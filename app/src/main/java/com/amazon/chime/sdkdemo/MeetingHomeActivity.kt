@@ -3,23 +3,21 @@ package com.amazon.chime.sdkdemo
 import android.Manifest
 import android.content.pm.PackageManager
 import android.os.AsyncTask
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ProgressBar
+import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import java.io.BufferedReader
 import java.io.InputStreamReader
 import java.lang.ref.WeakReference
 import java.net.HttpURLConnection
 import java.net.URL
-import android.widget.Toast
-import androidx.core.app.ActivityCompat
-import androidx.core.content.ContextCompat
-import com.amazon.chime.sdk.media.AudioVideoFacade
-import com.amazon.chime.sdk.media.DefaultAudioVideoFacade
 
 class MeetingHomeActivity : AppCompatActivity() {
 
@@ -71,7 +69,6 @@ class MeetingHomeActivity : AppCompatActivity() {
                             resp = response.toString()
                         }
                     }
-
                 } catch (e: Exception) {
                     println(e)
                 }
@@ -81,7 +78,7 @@ class MeetingHomeActivity : AppCompatActivity() {
             override fun onPostExecute(result: String?) {
                 super.onPostExecute(result)
                 Log.d(TAG, "Value of result is $result")
-                //TODO Add the MeetingSession object here instead of using Facade directly
+                // TODO Add the MeetingSession object here instead of using Facade directly
 //                var facade: AudioVideoFacade =
 //                    DefaultAudioVideoFacade(context.getApplicationContext(), result)
 //                facade.start()
@@ -95,7 +92,6 @@ class MeetingHomeActivity : AppCompatActivity() {
     private var authenticationProgressBar: ProgressBar? = null
     private var meetingID: String? = null
     private var yourName: String? = null
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -121,7 +117,6 @@ class MeetingHomeActivity : AppCompatActivity() {
             } else {
                 ActivityCompat.requestPermissions(this, WEBRTC_PERM, WEBRTC_PERMISSION_REQUEST_CODE)
             }
-
         }
     }
 
