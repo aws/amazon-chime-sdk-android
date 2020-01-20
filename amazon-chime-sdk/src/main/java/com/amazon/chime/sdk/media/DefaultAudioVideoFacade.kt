@@ -6,10 +6,17 @@ import android.media.AudioManager
 import android.media.AudioRecord
 import android.media.AudioTrack
 import android.util.Log
+import com.amazon.chime.sdk.media.mediacontroller.AudioVideoObserver
+import com.amazon.chime.sdk.session.MeetingSessionStatus
+import com.amazon.chime.sdk.session.MeetingSessionStatusCode
+import com.amazon.chime.sdk.session.SessionStateControllerAction
 import com.xodee.client.audio.audioclient.AudioClient
 import com.xodee.client.audio.audioclient.AudioClientSignalStrengthChangeListener
 import com.xodee.client.audio.audioclient.AudioClientStateChangeListener
 import com.xodee.client.audio.audioclient.AudioClientVolumeStateChangeListener
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import org.json.JSONObject
 
 // TODO This file is just at a POC stage now and each and very function needs to be refined. However I am going to checkin this file
@@ -17,10 +24,96 @@ import org.json.JSONObject
 class DefaultAudioVideoFacade(val context: Context, val meetingSession: String?) :
     AudioVideoFacade {
     var audioclient: AudioClient? = null
+    var currentAudioState = SessionStateControllerAction.Init.value
+    var currentAudioStatus = MeetingSessionStatusCode.OK.value
+    var observerQueue = mutableSetOf<AudioVideoObserver>()
 
     var audioClientStateChangeListener = object : AudioClientStateChangeListener {
         override fun onAudioClientStateChange(state: Int, status: Int) {
+            GlobalScope.launch(Dispatchers.Main) {
+                handleAudioClientStateChange(state, status)
+            }
         }
+    }
+
+    private fun handleAudioClientStateChange(newAudioState: Int, newAudioStatus: Int) {
+        if (newAudioState == SessionStateControllerAction.Unknown.value) return
+
+        if (newAudioState == currentAudioState && newAudioStatus == currentAudioStatus) return
+
+        when (newAudioState) {
+            SessionStateControllerAction.Connected.value -> {
+                when (currentAudioState) {
+                    SessionStateControllerAction.Connecting.value
+                    -> forEachObserver { observer -> observer.onAudioVideoStart(false) }
+
+                    SessionStateControllerAction.Reconnecting.value
+                    -> forEachObserver { observer -> observer.onAudioVideoStart(true) }
+
+                    SessionStateControllerAction.Connected.value -> {
+                        when (newAudioStatus) {
+                            MeetingSessionStatusCode.OK.value -> {
+                                if (currentAudioStatus == MeetingSessionStatusCode.NetworkIsNotGoodEnoughForVoIP.value) {
+                                    forEachObserver { observer -> observer.onConnectionRecovered() }
+                                }
+                            }
+                            MeetingSessionStatusCode.NetworkIsNotGoodEnoughForVoIP.value -> {
+                                if (currentAudioStatus == MeetingSessionStatusCode.OK.value) {
+                                    forEachObserver { observer -> observer.onConnectionBecamePoor() }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            SessionStateControllerAction.DisconnectedNormal.value -> {
+                when (currentAudioState) {
+                    SessionStateControllerAction.Connecting.value,
+                    SessionStateControllerAction.Connected.value
+                    -> forEachObserver { observer ->
+                        observer.onAudioVideoStop(
+                            MeetingSessionStatus(MeetingSessionStatusCode.OK)
+                        )
+                    }
+                    SessionStateControllerAction.Reconnecting.value ->
+                        forEachObserver { observer -> observer.onAudioReconnectionCancel() }
+                }
+            }
+            SessionStateControllerAction.DisconnectedAbnormal.value,
+            SessionStateControllerAction.FailedToConnect.value -> {
+                when (currentAudioState) {
+                    SessionStateControllerAction.Connecting.value,
+                    SessionStateControllerAction.Reconnecting.value,
+                    SessionStateControllerAction.Connected.value
+                    -> forEachObserver { observer ->
+                        observer.onAudioVideoStop(
+                            MeetingSessionStatus(newAudioStatus)
+                        )
+                    }
+                }
+            }
+            SessionStateControllerAction.Reconnecting.value -> {
+                if (currentAudioState == SessionStateControllerAction.Connected.value) {
+                    forEachObserver { observer -> observer.onAudioVideoStart(true) }
+                }
+            }
+            SessionStateControllerAction.ServerHungup.value -> {
+                when (currentAudioState) {
+                    SessionStateControllerAction.Connecting.value,
+                    SessionStateControllerAction.Connected.value -> forEachObserver { observer ->
+                        observer.onAudioVideoStop(MeetingSessionStatus(newAudioStatus))
+                    }
+                    SessionStateControllerAction.Reconnecting.value -> {
+                        forEachObserver { observer ->
+                            observer.onAudioVideoStop(MeetingSessionStatus(newAudioStatus))
+                            observer.onAudioReconnectionCancel()
+                        }
+                    }
+                }
+            }
+        }
+        currentAudioState = newAudioState
+        currentAudioStatus = newAudioStatus
     }
 
     var volumeStateChangeListener = object : AudioClientVolumeStateChangeListener {
@@ -49,6 +142,20 @@ class DefaultAudioVideoFacade(val context: Context, val meetingSession: String?)
         )
     }
 
+    override fun addObserver(observer: AudioVideoObserver) {
+        this.observerQueue.add(observer)
+    }
+
+    override fun removeObserver(observer: AudioVideoObserver) {
+        this.observerQueue.remove(observer)
+    }
+
+    private fun forEachObserver(observerFunction: (observer: AudioVideoObserver) -> Unit) {
+        for (observer in observerQueue) {
+            observerFunction(observer)
+        }
+    }
+
     override fun start() {
         val jsonobj = JSONObject(meetingSession)
         val attendee = jsonobj.getJSONObject("JoinInfo").getJSONObject("Attendee")
@@ -66,6 +173,7 @@ class DefaultAudioVideoFacade(val context: Context, val meetingSession: String?)
         val audiowsurl = "wss://haxrp." + hostsub + ":443/calls/" + meetingId
         setupRoute()
         setUpAudioConfiguration(context)
+        forEachObserver { observer -> observer.onAudioVideoStartConnecting(false) }
         val sessionConnector = object : Thread() {
             override fun run() {
                 val res = audioclient?.doStartSession(
@@ -83,6 +191,7 @@ class DefaultAudioVideoFacade(val context: Context, val meetingSession: String?)
                     audiowsurl,
                     null
                 )
+                forEachObserver { observer -> observer.onAudioVideoStart(false) }
             }
         }
         sessionConnector.start()
