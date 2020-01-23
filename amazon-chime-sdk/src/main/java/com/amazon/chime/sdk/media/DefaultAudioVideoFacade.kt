@@ -26,8 +26,8 @@ class DefaultAudioVideoFacade(
         audioVideoController.stop()
     }
 
-    override fun realtimeLocalMute() {
-        realtimeController.realtimeLocalMute()
+    override fun realtimeLocalMute(): Boolean {
+        return realtimeController.realtimeLocalMute()
     }
 
     override fun realtimeLocalUnmute(): Boolean {

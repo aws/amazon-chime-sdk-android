@@ -13,6 +13,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.amazon.chime.sdk.session.DefaultMeetingSession
+import com.amazon.chime.sdk.session.MeetingSession
 import com.amazon.chime.sdk.session.MeetingSessionConfiguration
 import com.amazon.chime.sdk.session.MeetingSessionCredentials
 import com.amazon.chime.sdk.session.MeetingSessionURLs
@@ -44,21 +45,30 @@ class MeetingHomeActivity : AppCompatActivity() {
         Manifest.permission.CAMERA
     )
 
+    // TODO: Clean up the UI. Have one view for joining meeting and another for roster + buttons
     private var meetingEditText: EditText? = null
     private var nameEditText: EditText? = null
-    private var continueButton: Button? = null
     private var authenticationProgressBar: ProgressBar? = null
     private var meetingID: String? = null
     private var yourName: String? = null
+
+    // TODO: Better state management of whether in meeting or not
+    private var isMeetingStarted = false
+    private lateinit var meetingSession: MeetingSession
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_meeting_home)
         meetingEditText = findViewById(R.id.editMeetingId)
         nameEditText = findViewById(R.id.editName)
-        continueButton = findViewById(R.id.buttonContinue)
-        continueButton?.setOnClickListener { joinMeeting() }
         authenticationProgressBar = findViewById(R.id.progressAuthentication)
+
+        findViewById<Button>(R.id.buttonJoin)?.setOnClickListener { joinMeeting() }
+
+        // These buttons are temporary until the roster view is added
+        findViewById<Button>(R.id.buttonLeave)?.setOnClickListener { leaveMeeting() }
+        findViewById<Button>(R.id.buttonMute)?.setOnClickListener { muteMeeting() }
+        findViewById<Button>(R.id.buttonUnmute)?.setOnClickListener { unmuteMeeting() }
     }
 
     private fun joinMeeting() {
@@ -75,6 +85,35 @@ class MeetingHomeActivity : AppCompatActivity() {
             } else {
                 ActivityCompat.requestPermissions(this, WEBRTC_PERM, WEBRTC_PERMISSION_REQUEST_CODE)
             }
+        }
+    }
+
+    // These methods temporary until we have  a roster view for roster display and meeting management (mute, unmute, leave)
+    fun displayMeetingWarning() =
+        Toast.makeText(this, "You are currently NOT in a meeting", Toast.LENGTH_LONG).show()
+
+    private fun leaveMeeting() {
+        if (isMeetingStarted) {
+            meetingSession.audioVideo.stop()
+            isMeetingStarted = false
+        } else {
+            displayMeetingWarning()
+        }
+    }
+
+    private fun muteMeeting() {
+        if (isMeetingStarted) {
+            meetingSession.audioVideo.realtimeLocalMute()
+        } else {
+            displayMeetingWarning()
+        }
+    }
+
+    private fun unmuteMeeting() {
+        if (isMeetingStarted) {
+            meetingSession.audioVideo.realtimeLocalUnmute()
+        } else {
+            displayMeetingWarning()
         }
     }
 
@@ -119,10 +158,9 @@ class MeetingHomeActivity : AppCompatActivity() {
 
             if (sessionConfig != null) {
                 val logger = ConsoleLogger(LogLevel.INFO)
-                val meetingSession =
-                    DefaultMeetingSession(sessionConfig, logger, applicationContext)
-
+                meetingSession = DefaultMeetingSession(sessionConfig, logger, applicationContext)
                 meetingSession.audioVideo.start()
+                isMeetingStarted = true
             }
 
             authenticationProgressBar?.visibility = View.INVISIBLE
