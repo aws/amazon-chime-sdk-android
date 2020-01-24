@@ -13,6 +13,7 @@ class DefaultMeetingSession(
     override val logger: Logger,
     context: Context
 ) : MeetingSession {
+
     override val audioVideo: AudioVideoFacade
 
     init {

@@ -9,7 +9,6 @@ class DefaultAudioVideoController(
     private val configuration: MeetingSessionConfiguration,
     private val logger: Logger
 ) : AudioVideoControllerFacade {
-
     private val TAG = "DefaultAudioVideoController"
     private val DEFAULT_AUDIO_HOST_PORT = 200 // Offset by 200 so that subtraction results in 0
 
@@ -47,10 +46,10 @@ class DefaultAudioVideoController(
     }
 
     override fun addObserver(observer: AudioVideoObserver) {
-        audioClientController.subscribeAudioClientStateChange(observer)
+        audioClientController.subscribeToAudioClientStateChange(observer)
     }
 
     override fun removeObserver(observer: AudioVideoObserver) {
-        audioClientController.unsubscribeAudioClientStateChange(observer)
+        audioClientController.unsubscribeFromAudioClientStateChange(observer)
     }
 }

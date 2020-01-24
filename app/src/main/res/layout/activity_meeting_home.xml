@@ -19,6 +19,7 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="16dp"
         android:hint="@string/edit_meeting_id"
+        android:inputType="text"
         android:importantForAutofill="no"
         android:maxLength="35" />
 
@@ -27,6 +28,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:hint="@string/edit_name"
+        android:inputType="text"
         android:importantForAutofill="no"
         android:layout_marginBottom="16dp" />
 
@@ -37,30 +39,6 @@
         android:paddingLeft="20dp"
         android:paddingRight="20dp"
         android:text="@string/meeting_join" />
-
-    <Button
-        android:id="@+id/buttonLeave"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:paddingLeft="20dp"
-        android:paddingRight="20dp"
-        android:text="@string/meeting_leave" />
-
-    <Button
-        android:id="@+id/buttonMute"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:paddingLeft="20dp"
-        android:paddingRight="20dp"
-        android:text="@string/meeting_mute" />
-
-    <Button
-        android:id="@+id/buttonUnmute"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:paddingLeft="20dp"
-        android:paddingRight="20dp"
-        android:text="@string/meeting_unmute" />
 
     <ProgressBar
         android:id="@+id/progressAuthentication"

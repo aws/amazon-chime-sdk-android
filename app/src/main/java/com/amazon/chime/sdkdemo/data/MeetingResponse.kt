@@ -1,4 +1,4 @@
-package com.amazon.chime.sdkdemo
+package com.amazon.chime.sdkdemo.data
 
 import com.google.gson.annotations.SerializedName
 

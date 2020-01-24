@@ -17,7 +17,6 @@ import com.xodee.client.audio.audioclient.AudioClientStateChangeListener
 import com.xodee.client.audio.audioclient.AudioClientVolumeStateChangeListener
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
 // TODO: Make singleton so that only one audio client can be created / used
@@ -30,10 +29,12 @@ class AudioClientController(private val context: Context, private val logger: Lo
     private var currentAudioState = SessionStateControllerAction.Init.value
     private var currentAudioStatus = MeetingSessionStatusCode.OK.value
     private var audioClientStateObservers = mutableSetOf<AudioVideoObserver>()
+    private var volumeIndicatorCallbacks = mutableSetOf<(Map<String, Int>) -> Unit>()
+    private var signalStrengthChangeCallbacks = mutableSetOf<(Map<String, Int>) -> Unit>()
 
     private var audioClientStateChangeListener = object : AudioClientStateChangeListener {
         override fun onAudioClientStateChange(state: Int, status: Int) {
-            GlobalScope.launch(Dispatchers.Main) {
+            uiScope.launch {
                 handleAudioClientStateChange(state, status)
             }
         }
@@ -41,6 +42,12 @@ class AudioClientController(private val context: Context, private val logger: Lo
 
     private var volumeStateChangeListener = object : AudioClientVolumeStateChangeListener {
         override fun onVolumeStateChange(profile_ids: Array<out String>?, volumes: IntArray?) {
+            if (profile_ids == null || volumes == null) return
+
+            val attendeeVolumeMap = mutableMapOf<String, Int>()
+            (0 until profile_ids.size).map { i -> attendeeVolumeMap[profile_ids[i]] = volumes[i] }
+
+            volumeIndicatorCallbacks.forEach { fn -> fn(attendeeVolumeMap) }
         }
     }
 
@@ -49,6 +56,14 @@ class AudioClientController(private val context: Context, private val logger: Lo
             profile_ids: Array<out String>?,
             signal_strengths: IntArray?
         ) {
+            if (profile_ids == null || signal_strengths == null) return
+
+            val attendeeSignalStrengthMap = mutableMapOf<String, Int>()
+            (0 until profile_ids.size).map { i ->
+                attendeeSignalStrengthMap[profile_ids[i]] = signal_strengths[i]
+            }
+
+            signalStrengthChangeCallbacks.forEach { fn -> fn(attendeeSignalStrengthMap) }
         }
     }
 
@@ -229,12 +244,28 @@ class AudioClientController(private val context: Context, private val logger: Lo
         audioClient.doStopSession()
     }
 
-    fun subscribeAudioClientStateChange(observer: AudioVideoObserver) {
+    fun subscribeToAudioClientStateChange(observer: AudioVideoObserver) {
         this.audioClientStateObservers.add(observer)
     }
 
-    fun unsubscribeAudioClientStateChange(observer: AudioVideoObserver) {
+    fun unsubscribeFromAudioClientStateChange(observer: AudioVideoObserver) {
         this.audioClientStateObservers.remove(observer)
+    }
+
+    fun subscribeToVolumeIndicator(callback: (Map<String, Int>) -> Unit) {
+        volumeIndicatorCallbacks.add(callback)
+    }
+
+    fun unsubscribeFromVolumeIndicator(callback: (Map<String, Int>) -> Unit) {
+        volumeIndicatorCallbacks.remove(callback)
+    }
+
+    fun subscribeToSignalStrengthChange(callback: (Map<String, Int>) -> Unit) {
+        signalStrengthChangeCallbacks.add(callback)
+    }
+
+    fun unsubscribeFromSignalStrengthChange(callback: (Map<String, Int>) -> Unit) {
+        signalStrengthChangeCallbacks.remove(callback)
     }
 
     fun setMute(isMuted: Boolean): Boolean {

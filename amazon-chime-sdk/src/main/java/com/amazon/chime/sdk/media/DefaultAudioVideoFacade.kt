@@ -33,4 +33,19 @@ class DefaultAudioVideoFacade(
     override fun realtimeLocalUnmute(): Boolean {
         return realtimeController.realtimeLocalUnmute()
     }
+
+    override fun realtimeSubscribeToVolumeIndicator(callback: (Map<String, Int>) -> Unit) {
+        realtimeController.realtimeSubscribeToVolumeIndicator(callback)
+    }
+
+    override fun realtimeUnsubscribeFromVolumeIndicator(callback: (Map<String, Int>) -> Unit) {
+        realtimeController.realtimeUnsubscribeFromVolumeIndicator(callback)
+    }
+    override fun realtimeSubscribeToSignalStrengthChange(callback: (Map<String, Int>) -> Unit) {
+        realtimeController.realtimeSubscribeToSignalStrengthChange(callback)
+    }
+
+    override fun realtimeUnsubscribeFromSignalStrengthChange(callback: (Map<String, Int>) -> Unit) {
+        realtimeController.realtimeUnsubscribeFromSignalStrengthChange(callback)
+    }
 }
