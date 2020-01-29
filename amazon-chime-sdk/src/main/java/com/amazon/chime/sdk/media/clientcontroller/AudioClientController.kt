@@ -11,6 +11,7 @@ import com.amazon.chime.sdk.session.MeetingSessionStatus
 import com.amazon.chime.sdk.session.MeetingSessionStatusCode
 import com.amazon.chime.sdk.session.SessionStateControllerAction
 import com.amazon.chime.sdk.utils.logger.Logger
+import com.amazon.chime.sdk.utils.singleton.SingletonWithParams
 import com.xodee.client.audio.audioclient.AudioClient
 import com.xodee.client.audio.audioclient.AudioClientSignalStrengthChangeListener
 import com.xodee.client.audio.audioclient.AudioClientStateChangeListener
@@ -19,9 +20,19 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-// TODO: Make singleton so that only one audio client can be created / used
-class AudioClientController(private val context: Context, private val logger: Logger) {
+// This is so that we only need one version of SingletonWithParams
+data class AudioClientControllerParams(val context: Context, val logger: Logger)
+
+// This is a singleton class. Normally we would use object but this class needs parameters and
+// object does not support that. So instead we use a companion object to retrieve the class
+class AudioClientController private constructor(params: AudioClientControllerParams) {
+    private val context: Context = params.context
+    private val logger: Logger = params.logger
+
     private val TAG = "AudioClientController"
+    private val AUDIO_PORT_OFFSET = 200 // Offset by 200 so that subtraction results in 0
+    private val DEFAULT_MIC_AND_SPEAKER = false
+    private val DEFAULT_PRESENTER = true
 
     private val audioClient: AudioClient
     private val uiScope = CoroutineScope(Dispatchers.Main)
@@ -80,6 +91,9 @@ class AudioClientController(private val context: Context, private val logger: Lo
             0
         )
     }
+
+    companion object :
+        SingletonWithParams<AudioClientController, AudioClientControllerParams>(::AudioClientController)
 
     private fun handleAudioClientStateChange(newAudioState: Int, newAudioStatus: Int) {
         if (newAudioState == SessionStateControllerAction.Unknown.value) return
@@ -208,7 +222,26 @@ class AudioClientController(private val context: Context, private val logger: Lo
         }
     }
 
-    fun start(host: String, port: Int, meetingId: String, attendeeId: String, joinToken: String) {
+    fun start(audioHostUrl: String, meetingId: String, attendeeId: String, joinToken: String) {
+        val audioUrlParts: List<String> =
+            audioHostUrl.split(":".toRegex()).dropLastWhile { it.isEmpty() }
+
+        val (host: String, portStr: String) = if (audioUrlParts.size == 2) audioUrlParts else listOf(
+            audioUrlParts[0],
+            "$AUDIO_PORT_OFFSET"
+        )
+
+        // We subtract 200 here since audio client will add an offset of 200 for the DTLS port
+        val port = try {
+            Integer.parseInt(portStr) - AUDIO_PORT_OFFSET
+        } catch (exception: Exception) {
+            logger.warn(
+                TAG,
+                "Error parsing int. Using default value. Exception: ${exception.message}"
+            )
+            0
+        }
+
         val hostSubStr = host.substringAfter('.').substringAfter('.')
         val audioWSUrl =
             context.getString(R.string.audio_ws_url, hostSubStr, meetingId)
@@ -217,7 +250,6 @@ class AudioClientController(private val context: Context, private val logger: Lo
         setUpAudioConfiguration()
         forEachObserver { observer -> observer.onAudioVideoStartConnecting(false) }
 
-        // TODO: Cleanup the rest of the hard coded fields
         uiScope.launch {
             val res = audioClient.doStartSession(
                 AudioClient.XTL_DEFAULT_TRANSPORT,
@@ -226,11 +258,11 @@ class AudioClientController(private val context: Context, private val logger: Lo
                 joinToken,
                 meetingId,
                 attendeeId,
-                6,
-                6,
-                false,
-                false,
-                true,
+                AudioClient.kCodecOpusLow,
+                AudioClient.kCodecOpusLow,
+                DEFAULT_MIC_AND_SPEAKER,
+                DEFAULT_MIC_AND_SPEAKER,
+                DEFAULT_PRESENTER,
                 audioWSUrl,
                 null
             )

@@ -35,8 +35,7 @@ class MeetingHomeActivity : AppCompatActivity() {
 
     private val WEBRTC_PERM = arrayOf(
         Manifest.permission.MODIFY_AUDIO_SETTINGS,
-        Manifest.permission.RECORD_AUDIO,
-        Manifest.permission.CAMERA
+        Manifest.permission.RECORD_AUDIO
     )
 
     private var meetingEditText: EditText? = null
@@ -46,8 +45,8 @@ class MeetingHomeActivity : AppCompatActivity() {
     private var yourName: String? = null
 
     companion object {
-        val MEETING_RESPONSE_KEY = "MEETING_RESPONSE"
-        val MEETING_ID_KEY = "MEETING_ID"
+        const val MEETING_RESPONSE_KEY = "MEETING_RESPONSE"
+        const val MEETING_ID_KEY = "MEETING_ID"
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -98,7 +97,6 @@ class MeetingHomeActivity : AppCompatActivity() {
                         .show()
                     return
                 }
-
                 authenticate(getString(R.string.test_url), meetingID, yourName)
             }
         }
@@ -113,14 +111,22 @@ class MeetingHomeActivity : AppCompatActivity() {
             authenticationProgressBar?.visibility = View.VISIBLE
             logger.info(TAG, "Joining meeting. URL: $meetingUrl")
 
-            val meetingResponseJson = joinMeeting(meetingUrl, meetingId, attendeeName)
+            val meetingResponseJson: String? = joinMeeting(meetingUrl, meetingId, attendeeName)
 
             authenticationProgressBar?.visibility = View.INVISIBLE
 
-            val intent = Intent(applicationContext, InMeetingActivity::class.java)
-            intent.putExtra(MEETING_RESPONSE_KEY, meetingResponseJson)
-            intent.putExtra(MEETING_ID_KEY, meetingId)
-            startActivity(intent)
+            if (meetingResponseJson == null) {
+                Toast.makeText(
+                    applicationContext,
+                    "There was an error joining the meeting. Please try again or use a different meeting ID",
+                    Toast.LENGTH_LONG
+                ).show()
+            } else {
+                val intent = Intent(applicationContext, InMeetingActivity::class.java)
+                intent.putExtra(MEETING_RESPONSE_KEY, meetingResponseJson)
+                intent.putExtra(MEETING_ID_KEY, meetingId)
+                startActivity(intent)
+            }
         }
 
     private suspend fun joinMeeting(
@@ -148,10 +154,15 @@ class MeetingHomeActivity : AppCompatActivity() {
                         it.close()
                     }
 
-                    if (responseCode != 200) null else response.toString()
+                    if (responseCode == 200) {
+                        response.toString()
+                    } else {
+                        logger.error(TAG, "Unable to join meeting. Response code: $responseCode")
+                        null
+                    }
                 }
             } catch (exception: Exception) {
-                logger.error(TAG, "Error joining meeting. Exception: ${exception.message}")
+                logger.error(TAG, "There was an exception while joining the meeting: $exception")
                 null
             }
         }

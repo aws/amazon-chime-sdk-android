@@ -1,14 +1,23 @@
 package com.amazon.chime.sdk.media
 
+import android.Manifest
+import android.content.Context
+import android.content.pm.PackageManager
+import androidx.core.content.ContextCompat
 import com.amazon.chime.sdk.media.mediacontroller.AudioVideoControllerFacade
 import com.amazon.chime.sdk.media.mediacontroller.AudioVideoObserver
 import com.amazon.chime.sdk.media.mediacontroller.RealtimeControllerFacade
 
 class DefaultAudioVideoFacade(
+    private val context: Context,
     private val audioVideoController: AudioVideoControllerFacade,
     private val realtimeController: RealtimeControllerFacade
-) :
-    AudioVideoFacade {
+) : AudioVideoFacade {
+
+    private val permissions = arrayOf(
+        Manifest.permission.MODIFY_AUDIO_SETTINGS,
+        Manifest.permission.RECORD_AUDIO
+    )
 
     override fun addObserver(observer: AudioVideoObserver) {
         audioVideoController.addObserver(observer)
@@ -19,7 +28,21 @@ class DefaultAudioVideoFacade(
     }
 
     override fun start() {
-        audioVideoController.start()
+        val hasPermission: Boolean = permissions.all {
+            ContextCompat.checkSelfPermission(context, it) == PackageManager.PERMISSION_GRANTED
+        }
+
+        if (hasPermission) {
+            audioVideoController.start()
+        } else {
+            throw SecurityException(
+                "Missing necessary permissions for WebRTC: ${permissions.joinToString(
+                    separator = ", ",
+                    prefix = "",
+                    postfix = ""
+                )}"
+            )
+        }
     }
 
     override fun stop() {
@@ -41,6 +64,7 @@ class DefaultAudioVideoFacade(
     override fun realtimeUnsubscribeFromVolumeIndicator(callback: (Map<String, Int>) -> Unit) {
         realtimeController.realtimeUnsubscribeFromVolumeIndicator(callback)
     }
+
     override fun realtimeSubscribeToSignalStrengthChange(callback: (Map<String, Int>) -> Unit) {
         realtimeController.realtimeSubscribeToSignalStrengthChange(callback)
     }
