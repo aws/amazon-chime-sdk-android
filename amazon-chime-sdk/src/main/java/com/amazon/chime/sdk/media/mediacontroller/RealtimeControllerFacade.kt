@@ -17,30 +17,16 @@ interface RealtimeControllerFacade {
     fun realtimeLocalUnmute(): Boolean
 
     /**
-     * Subscribes to volume indicator changes with a callback.
+     * Subscribes to real time events with an observer
      *
-     * @param (Map<String, Int>) -> Unit callback processing a map of attendee Ids to volume
+     * @param observer: [RealtimeObserver] - Observer that handles real time events
      */
-    fun realtimeSubscribeToVolumeIndicator(callback: (Map<String, Int>) -> Unit)
+    fun realtimeAddObserver(observer: RealtimeObserver)
 
     /**
-     * Unsubscribes from volume indicator changes by removing the specified callback.
+     * Unsubscribes from real time events by removing the specified observer
      *
-     * @param (Map<String, Int>) -> Unit callback processing a map of attendee Ids to volume
+     * @param observer: [RealtimeObserver] - Observer that handles real time events
      */
-    fun realtimeUnsubscribeFromVolumeIndicator(callback: (Map<String, Int>) -> Unit)
-
-    /**
-     * Subscribes from signal strength changes with a callback.
-     *
-     * @param (Map<String, Int>) -> Unit callback processing a map of attendee Ids to signal strength
-     */
-    fun realtimeSubscribeToSignalStrengthChange(callback: (Map<String, Int>) -> Unit)
-
-    /**
-     * Unsubscribes from signal strength changes by removing the specified callback.
-     *
-     * @param (Map<String, Int>) -> Unit callback processing a map of attendee Ids to signal strength
-     */
-    fun realtimeUnsubscribeFromSignalStrengthChange(callback: (Map<String, Int>) -> Unit)
+    fun realtimeRemoveObserver(observer: RealtimeObserver)
 }

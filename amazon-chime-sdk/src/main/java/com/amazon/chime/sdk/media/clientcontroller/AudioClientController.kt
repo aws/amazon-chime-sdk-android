@@ -7,6 +7,7 @@ import android.media.AudioRecord
 import android.media.AudioTrack
 import com.amazon.chime.sdk.R
 import com.amazon.chime.sdk.media.mediacontroller.AudioVideoObserver
+import com.amazon.chime.sdk.media.mediacontroller.RealtimeObserver
 import com.amazon.chime.sdk.session.MeetingSessionStatus
 import com.amazon.chime.sdk.session.MeetingSessionStatusCode
 import com.amazon.chime.sdk.session.SessionStateControllerAction
@@ -54,8 +55,7 @@ class AudioClientController private constructor(params: AudioClientControllerPar
     private var currentAudioState = SessionStateControllerAction.Init
     private var currentAudioStatus: MeetingSessionStatusCode? = MeetingSessionStatusCode.OK
     private var audioClientStateObservers = mutableSetOf<AudioVideoObserver>()
-    private var volumeIndicatorCallbacks = mutableSetOf<(Map<String, Int>) -> Unit>()
-    private var signalStrengthChangeCallbacks = mutableSetOf<(Map<String, Int>) -> Unit>()
+    private var realtimeEventObservers = mutableSetOf<RealtimeObserver>()
 
     private var audioClientStateChangeListener = object : AudioClientStateChangeListener {
         override fun onAudioClientStateChange(state: Int, status: Int) {
@@ -70,9 +70,8 @@ class AudioClientController private constructor(params: AudioClientControllerPar
             if (profile_ids == null || volumes == null) return
 
             val attendeeVolumeMap = mutableMapOf<String, Int>()
-            (0 until profile_ids.size).map { i -> attendeeVolumeMap[profile_ids[i]] = volumes[i] }
-
-            volumeIndicatorCallbacks.forEach { fn -> fn(attendeeVolumeMap) }
+            (profile_ids.indices).map { i -> attendeeVolumeMap[profile_ids[i]] = volumes[i] }
+            realtimeEventObservers.forEach { it.onVolumeChange(attendeeVolumeMap) }
         }
     }
 
@@ -84,11 +83,11 @@ class AudioClientController private constructor(params: AudioClientControllerPar
             if (profile_ids == null || signal_strengths == null) return
 
             val attendeeSignalStrengthMap = mutableMapOf<String, Int>()
-            (0 until profile_ids.size).map { i ->
+            (profile_ids.indices).map { i ->
                 attendeeSignalStrengthMap[profile_ids[i]] = signal_strengths[i]
             }
 
-            signalStrengthChangeCallbacks.forEach { fn -> fn(attendeeSignalStrengthMap) }
+            realtimeEventObservers.forEach { it.onSignalStrengthChange(attendeeSignalStrengthMap) }
         }
     }
 
@@ -319,20 +318,12 @@ class AudioClientController private constructor(params: AudioClientControllerPar
         this.audioClientStateObservers.remove(observer)
     }
 
-    fun subscribeToVolumeIndicator(callback: (Map<String, Int>) -> Unit) {
-        volumeIndicatorCallbacks.add(callback)
+    fun subscribeToRealTimeEvents(observer: RealtimeObserver) {
+        realtimeEventObservers.add(observer)
     }
 
-    fun unsubscribeFromVolumeIndicator(callback: (Map<String, Int>) -> Unit) {
-        volumeIndicatorCallbacks.remove(callback)
-    }
-
-    fun subscribeToSignalStrengthChange(callback: (Map<String, Int>) -> Unit) {
-        signalStrengthChangeCallbacks.add(callback)
-    }
-
-    fun unsubscribeFromSignalStrengthChange(callback: (Map<String, Int>) -> Unit) {
-        signalStrengthChangeCallbacks.remove(callback)
+    fun unsubscribeFromRealTimeEvents(observer: RealtimeObserver) {
+        realtimeEventObservers.remove(observer)
     }
 
     fun setMute(isMuted: Boolean): Boolean {

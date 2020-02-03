@@ -7,6 +7,7 @@ import androidx.core.content.ContextCompat
 import com.amazon.chime.sdk.media.mediacontroller.AudioVideoControllerFacade
 import com.amazon.chime.sdk.media.mediacontroller.AudioVideoObserver
 import com.amazon.chime.sdk.media.mediacontroller.RealtimeControllerFacade
+import com.amazon.chime.sdk.media.mediacontroller.RealtimeObserver
 
 class DefaultAudioVideoFacade(
     private val context: Context,
@@ -57,19 +58,11 @@ class DefaultAudioVideoFacade(
         return realtimeController.realtimeLocalUnmute()
     }
 
-    override fun realtimeSubscribeToVolumeIndicator(callback: (Map<String, Int>) -> Unit) {
-        realtimeController.realtimeSubscribeToVolumeIndicator(callback)
+    override fun realtimeAddObserver(observer: RealtimeObserver) {
+        realtimeController.realtimeAddObserver(observer)
     }
 
-    override fun realtimeUnsubscribeFromVolumeIndicator(callback: (Map<String, Int>) -> Unit) {
-        realtimeController.realtimeUnsubscribeFromVolumeIndicator(callback)
-    }
-
-    override fun realtimeSubscribeToSignalStrengthChange(callback: (Map<String, Int>) -> Unit) {
-        realtimeController.realtimeSubscribeToSignalStrengthChange(callback)
-    }
-
-    override fun realtimeUnsubscribeFromSignalStrengthChange(callback: (Map<String, Int>) -> Unit) {
-        realtimeController.realtimeUnsubscribeFromSignalStrengthChange(callback)
+    override fun realtimeRemoveObserver(observer: RealtimeObserver) {
+        realtimeController.realtimeRemoveObserver(observer)
     }
 }

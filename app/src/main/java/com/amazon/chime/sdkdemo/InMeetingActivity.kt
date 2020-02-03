@@ -5,6 +5,7 @@ import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.amazon.chime.sdk.media.AudioVideoFacade
+import com.amazon.chime.sdk.media.mediacontroller.RealtimeObserver
 import com.amazon.chime.sdk.session.DefaultMeetingSession
 import com.amazon.chime.sdk.session.MeetingSessionConfiguration
 import com.amazon.chime.sdk.session.MeetingSessionCredentials
@@ -27,7 +28,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
-class InMeetingActivity : AppCompatActivity() {
+class InMeetingActivity : AppCompatActivity(), RealtimeObserver {
 
     private val logger = ConsoleLogger(LogLevel.INFO)
     private val gson = Gson()
@@ -75,26 +76,7 @@ class InMeetingActivity : AppCompatActivity() {
         setupSubscriptionToAttendeeChangeHandler()
     }
 
-    private fun setupSubscriptionToAttendeeChangeHandler() {
-        audioVideo.realtimeSubscribeToVolumeIndicator { attendeeIdVolumeMap: Map<String, Int> ->
-            uiScope.launch {
-                val updatedRoster = mutableMapOf<String, RosterAttendee>()
-                for ((attendeeId, volume) in attendeeIdVolumeMap) {
-                    val attendeeName: String =
-                        if (currentRoster.containsKey(attendeeId) &&
-                            currentRoster.getValue(attendeeId).attendeeName.isNotBlank()
-                        ) currentRoster.getValue(attendeeId).attendeeName
-                        else getAttendeeName(getString(R.string.test_url), attendeeId) ?: ""
-
-                    updatedRoster[attendeeId] =
-                        RosterAttendee(attendeeName, volume)
-                }
-                currentRoster.clear()
-                currentRoster.putAll(updatedRoster)
-                adapter.notifyDataSetChanged()
-            }
-        }
-    }
+    private fun setupSubscriptionToAttendeeChangeHandler() = audioVideo.realtimeAddObserver(this)
 
     private suspend fun getAttendeeName(
         meetingUrl: String,
@@ -151,5 +133,28 @@ class InMeetingActivity : AppCompatActivity() {
         val credentials = MeetingSessionCredentials(attendee.attendeeId, attendee.joinToken)
         val urls = MeetingSessionURLs(meeting.mediaPlacement.audioHostUrl)
         return MeetingSessionConfiguration(meeting.meetingId, credentials, urls)
+    }
+
+    override fun onVolumeChange(attendeeVolumes: Map<String, Int>) {
+        uiScope.launch {
+            val updatedRoster = mutableMapOf<String, RosterAttendee>()
+            for ((attendeeId, volume) in attendeeVolumes) {
+                val attendeeName: String =
+                    if (currentRoster.containsKey(attendeeId) &&
+                        currentRoster.getValue(attendeeId).attendeeName.isNotBlank()
+                    ) currentRoster.getValue(attendeeId).attendeeName
+                    else getAttendeeName(getString(R.string.test_url), attendeeId) ?: ""
+
+                updatedRoster[attendeeId] =
+                    RosterAttendee(attendeeName, volume)
+            }
+            currentRoster.clear()
+            currentRoster.putAll(updatedRoster)
+            adapter.notifyDataSetChanged()
+        }
+    }
+
+    override fun onSignalStrengthChange(attendeeSignalStrength: Map<String, Int>) {
+        // Do nothing for now
     }
 }

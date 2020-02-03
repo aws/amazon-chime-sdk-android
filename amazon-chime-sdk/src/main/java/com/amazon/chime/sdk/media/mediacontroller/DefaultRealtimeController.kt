@@ -13,19 +13,11 @@ class DefaultRealtimeController(private val audioClientController: AudioClientCo
         return audioClientController.setMute(false)
     }
 
-    override fun realtimeSubscribeToVolumeIndicator(callback: (Map<String, Int>) -> Unit) {
-        audioClientController.subscribeToVolumeIndicator(callback)
+    override fun realtimeAddObserver(observer: RealtimeObserver) {
+        audioClientController.subscribeToRealTimeEvents(observer)
     }
 
-    override fun realtimeUnsubscribeFromVolumeIndicator(callback: (Map<String, Int>) -> Unit) {
-        audioClientController.unsubscribeFromVolumeIndicator(callback)
-    }
-
-    override fun realtimeSubscribeToSignalStrengthChange(callback: (Map<String, Int>) -> Unit) {
-        audioClientController.subscribeToSignalStrengthChange(callback)
-    }
-
-    override fun realtimeUnsubscribeFromSignalStrengthChange(callback: (Map<String, Int>) -> Unit) {
-        audioClientController.unsubscribeFromSignalStrengthChange(callback)
+    override fun realtimeRemoveObserver(observer: RealtimeObserver) {
+        audioClientController.unsubscribeFromRealTimeEvents(observer)
     }
 }
