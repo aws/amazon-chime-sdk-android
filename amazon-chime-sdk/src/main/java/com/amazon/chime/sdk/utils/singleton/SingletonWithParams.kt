@@ -1,7 +1,9 @@
 package com.amazon.chime.sdk.utils.singleton
 
-// If the singleton needed no parameters we can just use companion object instead of creating this
-// Referencing Kotlin Lazy()'s double checked locking algorithm
+/**
+ * If the singleton needed no parameters we can just use companion object instead of this.
+ * Referencing [[SynchronizedLazyImpl]] for double checked locking algorithm.
+ */
 open class SingletonWithParams<out T : Any, in A>(instanceCreator: (A) -> T) {
     private var instanceCreator: ((A) -> T)? = instanceCreator
 

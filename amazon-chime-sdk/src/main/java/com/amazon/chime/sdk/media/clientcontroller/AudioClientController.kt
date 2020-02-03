@@ -20,11 +20,18 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-// This is so that we only need one version of SingletonWithParams
+/**
+ * This is so that we only need one version of [[SingletonWithParams]].
+ */
 data class AudioClientControllerParams(val context: Context, val logger: Logger)
 
-// This is a singleton class. Normally we would use object but this class needs parameters and
-// object does not support that. So instead we use a companion object to retrieve the class
+/**
+ * Singleton to prevent more than one [[AudioClient]] from being created. Normally we'd use object
+ * but this class requires parameters for initialization and object currently does not support that.
+ *
+ * Instead, we use a companion object extending [[SingletonWithParams]] and taking
+ * [[AudioClientControllerParams]] to create and retrieve an instance of [[AudioClientController]]
+ */
 class AudioClientController private constructor(params: AudioClientControllerParams) {
     private val context: Context = params.context
     private val logger: Logger = params.logger
@@ -34,11 +41,18 @@ class AudioClientController private constructor(params: AudioClientControllerPar
     private val DEFAULT_MIC_AND_SPEAKER = false
     private val DEFAULT_PRESENTER = true
 
+    /**
+     * These are not present in [AudioClient], so defining it here
+     * TODO: Add it to AudioClient
+     */
+    private val AUDIO_CLIENT_ERR_SERVICE_UNAVAILABLE = 65
+    private val AUDIO_CLIENT_ERR_CALL_ENDED = 75
+
     private val audioClient: AudioClient
     private val uiScope = CoroutineScope(Dispatchers.Main)
 
-    private var currentAudioState = SessionStateControllerAction.Init.value
-    private var currentAudioStatus = MeetingSessionStatusCode.OK.value
+    private var currentAudioState = SessionStateControllerAction.Init
+    private var currentAudioStatus: MeetingSessionStatusCode? = MeetingSessionStatusCode.OK
     private var audioClientStateObservers = mutableSetOf<AudioVideoObserver>()
     private var volumeIndicatorCallbacks = mutableSetOf<(Map<String, Int>) -> Unit>()
     private var signalStrengthChangeCallbacks = mutableSetOf<(Map<String, Int>) -> Unit>()
@@ -95,78 +109,99 @@ class AudioClientController private constructor(params: AudioClientControllerPar
     companion object :
         SingletonWithParams<AudioClientController, AudioClientControllerParams>(::AudioClientController)
 
-    private fun handleAudioClientStateChange(newAudioState: Int, newAudioStatus: Int) {
-        if (newAudioState == SessionStateControllerAction.Unknown.value) return
+    // Tincan's integer values do not map 1:1 to our integer values
+    private fun toAudioClientState(internalAudioClientState: Int): SessionStateControllerAction {
+        return when (internalAudioClientState) {
+            AudioClient.AUDIO_CLIENT_STATE_UNKNOWN -> SessionStateControllerAction.Unknown
+            AudioClient.AUDIO_CLIENT_STATE_INIT -> SessionStateControllerAction.Init
+            AudioClient.AUDIO_CLIENT_STATE_CONNECTING -> SessionStateControllerAction.Connecting
+            AudioClient.AUDIO_CLIENT_STATE_CONNECTED -> SessionStateControllerAction.FinishConnecting
+            AudioClient.AUDIO_CLIENT_STATE_RECONNECTING -> SessionStateControllerAction.Reconnecting
+            AudioClient.AUDIO_CLIENT_STATE_DISCONNECTING -> SessionStateControllerAction.Disconnecting
+            AudioClient.AUDIO_CLIENT_STATE_DISCONNECTED_NORMAL -> SessionStateControllerAction.FinishDisconnecting
+            AudioClient.AUDIO_CLIENT_STATE_FAILED_TO_CONNECT,
+            AudioClient.AUDIO_CLIENT_STATE_DISCONNECTED_ABNORMAL,
+            AudioClient.AUDIO_CLIENT_STATE_SERVER_HUNGUP -> SessionStateControllerAction.Fail
+            else -> SessionStateControllerAction.Unknown
+        }
+    }
+
+    private fun toAudioStatus(internalAudioStatus: Int): MeetingSessionStatusCode? {
+        return when (internalAudioStatus) {
+            AudioClient.AUDIO_CLIENT_OK -> MeetingSessionStatusCode.OK
+            AudioClient.AUDIO_CLIENT_STATUS_NETWORK_IS_NOT_GOOD_ENOUGH_FOR_VOIP -> MeetingSessionStatusCode.NetworkBecamePoor
+            AudioClient.AUDIO_CLIENT_ERR_SERVER_HUNGUP -> MeetingSessionStatusCode.AudioDisconnected
+            AudioClient.AUDIO_CLIENT_ERR_JOINED_FROM_ANOTHER_DEVICE -> MeetingSessionStatusCode.AudioJoinedFromAnotherDevice
+            AudioClient.AUDIO_CLIENT_ERR_INTERNAL_SERVER_ERROR -> MeetingSessionStatusCode.AudioInternalServerError
+            AudioClient.AUDIO_CLIENT_ERR_AUTH_REJECTED -> MeetingSessionStatusCode.AudioAuthenticationRejected
+            AudioClient.AUDIO_CLIENT_ERR_CALL_AT_CAPACITY -> MeetingSessionStatusCode.AudioCallAtCapacity
+            AUDIO_CLIENT_ERR_SERVICE_UNAVAILABLE -> MeetingSessionStatusCode.AudioServiceUnavailable
+            AudioClient.AUDIO_CLIENT_ERR_SHOULD_DISCONNECT_AUDIO -> MeetingSessionStatusCode.AudioDisconnectAudio
+            AUDIO_CLIENT_ERR_CALL_ENDED -> MeetingSessionStatusCode.AudioCallEnded
+            else -> null
+        }
+    }
+
+    private fun handleAudioClientStateChange(
+        newInternalAudioState: Int,
+        newInternalAudioStatus: Int
+    ) {
+        val newAudioState: SessionStateControllerAction = toAudioClientState(newInternalAudioState)
+        val newAudioStatus: MeetingSessionStatusCode? = toAudioStatus(newInternalAudioStatus)
+
+        if (newAudioState == SessionStateControllerAction.Unknown) return
         if (newAudioState == currentAudioState && newAudioStatus == currentAudioStatus) return
 
         when (newAudioState) {
-            SessionStateControllerAction.Connected.value -> {
+            SessionStateControllerAction.FinishConnecting -> {
                 when (currentAudioState) {
-                    SessionStateControllerAction.Connecting.value
-                    -> forEachObserver { observer -> observer.onAudioVideoStart(false) }
-
-                    SessionStateControllerAction.Reconnecting.value
-                    -> forEachObserver { observer -> observer.onAudioVideoStart(true) }
-
-                    SessionStateControllerAction.Connected.value -> {
+                    SessionStateControllerAction.Connecting ->
+                        forEachObserver { observer -> observer.onAudioVideoStart(false) }
+                    SessionStateControllerAction.Reconnecting ->
+                        forEachObserver { observer -> observer.onAudioVideoStart(true) }
+                    SessionStateControllerAction.FinishConnecting ->
                         when (newAudioStatus) {
-                            MeetingSessionStatusCode.OK.value -> {
-                                if (currentAudioStatus == MeetingSessionStatusCode.NetworkIsNotGoodEnoughForVoIP.value) {
+                            MeetingSessionStatusCode.OK ->
+                                if (currentAudioStatus == MeetingSessionStatusCode.NetworkBecamePoor) {
                                     forEachObserver { observer -> observer.onConnectionRecovered() }
                                 }
-                            }
-                            MeetingSessionStatusCode.NetworkIsNotGoodEnoughForVoIP.value -> {
-                                if (currentAudioStatus == MeetingSessionStatusCode.OK.value) {
+                            MeetingSessionStatusCode.NetworkBecamePoor ->
+                                if (currentAudioStatus == MeetingSessionStatusCode.OK) {
                                     forEachObserver { observer -> observer.onConnectionBecamePoor() }
                                 }
-                            }
                         }
-                    }
                 }
             }
-            SessionStateControllerAction.DisconnectedNormal.value -> {
-                when (currentAudioState) {
-                    SessionStateControllerAction.Connecting.value,
-                    SessionStateControllerAction.Connected.value
-                    -> forEachObserver { observer ->
-                        observer.onAudioVideoStop(
-                            MeetingSessionStatus(MeetingSessionStatusCode.OK)
-                        )
-                    }
-                    SessionStateControllerAction.Reconnecting.value ->
-                        forEachObserver { observer -> observer.onAudioReconnectionCancel() }
-                }
-            }
-            SessionStateControllerAction.DisconnectedAbnormal.value,
-            SessionStateControllerAction.FailedToConnect.value -> {
-                when (currentAudioState) {
-                    SessionStateControllerAction.Connecting.value,
-                    SessionStateControllerAction.Reconnecting.value,
-                    SessionStateControllerAction.Connected.value
-                    -> forEachObserver { observer ->
-                        observer.onAudioVideoStop(
-                            MeetingSessionStatus(newAudioStatus)
-                        )
-                    }
-                }
-            }
-            SessionStateControllerAction.Reconnecting.value -> {
-                if (currentAudioState == SessionStateControllerAction.Connected.value) {
+            SessionStateControllerAction.Reconnecting -> {
+                if (currentAudioState == SessionStateControllerAction.FinishConnecting) {
                     forEachObserver { observer -> observer.onAudioVideoStart(true) }
                 }
             }
-            SessionStateControllerAction.ServerHungup.value -> {
+            SessionStateControllerAction.FinishDisconnecting -> {
                 when (currentAudioState) {
-                    SessionStateControllerAction.Connecting.value,
-                    SessionStateControllerAction.Connected.value -> forEachObserver { observer ->
-                        observer.onAudioVideoStop(MeetingSessionStatus(newAudioStatus))
-                    }
-                    SessionStateControllerAction.Reconnecting.value -> {
+                    SessionStateControllerAction.Connecting,
+                    SessionStateControllerAction.FinishConnecting ->
+                        forEachObserver { observer ->
+                            observer.onAudioVideoStop(
+                                MeetingSessionStatus(MeetingSessionStatusCode.OK)
+                            )
+                        }
+                    SessionStateControllerAction.Reconnecting ->
+                        forEachObserver { observer -> observer.onAudioReconnectionCancel() }
+                }
+            }
+            SessionStateControllerAction.Fail -> {
+                when (currentAudioState) {
+                    SessionStateControllerAction.Connecting,
+                    SessionStateControllerAction.FinishConnecting ->
                         forEachObserver { observer ->
                             observer.onAudioVideoStop(MeetingSessionStatus(newAudioStatus))
-                            observer.onAudioReconnectionCancel()
                         }
-                    }
+                    SessionStateControllerAction.Reconnecting ->
+                        forEachObserver { observer ->
+                            observer.onAudioReconnectionCancel()
+                            observer.onAudioVideoStop(MeetingSessionStatus(newAudioStatus))
+                        }
                 }
             }
         }
