@@ -47,6 +47,7 @@ class MeetingHomeActivity : AppCompatActivity() {
     companion object {
         const val MEETING_RESPONSE_KEY = "MEETING_RESPONSE"
         const val MEETING_ID_KEY = "MEETING_ID"
+        const val NAME_KEY = "NAME"
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -56,7 +57,7 @@ class MeetingHomeActivity : AppCompatActivity() {
         nameEditText = findViewById(R.id.editName)
         authenticationProgressBar = findViewById(R.id.progressAuthentication)
 
-        findViewById<Button>(R.id.buttonJoin)?.setOnClickListener { joinMeeting() }
+        findViewById<Button>(R.id.buttonContinue)?.setOnClickListener { joinMeeting() }
     }
 
     private fun joinMeeting() {
@@ -125,6 +126,7 @@ class MeetingHomeActivity : AppCompatActivity() {
                 val intent = Intent(applicationContext, InMeetingActivity::class.java)
                 intent.putExtra(MEETING_RESPONSE_KEY, meetingResponseJson)
                 intent.putExtra(MEETING_ID_KEY, meetingId)
+                intent.putExtra(NAME_KEY, attendeeName)
                 startActivity(intent)
             }
         }

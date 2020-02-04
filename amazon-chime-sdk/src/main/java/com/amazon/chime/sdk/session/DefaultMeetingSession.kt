@@ -5,6 +5,7 @@ import com.amazon.chime.sdk.media.AudioVideoFacade
 import com.amazon.chime.sdk.media.DefaultAudioVideoFacade
 import com.amazon.chime.sdk.media.clientcontroller.AudioClientController
 import com.amazon.chime.sdk.media.clientcontroller.AudioClientControllerParams
+import com.amazon.chime.sdk.media.devicecontroller.DefaultDeviceController
 import com.amazon.chime.sdk.media.mediacontroller.DefaultAudioVideoController
 import com.amazon.chime.sdk.media.mediacontroller.DefaultRealtimeController
 import com.amazon.chime.sdk.utils.logger.Logger
@@ -23,6 +24,7 @@ class DefaultMeetingSession(
 
         val audioVideoController = DefaultAudioVideoController(audioClientController, configuration)
         val realtimeController = DefaultRealtimeController(audioClientController)
-        audioVideo = DefaultAudioVideoFacade(context, audioVideoController, realtimeController)
+        val deviceController = DefaultDeviceController(context, audioClientController)
+        audioVideo = DefaultAudioVideoFacade(context, audioVideoController, realtimeController, deviceController)
     }
 }
