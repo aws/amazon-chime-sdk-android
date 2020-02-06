@@ -20,19 +20,19 @@ class ConsoleLoggerTest {
     }
 
     @Test
-    fun `can be constructed`() {
+    fun `constructor should use default log level when no parameters`() {
         val logger = ConsoleLogger()
         assertEquals(LogLevel.WARN, logger.getLogLevel())
     }
 
     @Test
-    fun `can be constructed with different level`() {
+    fun `constructor should use the log level when given parameter`() {
         val logger = ConsoleLogger(LogLevel.VERBOSE)
         assertEquals(LogLevel.VERBOSE, logger.getLogLevel())
     }
 
     @Test
-    fun `should log nothing with LogLevel OFF`() {
+    fun `logger should log nothing when log level is OFF`() {
         val logger = ConsoleLogger(LogLevel.OFF)
         logger.info("tag", "info")
         logger.error("tag", "error")
@@ -41,7 +41,7 @@ class ConsoleLoggerTest {
     }
 
     @Test
-    fun `should skip info debug and verbose logs by default`() {
+    fun `logger should skip info debug and verbose logs by default`() {
         val logger = ConsoleLogger()
         logger.verbose("tag", "verbose")
         logger.debug("tag", "debug")
@@ -56,7 +56,7 @@ class ConsoleLoggerTest {
     }
 
     @Test
-    fun `should have debug and info logs after setting DEBUG log level`() {
+    fun `logger should have debug and info logs when setting DEBUG log level`() {
         val logger = ConsoleLogger()
         logger.debug("tag", "debug")
         verify(exactly = 0) { Log.d(any(), any()) }

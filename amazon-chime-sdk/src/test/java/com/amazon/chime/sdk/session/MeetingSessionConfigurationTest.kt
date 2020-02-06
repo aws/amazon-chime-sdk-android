@@ -5,7 +5,7 @@ import org.junit.Test
 
 class MeetingSessionConfigurationTest {
     @Test
-    fun `can take a CreateMeeting and CreateAttendee response object`() {
+    fun `constructor should return object with data from parameters`() {
         val meetingSessionConfiguration = MeetingSessionConfiguration(
             CreateMeetingResponse(Meeting("meetingId", MediaPlacement("audioHostUrl"))),
             CreateAttendeeResponse(Attendee("attendeeId", "joinToken"))
