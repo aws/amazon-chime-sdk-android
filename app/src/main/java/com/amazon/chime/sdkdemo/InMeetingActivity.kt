@@ -89,7 +89,11 @@ class InMeetingActivity : AppCompatActivity(),
         val attendee = meetingResponse.joinInfo.attendee
 
         val credentials = MeetingSessionCredentials(attendee.attendeeId, attendee.joinToken)
-        val urls = MeetingSessionURLs(meeting.mediaPlacement.audioHostUrl)
+        val urls = MeetingSessionURLs(
+            meeting.mediaPlacement.audioHostUrl,
+            meeting.mediaPlacement.turnControlURL,
+            meeting.mediaPlacement.signalingURL
+        )
         return MeetingSessionConfiguration(meeting.meetingId, credentials, urls)
     }
 }

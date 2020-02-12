@@ -23,5 +23,7 @@ data class Meeting(
 )
 
 data class MediaPlacement(
-    @SerializedName("AudioHostUrl") val audioHostUrl: String
+    @SerializedName("AudioHostUrl") val audioHostUrl: String,
+    @SerializedName("TurnControlUrl") val turnControlURL: String,
+    @SerializedName("SignalingUrl") val signalingURL: String
 )

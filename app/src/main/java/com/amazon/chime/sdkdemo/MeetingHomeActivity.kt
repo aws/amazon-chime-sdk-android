@@ -35,7 +35,8 @@ class MeetingHomeActivity : AppCompatActivity() {
 
     private val WEBRTC_PERM = arrayOf(
         Manifest.permission.MODIFY_AUDIO_SETTINGS,
-        Manifest.permission.RECORD_AUDIO
+        Manifest.permission.RECORD_AUDIO,
+        Manifest.permission.CAMERA
     )
 
     private var meetingEditText: EditText? = null

@@ -7,7 +7,7 @@ class MeetingSessionConfigurationTest {
     @Test
     fun `constructor should return object with data from parameters`() {
         val meetingSessionConfiguration = MeetingSessionConfiguration(
-            CreateMeetingResponse(Meeting("meetingId", MediaPlacement("audioHostUrl"))),
+            CreateMeetingResponse(Meeting("meetingId", MediaPlacement("audioHostUrl", "turnControlURL", "signalingURL"))),
             CreateAttendeeResponse(Attendee("attendeeId", "joinToken"))
         )
         assertEquals("meetingId", meetingSessionConfiguration.meetingId)
