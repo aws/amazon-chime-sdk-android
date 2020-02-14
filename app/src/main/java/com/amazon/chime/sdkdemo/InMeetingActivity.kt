@@ -4,10 +4,10 @@ import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.amazon.chime.sdk.media.AudioVideoFacade
+import com.amazon.chime.sdk.session.CreateAttendeeResponse
+import com.amazon.chime.sdk.session.CreateMeetingResponse
 import com.amazon.chime.sdk.session.DefaultMeetingSession
 import com.amazon.chime.sdk.session.MeetingSessionConfiguration
-import com.amazon.chime.sdk.session.MeetingSessionCredentials
-import com.amazon.chime.sdk.session.MeetingSessionURLs
 import com.amazon.chime.sdk.utils.logger.ConsoleLogger
 import com.amazon.chime.sdk.utils.logger.LogLevel
 import com.amazon.chime.sdkdemo.data.MeetingResponse
@@ -47,7 +47,7 @@ class InMeetingActivity : AppCompatActivity(),
         if (meetingSession == null) {
             Toast.makeText(
                 applicationContext,
-                "There was an error starting the meeting. Please try again.",
+                getString(R.string.user_notification_meeting_start_error),
                 Toast.LENGTH_LONG
             ).show()
             onBackPressed()
@@ -72,24 +72,28 @@ class InMeetingActivity : AppCompatActivity(),
             .commit()
     }
 
-    override fun onLeaveMeetingClicked() {
+    override fun onLeaveMeeting() {
         audioVideo.stop()
         onBackPressed()
     }
 
-    fun getAudioVideo(): AudioVideoFacade {
-        return audioVideo
-    }
+    fun getAudioVideo(): AudioVideoFacade = audioVideo
 
     private fun createSessionConfiguration(response: String?): MeetingSessionConfiguration? {
         if (response.isNullOrBlank()) return null
 
-        val meetingResponse = gson.fromJson(response, MeetingResponse::class.java)
-        val meeting = meetingResponse.joinInfo.meeting
-        val attendee = meetingResponse.joinInfo.attendee
-
-        val credentials = MeetingSessionCredentials(attendee.attendeeId, attendee.joinToken)
-        val urls = MeetingSessionURLs(meeting.mediaPlacement.audioHostUrl)
-        return MeetingSessionConfiguration(meeting.meetingId, credentials, urls)
+        return try {
+            val meetingResponse = gson.fromJson(response, MeetingResponse::class.java)
+            MeetingSessionConfiguration(
+                CreateMeetingResponse(meetingResponse.joinInfo.meeting),
+                CreateAttendeeResponse(meetingResponse.joinInfo.attendee)
+            )
+        } catch (exception: Exception) {
+            logger.error(
+                TAG,
+                "Error creating session configuration: ${exception.localizedMessage}"
+            )
+            null
+        }
     }
 }

@@ -6,11 +6,14 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.amazon.chime.sdk.media.AudioVideoFacade
+import com.amazon.chime.sdk.media.mediacontroller.AudioVideoObserver
 import com.amazon.chime.sdk.media.mediacontroller.RealtimeObserver
+import com.amazon.chime.sdk.session.MeetingSessionStatus
 import com.amazon.chime.sdk.utils.logger.ConsoleLogger
 import com.amazon.chime.sdk.utils.logger.LogLevel
 import com.amazon.chime.sdkdemo.data.AttendeeInfoResponse
@@ -26,7 +29,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
-class RosterViewFragment : Fragment(), RealtimeObserver {
+class RosterViewFragment : Fragment(), RealtimeObserver, AudioVideoObserver {
     private val logger = ConsoleLogger(LogLevel.INFO)
     private val gson = Gson()
     private val uiScope = CoroutineScope(Dispatchers.Main)
@@ -41,7 +44,6 @@ class RosterViewFragment : Fragment(), RealtimeObserver {
     private lateinit var adapter: RosterAdapter
 
     companion object {
-
         fun newInstance(meetingId: String): RosterViewFragment {
             val fragment = RosterViewFragment()
 
@@ -52,7 +54,7 @@ class RosterViewFragment : Fragment(), RealtimeObserver {
     }
 
     interface RosterViewEventListener {
-        fun onLeaveMeetingClicked()
+        fun onLeaveMeeting()
     }
 
     override fun onAttach(context: Context) {
@@ -80,19 +82,18 @@ class RosterViewFragment : Fragment(), RealtimeObserver {
         view.findViewById<Button>(R.id.buttonMute)?.setOnClickListener { muteMeeting() }
         view.findViewById<Button>(R.id.buttonUnmute)?.setOnClickListener { unmuteMeeting() }
         view.findViewById<Button>(R.id.buttonLeave)
-            ?.setOnClickListener { listener.onLeaveMeetingClicked() }
+            ?.setOnClickListener { listener.onLeaveMeeting() }
 
         val recyclerViewRoster = view.findViewById<RecyclerView>(R.id.recyclerViewRoster)
         recyclerViewRoster.layoutManager = LinearLayoutManager(activity)
-        adapter = RosterAdapter(currentRoster.values)
+        adapter = RosterAdapter(currentRoster.values, activity)
         recyclerViewRoster.adapter = adapter
 
-        setupSubscriptionToAttendeeChangeHandler()
+        audioVideo.addObserver(this)
+        audioVideo.realtimeAddObserver(this)
         audioVideo.start()
         return view
     }
-
-    private fun setupSubscriptionToAttendeeChangeHandler() = audioVideo.realtimeAddObserver(this)
 
     override fun onVolumeChange(attendeeVolumes: Map<String, Int>) {
         uiScope.launch {
@@ -155,5 +156,22 @@ class RosterViewFragment : Fragment(), RealtimeObserver {
 
     private fun unmuteMeeting() {
         audioVideo.realtimeLocalUnmute()
+    }
+
+    override fun onAudioVideoStartConnecting(reconnecting: Boolean) = notify("Audio started connecting. reconnecting: $reconnecting")
+    override fun onAudioVideoStart(reconnecting: Boolean) = notify("Audio successfully started. reconnecting: $reconnecting")
+
+    override fun onAudioVideoStop(sessionStatus: MeetingSessionStatus) {
+        notify("Audio stopped for reason: ${sessionStatus.statusCode}")
+        listener.onLeaveMeeting()
+    }
+
+    override fun onAudioReconnectionCancel() = notify("Audio cancelled reconnecting")
+    override fun onConnectionRecovered() = notify("Connection quality has recovered")
+    override fun onConnectionBecamePoor() = notify("Connection quality has become poor")
+
+    private fun notify(message: String) {
+        Toast.makeText(activity, message, Toast.LENGTH_LONG).show()
+        logger.info(TAG, message)
     }
 }
