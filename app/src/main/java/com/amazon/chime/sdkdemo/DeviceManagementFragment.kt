@@ -12,6 +12,7 @@ import android.widget.Spinner
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import com.amazon.chime.sdk.media.AudioVideoFacade
+import com.amazon.chime.sdk.media.devicecontroller.DeviceChangeObserver
 import com.amazon.chime.sdk.media.devicecontroller.MediaDevice
 import com.amazon.chime.sdk.utils.logger.ConsoleLogger
 import com.amazon.chime.sdk.utils.logger.LogLevel
@@ -21,13 +22,18 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
-class DeviceManagementFragment : Fragment() {
+class DeviceManagementFragment : Fragment(), DeviceChangeObserver {
     private val logger = ConsoleLogger(LogLevel.INFO)
     private val uiScope = CoroutineScope(Dispatchers.Main)
+    // Maps to AudioDeviceInfo (API 23): https://developer.android.com/reference/android/media/AudioDeviceInfo
+    private val supportedAudioDeviceTypes = setOf(2, 3, 4, 7, 18)
+    private val audioDevices = mutableListOf<MediaDevice>()
     private lateinit var listener: DeviceManagementEventListener
     private lateinit var audioVideo: AudioVideoFacade
 
     private val TAG = "DeviceManagementFragment"
+
+    private lateinit var adapter: ArrayAdapter<MediaDevice>
 
     companion object {
 
@@ -63,8 +69,8 @@ class DeviceManagementFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val view: View = inflater.inflate(R.layout.fragment_device_management, container, false)
-        val activity = activity as Context
+        val view = inflater.inflate(R.layout.fragment_device_management, container, false)
+        val context = activity as Context
 
         val meetingId = arguments?.getString(MeetingHomeActivity.MEETING_ID_KEY)
         val name = arguments?.getString(MeetingHomeActivity.NAME_KEY)
@@ -77,58 +83,55 @@ class DeviceManagementFragment : Fragment() {
             listener.onJoinMeetingClicked()
         }
 
-        populateAllDeviceLists(view, activity)
+        val spinnerAudioDevice = view.findViewById<Spinner>(R.id.spinnerAudioDevice)
+        adapter = createSpinnerAdapter(context, audioDevices)
+        spinnerAudioDevice.adapter = adapter
+        spinnerAudioDevice.onItemSelectedListener = onAudioDeviceSelected
+
+        audioVideo.addDeviceChangeObserver(this)
+
+        uiScope.launch {
+            populateDeviceList(listAudioDevices())
+        }
         return view
     }
 
-    private val onMicrophoneSelected = object : AdapterView.OnItemSelectedListener {
+    private val onAudioDeviceSelected = object : AdapterView.OnItemSelectedListener {
         override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-            audioVideo.chooseAudioInputDevice(parent?.getItemAtPosition(position) as MediaDevice)
+            audioVideo.chooseAudioDevice(parent?.getItemAtPosition(position) as MediaDevice)
         }
 
         override fun onNothingSelected(parent: AdapterView<*>?) {
         }
     }
 
-    private val onSpeakerSelected = object :
-        AdapterView.OnItemSelectedListener {
-        override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-            audioVideo.chooseAudioOutputDevice(parent?.getItemAtPosition(position) as MediaDevice)
-        }
-
-        override fun onNothingSelected(parent: AdapterView<*>?) {
-        }
-    }
-
-    // TODO: implement device change observer
-    private fun populateAllDeviceLists(view: View, context: Context) {
-        uiScope.launch {
-            val microphoneDevices = listMicrophoneDevices()
-
-            val spinnerMicrophone = view.findViewById<Spinner>(R.id.spinnerMicrophone)
-            spinnerMicrophone?.adapter = createSpinnerAdapter(context, microphoneDevices)
-            spinnerMicrophone?.onItemSelectedListener = onMicrophoneSelected
-
-            val speakerDevices = listSpeakerDevices()
-            val spinnerSpeaker = view.findViewById<Spinner>(R.id.spinnerSpeaker)
-            spinnerSpeaker?.adapter = createSpinnerAdapter(context, speakerDevices)
-            spinnerSpeaker?.onItemSelectedListener = onSpeakerSelected
+    private fun populateDeviceList(freshAudioDeviceList: List<MediaDevice>) {
+        audioDevices.clear()
+        audioDevices.addAll(
+            freshAudioDeviceList.filter {
+                supportedAudioDeviceTypes.contains(it.type)
+            }.sortedBy { it.order }
+        )
+        adapter.notifyDataSetChanged()
+        if (audioDevices.isNotEmpty()) {
+            audioVideo.chooseAudioDevice(audioDevices[0])
         }
     }
 
-    private suspend fun listMicrophoneDevices(): List<MediaDevice> {
+    private suspend fun listAudioDevices(): List<MediaDevice> {
         return withContext(Dispatchers.Default) {
-            audioVideo.listAudioInputDevices()
+            audioVideo.listAudioDevices()
         }
     }
 
-    private suspend fun listSpeakerDevices(): List<MediaDevice> {
-        return withContext(Dispatchers.Default) {
-            audioVideo.listAudioOutputDevices()
-        }
-    }
-
-    private fun createSpinnerAdapter(context: Context, list: List<MediaDevice>): ArrayAdapter<MediaDevice> {
+    private fun createSpinnerAdapter(
+        context: Context,
+        list: List<MediaDevice>
+    ): ArrayAdapter<MediaDevice> {
         return ArrayAdapter(context, android.R.layout.simple_spinner_item, list)
+    }
+
+    override fun onAudioDeviceChange(freshAudioDeviceList: List<MediaDevice>) {
+        populateDeviceList(freshAudioDeviceList)
     }
 }

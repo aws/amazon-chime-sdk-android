@@ -4,6 +4,7 @@ import android.Manifest
 import android.content.Context
 import android.content.pm.PackageManager
 import androidx.core.content.ContextCompat
+import com.amazon.chime.sdk.media.devicecontroller.DeviceChangeObserver
 import com.amazon.chime.sdk.media.devicecontroller.DeviceController
 import com.amazon.chime.sdk.media.devicecontroller.MediaDevice
 import com.amazon.chime.sdk.media.mediacontroller.AudioVideoControllerFacade
@@ -69,19 +70,19 @@ class DefaultAudioVideoFacade(
         realtimeController.realtimeRemoveObserver(observer)
     }
 
-    override fun listAudioInputDevices(): List<MediaDevice> {
-        return deviceController.listAudioInputDevices()
+    override fun listAudioDevices(): List<MediaDevice> {
+        return deviceController.listAudioDevices()
     }
 
-    override fun listAudioOutputDevices(): List<MediaDevice> {
-        return deviceController.listAudioOutputDevices()
+    override fun chooseAudioDevice(mediaDevice: MediaDevice) {
+        deviceController.chooseAudioDevice(mediaDevice)
     }
 
-    override fun chooseAudioInputDevice(mediaDevice: MediaDevice) {
-        deviceController.chooseAudioInputDevice(mediaDevice)
+    override fun addDeviceChangeObserver(observer: DeviceChangeObserver) {
+        deviceController.addDeviceChangeObserver(observer)
     }
 
-    override fun chooseAudioOutputDevice(mediaDevice: MediaDevice) {
-        deviceController.chooseAudioOutputDevice(mediaDevice)
+    override fun removeDeviceChangeObserver(observer: DeviceChangeObserver) {
+        deviceController.removeDeviceChangeObserver(observer)
     }
 }

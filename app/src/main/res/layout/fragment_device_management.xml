@@ -15,36 +15,19 @@
         android:textAppearance="@style/TextAppearance.AppCompat.Display1" />
 
     <TextView
-        android:id="@+id/textViewMicrophone"
+        android:id="@+id/textViewAudioDevice"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
         android:paddingLeft="32dp"
         android:paddingRight="32dp"
-        android:text="@string/microphone_title" />
+        android:text="@string/audio_device_title" />
 
     <Spinner
-        android:id="@+id/spinnerMicrophone"
+        android:id="@+id/spinnerAudioDevice"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="16dp"
-        android:paddingLeft="32dp"
-        android:paddingRight="32dp" />
-
-    <TextView
-        android:id="@+id/textViewSpeaker"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
-        android:paddingLeft="32dp"
-        android:paddingRight="32dp"
-        android:text="@string/speaker_title" />
-
-    <Spinner
-        android:id="@+id/spinnerSpeaker"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="64dp"
         android:paddingLeft="32dp"
         android:paddingRight="32dp" />
 

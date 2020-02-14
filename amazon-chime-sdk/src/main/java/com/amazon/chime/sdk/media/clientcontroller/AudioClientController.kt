@@ -1,7 +1,6 @@
 package com.amazon.chime.sdk.media.clientcontroller
 
 import android.content.Context
-import android.media.AudioDeviceInfo
 import android.media.AudioFormat
 import android.media.AudioManager
 import android.media.AudioRecord
@@ -37,12 +36,12 @@ data class AudioClientControllerParams(val context: Context, val logger: Logger)
 class AudioClientController private constructor(params: AudioClientControllerParams) {
     private val context: Context = params.context
     private val logger: Logger = params.logger
-    private val audioManager = context.getSystemService(Context.AUDIO_SERVICE) as AudioManager
 
     private val TAG = "AudioClientController"
     private val AUDIO_PORT_OFFSET = 200 // Offset by 200 so that subtraction results in 0
     private val DEFAULT_MIC_AND_SPEAKER = false
     private val DEFAULT_PRESENTER = true
+    private val AUDIO_CLIENT_RESULT_SUCCESS = 0
 
     /**
      * These are not present in [AudioClient], so defining it here
@@ -259,31 +258,7 @@ class AudioClientController private constructor(params: AudioClientControllerPar
         if (getRoute() == route) return true
         logger.info(TAG, "Setting route to $route")
 
-        val tincanRoute = when (route) {
-            AudioDeviceInfo.TYPE_BUILTIN_SPEAKER -> AudioClient.SPK_STREAM_ROUTE_SPEAKER
-            AudioDeviceInfo.TYPE_BLUETOOTH_SCO,
-            AudioDeviceInfo.TYPE_BLUETOOTH_A2DP -> AudioClient.SPK_STREAM_ROUTE_BT_AUDIO
-            AudioDeviceInfo.TYPE_WIRED_HEADSET,
-            AudioDeviceInfo.TYPE_WIRED_HEADPHONES -> AudioClient.SPK_STREAM_ROUTE_HEADSET
-            else -> AudioClient.SPK_STREAM_ROUTE_RECEIVER
-        }
-
-        setupAudioDevice(tincanRoute)
-        return audioClient.setRoute(tincanRoute) == 0
-    }
-
-    private fun setupAudioDevice(tincanRoute: Int) {
-        if (tincanRoute == AudioClient.SPK_STREAM_ROUTE_SPEAKER) {
-            audioManager.apply {
-                mode = AudioManager.MODE_IN_COMMUNICATION
-                isSpeakerphoneOn = true
-            }
-        } else {
-            audioManager.apply {
-                mode = AudioManager.MODE_IN_COMMUNICATION
-                isSpeakerphoneOn = false
-            }
-        }
+        return audioClient.setRoute(route) == AUDIO_CLIENT_RESULT_SUCCESS
     }
 
     fun start(audioHostUrl: String, meetingId: String, attendeeId: String, joinToken: String) {
@@ -330,7 +305,11 @@ class AudioClientController private constructor(params: AudioClientControllerPar
                 null
             )
 
-            logger.info(TAG, "Started audio session. Result code: $res")
+            if (res != AUDIO_CLIENT_RESULT_SUCCESS) {
+                logger.error(TAG, "Failed to start audio session. Response code: $res")
+            } else {
+                logger.info(TAG, "Started audio session.")
+            }
             forEachObserver { observer -> observer.onAudioVideoStart(false) }
         }
     }

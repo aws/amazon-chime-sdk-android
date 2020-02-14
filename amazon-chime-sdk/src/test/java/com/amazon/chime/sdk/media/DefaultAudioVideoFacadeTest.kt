@@ -2,6 +2,7 @@ package com.amazon.chime.sdk.media
 
 import android.content.Context
 import androidx.core.content.ContextCompat
+import com.amazon.chime.sdk.media.devicecontroller.DeviceChangeObserver
 import com.amazon.chime.sdk.media.devicecontroller.DeviceController
 import com.amazon.chime.sdk.media.devicecontroller.MediaDevice
 import com.amazon.chime.sdk.media.mediacontroller.AudioVideoControllerFacade
@@ -21,7 +22,7 @@ import org.junit.Before
 import org.junit.Test
 
 class DefaultAudioVideoFacadeTest {
-    private val observer = object : AudioVideoObserver, RealtimeObserver {
+    private val observer = object : AudioVideoObserver, RealtimeObserver, DeviceChangeObserver {
         override fun onAudioVideoStartConnecting(reconnecting: Boolean) {
         }
 
@@ -44,6 +45,9 @@ class DefaultAudioVideoFacadeTest {
         }
 
         override fun onSignalStrengthChange(attendeeSignalStrength: Map<String, Int>) {
+        }
+
+        override fun onAudioDeviceChange(freshAudioDeviceList: List<MediaDevice>) {
         }
     }
 
@@ -127,26 +131,26 @@ class DefaultAudioVideoFacadeTest {
     }
 
     @Test
-    fun `listAudioInputDevices should call devices deviceController listAudioInputDevices and return the list of devices`() {
-        every { deviceController.listAudioInputDevices() } returns devices
-        assertEquals(devices, audioVideoFacade.listAudioInputDevices())
+    fun `listAudioDevices should call devices deviceController listAudioDevices and return the list of devices`() {
+        every { deviceController.listAudioDevices() } returns devices
+        assertEquals(devices, audioVideoFacade.listAudioDevices())
     }
 
     @Test
-    fun `listAudioOutputDevices should call devices deviceController listAudioOutputDevices and return the list of devices`() {
-        every { deviceController.listAudioOutputDevices() } returns devices
-        assertEquals(devices, audioVideoFacade.listAudioOutputDevices())
+    fun `chooseAudioDevice should call deviceController chooseAudioDevice`() {
+        audioVideoFacade.chooseAudioDevice(mediaDevice)
+        verify { deviceController.chooseAudioDevice(mediaDevice) }
     }
 
     @Test
-    fun `chooseAudioInputDevice should call deviceController chooseAudioInputDevice`() {
-        audioVideoFacade.chooseAudioInputDevice(mediaDevice)
-        verify { deviceController.chooseAudioInputDevice(mediaDevice) }
+    fun `addDeviceChangeObserver should call deviceController addDeviceChangeObserver with given observer`() {
+        audioVideoFacade.addDeviceChangeObserver(observer)
+        verify { deviceController.addDeviceChangeObserver(observer) }
     }
 
     @Test
-    fun `chooseAudioOutputDevice should call deviceController chooseAudioOutputDevice`() {
-        audioVideoFacade.chooseAudioOutputDevice(mediaDevice)
-        verify { deviceController.chooseAudioOutputDevice(mediaDevice) }
+    fun `removeDeviceChangeObserver should call deviceController removeDeviceChangeObserver with given observer`() {
+        audioVideoFacade.removeDeviceChangeObserver(observer)
+        verify { deviceController.removeDeviceChangeObserver(observer) }
     }
 }

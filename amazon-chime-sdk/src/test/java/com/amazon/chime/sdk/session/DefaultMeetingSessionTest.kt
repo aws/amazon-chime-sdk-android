@@ -1,6 +1,7 @@
 package com.amazon.chime.sdk.session
 
 import android.content.Context
+import android.content.Intent
 import android.media.AudioManager
 import com.amazon.chime.sdk.media.clientcontroller.AudioClientController
 import com.amazon.chime.sdk.utils.logger.Logger
@@ -31,6 +32,7 @@ class DefaultMeetingSessionTest {
     @Before
     fun setup() {
         MockKAnnotations.init(this)
+        every { context.registerReceiver(any(), any()) } returns mockkClass(Intent::class)
         every { context.getSystemService(any()) } returns mockkClass(AudioManager::class)
         mockkObject(AudioClientController.Companion)
         every { AudioClientController.getInstance(any()) } returns audioClientController
