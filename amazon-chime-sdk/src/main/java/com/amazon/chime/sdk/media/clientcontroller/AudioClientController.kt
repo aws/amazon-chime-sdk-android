@@ -14,6 +14,7 @@ import com.amazon.chime.sdk.session.SessionStateControllerAction
 import com.amazon.chime.sdk.utils.logger.Logger
 import com.amazon.chime.sdk.utils.singleton.SingletonWithParams
 import com.xodee.client.audio.audioclient.AudioClient
+import com.xodee.client.audio.audioclient.AudioClientLogListener
 import com.xodee.client.audio.audioclient.AudioClientSignalStrengthChangeListener
 import com.xodee.client.audio.audioclient.AudioClientStateChangeListener
 import com.xodee.client.audio.audioclient.AudioClientVolumeStateChangeListener
@@ -92,16 +93,28 @@ class AudioClientController private constructor(params: AudioClientControllerPar
         }
     }
 
+    private var logListener = object : AudioClientLogListener {
+        override fun onLogMessage(logLevel: Int, message: String?) {
+            if (message == null) return
+
+            // Only print error and fatal as the median team's request to avoid noise
+            // Will be changed back to respect logger settings once sanitize the logs
+            if (logLevel == AudioClient.L_ERROR || logLevel == AudioClient.L_FATAL) {
+                logger.error(TAG, message)
+            }
+        }
+    }
+
     init {
         System.loadLibrary("c++_shared")
         System.loadLibrary("biba_media_client")
 
         audioClient = AudioClient(
-            AudioClient.L_VERBOSE,
             context.assets,
             audioClientStateChangeListener,
             volumeStateChangeListener,
             signalStrengthChangeListener,
+            logListener,
             0
         )
     }
@@ -289,7 +302,7 @@ class AudioClientController private constructor(params: AudioClientControllerPar
         forEachObserver { observer -> observer.onAudioVideoStartConnecting(false) }
 
         uiScope.launch {
-            val res = audioClient.doStartSession(
+            val res = audioClient.startSession(
                 AudioClient.XTL_DEFAULT_TRANSPORT,
                 host,
                 port,
@@ -315,7 +328,7 @@ class AudioClientController private constructor(params: AudioClientControllerPar
     }
 
     fun stop() {
-        audioClient.doStopSession()
+        audioClient.stopSession()
     }
 
     fun subscribeToAudioClientStateChange(observer: AudioVideoObserver) {
