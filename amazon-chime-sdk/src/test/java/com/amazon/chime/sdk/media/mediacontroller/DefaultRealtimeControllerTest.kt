@@ -1,6 +1,7 @@
 package com.amazon.chime.sdk.media.mediacontroller
 
 import com.amazon.chime.sdk.media.clientcontroller.AudioClientController
+import com.amazon.chime.sdk.media.clientcontroller.AudioClientObserver
 import io.mockk.MockKAnnotations
 import io.mockk.every
 import io.mockk.impl.annotations.InjectMockKs
@@ -18,6 +19,9 @@ class DefaultRealtimeControllerTest {
         override fun onSignalStrengthChange(attendeeSignalStrength: Map<String, Int>) {
         }
     }
+
+    @MockK
+    private lateinit var audioClientObserver: AudioClientObserver
 
     @MockK
     private lateinit var audioClientController: AudioClientController
@@ -45,12 +49,12 @@ class DefaultRealtimeControllerTest {
     @Test
     fun `realtimeAddObserver should call audioClientController subscribeToRealTimeEvents with given observer`() {
         realtimeController.realtimeAddObserver(observer)
-        verify { audioClientController.subscribeToRealTimeEvents(observer) }
+        verify { audioClientObserver.subscribeToRealTimeEvents(observer) }
     }
 
     @Test
     fun `realtimeRemoveObserver should call audioClientController unsubscribeFromRealTimeEvents with given observer`() {
         realtimeController.realtimeRemoveObserver(observer)
-        verify { audioClientController.unsubscribeFromRealTimeEvents(observer) }
+        verify { audioClientObserver.unsubscribeFromRealTimeEvents(observer) }
     }
 }

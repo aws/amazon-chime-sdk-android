@@ -1,6 +1,7 @@
 package com.amazon.chime.sdk.media.mediacontroller
 
 import com.amazon.chime.sdk.media.clientcontroller.AudioClientController
+import com.amazon.chime.sdk.media.clientcontroller.AudioClientObserver
 import com.amazon.chime.sdk.session.MeetingSessionConfiguration
 import com.amazon.chime.sdk.session.MeetingSessionCredentials
 import com.amazon.chime.sdk.session.MeetingSessionStatus
@@ -38,6 +39,9 @@ class DefaultAudioVideoControllerTest {
     )
 
     @MockK
+    private lateinit var audioClientObserver: AudioClientObserver
+
+    @MockK
     private lateinit var audioClientController: AudioClientController
 
     private lateinit var audioVideoController: DefaultAudioVideoController
@@ -46,7 +50,7 @@ class DefaultAudioVideoControllerTest {
     fun setup() {
         MockKAnnotations.init(this, relaxUnitFun = true)
         audioVideoController =
-            DefaultAudioVideoController(audioClientController, meetingSessionConfiguration)
+            DefaultAudioVideoController(audioClientController, audioClientObserver, meetingSessionConfiguration)
     }
 
     @Test
@@ -69,14 +73,14 @@ class DefaultAudioVideoControllerTest {
     }
 
     @Test
-    fun `addObserver should call audioClientController subscribeToAudioClientStateChange with given observer`() {
+    fun `addObserver should call audioClientObserver subscribeToAudioClientStateChange with given observer`() {
         audioVideoController.addObserver(observer)
-        verify { audioClientController.subscribeToAudioClientStateChange(observer) }
+        verify { audioClientObserver.subscribeToAudioClientStateChange(observer) }
     }
 
     @Test
-    fun `removeObserver should call audioClientController unsubscribeFromAudioClientStateChange with given observer`() {
+    fun `removeObserver should call audioClientObserver unsubscribeFromAudioClientStateChange with given observer`() {
         audioVideoController.removeObserver(observer)
-        verify { audioClientController.unsubscribeFromAudioClientStateChange(observer) }
+        verify { audioClientObserver.unsubscribeFromAudioClientStateChange(observer) }
     }
 }
