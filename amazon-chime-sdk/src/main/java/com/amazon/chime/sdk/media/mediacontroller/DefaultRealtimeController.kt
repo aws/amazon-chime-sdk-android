@@ -1,8 +1,12 @@
 package com.amazon.chime.sdk.media.mediacontroller
 
 import com.amazon.chime.sdk.media.clientcontroller.AudioClientController
+import com.amazon.chime.sdk.media.clientcontroller.AudioClientObserver
 
-class DefaultRealtimeController(private val audioClientController: AudioClientController) :
+class DefaultRealtimeController(
+    private val audioClientController: AudioClientController,
+    private val audioClientObserver: AudioClientObserver
+) :
     RealtimeControllerFacade {
 
     override fun realtimeLocalMute(): Boolean {
@@ -14,10 +18,10 @@ class DefaultRealtimeController(private val audioClientController: AudioClientCo
     }
 
     override fun realtimeAddObserver(observer: RealtimeObserver) {
-        audioClientController.subscribeToRealTimeEvents(observer)
+        audioClientObserver.subscribeToRealTimeEvents(observer)
     }
 
     override fun realtimeRemoveObserver(observer: RealtimeObserver) {
-        audioClientController.unsubscribeFromRealTimeEvents(observer)
+        audioClientObserver.unsubscribeFromRealTimeEvents(observer)
     }
 }

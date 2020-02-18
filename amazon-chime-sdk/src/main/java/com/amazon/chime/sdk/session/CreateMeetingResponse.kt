@@ -1,10 +1,11 @@
 package com.amazon.chime.sdk.session
 
-data class CreateMeetingResponse(val meeting: Meeting)
+// https://docs.aws.amazon.com/chime/latest/APIReference/API_CreateMeeting.html
+data class CreateMeetingResponse(val Meeting: Meeting)
 
 data class Meeting(
-    val meetingId: String,
-    val mediaPlacement: MediaPlacement
+    val MeetingId: String,
+    val MediaPlacement: MediaPlacement
 )
 
-data class MediaPlacement(val audioHostUrl: String, val turnControlUrl: String, val signalingUrl: String)
+data class MediaPlacement(val AudioHostUrl: String, val TurnControlUrl: String, val SignalingUrl: String)

@@ -13,15 +13,13 @@ data class MeetingSessionConfiguration(
         createMeetingResponse: CreateMeetingResponse,
         createAttendeeResponse: CreateAttendeeResponse
     ) : this(
-        createMeetingResponse.meeting.meetingId,
+        createMeetingResponse.Meeting.MeetingId,
         MeetingSessionCredentials(
-            createAttendeeResponse.attendee.attendeeId,
-            createAttendeeResponse.attendee.joinToken
+            createAttendeeResponse.Attendee.AttendeeId,
+            createAttendeeResponse.Attendee.JoinToken
         ),
-        MeetingSessionURLs(
-            createMeetingResponse.meeting.mediaPlacement.audioHostUrl,
-            createMeetingResponse.meeting.mediaPlacement.turnControlUrl,
-            createMeetingResponse.meeting.mediaPlacement.signalingUrl
-        )
+        MeetingSessionURLs(createMeetingResponse.Meeting.MediaPlacement.AudioHostUrl,
+            createMeetingResponse.Meeting.MediaPlacement.TurnControlUrl,
+            createMeetingResponse.Meeting.MediaPlacement.SignalingUrl)
     )
 }

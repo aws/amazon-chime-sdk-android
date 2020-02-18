@@ -1,8 +1,9 @@
 package com.amazon.chime.sdk.session
 
-data class CreateAttendeeResponse(val attendee: Attendee)
+// https://docs.aws.amazon.com/chime/latest/APIReference/API_CreateAttendee.html
+data class CreateAttendeeResponse(val Attendee: Attendee)
 
 data class Attendee(
-    val attendeeId: String,
-    val joinToken: String
+    val AttendeeId: String,
+    val JoinToken: String
 )

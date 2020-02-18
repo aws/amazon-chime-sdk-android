@@ -2,30 +2,26 @@ package com.amazon.chime.sdk.media.devicecontroller
 
 interface DeviceController {
     /**
-     * Lists currently available audio input devices.
+     * Lists currently available audio devices.
      *
-     * @return a list of currently available audio input devices.
+     * @return a list of currently available audio devices.
      */
-    fun listAudioInputDevices(): List<MediaDevice>
+    fun listAudioDevices(): List<MediaDevice>
 
     /**
-     * Lists currently available audio output devices.
+     * Selects an audio device to use.
      *
-     * @return a list of currently available audio output devices.
+     * @param mediaDevice the audio device selected to use.
      */
-    fun listAudioOutputDevices(): List<MediaDevice>
+    fun chooseAudioDevice(mediaDevice: MediaDevice)
 
     /**
-     * Selects an audio input device to use.
-     *
-     * @param mediaDevice the audio input device selected to use.
+     * Adds an observer to receive callbacks about device changes.
      */
-    fun chooseAudioInputDevice(mediaDevice: MediaDevice)
+    fun addDeviceChangeObserver(observer: DeviceChangeObserver)
 
     /**
-     * Selects an video input device to use.
-     *
-     * @param mediaDevice the audio output device selected to use.
+     * Removes an observer to stop receiving callbacks about device changes.
      */
-    fun chooseAudioOutputDevice(mediaDevice: MediaDevice)
+    fun removeDeviceChangeObserver(observer: DeviceChangeObserver)
 }

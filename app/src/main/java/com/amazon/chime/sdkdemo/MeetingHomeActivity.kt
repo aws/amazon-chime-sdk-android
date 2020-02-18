@@ -66,9 +66,9 @@ class MeetingHomeActivity : AppCompatActivity() {
         yourName = nameEditText?.text.toString().trim().replace("\\s+".toRegex(), "+")
 
         if (meetingID.isNullOrBlank()) {
-            Toast.makeText(this, getString(R.string.meeting_id_invalid), Toast.LENGTH_LONG).show()
+            Toast.makeText(this, getString(R.string.user_notification_meeting_id_invalid), Toast.LENGTH_LONG).show()
         } else if (yourName.isNullOrBlank()) {
-            Toast.makeText(this, getString(R.string.name_invalid), Toast.LENGTH_LONG).show()
+            Toast.makeText(this, getString(R.string.user_notification_attendee_name_invalid), Toast.LENGTH_LONG).show()
         } else {
             if (hasPermissionsAlready()) {
                 authenticate(getString(R.string.test_url), meetingID, yourName)
@@ -95,7 +95,7 @@ class MeetingHomeActivity : AppCompatActivity() {
                     grantResults.isEmpty() || grantResults.any { PackageManager.PERMISSION_GRANTED != it }
 
                 if (isMissingPermission) {
-                    Toast.makeText(this, getString(R.string.permission_error), Toast.LENGTH_LONG)
+                    Toast.makeText(this, getString(R.string.user_notification_permission_error), Toast.LENGTH_LONG)
                         .show()
                     return
                 }
@@ -120,7 +120,7 @@ class MeetingHomeActivity : AppCompatActivity() {
             if (meetingResponseJson == null) {
                 Toast.makeText(
                     applicationContext,
-                    "There was an error joining the meeting. Please try again or use a different meeting ID",
+                    getString(R.string.user_notification_meeting_start_error),
                     Toast.LENGTH_LONG
                 ).show()
             } else {
