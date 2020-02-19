@@ -35,7 +35,7 @@ class DefaultMeetingSession(
             DefaultAudioVideoController(audioClientController, audioClientObserver, videoClientController, configuration)
         val realtimeController =
             DefaultRealtimeController(audioClientController, audioClientObserver)
-        val deviceController = DefaultDeviceController(context, audioClientController)
+        val deviceController = DefaultDeviceController(context, audioClientController, videoClientController)
         audioVideo = DefaultAudioVideoFacade(
             context,
             audioVideoController,

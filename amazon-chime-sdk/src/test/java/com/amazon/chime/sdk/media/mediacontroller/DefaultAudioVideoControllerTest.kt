@@ -82,6 +82,20 @@ class DefaultAudioVideoControllerTest {
     }
 
     @Test
+    fun `startLocalVideo should call videoClientController enableSelfVideo`() {
+        audioVideoController.startLocalVideo()
+
+        verify { videoClientController.enableSelfVideo(true) }
+    }
+
+    @Test
+    fun `stopLocalVideo should call videoClientController enableSelfVideo`() {
+        audioVideoController.stopLocalVideo()
+
+        verify { videoClientController.enableSelfVideo(false) }
+    }
+
+    @Test
     fun `addObserver should call audioClientObserver subscribeToAudioClientStateChange with given observer`() {
         audioVideoController.addObserver(observer)
         verify { audioClientObserver.subscribeToAudioClientStateChange(observer) }

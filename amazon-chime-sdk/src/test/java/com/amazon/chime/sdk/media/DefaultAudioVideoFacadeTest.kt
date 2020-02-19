@@ -5,6 +5,7 @@ import androidx.core.content.ContextCompat
 import com.amazon.chime.sdk.media.devicecontroller.DeviceChangeObserver
 import com.amazon.chime.sdk.media.devicecontroller.DeviceController
 import com.amazon.chime.sdk.media.devicecontroller.MediaDevice
+import com.amazon.chime.sdk.media.devicecontroller.MediaDeviceType
 import com.amazon.chime.sdk.media.mediacontroller.AudioVideoControllerFacade
 import com.amazon.chime.sdk.media.mediacontroller.AudioVideoObserver
 import com.amazon.chime.sdk.media.mediacontroller.RealtimeControllerFacade
@@ -53,7 +54,7 @@ class DefaultAudioVideoFacadeTest {
 
     private val devices = emptyList<MediaDevice>()
 
-    private val mediaDevice = MediaDevice("label", 0)
+    private val mediaDevice = MediaDevice("label", MediaDeviceType.OTHER)
 
     @MockK
     private lateinit var context: Context
@@ -107,6 +108,18 @@ class DefaultAudioVideoFacadeTest {
     }
 
     @Test
+    fun `startLocalVideo should call audioVideoController startLocalVideo`() {
+        audioVideoFacade.startLocalVideo()
+        verify { audioVideoController.startLocalVideo() }
+    }
+
+    @Test
+    fun `stopLocalVideo should call audioVideoController stopLocalVideo`() {
+        audioVideoFacade.stopLocalVideo()
+        verify { audioVideoController.stopLocalVideo() }
+    }
+
+    @Test
     fun `realtimeLocalMute should call realtimeController realtimeLocalMute and return the status`() {
         every { realtimeController.realtimeLocalMute() } returns true
         assertTrue(audioVideoFacade.realtimeLocalMute())
@@ -140,6 +153,21 @@ class DefaultAudioVideoFacadeTest {
     fun `chooseAudioDevice should call deviceController chooseAudioDevice`() {
         audioVideoFacade.chooseAudioDevice(mediaDevice)
         verify { deviceController.chooseAudioDevice(mediaDevice) }
+    }
+
+    @Test
+    fun `getActiveCamera should call deviceController getActiveCamera`() {
+        every { deviceController.getActiveCamera() } returns mediaDevice
+
+        assertEquals(mediaDevice, audioVideoFacade.getActiveCamera())
+        verify { deviceController.getActiveCamera() }
+    }
+
+    @Test
+    fun `switchCamera should call deviceController switchCamera`() {
+        audioVideoFacade.switchCamera()
+
+        verify { deviceController.switchCamera() }
     }
 
     @Test

@@ -10,6 +10,7 @@ import com.amazon.chime.sdk.utils.singleton.SingletonWithParams
 import com.xodee.client.video.VideoClient
 import com.xodee.client.video.VideoClientCapturer
 import com.xodee.client.video.VideoClientDelegate
+import com.xodee.client.video.VideoDevice
 import java.io.BufferedReader
 import java.io.BufferedWriter
 import java.io.InputStreamReader
@@ -152,7 +153,7 @@ class VideoClientController private constructor(params: VideoClientControllerPar
         videoClientState = VideoClientState.UNINITIALIZED
     }
 
-    private fun enableSelfVideo(isEnable: Boolean) {
+    fun enableSelfVideo(isEnable: Boolean) {
         logger.info(TAG, "Enable Self Video with isEnable = $isEnable")
         if (videoClientState == VideoClientState.UNINITIALIZED) {
             logger.info(TAG, "Video Client is not initialized so returning without doing anything")
@@ -172,7 +173,7 @@ class VideoClientController private constructor(params: VideoClientControllerPar
                     )}"
                 )
             }
-            val currentDevice = videoClient?.getCurrentDevice()
+            val currentDevice = getActiveCamera()
             if (currentDevice == null) {
                 setFrontCameraAsCurrentDevice()
             }
@@ -180,14 +181,18 @@ class VideoClientController private constructor(params: VideoClientControllerPar
         videoClient?.setSending(isSelfVideoSending)
     }
 
-    private fun switchCamera() {
+    fun getActiveCamera(): VideoDevice? {
+        return videoClient?.currentDevice
+    }
+
+    fun switchCamera() {
         if (videoClientState >= VideoClientState.INITIALIZED) {
             logger.info(TAG, "Switching Camera")
-            val nextDevice = videoClient?.getDevices()
-                ?.filter { !(it.identifier.equals(videoClient?.getCurrentDevice()?.identifier)) }
+            val nextDevice = videoClient?.devices
+                ?.filter { it.identifier != (getActiveCamera()?.identifier) }
                 ?.elementAtOrNull(0)
             if (nextDevice != null) {
-                videoClient?.setCurrentDevice(nextDevice)
+                videoClient?.currentDevice = nextDevice
             }
         }
     }
@@ -195,12 +200,12 @@ class VideoClientController private constructor(params: VideoClientControllerPar
     private fun setFrontCameraAsCurrentDevice() {
         if (videoClientState >= VideoClientState.INITIALIZED) {
             logger.info(TAG, "Setting setFrontCameraAsCurrentDevice")
-            val currentDevice = videoClient?.getCurrentDevice()
+            val currentDevice = getActiveCamera()
             if (currentDevice == null || !currentDevice.isFrontFacing) {
                 val frontDevice =
-                    videoClient?.getDevices()?.filter { it.isFrontFacing }?.elementAtOrNull(0)
+                    videoClient?.devices?.filter { it.isFrontFacing }?.elementAtOrNull(0)
                 if (frontDevice != null) {
-                    videoClient?.setCurrentDevice(frontDevice)
+                    videoClient?.currentDevice = frontDevice
                 }
             }
         }

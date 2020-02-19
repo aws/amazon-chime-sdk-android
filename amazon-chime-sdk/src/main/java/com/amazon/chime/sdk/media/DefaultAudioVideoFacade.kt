@@ -54,6 +54,14 @@ class DefaultAudioVideoFacade(
         audioVideoController.stop()
     }
 
+    override fun startLocalVideo() {
+        audioVideoController.startLocalVideo()
+    }
+
+    override fun stopLocalVideo() {
+        audioVideoController.stopLocalVideo()
+    }
+
     override fun realtimeLocalMute(): Boolean {
         return realtimeController.realtimeLocalMute()
     }
@@ -76,6 +84,14 @@ class DefaultAudioVideoFacade(
 
     override fun chooseAudioDevice(mediaDevice: MediaDevice) {
         deviceController.chooseAudioDevice(mediaDevice)
+    }
+
+    override fun getActiveCamera(): MediaDevice? {
+        return deviceController.getActiveCamera()
+    }
+
+    override fun switchCamera() {
+        deviceController.switchCamera()
     }
 
     override fun addDeviceChangeObserver(observer: DeviceChangeObserver) {

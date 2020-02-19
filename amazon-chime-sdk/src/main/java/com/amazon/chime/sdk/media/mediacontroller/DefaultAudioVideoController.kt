@@ -33,6 +33,14 @@ class DefaultAudioVideoController(
         videoClientController.stopAndDestroy()
     }
 
+    override fun startLocalVideo() {
+        videoClientController.enableSelfVideo(true)
+    }
+
+    override fun stopLocalVideo() {
+        videoClientController.enableSelfVideo(false)
+    }
+
     override fun addObserver(observer: AudioVideoObserver) {
         audioClientObserver.subscribeToAudioClientStateChange(observer)
     }
