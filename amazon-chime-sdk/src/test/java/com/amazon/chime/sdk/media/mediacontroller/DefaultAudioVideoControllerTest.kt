@@ -50,7 +50,11 @@ class DefaultAudioVideoControllerTest {
     fun setup() {
         MockKAnnotations.init(this, relaxUnitFun = true)
         audioVideoController =
-            DefaultAudioVideoController(audioClientController, audioClientObserver, meetingSessionConfiguration)
+            DefaultAudioVideoController(
+                audioClientController,
+                audioClientObserver,
+                meetingSessionConfiguration
+            )
     }
 
     @Test

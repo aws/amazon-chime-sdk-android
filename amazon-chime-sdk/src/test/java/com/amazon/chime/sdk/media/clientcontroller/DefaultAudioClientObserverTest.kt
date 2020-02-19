@@ -1,5 +1,7 @@
 package com.amazon.chime.sdk.media.clientcontroller
 
+import com.amazon.chime.sdk.media.enums.SignalStrength
+import com.amazon.chime.sdk.media.enums.VolumeLevel
 import com.amazon.chime.sdk.media.mediacontroller.AudioVideoObserver
 import com.amazon.chime.sdk.media.mediacontroller.RealtimeObserver
 import com.amazon.chime.sdk.session.MeetingSessionStatus
@@ -51,11 +53,11 @@ class DefaultAudioClientObserverTest {
     }
 
     private val realtimeObserver: RealtimeObserver = object : RealtimeObserver {
-        override fun onVolumeChange(attendeeVolumes: Map<String, Int>) {
+        override fun onVolumeChange(attendeeVolumes: Map<String, VolumeLevel>) {
             observerCalled += 1
         }
 
-        override fun onSignalStrengthChange(attendeeSignalStrength: Map<String, Int>) {
+        override fun onSignalStrengthChange(attendeeSignalStrength: Map<String, SignalStrength>) {
             observerCalled += 1
         }
     }
