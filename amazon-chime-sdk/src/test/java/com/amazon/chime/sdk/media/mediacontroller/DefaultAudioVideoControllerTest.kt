@@ -2,6 +2,8 @@ package com.amazon.chime.sdk.media.mediacontroller
 
 import com.amazon.chime.sdk.media.clientcontroller.AudioClientController
 import com.amazon.chime.sdk.media.clientcontroller.AudioClientObserver
+import com.amazon.chime.sdk.media.clientcontroller.ClientMetricsCollector
+import com.amazon.chime.sdk.media.clientcontroller.ObservableMetric
 import com.amazon.chime.sdk.session.MeetingSessionConfiguration
 import com.amazon.chime.sdk.session.MeetingSessionCredentials
 import com.amazon.chime.sdk.session.MeetingSessionStatus
@@ -31,6 +33,9 @@ class DefaultAudioVideoControllerTest {
 
         override fun onConnectionBecamePoor() {
         }
+
+        override fun onReceiveMetric(metrics: Map<ObservableMetric, Double>) {
+        }
     }
     private val meetingSessionConfiguration = MeetingSessionConfiguration(
         "meetingId",
@@ -44,13 +49,16 @@ class DefaultAudioVideoControllerTest {
     @MockK
     private lateinit var audioClientController: AudioClientController
 
+    @MockK
+    private lateinit var clientMetricsCollector: ClientMetricsCollector
+
     private lateinit var audioVideoController: DefaultAudioVideoController
 
     @Before
     fun setup() {
         MockKAnnotations.init(this, relaxUnitFun = true)
         audioVideoController =
-            DefaultAudioVideoController(audioClientController, audioClientObserver, meetingSessionConfiguration)
+            DefaultAudioVideoController(audioClientController, audioClientObserver, clientMetricsCollector, meetingSessionConfiguration)
     }
 
     @Test
@@ -82,5 +90,17 @@ class DefaultAudioVideoControllerTest {
     fun `removeObserver should call audioClientObserver unsubscribeFromAudioClientStateChange with given observer`() {
         audioVideoController.removeObserver(observer)
         verify { audioClientObserver.unsubscribeFromAudioClientStateChange(observer) }
+    }
+
+    @Test
+    fun `addObserver should call clientMetricsCollector addObserver with given observer`() {
+        audioVideoController.addObserver(observer)
+        verify { clientMetricsCollector.addObserver(observer) }
+    }
+
+    @Test
+    fun `removeObserver should call clientMetricsCollector removeObserver with given observer`() {
+        audioVideoController.removeObserver(observer)
+        verify { clientMetricsCollector.removeObserver(observer) }
     }
 }

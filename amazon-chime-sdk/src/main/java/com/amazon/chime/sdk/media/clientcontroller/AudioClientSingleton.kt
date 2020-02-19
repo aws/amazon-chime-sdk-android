@@ -31,6 +31,7 @@ class AudioClientSingleton private constructor(params: AudioClientSingletonParam
             params.audioClientObserver,
             params.audioClientObserver,
             params.audioClientObserver,
+            params.audioClientObserver,
             0
         )
     }
