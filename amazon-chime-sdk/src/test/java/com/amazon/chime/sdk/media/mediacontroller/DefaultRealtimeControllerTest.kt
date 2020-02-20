@@ -2,6 +2,8 @@ package com.amazon.chime.sdk.media.mediacontroller
 
 import com.amazon.chime.sdk.media.clientcontroller.AudioClientController
 import com.amazon.chime.sdk.media.clientcontroller.AudioClientObserver
+import com.amazon.chime.sdk.media.enums.SignalStrength
+import com.amazon.chime.sdk.media.enums.VolumeLevel
 import io.mockk.MockKAnnotations
 import io.mockk.every
 import io.mockk.impl.annotations.InjectMockKs
@@ -13,10 +15,10 @@ import org.junit.Test
 
 class DefaultRealtimeControllerTest {
     private val observer = object : RealtimeObserver {
-        override fun onVolumeChange(attendeeVolumes: Map<String, Int>) {
+        override fun onVolumeChange(attendeeVolumes: Map<String, VolumeLevel>) {
         }
 
-        override fun onSignalStrengthChange(attendeeSignalStrength: Map<String, Int>) {
+        override fun onSignalStrengthChange(attendeeSignalStrength: Map<String, SignalStrength>) {
         }
     }
 

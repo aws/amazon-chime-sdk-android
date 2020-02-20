@@ -6,6 +6,8 @@ import com.amazon.chime.sdk.media.clientcontroller.ObservableMetric
 import com.amazon.chime.sdk.media.devicecontroller.DeviceChangeObserver
 import com.amazon.chime.sdk.media.devicecontroller.DeviceController
 import com.amazon.chime.sdk.media.devicecontroller.MediaDevice
+import com.amazon.chime.sdk.media.enums.SignalStrength
+import com.amazon.chime.sdk.media.enums.VolumeLevel
 import com.amazon.chime.sdk.media.mediacontroller.AudioVideoControllerFacade
 import com.amazon.chime.sdk.media.mediacontroller.AudioVideoObserver
 import com.amazon.chime.sdk.media.mediacontroller.RealtimeControllerFacade
@@ -42,10 +44,10 @@ class DefaultAudioVideoFacadeTest {
         override fun onConnectionBecamePoor() {
         }
 
-        override fun onVolumeChange(attendeeVolumes: Map<String, Int>) {
+        override fun onVolumeChange(attendeeVolumes: Map<String, VolumeLevel>) {
         }
 
-        override fun onSignalStrengthChange(attendeeSignalStrength: Map<String, Int>) {
+        override fun onSignalStrengthChange(attendeeSignalStrength: Map<String, SignalStrength>) {
         }
 
         override fun onAudioDeviceChange(freshAudioDeviceList: List<MediaDevice>) {

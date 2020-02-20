@@ -12,6 +12,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.amazon.chime.sdk.media.AudioVideoFacade
 import com.amazon.chime.sdk.media.clientcontroller.ObservableMetric
+import com.amazon.chime.sdk.media.enums.SignalStrength
+import com.amazon.chime.sdk.media.enums.VolumeLevel
 import com.amazon.chime.sdk.media.mediacontroller.AudioVideoObserver
 import com.amazon.chime.sdk.media.mediacontroller.RealtimeObserver
 import com.amazon.chime.sdk.session.MeetingSessionStatus
@@ -96,7 +98,7 @@ class RosterViewFragment : Fragment(), RealtimeObserver, AudioVideoObserver {
         return view
     }
 
-    override fun onVolumeChange(attendeeVolumes: Map<String, Int>) {
+    override fun onVolumeChange(attendeeVolumes: Map<String, VolumeLevel>) {
         uiScope.launch {
             val updatedRoster = mutableMapOf<String, RosterAttendee>()
             for ((attendeeId, volume) in attendeeVolumes) {
@@ -147,8 +149,10 @@ class RosterViewFragment : Fragment(), RealtimeObserver, AudioVideoObserver {
         }
     }
 
-    override fun onSignalStrengthChange(attendeeSignalStrength: Map<String, Int>) {
-        // Do nothing for now
+    override fun onSignalStrengthChange(attendeeSignalStrength: Map<String, SignalStrength>) {
+        attendeeSignalStrength.forEach { (attendeeId, signalStrength) ->
+            logger.info(TAG, "Attendee $attendeeId signalStrength: $signalStrength")
+        }
     }
 
     private fun muteMeeting() {
@@ -159,8 +163,11 @@ class RosterViewFragment : Fragment(), RealtimeObserver, AudioVideoObserver {
         audioVideo.realtimeLocalUnmute()
     }
 
-    override fun onAudioVideoStartConnecting(reconnecting: Boolean) = notify("Audio started connecting. reconnecting: $reconnecting")
-    override fun onAudioVideoStart(reconnecting: Boolean) = notify("Audio successfully started. reconnecting: $reconnecting")
+    override fun onAudioVideoStartConnecting(reconnecting: Boolean) =
+        notify("Audio started connecting. reconnecting: $reconnecting")
+
+    override fun onAudioVideoStart(reconnecting: Boolean) =
+        notify("Audio successfully started. reconnecting: $reconnecting")
 
     override fun onAudioVideoStop(sessionStatus: MeetingSessionStatus) {
         notify("Audio stopped for reason: ${sessionStatus.statusCode}")
