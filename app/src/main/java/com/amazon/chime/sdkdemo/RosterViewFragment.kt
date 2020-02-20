@@ -178,8 +178,8 @@ class RosterViewFragment : Fragment(), RealtimeObserver, AudioVideoObserver {
     override fun onConnectionRecovered() = notify("Connection quality has recovered")
     override fun onConnectionBecamePoor() = notify("Connection quality has become poor")
 
-    override fun onReceiveMetric(metrics: Map<ObservableMetric, Double>) {
-        logger.error(TAG, "Media metrics received: $metrics")
+    override fun onReceiveMetric(metrics: Map<ObservableMetric, Any>) {
+        logger.info(TAG, "Media metrics received: $metrics")
     }
 
     private fun notify(message: String) {

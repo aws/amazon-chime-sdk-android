@@ -53,7 +53,7 @@ class DefaultAudioVideoFacadeTest {
         override fun onAudioDeviceChange(freshAudioDeviceList: List<MediaDevice>) {
         }
 
-        override fun onReceiveMetric(metrics: Map<ObservableMetric, Double>) {
+        override fun onReceiveMetric(metrics: Map<ObservableMetric, Any>) {
         }
     }
 

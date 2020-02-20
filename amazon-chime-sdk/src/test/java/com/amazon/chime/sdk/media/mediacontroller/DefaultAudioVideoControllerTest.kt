@@ -34,7 +34,7 @@ class DefaultAudioVideoControllerTest {
         override fun onConnectionBecamePoor() {
         }
 
-        override fun onReceiveMetric(metrics: Map<ObservableMetric, Double>) {
+        override fun onReceiveMetric(metrics: Map<ObservableMetric, Any>) {
         }
     }
     private val meetingSessionConfiguration = MeetingSessionConfiguration(

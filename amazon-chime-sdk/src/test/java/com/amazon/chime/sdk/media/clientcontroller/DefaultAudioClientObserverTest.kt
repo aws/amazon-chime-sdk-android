@@ -52,7 +52,7 @@ class DefaultAudioClientObserverTest {
             observerCalled += 1
         }
 
-        override fun onReceiveMetric(metrics: Map<ObservableMetric, Double>) {
+        override fun onReceiveMetric(metrics: Map<ObservableMetric, Any>) {
             observerCalled += 1
         }
     }

@@ -3,6 +3,10 @@ package com.amazon.chime.sdk.media.clientcontroller
 import com.amazon.chime.sdk.media.mediacontroller.AudioVideoObserver
 import com.xodee.client.audio.audioclient.AudioClient
 
+/**
+ * [DefaultClientMetricsCollector]'s filters and caches incoming raw client metrics
+ * and calls the metrics observer with the current values every second
+ */
 class DefaultClientMetricsCollector() : ClientMetricsCollector {
     private var metricsObservers = mutableSetOf<AudioVideoObserver>()
     private var cachedObservableMetrics = mutableMapOf<ObservableMetric, Double>()

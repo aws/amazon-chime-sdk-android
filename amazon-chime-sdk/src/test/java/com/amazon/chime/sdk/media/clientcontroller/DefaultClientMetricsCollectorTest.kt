@@ -19,6 +19,8 @@ class DefaultClientMetricsCollectorTest {
     fun setup() {
         MockKAnnotations.init(this, relaxUnitFun = true)
         clientMetricsCollector = DefaultClientMetricsCollector()
+
+        // TODO: Investigate and implement mocking of passage of time intervals
     }
 
     @Test

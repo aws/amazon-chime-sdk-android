@@ -46,5 +46,5 @@ interface AudioVideoObserver {
      *
      * @param metrics: Map<ObservableMetric, Double> - Map of metric type to value
      */
-    fun onReceiveMetric(metrics: Map<ObservableMetric, Double>)
+    fun onReceiveMetric(metrics: Map<ObservableMetric, Any>)
 }
