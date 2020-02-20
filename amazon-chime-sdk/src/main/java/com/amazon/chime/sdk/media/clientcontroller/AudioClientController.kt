@@ -14,7 +14,7 @@ package com.amazon.chime.sdk.media.clientcontroller
 interface AudioClientController {
     fun getRoute(): Int
     fun setRoute(route: Int): Boolean
-    fun start(audioHostUrl: String, meetingId: String, attendeeId: String, joinToken: String)
+    fun start(audioFallbackUrl: String, audioHostUrl: String, meetingId: String, attendeeId: String, joinToken: String)
     fun stop()
     fun setMute(isMuted: Boolean): Boolean
 }

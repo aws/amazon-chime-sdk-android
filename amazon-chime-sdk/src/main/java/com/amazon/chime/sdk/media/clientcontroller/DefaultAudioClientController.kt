@@ -4,12 +4,10 @@
 
 package com.amazon.chime.sdk.media.clientcontroller
 
-import android.content.Context
 import android.media.AudioFormat
 import android.media.AudioManager
 import android.media.AudioRecord
 import android.media.AudioTrack
-import com.amazon.chime.sdk.R
 import com.amazon.chime.sdk.utils.logger.Logger
 import com.xodee.client.audio.audioclient.AudioClient
 import kotlinx.coroutines.CoroutineScope
@@ -17,15 +15,12 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 class DefaultAudioClientController(
-    private val context: Context,
     private val logger: Logger,
     private val audioClientObserver: AudioClientObserver,
-    private var audioClient: AudioClient = AudioClientFactory.getAudioClient(
-        context,
-        audioClientObserver
-    )
+    private val audioClient: AudioClient
 ) : AudioClientController {
     private val TAG = "DefaultAudioClientController"
+    private val DEFAULT_PORT = 0 // In case the URL does not have port
     private val AUDIO_PORT_OFFSET = 200 // Offset by 200 so that subtraction results in 0
     private val DEFAULT_MIC_AND_SPEAKER = false
     private val DEFAULT_PRESENTER = true
@@ -80,6 +75,7 @@ class DefaultAudioClientController(
     }
 
     override fun start(
+        audioFallbackUrl: String,
         audioHostUrl: String,
         meetingId: String,
         attendeeId: String,
@@ -101,12 +97,8 @@ class DefaultAudioClientController(
                 TAG,
                 "Error parsing int. Using default value. Exception: ${exception.message}"
             )
-            0
+            DEFAULT_PORT
         }
-
-        val hostSubStr = host.substringAfter('.').substringAfter('.')
-        val audioWSUrl =
-            context.getString(R.string.audio_ws_url, hostSubStr, meetingId)
 
         setUpAudioConfiguration()
         audioClientObserver.notifyAudioClientObserver { observer ->
@@ -128,7 +120,7 @@ class DefaultAudioClientController(
                 DEFAULT_MIC_AND_SPEAKER,
                 DEFAULT_MIC_AND_SPEAKER,
                 DEFAULT_PRESENTER,
-                audioWSUrl,
+                audioFallbackUrl,
                 null
             )
 

@@ -4,7 +4,6 @@
 
 package com.amazon.chime.sdk.media.clientcontroller
 
-import android.content.Context
 import android.media.AudioDeviceInfo
 import android.util.Log
 import com.amazon.chime.sdk.utils.logger.Logger
@@ -23,9 +22,6 @@ import org.junit.Before
 import org.junit.Test
 
 class DefaultAudioClientControllerTest {
-    @MockK
-    private lateinit var mockContext: Context
-
     @MockK
     private lateinit var mockLogger: Logger
 

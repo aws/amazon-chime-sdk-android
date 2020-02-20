@@ -18,6 +18,7 @@ class DefaultAudioVideoController(
 
     override fun start() {
         audioClientController.start(
+            configuration.urls.audioFallbackURL,
             configuration.urls.audioHostURL,
             configuration.meetingId,
             configuration.credentials.attendeeId,
