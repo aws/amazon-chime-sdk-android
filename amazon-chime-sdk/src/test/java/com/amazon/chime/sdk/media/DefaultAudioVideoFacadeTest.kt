@@ -53,6 +53,12 @@ class DefaultAudioVideoFacadeTest {
         override fun onSignalStrengthChange(attendeeSignalStrength: Map<String, SignalStrength>) {
         }
 
+        override fun onAttendeesJoin(attendeeIds: Array<String>) {
+        }
+
+        override fun onAttendeesLeave(attendeeIds: Array<String>) {
+        }
+
         override fun onAudioDeviceChange(freshAudioDeviceList: List<MediaDevice>) {
         }
     }

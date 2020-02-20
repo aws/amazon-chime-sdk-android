@@ -33,11 +33,14 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
 import kotlinx.coroutines.withContext
 
 class RosterViewFragment : Fragment(), RealtimeObserver, AudioVideoObserver {
     private val logger = ConsoleLogger(LogLevel.INFO)
     private val gson = Gson()
+    private val mutex = Mutex()
     private val uiScope = CoroutineScope(Dispatchers.Main)
     private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO
     private val currentRoster = mutableMapOf<String, RosterAttendee>()
@@ -103,20 +106,85 @@ class RosterViewFragment : Fragment(), RealtimeObserver, AudioVideoObserver {
 
     override fun onVolumeChange(attendeeVolumes: Map<String, VolumeLevel>) {
         uiScope.launch {
-            val updatedRoster = mutableMapOf<String, RosterAttendee>()
-            for ((attendeeId, volume) in attendeeVolumes) {
-                val attendeeName: String =
-                    if (currentRoster.containsKey(attendeeId) &&
-                        currentRoster.getValue(attendeeId).attendeeName.isNotBlank()
-                    ) currentRoster.getValue(attendeeId).attendeeName
-                    else getAttendeeName(getString(R.string.test_url), attendeeId) ?: ""
+            mutex.withLock {
+                val updatedRoster = mutableMapOf<String, RosterAttendee>()
+                attendeeVolumes.forEach { (attendeeId, volume) ->
+                    currentRoster[attendeeId]?.let {
+                        updatedRoster[attendeeId] =
+                            RosterAttendee(
+                                it.attendeeId,
+                                it.attendeeName,
+                                volume,
+                                it.signalStrength
+                            )
+                    }
+                }
 
-                updatedRoster[attendeeId] =
-                    RosterAttendee(attendeeName, volume)
+                currentRoster.clear()
+                currentRoster.putAll(updatedRoster)
+                adapter.notifyDataSetChanged()
             }
-            currentRoster.clear()
-            currentRoster.putAll(updatedRoster)
-            adapter.notifyDataSetChanged()
+        }
+    }
+
+    override fun onSignalStrengthChange(attendeeSignalStrength: Map<String, SignalStrength>) {
+        uiScope.launch {
+            mutex.withLock {
+                val updatedRoster = mutableMapOf<String, RosterAttendee>()
+                attendeeSignalStrength.forEach { (attendeeId, signalStrength) ->
+                    logger.info(TAG, "Attendee $attendeeId signalStrength: $signalStrength")
+
+                    currentRoster[attendeeId]?.let {
+                        updatedRoster[attendeeId] =
+                            RosterAttendee(
+                                it.attendeeId,
+                                it.attendeeName,
+                                it.volumeLevel,
+                                signalStrength
+                            )
+                    }
+                }
+
+                currentRoster.clear()
+                currentRoster.putAll(updatedRoster)
+                adapter.notifyDataSetChanged()
+            }
+        }
+    }
+
+    override fun onAttendeesJoin(attendeeIds: Array<String>) {
+        uiScope.launch {
+            mutex.withLock {
+                val updatedRoster: MutableMap<String, RosterAttendee> = currentRoster.toMutableMap()
+                attendeeIds.forEach { attendeeId ->
+                    val attendeeName: String = (currentRoster[attendeeId]?.let { it.attendeeName }
+                        ?: getAttendeeName(getString(R.string.test_url), attendeeId)) ?: ""
+
+                    updatedRoster[attendeeId] = RosterAttendee(attendeeId, attendeeName)
+                }
+
+                currentRoster.clear()
+                currentRoster.putAll(updatedRoster)
+                adapter.notifyDataSetChanged()
+            }
+        }
+    }
+
+    override fun onAttendeesLeave(attendeeIds: Array<String>) {
+        uiScope.launch {
+            mutex.withLock {
+                val updatedRoster = mutableMapOf<String, RosterAttendee>()
+                currentRoster.forEach { (attendeeId, attendee) ->
+                    val notRemoved = !attendeeIds.contains(attendeeId)
+                    if (notRemoved) {
+                        updatedRoster[attendeeId] = attendee
+                    }
+                }
+
+                currentRoster.clear()
+                currentRoster.putAll(updatedRoster)
+                adapter.notifyDataSetChanged()
+            }
         }
     }
 
@@ -149,12 +217,6 @@ class RosterViewFragment : Fragment(), RealtimeObserver, AudioVideoObserver {
                 logger.error(TAG, "Error getting attendee info. Exception: ${exception.message}")
                 null
             }
-        }
-    }
-
-    override fun onSignalStrengthChange(attendeeSignalStrength: Map<String, SignalStrength>) {
-        attendeeSignalStrength.forEach { (attendeeId, signalStrength) ->
-            logger.info(TAG, "Attendee $attendeeId signalStrength: $signalStrength")
         }
     }
 

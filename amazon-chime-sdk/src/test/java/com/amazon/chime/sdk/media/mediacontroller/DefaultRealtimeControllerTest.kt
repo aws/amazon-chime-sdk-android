@@ -6,8 +6,6 @@ package com.amazon.chime.sdk.media.mediacontroller
 
 import com.amazon.chime.sdk.media.clientcontroller.AudioClientController
 import com.amazon.chime.sdk.media.clientcontroller.AudioClientObserver
-import com.amazon.chime.sdk.media.enums.SignalStrength
-import com.amazon.chime.sdk.media.enums.VolumeLevel
 import io.mockk.MockKAnnotations
 import io.mockk.every
 import io.mockk.impl.annotations.InjectMockKs
@@ -18,13 +16,8 @@ import org.junit.Before
 import org.junit.Test
 
 class DefaultRealtimeControllerTest {
-    private val observer = object : RealtimeObserver {
-        override fun onVolumeChange(attendeeVolumes: Map<String, VolumeLevel>) {
-        }
-
-        override fun onSignalStrengthChange(attendeeSignalStrength: Map<String, SignalStrength>) {
-        }
-    }
+    @MockK
+    private lateinit var mockObserver: RealtimeObserver
 
     @MockK
     private lateinit var audioClientObserver: AudioClientObserver
@@ -54,13 +47,13 @@ class DefaultRealtimeControllerTest {
 
     @Test
     fun `realtimeAddObserver should call audioClientController subscribeToRealTimeEvents with given observer`() {
-        realtimeController.realtimeAddObserver(observer)
-        verify { audioClientObserver.subscribeToRealTimeEvents(observer) }
+        realtimeController.realtimeAddObserver(mockObserver)
+        verify { audioClientObserver.subscribeToRealTimeEvents(mockObserver) }
     }
 
     @Test
     fun `realtimeRemoveObserver should call audioClientController unsubscribeFromRealTimeEvents with given observer`() {
-        realtimeController.realtimeRemoveObserver(observer)
-        verify { audioClientObserver.unsubscribeFromRealTimeEvents(observer) }
+        realtimeController.realtimeRemoveObserver(mockObserver)
+        verify { audioClientObserver.unsubscribeFromRealTimeEvents(mockObserver) }
     }
 }

@@ -64,6 +64,12 @@ class DefaultAudioClientObserverTest {
         override fun onSignalStrengthChange(attendeeSignalStrength: Map<String, SignalStrength>) {
             observerCalled += 1
         }
+
+        override fun onAttendeesJoin(attendeeIds: Array<String>) {
+        }
+
+        override fun onAttendeesLeave(attendeeIds: Array<String>) {
+        }
     }
 
     private val testObserverFun = { observer: AudioVideoObserver ->

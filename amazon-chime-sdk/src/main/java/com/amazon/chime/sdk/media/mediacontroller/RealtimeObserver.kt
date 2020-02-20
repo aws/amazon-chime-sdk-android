@@ -24,4 +24,18 @@ interface RealtimeObserver {
      * @param attendeeVolumes: Map<String, SignalStrength> - A map of attendee Ids to signal strength
      */
     fun onSignalStrengthChange(attendeeSignalStrength: Map<String, SignalStrength>)
+
+    /**
+     * Handles attendee(s) being added
+     *
+     * @param attendeeIds: Array<String> - The Ids for the attendees being added
+     */
+    fun onAttendeesJoin(attendeeIds: Array<String>)
+
+    /**
+     * Handles attendee(s) being removed
+     *
+     * @param attendeeIds: Array<String> - The Ids for the attendees being removed
+     */
+    fun onAttendeesLeave(attendeeIds: Array<String>)
 }
