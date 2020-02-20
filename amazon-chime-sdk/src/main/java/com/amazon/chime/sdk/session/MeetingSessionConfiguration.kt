@@ -20,6 +20,9 @@ data class MeetingSessionConfiguration(
         createMeetingResponse.Meeting.MeetingId, MeetingSessionCredentials(
             createAttendeeResponse.Attendee.AttendeeId,
             createAttendeeResponse.Attendee.JoinToken
-        ), MeetingSessionURLs(createMeetingResponse.Meeting.MediaPlacement.AudioHostUrl)
+        ), MeetingSessionURLs(
+            createMeetingResponse.Meeting.MediaPlacement.AudioFallbackUrl,
+            createMeetingResponse.Meeting.MediaPlacement.AudioHostUrl
+        )
     )
 }

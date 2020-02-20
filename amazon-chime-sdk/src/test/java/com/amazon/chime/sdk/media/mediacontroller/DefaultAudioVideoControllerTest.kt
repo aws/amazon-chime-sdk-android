@@ -36,10 +36,17 @@ class DefaultAudioVideoControllerTest {
         override fun onConnectionBecamePoor() {
         }
     }
+
+    private val meetingId = "meetingId"
+    private val attendeeId = "attendeeId"
+    private val joinToken = "joinToken"
+    private val audioFallbackURL = "audioFallbackURL"
+    private val audioHostURL = "audioHostURL"
+
     private val meetingSessionConfiguration = MeetingSessionConfiguration(
-        "meetingId",
-        MeetingSessionCredentials("attendeeId", "joinToken"),
-        MeetingSessionURLs("audioHostURL")
+        meetingId,
+        MeetingSessionCredentials(attendeeId, joinToken),
+        MeetingSessionURLs(audioFallbackURL, audioHostURL)
     )
 
     @MockK
@@ -66,10 +73,11 @@ class DefaultAudioVideoControllerTest {
         audioVideoController.start()
         verify {
             audioClientController.start(
-                "audioHostURL",
-                "meetingId",
-                "attendeeId",
-                "joinToken"
+                audioFallbackURL,
+                audioHostURL,
+                meetingId,
+                attendeeId,
+                joinToken
             )
         }
     }

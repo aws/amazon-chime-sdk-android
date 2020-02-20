@@ -12,4 +12,4 @@ data class Meeting(
     val MediaPlacement: MediaPlacement
 )
 
-data class MediaPlacement(val AudioHostUrl: String)
+data class MediaPlacement(val AudioFallbackUrl: String, val AudioHostUrl: String)
