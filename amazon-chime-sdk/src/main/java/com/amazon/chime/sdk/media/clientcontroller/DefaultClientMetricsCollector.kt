@@ -32,7 +32,7 @@ class DefaultClientMetricsCollector() : ClientMetricsCollector {
 
     private fun maybeEmitMetrics() {
         val now = System.currentTimeMillis()
-        if (now - lastEmittedMetricsTime > METRICS_EMISSION_INTERVAL_MS) {
+        if (cachedObservableMetrics.isNotEmpty() && now - lastEmittedMetricsTime > METRICS_EMISSION_INTERVAL_MS) {
             lastEmittedMetricsTime = now
             metricsObservers.forEach { it.onReceiveMetric(cachedObservableMetrics) }
         }

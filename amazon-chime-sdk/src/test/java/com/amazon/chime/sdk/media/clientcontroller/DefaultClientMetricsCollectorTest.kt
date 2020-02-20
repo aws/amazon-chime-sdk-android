@@ -46,25 +46,21 @@ class DefaultClientMetricsCollectorTest {
 
     @Test
     fun `onMetrics should not emit non-observable metrics`() {
-        Thread.sleep(1100)
-
         clientMetricsCollector.addObserver(mockAudioVideoObserver)
         val rawMetrics = mutableMapOf(AudioClient.AUDIO_CLIENT_METRIC_MIC_DEVICE_FRAMES_LOST_PERCENT to 1.0)
         clientMetricsCollector.processAudioClientMetrics(rawMetrics)
 
         val observableMetrics = mutableMapOf<ObservableMetric, Double>()
-        verify(exactly = 1) { mockAudioVideoObserver.onReceiveMetric(observableMetrics) }
+        verify(exactly = 0) { mockAudioVideoObserver.onReceiveMetric(observableMetrics) }
     }
 
     @Test
     fun `onMetrics should not emit invalid metrics`() {
-        Thread.sleep(1100)
-
         clientMetricsCollector.addObserver(mockAudioVideoObserver)
         val rawMetrics = mutableMapOf(999 to 1.0)
         clientMetricsCollector.processAudioClientMetrics(rawMetrics)
 
         val observableMetrics = mutableMapOf<ObservableMetric, Double>()
-        verify(exactly = 1) { mockAudioVideoObserver.onReceiveMetric(observableMetrics) }
+        verify(exactly = 0) { mockAudioVideoObserver.onReceiveMetric(observableMetrics) }
     }
 }
