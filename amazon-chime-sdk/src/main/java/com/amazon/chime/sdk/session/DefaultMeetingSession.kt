@@ -12,6 +12,8 @@ import com.amazon.chime.sdk.media.clientcontroller.VideoClientControllerParams
 import com.amazon.chime.sdk.media.devicecontroller.DefaultDeviceController
 import com.amazon.chime.sdk.media.mediacontroller.DefaultAudioVideoController
 import com.amazon.chime.sdk.media.mediacontroller.DefaultRealtimeController
+import com.amazon.chime.sdk.media.mediacontroller.video.DefaultVideoTileController
+import com.amazon.chime.sdk.media.mediacontroller.video.VideoTileController
 import com.amazon.chime.sdk.utils.logger.Logger
 
 class DefaultMeetingSession(
@@ -23,16 +25,22 @@ class DefaultMeetingSession(
     override val audioVideo: AudioVideoFacade
 
     init {
-        val videoClientController =
-            VideoClientController.getInstance(VideoClientControllerParams(context, logger))
         val audioClientObserver: AudioClientObserver = DefaultAudioClientObserver(logger)
         val audioClientController: AudioClientController = DefaultAudioClientController(
             context,
             logger,
             audioClientObserver
         )
-        val audioVideoController =
-            DefaultAudioVideoController(audioClientController, audioClientObserver, videoClientController, configuration)
+        val videoTileController: VideoTileController = DefaultVideoTileController(logger)
+        val videoClientController =
+            VideoClientController.getInstance(
+                VideoClientControllerParams(
+                    context,
+                    logger
+                )
+            )
+        videoClientController.subscribeToVideoTile(videoTileController)
+        val audioVideoController = DefaultAudioVideoController(configuration, audioClientController, audioClientObserver, videoClientController)
         val realtimeController =
             DefaultRealtimeController(audioClientController, audioClientObserver)
         val deviceController = DefaultDeviceController(context, audioClientController, videoClientController)
@@ -40,7 +48,8 @@ class DefaultMeetingSession(
             context,
             audioVideoController,
             realtimeController,
-            deviceController
+            deviceController,
+            videoTileController
         )
     }
 }

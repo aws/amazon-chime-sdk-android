@@ -4,6 +4,10 @@ import android.Manifest
 import android.content.Context
 import android.content.pm.PackageManager
 import androidx.core.content.ContextCompat
+import com.amazon.chime.sdk.media.mediacontroller.AudioVideoObserver
+import com.amazon.chime.sdk.media.mediacontroller.video.VideoTileController
+import com.amazon.chime.sdk.session.MeetingSessionStatus
+import com.amazon.chime.sdk.session.MeetingSessionStatusCode
 import com.amazon.chime.sdk.session.MeetingSessionTURNCredentials
 import com.amazon.chime.sdk.utils.logger.Logger
 import com.amazon.chime.sdk.utils.singleton.SingletonWithParams
@@ -27,7 +31,10 @@ import org.json.JSONObject
 /**
  * This is so that we only need one version of [[SingletonWithParams]].
  */
-data class VideoClientControllerParams(val context: Context, val logger: Logger)
+data class VideoClientControllerParams(
+    val context: Context,
+    val logger: Logger
+)
 
 /**
  * Singleton to prevent more than one [[VideoClient]] from being created. Normally we'd use object
@@ -51,6 +58,8 @@ class VideoClientController private constructor(params: VideoClientControllerPar
         Manifest.permission.CAMERA
     )
     private var videoClient: VideoClient? = null
+    private var videoClientStateObservers = mutableSetOf<AudioVideoObserver>()
+    private var videoClientTileObservers = mutableSetOf<VideoTileController>()
     private var videoClientState: VideoClientState = VideoClientState.UNINITIALIZED
     private var isSelfVideoSending: Boolean = false
     private val uiScope = CoroutineScope(Dispatchers.Main)
@@ -124,6 +133,7 @@ class VideoClientController private constructor(params: VideoClientControllerPar
             VideoClient.initializeGlobals(context)
             VideoClientCapturer.getInstance(context)
             videoClient = VideoClient(this)
+            forEachVideoTileObserver { observer -> observer.initialize() }
             videoClientState = VideoClientState.INITIALIZED
         }
     }
@@ -147,13 +157,14 @@ class VideoClientController private constructor(params: VideoClientControllerPar
         }
         logger.info(TAG, "VideoClient is being destroyed")
         videoClient?.clearCurrentDevice()
+        forEachVideoTileObserver { observer -> observer.destroy() }
         videoClient?.destroy()
         videoClient = null
         VideoClient.finalizeGlobals()
         videoClientState = VideoClientState.UNINITIALIZED
     }
 
-    fun enableSelfVideo(isEnable: Boolean) {
+    internal fun enableSelfVideo(isEnable: Boolean) {
         logger.info(TAG, "Enable Self Video with isEnable = $isEnable")
         if (videoClientState == VideoClientState.UNINITIALIZED) {
             logger.info(TAG, "Video Client is not initialized so returning without doing anything")
@@ -181,11 +192,11 @@ class VideoClientController private constructor(params: VideoClientControllerPar
         videoClient?.setSending(isSelfVideoSending)
     }
 
-    fun getActiveCamera(): VideoDevice? {
+    internal fun getActiveCamera(): VideoDevice? {
         return videoClient?.currentDevice
     }
 
-    fun switchCamera() {
+    internal fun switchCamera() {
         if (videoClientState >= VideoClientState.INITIALIZED) {
             logger.info(TAG, "Switching Camera")
             val nextDevice = videoClient?.devices
@@ -211,21 +222,65 @@ class VideoClientController private constructor(params: VideoClientControllerPar
         }
     }
 
+    private fun forEachVideoClientStateObserver(observerFunction: (observer: AudioVideoObserver) -> Unit) {
+        for (observer in videoClientStateObservers) {
+            observerFunction(observer)
+        }
+    }
+
+    private fun forEachVideoTileObserver(observerFunction: (observer: VideoTileController) -> Unit) {
+        for (observer in videoClientTileObservers) {
+            observerFunction(observer)
+        }
+    }
+
+    fun subscribeToVideoClientStateChange(observer: AudioVideoObserver) {
+        videoClientStateObservers.add(observer)
+    }
+
+    fun unsubscribeFromVideoClientStateChange(observer: AudioVideoObserver) {
+        videoClientStateObservers.remove(observer)
+    }
+
+    internal fun subscribeToVideoTile(observer: VideoTileController) {
+        videoClientTileObservers.add(observer)
+    }
+
+    internal fun unsubscribeFromVideoTile(observer: VideoTileController) {
+        videoClientTileObservers.remove(observer)
+    }
+
     override fun isConnecting(client: VideoClient?) {
         logger.info(TAG, "isConnecting")
+        forEachVideoClientStateObserver { observer -> observer.onVideoClientConnecting() }
     }
 
     override fun didConnect(client: VideoClient?, controlStatus: Int) {
         logger.info(TAG, "didConnect")
+        forEachVideoClientStateObserver { observer -> observer.onVideoClientStart() }
     }
 
     override fun didFail(client: VideoClient?, status: Int, controlStatus: Int) {
-        logger.info(TAG, "didFail")
+        logger.info(TAG, "didFail with controlStatus = $controlStatus")
+        forEachVideoClientStateObserver { observer ->
+            observer.onVideoClientStop(
+                MeetingSessionStatus(
+                    MeetingSessionStatusCode.VideoServiceFailed
+                )
+            )
+        }
     }
 
     override fun didStop(client: VideoClient?) {
         logger.info(TAG, "didStop")
         videoClientState = VideoClientState.STOPPED
+        forEachVideoClientStateObserver { observer ->
+            observer.onVideoClientStop(
+                MeetingSessionStatus(
+                    MeetingSessionStatusCode.OK
+                )
+            )
+        }
     }
 
     override fun cameraSendIsAvailable(client: VideoClient?, available: Boolean) {
@@ -277,7 +332,15 @@ class VideoClientController private constructor(params: VideoClientControllerPar
         pauseType: Int,
         videoId: Int
     ) {
-        logger.info(TAG, "didReceiveFrame")
+        forEachVideoTileObserver { observer ->
+            observer.onReceiveFrame(
+                frame,
+                profileId,
+                displayId,
+                pauseType,
+                videoId
+            )
+        }
     }
 
     private suspend fun doTurnRequest(): MeetingSessionTURNCredentials? {

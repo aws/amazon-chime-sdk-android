@@ -6,10 +6,10 @@ import com.amazon.chime.sdk.media.clientcontroller.VideoClientController
 import com.amazon.chime.sdk.session.MeetingSessionConfiguration
 
 class DefaultAudioVideoController(
+    private val configuration: MeetingSessionConfiguration,
     private val audioClientController: AudioClientController,
     private val audioClientObserver: AudioClientObserver,
-    private val videoClientController: VideoClientController,
-    private val configuration: MeetingSessionConfiguration
+    private val videoClientController: VideoClientController
 ) : AudioVideoControllerFacade {
 
     override fun start() {
@@ -43,9 +43,11 @@ class DefaultAudioVideoController(
 
     override fun addObserver(observer: AudioVideoObserver) {
         audioClientObserver.subscribeToAudioClientStateChange(observer)
+        videoClientController.subscribeToVideoClientStateChange(observer)
     }
 
     override fun removeObserver(observer: AudioVideoObserver) {
         audioClientObserver.unsubscribeFromAudioClientStateChange(observer)
+        videoClientController.unsubscribeFromVideoClientStateChange(observer)
     }
 }

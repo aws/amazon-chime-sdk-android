@@ -10,6 +10,7 @@ import com.amazon.chime.sdk.media.mediacontroller.AudioVideoControllerFacade
 import com.amazon.chime.sdk.media.mediacontroller.AudioVideoObserver
 import com.amazon.chime.sdk.media.mediacontroller.RealtimeControllerFacade
 import com.amazon.chime.sdk.media.mediacontroller.RealtimeObserver
+import com.amazon.chime.sdk.media.mediacontroller.video.VideoTileController
 import com.amazon.chime.sdk.session.MeetingSessionStatus
 import io.mockk.MockKAnnotations
 import io.mockk.every
@@ -24,22 +25,23 @@ import org.junit.Test
 
 class DefaultAudioVideoFacadeTest {
     private val observer = object : AudioVideoObserver, RealtimeObserver, DeviceChangeObserver {
-        override fun onAudioVideoStartConnecting(reconnecting: Boolean) {
+
+        override fun onAudioClientConnecting(reconnecting: Boolean) {
         }
 
-        override fun onAudioVideoStart(reconnecting: Boolean) {
+        override fun onAudioClientStart(reconnecting: Boolean) {
         }
 
-        override fun onAudioVideoStop(sessionStatus: MeetingSessionStatus) {
+        override fun onAudioClientStop(sessionStatus: MeetingSessionStatus) {
         }
 
-        override fun onAudioReconnectionCancel() {
+        override fun onAudioClientReconnectionCancel() {
         }
 
-        override fun onConnectionRecovered() {
+        override fun onConnectionRecover() {
         }
 
-        override fun onConnectionBecamePoor() {
+        override fun onConnectionBecomePoor() {
         }
 
         override fun onVolumeChange(attendeeVolumes: Map<String, Int>) {
@@ -49,6 +51,15 @@ class DefaultAudioVideoFacadeTest {
         }
 
         override fun onAudioDeviceChange(freshAudioDeviceList: List<MediaDevice>) {
+        }
+
+        override fun onVideoClientConnecting() {
+        }
+
+        override fun onVideoClientStart() {
+        }
+
+        override fun onVideoClientStop(sessionStatus: MeetingSessionStatus) {
         }
     }
 
@@ -67,6 +78,9 @@ class DefaultAudioVideoFacadeTest {
 
     @MockK
     private lateinit var deviceController: DeviceController
+
+    @MockK
+    private lateinit var videoTileController: VideoTileController
 
     @InjectMockKs
     private lateinit var audioVideoFacade: DefaultAudioVideoFacade

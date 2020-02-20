@@ -25,28 +25,38 @@ class DefaultAudioClientObserverTest {
     private var observerCalled = 0
 
     private val audioVideoObserver: AudioVideoObserver = object : AudioVideoObserver {
-        override fun onAudioVideoStartConnecting(reconnecting: Boolean) {
+
+        override fun onAudioClientConnecting(reconnecting: Boolean) {
             observerCalled += 1
         }
 
-        override fun onAudioVideoStart(reconnecting: Boolean) {
+        override fun onAudioClientStart(reconnecting: Boolean) {
             observerCalled += 1
         }
 
-        override fun onAudioVideoStop(sessionStatus: MeetingSessionStatus) {
+        override fun onAudioClientStop(sessionStatus: MeetingSessionStatus) {
             observerCalled += 1
         }
 
-        override fun onAudioReconnectionCancel() {
+        override fun onAudioClientReconnectionCancel() {
             observerCalled += 1
         }
 
-        override fun onConnectionRecovered() {
+        override fun onConnectionRecover() {
             observerCalled += 1
         }
 
-        override fun onConnectionBecamePoor() {
+        override fun onConnectionBecomePoor() {
             observerCalled += 1
+        }
+
+        override fun onVideoClientConnecting() {
+        }
+
+        override fun onVideoClientStart() {
+        }
+
+        override fun onVideoClientStop(sessionStatus: MeetingSessionStatus) {
         }
     }
 
@@ -61,7 +71,7 @@ class DefaultAudioClientObserverTest {
     }
 
     private val testObserverFun = { observer: AudioVideoObserver ->
-        observer.onAudioVideoStartConnecting(
+        observer.onAudioClientConnecting(
             false
         )
     }

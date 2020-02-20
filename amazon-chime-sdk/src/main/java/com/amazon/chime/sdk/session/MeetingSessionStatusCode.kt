@@ -64,7 +64,12 @@ enum class MeetingSessionStatusCode(val value: Int) {
     /**
      * The network has become poor and is no longer good enough for VoIP.
      */
-    NetworkBecamePoor(11);
+    NetworkBecamePoor(11),
+
+    /**
+     * Video Client Failed.
+     */
+    VideoServiceFailed(12);
 
     companion object {
         fun from(intValue: Int): MeetingSessionStatusCode? = values().find { it.value == intValue }

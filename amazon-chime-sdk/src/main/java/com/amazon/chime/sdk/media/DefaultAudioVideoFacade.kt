@@ -11,12 +11,16 @@ import com.amazon.chime.sdk.media.mediacontroller.AudioVideoControllerFacade
 import com.amazon.chime.sdk.media.mediacontroller.AudioVideoObserver
 import com.amazon.chime.sdk.media.mediacontroller.RealtimeControllerFacade
 import com.amazon.chime.sdk.media.mediacontroller.RealtimeObserver
+import com.amazon.chime.sdk.media.mediacontroller.video.DefaultVideoRenderView
+import com.amazon.chime.sdk.media.mediacontroller.video.VideoTileController
+import com.amazon.chime.sdk.media.mediacontroller.video.VideoTileObserver
 
 class DefaultAudioVideoFacade(
     private val context: Context,
     private val audioVideoController: AudioVideoControllerFacade,
     private val realtimeController: RealtimeControllerFacade,
-    private val deviceController: DeviceController
+    private val deviceController: DeviceController,
+    private val videoTileController: VideoTileController
 ) : AudioVideoFacade {
 
     private val permissions = arrayOf(
@@ -100,5 +104,21 @@ class DefaultAudioVideoFacade(
 
     override fun removeDeviceChangeObserver(observer: DeviceChangeObserver) {
         deviceController.removeDeviceChangeObserver(observer)
+    }
+
+    override fun bindVideoView(videoView: DefaultVideoRenderView, tileId: Int) {
+        videoTileController.bindVideoView(videoView, tileId)
+    }
+
+    override fun unbindVideoView(tileId: Int) {
+        videoTileController.unbindVideoView(tileId)
+    }
+
+    override fun addVideoTileObserver(observer: VideoTileObserver) {
+        videoTileController.addVideoTileObserver(observer)
+    }
+
+    override fun removeVideoTileObserver(observer: VideoTileObserver) {
+        videoTileController.removeVideoTileObserver(observer)
     }
 }

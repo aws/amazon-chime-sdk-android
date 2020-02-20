@@ -15,22 +15,32 @@ import org.junit.Test
 
 class DefaultAudioVideoControllerTest {
     private val observer = object : AudioVideoObserver {
-        override fun onAudioVideoStartConnecting(reconnecting: Boolean) {
+
+        override fun onAudioClientConnecting(reconnecting: Boolean) {
         }
 
-        override fun onAudioVideoStart(reconnecting: Boolean) {
+        override fun onAudioClientStart(reconnecting: Boolean) {
         }
 
-        override fun onAudioVideoStop(sessionStatus: MeetingSessionStatus) {
+        override fun onAudioClientStop(sessionStatus: MeetingSessionStatus) {
         }
 
-        override fun onAudioReconnectionCancel() {
+        override fun onAudioClientReconnectionCancel() {
         }
 
-        override fun onConnectionRecovered() {
+        override fun onConnectionRecover() {
         }
 
-        override fun onConnectionBecamePoor() {
+        override fun onConnectionBecomePoor() {
+        }
+
+        override fun onVideoClientStart() {
+        }
+
+        override fun onVideoClientStop(sessionStatus: MeetingSessionStatus) {
+        }
+
+        override fun onVideoClientConnecting() {
         }
     }
     private val meetingSessionConfiguration = MeetingSessionConfiguration(
@@ -55,10 +65,11 @@ class DefaultAudioVideoControllerTest {
         MockKAnnotations.init(this, relaxUnitFun = true)
         audioVideoController =
             DefaultAudioVideoController(
+                meetingSessionConfiguration,
                 audioClientController,
                 audioClientObserver,
-                videoClientController,
-                meetingSessionConfiguration
+                videoClientController
+
             )
     }
 

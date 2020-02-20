@@ -30,6 +30,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 class RosterViewFragment : Fragment(), RealtimeObserver, AudioVideoObserver {
+
     private val logger = ConsoleLogger(LogLevel.INFO)
     private val gson = Gson()
     private val uiScope = CoroutineScope(Dispatchers.Main)
@@ -158,17 +159,25 @@ class RosterViewFragment : Fragment(), RealtimeObserver, AudioVideoObserver {
         audioVideo.realtimeLocalUnmute()
     }
 
-    override fun onAudioVideoStartConnecting(reconnecting: Boolean) = notify("Audio started connecting. reconnecting: $reconnecting")
-    override fun onAudioVideoStart(reconnecting: Boolean) = notify("Audio successfully started. reconnecting: $reconnecting")
+    override fun onAudioClientConnecting(reconnecting: Boolean) = notify("Audio started connecting. reconnecting: $reconnecting")
+    override fun onAudioClientStart(reconnecting: Boolean) = notify("Audio successfully started. reconnecting: $reconnecting")
 
-    override fun onAudioVideoStop(sessionStatus: MeetingSessionStatus) {
+    override fun onAudioClientStop(sessionStatus: MeetingSessionStatus) {
         notify("Audio stopped for reason: ${sessionStatus.statusCode}")
         listener.onLeaveMeeting()
     }
 
-    override fun onAudioReconnectionCancel() = notify("Audio cancelled reconnecting")
-    override fun onConnectionRecovered() = notify("Connection quality has recovered")
-    override fun onConnectionBecamePoor() = notify("Connection quality has become poor")
+    override fun onAudioClientReconnectionCancel() = notify("Audio cancelled reconnecting")
+    override fun onConnectionRecover() = notify("Connection quality has recovered")
+    override fun onConnectionBecomePoor() = notify("Connection quality has become poor")
+    override fun onVideoClientConnecting() {
+    }
+
+    override fun onVideoClientStart() {
+    }
+
+    override fun onVideoClientStop(sessionStatus: MeetingSessionStatus) {
+    }
 
     private fun notify(message: String) {
         Toast.makeText(activity, message, Toast.LENGTH_LONG).show()
