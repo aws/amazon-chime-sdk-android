@@ -14,6 +14,7 @@ import com.amazon.chime.sdk.session.SessionStateControllerAction
 import com.amazon.chime.sdk.utils.logger.Logger
 import io.mockk.MockKAnnotations
 import io.mockk.impl.annotations.MockK
+import io.mockk.verify
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.newSingleThreadContext
 import kotlinx.coroutines.test.setMain
@@ -54,6 +55,10 @@ class DefaultAudioClientObserverTest {
         override fun onConnectionBecamePoor() {
             observerCalled += 1
         }
+
+        override fun onReceiveMetric(metrics: Map<ObservableMetric, Any>) {
+            observerCalled += 1
+        }
     }
 
     private val realtimeObserver: RealtimeObserver = object : RealtimeObserver {
@@ -85,11 +90,14 @@ class DefaultAudioClientObserverTest {
 
     private val mockUIThread = newSingleThreadContext("UI thread")
 
+    @MockK
+    private lateinit var clientMetricsCollector: ClientMetricsCollector
+
     @Before
     fun setup() {
         observerCalled = 0
         MockKAnnotations.init(this, relaxUnitFun = true)
-        audioClientObserver = DefaultAudioClientObserver(mockLogger)
+        audioClientObserver = DefaultAudioClientObserver(mockLogger, clientMetricsCollector)
         audioClientObserver.subscribeToAudioClientStateChange(audioVideoObserver)
         audioClientObserver.subscribeToRealTimeEvents(realtimeObserver)
         Dispatchers.setMain(mockUIThread)
@@ -185,5 +193,13 @@ class DefaultAudioClientObserverTest {
         )
 
         Assert.assertEquals(0, observerCalled)
+    }
+
+    @Test
+    fun `onMetrics should call clientMetricsCollector processAudioClientMetrics`() {
+        val metrics = mutableMapOf(1 to 2.3, 4 to 5.6)
+        audioClientObserver.onMetrics(metrics.keys.toIntArray(), metrics.values.toDoubleArray())
+
+        verify { clientMetricsCollector.processAudioClientMetrics(metrics) }
     }
 }

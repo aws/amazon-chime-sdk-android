@@ -10,8 +10,10 @@ import com.amazon.chime.sdk.media.DefaultAudioVideoFacade
 import com.amazon.chime.sdk.media.clientcontroller.AudioClientController
 import com.amazon.chime.sdk.media.clientcontroller.AudioClientFactory
 import com.amazon.chime.sdk.media.clientcontroller.AudioClientObserver
+import com.amazon.chime.sdk.media.clientcontroller.ClientMetricsCollector
 import com.amazon.chime.sdk.media.clientcontroller.DefaultAudioClientController
 import com.amazon.chime.sdk.media.clientcontroller.DefaultAudioClientObserver
+import com.amazon.chime.sdk.media.clientcontroller.DefaultClientMetricsCollector
 import com.amazon.chime.sdk.media.devicecontroller.DefaultDeviceController
 import com.amazon.chime.sdk.media.mediacontroller.DefaultAudioVideoController
 import com.amazon.chime.sdk.media.mediacontroller.DefaultRealtimeController
@@ -27,7 +29,8 @@ class DefaultMeetingSession(
     override val audioVideo: AudioVideoFacade
 
     init {
-        val audioClientObserver: AudioClientObserver = DefaultAudioClientObserver(logger)
+        val metricsCollector: ClientMetricsCollector = DefaultClientMetricsCollector()
+        val audioClientObserver: AudioClientObserver = DefaultAudioClientObserver(logger, metricsCollector)
         val audioClient: AudioClient = AudioClientFactory.getAudioClient(context, audioClientObserver)
         val audioClientController: AudioClientController = DefaultAudioClientController(
             logger,
@@ -36,7 +39,7 @@ class DefaultMeetingSession(
         )
 
         val audioVideoController =
-            DefaultAudioVideoController(audioClientController, audioClientObserver, configuration)
+            DefaultAudioVideoController(audioClientController, audioClientObserver, metricsCollector, configuration)
         val realtimeController =
             DefaultRealtimeController(audioClientController, audioClientObserver)
         val deviceController = DefaultDeviceController(context, audioClientController)

@@ -15,6 +15,7 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.amazon.chime.sdk.media.AudioVideoFacade
+import com.amazon.chime.sdk.media.clientcontroller.ObservableMetric
 import com.amazon.chime.sdk.media.enums.SignalStrength
 import com.amazon.chime.sdk.media.enums.VolumeLevel
 import com.amazon.chime.sdk.media.mediacontroller.AudioVideoObserver
@@ -242,6 +243,10 @@ class RosterViewFragment : Fragment(), RealtimeObserver, AudioVideoObserver {
     override fun onAudioReconnectionCancel() = notify("Audio cancelled reconnecting")
     override fun onConnectionRecovered() = notify("Connection quality has recovered")
     override fun onConnectionBecamePoor() = notify("Connection quality has become poor")
+
+    override fun onReceiveMetric(metrics: Map<ObservableMetric, Any>) {
+        logger.info(TAG, "Media metrics received: $metrics")
+    }
 
     private fun notify(message: String) {
         Toast.makeText(activity, message, Toast.LENGTH_LONG).show()

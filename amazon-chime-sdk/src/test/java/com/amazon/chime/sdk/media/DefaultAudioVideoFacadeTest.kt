@@ -6,6 +6,7 @@ package com.amazon.chime.sdk.media
 
 import android.content.Context
 import androidx.core.content.ContextCompat
+import com.amazon.chime.sdk.media.clientcontroller.ObservableMetric
 import com.amazon.chime.sdk.media.devicecontroller.DeviceChangeObserver
 import com.amazon.chime.sdk.media.devicecontroller.DeviceController
 import com.amazon.chime.sdk.media.devicecontroller.MediaDevice
@@ -60,6 +61,9 @@ class DefaultAudioVideoFacadeTest {
         }
 
         override fun onAudioDeviceChange(freshAudioDeviceList: List<MediaDevice>) {
+        }
+
+        override fun onReceiveMetric(metrics: Map<ObservableMetric, Any>) {
         }
     }
 
