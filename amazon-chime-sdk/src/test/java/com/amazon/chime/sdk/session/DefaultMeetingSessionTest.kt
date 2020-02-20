@@ -6,9 +6,10 @@ package com.amazon.chime.sdk.session
 
 import android.content.Context
 import android.content.Intent
+import android.content.res.AssetManager
 import android.media.AudioManager
 import android.util.Log
-import com.amazon.chime.sdk.media.clientcontroller.AudioClientSingleton
+import com.amazon.chime.sdk.media.clientcontroller.AudioClientFactory
 import com.amazon.chime.sdk.utils.logger.Logger
 import com.xodee.client.audio.audioclient.AudioClient
 import io.mockk.MockKAnnotations
@@ -37,7 +38,7 @@ class DefaultMeetingSessionTest {
     lateinit var mockAudioClient: AudioClient
 
     @MockK
-    lateinit var mockAudioClientSingleton: AudioClientSingleton
+    private lateinit var assetManager: AssetManager
 
     lateinit var meetingSession: DefaultMeetingSession
 
@@ -48,11 +49,11 @@ class DefaultMeetingSessionTest {
         every { System.loadLibrary(any()) } just runs
         every { Log.d(any(), any()) } returns 0
         MockKAnnotations.init(this)
+        every { context.assets } returns assetManager
         every { context.registerReceiver(any(), any()) } returns mockkClass(Intent::class)
         every { context.getSystemService(any()) } returns mockkClass(AudioManager::class)
-        mockkObject(AudioClientSingleton.Companion)
-        every { AudioClientSingleton.getInstance(any()) } returns mockAudioClientSingleton
-        every { mockAudioClientSingleton.audioClient } returns mockAudioClient
+        mockkObject(AudioClientFactory.Companion)
+        every { AudioClientFactory.getAudioClient(any(), any()) } returns mockAudioClient
         meetingSession = DefaultMeetingSession(configuration, logger, context)
     }
 

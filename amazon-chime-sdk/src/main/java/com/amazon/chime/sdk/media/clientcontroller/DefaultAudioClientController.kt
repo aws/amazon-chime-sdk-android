@@ -20,9 +20,10 @@ class DefaultAudioClientController(
     private val context: Context,
     private val logger: Logger,
     private val audioClientObserver: AudioClientObserver,
-    private val audioClient: AudioClient = AudioClientSingleton.getInstance(
-        AudioClientSingletonParams(context, audioClientObserver)
-    ).audioClient
+    private var audioClient: AudioClient = AudioClientFactory.getAudioClient(
+        context,
+        audioClientObserver
+    )
 ) : AudioClientController {
     private val TAG = "DefaultAudioClientController"
     private val AUDIO_PORT_OFFSET = 200 // Offset by 200 so that subtraction results in 0
