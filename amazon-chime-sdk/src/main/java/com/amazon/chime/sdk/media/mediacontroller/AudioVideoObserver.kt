@@ -4,7 +4,7 @@
 
 package com.amazon.chime.sdk.media.mediacontroller
 
-import com.amazon.chime.sdk.media.clientcontroller.ObservableMetric
+import com.amazon.chime.sdk.media.enums.ObservableMetric
 import com.amazon.chime.sdk.session.MeetingSessionStatus
 
 interface AudioVideoObserver {
@@ -50,5 +50,5 @@ interface AudioVideoObserver {
      *
      * @param metrics: Map<ObservableMetric, Any> - Map of metric type to value
      */
-    fun onReceiveMetric(metrics: Map<ObservableMetric, Any>)
+    fun onMetricsReceive(metrics: Map<ObservableMetric, Any>)
 }
