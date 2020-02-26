@@ -1,8 +1,13 @@
+/*
+ * Copyright (c) 2020 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ */
+
 package com.amazon.chime.sdk.media.clientcontroller
 
 import com.amazon.chime.sdk.media.mediacontroller.AudioVideoObserver
 import com.amazon.chime.sdk.media.mediacontroller.RealtimeObserver
 import com.xodee.client.audio.audioclient.AudioClientLogListener
+import com.xodee.client.audio.audioclient.AudioClientMetricsListener
 import com.xodee.client.audio.audioclient.AudioClientSignalStrengthChangeListener
 import com.xodee.client.audio.audioclient.AudioClientStateChangeListener
 import com.xodee.client.audio.audioclient.AudioClientVolumeStateChangeListener
@@ -13,7 +18,8 @@ import com.xodee.client.audio.audioclient.AudioClientVolumeStateChangeListener
  */
 interface AudioClientObserver : AudioClientStateChangeListener,
     AudioClientVolumeStateChangeListener,
-    AudioClientSignalStrengthChangeListener, AudioClientLogListener {
+    AudioClientSignalStrengthChangeListener, AudioClientLogListener,
+    AudioClientMetricsListener {
 
     fun subscribeToAudioClientStateChange(observer: AudioVideoObserver)
     fun unsubscribeFromAudioClientStateChange(observer: AudioVideoObserver)

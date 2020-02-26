@@ -1,5 +1,11 @@
+/*
+ * Copyright (c) 2020 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ */
+
 package com.amazon.chime.sdk.media.clientcontroller
 
+import com.amazon.chime.sdk.media.enums.SignalStrength
+import com.amazon.chime.sdk.media.enums.VolumeLevel
 import com.amazon.chime.sdk.media.mediacontroller.AudioVideoObserver
 import com.amazon.chime.sdk.media.mediacontroller.RealtimeObserver
 import com.amazon.chime.sdk.session.MeetingSessionStatus
@@ -8,6 +14,7 @@ import com.amazon.chime.sdk.session.SessionStateControllerAction
 import com.amazon.chime.sdk.utils.logger.Logger
 import io.mockk.MockKAnnotations
 import io.mockk.impl.annotations.MockK
+import io.mockk.verify
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.newSingleThreadContext
 import kotlinx.coroutines.test.setMain
@@ -50,6 +57,10 @@ class DefaultAudioClientObserverTest {
             observerCalled += 1
         }
 
+        override fun onReceiveMetric(metrics: Map<ObservableMetric, Any>) {
+            observerCalled += 1
+        }
+
         override fun onVideoClientConnecting() {
         }
 
@@ -61,12 +72,18 @@ class DefaultAudioClientObserverTest {
     }
 
     private val realtimeObserver: RealtimeObserver = object : RealtimeObserver {
-        override fun onVolumeChange(attendeeVolumes: Map<String, Int>) {
+        override fun onVolumeChange(attendeeVolumes: Map<String, VolumeLevel>) {
             observerCalled += 1
         }
 
-        override fun onSignalStrengthChange(attendeeSignalStrength: Map<String, Int>) {
+        override fun onSignalStrengthChange(attendeeSignalStrength: Map<String, SignalStrength>) {
             observerCalled += 1
+        }
+
+        override fun onAttendeesJoin(attendeeIds: Array<String>) {
+        }
+
+        override fun onAttendeesLeave(attendeeIds: Array<String>) {
         }
     }
 
@@ -83,11 +100,14 @@ class DefaultAudioClientObserverTest {
 
     private val mockUIThread = newSingleThreadContext("UI thread")
 
+    @MockK
+    private lateinit var clientMetricsCollector: ClientMetricsCollector
+
     @Before
     fun setup() {
         observerCalled = 0
         MockKAnnotations.init(this, relaxUnitFun = true)
-        audioClientObserver = DefaultAudioClientObserver(mockLogger)
+        audioClientObserver = DefaultAudioClientObserver(mockLogger, clientMetricsCollector)
         audioClientObserver.subscribeToAudioClientStateChange(audioVideoObserver)
         audioClientObserver.subscribeToRealTimeEvents(realtimeObserver)
         Dispatchers.setMain(mockUIThread)
@@ -183,5 +203,13 @@ class DefaultAudioClientObserverTest {
         )
 
         Assert.assertEquals(0, observerCalled)
+    }
+
+    @Test
+    fun `onMetrics should call clientMetricsCollector processAudioClientMetrics`() {
+        val metrics = mutableMapOf(1 to 2.3, 4 to 5.6)
+        audioClientObserver.onMetrics(metrics.keys.toIntArray(), metrics.values.toDoubleArray())
+
+        verify { clientMetricsCollector.processAudioClientMetrics(metrics) }
     }
 }

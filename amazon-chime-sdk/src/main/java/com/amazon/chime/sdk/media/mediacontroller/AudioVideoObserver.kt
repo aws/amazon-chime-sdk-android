@@ -1,5 +1,10 @@
+/*
+ * Copyright (c) 2020 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ */
+
 package com.amazon.chime.sdk.media.mediacontroller
 
+import com.amazon.chime.sdk.media.clientcontroller.ObservableMetric
 import com.amazon.chime.sdk.session.MeetingSessionStatus
 
 interface AudioVideoObserver {
@@ -39,6 +44,13 @@ interface AudioVideoObserver {
      * Called when connection is becoming poor.
      */
     fun onConnectionBecomePoor()
+
+    /**
+     * Called when metrics are ready.
+     *
+     * @param metrics: Map<ObservableMetric, Any> - Map of metric type to value
+     */
+    fun onReceiveMetric(metrics: Map<ObservableMetric, Any>)
 
     /**
      * Called when the video session is connecting or reconnecting.

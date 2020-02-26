@@ -1,3 +1,7 @@
+/*
+ * Copyright 2020 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ */
+
 package com.amazon.chime.sdk.media.clientcontroller
 
 import android.Manifest
@@ -10,7 +14,6 @@ import com.amazon.chime.sdk.session.MeetingSessionStatus
 import com.amazon.chime.sdk.session.MeetingSessionStatusCode
 import com.amazon.chime.sdk.session.MeetingSessionTURNCredentials
 import com.amazon.chime.sdk.utils.logger.Logger
-import com.amazon.chime.sdk.utils.singleton.SingletonWithParams
 import com.xodee.client.video.VideoClient
 import com.xodee.client.video.VideoClientCapturer
 import com.xodee.client.video.VideoClientDelegate
@@ -28,26 +31,12 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.json.JSONObject
 
-/**
- * This is so that we only need one version of [[SingletonWithParams]].
- */
-data class VideoClientControllerParams(
+class VideoClientController constructor(
     val context: Context,
     val logger: Logger
-)
-
-/**
- * Singleton to prevent more than one [[VideoClient]] from being created. Normally we'd use object
- * but this class requires parameters for initialization and object currently does not support that.
- *
- * Instead, we use a companion object extending [[SingletonWithParams]] and taking
- * [[VideoClientControllerParams]] to create and retrieve an instance of [[VideoClientController]]
- */
-class VideoClientController private constructor(params: VideoClientControllerParams) :
+) :
     VideoClientDelegate {
 
-    private val context: Context = params.context
-    private val logger: Logger = params.logger
     private val TAG = "VideoClientController"
     private val TOKEN_HEADER = "X-Chime-Auth-Token"
     private val CONTENT_TYPE_HEADER = "Content-Type"
@@ -68,9 +57,6 @@ class VideoClientController private constructor(params: VideoClientControllerPar
     private var turnControlUrl: String? = null
     private var meetingId: String? = null
     private var joinToken: String? = null
-
-    companion object :
-        SingletonWithParams<VideoClientController, VideoClientControllerParams>(::VideoClientController)
 
     private enum class VideoClientState(val value: Int) {
         UNINITIALIZED(-1),

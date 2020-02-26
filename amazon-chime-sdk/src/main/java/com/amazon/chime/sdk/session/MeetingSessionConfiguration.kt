@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) 2020 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ */
+
 package com.amazon.chime.sdk.session
 
 /**
@@ -18,8 +22,11 @@ data class MeetingSessionConfiguration(
             createAttendeeResponse.Attendee.AttendeeId,
             createAttendeeResponse.Attendee.JoinToken
         ),
-        MeetingSessionURLs(createMeetingResponse.Meeting.MediaPlacement.AudioHostUrl,
+        MeetingSessionURLs(
+            createMeetingResponse.Meeting.MediaPlacement.AudioFallbackUrl,
+            createMeetingResponse.Meeting.MediaPlacement.AudioHostUrl,
             createMeetingResponse.Meeting.MediaPlacement.TurnControlUrl,
-            createMeetingResponse.Meeting.MediaPlacement.SignalingUrl)
+            createMeetingResponse.Meeting.MediaPlacement.SignalingUrl
+        )
     )
 }

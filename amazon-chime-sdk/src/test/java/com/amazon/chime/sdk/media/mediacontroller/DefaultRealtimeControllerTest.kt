@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) 2020 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ */
+
 package com.amazon.chime.sdk.media.mediacontroller
 
 import com.amazon.chime.sdk.media.clientcontroller.AudioClientController
@@ -12,13 +16,8 @@ import org.junit.Before
 import org.junit.Test
 
 class DefaultRealtimeControllerTest {
-    private val observer = object : RealtimeObserver {
-        override fun onVolumeChange(attendeeVolumes: Map<String, Int>) {
-        }
-
-        override fun onSignalStrengthChange(attendeeSignalStrength: Map<String, Int>) {
-        }
-    }
+    @MockK
+    private lateinit var mockObserver: RealtimeObserver
 
     @MockK
     private lateinit var audioClientObserver: AudioClientObserver
@@ -48,13 +47,13 @@ class DefaultRealtimeControllerTest {
 
     @Test
     fun `realtimeAddObserver should call audioClientController subscribeToRealTimeEvents with given observer`() {
-        realtimeController.realtimeAddObserver(observer)
-        verify { audioClientObserver.subscribeToRealTimeEvents(observer) }
+        realtimeController.realtimeAddObserver(mockObserver)
+        verify { audioClientObserver.subscribeToRealTimeEvents(mockObserver) }
     }
 
     @Test
     fun `realtimeRemoveObserver should call audioClientController unsubscribeFromRealTimeEvents with given observer`() {
-        realtimeController.realtimeRemoveObserver(observer)
-        verify { audioClientObserver.unsubscribeFromRealTimeEvents(observer) }
+        realtimeController.realtimeRemoveObserver(mockObserver)
+        verify { audioClientObserver.unsubscribeFromRealTimeEvents(mockObserver) }
     }
 }

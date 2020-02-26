@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) 2020 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ */
+
 package com.amazon.chime.sdk.media.devicecontroller
 
 import android.media.AudioDeviceInfo
@@ -12,12 +16,13 @@ class MediaDeviceTest {
         val receiver = MediaDevice("handset", MediaDeviceType.AUDIO_HANDSET)
         val wiredHeadset = MediaDevice("wired headset", MediaDeviceType.AUDIO_WIRED_HEADSET)
         val bluetoothAudio = MediaDevice("bluetooth", MediaDeviceType.AUDIO_BLUETOOTH)
-        val sortedDevices = listOf(speaker, receiver, wiredHeadset, bluetoothAudio).sortedBy { it.order }
+        val sortedDevices =
+            listOf(speaker, receiver, wiredHeadset, bluetoothAudio).sortedBy { it.order }
         assertTrue(
             sortedDevices[0] == bluetoothAudio &&
-                    sortedDevices[1] == wiredHeadset &&
-                    sortedDevices[2] == speaker &&
-                    sortedDevices[3] == receiver
+                sortedDevices[1] == wiredHeadset &&
+                sortedDevices[2] == speaker &&
+                sortedDevices[3] == receiver
         )
     }
 

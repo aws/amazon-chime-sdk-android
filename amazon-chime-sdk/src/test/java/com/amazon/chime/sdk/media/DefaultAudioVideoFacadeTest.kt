@@ -1,11 +1,18 @@
+/*
+ * Copyright (c) 2020 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ */
+
 package com.amazon.chime.sdk.media
 
 import android.content.Context
 import androidx.core.content.ContextCompat
+import com.amazon.chime.sdk.media.clientcontroller.ObservableMetric
 import com.amazon.chime.sdk.media.devicecontroller.DeviceChangeObserver
 import com.amazon.chime.sdk.media.devicecontroller.DeviceController
 import com.amazon.chime.sdk.media.devicecontroller.MediaDevice
 import com.amazon.chime.sdk.media.devicecontroller.MediaDeviceType
+import com.amazon.chime.sdk.media.enums.SignalStrength
+import com.amazon.chime.sdk.media.enums.VolumeLevel
 import com.amazon.chime.sdk.media.mediacontroller.AudioVideoControllerFacade
 import com.amazon.chime.sdk.media.mediacontroller.AudioVideoObserver
 import com.amazon.chime.sdk.media.mediacontroller.RealtimeControllerFacade
@@ -44,13 +51,22 @@ class DefaultAudioVideoFacadeTest {
         override fun onConnectionBecomePoor() {
         }
 
-        override fun onVolumeChange(attendeeVolumes: Map<String, Int>) {
+        override fun onVolumeChange(attendeeVolumes: Map<String, VolumeLevel>) {
         }
 
-        override fun onSignalStrengthChange(attendeeSignalStrength: Map<String, Int>) {
+        override fun onSignalStrengthChange(attendeeSignalStrength: Map<String, SignalStrength>) {
+        }
+
+        override fun onAttendeesJoin(attendeeIds: Array<String>) {
+        }
+
+        override fun onAttendeesLeave(attendeeIds: Array<String>) {
         }
 
         override fun onAudioDeviceChange(freshAudioDeviceList: List<MediaDevice>) {
+        }
+
+        override fun onReceiveMetric(metrics: Map<ObservableMetric, Any>) {
         }
 
         override fun onVideoClientConnecting() {
@@ -122,18 +138,6 @@ class DefaultAudioVideoFacadeTest {
     }
 
     @Test
-    fun `startLocalVideo should call audioVideoController startLocalVideo`() {
-        audioVideoFacade.startLocalVideo()
-        verify { audioVideoController.startLocalVideo() }
-    }
-
-    @Test
-    fun `stopLocalVideo should call audioVideoController stopLocalVideo`() {
-        audioVideoFacade.stopLocalVideo()
-        verify { audioVideoController.stopLocalVideo() }
-    }
-
-    @Test
     fun `realtimeLocalMute should call realtimeController realtimeLocalMute and return the status`() {
         every { realtimeController.realtimeLocalMute() } returns true
         assertTrue(audioVideoFacade.realtimeLocalMute())
@@ -170,6 +174,30 @@ class DefaultAudioVideoFacadeTest {
     }
 
     @Test
+    fun `addDeviceChangeObserver should call deviceController addDeviceChangeObserver with given observer`() {
+        audioVideoFacade.addDeviceChangeObserver(observer)
+        verify { deviceController.addDeviceChangeObserver(observer) }
+    }
+
+    @Test
+    fun `removeDeviceChangeObserver should call deviceController removeDeviceChangeObserver with given observer`() {
+        audioVideoFacade.removeDeviceChangeObserver(observer)
+        verify { deviceController.removeDeviceChangeObserver(observer) }
+    }
+
+    @Test
+    fun `startLocalVideo should call audioVideoController startLocalVideo`() {
+        audioVideoFacade.startLocalVideo()
+        verify { audioVideoController.startLocalVideo() }
+    }
+
+    @Test
+    fun `stopLocalVideo should call audioVideoController stopLocalVideo`() {
+        audioVideoFacade.stopLocalVideo()
+        verify { audioVideoController.stopLocalVideo() }
+    }
+
+    @Test
     fun `getActiveCamera should call deviceController getActiveCamera`() {
         every { deviceController.getActiveCamera() } returns mediaDevice
 
@@ -182,17 +210,5 @@ class DefaultAudioVideoFacadeTest {
         audioVideoFacade.switchCamera()
 
         verify { deviceController.switchCamera() }
-    }
-
-    @Test
-    fun `addDeviceChangeObserver should call deviceController addDeviceChangeObserver with given observer`() {
-        audioVideoFacade.addDeviceChangeObserver(observer)
-        verify { deviceController.addDeviceChangeObserver(observer) }
-    }
-
-    @Test
-    fun `removeDeviceChangeObserver should call deviceController removeDeviceChangeObserver with given observer`() {
-        audioVideoFacade.removeDeviceChangeObserver(observer)
-        verify { deviceController.removeDeviceChangeObserver(observer) }
     }
 }

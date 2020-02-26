@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) 2020 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ */
+
 package com.amazon.chime.sdkdemo
 
 import android.content.Context
@@ -5,6 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat.getColor
 import androidx.recyclerview.widget.RecyclerView
+import com.amazon.chime.sdk.media.enums.VolumeLevel
 import com.amazon.chime.sdkdemo.data.RosterAttendee
 import kotlinx.android.synthetic.main.roster_view_attendee_row.view.attendeeName
 import kotlinx.android.synthetic.main.roster_view_attendee_row.view.attendeeVolume
@@ -31,8 +36,6 @@ class RosterAdapter(
 
 class RosterHolder(inflatedView: View, private val context: Context) :
     RecyclerView.ViewHolder(inflatedView) {
-    private val MUTED = -1
-    private val NOT_SPEAKING = 0
 
     private var view: View = inflatedView
     private var attendeeName: String? = null
@@ -41,12 +44,12 @@ class RosterHolder(inflatedView: View, private val context: Context) :
         this.attendeeName = attendee.attendeeName
         view.attendeeName.text = attendeeName
 
-        when (attendee.score) {
-            MUTED -> {
+        when (attendee.volumeLevel) {
+            VolumeLevel.Muted -> {
                 view.attendeeVolume.text = context.getString(R.string.volume_muted)
                 view.attendeeVolume.setBackgroundColor(getColor(context, R.color.colorMuted))
             }
-            NOT_SPEAKING -> {
+            VolumeLevel.NotSpeaking -> {
                 view.attendeeVolume.text = ""
                 view.attendeeVolume.setBackgroundColor(
                     getColor(

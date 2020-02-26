@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) 2020 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ */
+
 package com.amazon.chime.sdk.media.devicecontroller
 
 import android.content.Context
@@ -105,11 +109,11 @@ class DefaultDeviceControllerTest {
         devices.forEach {
             assertTrue(
                 it.type == MediaDeviceType.AUDIO_BUILTIN_SPEAKER &&
-                        it.label == "default speaker (Speaker)" ||
-                        it.type == MediaDeviceType.AUDIO_HANDSET &&
-                        it.label == "default receiver (Handset)" ||
-                        it.type == MediaDeviceType.AUDIO_BLUETOOTH &&
-                        it.label == "my bluetooth headphone (Bluetooth)"
+                    it.label == "default speaker (Speaker)" ||
+                    it.type == MediaDeviceType.AUDIO_HANDSET &&
+                    it.label == "default receiver (Handset)" ||
+                    it.type == MediaDeviceType.AUDIO_BLUETOOTH &&
+                    it.label == "my bluetooth headphone (Bluetooth)"
             )
         }
     }
@@ -126,11 +130,11 @@ class DefaultDeviceControllerTest {
         devices.forEach {
             assertTrue(
                 it.type == MediaDeviceType.AUDIO_HANDSET &&
-                        it.label == "Handset" ||
-                        it.type == MediaDeviceType.AUDIO_BUILTIN_SPEAKER &&
-                        it.label == "Speaker" ||
-                        it.type == MediaDeviceType.AUDIO_BLUETOOTH &&
-                        it.label == "Bluetooth"
+                    it.label == "Handset" ||
+                    it.type == MediaDeviceType.AUDIO_BUILTIN_SPEAKER &&
+                    it.label == "Speaker" ||
+                    it.type == MediaDeviceType.AUDIO_BLUETOOTH &&
+                    it.label == "Bluetooth"
             )
         }
     }
@@ -147,7 +151,7 @@ class DefaultDeviceControllerTest {
         devices.forEach {
             assertTrue(
                 it.type == MediaDeviceType.AUDIO_WIRED_HEADSET ||
-                        it.type == MediaDeviceType.AUDIO_BUILTIN_SPEAKER
+                    it.type == MediaDeviceType.AUDIO_BUILTIN_SPEAKER
             )
         }
     }
@@ -164,7 +168,7 @@ class DefaultDeviceControllerTest {
         devices.forEach {
             assertTrue(
                 it.type == MediaDeviceType.AUDIO_WIRED_HEADSET ||
-                        it.type == MediaDeviceType.AUDIO_BUILTIN_SPEAKER
+                    it.type == MediaDeviceType.AUDIO_BUILTIN_SPEAKER
             )
         }
     }
@@ -174,7 +178,12 @@ class DefaultDeviceControllerTest {
         setupForOldAPILevel()
         every { audioClientController.setRoute(any()) } returns true
 
-        deviceController.chooseAudioDevice(MediaDevice("speaker", MediaDeviceType.AUDIO_BUILTIN_SPEAKER))
+        deviceController.chooseAudioDevice(
+            MediaDevice(
+                "speaker",
+                MediaDeviceType.AUDIO_BUILTIN_SPEAKER
+            )
+        )
 
         verify { audioClientController.setRoute(2) }
     }
@@ -184,7 +193,12 @@ class DefaultDeviceControllerTest {
         setupForOldAPILevel()
         every { audioClientController.setRoute(any()) } returns true
 
-        deviceController.chooseAudioDevice(MediaDevice("bluetooth", MediaDeviceType.AUDIO_BLUETOOTH))
+        deviceController.chooseAudioDevice(
+            MediaDevice(
+                "bluetooth",
+                MediaDeviceType.AUDIO_BLUETOOTH
+            )
+        )
 
         verify { audioManager.startBluetoothSco() }
     }
@@ -194,7 +208,12 @@ class DefaultDeviceControllerTest {
         setupForOldAPILevel()
         every { audioClientController.setRoute(any()) } returns true
 
-        deviceController.chooseAudioDevice(MediaDevice("wired headset", MediaDeviceType.AUDIO_WIRED_HEADSET))
+        deviceController.chooseAudioDevice(
+            MediaDevice(
+                "wired headset",
+                MediaDeviceType.AUDIO_WIRED_HEADSET
+            )
+        )
 
         verify { audioManager.setSpeakerphoneOn(false) }
         verify { audioManager.setBluetoothScoOn(false) }
