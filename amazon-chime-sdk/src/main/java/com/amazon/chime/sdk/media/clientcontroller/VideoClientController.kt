@@ -220,6 +220,13 @@ class VideoClientController constructor(
         }
     }
 
+    fun setRemotePaused(isPaused: Boolean, videoId: Int) {
+        if (videoClientState >= VideoClientState.STARTED) {
+            logger.info(TAG, "Set pause for videoId: $videoId, isPaused: $isPaused")
+            videoClient?.setRemotePause(videoId, isPaused)
+        }
+    }
+
     fun subscribeToVideoClientStateChange(observer: AudioVideoObserver) {
         videoClientStateObservers.add(observer)
     }

@@ -125,4 +125,12 @@ class DefaultAudioVideoFacade(
     override fun removeVideoTileObserver(observer: VideoTileObserver) {
         videoTileController.removeVideoTileObserver(observer)
     }
+
+    override fun pauseRemoteVideoTile(tileId: Int) {
+        videoTileController.pauseRemoteVideoTile(tileId)
+    }
+
+    override fun resumeRemoteVideoTile(tileId: Int) {
+        videoTileController.resumeRemoteVideoTile(tileId)
+    }
 }

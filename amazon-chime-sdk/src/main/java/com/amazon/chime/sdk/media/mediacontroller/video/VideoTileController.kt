@@ -17,10 +17,10 @@ interface VideoTileController : VideoTileControllerFacade {
     fun destroy()
 
     /**
-     * Called whenever there is anew Video frame received for any of the attendee in the meeting
+     * Called whenever there is a new Video frame received for any of the attendee in the meeting
      *
      * @param frame: [Any] - Video frame
-     * @param profileId: [String] - Profile Id of the attendee
+     * @param attendeeId: [String] - Attendee Id
      * @param displayId: [Int] - display Id
      * @param pauseType: [Int] - pauseType
      * @param videoId: [Int] - Video Id

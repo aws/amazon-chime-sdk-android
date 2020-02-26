@@ -48,8 +48,10 @@ class DefaultMeetingSession(
         val realtimeController =
             DefaultRealtimeController(audioClientController, audioClientObserver)
 
-        val videoTileController: VideoTileController = DefaultVideoTileController(logger)
         val videoClientController = VideoClientController(context, logger)
+
+        val videoTileController: VideoTileController =
+            DefaultVideoTileController(logger, videoClientController)
 
         videoClientController.subscribeToVideoTile(videoTileController)
         val deviceController =

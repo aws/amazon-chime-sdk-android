@@ -37,4 +37,18 @@ interface VideoTileControllerFacade {
      * @param observer: [VideoTileObserver] - The observer to unsubscribe from events with.
      */
     fun removeVideoTileObserver(observer: VideoTileObserver)
+
+    /**
+     * Pauses the specified remote video tile. Ignores the tileId if it belongs to the local video tile
+     *
+     * @param tileId: Int - The ID of the remote video tile to pause
+     */
+    fun pauseRemoteVideoTile(tileId: Int)
+
+    /**
+     * Resumes the specified remote video tile. Ignores the tileId if it belongs to the local video tile
+     *
+     * @param tileId: Int - The ID of the remote video tile to resume
+     */
+    fun resumeRemoteVideoTile(tileId: Int)
 }
