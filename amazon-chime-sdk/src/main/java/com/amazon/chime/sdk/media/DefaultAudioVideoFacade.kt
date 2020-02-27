@@ -15,7 +15,7 @@ import com.amazon.chime.sdk.media.mediacontroller.AudioVideoControllerFacade
 import com.amazon.chime.sdk.media.mediacontroller.AudioVideoObserver
 import com.amazon.chime.sdk.media.mediacontroller.RealtimeControllerFacade
 import com.amazon.chime.sdk.media.mediacontroller.RealtimeObserver
-import com.amazon.chime.sdk.media.mediacontroller.video.DefaultVideoRenderView
+import com.amazon.chime.sdk.media.mediacontroller.video.VideoRenderView
 import com.amazon.chime.sdk.media.mediacontroller.video.VideoTileController
 import com.amazon.chime.sdk.media.mediacontroller.video.VideoTileObserver
 
@@ -110,7 +110,7 @@ class DefaultAudioVideoFacade(
         deviceController.removeDeviceChangeObserver(observer)
     }
 
-    override fun bindVideoView(videoView: DefaultVideoRenderView, tileId: Int) {
+    override fun bindVideoView(videoView: VideoRenderView, tileId: Int) {
         videoTileController.bindVideoView(videoView, tileId)
     }
 

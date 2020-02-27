@@ -115,7 +115,7 @@ class DefaultVideoTileController(
         }
     }
 
-    override fun bindVideoView(videoView: DefaultVideoRenderView, tileId: Int) {
+    override fun bindVideoView(videoView: VideoRenderView, tileId: Int) {
         logger.info(TAG, "Binding VideoView to Tile with tileId = $tileId")
         videoTileMap[tileId]?.let { it.bind(rootEglBase, videoView) }
     }
