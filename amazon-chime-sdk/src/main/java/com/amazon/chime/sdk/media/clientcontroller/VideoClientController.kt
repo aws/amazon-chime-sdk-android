@@ -33,6 +33,7 @@ import org.json.JSONObject
 
 class VideoClientController constructor(
     val context: Context,
+    val clientMetricsCollector: ClientMetricsCollector,
     val logger: Logger
 ) :
     VideoClientDelegate {
@@ -337,6 +338,11 @@ class VideoClientController constructor(
     }
 
     override fun onMetrics(metrics: IntArray?, values: DoubleArray?) {
+        if (metrics == null || values == null) return
+
+        val metricMap = mutableMapOf<Int, Double>()
+        (metrics.indices).map { i -> metricMap[metrics[i]] = values[i] }
+        clientMetricsCollector.processVideoClientMetrics(metricMap)
     }
 
     private suspend fun doTurnRequest(): MeetingSessionTURNCredentials? {
