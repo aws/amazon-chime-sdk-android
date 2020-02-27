@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/tile_container"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <RelativeLayout
+        android:id="@+id/tile"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <com.amazon.chime.sdk.media.mediacontroller.video.DefaultVideoRenderView
+            android:id="@+id/video_surface"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+        <ImageButton
+            android:id="@+id/switch_camera"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentBottom="true"
+            android:contentDescription="@string/switch_camera"
+            android:src="@drawable/button_switch_camera"
+            android:visibility="invisible" />
+
+        <TextView
+            android:id="@+id/attendee_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="5dp"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentBottom="true"
+            android:maxLines="1"
+            android:ellipsize="end"
+            android:textColor="@color/colorAttendeeName"
+            android:background="@color/colorAttendeeNameBackground"
+            android:textSize="12sp"
+            android:visibility="invisible" />
+
+    </RelativeLayout>
+
+</FrameLayout>

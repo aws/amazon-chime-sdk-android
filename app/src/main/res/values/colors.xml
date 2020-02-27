@@ -8,8 +8,10 @@
     <color name="colorPrimary">#008577</color>
     <color name="colorPrimaryDark">#00574B</color>
     <color name="colorAccent">#D81B60</color>
+    <color name="colorText">#000000</color>
 
     <!-- For roster view -->
-    <color name="colorSpeaking">#18BC9C</color>
-    <color name="colorMuted">#95a5a6</color>
+    <color name="colorBackground">#E9E9E9</color>
+    <color name="colorAttendeeName">#FFFFFFFF</color>
+    <color name="colorAttendeeNameBackground">#99000000</color>
 </resources>
