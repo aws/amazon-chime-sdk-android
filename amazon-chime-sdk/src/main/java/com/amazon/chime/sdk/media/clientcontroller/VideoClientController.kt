@@ -336,6 +336,9 @@ class VideoClientController constructor(
         }
     }
 
+    override fun onMetrics(metrics: IntArray?, values: DoubleArray?) {
+    }
+
     private suspend fun doTurnRequest(): MeetingSessionTURNCredentials? {
         return withContext(ioDispatcher) {
             try {
