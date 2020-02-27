@@ -24,8 +24,8 @@ import com.amazon.chime.sdk.media.enums.SignalStrength
 import com.amazon.chime.sdk.media.enums.VolumeLevel
 import com.amazon.chime.sdk.media.mediacontroller.AudioVideoObserver
 import com.amazon.chime.sdk.media.mediacontroller.RealtimeObserver
-import com.amazon.chime.sdk.media.mediacontroller.video.VideoTile
 import com.amazon.chime.sdk.media.mediacontroller.video.VideoTileObserver
+import com.amazon.chime.sdk.media.mediacontroller.video.VideoTileState
 import com.amazon.chime.sdk.session.MeetingSessionStatus
 import com.amazon.chime.sdk.utils.logger.ConsoleLogger
 import com.amazon.chime.sdk.utils.logger.LogLevel
@@ -352,20 +352,20 @@ class RosterViewFragment : Fragment(), RealtimeObserver, AudioVideoObserver, Vid
     override fun onVideoClientStop(sessionStatus: MeetingSessionStatus) =
         notify("Video stopped for reason: ${sessionStatus.statusCode}")
 
-    override fun onAddVideoTrack(tile: VideoTile) {
+    override fun onAddVideoTile(tileState: VideoTileState) {
         uiScope.launch {
             logger.info(
                 TAG,
-                "Video track added, titleId: ${tile.tileId}, attendeeId: ${tile.attendeeId}"
+                "Video track added, titleId: ${tileState.tileId}, attendeeId: ${tileState.attendeeId}"
             )
             // For local video, should show it anyway
-            if (tile.attendeeId == null) {
-                showVideoTile(tile)
-            } else if (!currentVideoTiles.containsKey(tile.tileId)) {
+            if (tileState.isLocalTile) {
+                showVideoTile(tileState)
+            } else if (!currentVideoTiles.containsKey(tileState.tileId)) {
                 if (canShowMoreRemoteVideoTile()) {
-                    showVideoTile(tile)
+                    showVideoTile(tileState)
                 } else {
-                    nextVideoTiles[tile.tileId] = createVideoCollectionTile(tile)
+                    nextVideoTiles[tileState.tileId] = createVideoCollectionTile(tileState)
                 }
             }
         }
@@ -375,8 +375,8 @@ class RosterViewFragment : Fragment(), RealtimeObserver, AudioVideoObserver, Vid
         logger.info(TAG, "Media metrics received: $metrics")
     }
 
-    private fun showVideoTile(tile: VideoTile) {
-        currentVideoTiles[tile.tileId] = createVideoCollectionTile(tile)
+    private fun showVideoTile(tileState: VideoTileState) {
+        currentVideoTiles[tileState.tileId] = createVideoCollectionTile(tileState)
         videoTileAdapter.notifyDataSetChanged()
     }
 
@@ -387,35 +387,35 @@ class RosterViewFragment : Fragment(), RealtimeObserver, AudioVideoObserver, Vid
         return currentVideoTiles.size < currentMax
     }
 
-    private fun createVideoCollectionTile(tile: VideoTile): VideoCollectionTile {
-        val attendeeId = tile.attendeeId
+    private fun createVideoCollectionTile(tileState: VideoTileState): VideoCollectionTile {
+        val attendeeId = tileState.attendeeId
         attendeeId?.let {
             val attendeeName = currentRoster[attendeeId]?.attendeeName ?: ""
-            return VideoCollectionTile(attendeeName, false, tile)
+            return VideoCollectionTile(attendeeName, tileState)
         }
 
-        return VideoCollectionTile("", true, tile)
+        return VideoCollectionTile("", tileState)
     }
 
-    override fun onRemoveVideoTrack(tile: VideoTile) {
+    override fun onRemoveVideoTile(tileState: VideoTileState) {
         uiScope.launch {
             logger.info(
                 TAG,
-                "Video track removed, titleId: ${tile.tileId}, attendeeId: ${tile.attendeeId}"
+                "Video track removed, titleId: ${tileState.tileId}, attendeeId: ${tileState.attendeeId}"
             )
-            if (currentVideoTiles.containsKey(tile.tileId)) {
-                audioVideo.unbindVideoView(tile.tileId)
-                currentVideoTiles.remove(tile.tileId)
-                // Show next video tile if available
+            if (currentVideoTiles.containsKey(tileState.tileId)) {
+                audioVideo.unbindVideoView(tileState.tileId)
+                currentVideoTiles.remove(tileState.tileId)
+                // Show next video tileState if available
                 if (nextVideoTiles.isNotEmpty() && canShowMoreRemoteVideoTile()) {
-                    showVideoTile(nextVideoTiles.entries.iterator().next().value.videoTile)
-                    nextVideoTiles.remove(tile.tileId)
+                    showVideoTile(nextVideoTiles.entries.iterator().next().value.videoTileState)
+                    nextVideoTiles.remove(tileState.tileId)
                 }
                 videoTileAdapter.notifyDataSetChanged()
             } else {
                 // clean up removed tiles
-                if (nextVideoTiles.containsKey(tile.tileId)) {
-                    nextVideoTiles.remove(tile.tileId)
+                if (nextVideoTiles.containsKey(tileState.tileId)) {
+                    nextVideoTiles.remove(tileState.tileId)
                 }
             }
         }

@@ -9,13 +9,13 @@ interface VideoTileObserver {
     /**
      * Called whenever an attendee starts sharing the video
      *
-     * @param tile: [VideoTile] - Video tile associated with new attendee.
+     * @param tileState: [VideoTileState] - Video tile state associated with new attendee.
      */
-    fun onAddVideoTrack(tile: VideoTile)
+    fun onAddVideoTile(tileState: VideoTileState)
 
     /**
      * Called whenever any attendee stops sharing the video
-     * @param tile: [VideoTile] - Video tile associated with attendee who is removed
+     * @param tileState: [VideoTileState] - Video tile state associated with attendee who is removed
      */
-    fun onRemoveVideoTrack(tile: VideoTile)
+    fun onRemoveVideoTile(tileState: VideoTileState)
 }

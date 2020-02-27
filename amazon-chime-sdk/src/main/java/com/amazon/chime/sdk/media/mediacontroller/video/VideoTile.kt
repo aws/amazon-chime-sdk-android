@@ -8,14 +8,9 @@ import com.amazon.chime.webrtc.EglBase
 
 interface VideoTile {
     /**
-     * Unique Id associated with this tile
+     * State of video tile
      */
-    val tileId: Int
-
-    /**
-     * Profile Id of the user associated with this tile
-     */
-    val attendeeId: String?
+    var state: VideoTileState
 
     /**
      * View which will be used to render the Video Frame
@@ -43,4 +38,16 @@ interface VideoTile {
      * Unbinds the [videoRenderView] from tile. Any EGL context associated with the [videoRenderView] will be released
      */
     fun unbind()
+
+    /**
+     * Pauses the tile. When paused, the tile moves to an inactive state and will not receive
+     * frame update callback
+     */
+    fun pause()
+
+    /**
+     * Resume the tile if it was paused. When resumed,
+     * the tile moves to the active state.
+     */
+    fun resume()
 }

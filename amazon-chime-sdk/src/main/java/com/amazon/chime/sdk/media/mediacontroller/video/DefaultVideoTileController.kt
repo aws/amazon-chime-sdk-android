@@ -59,7 +59,7 @@ class DefaultVideoTileController(
                         TAG,
                         "Removing video tile with videoId = $videoId & attendeeId = $attendeeId"
                     )
-                    onRemoveTrack(videoId)
+                    onRemoveVideoTile(videoId)
                 }
             }
         } else {
@@ -69,7 +69,7 @@ class DefaultVideoTileController(
                         TAG,
                         "Adding video tile with videoId = $videoId & attendeeId = $attendeeId"
                     )
-                    onAddTrack(videoId, attendeeId)
+                    onAddVideoTile(videoId, attendeeId)
                 }
             }
         }
@@ -85,8 +85,7 @@ class DefaultVideoTileController(
 
     override fun pauseRemoteVideoTile(tileId: Int) {
         videoTileMap[tileId]?.let {
-            // Local attendeeId is null because VideoClient doesn't know its attendeeId
-            it.attendeeId ?: run {
+            if (it.state.isLocalTile) {
                 logger.warn(TAG, "Cannot pause local video tile $tileId!")
                 return
             }
@@ -96,13 +95,13 @@ class DefaultVideoTileController(
                 true,
                 tileId
             )
+            it.pause()
         }
     }
 
     override fun resumeRemoteVideoTile(tileId: Int) {
         videoTileMap[tileId]?.let {
-            // Local attendeeId is null because VideoClient doesn't know its attendeeId
-            it.attendeeId ?: run {
+            if (it.state.isLocalTile) {
                 logger.warn(TAG, "Cannot resume local video tile $tileId!")
                 return
             }
@@ -112,6 +111,7 @@ class DefaultVideoTileController(
                 false,
                 tileId
             )
+            it.resume()
         }
     }
 
@@ -126,16 +126,16 @@ class DefaultVideoTileController(
         videoTileMap.remove(tileId)
     }
 
-    private fun onRemoveTrack(tileId: Int) {
+    private fun onRemoveVideoTile(tileId: Int) {
         videoTileMap[tileId]?.let {
-            forEachObserver { observer -> observer.onRemoveVideoTrack(it) }
+            forEachObserver { observer -> observer.onRemoveVideoTile(it.state) }
         }
     }
 
-    private fun onAddTrack(tileId: Int, profileId: String?) {
+    private fun onAddVideoTile(tileId: Int, profileId: String?) {
         val tile = DefaultVideoTile(logger, tileId, profileId)
         videoTileMap[tileId] = tile
-        forEachObserver { observer -> observer.onAddVideoTrack(tile) }
+        forEachObserver { observer -> observer.onAddVideoTile(tile.state) }
     }
 
     private fun forEachObserver(observerFunction: (observer: VideoTileObserver) -> Unit) {

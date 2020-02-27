@@ -10,12 +10,12 @@ import com.amazon.chime.webrtc.VideoRenderer
 
 class DefaultVideoTile(
     private val logger: Logger,
-    override val tileId: Int,
-    override val attendeeId: String?
+    tileId: Int,
+    attendeeId: String?
 ) : VideoTile {
-
     private val TAG = "DefaultVideoTile"
 
+    override var state: VideoTileState = VideoTileState(tileId, attendeeId, false)
     override var videoRenderView: DefaultVideoRenderView? = null
 
     override fun bind(rootEglBase: EglBase?, videoRenderView: DefaultVideoRenderView?) {
@@ -31,5 +31,14 @@ class DefaultVideoTile(
     override fun unbind() {
         logger.info(TAG, "Unbinding the View from Tile")
         videoRenderView?.release()
+        videoRenderView = null
+    }
+
+    override fun resume() {
+        this.state.paused = false
+    }
+
+    override fun pause() {
+        this.state.paused = true
     }
 }

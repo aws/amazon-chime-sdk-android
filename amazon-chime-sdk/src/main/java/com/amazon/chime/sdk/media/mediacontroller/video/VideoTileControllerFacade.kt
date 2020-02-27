@@ -12,7 +12,7 @@ interface VideoTileControllerFacade {
      *
      * @param videoView: [DefaultVideoRenderView] - View to render the video. Application needs to create it
      * and pass to SDK.
-     * @param tileId: [Int] - id of the tile which was passed to the application in [VideoTileObserver.onAddVideoTrack] .
+     * @param tileId: [Int] - id of the tile which was passed to the application in [VideoTileObserver.onAddVideoTile] .
      */
     fun bindVideoView(videoView: DefaultVideoRenderView, tileId: Int)
 
@@ -20,7 +20,7 @@ interface VideoTileControllerFacade {
      * Unbinds the video rendering view from Video Tile. The view will stop displaying the video frame
      * after the completion of this API
      *
-     * @param tileId: [Int] - id of the tile which was passed to the application in [VideoTileObserver.onAddVideoTrack] .
+     * @param tileId: [Int] - id of the tile which was passed to the application in [VideoTileObserver.onAddVideoTile] .
      */
     fun unbindVideoView(tileId: Int)
 

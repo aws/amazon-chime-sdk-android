@@ -1,3 +1,6 @@
+/*
+ * Copyright 2020 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ */
 package com.amazon.chime.sdkdemo
 
 import android.content.Context
@@ -55,9 +58,9 @@ class ViewHolder(inflatedView: View, audioVideoFacade: AudioVideoFacade) :
     }
 
     fun bindVideoTile(videoCollectionTile: VideoCollectionTile) {
-        audioVideo.bindVideoView(view.video_surface, videoCollectionTile.videoTile.tileId)
+        audioVideo.bindVideoView(view.video_surface, videoCollectionTile.videoTileState.tileId)
 
-        if (videoCollectionTile.isLocal) {
+        if (videoCollectionTile.videoTileState.isLocalTile) {
             view.switch_camera.visibility = View.VISIBLE
             view.switch_camera.setOnClickListener { audioVideo.switchCamera() }
         } else {
