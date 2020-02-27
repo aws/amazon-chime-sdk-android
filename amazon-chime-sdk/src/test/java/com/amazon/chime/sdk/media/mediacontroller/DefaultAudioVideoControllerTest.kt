@@ -7,8 +7,8 @@ package com.amazon.chime.sdk.media.mediacontroller
 import com.amazon.chime.sdk.media.clientcontroller.AudioClientController
 import com.amazon.chime.sdk.media.clientcontroller.AudioClientObserver
 import com.amazon.chime.sdk.media.clientcontroller.ClientMetricsCollector
-import com.amazon.chime.sdk.media.clientcontroller.ObservableMetric
 import com.amazon.chime.sdk.media.clientcontroller.VideoClientController
+import com.amazon.chime.sdk.media.enums.ObservableMetric
 import com.amazon.chime.sdk.session.MeetingSessionConfiguration
 import com.amazon.chime.sdk.session.MeetingSessionCredentials
 import com.amazon.chime.sdk.session.MeetingSessionStatus
@@ -40,7 +40,7 @@ class DefaultAudioVideoControllerTest {
         override fun onConnectionBecomePoor() {
         }
 
-        override fun onReceiveMetric(metrics: Map<ObservableMetric, Any>) {
+        override fun onMetricsReceive(metrics: Map<ObservableMetric, Any>) {
         }
 
         override fun onVideoClientStart() {
@@ -129,13 +129,13 @@ class DefaultAudioVideoControllerTest {
     @Test
     fun `addObserver should call clientMetricsCollector addObserver with given observer`() {
         audioVideoController.addObserver(observer)
-        verify { clientMetricsCollector.addObserver(observer) }
+        verify { clientMetricsCollector.subscribeToMetrics(observer) }
     }
 
     @Test
     fun `removeObserver should call clientMetricsCollector removeObserver with given observer`() {
         audioVideoController.removeObserver(observer)
-        verify { clientMetricsCollector.removeObserver(observer) }
+        verify { clientMetricsCollector.unsubscribeFromMetrics(observer) }
     }
 
     @Test

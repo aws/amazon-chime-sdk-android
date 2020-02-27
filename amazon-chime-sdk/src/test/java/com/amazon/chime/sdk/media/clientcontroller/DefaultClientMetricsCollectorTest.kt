@@ -1,9 +1,10 @@
 /*
- * Copyright 2020 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright (c) 2020 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  */
 
 package com.amazon.chime.sdk.media.clientcontroller
 
+import com.amazon.chime.sdk.media.enums.ObservableMetric
 import com.amazon.chime.sdk.media.mediacontroller.AudioVideoObserver
 import com.xodee.client.audio.audioclient.AudioClient
 import io.mockk.MockKAnnotations
@@ -32,39 +33,39 @@ class DefaultClientMetricsCollectorTest {
         val rawMetrics = mutableMapOf(AudioClient.AUDIO_CLIENT_METRIC_POST_JB_SPK_1S_PACKETS_LOST_PERCENT to 1.0)
         clientMetricsCollector.processAudioClientMetrics(rawMetrics)
 
-        val observableMetrics = mutableMapOf(ObservableMetric.audioPacketsReceivedFractionLoss to 1.0)
-        verify(exactly = 0) { mockAudioVideoObserver.onReceiveMetric(observableMetrics) }
+        val observableMetrics = mutableMapOf(ObservableMetric.audioPacketsReceivedFractionLossPercent to 1.0)
+        verify(exactly = 0) { mockAudioVideoObserver.onMetricsReceive(observableMetrics) }
     }
 
     @Test
-    fun `onMetrics should call observer after interval has passed`() {
+    fun `onMetrics should call observer after interval has passed and observer should not receive any null metrics`() {
         Thread.sleep(1100)
 
-        clientMetricsCollector.addObserver(mockAudioVideoObserver)
+        clientMetricsCollector.subscribeToMetrics(mockAudioVideoObserver)
         val rawMetrics = mutableMapOf(AudioClient.AUDIO_CLIENT_METRIC_POST_JB_SPK_1S_PACKETS_LOST_PERCENT to 1.0)
         clientMetricsCollector.processAudioClientMetrics(rawMetrics)
 
-        val observableMetrics = mutableMapOf(ObservableMetric.audioPacketsReceivedFractionLoss to 1.0)
-        verify(exactly = 1) { mockAudioVideoObserver.onReceiveMetric(observableMetrics) }
+        val observableMetrics = mutableMapOf(ObservableMetric.audioPacketsReceivedFractionLossPercent to 1.0)
+        verify(exactly = 1) { mockAudioVideoObserver.onMetricsReceive(observableMetrics) }
     }
 
     @Test
     fun `onMetrics should not emit non-observable metrics`() {
-        clientMetricsCollector.addObserver(mockAudioVideoObserver)
+        clientMetricsCollector.subscribeToMetrics(mockAudioVideoObserver)
         val rawMetrics = mutableMapOf(AudioClient.AUDIO_CLIENT_METRIC_MIC_DEVICE_FRAMES_LOST_PERCENT to 1.0)
         clientMetricsCollector.processAudioClientMetrics(rawMetrics)
 
         val observableMetrics = mutableMapOf<ObservableMetric, Double>()
-        verify(exactly = 0) { mockAudioVideoObserver.onReceiveMetric(observableMetrics) }
+        verify(exactly = 0) { mockAudioVideoObserver.onMetricsReceive(observableMetrics) }
     }
 
     @Test
     fun `onMetrics should not emit invalid metrics`() {
-        clientMetricsCollector.addObserver(mockAudioVideoObserver)
+        clientMetricsCollector.subscribeToMetrics(mockAudioVideoObserver)
         val rawMetrics = mutableMapOf(999 to 1.0)
         clientMetricsCollector.processAudioClientMetrics(rawMetrics)
 
         val observableMetrics = mutableMapOf<ObservableMetric, Double>()
-        verify(exactly = 0) { mockAudioVideoObserver.onReceiveMetric(observableMetrics) }
+        verify(exactly = 0) { mockAudioVideoObserver.onMetricsReceive(observableMetrics) }
     }
 }

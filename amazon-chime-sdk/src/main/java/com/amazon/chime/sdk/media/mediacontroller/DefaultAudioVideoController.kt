@@ -50,13 +50,13 @@ class DefaultAudioVideoController(
 
     override fun addObserver(observer: AudioVideoObserver) {
         audioClientObserver.subscribeToAudioClientStateChange(observer)
-        clientMetricsCollector.addObserver(observer)
         videoClientController.subscribeToVideoClientStateChange(observer)
+        clientMetricsCollector.subscribeToMetrics(observer)
     }
 
     override fun removeObserver(observer: AudioVideoObserver) {
         audioClientObserver.unsubscribeFromAudioClientStateChange(observer)
-        clientMetricsCollector.removeObserver(observer)
         videoClientController.unsubscribeFromVideoClientStateChange(observer)
+        clientMetricsCollector.unsubscribeFromMetrics(observer)
     }
 }

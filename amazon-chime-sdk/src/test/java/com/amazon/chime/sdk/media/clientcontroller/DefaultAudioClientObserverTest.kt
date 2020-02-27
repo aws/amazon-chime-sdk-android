@@ -4,6 +4,7 @@
 
 package com.amazon.chime.sdk.media.clientcontroller
 
+import com.amazon.chime.sdk.media.enums.ObservableMetric
 import com.amazon.chime.sdk.media.enums.SignalStrength
 import com.amazon.chime.sdk.media.enums.VolumeLevel
 import com.amazon.chime.sdk.media.mediacontroller.AudioVideoObserver
@@ -57,7 +58,7 @@ class DefaultAudioClientObserverTest {
             observerCalled += 1
         }
 
-        override fun onReceiveMetric(metrics: Map<ObservableMetric, Any>) {
+        override fun onMetricsReceive(metrics: Map<ObservableMetric, Any>) {
             observerCalled += 1
         }
 

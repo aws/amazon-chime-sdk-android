@@ -19,7 +19,7 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.amazon.chime.sdk.media.AudioVideoFacade
-import com.amazon.chime.sdk.media.clientcontroller.ObservableMetric
+import com.amazon.chime.sdk.media.enums.ObservableMetric
 import com.amazon.chime.sdk.media.enums.SignalStrength
 import com.amazon.chime.sdk.media.enums.VolumeLevel
 import com.amazon.chime.sdk.media.mediacontroller.AudioVideoObserver
@@ -371,7 +371,7 @@ class RosterViewFragment : Fragment(), RealtimeObserver, AudioVideoObserver, Vid
         }
     }
 
-    override fun onReceiveMetric(metrics: Map<ObservableMetric, Any>) {
+    override fun onMetricsReceive(metrics: Map<ObservableMetric, Any>) {
         logger.info(TAG, "Media metrics received: $metrics")
     }
 

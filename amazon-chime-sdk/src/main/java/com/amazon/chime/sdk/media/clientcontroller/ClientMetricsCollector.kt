@@ -1,5 +1,5 @@
 /*
- * Copyright 2020 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * Copyright (c) 2020 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  */
 
 package com.amazon.chime.sdk.media.clientcontroller
@@ -20,16 +20,24 @@ interface ClientMetricsCollector {
     fun processAudioClientMetrics(metrics: Map<Int, Double>)
 
     /**
+     * Collect the raw video client metrics and filter observable metrics for eventual
+     * callback to the observer
+     *
+     * @param metrics: Map<Int, Double> - Map of raw video client metric to value
+     */
+    fun processVideoClientMetrics(metrics: Map<Int, Double>)
+
+    /**
      * Subscribe to metric events with an [AudioVideoObserver].
      *
      * @param observer: [AudioVideoObserver] - The observer to subscribe to metrics with.
      */
-    fun addObserver(observer: AudioVideoObserver)
+    fun subscribeToMetrics(observer: AudioVideoObserver)
 
     /**
-     * Unsubscribe to metric events with an [AudioVideoObserver].
+     * Unsubscribe from metric events with an [AudioVideoObserver].
      *
      * @param observer: [AudioVideoObserver] - The observer to unsubscribe from metrics.
      */
-    fun removeObserver(observer: AudioVideoObserver)
+    fun unsubscribeFromMetrics(observer: AudioVideoObserver)
 }
