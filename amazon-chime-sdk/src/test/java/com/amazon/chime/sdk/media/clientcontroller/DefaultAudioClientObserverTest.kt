@@ -4,23 +4,21 @@
 
 package com.amazon.chime.sdk.media.clientcontroller
 
-import com.amazon.chime.sdk.media.enums.ObservableMetric
 import com.amazon.chime.sdk.media.enums.SignalStrength
 import com.amazon.chime.sdk.media.enums.VolumeLevel
 import com.amazon.chime.sdk.media.mediacontroller.AudioVideoObserver
 import com.amazon.chime.sdk.media.mediacontroller.RealtimeObserver
-import com.amazon.chime.sdk.session.MeetingSessionStatus
 import com.amazon.chime.sdk.session.MeetingSessionStatusCode
 import com.amazon.chime.sdk.session.SessionStateControllerAction
 import com.amazon.chime.sdk.utils.logger.Logger
 import io.mockk.MockKAnnotations
 import io.mockk.impl.annotations.MockK
 import io.mockk.verify
+import io.mockk.verifyOrder
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.newSingleThreadContext
 import kotlinx.coroutines.test.setMain
 import org.junit.After
-import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
 
@@ -32,61 +30,11 @@ class DefaultAudioClientObserverTest {
 
     private var observerCalled = 0
 
-    private val audioVideoObserver: AudioVideoObserver = object : AudioVideoObserver {
+    @MockK
+    private lateinit var audioVideoObserver: AudioVideoObserver
 
-        override fun onAudioClientConnecting(reconnecting: Boolean) {
-            observerCalled += 1
-        }
-
-        override fun onAudioClientStart(reconnecting: Boolean) {
-            observerCalled += 1
-        }
-
-        override fun onAudioClientStop(sessionStatus: MeetingSessionStatus) {
-            observerCalled += 1
-        }
-
-        override fun onAudioClientReconnectionCancel() {
-            observerCalled += 1
-        }
-
-        override fun onConnectionRecover() {
-            observerCalled += 1
-        }
-
-        override fun onConnectionBecomePoor() {
-            observerCalled += 1
-        }
-
-        override fun onMetricsReceive(metrics: Map<ObservableMetric, Any>) {
-            observerCalled += 1
-        }
-
-        override fun onVideoClientConnecting() {
-        }
-
-        override fun onVideoClientStart() {
-        }
-
-        override fun onVideoClientStop(sessionStatus: MeetingSessionStatus) {
-        }
-    }
-
-    private val realtimeObserver: RealtimeObserver = object : RealtimeObserver {
-        override fun onVolumeChange(attendeeVolumes: Map<String, VolumeLevel>) {
-            observerCalled += 1
-        }
-
-        override fun onSignalStrengthChange(attendeeSignalStrength: Map<String, SignalStrength>) {
-            observerCalled += 1
-        }
-
-        override fun onAttendeesJoin(attendeeIds: Array<String>) {
-        }
-
-        override fun onAttendeesLeave(attendeeIds: Array<String>) {
-        }
-    }
+    @MockK
+    private lateinit var realtimeObserver: RealtimeObserver
 
     private val testObserverFun = { observer: AudioVideoObserver ->
         observer.onAudioClientConnecting(
@@ -98,6 +46,7 @@ class DefaultAudioClientObserverTest {
 
     // Used for both volume and signal
     private val testValues = IntArray(2) { it }
+    private val newTestValues = IntArray(2) { it * 2 }
 
     private val mockUIThread = newSingleThreadContext("UI thread")
 
@@ -123,7 +72,7 @@ class DefaultAudioClientObserverTest {
     fun `notifyAudioClientObserver should notify added observers`() {
         audioClientObserver.notifyAudioClientObserver(testObserverFun)
 
-        Assert.assertEquals(1, observerCalled)
+        verify(exactly = 1) { audioVideoObserver.onAudioClientConnecting(any()) }
     }
 
     @Test
@@ -132,49 +81,82 @@ class DefaultAudioClientObserverTest {
 
         audioClientObserver.notifyAudioClientObserver(testObserverFun)
 
-        Assert.assertEquals(0, observerCalled)
+        verifyAudioVideoObserverIsNotNotified()
     }
 
     @Test
     fun `onVolumeStateChange should notify added observers`() {
         audioClientObserver.onVolumeStateChange(testProfileIds, testValues)
 
-        Assert.assertEquals(1, observerCalled)
+        verify(exactly = 1) { realtimeObserver.onVolumeChange(any()) }
     }
 
     @Test
     fun `onVolumeStateChange should NOT notify when no profile Ids`() {
         audioClientObserver.onVolumeStateChange(null, testValues)
 
-        Assert.assertEquals(0, observerCalled)
+        verify(exactly = 0) { realtimeObserver.onVolumeChange(any()) }
     }
 
     @Test
     fun `onVolumeStateChange should NOT notify when no volumes`() {
         audioClientObserver.onVolumeStateChange(testProfileIds, null)
 
-        Assert.assertEquals(0, observerCalled)
+        verify(exactly = 0) { realtimeObserver.onVolumeChange(any()) }
+    }
+
+    @Test
+    fun `onVolumeStateChange should only notify delta`() {
+        audioClientObserver.onVolumeStateChange(testProfileIds, testValues)
+        audioClientObserver.onVolumeStateChange(testProfileIds, newTestValues)
+
+        val expectedArgs1 = mutableMapOf(
+            testProfileIds[0] to VolumeLevel.from(testValues[0])!!,
+            testProfileIds[1] to VolumeLevel.from(testValues[1])!!
+        )
+        val expectedArgs2 = mutableMapOf(testProfileIds[1] to VolumeLevel.from(newTestValues[1])!!)
+        verifyOrder {
+            realtimeObserver.onVolumeChange(expectedArgs1)
+            realtimeObserver.onVolumeChange(expectedArgs2)
+        }
     }
 
     @Test
     fun `onSignalStrengthChange should notify added observers`() {
         audioClientObserver.onSignalStrengthChange(testProfileIds, testValues)
 
-        Assert.assertEquals(1, observerCalled)
+        verify(exactly = 1) { realtimeObserver.onSignalStrengthChange(any()) }
     }
 
     @Test
     fun `onSignalStrengthChange should notify when no profile Ids`() {
         audioClientObserver.onSignalStrengthChange(null, testValues)
 
-        Assert.assertEquals(0, observerCalled)
+        verify(exactly = 0) { realtimeObserver.onSignalStrengthChange(any()) }
     }
 
     @Test
     fun `onSignalStrengthChange should notify when no volumes`() {
         audioClientObserver.onSignalStrengthChange(testProfileIds, null)
 
-        Assert.assertEquals(0, observerCalled)
+        verify(exactly = 0) { realtimeObserver.onSignalStrengthChange(any()) }
+    }
+
+    @Test
+    fun `onSignalStrengthChange should only notify delta`() {
+        audioClientObserver.onSignalStrengthChange(testProfileIds, testValues)
+        audioClientObserver.onSignalStrengthChange(testProfileIds, newTestValues)
+
+        val expectedArgs1 = mutableMapOf(
+            testProfileIds[0] to SignalStrength.from(testValues[0])!!,
+            testProfileIds[1] to SignalStrength.from(testValues[1])!!
+        )
+        val expectedArgs2 =
+            mutableMapOf(testProfileIds[1] to SignalStrength.from(newTestValues[1])!!)
+        verifyOrder {
+            realtimeObserver.onSignalStrengthChange(expectedArgs1)
+            realtimeObserver.onSignalStrengthChange(expectedArgs2)
+        }
     }
 
     @Test
@@ -183,7 +165,12 @@ class DefaultAudioClientObserverTest {
 
         audioClientObserver.onVolumeStateChange(testProfileIds, testValues)
 
-        Assert.assertEquals(0, observerCalled)
+        verify(exactly = 0) { realtimeObserver.onVolumeChange(any()) }
+        verify(exactly = 0) { realtimeObserver.onAttendeesJoin(any()) }
+        verify(exactly = 0) { realtimeObserver.onAttendeesLeave(any()) }
+        verify(exactly = 0) { realtimeObserver.onAttendeesMute(any()) }
+        verify(exactly = 0) { realtimeObserver.onAttendeesUnmute(any()) }
+        verify(exactly = 0) { realtimeObserver.onSignalStrengthChange(any()) }
     }
 
     @Test
@@ -193,7 +180,7 @@ class DefaultAudioClientObserverTest {
             100
         )
 
-        Assert.assertEquals(0, observerCalled)
+        verifyAudioVideoObserverIsNotNotified()
     }
 
     @Test
@@ -203,7 +190,7 @@ class DefaultAudioClientObserverTest {
             MeetingSessionStatusCode.OK.value
         )
 
-        Assert.assertEquals(0, observerCalled)
+        verifyAudioVideoObserverIsNotNotified()
     }
 
     @Test
@@ -212,5 +199,18 @@ class DefaultAudioClientObserverTest {
         audioClientObserver.onMetrics(metrics.keys.toIntArray(), metrics.values.toDoubleArray())
 
         verify { clientMetricsCollector.processAudioClientMetrics(metrics) }
+    }
+
+    private fun verifyAudioVideoObserverIsNotNotified() {
+        verify(exactly = 0) { audioVideoObserver.onAudioClientConnecting(any()) }
+        verify(exactly = 0) { audioVideoObserver.onAudioClientStart(any()) }
+        verify(exactly = 0) { audioVideoObserver.onAudioClientStop(any()) }
+        verify(exactly = 0) { audioVideoObserver.onAudioClientReconnectionCancel() }
+        verify(exactly = 0) { audioVideoObserver.onConnectionRecover() }
+        verify(exactly = 0) { audioVideoObserver.onConnectionBecomePoor() }
+        verify(exactly = 0) { audioVideoObserver.onMetricsReceive(any()) }
+        verify(exactly = 0) { audioVideoObserver.onVideoClientConnecting() }
+        verify(exactly = 0) { audioVideoObserver.onVideoClientStart() }
+        verify(exactly = 0) { audioVideoObserver.onVideoClientStop(any()) }
     }
 }

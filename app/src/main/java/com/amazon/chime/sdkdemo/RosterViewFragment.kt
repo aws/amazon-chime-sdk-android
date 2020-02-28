@@ -143,10 +143,9 @@ class RosterViewFragment : Fragment(), RealtimeObserver, AudioVideoObserver, Vid
     override fun onVolumeChange(attendeeVolumes: Map<String, VolumeLevel>) {
         uiScope.launch {
             mutex.withLock {
-                val updatedRoster = mutableMapOf<String, RosterAttendee>()
                 attendeeVolumes.forEach { (attendeeId, volume) ->
                     currentRoster[attendeeId]?.let {
-                        updatedRoster[attendeeId] =
+                        currentRoster[attendeeId] =
                             RosterAttendee(
                                 it.attendeeId,
                                 it.attendeeName,
@@ -156,8 +155,6 @@ class RosterViewFragment : Fragment(), RealtimeObserver, AudioVideoObserver, Vid
                     }
                 }
 
-                currentRoster.clear()
-                currentRoster.putAll(updatedRoster)
                 rosterAdapter.notifyDataSetChanged()
             }
         }
@@ -166,12 +163,11 @@ class RosterViewFragment : Fragment(), RealtimeObserver, AudioVideoObserver, Vid
     override fun onSignalStrengthChange(attendeeSignalStrength: Map<String, SignalStrength>) {
         uiScope.launch {
             mutex.withLock {
-                val updatedRoster = mutableMapOf<String, RosterAttendee>()
                 attendeeSignalStrength.forEach { (attendeeId, signalStrength) ->
                     logger.info(TAG, "Attendee $attendeeId signalStrength: $signalStrength")
 
                     currentRoster[attendeeId]?.let {
-                        updatedRoster[attendeeId] =
+                        currentRoster[attendeeId] =
                             RosterAttendee(
                                 it.attendeeId,
                                 it.attendeeName,
@@ -181,8 +177,6 @@ class RosterViewFragment : Fragment(), RealtimeObserver, AudioVideoObserver, Vid
                     }
                 }
 
-                currentRoster.clear()
-                currentRoster.putAll(updatedRoster)
                 rosterAdapter.notifyDataSetChanged()
             }
         }
@@ -191,16 +185,17 @@ class RosterViewFragment : Fragment(), RealtimeObserver, AudioVideoObserver, Vid
     override fun onAttendeesJoin(attendeeIds: Array<String>) {
         uiScope.launch {
             mutex.withLock {
-                val updatedRoster: MutableMap<String, RosterAttendee> = currentRoster.toMutableMap()
-                attendeeIds.forEach { attendeeId ->
-                    val attendeeName: String = (currentRoster[attendeeId]?.let { it.attendeeName }
-                        ?: getAttendeeName(getString(R.string.test_url), attendeeId)) ?: ""
-
-                    updatedRoster[attendeeId] = RosterAttendee(attendeeId, attendeeName)
+                attendeeIds.forEach {
+                    currentRoster.getOrPut(
+                        it,
+                        {
+                            RosterAttendee(
+                                it,
+                                getAttendeeName(getString(R.string.test_url), it) ?: ""
+                            )
+                        })
                 }
 
-                currentRoster.clear()
-                currentRoster.putAll(updatedRoster)
                 rosterAdapter.notifyDataSetChanged()
             }
         }
@@ -209,18 +204,22 @@ class RosterViewFragment : Fragment(), RealtimeObserver, AudioVideoObserver, Vid
     override fun onAttendeesLeave(attendeeIds: Array<String>) {
         uiScope.launch {
             mutex.withLock {
-                val updatedRoster = mutableMapOf<String, RosterAttendee>()
-                currentRoster.forEach { (attendeeId, attendee) ->
-                    val notRemoved = !attendeeIds.contains(attendeeId)
-                    if (notRemoved) {
-                        updatedRoster[attendeeId] = attendee
-                    }
-                }
+                attendeeIds.forEach { currentRoster.remove(it) }
 
-                currentRoster.clear()
-                currentRoster.putAll(updatedRoster)
                 rosterAdapter.notifyDataSetChanged()
             }
+        }
+    }
+
+    override fun onAttendeesMute(attendeeIds: Array<String>) {
+        attendeeIds.forEach {
+            logger.info(TAG, "Attendee $it muted")
+        }
+    }
+
+    override fun onAttendeesUnmute(attendeeIds: Array<String>) {
+        attendeeIds.forEach {
+            logger.info(TAG, "Attendee $it unmuted")
         }
     }
 
@@ -328,53 +327,6 @@ class RosterViewFragment : Fragment(), RealtimeObserver, AudioVideoObserver, Vid
         buttonVideo.setImageResource(R.drawable.button_video)
     }
 
-    override fun onAudioClientConnecting(reconnecting: Boolean) =
-        notify("Audio started connecting. reconnecting: $reconnecting")
-
-    override fun onAudioClientStart(reconnecting: Boolean) =
-        notify("Audio successfully started. reconnecting: $reconnecting")
-
-    override fun onAudioClientStop(sessionStatus: MeetingSessionStatus) {
-        notify("Audio stopped for reason: ${sessionStatus.statusCode}")
-        listener.onLeaveMeeting()
-    }
-
-    override fun onAudioClientReconnectionCancel() = notify("Audio cancelled reconnecting")
-
-    override fun onConnectionRecover() = notify("Connection quality has recovered")
-
-    override fun onConnectionBecomePoor() = notify("Connection quality has become poor")
-
-    override fun onVideoClientConnecting() = notify("Video started connecting.")
-
-    override fun onVideoClientStart() = notify("Video successfully started.")
-
-    override fun onVideoClientStop(sessionStatus: MeetingSessionStatus) =
-        notify("Video stopped for reason: ${sessionStatus.statusCode}")
-
-    override fun onAddVideoTile(tileState: VideoTileState) {
-        uiScope.launch {
-            logger.info(
-                TAG,
-                "Video track added, titleId: ${tileState.tileId}, attendeeId: ${tileState.attendeeId}"
-            )
-            // For local video, should show it anyway
-            if (tileState.isLocalTile) {
-                showVideoTile(tileState)
-            } else if (!currentVideoTiles.containsKey(tileState.tileId)) {
-                if (canShowMoreRemoteVideoTile()) {
-                    showVideoTile(tileState)
-                } else {
-                    nextVideoTiles[tileState.tileId] = createVideoCollectionTile(tileState)
-                }
-            }
-        }
-    }
-
-    override fun onMetricsReceive(metrics: Map<ObservableMetric, Any>) {
-        logger.info(TAG, "Media metrics received: $metrics")
-    }
-
     private fun showVideoTile(tileState: VideoTileState) {
         currentVideoTiles[tileState.tileId] = createVideoCollectionTile(tileState)
         videoTileAdapter.notifyDataSetChanged()
@@ -419,6 +371,53 @@ class RosterViewFragment : Fragment(), RealtimeObserver, AudioVideoObserver, Vid
                 }
             }
         }
+    }
+
+    override fun onAudioClientConnecting(reconnecting: Boolean) =
+        notify("Audio started connecting. reconnecting: $reconnecting")
+
+    override fun onAudioClientStart(reconnecting: Boolean) =
+        notify("Audio successfully started. reconnecting: $reconnecting")
+
+    override fun onAudioClientStop(sessionStatus: MeetingSessionStatus) {
+        notify("Audio stopped for reason: ${sessionStatus.statusCode}")
+        listener.onLeaveMeeting()
+    }
+
+    override fun onAudioClientReconnectionCancel() = notify("Audio cancelled reconnecting")
+
+    override fun onConnectionRecover() = notify("Connection quality has recovered")
+
+    override fun onConnectionBecomePoor() = notify("Connection quality has become poor")
+
+    override fun onVideoClientConnecting() = notify("Video started connecting.")
+
+    override fun onVideoClientStart() = notify("Video successfully started.")
+
+    override fun onVideoClientStop(sessionStatus: MeetingSessionStatus) =
+        notify("Video stopped for reason: ${sessionStatus.statusCode}")
+
+    override fun onAddVideoTile(tileState: VideoTileState) {
+        uiScope.launch {
+            logger.info(
+                TAG,
+                "Video track added, titleId: ${tileState.tileId}, attendeeId: ${tileState.attendeeId}"
+            )
+            // For local video, should show it anyway
+            if (tileState.isLocalTile) {
+                showVideoTile(tileState)
+            } else if (!currentVideoTiles.containsKey(tileState.tileId)) {
+                if (canShowMoreRemoteVideoTile()) {
+                    showVideoTile(tileState)
+                } else {
+                    nextVideoTiles[tileState.tileId] = createVideoCollectionTile(tileState)
+                }
+            }
+        }
+    }
+
+    override fun onMetricsReceive(metrics: Map<ObservableMetric, Any>) {
+        logger.debug(TAG, "Media metrics received: $metrics")
     }
 
     private fun notify(message: String) {
