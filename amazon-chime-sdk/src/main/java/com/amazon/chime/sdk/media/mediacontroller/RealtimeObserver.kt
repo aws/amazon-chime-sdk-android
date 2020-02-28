@@ -38,4 +38,18 @@ interface RealtimeObserver {
      * @param attendeeIds: Array<String> - The Ids for the attendees being removed
      */
     fun onAttendeesLeave(attendeeIds: Array<String>)
+
+    /**
+     * Handles attendee(s) being muted
+     *
+     * @param attendeeIds: Array<String> - The Ids for the attendees being muted
+     */
+    fun onAttendeesMute(attendeeIds: Array<String>)
+
+    /**
+     * Handles attendee(s) being unmuted
+     *
+     * @param attendeeIds: Array<String> - The Ids for the attendees being unmuted
+     */
+    fun onAttendeesUnmute(attendeeIds: Array<String>)
 }

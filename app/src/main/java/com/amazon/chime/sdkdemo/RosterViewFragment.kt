@@ -108,10 +108,9 @@ class RosterViewFragment : Fragment(), RealtimeObserver, AudioVideoObserver {
     override fun onVolumeChange(attendeeVolumes: Map<String, VolumeLevel>) {
         uiScope.launch {
             mutex.withLock {
-                val updatedRoster = mutableMapOf<String, RosterAttendee>()
                 attendeeVolumes.forEach { (attendeeId, volume) ->
                     currentRoster[attendeeId]?.let {
-                        updatedRoster[attendeeId] =
+                        currentRoster[attendeeId] =
                             RosterAttendee(
                                 it.attendeeId,
                                 it.attendeeName,
@@ -120,9 +119,6 @@ class RosterViewFragment : Fragment(), RealtimeObserver, AudioVideoObserver {
                             )
                     }
                 }
-
-                currentRoster.clear()
-                currentRoster.putAll(updatedRoster)
                 adapter.notifyDataSetChanged()
             }
         }
@@ -131,12 +127,11 @@ class RosterViewFragment : Fragment(), RealtimeObserver, AudioVideoObserver {
     override fun onSignalStrengthChange(attendeeSignalStrength: Map<String, SignalStrength>) {
         uiScope.launch {
             mutex.withLock {
-                val updatedRoster = mutableMapOf<String, RosterAttendee>()
                 attendeeSignalStrength.forEach { (attendeeId, signalStrength) ->
                     logger.info(TAG, "Attendee $attendeeId signalStrength: $signalStrength")
 
                     currentRoster[attendeeId]?.let {
-                        updatedRoster[attendeeId] =
+                        currentRoster[attendeeId] =
                             RosterAttendee(
                                 it.attendeeId,
                                 it.attendeeName,
@@ -145,9 +140,6 @@ class RosterViewFragment : Fragment(), RealtimeObserver, AudioVideoObserver {
                             )
                     }
                 }
-
-                currentRoster.clear()
-                currentRoster.putAll(updatedRoster)
                 adapter.notifyDataSetChanged()
             }
         }
@@ -156,17 +148,17 @@ class RosterViewFragment : Fragment(), RealtimeObserver, AudioVideoObserver {
     override fun onAttendeesJoin(attendeeIds: Array<String>) {
         uiScope.launch {
             mutex.withLock {
-                val updatedRoster: MutableMap<String, RosterAttendee> = currentRoster.toMutableMap()
-                attendeeIds.forEach { attendeeId ->
-                    val attendeeName: String = (currentRoster[attendeeId]?.let { it.attendeeName }
-                        ?: getAttendeeName(getString(R.string.test_url), attendeeId)) ?: ""
-
-                    updatedRoster[attendeeId] = RosterAttendee(attendeeId, attendeeName)
+                attendeeIds.forEach {
+                    currentRoster.getOrPut(
+                        it,
+                        {
+                            RosterAttendee(
+                                it,
+                                getAttendeeName(getString(R.string.test_url), it) ?: ""
+                            )
+                        })
+                    adapter.notifyDataSetChanged()
                 }
-
-                currentRoster.clear()
-                currentRoster.putAll(updatedRoster)
-                adapter.notifyDataSetChanged()
             }
         }
     }
@@ -174,17 +166,28 @@ class RosterViewFragment : Fragment(), RealtimeObserver, AudioVideoObserver {
     override fun onAttendeesLeave(attendeeIds: Array<String>) {
         uiScope.launch {
             mutex.withLock {
-                val updatedRoster = mutableMapOf<String, RosterAttendee>()
-                currentRoster.forEach { (attendeeId, attendee) ->
-                    val notRemoved = !attendeeIds.contains(attendeeId)
-                    if (notRemoved) {
-                        updatedRoster[attendeeId] = attendee
-                    }
-                }
-
-                currentRoster.clear()
-                currentRoster.putAll(updatedRoster)
+                attendeeIds.forEach { currentRoster.remove(it) }
                 adapter.notifyDataSetChanged()
+            }
+        }
+    }
+
+    override fun onAttendeesMute(attendeeIds: Array<String>) {
+        uiScope.launch {
+            mutex.withLock {
+                attendeeIds.forEach {
+                    logger.info(TAG, "Attendee $it muted")
+                }
+            }
+        }
+    }
+
+    override fun onAttendeesUnmute(attendeeIds: Array<String>) {
+        uiScope.launch {
+            mutex.withLock {
+                attendeeIds.forEach {
+                    logger.info(TAG, "Attendee $it unmuted")
+                }
             }
         }
     }
@@ -245,7 +248,7 @@ class RosterViewFragment : Fragment(), RealtimeObserver, AudioVideoObserver {
     override fun onConnectionBecamePoor() = notify("Connection quality has become poor")
 
     override fun onMetricsReceive(metrics: Map<ObservableMetric, Any>) {
-        logger.info(TAG, "Media metrics received: $metrics")
+        logger.debug(TAG, "Media metrics received: $metrics")
     }
 
     private fun notify(message: String) {

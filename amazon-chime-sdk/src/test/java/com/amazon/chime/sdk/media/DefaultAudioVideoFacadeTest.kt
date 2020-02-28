@@ -60,6 +60,12 @@ class DefaultAudioVideoFacadeTest {
         override fun onAttendeesLeave(attendeeIds: Array<String>) {
         }
 
+        override fun onAttendeesMute(attendeeIds: Array<String>) {
+        }
+
+        override fun onAttendeesUnmute(attendeeIds: Array<String>) {
+        }
+
         override fun onAudioDeviceChange(freshAudioDeviceList: List<MediaDevice>) {
         }
 
