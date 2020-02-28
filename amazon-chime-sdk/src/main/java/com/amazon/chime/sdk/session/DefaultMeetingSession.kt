@@ -19,6 +19,7 @@ import com.amazon.chime.sdk.media.devicecontroller.DefaultDeviceController
 import com.amazon.chime.sdk.media.mediacontroller.DefaultAudioVideoController
 import com.amazon.chime.sdk.media.mediacontroller.DefaultRealtimeController
 import com.amazon.chime.sdk.media.mediacontroller.video.DefaultVideoTileController
+import com.amazon.chime.sdk.media.mediacontroller.video.DefaultVideoTileFactory
 import com.amazon.chime.sdk.media.mediacontroller.video.VideoTileController
 import com.amazon.chime.sdk.utils.logger.Logger
 import com.xodee.client.audio.audioclient.AudioClient
@@ -50,8 +51,10 @@ class DefaultMeetingSession(
 
         val videoClientController = VideoClientController(context, metricsCollector, logger)
 
+        val videoTileFactory = DefaultVideoTileFactory(logger)
+
         val videoTileController: VideoTileController =
-            DefaultVideoTileController(logger, videoClientController)
+            DefaultVideoTileController(logger, videoClientController, videoTileFactory)
 
         videoClientController.subscribeToVideoTile(videoTileController)
         val deviceController =

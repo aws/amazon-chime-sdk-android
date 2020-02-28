@@ -13,7 +13,8 @@ import kotlinx.coroutines.launch
 
 class DefaultVideoTileController(
     private val logger: Logger,
-    private val videoClientController: VideoClientController
+    private val videoClientController: VideoClientController,
+    private val videoTileFactory: VideoTileFactory
 ) : VideoTileController {
     private val NO_PAUSE = 0
     private val videoTileMap = mutableMapOf<Int, VideoTile>()
@@ -132,8 +133,8 @@ class DefaultVideoTileController(
         }
     }
 
-    private fun onAddVideoTile(tileId: Int, profileId: String?) {
-        val tile = DefaultVideoTile(logger, tileId, profileId)
+    private fun onAddVideoTile(tileId: Int, attendeeId: String?) {
+        val tile = videoTileFactory.makeTile(tileId, attendeeId)
         videoTileMap[tileId] = tile
         forEachObserver { observer -> observer.onAddVideoTile(tile.state) }
     }
