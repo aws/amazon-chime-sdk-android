@@ -4,10 +4,8 @@
 
 package com.amazon.chime.sdkdemo
 
-import android.content.Context
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.content.ContextCompat.getColor
 import androidx.recyclerview.widget.RecyclerView
 import com.amazon.chime.sdk.media.enums.VolumeLevel
 import com.amazon.chime.sdkdemo.data.RosterAttendee
@@ -15,13 +13,12 @@ import kotlinx.android.synthetic.main.roster_view_attendee_row.view.attendeeName
 import kotlinx.android.synthetic.main.roster_view_attendee_row.view.attendeeVolume
 
 class RosterAdapter(
-    private val roster: MutableCollection<RosterAttendee>,
-    private val context: Context
+    private val roster: MutableCollection<RosterAttendee>
 ) :
     RecyclerView.Adapter<RosterHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RosterHolder {
         val inflatedView = parent.inflate(R.layout.roster_view_attendee_row, false)
-        return RosterHolder(inflatedView, context)
+        return RosterHolder(inflatedView)
     }
 
     override fun getItemCount(): Int {
@@ -34,7 +31,7 @@ class RosterAdapter(
     }
 }
 
-class RosterHolder(inflatedView: View, private val context: Context) :
+class RosterHolder(inflatedView: View) :
     RecyclerView.ViewHolder(inflatedView) {
 
     private var view: View = inflatedView
@@ -45,23 +42,9 @@ class RosterHolder(inflatedView: View, private val context: Context) :
         view.attendeeName.text = attendeeName
 
         when (attendee.volumeLevel) {
-            VolumeLevel.Muted -> {
-                view.attendeeVolume.text = context.getString(R.string.volume_muted)
-                view.attendeeVolume.setBackgroundColor(getColor(context, R.color.colorMuted))
-            }
-            VolumeLevel.NotSpeaking -> {
-                view.attendeeVolume.text = ""
-                view.attendeeVolume.setBackgroundColor(
-                    getColor(
-                        context,
-                        android.R.color.transparent
-                    )
-                )
-            }
-            else -> {
-                view.attendeeVolume.text = context.getString(R.string.volume_speaking)
-                view.attendeeVolume.setBackgroundColor(getColor(context, R.color.colorSpeaking))
-            }
+            VolumeLevel.Muted -> view.attendeeVolume.setImageResource(R.drawable.volume_muted)
+            VolumeLevel.NotSpeaking -> view.attendeeVolume.setImageResource(R.drawable.volume_0)
+            else -> view.attendeeVolume.setImageResource(R.drawable.volume_3)
         }
     }
 }

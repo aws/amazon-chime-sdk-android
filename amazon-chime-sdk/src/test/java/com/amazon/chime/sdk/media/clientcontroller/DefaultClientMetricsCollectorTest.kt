@@ -7,6 +7,7 @@ package com.amazon.chime.sdk.media.clientcontroller
 import com.amazon.chime.sdk.media.enums.ObservableMetric
 import com.amazon.chime.sdk.media.mediacontroller.AudioVideoObserver
 import com.xodee.client.audio.audioclient.AudioClient
+import com.xodee.client.video.VideoClient
 import io.mockk.MockKAnnotations
 import io.mockk.impl.annotations.MockK
 import io.mockk.verify
@@ -38,7 +39,7 @@ class DefaultClientMetricsCollectorTest {
     }
 
     @Test
-    fun `onMetrics should call observer after interval has passed and observer should not receive any null metrics`() {
+    fun `onMetrics for audio should call observer after interval has passed and observer should not receive any null metrics`() {
         Thread.sleep(1100)
 
         clientMetricsCollector.subscribeToMetrics(mockAudioVideoObserver)
@@ -46,6 +47,18 @@ class DefaultClientMetricsCollectorTest {
         clientMetricsCollector.processAudioClientMetrics(rawMetrics)
 
         val observableMetrics = mutableMapOf(ObservableMetric.audioPacketsReceivedFractionLossPercent to 1.0)
+        verify(exactly = 1) { mockAudioVideoObserver.onMetricsReceive(observableMetrics) }
+    }
+
+    @Test
+    fun `onMetrics for video should call observer after interval has passed and observer should not receive any null metrics`() {
+        Thread.sleep(1100)
+
+        clientMetricsCollector.subscribeToMetrics(mockAudioVideoObserver)
+        val rawMetrics = mutableMapOf(VideoClient.VIDEO_AVAILABLE_RECEIVE_BANDWIDTH to 10.0)
+        clientMetricsCollector.processVideoClientMetrics(rawMetrics)
+
+        val observableMetrics = mutableMapOf(ObservableMetric.videoAvailableReceiveBandwidth to 10.0)
         verify(exactly = 1) { mockAudioVideoObserver.onMetricsReceive(observableMetrics) }
     }
 

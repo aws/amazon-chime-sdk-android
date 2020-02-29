@@ -9,6 +9,7 @@ import androidx.core.content.ContextCompat
 import com.amazon.chime.sdk.media.devicecontroller.DeviceChangeObserver
 import com.amazon.chime.sdk.media.devicecontroller.DeviceController
 import com.amazon.chime.sdk.media.devicecontroller.MediaDevice
+import com.amazon.chime.sdk.media.devicecontroller.MediaDeviceType
 import com.amazon.chime.sdk.media.enums.ObservableMetric
 import com.amazon.chime.sdk.media.enums.SignalStrength
 import com.amazon.chime.sdk.media.enums.VolumeLevel
@@ -16,6 +17,7 @@ import com.amazon.chime.sdk.media.mediacontroller.AudioVideoControllerFacade
 import com.amazon.chime.sdk.media.mediacontroller.AudioVideoObserver
 import com.amazon.chime.sdk.media.mediacontroller.RealtimeControllerFacade
 import com.amazon.chime.sdk.media.mediacontroller.RealtimeObserver
+import com.amazon.chime.sdk.media.mediacontroller.video.VideoTileController
 import com.amazon.chime.sdk.session.MeetingSessionStatus
 import io.mockk.MockKAnnotations
 import io.mockk.every
@@ -30,22 +32,23 @@ import org.junit.Test
 
 class DefaultAudioVideoFacadeTest {
     private val observer = object : AudioVideoObserver, RealtimeObserver, DeviceChangeObserver {
-        override fun onAudioVideoStartConnecting(reconnecting: Boolean) {
+
+        override fun onAudioClientConnecting(reconnecting: Boolean) {
         }
 
-        override fun onAudioVideoStart(reconnecting: Boolean) {
+        override fun onAudioClientStart(reconnecting: Boolean) {
         }
 
-        override fun onAudioVideoStop(sessionStatus: MeetingSessionStatus) {
+        override fun onAudioClientStop(sessionStatus: MeetingSessionStatus) {
         }
 
-        override fun onAudioReconnectionCancel() {
+        override fun onAudioClientReconnectionCancel() {
         }
 
-        override fun onConnectionRecovered() {
+        override fun onConnectionRecover() {
         }
 
-        override fun onConnectionBecamePoor() {
+        override fun onConnectionBecomePoor() {
         }
 
         override fun onVolumeChange(attendeeVolumes: Map<String, VolumeLevel>) {
@@ -71,11 +74,20 @@ class DefaultAudioVideoFacadeTest {
 
         override fun onMetricsReceive(metrics: Map<ObservableMetric, Any>) {
         }
+
+        override fun onVideoClientConnecting() {
+        }
+
+        override fun onVideoClientStart() {
+        }
+
+        override fun onVideoClientStop(sessionStatus: MeetingSessionStatus) {
+        }
     }
 
     private val devices = emptyList<MediaDevice>()
 
-    private val mediaDevice = MediaDevice("label", 0)
+    private val mediaDevice = MediaDevice("label", MediaDeviceType.OTHER)
 
     @MockK
     private lateinit var context: Context
@@ -88,6 +100,9 @@ class DefaultAudioVideoFacadeTest {
 
     @MockK
     private lateinit var deviceController: DeviceController
+
+    @MockK
+    private lateinit var videoTileController: VideoTileController
 
     @InjectMockKs
     private lateinit var audioVideoFacade: DefaultAudioVideoFacade
@@ -174,5 +189,32 @@ class DefaultAudioVideoFacadeTest {
     fun `removeDeviceChangeObserver should call deviceController removeDeviceChangeObserver with given observer`() {
         audioVideoFacade.removeDeviceChangeObserver(observer)
         verify { deviceController.removeDeviceChangeObserver(observer) }
+    }
+
+    @Test
+    fun `startLocalVideo should call audioVideoController startLocalVideo`() {
+        audioVideoFacade.startLocalVideo()
+        verify { audioVideoController.startLocalVideo() }
+    }
+
+    @Test
+    fun `stopLocalVideo should call audioVideoController stopLocalVideo`() {
+        audioVideoFacade.stopLocalVideo()
+        verify { audioVideoController.stopLocalVideo() }
+    }
+
+    @Test
+    fun `getActiveCamera should call deviceController getActiveCamera`() {
+        every { deviceController.getActiveCamera() } returns mediaDevice
+
+        assertEquals(mediaDevice, audioVideoFacade.getActiveCamera())
+        verify { deviceController.getActiveCamera() }
+    }
+
+    @Test
+    fun `switchCamera should call deviceController switchCamera`() {
+        audioVideoFacade.switchCamera()
+
+        verify { deviceController.switchCamera() }
     }
 }

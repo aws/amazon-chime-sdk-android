@@ -21,12 +21,22 @@ interface AudioVideoControllerFacade {
     fun removeObserver(observer: AudioVideoObserver)
 
     /**
-     * Starts audio
+     * Starts audio and video.
      */
     fun start()
 
     /**
-     * Stops audio
+     * Stops audio and video.
      */
     fun stop()
+
+    /**
+     * Start local video.
+     */
+    fun startLocalVideo()
+
+    /**
+     * Stop local video.
+     */
+    fun stopLocalVideo()
 }

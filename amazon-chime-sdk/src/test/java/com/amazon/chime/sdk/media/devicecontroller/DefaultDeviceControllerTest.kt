@@ -9,11 +9,15 @@ import android.content.Intent
 import android.media.AudioDeviceInfo
 import android.media.AudioManager
 import com.amazon.chime.sdk.media.clientcontroller.AudioClientController
+import com.amazon.chime.sdk.media.clientcontroller.VideoClientController
+import com.xodee.client.video.VideoDevice
 import io.mockk.MockKAnnotations
 import io.mockk.every
 import io.mockk.impl.annotations.MockK
+import io.mockk.mockkClass
 import io.mockk.verify
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertNull
 import org.junit.Assert.assertTrue
 import org.junit.Test
 
@@ -37,6 +41,9 @@ class DefaultDeviceControllerTest {
     private lateinit var audioClientController: AudioClientController
 
     @MockK
+    private lateinit var videoClientController: VideoClientController
+
+    @MockK
     private lateinit var audioManager: AudioManager
 
     private lateinit var deviceController: DefaultDeviceController
@@ -46,6 +53,7 @@ class DefaultDeviceControllerTest {
         deviceController = DefaultDeviceController(
             context,
             audioClientController,
+            videoClientController,
             audioManager,
             23
         )
@@ -58,6 +66,7 @@ class DefaultDeviceControllerTest {
         deviceController = DefaultDeviceController(
             context,
             audioClientController,
+            videoClientController,
             audioManager,
             21
         )
@@ -99,12 +108,12 @@ class DefaultDeviceControllerTest {
         assertEquals(3, devices.size)
         devices.forEach {
             assertTrue(
-                it.type == AudioDeviceInfo.TYPE_BUILTIN_SPEAKER &&
-                        it.label == "default speaker (Speaker)" ||
-                        it.type == AudioDeviceInfo.TYPE_TELEPHONY &&
-                        it.label == "default receiver (Handset)" ||
-                        it.type == AudioDeviceInfo.TYPE_BLUETOOTH_SCO &&
-                        it.label == "my bluetooth headphone (Bluetooth)"
+                it.type == MediaDeviceType.AUDIO_BUILTIN_SPEAKER &&
+                    it.label == "default speaker (Speaker)" ||
+                    it.type == MediaDeviceType.AUDIO_HANDSET &&
+                    it.label == "default receiver (Handset)" ||
+                    it.type == MediaDeviceType.AUDIO_BLUETOOTH &&
+                    it.label == "my bluetooth headphone (Bluetooth)"
             )
         }
     }
@@ -120,12 +129,12 @@ class DefaultDeviceControllerTest {
         assertEquals(3, devices.size)
         devices.forEach {
             assertTrue(
-                it.type == AudioDeviceInfo.TYPE_TELEPHONY &&
-                        it.label == "Handset" ||
-                        it.type == AudioDeviceInfo.TYPE_BUILTIN_SPEAKER &&
-                        it.label == "Speaker" ||
-                        it.type == AudioDeviceInfo.TYPE_BLUETOOTH_SCO &&
-                        it.label == "Bluetooth"
+                it.type == MediaDeviceType.AUDIO_HANDSET &&
+                    it.label == "Handset" ||
+                    it.type == MediaDeviceType.AUDIO_BUILTIN_SPEAKER &&
+                    it.label == "Speaker" ||
+                    it.type == MediaDeviceType.AUDIO_BLUETOOTH &&
+                    it.label == "Bluetooth"
             )
         }
     }
@@ -141,8 +150,8 @@ class DefaultDeviceControllerTest {
         assertEquals(2, devices.size)
         devices.forEach {
             assertTrue(
-                it.type == AudioDeviceInfo.TYPE_WIRED_HEADSET ||
-                        it.type == AudioDeviceInfo.TYPE_BUILTIN_SPEAKER
+                it.type == MediaDeviceType.AUDIO_WIRED_HEADSET ||
+                    it.type == MediaDeviceType.AUDIO_BUILTIN_SPEAKER
             )
         }
     }
@@ -158,8 +167,8 @@ class DefaultDeviceControllerTest {
         assertEquals(2, devices.size)
         devices.forEach {
             assertTrue(
-                it.type == AudioDeviceInfo.TYPE_WIRED_HEADSET ||
-                        it.type == AudioDeviceInfo.TYPE_BUILTIN_SPEAKER
+                it.type == MediaDeviceType.AUDIO_WIRED_HEADSET ||
+                    it.type == MediaDeviceType.AUDIO_BUILTIN_SPEAKER
             )
         }
     }
@@ -169,7 +178,12 @@ class DefaultDeviceControllerTest {
         setupForOldAPILevel()
         every { audioClientController.setRoute(any()) } returns true
 
-        deviceController.chooseAudioDevice(MediaDevice("speaker", AudioDeviceInfo.TYPE_BUILTIN_SPEAKER))
+        deviceController.chooseAudioDevice(
+            MediaDevice(
+                "speaker",
+                MediaDeviceType.AUDIO_BUILTIN_SPEAKER
+            )
+        )
 
         verify { audioClientController.setRoute(2) }
     }
@@ -179,7 +193,12 @@ class DefaultDeviceControllerTest {
         setupForOldAPILevel()
         every { audioClientController.setRoute(any()) } returns true
 
-        deviceController.chooseAudioDevice(MediaDevice("bluetooth", AudioDeviceInfo.TYPE_BLUETOOTH_SCO))
+        deviceController.chooseAudioDevice(
+            MediaDevice(
+                "bluetooth",
+                MediaDeviceType.AUDIO_BLUETOOTH
+            )
+        )
 
         verify { audioManager.startBluetoothSco() }
     }
@@ -189,9 +208,45 @@ class DefaultDeviceControllerTest {
         setupForOldAPILevel()
         every { audioClientController.setRoute(any()) } returns true
 
-        deviceController.chooseAudioDevice(MediaDevice("wired headset", AudioDeviceInfo.TYPE_WIRED_HEADSET))
+        deviceController.chooseAudioDevice(
+            MediaDevice(
+                "wired headset",
+                MediaDeviceType.AUDIO_WIRED_HEADSET
+            )
+        )
 
         verify { audioManager.setSpeakerphoneOn(false) }
         verify { audioManager.setBluetoothScoOn(false) }
+    }
+
+    @Test
+    fun `getActiveCamera should return null when no active camera`() {
+        setupForOldAPILevel()
+        every { videoClientController.getActiveCamera() } returns null
+
+        assertNull(deviceController.getActiveCamera())
+    }
+
+    @Test
+    fun `getActiveCamera should return a media device when active camera existing`() {
+        setupForOldAPILevel()
+        val videoDevice = mockkClass(VideoDevice::class)
+        every { videoDevice.name } returns "camera"
+        every { videoDevice.isFrontFacing } returns true
+        every { videoClientController.getActiveCamera() } returns videoDevice
+
+        val mediaDevice = deviceController.getActiveCamera()!!
+
+        assertEquals("camera", mediaDevice.label)
+        assertEquals(MediaDeviceType.VIDEO_FRONT_CAMERA, mediaDevice.type)
+    }
+
+    @Test
+    fun `switchCamera should call videoClientController switchCamera`() {
+        setupForOldAPILevel()
+
+        deviceController.switchCamera()
+
+        verify { videoClientController.switchCamera() }
     }
 }

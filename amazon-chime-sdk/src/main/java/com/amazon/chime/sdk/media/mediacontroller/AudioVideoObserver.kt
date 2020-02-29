@@ -9,46 +9,64 @@ import com.amazon.chime.sdk.session.MeetingSessionStatus
 
 interface AudioVideoObserver {
     /**
-     * Called when the session is connecting or reconnecting.
+     * Called when the audio session is connecting or reconnecting.
      *
      * @param reconnecting: Boolean - Whether the session is reconnecting or not.
      */
-    fun onAudioVideoStartConnecting(reconnecting: Boolean)
+    fun onAudioClientConnecting(reconnecting: Boolean)
 
     /**
-     * Called when the session has started.
+     * Called when the audio session has started.
      *
      * @param reconnecting: Boolean - Whether the session is reconnecting or not.
      */
-    fun onAudioVideoStart(reconnecting: Boolean)
+    fun onAudioClientStart(reconnecting: Boolean)
 
     /**
-     * Called when the session has stopped from a started state with the reason
+     * Called when the audio session has stopped from a started state with the reason
      * provided in the status.
      *
      * @param sessionStatus: [MeetingSessionStatus] - The reason why the session has stopped.
      */
-    fun onAudioVideoStop(sessionStatus: MeetingSessionStatus)
+    fun onAudioClientStop(sessionStatus: MeetingSessionStatus)
 
     /**
-     * Called when reconnection is canceled.
+     * Called when audio reconnection is canceled.
      */
-    fun onAudioReconnectionCancel()
+    fun onAudioClientReconnectionCancel()
 
     /**
      * Called when the connection health is recovered.
      */
-    fun onConnectionRecovered()
+    fun onConnectionRecover()
 
     /**
      * Called when connection is becoming poor.
      */
-    fun onConnectionBecamePoor()
+    fun onConnectionBecomePoor()
 
     /**
      * Called when metrics are ready.
      *
-     * @param metrics: Map<ObservableMetric, Any> - Map of metric type to value
+     * @param metrics: Map<[ObservableMetric], Any> - Map of metric type to value
      */
     fun onMetricsReceive(metrics: Map<ObservableMetric, Any>)
+
+    /**
+     * Called when the video session is connecting or reconnecting.
+     */
+    fun onVideoClientConnecting()
+
+    /**
+     * Called when the video session has started.
+     */
+    fun onVideoClientStart()
+
+    /**
+     * Called when the video session has stopped from a started state with the reason
+     * provided in the status.
+     *
+     * @param sessionStatus: [MeetingSessionStatus] - The reason why the session has stopped.
+     */
+    fun onVideoClientStop(sessionStatus: MeetingSessionStatus)
 }

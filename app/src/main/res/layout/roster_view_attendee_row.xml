@@ -11,18 +11,21 @@
 
     <TextView
         android:id="@+id/attendeeName"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:gravity="start"
+        android:layout_weight="3"
         android:padding="8dp"
-        android:textSize="20sp" />
+        android:textSize="20sp"
+        android:maxLines="1"
+        android:ellipsize="end"
+        android:textColor="@color/colorText" />
 
-    <TextView
+    <ImageView
         android:id="@+id/attendeeVolume"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:gravity="end"
-        android:padding="8dp"
-        android:textSize="20sp" />
+        android:layout_weight="1"
+        android:contentDescription="@string/volume_indicator"
+        android:padding="8dp" />
 
 </LinearLayout>

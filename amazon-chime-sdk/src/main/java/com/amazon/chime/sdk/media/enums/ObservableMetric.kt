@@ -5,7 +5,7 @@
 package com.amazon.chime.sdk.media.enums
 
 /**
- * [ObservableMetric]'s represents filtered metrics that are intended to propagate to the
+ * [ObservableMetric] represents filtered metrics that are intended to propagate to the
  * top level observers. All metrics are measured over the past second.
  */
 enum class ObservableMetric() {

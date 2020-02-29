@@ -18,6 +18,7 @@ import androidx.fragment.app.Fragment
 import com.amazon.chime.sdk.media.AudioVideoFacade
 import com.amazon.chime.sdk.media.devicecontroller.DeviceChangeObserver
 import com.amazon.chime.sdk.media.devicecontroller.MediaDevice
+import com.amazon.chime.sdk.media.devicecontroller.MediaDeviceType
 import com.amazon.chime.sdk.utils.logger.ConsoleLogger
 import com.amazon.chime.sdk.utils.logger.LogLevel
 import java.lang.ClassCastException
@@ -29,8 +30,6 @@ import kotlinx.coroutines.withContext
 class DeviceManagementFragment : Fragment(), DeviceChangeObserver {
     private val logger = ConsoleLogger(LogLevel.INFO)
     private val uiScope = CoroutineScope(Dispatchers.Main)
-    // Maps to AudioDeviceInfo (API 23): https://developer.android.com/reference/android/media/AudioDeviceInfo
-    private val supportedAudioDeviceTypes = setOf(2, 3, 4, 7, 18)
     private val audioDevices = mutableListOf<MediaDevice>()
     private lateinit var listener: DeviceManagementEventListener
     private lateinit var audioVideo: AudioVideoFacade
@@ -113,7 +112,7 @@ class DeviceManagementFragment : Fragment(), DeviceChangeObserver {
         audioDevices.clear()
         audioDevices.addAll(
             freshAudioDeviceList.filter {
-                supportedAudioDeviceTypes.contains(it.type)
+                it.type != MediaDeviceType.OTHER
             }.sortedBy { it.order }
         )
         adapter.notifyDataSetChanged()

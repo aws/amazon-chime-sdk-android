@@ -12,16 +12,16 @@ import com.amazon.chime.sdk.media.enums.VolumeLevel
  */
 interface RealtimeObserver {
     /**
-     * Handles volume changes for attendees
+     * Handles volume changes for attendees whose [VolumeLevel] has changed
      *
-     * @param attendeeVolumes: Map<String, VolumeLevel> - A map of attendee Ids to volume
+     * @param attendeeVolumes: Map<String, [VolumeLevel]> - A map of attendee Ids to volume
      */
     fun onVolumeChange(attendeeVolumes: Map<String, VolumeLevel>)
 
     /**
-     * Handles signal strength changes for attendees
+     * Handles signal strength changes for attendees whose [SignalStrength] has changed
      *
-     * @param attendeeVolumes: Map<String, SignalStrength> - A map of attendee Ids to signal strength
+     * @param attendeeSignalStrength: Map<String, [SignalStrength]> - A map of attendee Ids to signal strength
      */
     fun onSignalStrengthChange(attendeeSignalStrength: Map<String, SignalStrength>)
 
@@ -40,14 +40,14 @@ interface RealtimeObserver {
     fun onAttendeesLeave(attendeeIds: Array<String>)
 
     /**
-     * Handles attendee(s) being muted
+     * Handles attendee(s) whose [VolumeLevel] has changed to muted
      *
      * @param attendeeIds: Array<String> - The Ids for the attendees being muted
      */
     fun onAttendeesMute(attendeeIds: Array<String>)
 
     /**
-     * Handles attendee(s) being unmuted
+     * Handles attendee(s) whose [VolumeLevel] has changed from muted
      *
      * @param attendeeIds: Array<String> - The Ids for the attendees being unmuted
      */

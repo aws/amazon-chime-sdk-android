@@ -37,7 +37,7 @@ class DefaultAudioClientObserverTest {
     private lateinit var realtimeObserver: RealtimeObserver
 
     private val testObserverFun = { observer: AudioVideoObserver ->
-        observer.onAudioVideoStartConnecting(
+        observer.onAudioClientConnecting(
             false
         )
     }
@@ -72,7 +72,7 @@ class DefaultAudioClientObserverTest {
     fun `notifyAudioClientObserver should notify added observers`() {
         audioClientObserver.notifyAudioClientObserver(testObserverFun)
 
-        verify(exactly = 1) { audioVideoObserver.onAudioVideoStartConnecting(any()) }
+        verify(exactly = 1) { audioVideoObserver.onAudioClientConnecting(any()) }
     }
 
     @Test
@@ -151,7 +151,8 @@ class DefaultAudioClientObserverTest {
             testProfileIds[0] to SignalStrength.from(testValues[0])!!,
             testProfileIds[1] to SignalStrength.from(testValues[1])!!
         )
-        val expectedArgs2 = mutableMapOf(testProfileIds[1] to SignalStrength.from(newTestValues[1])!!)
+        val expectedArgs2 =
+            mutableMapOf(testProfileIds[1] to SignalStrength.from(newTestValues[1])!!)
         verifyOrder {
             realtimeObserver.onSignalStrengthChange(expectedArgs1)
             realtimeObserver.onSignalStrengthChange(expectedArgs2)
@@ -201,12 +202,15 @@ class DefaultAudioClientObserverTest {
     }
 
     private fun verifyAudioVideoObserverIsNotNotified() {
-        verify(exactly = 0) { audioVideoObserver.onAudioVideoStartConnecting(any()) }
-        verify(exactly = 0) { audioVideoObserver.onAudioVideoStart(any()) }
-        verify(exactly = 0) { audioVideoObserver.onAudioVideoStop(any()) }
-        verify(exactly = 0) { audioVideoObserver.onAudioReconnectionCancel() }
-        verify(exactly = 0) { audioVideoObserver.onConnectionBecamePoor() }
-        verify(exactly = 0) { audioVideoObserver.onConnectionRecovered() }
+        verify(exactly = 0) { audioVideoObserver.onAudioClientConnecting(any()) }
+        verify(exactly = 0) { audioVideoObserver.onAudioClientStart(any()) }
+        verify(exactly = 0) { audioVideoObserver.onAudioClientStop(any()) }
+        verify(exactly = 0) { audioVideoObserver.onAudioClientReconnectionCancel() }
+        verify(exactly = 0) { audioVideoObserver.onConnectionRecover() }
+        verify(exactly = 0) { audioVideoObserver.onConnectionBecomePoor() }
         verify(exactly = 0) { audioVideoObserver.onMetricsReceive(any()) }
+        verify(exactly = 0) { audioVideoObserver.onVideoClientConnecting() }
+        verify(exactly = 0) { audioVideoObserver.onVideoClientStart() }
+        verify(exactly = 0) { audioVideoObserver.onVideoClientStop(any()) }
     }
 }

@@ -1,50 +1,85 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
   ~ Copyright (c) 2020 Amazon.com, Inc. or its affiliates. All Rights Reserved.
   -->
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/colorBackground"
     android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/textViewMeetingId"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="8dp"
+        android:textColor="@color/colorText"
+        android:textSize="32sp" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:gravity="center"
         android:orientation="horizontal"
         android:padding="8dp">
 
-        <Button
-            android:id="@+id/buttonLeave"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:paddingLeft="8dp"
-            android:paddingRight="8dp"
-            android:text="@string/meeting_leave" />
-
-        <Button
+        <ImageButton
             android:id="@+id/buttonMute"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:background="@null"
+            android:contentDescription="@string/meeting_mute"
             android:paddingLeft="8dp"
             android:paddingRight="8dp"
-            android:text="@string/meeting_mute" />
+            android:src="@drawable/button_mute" />
 
-        <Button
-            android:id="@+id/buttonUnmute"
+        <ImageButton
+            android:id="@+id/buttonSpeaker"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:background="@null"
+            android:contentDescription="@string/meeting_mute"
             android:paddingLeft="8dp"
             android:paddingRight="8dp"
-            android:text="@string/meeting_unmute" />
+            android:src="@drawable/button_speaker" />
+
+        <ImageButton
+            android:id="@+id/buttonVideo"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@null"
+            android:contentDescription="@string/meeting_mute"
+            android:paddingLeft="8dp"
+            android:paddingRight="8dp"
+            android:src="@drawable/button_video" />
+
+        <ImageButton
+            android:id="@+id/buttonLeave"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@null"
+            android:contentDescription="@string/meeting_leave"
+            android:paddingLeft="8dp"
+            android:paddingRight="8dp"
+            android:src="@drawable/button_end" />
 
     </LinearLayout>
 
     <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerViewVideoCollection"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:padding="8dp" />
+
+    <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerViewRoster"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        android:padding="8dp" />
+
 </LinearLayout>

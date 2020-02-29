@@ -77,8 +77,12 @@ class InMeetingActivity : AppCompatActivity(),
     }
 
     override fun onLeaveMeeting() {
-        audioVideo.stop()
         onBackPressed()
+    }
+
+    override fun onBackPressed() {
+        audioVideo.stop()
+        super.onBackPressed()
     }
 
     fun getAudioVideo(): AudioVideoFacade = audioVideo

@@ -5,8 +5,8 @@
 package com.amazon.chime.sdk.session
 
 /**
- * [[MeetingSessionCredentials]] includes the credentials used to authenticate
- * the attendee on the meeting
+ * [[MeetingSessionConfiguration]] includes information needed to start the meeting session such as
+ * attendee credentials and URLs for audio and video
  */
 data class MeetingSessionConfiguration(
     val meetingId: String,
@@ -17,12 +17,16 @@ data class MeetingSessionConfiguration(
         createMeetingResponse: CreateMeetingResponse,
         createAttendeeResponse: CreateAttendeeResponse
     ) : this(
-        createMeetingResponse.Meeting.MeetingId, MeetingSessionCredentials(
+        createMeetingResponse.Meeting.MeetingId,
+        MeetingSessionCredentials(
             createAttendeeResponse.Attendee.AttendeeId,
             createAttendeeResponse.Attendee.JoinToken
-        ), MeetingSessionURLs(
+        ),
+        MeetingSessionURLs(
             createMeetingResponse.Meeting.MediaPlacement.AudioFallbackUrl,
-            createMeetingResponse.Meeting.MediaPlacement.AudioHostUrl
+            createMeetingResponse.Meeting.MediaPlacement.AudioHostUrl,
+            createMeetingResponse.Meeting.MediaPlacement.TurnControlUrl,
+            createMeetingResponse.Meeting.MediaPlacement.SignalingUrl
         )
     )
 }

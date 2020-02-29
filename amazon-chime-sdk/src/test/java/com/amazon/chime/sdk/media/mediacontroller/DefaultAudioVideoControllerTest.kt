@@ -7,6 +7,7 @@ package com.amazon.chime.sdk.media.mediacontroller
 import com.amazon.chime.sdk.media.clientcontroller.AudioClientController
 import com.amazon.chime.sdk.media.clientcontroller.AudioClientObserver
 import com.amazon.chime.sdk.media.clientcontroller.ClientMetricsCollector
+import com.amazon.chime.sdk.media.clientcontroller.VideoClientController
 import com.amazon.chime.sdk.media.enums.ObservableMetric
 import com.amazon.chime.sdk.session.MeetingSessionConfiguration
 import com.amazon.chime.sdk.session.MeetingSessionCredentials
@@ -20,25 +21,35 @@ import org.junit.Test
 
 class DefaultAudioVideoControllerTest {
     private val observer = object : AudioVideoObserver {
-        override fun onAudioVideoStartConnecting(reconnecting: Boolean) {
+
+        override fun onAudioClientConnecting(reconnecting: Boolean) {
         }
 
-        override fun onAudioVideoStart(reconnecting: Boolean) {
+        override fun onAudioClientStart(reconnecting: Boolean) {
         }
 
-        override fun onAudioVideoStop(sessionStatus: MeetingSessionStatus) {
+        override fun onAudioClientStop(sessionStatus: MeetingSessionStatus) {
         }
 
-        override fun onAudioReconnectionCancel() {
+        override fun onAudioClientReconnectionCancel() {
         }
 
-        override fun onConnectionRecovered() {
+        override fun onConnectionRecover() {
         }
 
-        override fun onConnectionBecamePoor() {
+        override fun onConnectionBecomePoor() {
         }
 
         override fun onMetricsReceive(metrics: Map<ObservableMetric, Any>) {
+        }
+
+        override fun onVideoClientStart() {
+        }
+
+        override fun onVideoClientStop(sessionStatus: MeetingSessionStatus) {
+        }
+
+        override fun onVideoClientConnecting() {
         }
     }
 
@@ -47,11 +58,13 @@ class DefaultAudioVideoControllerTest {
     private val joinToken = "joinToken"
     private val audioFallbackURL = "audioFallbackURL"
     private val audioHostURL = "audioHostURL"
+    private val turnControlURL = "turnControlURL"
+    private val signalingURL = "signalingURL"
 
     private val meetingSessionConfiguration = MeetingSessionConfiguration(
         meetingId,
         MeetingSessionCredentials(attendeeId, joinToken),
-        MeetingSessionURLs(audioFallbackURL, audioHostURL)
+        MeetingSessionURLs(audioFallbackURL, audioHostURL, turnControlURL, signalingURL)
     )
 
     @MockK
@@ -63,6 +76,9 @@ class DefaultAudioVideoControllerTest {
     @MockK
     private lateinit var clientMetricsCollector: ClientMetricsCollector
 
+    @MockK
+    private lateinit var videoClientController: VideoClientController
+
     private lateinit var audioVideoController: DefaultAudioVideoController
 
     @Before
@@ -73,7 +89,8 @@ class DefaultAudioVideoControllerTest {
                 audioClientController,
                 audioClientObserver,
                 clientMetricsCollector,
-                meetingSessionConfiguration
+                meetingSessionConfiguration,
+                videoClientController
             )
     }
 
@@ -119,5 +136,19 @@ class DefaultAudioVideoControllerTest {
     fun `removeObserver should call clientMetricsCollector removeObserver with given observer`() {
         audioVideoController.removeObserver(observer)
         verify { clientMetricsCollector.unsubscribeFromMetrics(observer) }
+    }
+
+    @Test
+    fun `startLocalVideo should call videoClientController enableSelfVideo`() {
+        audioVideoController.startLocalVideo()
+
+        verify { videoClientController.enableSelfVideo(true) }
+    }
+
+    @Test
+    fun `stopLocalVideo should call videoClientController enableSelfVideo`() {
+        audioVideoController.stopLocalVideo()
+
+        verify { videoClientController.enableSelfVideo(false) }
     }
 }

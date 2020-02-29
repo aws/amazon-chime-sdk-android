@@ -3,6 +3,7 @@
  */
 
 package com.amazon.chime.sdk.session
+
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNotNull
 import org.junit.Assert.assertNull
