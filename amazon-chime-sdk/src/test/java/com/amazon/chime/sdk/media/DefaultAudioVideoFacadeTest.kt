@@ -15,6 +15,7 @@ import com.amazon.chime.sdk.media.enums.SignalStrength
 import com.amazon.chime.sdk.media.enums.VolumeLevel
 import com.amazon.chime.sdk.media.mediacontroller.AudioVideoControllerFacade
 import com.amazon.chime.sdk.media.mediacontroller.AudioVideoObserver
+import com.amazon.chime.sdk.media.mediacontroller.MetricsObserver
 import com.amazon.chime.sdk.media.mediacontroller.RealtimeControllerFacade
 import com.amazon.chime.sdk.media.mediacontroller.RealtimeObserver
 import com.amazon.chime.sdk.media.mediacontroller.video.VideoTileController
@@ -31,7 +32,7 @@ import org.junit.Before
 import org.junit.Test
 
 class DefaultAudioVideoFacadeTest {
-    private val observer = object : AudioVideoObserver, RealtimeObserver, DeviceChangeObserver {
+    private val observer = object : AudioVideoObserver, RealtimeObserver, DeviceChangeObserver, MetricsObserver {
 
         override fun onAudioClientConnecting(reconnecting: Boolean) {
         }
@@ -110,18 +111,6 @@ class DefaultAudioVideoFacadeTest {
     @Before
     fun setup() = MockKAnnotations.init(this, relaxUnitFun = true)
 
-    @Test
-    fun `addObserver should call audioVideoController addObserver with given observer`() {
-        audioVideoFacade.addObserver(observer)
-        verify { audioVideoController.addObserver(observer) }
-    }
-
-    @Test
-    fun `removeObserver should call audioVideoController removeObserve with given observer`() {
-        audioVideoFacade.removeObserver(observer)
-        verify { audioVideoController.removeObserver(observer) }
-    }
-
     @Test(expected = SecurityException::class)
     fun `start should throw exception when the required permissions are not granted`() {
         mockkStatic(ContextCompat::class)
@@ -129,6 +118,29 @@ class DefaultAudioVideoFacadeTest {
         audioVideoFacade.start()
     }
 
+    @Test
+    fun `addAudioVideoObserver should call audioVideoController addObserver with given observer`() {
+        audioVideoFacade.addAudioVideoObserver(observer)
+        verify { audioVideoController.addAudioVideoObserver(observer) }
+    }
+
+    @Test
+    fun `removeAudioVideoObserver should call audioVideoController removeObserve with given observer`() {
+        audioVideoFacade.removeAudioVideoObserver(observer)
+        verify { audioVideoController.removeAudioVideoObserver(observer) }
+    }
+
+    @Test
+    fun `addMetricsObserver should call audioVideoController addMetricsObserver with given observer`() {
+        audioVideoFacade.addMetricsObserver(observer)
+        verify { audioVideoController.addMetricsObserver(observer) }
+    }
+
+    @Test
+    fun `removeMetricsObserver should call audioVideoController removeMetricsObserver with given observer`() {
+        audioVideoFacade.removeMetricsObserver(observer)
+        verify { audioVideoController.removeMetricsObserver(observer) }
+    }
     @Test
     fun `start should call audioVideoController start when the required permissions are granted`() {
         mockkStatic(ContextCompat::class)
@@ -156,15 +168,15 @@ class DefaultAudioVideoFacadeTest {
     }
 
     @Test
-    fun `realtimeAddObserver should call realtimeController realtimeAddObserver with given observer`() {
-        audioVideoFacade.realtimeAddObserver(observer)
-        verify { realtimeController.realtimeAddObserver(observer) }
+    fun `addRealtimeObserver should call realtimeController addRealtimeObserver with given observer`() {
+        audioVideoFacade.addRealtimeObserver(observer)
+        verify { realtimeController.addRealtimeObserver(observer) }
     }
 
     @Test
-    fun `realtimeRemoveObserver should call realtimeController realtimeRemoveObserver with given observer`() {
-        audioVideoFacade.realtimeRemoveObserver(observer)
-        verify { realtimeController.realtimeRemoveObserver(observer) }
+    fun `removeRealtimeObserver should call realtimeController removeRealtimeObserver with given observer`() {
+        audioVideoFacade.removeRealtimeObserver(observer)
+        verify { realtimeController.removeRealtimeObserver(observer) }
     }
 
     @Test

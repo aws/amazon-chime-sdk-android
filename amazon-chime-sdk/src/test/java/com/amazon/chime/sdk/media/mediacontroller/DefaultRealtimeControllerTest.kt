@@ -46,14 +46,14 @@ class DefaultRealtimeControllerTest {
     }
 
     @Test
-    fun `realtimeAddObserver should call audioClientController subscribeToRealTimeEvents with given observer`() {
-        realtimeController.realtimeAddObserver(mockObserver)
+    fun `addRealtimeObserver should call audioClientController subscribeToRealTimeEvents with given observer`() {
+        realtimeController.addRealtimeObserver(mockObserver)
         verify { audioClientObserver.subscribeToRealTimeEvents(mockObserver) }
     }
 
     @Test
-    fun `realtimeRemoveObserver should call audioClientController unsubscribeFromRealTimeEvents with given observer`() {
-        realtimeController.realtimeRemoveObserver(mockObserver)
+    fun `removeRealtimeObserver should call audioClientController unsubscribeFromRealTimeEvents with given observer`() {
+        realtimeController.removeRealtimeObserver(mockObserver)
         verify { audioClientObserver.unsubscribeFromRealTimeEvents(mockObserver) }
     }
 }

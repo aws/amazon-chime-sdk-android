@@ -208,7 +208,6 @@ class DefaultAudioClientObserverTest {
         verify(exactly = 0) { audioVideoObserver.onAudioClientReconnectionCancel() }
         verify(exactly = 0) { audioVideoObserver.onConnectionRecover() }
         verify(exactly = 0) { audioVideoObserver.onConnectionBecomePoor() }
-        verify(exactly = 0) { audioVideoObserver.onMetricsReceive(any()) }
         verify(exactly = 0) { audioVideoObserver.onVideoClientConnecting() }
         verify(exactly = 0) { audioVideoObserver.onVideoClientStart() }
         verify(exactly = 0) { audioVideoObserver.onVideoClientStop(any()) }

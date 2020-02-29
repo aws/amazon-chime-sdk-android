@@ -23,6 +23,7 @@ import com.amazon.chime.sdk.media.enums.ObservableMetric
 import com.amazon.chime.sdk.media.enums.SignalStrength
 import com.amazon.chime.sdk.media.enums.VolumeLevel
 import com.amazon.chime.sdk.media.mediacontroller.AudioVideoObserver
+import com.amazon.chime.sdk.media.mediacontroller.MetricsObserver
 import com.amazon.chime.sdk.media.mediacontroller.RealtimeObserver
 import com.amazon.chime.sdk.media.mediacontroller.video.VideoTileObserver
 import com.amazon.chime.sdk.media.mediacontroller.video.VideoTileState
@@ -45,8 +46,7 @@ import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import kotlinx.coroutines.withContext
 
-class RosterViewFragment : Fragment(), RealtimeObserver, AudioVideoObserver, VideoTileObserver {
-
+class RosterViewFragment : Fragment(), RealtimeObserver, AudioVideoObserver, VideoTileObserver, MetricsObserver {
     private val logger = ConsoleLogger(LogLevel.DEBUG)
     private val gson = Gson()
     private val mutex = Mutex()
@@ -133,8 +133,9 @@ class RosterViewFragment : Fragment(), RealtimeObserver, AudioVideoObserver, Vid
         rosterAdapter = RosterAdapter(currentRoster.values)
         recyclerViewRoster.adapter = rosterAdapter
 
-        audioVideo.addObserver(this)
-        audioVideo.realtimeAddObserver(this)
+        audioVideo.addAudioVideoObserver(this)
+        audioVideo.addMetricsObserver(this)
+        audioVideo.addRealtimeObserver(this)
         audioVideo.addVideoTileObserver(this)
         audioVideo.start()
         return view
@@ -349,34 +350,6 @@ class RosterViewFragment : Fragment(), RealtimeObserver, AudioVideoObserver, Vid
         return VideoCollectionTile("", tileState)
     }
 
-    override fun onRemoveVideoTile(tileState: VideoTileState) {
-        uiScope.launch {
-            val tileId: Int = tileState.tileId
-
-            logger.info(
-                TAG,
-                "Video track removed, titleId: $tileId, attendeeId: ${tileState.attendeeId}"
-            )
-            if (currentVideoTiles.containsKey(tileId)) {
-                audioVideo.unbindVideoView(tileId)
-                currentVideoTiles.remove(tileId)
-                // Show next video tileState if available
-                if (nextVideoTiles.isNotEmpty() && canShowMoreRemoteVideoTile()) {
-                    val nextTileState: VideoTileState =
-                        nextVideoTiles.entries.iterator().next().value.videoTileState
-                    showVideoTile(nextTileState)
-                    nextVideoTiles.remove(nextTileState.tileId)
-                }
-                videoTileAdapter.notifyDataSetChanged()
-            } else {
-                // Clean up removed tiles
-                if (nextVideoTiles.containsKey(tileId)) {
-                    nextVideoTiles.remove(tileId)
-                }
-            }
-        }
-    }
-
     override fun onAudioClientConnecting(reconnecting: Boolean) =
         notify("Audio started connecting. reconnecting: $reconnecting")
 
@@ -415,6 +388,34 @@ class RosterViewFragment : Fragment(), RealtimeObserver, AudioVideoObserver, Vid
                     showVideoTile(tileState)
                 } else {
                     nextVideoTiles[tileState.tileId] = createVideoCollectionTile(tileState)
+                }
+            }
+        }
+    }
+
+    override fun onRemoveVideoTile(tileState: VideoTileState) {
+        uiScope.launch {
+            val tileId: Int = tileState.tileId
+
+            logger.info(
+                TAG,
+                "Video track removed, titleId: $tileId, attendeeId: ${tileState.attendeeId}"
+            )
+            if (currentVideoTiles.containsKey(tileId)) {
+                audioVideo.unbindVideoView(tileId)
+                currentVideoTiles.remove(tileId)
+                // Show next video tileState if available
+                if (nextVideoTiles.isNotEmpty() && canShowMoreRemoteVideoTile()) {
+                    val nextTileState: VideoTileState =
+                        nextVideoTiles.entries.iterator().next().value.videoTileState
+                    showVideoTile(nextTileState)
+                    nextVideoTiles.remove(nextTileState.tileId)
+                }
+                videoTileAdapter.notifyDataSetChanged()
+            } else {
+                // Clean up removed tiles
+                if (nextVideoTiles.containsKey(tileId)) {
+                    nextVideoTiles.remove(tileId)
                 }
             }
         }

@@ -13,6 +13,7 @@ import com.amazon.chime.sdk.media.devicecontroller.DeviceController
 import com.amazon.chime.sdk.media.devicecontroller.MediaDevice
 import com.amazon.chime.sdk.media.mediacontroller.AudioVideoControllerFacade
 import com.amazon.chime.sdk.media.mediacontroller.AudioVideoObserver
+import com.amazon.chime.sdk.media.mediacontroller.MetricsObserver
 import com.amazon.chime.sdk.media.mediacontroller.RealtimeControllerFacade
 import com.amazon.chime.sdk.media.mediacontroller.RealtimeObserver
 import com.amazon.chime.sdk.media.mediacontroller.video.VideoRenderView
@@ -32,14 +33,6 @@ class DefaultAudioVideoFacade(
         Manifest.permission.RECORD_AUDIO
     )
 
-    override fun addObserver(observer: AudioVideoObserver) {
-        audioVideoController.addObserver(observer)
-    }
-
-    override fun removeObserver(observer: AudioVideoObserver) {
-        audioVideoController.removeObserver(observer)
-    }
-
     override fun start() {
         val hasPermission: Boolean = permissions.all {
             ContextCompat.checkSelfPermission(context, it) == PackageManager.PERMISSION_GRANTED
@@ -56,6 +49,22 @@ class DefaultAudioVideoFacade(
                 )}"
             )
         }
+    }
+
+    override fun addAudioVideoObserver(observer: AudioVideoObserver) {
+        audioVideoController.addAudioVideoObserver(observer)
+    }
+
+    override fun removeAudioVideoObserver(observer: AudioVideoObserver) {
+        audioVideoController.removeAudioVideoObserver(observer)
+    }
+
+    override fun addMetricsObserver(observer: MetricsObserver) {
+        audioVideoController.addMetricsObserver(observer)
+    }
+
+    override fun removeMetricsObserver(observer: MetricsObserver) {
+        audioVideoController.removeMetricsObserver(observer)
     }
 
     override fun stop() {
@@ -78,12 +87,12 @@ class DefaultAudioVideoFacade(
         return realtimeController.realtimeLocalUnmute()
     }
 
-    override fun realtimeAddObserver(observer: RealtimeObserver) {
-        realtimeController.realtimeAddObserver(observer)
+    override fun addRealtimeObserver(observer: RealtimeObserver) {
+        realtimeController.addRealtimeObserver(observer)
     }
 
-    override fun realtimeRemoveObserver(observer: RealtimeObserver) {
-        realtimeController.realtimeRemoveObserver(observer)
+    override fun removeRealtimeObserver(observer: RealtimeObserver) {
+        realtimeController.removeRealtimeObserver(observer)
     }
 
     override fun listAudioDevices(): List<MediaDevice> {

@@ -5,7 +5,7 @@
 package com.amazon.chime.sdk.media.clientcontroller
 
 import com.amazon.chime.sdk.media.enums.ObservableMetric
-import com.amazon.chime.sdk.media.mediacontroller.AudioVideoObserver
+import com.amazon.chime.sdk.media.mediacontroller.MetricsObserver
 import com.xodee.client.audio.audioclient.AudioClient
 import com.xodee.client.video.VideoClient
 
@@ -13,8 +13,8 @@ import com.xodee.client.video.VideoClient
  * [DefaultClientMetricsCollector]'s filters and caches incoming raw client metrics
  * and calls the metrics observer with the current values every second
  */
-class DefaultClientMetricsCollector() : ClientMetricsCollector {
-    private var metricsObservers = mutableSetOf<AudioVideoObserver>()
+class DefaultClientMetricsCollector : ClientMetricsCollector {
+    private var metricsObservers = mutableSetOf<MetricsObserver>()
     private var cachedObservableMetrics = mutableMapOf<ObservableMetric, Double?>()
     private var lastEmittedMetricsTime = System.currentTimeMillis()
     private val METRICS_EMISSION_INTERVAL_MS = 1000
@@ -54,11 +54,11 @@ class DefaultClientMetricsCollector() : ClientMetricsCollector {
         }
     }
 
-    override fun subscribeToMetrics(observer: AudioVideoObserver) {
+    override fun subscribeToMetrics(observer: MetricsObserver) {
         this.metricsObservers.add(observer)
     }
 
-    override fun unsubscribeFromMetrics(observer: AudioVideoObserver) {
+    override fun unsubscribeFromMetrics(observer: MetricsObserver) {
         this.metricsObservers.remove(observer)
     }
 }

@@ -10,6 +10,7 @@
 #### Manual test cases (add more as needed):
 * [ ] Join meeting
 * [ ] Leave meeting
+* [ ] Roster updates when remote join/leave meeting
 * [ ] Rejoin meeting
 * [ ] Send audio
 * [ ] Receive audio
@@ -17,6 +18,7 @@
 * [ ] Unmute self
 * [ ] See local mute indicator when muted
 * [ ] See remote mute indicator when other is muted
+* [ ] See media metrics received
 
 #### Screenshots, if available:
 

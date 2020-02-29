@@ -6,7 +6,7 @@ package com.amazon.chime.sdk.media.mediacontroller.video
 /**
  * Contains properties related to the current state of the [VideoTile]
  *
- * @property titleId: Int - Unique Id associated with this tile
+ * @property tileId: Int - Unique Id associated with this tile
  * @property attendeeId: String? - Attendee Id of the user associated with this tile
  * @property paused: Boolean - Whether video tile has been paused
  * @property isLocalTile: Boolean - Whether the video tile is for the local attendee

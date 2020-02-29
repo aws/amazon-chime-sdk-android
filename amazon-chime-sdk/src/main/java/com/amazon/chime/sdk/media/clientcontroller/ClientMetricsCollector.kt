@@ -4,7 +4,7 @@
 
 package com.amazon.chime.sdk.media.clientcontroller
 
-import com.amazon.chime.sdk.media.mediacontroller.AudioVideoObserver
+import com.amazon.chime.sdk.media.mediacontroller.MetricsObserver
 
 /**
  * [ClientMetricsCollector]'s responsibility is to take raw metrics from both
@@ -28,16 +28,16 @@ interface ClientMetricsCollector {
     fun processVideoClientMetrics(metrics: Map<Int, Double>)
 
     /**
-     * Subscribe to metric events with an [AudioVideoObserver].
+     * Subscribe to metric events with an [MetricsObserver].
      *
-     * @param observer: [AudioVideoObserver] - The observer to subscribe to metrics with.
+     * @param observer: [MetricsObserver] - The observer to subscribe to metrics with.
      */
-    fun subscribeToMetrics(observer: AudioVideoObserver)
+    fun subscribeToMetrics(observer: MetricsObserver)
 
     /**
-     * Unsubscribe from metric events with an [AudioVideoObserver].
+     * Unsubscribe from metric events with an [MetricsObserver].
      *
-     * @param observer: [AudioVideoObserver] - The observer to unsubscribe from metrics.
+     * @param observer: [MetricsObserver] - The observer to unsubscribe from metrics.
      */
-    fun unsubscribeFromMetrics(observer: AudioVideoObserver)
+    fun unsubscribeFromMetrics(observer: MetricsObserver)
 }

@@ -25,12 +25,12 @@ interface RealtimeControllerFacade {
      *
      * @param observer: [RealtimeObserver] - Observer that handles real time events
      */
-    fun realtimeAddObserver(observer: RealtimeObserver)
+    fun addRealtimeObserver(observer: RealtimeObserver)
 
     /**
      * Unsubscribes from real time events by removing the specified observer
      *
      * @param observer: [RealtimeObserver] - Observer that handles real time events
      */
-    fun realtimeRemoveObserver(observer: RealtimeObserver)
+    fun removeRealtimeObserver(observer: RealtimeObserver)
 }

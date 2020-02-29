@@ -21,11 +21,11 @@ class DefaultRealtimeController(
         return audioClientController.setMute(false)
     }
 
-    override fun realtimeAddObserver(observer: RealtimeObserver) {
+    override fun addRealtimeObserver(observer: RealtimeObserver) {
         audioClientObserver.subscribeToRealTimeEvents(observer)
     }
 
-    override fun realtimeRemoveObserver(observer: RealtimeObserver) {
+    override fun removeRealtimeObserver(observer: RealtimeObserver) {
         audioClientObserver.unsubscribeFromRealTimeEvents(observer)
     }
 }
