@@ -13,8 +13,7 @@ package com.amazon.chime.sdk.media.mediacontroller.video
  */
 data class VideoTileState(val tileId: Int, val attendeeId: String?, var paused: Boolean) {
     /**
-     * Whether tile is local or remote tile
-     * Local attendeeId is null because VideoClient doesn't know its attendeeId
+     * Whether the video tile is for the local attendee
      */
     val isLocalTile: Boolean = attendeeId == null
 }

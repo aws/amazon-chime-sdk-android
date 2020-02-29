@@ -10,7 +10,6 @@
 #### Manual test cases (add more as needed):
 * [ ] Join meeting
 * [ ] Leave meeting
-* [ ] Roster updates when remote join/leave meeting
 * [ ] Rejoin meeting
 * [ ] Send audio
 * [ ] Receive audio
@@ -18,7 +17,18 @@
 * [ ] Unmute self
 * [ ] See local mute indicator when muted
 * [ ] See remote mute indicator when other is muted
+* [ ] See audio video events
+* [ ] See signal strength changes
 * [ ] See media metrics received
+* [ ] See roster updates when remote attendees join / leave the meeting
+* [ ] Enable local video
+* [ ] See local video tile
+* [ ] See remote video tile
+* [ ] Switch camera
+* [ ] Pause remote video tile
+* [ ] Resume remote video tile
+* [ ] First time audio permissions
+* [ ] First time video permissions
 
 #### Screenshots, if available:
 
