@@ -2,7 +2,7 @@
  * Copyright 2020 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  */
 
-package com.amazon.chime.sdk.session
+package com.amazon.chime.sdk.media.clientcontroller
 
 data class MeetingSessionTURNCredentials(
     val username: String,

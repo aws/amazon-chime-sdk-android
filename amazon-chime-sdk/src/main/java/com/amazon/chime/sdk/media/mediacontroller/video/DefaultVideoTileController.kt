@@ -34,15 +34,6 @@ class DefaultVideoTileController(
         rootEglBase?.release()
     }
 
-    /**
-     * There are FOUR possible outcomes:
-     * 1) Create - Someone has started sharing video
-     * 2) Render / Resume - Someone is sending new frames for their video
-     * 3) Pause - Someone is sending a pause frame
-     * 4) Stop - Someone has stopped sharing video
-     *
-     * In both pause and stop cases, the frame is null but the pauseType differs
-     */
     override fun onReceiveFrame(
         frame: Any?,
         attendeeId: String?,
@@ -50,6 +41,15 @@ class DefaultVideoTileController(
         pauseType: Int,
         videoId: Int
     ) {
+        /**
+         * There are FOUR possible outcomes:
+         * 1) Create - Someone has started sharing video
+         * 2) Render / Resume - Someone is sending new frames for their video
+         * 3) Pause - Someone is sending a pause frame
+         * 4) Stop - Someone has stopped sharing video
+         *
+         * In both pause and stop cases, the frame is null but the pauseType differs
+         */
         val tile: VideoTile? = videoTileMap[videoId]
         if (tile != null) {
             if (frame != null) {

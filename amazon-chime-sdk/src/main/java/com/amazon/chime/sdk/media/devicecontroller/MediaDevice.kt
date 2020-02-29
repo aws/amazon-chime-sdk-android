@@ -9,8 +9,8 @@ import android.media.AudioDeviceInfo
 /**
  * Media device with its info.
  *
- * @property label human readable string describing the device.
- * @property type media device type
+ * @property label: String - human readable string describing the device.
+ * @property type: [MediaDeviceType] - media device type
  */
 data class MediaDevice(val label: String, val type: MediaDeviceType) {
     val order: Int = when (type) {
@@ -24,6 +24,9 @@ data class MediaDevice(val label: String, val type: MediaDeviceType) {
     override fun toString(): String = label
 }
 
+/**
+ * The media device's type (Ex: video front camera, video rear camera, audio bluetooth)
+ */
 enum class MediaDeviceType {
     AUDIO_BLUETOOTH,
     AUDIO_WIRED_HEADSET,

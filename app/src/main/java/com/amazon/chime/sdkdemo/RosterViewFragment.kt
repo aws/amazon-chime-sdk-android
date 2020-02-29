@@ -47,7 +47,7 @@ import kotlinx.coroutines.withContext
 
 class RosterViewFragment : Fragment(), RealtimeObserver, AudioVideoObserver, VideoTileObserver {
 
-    private val logger = ConsoleLogger(LogLevel.INFO)
+    private val logger = ConsoleLogger(LogLevel.DEBUG)
     private val gson = Gson()
     private val mutex = Mutex()
     private val uiScope = CoroutineScope(Dispatchers.Main)
@@ -351,23 +351,27 @@ class RosterViewFragment : Fragment(), RealtimeObserver, AudioVideoObserver, Vid
 
     override fun onRemoveVideoTile(tileState: VideoTileState) {
         uiScope.launch {
+            val tileId: Int = tileState.tileId
+
             logger.info(
                 TAG,
-                "Video track removed, titleId: ${tileState.tileId}, attendeeId: ${tileState.attendeeId}"
+                "Video track removed, titleId: $tileId, attendeeId: ${tileState.attendeeId}"
             )
-            if (currentVideoTiles.containsKey(tileState.tileId)) {
-                audioVideo.unbindVideoView(tileState.tileId)
-                currentVideoTiles.remove(tileState.tileId)
+            if (currentVideoTiles.containsKey(tileId)) {
+                audioVideo.unbindVideoView(tileId)
+                currentVideoTiles.remove(tileId)
                 // Show next video tileState if available
                 if (nextVideoTiles.isNotEmpty() && canShowMoreRemoteVideoTile()) {
-                    showVideoTile(nextVideoTiles.entries.iterator().next().value.videoTileState)
-                    nextVideoTiles.remove(tileState.tileId)
+                    val nextTileState: VideoTileState =
+                        nextVideoTiles.entries.iterator().next().value.videoTileState
+                    showVideoTile(nextTileState)
+                    nextVideoTiles.remove(nextTileState.tileId)
                 }
                 videoTileAdapter.notifyDataSetChanged()
             } else {
-                // clean up removed tiles
-                if (nextVideoTiles.containsKey(tileState.tileId)) {
-                    nextVideoTiles.remove(tileState.tileId)
+                // Clean up removed tiles
+                if (nextVideoTiles.containsKey(tileId)) {
+                    nextVideoTiles.remove(tileId)
                 }
             }
         }

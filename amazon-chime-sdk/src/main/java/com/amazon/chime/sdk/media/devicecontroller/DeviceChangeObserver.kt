@@ -6,7 +6,9 @@ package com.amazon.chime.sdk.media.devicecontroller
 
 interface DeviceChangeObserver {
     /**
-     *Called when audio devices are changed.
+     * Called when audio devices are changed.
+     *
+     * @param freshAudioDeviceList: List<[MediaDevice]> - An updated list of audio devices
      */
     fun onAudioDeviceChange(freshAudioDeviceList: List<MediaDevice>)
 }

@@ -12,7 +12,6 @@ import com.amazon.chime.sdk.media.mediacontroller.AudioVideoObserver
 import com.amazon.chime.sdk.media.mediacontroller.video.VideoTileController
 import com.amazon.chime.sdk.session.MeetingSessionStatus
 import com.amazon.chime.sdk.session.MeetingSessionStatusCode
-import com.amazon.chime.sdk.session.MeetingSessionTURNCredentials
 import com.amazon.chime.sdk.utils.logger.Logger
 import com.xodee.client.video.VideoClient
 import com.xodee.client.video.VideoClientCapturer

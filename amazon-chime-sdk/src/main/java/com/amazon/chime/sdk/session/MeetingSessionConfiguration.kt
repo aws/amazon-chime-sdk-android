@@ -5,8 +5,8 @@
 package com.amazon.chime.sdk.session
 
 /**
- * [[MeetingSessionCredentials]] includes the credentials used to authenticate
- * the attendee on the meeting
+ * [[MeetingSessionConfiguration]] includes information needed to start the meeting session such as
+ * attendee credentials and URLs for audio and video
  */
 data class MeetingSessionConfiguration(
     val meetingId: String,
