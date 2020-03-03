@@ -46,6 +46,9 @@ class DefaultDeviceControllerTest {
     @MockK
     private lateinit var audioManager: AudioManager
 
+    @MockK
+    private lateinit var deviceChangeObserver: DeviceChangeObserver
+
     private lateinit var deviceController: DefaultDeviceController
 
     private fun setupForNewAPILevel() {
@@ -248,5 +251,29 @@ class DefaultDeviceControllerTest {
         deviceController.switchCamera()
 
         verify { videoClientController.switchCamera() }
+    }
+
+    @Test
+    fun `notifyAudioDeviceChange should notify added observers`() {
+        setupForOldAPILevel()
+        deviceController.addDeviceChangeObserver(deviceChangeObserver)
+        every { audioManager.isBluetoothScoOn } returns false
+        every { audioManager.isBluetoothA2dpOn } returns false
+        every { audioManager.isWiredHeadsetOn } returns false
+
+        deviceController.notifyAudioDeviceChange()
+
+        verify { deviceChangeObserver.onAudioDeviceChange(any()) }
+    }
+
+    @Test
+    fun `notifyAudioDeviceChange should NOT notify removed observer`() {
+        setupForOldAPILevel()
+        deviceController.addDeviceChangeObserver(deviceChangeObserver)
+        deviceController.removeDeviceChangeObserver(deviceChangeObserver)
+
+        deviceController.notifyAudioDeviceChange()
+
+        verify(exactly = 0) { deviceChangeObserver.onAudioDeviceChange(any()) }
     }
 }
