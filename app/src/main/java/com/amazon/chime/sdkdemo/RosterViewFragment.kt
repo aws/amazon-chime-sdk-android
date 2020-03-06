@@ -33,6 +33,7 @@ import com.amazon.chime.sdk.utils.logger.LogLevel
 import com.amazon.chime.sdkdemo.data.AttendeeInfoResponse
 import com.amazon.chime.sdkdemo.data.RosterAttendee
 import com.amazon.chime.sdkdemo.data.VideoCollectionTile
+import com.google.android.material.tabs.TabLayout
 import com.google.gson.Gson
 import java.io.BufferedReader
 import java.io.InputStreamReader
@@ -69,11 +70,18 @@ class RosterViewFragment : Fragment(), RealtimeObserver, AudioVideoObserver, Vid
     private val WEBRTC_PERM = arrayOf(
         Manifest.permission.CAMERA
     )
+    enum class SubTab(val position: Int) {
+        Attendee(0),
+        Video(1)
+    }
 
     private lateinit var buttonMute: ImageButton
     private lateinit var buttonVideo: ImageButton
+    private lateinit var recyclerViewRoster: RecyclerView
+    private lateinit var recyclerViewVideoCollection: RecyclerView
     private lateinit var rosterAdapter: RosterAdapter
     private lateinit var videoTileAdapter: VideoCollectionTileAdapter
+    private lateinit var tabLayout: TabLayout
 
     companion object {
         fun newInstance(meetingId: String): RosterViewFragment {
@@ -122,16 +130,7 @@ class RosterViewFragment : Fragment(), RealtimeObserver, AudioVideoObserver, Vid
         view.findViewById<ImageButton>(R.id.buttonLeave)
             ?.setOnClickListener { listener.onLeaveMeeting() }
 
-        val recyclerViewVideoCollection =
-            view.findViewById<RecyclerView>(R.id.recyclerViewVideoCollection)
-        recyclerViewVideoCollection.layoutManager = LinearLayoutManager(activity)
-        videoTileAdapter = VideoCollectionTileAdapter(currentVideoTiles.values, audioVideo, context)
-        recyclerViewVideoCollection.adapter = videoTileAdapter
-
-        val recyclerViewRoster = view.findViewById<RecyclerView>(R.id.recyclerViewRoster)
-        recyclerViewRoster.layoutManager = LinearLayoutManager(activity)
-        rosterAdapter = RosterAdapter(currentRoster.values)
-        recyclerViewRoster.adapter = rosterAdapter
+        setupSubTabs(view)
 
         audioVideo.addAudioVideoObserver(this)
         audioVideo.addMetricsObserver(this)
@@ -139,6 +138,47 @@ class RosterViewFragment : Fragment(), RealtimeObserver, AudioVideoObserver, Vid
         audioVideo.addVideoTileObserver(this)
         audioVideo.start()
         return view
+    }
+
+    private fun setupSubTabs(view: View) {
+        recyclerViewRoster = view.findViewById(R.id.recyclerViewRoster)
+        recyclerViewRoster.layoutManager = LinearLayoutManager(activity)
+        rosterAdapter = RosterAdapter(currentRoster.values)
+        recyclerViewRoster.adapter = rosterAdapter
+
+        recyclerViewVideoCollection =
+            view.findViewById(R.id.recyclerViewVideoCollection)
+        recyclerViewVideoCollection.layoutManager = LinearLayoutManager(activity)
+        videoTileAdapter = VideoCollectionTileAdapter(currentVideoTiles.values, audioVideo, context)
+        recyclerViewVideoCollection.adapter = videoTileAdapter
+
+        tabLayout = view.findViewById(R.id.tabLayoutRosterView)
+        SubTab.values().forEach { tabLayout.addTab(tabLayout.newTab().setText(it.name)) }
+        tabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
+            override fun onTabReselected(tab: TabLayout.Tab?) {
+            }
+
+            override fun onTabSelected(tab: TabLayout.Tab?) {
+                showTabAt(tab?.position ?: 0)
+            }
+
+            override fun onTabUnselected(tab: TabLayout.Tab?) {
+            }
+        })
+    }
+
+    private fun showTabAt(index: Int) {
+        when (index) {
+            SubTab.Attendee.position -> {
+                recyclerViewRoster.visibility = View.VISIBLE
+                recyclerViewVideoCollection.visibility = View.GONE
+            }
+            SubTab.Video.position -> {
+                recyclerViewRoster.visibility = View.GONE
+                recyclerViewVideoCollection.visibility = View.VISIBLE
+            }
+            else -> return
+        }
     }
 
     override fun onVolumeChange(attendeeVolumes: Map<String, VolumeLevel>) {
