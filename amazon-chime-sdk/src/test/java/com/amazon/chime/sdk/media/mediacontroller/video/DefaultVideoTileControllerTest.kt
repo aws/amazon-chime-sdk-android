@@ -10,6 +10,7 @@ import io.mockk.MockKAnnotations
 import io.mockk.every
 import io.mockk.impl.annotations.InjectMockKs
 import io.mockk.impl.annotations.MockK
+import io.mockk.mockk
 import io.mockk.spyk
 import io.mockk.verify
 import kotlinx.coroutines.Dispatchers
@@ -47,7 +48,7 @@ class DefaultVideoTileControllerTest {
     // See https://github.com/Kotlin/kotlinx.coroutines/tree/master/kotlinx-coroutines-test for more examples
     private val testDispatcher = TestCoroutineDispatcher()
 
-    private val tileId = 117 // some random prime number
+    private val tileId = 7 // some random prime number
     private val attendeeId = "chimesarang"
     private val pauseType = 0
 
@@ -67,8 +68,10 @@ class DefaultVideoTileControllerTest {
     @Before
     fun setUp() {
         MockKAnnotations.init(this, relaxUnitFun = true)
-        every { mockVideoTileFactory.makeTile(any(), any()) } returns mockVideoTile
+        every { mockVideoTileFactory.makeTile(tileId, any()) } returns mockVideoTile
         every { mockVideoTile.state } returns VideoTileState(tileId, attendeeId, false)
+        every { mockVideoTile.videoRenderView } returns mockVideoRenderView
+
         Dispatchers.setMain(testDispatcher)
     }
 
@@ -183,5 +186,48 @@ class DefaultVideoTileControllerTest {
         videoTileController.resumeRemoteVideoTile(tileId)
 
         verify(exactly = 0) { mockVideoTileController.setRemotePaused(false, tileId) }
+    }
+
+    @Test
+    fun `bind should unbind the view first when already bound`() {
+        val mockVideoTile2: VideoTile = mockk(relaxUnitFun = true)
+        val tileId2 = 127
+
+        every { mockVideoTileFactory.makeTile(tileId2, any()) } returns mockVideoTile2
+        every { mockVideoTile2.state } returns VideoTileState(tileId2, attendeeId, false)
+        every { mockVideoTile2.videoRenderView } returns mockVideoRenderView
+        runBlockingTest {
+            videoTileController.onReceiveFrame(mockFrame, attendeeId, tileId, pauseType, tileId)
+            videoTileController.onReceiveFrame(mockFrame, attendeeId, tileId2, pauseType, tileId2)
+        }
+
+        videoTileController.bindVideoView(mockVideoRenderView, tileId)
+        videoTileController.bindVideoView(mockVideoRenderView, tileId2)
+
+        verify { mockVideoTile.unbind() }
+        verify(exactly = 0) { mockVideoTile2.unbind() }
+    }
+
+    @Test
+    fun `bind should NOT call unbind on the first view when not bound`() {
+        val mockVideoTile2: VideoTile = mockk(relaxUnitFun = true)
+        val mockVideoRenderView2: VideoRenderView = mockk(relaxUnitFun = true)
+        val tileId2 = 127
+
+        every { mockVideoTileFactory.makeTile(tileId2, any()) } returns mockVideoTile2
+        every { mockVideoTile2.state } returns VideoTileState(tileId2, attendeeId, false)
+        every { mockVideoTile2.videoRenderView } returns mockVideoRenderView2
+        runBlockingTest {
+            videoTileController.onReceiveFrame(mockFrame, attendeeId, tileId, pauseType, tileId)
+            videoTileController.onReceiveFrame(mockFrame, attendeeId, tileId2, pauseType, tileId2)
+        }
+
+        videoTileController.bindVideoView(mockVideoRenderView, tileId)
+        videoTileController.bindVideoView(mockVideoRenderView2, tileId2)
+
+        verify(exactly = 0) { mockVideoTile.unbind() }
+        verify(exactly = 0) { mockVideoTile2.unbind() }
+        verify(exactly = 1) { mockVideoTile.bind(any(), any()) }
+        verify(exactly = 1) { mockVideoTile2.bind(any(), any()) }
     }
 }
