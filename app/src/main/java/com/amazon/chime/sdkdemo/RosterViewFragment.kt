@@ -420,6 +420,11 @@ class RosterViewFragment : Fragment(), RealtimeObserver, AudioVideoObserver, Vid
                 TAG,
                 "Video track added, titleId: ${tileState.tileId}, attendeeId: ${tileState.attendeeId}"
             )
+            if (tileState.isContent) {
+                notify("Meeting has a screen share.")
+            } else {
+                notify("Meeting has a video call.")
+            }
             // For local video, should show it anyway
             if (tileState.isLocalTile) {
                 showVideoTile(tileState)

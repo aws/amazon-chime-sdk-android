@@ -16,4 +16,9 @@ data class VideoTileState(val tileId: Int, val attendeeId: String?, var paused: 
      * Whether the video tile is for the local attendee
      */
     val isLocalTile: Boolean = attendeeId == null
+
+    /**
+     * Whether the video tile is from screen share
+     */
+    val isContent: Boolean = attendeeId?.endsWith("#content") ?: false
 }
