@@ -10,16 +10,12 @@ import com.amazon.chime.sdk.media.devicecontroller.DeviceChangeObserver
 import com.amazon.chime.sdk.media.devicecontroller.DeviceController
 import com.amazon.chime.sdk.media.devicecontroller.MediaDevice
 import com.amazon.chime.sdk.media.devicecontroller.MediaDeviceType
-import com.amazon.chime.sdk.media.enums.ObservableMetric
-import com.amazon.chime.sdk.media.enums.SignalStrength
-import com.amazon.chime.sdk.media.enums.VolumeLevel
 import com.amazon.chime.sdk.media.mediacontroller.AudioVideoControllerFacade
 import com.amazon.chime.sdk.media.mediacontroller.AudioVideoObserver
 import com.amazon.chime.sdk.media.mediacontroller.MetricsObserver
 import com.amazon.chime.sdk.media.mediacontroller.RealtimeControllerFacade
 import com.amazon.chime.sdk.media.mediacontroller.RealtimeObserver
 import com.amazon.chime.sdk.media.mediacontroller.video.VideoTileController
-import com.amazon.chime.sdk.session.MeetingSessionStatus
 import io.mockk.MockKAnnotations
 import io.mockk.every
 import io.mockk.impl.annotations.InjectMockKs
@@ -32,63 +28,21 @@ import org.junit.Before
 import org.junit.Test
 
 class DefaultAudioVideoFacadeTest {
-    private val observer = object : AudioVideoObserver, RealtimeObserver, DeviceChangeObserver, MetricsObserver {
-
-        override fun onAudioClientConnecting(reconnecting: Boolean) {
-        }
-
-        override fun onAudioClientStart(reconnecting: Boolean) {
-        }
-
-        override fun onAudioClientStop(sessionStatus: MeetingSessionStatus) {
-        }
-
-        override fun onAudioClientReconnectionCancel() {
-        }
-
-        override fun onConnectionRecover() {
-        }
-
-        override fun onConnectionBecomePoor() {
-        }
-
-        override fun onVolumeChange(attendeeVolumes: Map<String, VolumeLevel>) {
-        }
-
-        override fun onSignalStrengthChange(attendeeSignalStrength: Map<String, SignalStrength>) {
-        }
-
-        override fun onAttendeesJoin(attendeeIds: Array<String>) {
-        }
-
-        override fun onAttendeesLeave(attendeeIds: Array<String>) {
-        }
-
-        override fun onAttendeesMute(attendeeIds: Array<String>) {
-        }
-
-        override fun onAttendeesUnmute(attendeeIds: Array<String>) {
-        }
-
-        override fun onAudioDeviceChange(freshAudioDeviceList: List<MediaDevice>) {
-        }
-
-        override fun onMetricsReceive(metrics: Map<ObservableMetric, Any>) {
-        }
-
-        override fun onVideoClientConnecting() {
-        }
-
-        override fun onVideoClientStart() {
-        }
-
-        override fun onVideoClientStop(sessionStatus: MeetingSessionStatus) {
-        }
-    }
-
     private val devices = emptyList<MediaDevice>()
 
     private val mediaDevice = MediaDevice("label", MediaDeviceType.OTHER)
+
+    @MockK
+    private lateinit var mockAudioVideoObserver: AudioVideoObserver
+
+    @MockK
+    private lateinit var mockRealtimeObserver: RealtimeObserver
+
+    @MockK
+    private lateinit var mockDeviceChangeObserver: DeviceChangeObserver
+
+    @MockK
+    private lateinit var mockMetricsObserver: MetricsObserver
 
     @MockK
     private lateinit var context: Context
@@ -120,26 +74,26 @@ class DefaultAudioVideoFacadeTest {
 
     @Test
     fun `addAudioVideoObserver should call audioVideoController addObserver with given observer`() {
-        audioVideoFacade.addAudioVideoObserver(observer)
-        verify { audioVideoController.addAudioVideoObserver(observer) }
+        audioVideoFacade.addAudioVideoObserver(mockAudioVideoObserver)
+        verify { audioVideoController.addAudioVideoObserver(mockAudioVideoObserver) }
     }
 
     @Test
     fun `removeAudioVideoObserver should call audioVideoController removeObserve with given observer`() {
-        audioVideoFacade.removeAudioVideoObserver(observer)
-        verify { audioVideoController.removeAudioVideoObserver(observer) }
+        audioVideoFacade.removeAudioVideoObserver(mockAudioVideoObserver)
+        verify { audioVideoController.removeAudioVideoObserver(mockAudioVideoObserver) }
     }
 
     @Test
     fun `addMetricsObserver should call audioVideoController addMetricsObserver with given observer`() {
-        audioVideoFacade.addMetricsObserver(observer)
-        verify { audioVideoController.addMetricsObserver(observer) }
+        audioVideoFacade.addMetricsObserver(mockMetricsObserver)
+        verify { audioVideoController.addMetricsObserver(mockMetricsObserver) }
     }
 
     @Test
     fun `removeMetricsObserver should call audioVideoController removeMetricsObserver with given observer`() {
-        audioVideoFacade.removeMetricsObserver(observer)
-        verify { audioVideoController.removeMetricsObserver(observer) }
+        audioVideoFacade.removeMetricsObserver(mockMetricsObserver)
+        verify { audioVideoController.removeMetricsObserver(mockMetricsObserver) }
     }
     @Test
     fun `start should call audioVideoController start when the required permissions are granted`() {
@@ -169,14 +123,14 @@ class DefaultAudioVideoFacadeTest {
 
     @Test
     fun `addRealtimeObserver should call realtimeController addRealtimeObserver with given observer`() {
-        audioVideoFacade.addRealtimeObserver(observer)
-        verify { realtimeController.addRealtimeObserver(observer) }
+        audioVideoFacade.addRealtimeObserver(mockRealtimeObserver)
+        verify { realtimeController.addRealtimeObserver(mockRealtimeObserver) }
     }
 
     @Test
     fun `removeRealtimeObserver should call realtimeController removeRealtimeObserver with given observer`() {
-        audioVideoFacade.removeRealtimeObserver(observer)
-        verify { realtimeController.removeRealtimeObserver(observer) }
+        audioVideoFacade.removeRealtimeObserver(mockRealtimeObserver)
+        verify { realtimeController.removeRealtimeObserver(mockRealtimeObserver) }
     }
 
     @Test
@@ -193,14 +147,14 @@ class DefaultAudioVideoFacadeTest {
 
     @Test
     fun `addDeviceChangeObserver should call deviceController addDeviceChangeObserver with given observer`() {
-        audioVideoFacade.addDeviceChangeObserver(observer)
-        verify { deviceController.addDeviceChangeObserver(observer) }
+        audioVideoFacade.addDeviceChangeObserver(mockDeviceChangeObserver)
+        verify { deviceController.addDeviceChangeObserver(mockDeviceChangeObserver) }
     }
 
     @Test
     fun `removeDeviceChangeObserver should call deviceController removeDeviceChangeObserver with given observer`() {
-        audioVideoFacade.removeDeviceChangeObserver(observer)
-        verify { deviceController.removeDeviceChangeObserver(observer) }
+        audioVideoFacade.removeDeviceChangeObserver(mockDeviceChangeObserver)
+        verify { deviceController.removeDeviceChangeObserver(mockDeviceChangeObserver) }
     }
 
     @Test

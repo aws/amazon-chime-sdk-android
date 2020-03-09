@@ -20,11 +20,12 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.amazon.chime.sdk.media.AudioVideoFacade
 import com.amazon.chime.sdk.media.enums.ObservableMetric
-import com.amazon.chime.sdk.media.enums.SignalStrength
-import com.amazon.chime.sdk.media.enums.VolumeLevel
+import com.amazon.chime.sdk.media.mediacontroller.AttendeeInfo
 import com.amazon.chime.sdk.media.mediacontroller.AudioVideoObserver
 import com.amazon.chime.sdk.media.mediacontroller.MetricsObserver
 import com.amazon.chime.sdk.media.mediacontroller.RealtimeObserver
+import com.amazon.chime.sdk.media.mediacontroller.SignalUpdate
+import com.amazon.chime.sdk.media.mediacontroller.VolumeUpdate
 import com.amazon.chime.sdk.media.mediacontroller.video.VideoTileObserver
 import com.amazon.chime.sdk.media.mediacontroller.video.VideoTileState
 import com.amazon.chime.sdk.session.MeetingSessionStatus
@@ -181,16 +182,16 @@ class RosterViewFragment : Fragment(), RealtimeObserver, AudioVideoObserver, Vid
         }
     }
 
-    override fun onVolumeChange(attendeeVolumes: Map<String, VolumeLevel>) {
+    override fun onVolumeChange(volumeUpdates: Array<VolumeUpdate>) {
         uiScope.launch {
             mutex.withLock {
-                attendeeVolumes.forEach { (attendeeId, volume) ->
-                    currentRoster[attendeeId]?.let {
-                        currentRoster[attendeeId] =
+                volumeUpdates.forEach { (attendeeInfo, volumeLevel) ->
+                    currentRoster[attendeeInfo.attendeeId]?.let {
+                        currentRoster[attendeeInfo.attendeeId] =
                             RosterAttendee(
                                 it.attendeeId,
                                 it.attendeeName,
-                                volume,
+                                volumeLevel,
                                 it.signalStrength
                             )
                     }
@@ -201,11 +202,16 @@ class RosterViewFragment : Fragment(), RealtimeObserver, AudioVideoObserver, Vid
         }
     }
 
-    override fun onSignalStrengthChange(attendeeSignalStrength: Map<String, SignalStrength>) {
+    override fun onSignalStrengthChange(signalUpdates: Array<SignalUpdate>) {
         uiScope.launch {
             mutex.withLock {
-                attendeeSignalStrength.forEach { (attendeeId, signalStrength) ->
-                    logger.info(TAG, "Attendee $attendeeId signalStrength: $signalStrength")
+                signalUpdates.forEach { (attendeeInfo, signalStrength) ->
+                    val attendeeId: String = attendeeInfo.attendeeId
+
+                    logger.info(
+                        TAG,
+                        "AttendeeId: $attendeeId externalUserId: ${attendeeInfo.externalUserId} signalStrength: $signalStrength"
+                    )
 
                     currentRoster[attendeeId]?.let {
                         currentRoster[attendeeId] =
@@ -223,16 +229,16 @@ class RosterViewFragment : Fragment(), RealtimeObserver, AudioVideoObserver, Vid
         }
     }
 
-    override fun onAttendeesJoin(attendeeIds: Array<String>) {
+    override fun onAttendeesJoin(attendeeInfo: Array<AttendeeInfo>) {
         uiScope.launch {
             mutex.withLock {
-                attendeeIds.forEach {
+                attendeeInfo.forEach { (attendeeId, _) ->
                     currentRoster.getOrPut(
-                        it,
+                        attendeeId,
                         {
                             RosterAttendee(
-                                it,
-                                getAttendeeName(getString(R.string.test_url), it) ?: ""
+                                attendeeId,
+                                getAttendeeName(getString(R.string.test_url), attendeeId) ?: ""
                             )
                         })
                 }
@@ -242,25 +248,31 @@ class RosterViewFragment : Fragment(), RealtimeObserver, AudioVideoObserver, Vid
         }
     }
 
-    override fun onAttendeesLeave(attendeeIds: Array<String>) {
+    override fun onAttendeesLeave(attendeeInfo: Array<AttendeeInfo>) {
         uiScope.launch {
             mutex.withLock {
-                attendeeIds.forEach { currentRoster.remove(it) }
+                attendeeInfo.forEach { (attendeeId, _) -> currentRoster.remove(attendeeId) }
 
                 rosterAdapter.notifyDataSetChanged()
             }
         }
     }
 
-    override fun onAttendeesMute(attendeeIds: Array<String>) {
-        attendeeIds.forEach {
-            logger.info(TAG, "Attendee $it muted")
+    override fun onAttendeesMute(attendeeInfo: Array<AttendeeInfo>) {
+        attendeeInfo.forEach { (attendeeId, externalUserId) ->
+            logger.info(
+                TAG,
+                "Attendee with attendeeId $attendeeId and externalUserId $externalUserId muted"
+            )
         }
     }
 
-    override fun onAttendeesUnmute(attendeeIds: Array<String>) {
-        attendeeIds.forEach {
-            logger.info(TAG, "Attendee $it unmuted")
+    override fun onAttendeesUnmute(attendeeInfo: Array<AttendeeInfo>) {
+        attendeeInfo.forEach { (attendeeId, externalUserId) ->
+            logger.info(
+                TAG,
+                "Attendee with attendeeId $attendeeId and externalUserId $externalUserId unmuted"
+            )
         }
     }
 

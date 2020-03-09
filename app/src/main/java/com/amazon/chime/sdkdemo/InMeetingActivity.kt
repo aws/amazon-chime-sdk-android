@@ -21,7 +21,7 @@ class InMeetingActivity : AppCompatActivity(),
     DeviceManagementFragment.DeviceManagementEventListener,
     RosterViewFragment.RosterViewEventListener {
 
-    private val logger = ConsoleLogger(LogLevel.INFO)
+    private val logger = ConsoleLogger(LogLevel.DEBUG)
     private val gson = Gson()
     private lateinit var meetingId: String
     private lateinit var name: String

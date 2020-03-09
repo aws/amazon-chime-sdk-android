@@ -14,42 +14,42 @@ interface RealtimeObserver {
     /**
      * Handles volume changes for attendees whose [VolumeLevel] has changed
      *
-     * @param attendeeVolumes: Map<String, [VolumeLevel]> - A map of attendee Ids to volume
+     * @param volumeUpdates: Array<[VolumeUpdate]> - Attendees with updated volume levels
      */
-    fun onVolumeChange(attendeeVolumes: Map<String, VolumeLevel>)
+    fun onVolumeChange(volumeUpdates: Array<VolumeUpdate>)
 
     /**
      * Handles signal strength changes for attendees whose [SignalStrength] has changed
      *
-     * @param attendeeSignalStrength: Map<String, [SignalStrength]> - A map of attendee Ids to signal strength
+     * @param signalUpdates: Array<[SignalUpdate]> - Attendees with updated signal strengths
      */
-    fun onSignalStrengthChange(attendeeSignalStrength: Map<String, SignalStrength>)
+    fun onSignalStrengthChange(signalUpdates: Array<SignalUpdate>)
 
     /**
      * Handles attendee(s) being added
      *
-     * @param attendeeIds: Array<String> - The Ids for the attendees being added
+     * @param attendeeInfo: Array<[AttendeeInfo]> - Attendees being added
      */
-    fun onAttendeesJoin(attendeeIds: Array<String>)
+    fun onAttendeesJoin(attendeeInfo: Array<AttendeeInfo>)
 
     /**
      * Handles attendee(s) being removed
      *
-     * @param attendeeIds: Array<String> - The Ids for the attendees being removed
+     * @param attendeeInfo: Array<[AttendeeInfo]> - Attendees being removed
      */
-    fun onAttendeesLeave(attendeeIds: Array<String>)
+    fun onAttendeesLeave(attendeeInfo: Array<AttendeeInfo>)
 
     /**
      * Handles attendee(s) whose [VolumeLevel] has changed to muted
      *
-     * @param attendeeIds: Array<String> - The Ids for the attendees being muted
+     * @param attendeeInfo: Array<[AttendeeInfo]> - Attendees who are newly muted
      */
-    fun onAttendeesMute(attendeeIds: Array<String>)
+    fun onAttendeesMute(attendeeInfo: Array<AttendeeInfo>)
 
     /**
      * Handles attendee(s) whose [VolumeLevel] has changed from muted
      *
-     * @param attendeeIds: Array<String> - The Ids for the attendees being unmuted
+     * @param attendeeInfo: Array<[AttendeeInfo]> - Attendees who are newly unmuted
      */
-    fun onAttendeesUnmute(attendeeIds: Array<String>)
+    fun onAttendeesUnmute(attendeeInfo: Array<AttendeeInfo>)
 }
