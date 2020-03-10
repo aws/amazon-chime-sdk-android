@@ -13,9 +13,11 @@ import com.amazon.chime.sdk.media.mediacontroller.video.VideoTileController
 import com.amazon.chime.sdk.session.MeetingSessionStatus
 import com.amazon.chime.sdk.session.MeetingSessionStatusCode
 import com.amazon.chime.sdk.utils.logger.Logger
+import com.xodee.client.audio.audioclient.AudioClient
 import com.xodee.client.video.VideoClient
 import com.xodee.client.video.VideoClientCapturer
 import com.xodee.client.video.VideoClientDelegate
+import com.xodee.client.video.VideoClientLogListener
 import com.xodee.client.video.VideoDevice
 import java.io.BufferedReader
 import java.io.BufferedWriter
@@ -32,10 +34,10 @@ import org.json.JSONObject
 
 class VideoClientController constructor(
     val context: Context,
-    val clientMetricsCollector: ClientMetricsCollector,
+    private val clientMetricsCollector: ClientMetricsCollector,
     val logger: Logger
 ) :
-    VideoClientDelegate {
+    VideoClientDelegate, VideoClientLogListener {
 
     private val TAG = "VideoClientController"
     private val TOKEN_HEADER = "X-Chime-Auth-Token"
@@ -118,7 +120,7 @@ class VideoClientController constructor(
             // initializeAppDetailedInfo()
             VideoClient.initializeGlobals(context)
             VideoClientCapturer.getInstance(context)
-            videoClient = VideoClient(this)
+            videoClient = VideoClient(this, this)
             forEachVideoTileObserver { observer -> observer.initialize() }
             videoClientState = VideoClientState.INITIALIZED
         }
@@ -394,6 +396,15 @@ class VideoClientController constructor(
                 logger.error(TAG, "Exception while doing TURN Request: $exception")
                 null
             }
+        }
+    }
+
+    override fun onLogMessage(logLevel: Int, message: String?) {
+        if (message == null) return
+        // Only print error and fatal as the Media team's request to avoid noise
+        // Will be changed back to respect logger settings once sanitize the logs
+        if (logLevel == AudioClient.L_ERROR || logLevel == AudioClient.L_FATAL) {
+            logger.error(TAG, message)
         }
     }
 }
