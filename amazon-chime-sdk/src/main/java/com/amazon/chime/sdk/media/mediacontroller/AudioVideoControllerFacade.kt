@@ -52,4 +52,14 @@ interface AudioVideoControllerFacade {
      * Stop local video.
      */
     fun stopLocalVideo()
+
+    /**
+     * Start remote video.
+     */
+    fun startRemoteVideo()
+
+    /**
+     * Stop remote video.
+     */
+    fun stopRemoteVideo()
 }

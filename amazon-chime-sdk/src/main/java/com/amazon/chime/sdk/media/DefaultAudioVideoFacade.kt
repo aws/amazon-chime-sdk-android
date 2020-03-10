@@ -79,6 +79,14 @@ class DefaultAudioVideoFacade(
         audioVideoController.stopLocalVideo()
     }
 
+    override fun startRemoteVideo() {
+        audioVideoController.startRemoteVideo()
+    }
+
+    override fun stopRemoteVideo() {
+        audioVideoController.stopRemoteVideo()
+    }
+
     override fun realtimeLocalMute(): Boolean {
         return realtimeController.realtimeLocalMute()
     }

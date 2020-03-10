@@ -30,8 +30,7 @@ class DefaultAudioVideoController(
             configuration.urls.turnControlURL,
             configuration.urls.signalingURL,
             configuration.meetingId,
-            configuration.credentials.joinToken,
-            false
+            configuration.credentials.joinToken
         )
     }
 
@@ -41,11 +40,19 @@ class DefaultAudioVideoController(
     }
 
     override fun startLocalVideo() {
-        videoClientController.enableSelfVideo(true)
+        videoClientController.startLocalVideo()
     }
 
     override fun stopLocalVideo() {
-        videoClientController.enableSelfVideo(false)
+        videoClientController.stopLocalVideo()
+    }
+
+    override fun startRemoteVideo() {
+        videoClientController.startRemoteVideo()
+    }
+
+    override fun stopRemoteVideo() {
+        videoClientController.stopRemoteVideo()
     }
 
     override fun addAudioVideoObserver(observer: AudioVideoObserver) {

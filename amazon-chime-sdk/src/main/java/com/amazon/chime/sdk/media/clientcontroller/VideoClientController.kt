@@ -52,7 +52,6 @@ class VideoClientController constructor(
     private var videoClientStateObservers = mutableSetOf<AudioVideoObserver>()
     private var videoClientTileObservers = mutableSetOf<VideoTileController>()
     private var videoClientState: VideoClientState = VideoClientState.UNINITIALIZED
-    private var isSelfVideoSending: Boolean = false
     private val uiScope = CoroutineScope(Dispatchers.Main)
     private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO
     private var signalingUrl: String? = null
@@ -71,21 +70,8 @@ class VideoClientController constructor(
         controlUrl: String,
         signalingUrl: String,
         meetingId: String,
-        token: String,
-        sending: Boolean
+        token: String
     ) {
-        val hasPermission: Boolean = permissions.all {
-            ContextCompat.checkSelfPermission(context, it) == PackageManager.PERMISSION_GRANTED
-        }
-        if (sending && !hasPermission) {
-            throw SecurityException(
-                "Missing necessary permissions for WebRTC: ${permissions.joinToString(
-                    separator = ", ",
-                    prefix = "",
-                    postfix = ""
-                )}"
-            )
-        }
         this.signalingUrl = signalingUrl
         this.turnControlUrl = controlUrl
         this.meetingId = meetingId
@@ -98,14 +84,14 @@ class VideoClientController constructor(
             return
         }
         if (videoClientState == VideoClientState.INITIALIZED || videoClientState == VideoClientState.STOPPED) {
-            logger.info(TAG, "Starting VideoClient with sending = $sending")
-            enableSelfVideo(sending)
+            logger.info(TAG, "Starting Video Client")
+            videoClient?.setReceiving(false)
             videoClient?.startServiceV2(
                 "",
                 "",
                 meetingId,
                 token,
-                sending,
+                false,
                 0,
                 0
             )
@@ -133,7 +119,6 @@ class VideoClientController constructor(
                 "Stopping Video Client"
             )
             videoClient?.stopService()
-            isSelfVideoSending = false
             videoClientState = VideoClientState.STOPPED
         }
     }
@@ -152,32 +137,56 @@ class VideoClientController constructor(
         videoClientState = VideoClientState.UNINITIALIZED
     }
 
-    internal fun enableSelfVideo(isEnable: Boolean) {
-        logger.info(TAG, "Enable Self Video with isEnable = $isEnable")
+    internal fun startLocalVideo() {
+        logger.info(TAG, "Starting local video")
         if (videoClientState == VideoClientState.UNINITIALIZED) {
-            logger.info(TAG, "Video Client is not initialized so returning without doing anything")
+            logger.warn(TAG, "Video Client is not initialized so returning without doing anything")
             return
         }
-        isSelfVideoSending = isEnable
-        if (isSelfVideoSending) {
-            val hasPermission: Boolean = permissions.all {
-                ContextCompat.checkSelfPermission(context, it) == PackageManager.PERMISSION_GRANTED
-            }
-            if (!hasPermission) {
-                throw SecurityException(
-                    "Missing necessary permissions for WebRTC: ${permissions.joinToString(
-                        separator = ", ",
-                        prefix = "",
-                        postfix = ""
-                    )}"
-                )
-            }
-            val currentDevice = getActiveCamera()
-            if (currentDevice == null) {
-                setFrontCameraAsCurrentDevice()
-            }
+        val hasPermission: Boolean = permissions.all {
+            ContextCompat.checkSelfPermission(context, it) == PackageManager.PERMISSION_GRANTED
         }
-        videoClient?.setSending(isSelfVideoSending)
+        if (!hasPermission) {
+            throw SecurityException(
+                "Missing necessary permissions for WebRTC: ${permissions.joinToString(
+                    separator = ", ",
+                    prefix = "",
+                    postfix = ""
+                )}"
+            )
+        }
+        val currentDevice = getActiveCamera()
+        if (currentDevice == null) {
+            setFrontCameraAsCurrentDevice()
+        }
+        videoClient?.setSending(true)
+    }
+
+    internal fun stopLocalVideo() {
+        logger.info(TAG, "Stopping local video")
+        if (videoClientState == VideoClientState.UNINITIALIZED) {
+            logger.warn(TAG, "Video Client is not initialized so returning without doing anything")
+            return
+        }
+        videoClient?.setSending(false)
+    }
+
+    internal fun startRemoteVideo() {
+        logger.info(TAG, "Starting remote video")
+        if (videoClientState == VideoClientState.UNINITIALIZED) {
+            logger.warn(TAG, "Video Client is not initialized so returning without doing anything")
+            return
+        }
+        videoClient?.setReceiving(true)
+    }
+
+    internal fun stopRemoteVideo() {
+        logger.info(TAG, "Stopping remote video")
+        if (videoClientState == VideoClientState.UNINITIALIZED) {
+            logger.warn(TAG, "Video Client is not initialized so returning without doing anything")
+            return
+        }
+        videoClient?.setReceiving(false)
     }
 
     internal fun getActiveCamera(): VideoDevice? {

@@ -173,10 +173,12 @@ class RosterViewFragment : Fragment(), RealtimeObserver, AudioVideoObserver, Vid
             SubTab.Attendee.position -> {
                 recyclerViewRoster.visibility = View.VISIBLE
                 recyclerViewVideoCollection.visibility = View.GONE
+                audioVideo.stopRemoteVideo()
             }
             SubTab.Video.position -> {
                 recyclerViewRoster.visibility = View.GONE
                 recyclerViewVideoCollection.visibility = View.VISIBLE
+                audioVideo.startRemoteVideo()
             }
             else -> return
         }
@@ -430,13 +432,9 @@ class RosterViewFragment : Fragment(), RealtimeObserver, AudioVideoObserver, Vid
         uiScope.launch {
             logger.info(
                 TAG,
-                "Video track added, titleId: ${tileState.tileId}, attendeeId: ${tileState.attendeeId}"
+                "Video track added, titleId: ${tileState.tileId}, attendeeId: ${tileState.attendeeId}" +
+                ", isContent ${tileState.isContent}"
             )
-            if (tileState.isContent) {
-                notify("Meeting has a screen share.")
-            } else {
-                notify("Meeting has a video call.")
-            }
             // For local video, should show it anyway
             if (tileState.isLocalTile) {
                 showVideoTile(tileState)

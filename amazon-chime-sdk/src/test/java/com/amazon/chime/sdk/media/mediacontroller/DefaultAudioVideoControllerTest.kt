@@ -109,16 +109,30 @@ class DefaultAudioVideoControllerTest {
     }
 
     @Test
-    fun `startLocalVideo should call videoClientController enableSelfVideo`() {
+    fun `startLocalVideo should call videoClientController startLocalVideo`() {
         audioVideoController.startLocalVideo()
 
-        verify { videoClientController.enableSelfVideo(true) }
+        verify { videoClientController.startLocalVideo() }
     }
 
     @Test
-    fun `stopLocalVideo should call videoClientController enableSelfVideo`() {
+    fun `stopLocalVideo should call videoClientController stopLocalVideo`() {
         audioVideoController.stopLocalVideo()
 
-        verify { videoClientController.enableSelfVideo(false) }
+        verify { videoClientController.stopLocalVideo() }
+    }
+
+    @Test
+    fun `startRemoteVideo should call videoClientController startRemoteVideo`() {
+        audioVideoController.startRemoteVideo()
+
+        verify { videoClientController.startRemoteVideo() }
+    }
+
+    @Test
+    fun `stopRemoteVideo should call videoClientController stopRemoteVideo`() {
+        audioVideoController.stopRemoteVideo()
+
+        verify { videoClientController.stopRemoteVideo() }
     }
 }
