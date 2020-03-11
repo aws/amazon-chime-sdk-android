@@ -90,6 +90,14 @@
             android:padding="8dp"
             android:visibility="gone" />
 
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerViewScreenShareCollection"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:padding="8dp"
+            android:visibility="gone" />
+
     </LinearLayout>
 
     <com.google.android.material.tabs.TabLayout

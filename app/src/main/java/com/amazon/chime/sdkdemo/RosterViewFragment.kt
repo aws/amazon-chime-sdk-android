@@ -56,6 +56,7 @@ class RosterViewFragment : Fragment(), RealtimeObserver, AudioVideoObserver, Vid
     private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO
     private val currentRoster = mutableMapOf<String, RosterAttendee>()
     private val currentVideoTiles = mutableMapOf<Int, VideoCollectionTile>()
+    private val currentScreenTiles = mutableMapOf<Int, VideoCollectionTile>()
     private val nextVideoTiles = LinkedHashMap<Int, VideoCollectionTile>()
     private var isMuted = false
     private var isCameraOn = false
@@ -73,15 +74,18 @@ class RosterViewFragment : Fragment(), RealtimeObserver, AudioVideoObserver, Vid
     )
     enum class SubTab(val position: Int) {
         Attendee(0),
-        Video(1)
+        Video(1),
+        Screen(2)
     }
 
     private lateinit var buttonMute: ImageButton
     private lateinit var buttonVideo: ImageButton
     private lateinit var recyclerViewRoster: RecyclerView
     private lateinit var recyclerViewVideoCollection: RecyclerView
+    private lateinit var recyclerViewScreenShareCollection: RecyclerView
     private lateinit var rosterAdapter: RosterAdapter
     private lateinit var videoTileAdapter: VideoCollectionTileAdapter
+    private lateinit var screenTileAdapter: VideoCollectionTileAdapter
     private lateinit var tabLayout: TabLayout
 
     companion object {
@@ -153,6 +157,12 @@ class RosterViewFragment : Fragment(), RealtimeObserver, AudioVideoObserver, Vid
         videoTileAdapter = VideoCollectionTileAdapter(currentVideoTiles.values, audioVideo, context)
         recyclerViewVideoCollection.adapter = videoTileAdapter
 
+        recyclerViewScreenShareCollection =
+            view.findViewById(R.id.recyclerViewScreenShareCollection)
+        recyclerViewScreenShareCollection.layoutManager = LinearLayoutManager(activity)
+        screenTileAdapter = VideoCollectionTileAdapter(currentScreenTiles.values, audioVideo, context)
+        recyclerViewScreenShareCollection.adapter = screenTileAdapter
+
         tabLayout = view.findViewById(R.id.tabLayoutRosterView)
         SubTab.values().forEach { tabLayout.addTab(tabLayout.newTab().setText(it.name)) }
         tabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
@@ -173,13 +183,22 @@ class RosterViewFragment : Fragment(), RealtimeObserver, AudioVideoObserver, Vid
             SubTab.Attendee.position -> {
                 recyclerViewRoster.visibility = View.VISIBLE
                 recyclerViewVideoCollection.visibility = View.GONE
+                recyclerViewScreenShareCollection.visibility = View.GONE
                 audioVideo.stopRemoteVideo()
             }
             SubTab.Video.position -> {
                 recyclerViewRoster.visibility = View.GONE
                 recyclerViewVideoCollection.visibility = View.VISIBLE
+                recyclerViewScreenShareCollection.visibility = View.GONE
                 audioVideo.startRemoteVideo()
             }
+            SubTab.Screen.position -> {
+                recyclerViewRoster.visibility = View.GONE
+                recyclerViewVideoCollection.visibility = View.GONE
+                recyclerViewScreenShareCollection.visibility = View.VISIBLE
+                audioVideo.startRemoteVideo()
+            }
+
             else -> return
         }
     }
@@ -383,8 +402,13 @@ class RosterViewFragment : Fragment(), RealtimeObserver, AudioVideoObserver, Vid
     }
 
     private fun showVideoTile(tileState: VideoTileState) {
-        currentVideoTiles[tileState.tileId] = createVideoCollectionTile(tileState)
-        videoTileAdapter.notifyDataSetChanged()
+        if (tileState.isContent) {
+            currentScreenTiles[tileState.tileId] = createVideoCollectionTile(tileState)
+            screenTileAdapter.notifyDataSetChanged()
+        } else {
+            currentVideoTiles[tileState.tileId] = createVideoCollectionTile(tileState)
+            videoTileAdapter.notifyDataSetChanged()
+        }
     }
 
     private fun canShowMoreRemoteVideoTile(): Boolean {
@@ -392,6 +416,11 @@ class RosterViewFragment : Fragment(), RealtimeObserver, AudioVideoObserver, Vid
         val currentMax =
             if (currentVideoTiles.containsKey(LOCAL_TILE_ID)) MAX_TILE_COUNT else MAX_TILE_COUNT - 1
         return currentVideoTiles.size < currentMax
+    }
+
+    private fun canShowMoreRemoteScreenTile(): Boolean {
+        // only show 1 screen share tile
+        return currentScreenTiles.isEmpty()
     }
 
     private fun createVideoCollectionTile(tileState: VideoTileState): VideoCollectionTile {
@@ -435,14 +464,20 @@ class RosterViewFragment : Fragment(), RealtimeObserver, AudioVideoObserver, Vid
                 "Video track added, titleId: ${tileState.tileId}, attendeeId: ${tileState.attendeeId}" +
                 ", isContent ${tileState.isContent}"
             )
-            // For local video, should show it anyway
-            if (tileState.isLocalTile) {
-                showVideoTile(tileState)
-            } else if (!currentVideoTiles.containsKey(tileState.tileId)) {
-                if (canShowMoreRemoteVideoTile()) {
+            if (tileState.isContent) {
+                if (!currentScreenTiles.containsKey(tileState.tileId) && canShowMoreRemoteScreenTile()) {
                     showVideoTile(tileState)
-                } else {
-                    nextVideoTiles[tileState.tileId] = createVideoCollectionTile(tileState)
+                }
+            } else {
+                // For local video, should show it anyway
+                if (tileState.isLocalTile) {
+                    showVideoTile(tileState)
+                } else if (!currentVideoTiles.containsKey(tileState.tileId)) {
+                    if (canShowMoreRemoteVideoTile()) {
+                        showVideoTile(tileState)
+                    } else {
+                        nextVideoTiles[tileState.tileId] = createVideoCollectionTile(tileState)
+                    }
                 }
             }
         }
@@ -467,11 +502,12 @@ class RosterViewFragment : Fragment(), RealtimeObserver, AudioVideoObserver, Vid
                     nextVideoTiles.remove(nextTileState.tileId)
                 }
                 videoTileAdapter.notifyDataSetChanged()
-            } else {
-                // Clean up removed tiles
-                if (nextVideoTiles.containsKey(tileId)) {
+            } else if (nextVideoTiles.containsKey(tileId)) {
                     nextVideoTiles.remove(tileId)
-                }
+            } else if (currentScreenTiles.containsKey(tileId)) {
+                audioVideo.unbindVideoView(tileId)
+                currentScreenTiles.remove(tileId)
+                screenTileAdapter.notifyDataSetChanged()
             }
         }
     }
