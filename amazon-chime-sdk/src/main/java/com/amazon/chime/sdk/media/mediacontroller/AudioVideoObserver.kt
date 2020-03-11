@@ -64,4 +64,14 @@ interface AudioVideoObserver {
      * @param sessionStatus: [MeetingSessionStatus] - The reason why the session has stopped.
      */
     fun onVideoClientStop(sessionStatus: MeetingSessionStatus)
+
+    /**
+     * Called when an error is encountered in the video session with the reason provided in the status.
+     * In this case, the error does not cause the video session to stop. For example, the video client
+     * may have tried to send video but found that the capacity was already reached. However, the video
+     * client can still receive remote video streams.
+     *
+     * @param sessionStatus: [MeetingSessionStatus] - The reason why the session has stopped.
+     */
+    fun onVideoClientError(sessionStatus: MeetingSessionStatus)
 }

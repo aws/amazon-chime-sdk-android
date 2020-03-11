@@ -73,7 +73,13 @@ enum class MeetingSessionStatusCode(val value: Int) {
     /**
      * Video Client Failed.
      */
-    VideoServiceFailed(12);
+    VideoServiceFailed(12),
+
+    /**
+     * The video client has tried to send video but was unable to do so due to capacity reached.
+     * However, the video client can still receive remote video streams.
+     */
+    VideoAtCapacityViewOnly(13);
 
     companion object {
         fun from(intValue: Int): MeetingSessionStatusCode? = values().find { it.value == intValue }

@@ -276,12 +276,24 @@ class VideoClientController constructor(
     }
 
     override fun didConnect(client: VideoClient?, controlStatus: Int) {
-        logger.info(TAG, "didConnect")
-        forEachVideoClientStateObserver { observer -> observer.onVideoClientStart() }
+        logger.info(TAG, "didConnect with controlStatus: $controlStatus")
+
+        if (controlStatus == VideoClient.VIDEO_CLIENT_STATUS_CALL_AT_CAPACITY_VIEW_ONLY) {
+            forEachVideoClientStateObserver {
+                it.onVideoClientError(
+                    MeetingSessionStatus(
+                        MeetingSessionStatusCode.VideoAtCapacityViewOnly
+                    )
+                )
+            }
+        } else {
+            forEachVideoClientStateObserver { observer -> observer.onVideoClientStart() }
+        }
     }
 
     override fun didFail(client: VideoClient?, status: Int, controlStatus: Int) {
-        logger.info(TAG, "didFail with controlStatus = $controlStatus")
+        logger.info(TAG, "didFail with controlStatus: $controlStatus")
+
         forEachVideoClientStateObserver { observer ->
             observer.onVideoClientStop(
                 MeetingSessionStatus(
@@ -293,6 +305,7 @@ class VideoClientController constructor(
 
     override fun didStop(client: VideoClient?) {
         logger.info(TAG, "didStop")
+
         videoClientState = VideoClientState.STOPPED
         forEachVideoClientStateObserver { observer ->
             observer.onVideoClientStop(
@@ -304,7 +317,7 @@ class VideoClientController constructor(
     }
 
     override fun cameraSendIsAvailable(client: VideoClient?, available: Boolean) {
-        logger.info(TAG, "cameraSendIsAvailable")
+        logger.debug(TAG, "cameraSendIsAvailable: $available")
     }
 
     override fun requestTurnCreds(client: VideoClient?) {

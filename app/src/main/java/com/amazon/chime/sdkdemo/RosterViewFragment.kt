@@ -457,6 +457,10 @@ class RosterViewFragment : Fragment(), RealtimeObserver, AudioVideoObserver, Vid
     override fun onVideoClientStop(sessionStatus: MeetingSessionStatus) =
         notify("Video stopped for reason: ${sessionStatus.statusCode}")
 
+    override fun onVideoClientError(sessionStatus: MeetingSessionStatus) {
+        notify("Video encountered an error: ${sessionStatus.statusCode}")
+    }
+
     override fun onAddVideoTile(tileState: VideoTileState) {
         uiScope.launch {
             logger.info(
