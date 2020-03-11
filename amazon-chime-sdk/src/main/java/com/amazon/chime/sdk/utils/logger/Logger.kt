@@ -5,7 +5,7 @@
 package com.amazon.chime.sdk.utils.logger
 
 /**
- * [[Logger]] defines how to write logs for different logging level.
+ * [Logger] defines how to write logs for different logging level.
  */
 interface Logger {
 

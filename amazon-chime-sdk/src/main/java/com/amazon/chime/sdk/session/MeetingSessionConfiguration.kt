@@ -5,8 +5,11 @@
 package com.amazon.chime.sdk.session
 
 /**
- * [[MeetingSessionConfiguration]] includes information needed to start the meeting session such as
+ * [MeetingSessionConfiguration] includes information needed to start the meeting session such as
  * attendee credentials and URLs for audio and video
+ *
+ * Constructs a MeetingSessionConfiguration with a chime:[CreateMeetingResponse] and
+ * chime:[CreateAttendeeResponse] response.
  */
 data class MeetingSessionConfiguration(
     val meetingId: String,

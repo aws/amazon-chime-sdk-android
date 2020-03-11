@@ -5,7 +5,7 @@
 package com.amazon.chime.sdk.session
 
 /**
- * [[MeetingSessionStatus]] indicates a status received regarding the session.
+ * [MeetingSessionStatus] indicates a status received regarding the session.
  *
  * @param statusCode: [MeetingSessionStatusCode] - Additional details for the status
  */

@@ -4,6 +4,9 @@
 
 package com.amazon.chime.sdk.media.mediacontroller.video
 
+/**
+ * [VideoTileObserver] handles events related to [VideoTile].
+ */
 interface VideoTileObserver {
 
     /**

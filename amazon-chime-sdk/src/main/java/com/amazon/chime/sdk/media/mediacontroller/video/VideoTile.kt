@@ -4,8 +4,9 @@
 
 package com.amazon.chime.sdk.media.mediacontroller.video
 
-import com.amazon.chime.webrtc.EglBase
-
+/**
+ * [VideoTile] is a tile that binds video render view to display the frame into the view.
+ */
 interface VideoTile {
     /**
      * State of video tile
@@ -21,8 +22,8 @@ interface VideoTile {
      * Binds the view to the tile. The view needs to be create by the application.
      * Once the binding is done, the view will start displaying the video frame automatically
      *
-     * @param rootEglBase: [EglBase] - Shared EGL context
-     * @param videoRenderView: [DefaultVideoRenderView] - The view created by application to render the video frame
+     * @param bindParams: [Any] - Any parameter required to initialize render view
+     * @param videoRenderView: [VideoRenderView] - The view created by application to render the video frame
      */
     fun bind(bindParams: Any?, videoRenderView: VideoRenderView?)
 
@@ -35,7 +36,7 @@ interface VideoTile {
     fun renderFrame(frame: Any)
 
     /**
-     * Unbinds the [videoRenderView] from tile. Any EGL context associated with the [videoRenderView] will be released
+     * Unbinds the [videoRenderView] from tile.
      */
     fun unbind()
 

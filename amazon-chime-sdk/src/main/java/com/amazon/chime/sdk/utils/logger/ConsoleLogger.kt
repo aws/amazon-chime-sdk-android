@@ -6,6 +6,24 @@ package com.amazon.chime.sdk.utils.logger
 
 import android.util.Log
 
+/**
+ * [ConsoleLogger] writes logs with console
+ *
+ * ```
+ * // Working with the ConsoleLogger
+ * val logger = new ConsoleLogger("demo"); // defaults to WARN
+ * logger.info("info");
+ * logger.debug("debug");
+ * logger.warn("warn");
+ * logger.error("error");
+ *
+ * // Setting logging levels
+ * val logger = new ConsoleLogger("demo", LogLevel.WARN);
+ * logger.debug("debug"); // does not print
+ * logger.setLogLevel(LogLevel.DEBUG)
+ * logger.debug("debug"); // print
+ * ```
+ */
 class ConsoleLogger(private var level: LogLevel = LogLevel.WARN) : Logger {
 
     override fun verbose(tag: String, msg: String) {

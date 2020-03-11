@@ -8,6 +8,7 @@ import com.amazon.chime.sdk.media.enums.ObservableMetric
 import com.amazon.chime.sdk.media.mediacontroller.MetricsObserver
 import com.xodee.client.audio.audioclient.AudioClient
 import com.xodee.client.video.VideoClient
+import java.util.Calendar
 
 /**
  * [DefaultClientMetricsCollector]'s filters and caches incoming raw client metrics
@@ -16,7 +17,7 @@ import com.xodee.client.video.VideoClient
 class DefaultClientMetricsCollector : ClientMetricsCollector {
     private var metricsObservers = mutableSetOf<MetricsObserver>()
     private var cachedObservableMetrics = mutableMapOf<ObservableMetric, Double?>()
-    private var lastEmittedMetricsTime = System.currentTimeMillis()
+    private var lastEmittedMetricsTime = Calendar.getInstance().timeInMillis
     private val METRICS_EMISSION_INTERVAL_MS = 1000
 
     override fun processAudioClientMetrics(metrics: Map<Int, Double>) {
@@ -46,10 +47,11 @@ class DefaultClientMetricsCollector : ClientMetricsCollector {
     }
 
     private fun maybeEmitMetrics() {
-        val now = System.currentTimeMillis()
+        val now = Calendar.getInstance().timeInMillis
         if (cachedObservableMetrics.isNotEmpty() && now - lastEmittedMetricsTime > METRICS_EMISSION_INTERVAL_MS) {
             lastEmittedMetricsTime = now
-            var cachedObservableMetricsWithoutNullValues = cachedObservableMetrics.filterValues { it != null } as Map<ObservableMetric, Any>
+            var cachedObservableMetricsWithoutNullValues =
+                cachedObservableMetrics.filterValues { it != null } as Map<ObservableMetric, Any>
             metricsObservers.forEach { it.onMetricsReceive(cachedObservableMetricsWithoutNullValues) }
         }
     }

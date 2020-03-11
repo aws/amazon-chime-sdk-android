@@ -4,6 +4,9 @@
 
 package com.amazon.chime.sdk.media.mediacontroller
 
+/**
+ * [AudioVideoControllerFacade] manages the signaling and peer connections.
+ */
 interface AudioVideoControllerFacade {
     /**
      * Starts audio and video.

@@ -4,6 +4,9 @@
 
 package com.amazon.chime.sdk.media.mediacontroller.video
 
+/**
+ * [VideoTileController] handles rendering/creating of new [VideoTile].
+ */
 interface VideoTileController : VideoTileControllerFacade {
 
     /**

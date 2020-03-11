@@ -5,7 +5,7 @@
 package com.amazon.chime.sdk.session
 
 /**
- * [[SessionStateControllerAction]] is a state-changing action to perform.
+ * [SessionStateControllerAction] is a state-changing action to perform.
  */
 enum class SessionStateControllerAction(val value: Int) {
     Unknown(-1),

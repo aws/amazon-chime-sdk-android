@@ -6,6 +6,9 @@ package com.amazon.chime.sdk.media.mediacontroller
 
 import com.amazon.chime.sdk.media.enums.ObservableMetric
 
+/**
+ * [MetricsObserver] handles events related to audio/video metrics.
+ */
 interface MetricsObserver {
     /**
      * Called when metrics are ready.

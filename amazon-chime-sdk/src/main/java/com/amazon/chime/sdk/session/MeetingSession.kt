@@ -8,7 +8,7 @@ import com.amazon.chime.sdk.media.AudioVideoFacade
 import com.amazon.chime.sdk.utils.logger.Logger
 
 /**
- * [[MeetingSession]] contains everything needed for the attendee to authenticate,
+ * [MeetingSession] contains everything needed for the attendee to authenticate,
  * reach the meeting service, start audio, and start video
  */
 interface MeetingSession {

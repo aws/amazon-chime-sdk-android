@@ -4,6 +4,9 @@
 
 package com.amazon.chime.sdk.media.devicecontroller
 
+/**
+ * [DeviceChangeObserver] listens to the change of Audio Device.
+ */
 interface DeviceChangeObserver {
     /**
      * Called when audio devices are changed.

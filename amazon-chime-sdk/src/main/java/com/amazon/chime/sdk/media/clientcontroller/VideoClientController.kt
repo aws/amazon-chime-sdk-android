@@ -99,11 +99,27 @@ class VideoClientController constructor(
         }
     }
 
+    private fun initializeAppDetailedInfo() {
+        val manufacturer = android.os.Build.MANUFACTURER
+        val model = android.os.Build.MODEL
+        val osVersion = android.os.Build.VERSION.RELEASE
+        val package_name = context.packageName
+        val pi = context.packageManager.getPackageInfo(package_name, 0)
+        val appVer = pi.versionName
+        val appCode = pi.versionCode.toString()
+        VideoClient.AppDetailedInfo.intialize(
+            String.format("Android %s", appVer),
+            appCode,
+            model,
+            manufacturer,
+            osVersion
+        )
+    }
+
     private fun initialize() {
         if (videoClientState == VideoClientState.UNINITIALIZED) {
             logger.info(TAG, "VideoClientState is UNINITIALIZED. Therefore creating a new one")
-            // TODO check with video team if this function is required
-            // initializeAppDetailedInfo()
+            initializeAppDetailedInfo()
             VideoClient.initializeGlobals(context)
             VideoClientCapturer.getInstance(context)
             videoClient = VideoClient(this, this)

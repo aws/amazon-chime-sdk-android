@@ -6,6 +6,9 @@ package com.amazon.chime.sdk.media.mediacontroller
 
 import com.amazon.chime.sdk.session.MeetingSessionStatus
 
+/**
+ * [AudioVideoObserver] handles audio/video client events.
+ */
 interface AudioVideoObserver {
     /**
      * Called when the audio session is connecting or reconnecting.

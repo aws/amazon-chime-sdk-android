@@ -8,7 +8,7 @@ import com.amazon.chime.sdk.media.enums.SignalStrength
 import com.amazon.chime.sdk.media.enums.VolumeLevel
 
 /**
- * [[RealtimeObserver]] lets one listen to real time events such a volume or signal strength changes
+ * [RealtimeObserver] lets one listen to real time events such a volume or signal strength changes
  */
 interface RealtimeObserver {
     /**

@@ -5,7 +5,7 @@
 package com.amazon.chime.sdk.session
 
 /**
- * [[MeetingSessionStatusCode]] provides additional details for the [[MeetingSessionStatus]]
+ * [MeetingSessionStatusCode] provides additional details for the [MeetingSessionStatus]
  * received for a session.
  */
 enum class MeetingSessionStatusCode(val value: Int) {
