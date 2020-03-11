@@ -10,6 +10,7 @@ import android.media.AudioDeviceInfo
 import android.media.AudioManager
 import com.amazon.chime.sdk.media.clientcontroller.AudioClientController
 import com.amazon.chime.sdk.media.clientcontroller.VideoClientController
+import com.xodee.client.audio.audioclient.AudioClient
 import com.xodee.client.video.VideoDevice
 import io.mockk.MockKAnnotations
 import io.mockk.every
@@ -112,11 +113,11 @@ class DefaultDeviceControllerTest {
         devices.forEach {
             assertTrue(
                 it.type == MediaDeviceType.AUDIO_BUILTIN_SPEAKER &&
-                    it.label == "default speaker (Speaker)" ||
-                    it.type == MediaDeviceType.AUDIO_HANDSET &&
-                    it.label == "default receiver (Handset)" ||
-                    it.type == MediaDeviceType.AUDIO_BLUETOOTH &&
-                    it.label == "my bluetooth headphone (Bluetooth)"
+                        it.label == "default speaker (Speaker)" ||
+                        it.type == MediaDeviceType.AUDIO_HANDSET &&
+                        it.label == "default receiver (Handset)" ||
+                        it.type == MediaDeviceType.AUDIO_BLUETOOTH &&
+                        it.label == "my bluetooth headphone (Bluetooth)"
             )
         }
     }
@@ -133,11 +134,11 @@ class DefaultDeviceControllerTest {
         devices.forEach {
             assertTrue(
                 it.type == MediaDeviceType.AUDIO_HANDSET &&
-                    it.label == "Handset" ||
-                    it.type == MediaDeviceType.AUDIO_BUILTIN_SPEAKER &&
-                    it.label == "Speaker" ||
-                    it.type == MediaDeviceType.AUDIO_BLUETOOTH &&
-                    it.label == "Bluetooth"
+                        it.label == "Handset" ||
+                        it.type == MediaDeviceType.AUDIO_BUILTIN_SPEAKER &&
+                        it.label == "Speaker" ||
+                        it.type == MediaDeviceType.AUDIO_BLUETOOTH &&
+                        it.label == "Bluetooth"
             )
         }
     }
@@ -154,7 +155,7 @@ class DefaultDeviceControllerTest {
         devices.forEach {
             assertTrue(
                 it.type == MediaDeviceType.AUDIO_WIRED_HEADSET ||
-                    it.type == MediaDeviceType.AUDIO_BUILTIN_SPEAKER
+                        it.type == MediaDeviceType.AUDIO_BUILTIN_SPEAKER
             )
         }
     }
@@ -171,13 +172,13 @@ class DefaultDeviceControllerTest {
         devices.forEach {
             assertTrue(
                 it.type == MediaDeviceType.AUDIO_WIRED_HEADSET ||
-                    it.type == MediaDeviceType.AUDIO_BUILTIN_SPEAKER
+                        it.type == MediaDeviceType.AUDIO_BUILTIN_SPEAKER
             )
         }
     }
 
     @Test
-    fun `should call AudioClientController setRoute`() {
+    fun `chooseAudioDevice should call AudioClientController setRoute`() {
         setupForOldAPILevel()
         every { audioClientController.setRoute(any()) } returns true
 
@@ -188,7 +189,7 @@ class DefaultDeviceControllerTest {
             )
         )
 
-        verify { audioClientController.setRoute(2) }
+        verify { audioClientController.setRoute(AudioClient.SPK_STREAM_ROUTE_SPEAKER) }
     }
 
     @Test
@@ -220,6 +221,21 @@ class DefaultDeviceControllerTest {
 
         verify { audioManager.setSpeakerphoneOn(false) }
         verify { audioManager.setBluetoothScoOn(false) }
+    }
+
+    @Test
+    fun `chooseAudioDevice should default to handset when not bluetooth, wired headset, or speaker`() {
+        setupForOldAPILevel()
+        every { audioClientController.setRoute(any()) } returns true
+
+        deviceController.chooseAudioDevice(
+            MediaDevice(
+                "handset",
+                MediaDeviceType.AUDIO_HANDSET
+            )
+        )
+
+        verify { audioClientController.setRoute(AudioClient.SPK_STREAM_ROUTE_RECEIVER) }
     }
 
     @Test

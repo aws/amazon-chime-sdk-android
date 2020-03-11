@@ -5,6 +5,8 @@
 package com.amazon.chime.sdk.media.clientcontroller
 
 import android.media.AudioDeviceInfo
+import android.media.AudioRecord
+import android.media.AudioTrack
 import android.util.Log
 import com.amazon.chime.sdk.utils.logger.Logger
 import com.xodee.client.audio.audioclient.AudioClient
@@ -16,11 +18,18 @@ import io.mockk.just
 import io.mockk.mockkStatic
 import io.mockk.runs
 import io.mockk.verify
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.test.TestCoroutineDispatcher
+import kotlinx.coroutines.test.resetMain
+import kotlinx.coroutines.test.setMain
+import org.junit.After
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
 
+@ExperimentalCoroutinesApi
 class DefaultAudioClientControllerTest {
     @MockK
     private lateinit var mockLogger: Logger
@@ -34,10 +43,18 @@ class DefaultAudioClientControllerTest {
     @InjectMockKs
     private lateinit var audioClientController: DefaultAudioClientController
 
+    private val testDispatcher = TestCoroutineDispatcher()
+
     private val testAudioClientSuccessCode = 0
     private val testAudioClientFailureCode = -1
     private val testNewRoute = 5
     private val testMicMute = true
+    private val testAudioFallbackUrl = "audioFallbackUrl"
+    private val testAudioHostUrl = "https://audiohost.com:500"
+    private val testMeetingId = "meetingId"
+    private val testAttendeeId = "aliceId"
+    private val testJoinToken = "joinToken"
+    private val testSampleBuffer = 32 // Used for sample rate and buffer size
 
     @Before
     fun setup() {
@@ -48,11 +65,44 @@ class DefaultAudioClientControllerTest {
         every { System.loadLibrary(any()) } just runs
 
         MockKAnnotations.init(this, relaxUnitFun = true)
+        Dispatchers.setMain(testDispatcher)
+    }
+
+    @After
+    fun teardown() {
+        Dispatchers.resetMain()
+        testDispatcher.cleanupTestCoroutines()
     }
 
     private fun setupRouteTests(audioClientStatusCode: Int) {
         every { mockAudioClient.route } returns AudioDeviceInfo.TYPE_BUILTIN_SPEAKER
         every { mockAudioClient.setRoute(any()) } returns audioClientStatusCode
+    }
+
+    private fun setupStartTests() {
+        every { mockAudioClient.sendMessage(any(), any()) } returns testAudioClientSuccessCode
+        every {
+            mockAudioClient.startSession(
+                any(),
+                any(),
+                any(),
+                any(),
+                any(),
+                any(),
+                any(),
+                any(),
+                any(),
+                any(),
+                any(),
+                any(),
+                any()
+            )
+        } returns testAudioClientSuccessCode
+
+        mockkStatic(AudioTrack::class, AudioRecord::class)
+        every { AudioTrack.getNativeOutputSampleRate(any()) } returns testSampleBuffer
+        every { AudioTrack.getMinBufferSize(any(), any(), any()) } returns testSampleBuffer
+        every { AudioRecord.getMinBufferSize(any(), any(), any()) } returns testSampleBuffer
     }
 
     @Test
@@ -125,5 +175,60 @@ class DefaultAudioClientControllerTest {
         val testOutput: Boolean = audioClientController.setMute(testMicMute)
 
         assertFalse(testOutput)
+    }
+
+    @Test
+    fun `start should call AudioClient startSession`() {
+        setupStartTests()
+
+        audioClientController.start(
+            testAudioFallbackUrl,
+            testAudioHostUrl,
+            testMeetingId,
+            testAttendeeId,
+            testJoinToken
+        )
+
+        verify {
+            mockAudioClient.startSession(
+                any(),
+                any(),
+                any(),
+                any(),
+                any(),
+                any(),
+                any(),
+                any(),
+                any(),
+                any(),
+                any(),
+                any(),
+                any()
+            )
+        }
+    }
+
+    @Test
+    fun `start should notify audioClientObserver about audio client connection events`() {
+        setupStartTests()
+
+        audioClientController.start(
+            testAudioFallbackUrl,
+            testAudioHostUrl,
+            testMeetingId,
+            testAttendeeId,
+            testJoinToken
+        )
+
+        verify(exactly = 2) { mockAudioClientObserver.notifyAudioClientObserver(any()) }
+    }
+
+    @Test
+    fun `stop should call AudioClient stopSession`() {
+        every { mockAudioClient.stopSession() } returns testAudioClientSuccessCode
+
+        audioClientController.stop()
+
+        verify { mockAudioClient.stopSession() }
     }
 }

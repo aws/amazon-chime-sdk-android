@@ -120,7 +120,12 @@ class DefaultAudioClientObserverTest {
         val expectedArgs2 = arrayOf(VolumeUpdate(AttendeeInfo(testId2, testId2), VolumeLevel.Low))
 
         audioClientObserver.onVolumeStateChange(arrayOf(testAttendeeVolumeUpdate))
-        audioClientObserver.onVolumeStateChange(arrayOf(testAttendeeVolumeUpdate, testAttendeeUpdate2))
+        audioClientObserver.onVolumeStateChange(
+            arrayOf(
+                testAttendeeVolumeUpdate,
+                testAttendeeUpdate2
+            )
+        )
 
         verifyOrder {
             mockRealtimeObserver.onVolumeChange(expectedArgs1)
@@ -164,7 +169,12 @@ class DefaultAudioClientObserverTest {
             arrayOf(SignalUpdate(AttendeeInfo(testId2, testId2), SignalStrength.Low))
 
         audioClientObserver.onSignalStrengthChange(arrayOf(testAttendeeSignalUpdate))
-        audioClientObserver.onSignalStrengthChange(arrayOf(testAttendeeSignalUpdate, testAttendeeUpdate2))
+        audioClientObserver.onSignalStrengthChange(
+            arrayOf(
+                testAttendeeSignalUpdate,
+                testAttendeeUpdate2
+            )
+        )
 
         verifyOrder {
             mockRealtimeObserver.onSignalStrengthChange(expectedArgs1)
@@ -337,6 +347,158 @@ class DefaultAudioClientObserverTest {
         }
 
         verifyAudioVideoObserverIsNotNotified()
+    }
+
+    @Test
+    fun `onAudioClientStateChange should notify of connect event when finished connecting`() {
+        runBlockingTest {
+            audioClientObserver.onAudioClientStateChange(
+                AudioClient.AUDIO_CLIENT_STATE_CONNECTING,
+                AudioClient.AUDIO_CLIENT_OK
+            )
+
+            audioClientObserver.onAudioClientStateChange(
+                AudioClient.AUDIO_CLIENT_STATE_CONNECTED,
+                AudioClient.AUDIO_CLIENT_OK
+            )
+        }
+
+        verify(exactly = 1) { mockAudioVideoObserver.onAudioClientStart(false) }
+    }
+
+    @Test
+    fun `onAudioClientStateChange should notify of reconnect event when finished reconnecting`() {
+        runBlockingTest {
+            audioClientObserver.onAudioClientStateChange(
+                AudioClient.AUDIO_CLIENT_STATE_RECONNECTING,
+                AudioClient.AUDIO_CLIENT_OK
+            )
+
+            audioClientObserver.onAudioClientStateChange(
+                AudioClient.AUDIO_CLIENT_STATE_CONNECTED,
+                AudioClient.AUDIO_CLIENT_OK
+            )
+        }
+
+        verify(exactly = 1) { mockAudioVideoObserver.onAudioClientStart(true) }
+    }
+
+    @Test
+    fun `onAudioClientStateChange should notify of reconnect event when start reconnecting`() {
+        runBlockingTest {
+            audioClientObserver.onAudioClientStateChange(
+                AudioClient.AUDIO_CLIENT_STATE_CONNECTED,
+                AudioClient.AUDIO_CLIENT_OK
+            )
+
+            audioClientObserver.onAudioClientStateChange(
+                AudioClient.AUDIO_CLIENT_STATE_RECONNECTING,
+                AudioClient.AUDIO_CLIENT_OK
+            )
+        }
+
+        verify(exactly = 1) { mockAudioVideoObserver.onAudioClientStart(true) }
+    }
+
+    @Test
+    fun `onAudioClientStateChange should notify of poor connection event when status changed to poor network`() {
+        runBlockingTest {
+            audioClientObserver.onAudioClientStateChange(
+                AudioClient.AUDIO_CLIENT_STATE_CONNECTED,
+                AudioClient.AUDIO_CLIENT_OK
+            )
+
+            audioClientObserver.onAudioClientStateChange(
+                AudioClient.AUDIO_CLIENT_STATE_CONNECTED,
+                AudioClient.AUDIO_CLIENT_STATUS_NETWORK_IS_NOT_GOOD_ENOUGH_FOR_VOIP
+            )
+        }
+
+        verify(exactly = 1) { mockAudioVideoObserver.onConnectionBecomePoor() }
+    }
+
+    @Test
+    fun `onAudioClientStateChange should notify of connection recover event when status changed from poor network`() {
+        runBlockingTest {
+            audioClientObserver.onAudioClientStateChange(
+                AudioClient.AUDIO_CLIENT_STATE_CONNECTED,
+                AudioClient.AUDIO_CLIENT_STATUS_NETWORK_IS_NOT_GOOD_ENOUGH_FOR_VOIP
+            )
+
+            audioClientObserver.onAudioClientStateChange(
+                AudioClient.AUDIO_CLIENT_STATE_CONNECTED,
+                AudioClient.AUDIO_CLIENT_OK
+            )
+        }
+
+        verify(exactly = 1) { mockAudioVideoObserver.onConnectionRecover() }
+    }
+
+    @Test
+    fun `onAudioClientStateChange should notify of reconnect cancel event when cancelling reconnect`() {
+        runBlockingTest {
+            audioClientObserver.onAudioClientStateChange(
+                AudioClient.AUDIO_CLIENT_STATE_RECONNECTING,
+                AudioClient.AUDIO_CLIENT_OK
+            )
+
+            audioClientObserver.onAudioClientStateChange(
+                AudioClient.AUDIO_CLIENT_STATE_DISCONNECTED_NORMAL,
+                AudioClient.AUDIO_CLIENT_ERR_JOINED_FROM_ANOTHER_DEVICE
+            )
+        }
+
+        verify(exactly = 1) { mockAudioVideoObserver.onAudioClientReconnectionCancel() }
+    }
+
+    @Test
+    fun `onAudioClientStateChange should notify of disconnect event when disconnected`() {
+        runBlockingTest {
+            audioClientObserver.onAudioClientStateChange(
+                AudioClient.AUDIO_CLIENT_STATE_CONNECTING,
+                AudioClient.AUDIO_CLIENT_OK
+            )
+            audioClientObserver.onAudioClientStateChange(
+                AudioClient.AUDIO_CLIENT_STATE_DISCONNECTED_NORMAL,
+                AudioClient.AUDIO_CLIENT_ERR_CALL_ENDED
+            )
+        }
+
+        verify(exactly = 1) { mockAudioVideoObserver.onAudioClientStop(any()) }
+    }
+
+    @Test
+    fun `onAudioClientStateChange should notify of disconnect event when failure while connecting`() {
+        runBlockingTest {
+            audioClientObserver.onAudioClientStateChange(
+                AudioClient.AUDIO_CLIENT_STATE_CONNECTING,
+                AudioClient.AUDIO_CLIENT_OK
+            )
+
+            audioClientObserver.onAudioClientStateChange(
+                AudioClient.AUDIO_CLIENT_STATE_FAILED_TO_CONNECT,
+                AudioClient.AUDIO_CLIENT_ERR_CALL_AT_CAPACITY
+            )
+        }
+
+        verify(exactly = 1) { mockAudioVideoObserver.onAudioClientStop(any()) }
+    }
+
+    @Test
+    fun `onAudioClientStateChange should notify of disconnect event when failure while reconnecting`() {
+        runBlockingTest {
+            audioClientObserver.onAudioClientStateChange(
+                AudioClient.AUDIO_CLIENT_STATE_RECONNECTING,
+                AudioClient.AUDIO_CLIENT_OK
+            )
+
+            audioClientObserver.onAudioClientStateChange(
+                AudioClient.AUDIO_CLIENT_STATE_DISCONNECTED_ABNORMAL,
+                AudioClient.AUDIO_CLIENT_ERR_SERVICE_UNAVAILABLE
+            )
+        }
+
+        verify(exactly = 1) { mockAudioVideoObserver.onAudioClientStop(any()) }
     }
 
     @Test
