@@ -8,6 +8,7 @@ import android.Manifest
 import android.content.Context
 import android.content.pm.PackageManager
 import androidx.core.content.ContextCompat
+import com.amazon.chime.sdk.media.enums.VideoPauseState
 import com.amazon.chime.sdk.media.mediacontroller.AudioVideoObserver
 import com.amazon.chime.sdk.media.mediacontroller.video.VideoTileController
 import com.amazon.chime.sdk.session.MeetingSessionStatus
@@ -15,6 +16,9 @@ import com.amazon.chime.sdk.session.MeetingSessionStatusCode
 import com.amazon.chime.sdk.utils.logger.Logger
 import com.xodee.client.audio.audioclient.AudioClient
 import com.xodee.client.video.VideoClient
+import com.xodee.client.video.VideoClient.VIDEO_CLIENT_NO_PAUSE
+import com.xodee.client.video.VideoClient.VIDEO_CLIENT_REMOTE_PAUSED_BY_LOCAL_BAD_NETWORK
+import com.xodee.client.video.VideoClient.VIDEO_CLIENT_REMOTE_PAUSED_BY_USER
 import com.xodee.client.video.VideoClientCapturer
 import com.xodee.client.video.VideoClientDelegate
 import com.xodee.client.video.VideoClientLogListener
@@ -365,12 +369,17 @@ class VideoClientController constructor(
         pauseType: Int,
         videoId: Int
     ) {
+        var pauseState: VideoPauseState = VideoPauseState.Unpaused
+        when (pauseType) {
+            VIDEO_CLIENT_NO_PAUSE -> pauseState = VideoPauseState.Unpaused
+            VIDEO_CLIENT_REMOTE_PAUSED_BY_USER -> pauseState = VideoPauseState.PausedByUserRequest
+            VIDEO_CLIENT_REMOTE_PAUSED_BY_LOCAL_BAD_NETWORK -> pauseState = VideoPauseState.PausedForPoorConnection
+        }
         forEachVideoTileObserver { observer ->
             observer.onReceiveFrame(
                 frame,
                 profileId,
-                displayId,
-                pauseType,
+                pauseState,
                 videoId
             )
         }

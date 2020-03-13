@@ -20,6 +20,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.amazon.chime.sdk.media.AudioVideoFacade
 import com.amazon.chime.sdk.media.enums.ObservableMetric
+import com.amazon.chime.sdk.media.enums.VideoPauseState
 import com.amazon.chime.sdk.media.mediacontroller.AttendeeInfo
 import com.amazon.chime.sdk.media.mediacontroller.AudioVideoObserver
 import com.amazon.chime.sdk.media.mediacontroller.MetricsObserver
@@ -514,6 +515,20 @@ class RosterViewFragment : Fragment(), RealtimeObserver, AudioVideoObserver, Vid
                 screenTileAdapter.notifyDataSetChanged()
             }
         }
+    }
+
+    override fun onPauseVideoTile(tileState: VideoTileState) {
+        if (tileState.pauseState == VideoPauseState.PausedForPoorConnection) {
+            val attendeeName = currentRoster[tileState.attendeeId]?.attendeeName ?: ""
+            notify("Video for attendee $attendeeName " +
+                    " has been paused for poor network connection," +
+                    " video will automatically resume when connection improves")
+        }
+    }
+
+    override fun onResumeVideoTile(tileState: VideoTileState) {
+        val attendeeName = currentRoster[tileState.attendeeId]?.attendeeName ?: ""
+        notify("Video for attendee $attendeeName has been unpaused")
     }
 
     override fun onMetricsReceive(metrics: Map<ObservableMetric, Any>) {

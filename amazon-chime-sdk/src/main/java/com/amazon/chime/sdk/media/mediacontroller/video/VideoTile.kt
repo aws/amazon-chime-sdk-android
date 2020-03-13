@@ -4,6 +4,8 @@
 
 package com.amazon.chime.sdk.media.mediacontroller.video
 
+import com.amazon.chime.sdk.media.enums.VideoPauseState
+
 /**
  * [VideoTile] is a tile that binds video render view to display the frame into the view.
  */
@@ -41,14 +43,7 @@ interface VideoTile {
     fun unbind()
 
     /**
-     * Pauses the tile. When paused, the tile moves to an inactive state and will not receive
-     * frame update callback
+     * Update the pause state of the tile.
      */
-    fun pause()
-
-    /**
-     * Resume the tile if it was paused. When resumed,
-     * the tile moves to the active state.
-     */
-    fun resume()
+    fun setPauseState(pauseState: VideoPauseState)
 }

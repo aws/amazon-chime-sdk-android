@@ -4,6 +4,7 @@
 package com.amazon.chime.sdk.media.mediacontroller.video
 
 import com.amazon.chime.sdk.media.clientcontroller.VideoClientController
+import com.amazon.chime.sdk.media.enums.VideoPauseState
 import com.amazon.chime.sdk.utils.logger.Logger
 import com.amazon.chime.webrtc.VideoRenderer
 import io.mockk.MockKAnnotations
@@ -50,10 +51,11 @@ class DefaultVideoTileControllerTest {
 
     private val tileId = 7 // some random prime number
     private val attendeeId = "chimesarang"
-    private val pauseType = 0
 
     private var onAddObserverCalled = 0
     private var onRemoveObserverCalled = 0
+    private var onPauseObserverCalled = 0
+    private var onResumeObserverCalled = 0
 
     private val tileObserver = object : VideoTileObserver {
         override fun onAddVideoTile(tileState: VideoTileState) {
@@ -63,13 +65,21 @@ class DefaultVideoTileControllerTest {
         override fun onRemoveVideoTile(tileState: VideoTileState) {
             onRemoveObserverCalled++
         }
+
+        override fun onPauseVideoTile(tileState: VideoTileState) {
+            onPauseObserverCalled++
+        }
+
+        override fun onResumeVideoTile(tileState: VideoTileState) {
+            onResumeObserverCalled++
+        }
     }
 
     @Before
     fun setUp() {
         MockKAnnotations.init(this, relaxUnitFun = true)
         every { mockVideoTileFactory.makeTile(tileId, any()) } returns mockVideoTile
-        every { mockVideoTile.state } returns VideoTileState(tileId, attendeeId, false)
+        every { mockVideoTile.state } returns VideoTileState(tileId, attendeeId, VideoPauseState.Unpaused)
         every { mockVideoTile.videoRenderView } returns mockVideoRenderView
 
         Dispatchers.setMain(testDispatcher)
@@ -84,7 +94,7 @@ class DefaultVideoTileControllerTest {
     @Test
     fun `unbindVideoView should call finalize on VideoRenderView`() {
         runBlockingTest {
-            videoTileController.onReceiveFrame(mockFrame, attendeeId, tileId, pauseType, tileId)
+            videoTileController.onReceiveFrame(mockFrame, attendeeId, VideoPauseState.Unpaused, tileId)
         }
         videoTileController.bindVideoView(mockVideoRenderView, tileId)
         videoTileController.unbindVideoView(tileId)
@@ -95,11 +105,11 @@ class DefaultVideoTileControllerTest {
     @Test
     fun `onReceiveFrame should call renderFrame on VideoRenderView when bound`() {
         runBlockingTest {
-            videoTileController.onReceiveFrame(mockFrame, attendeeId, tileId, pauseType, tileId)
+            videoTileController.onReceiveFrame(mockFrame, attendeeId, VideoPauseState.Unpaused, tileId)
         }
         videoTileController.bindVideoView(mockVideoRenderView, tileId)
         runBlockingTest {
-            videoTileController.onReceiveFrame(mockFrame, attendeeId, tileId, pauseType, tileId)
+            videoTileController.onReceiveFrame(mockFrame, attendeeId, VideoPauseState.Unpaused, tileId)
         }
 
         verify { mockVideoTile.renderFrame(any()) }
@@ -110,7 +120,7 @@ class DefaultVideoTileControllerTest {
         videoTileController.addVideoTileObserver(tileObserver)
         videoTileController.removeVideoTileObserver(tileObserver)
         runBlockingTest {
-            videoTileController.onReceiveFrame(mockFrame, attendeeId, tileId, pauseType, tileId)
+            videoTileController.onReceiveFrame(mockFrame, attendeeId, VideoPauseState.Unpaused, tileId)
         }
 
         Assert.assertEquals(0, onAddObserverCalled)
@@ -121,7 +131,7 @@ class DefaultVideoTileControllerTest {
         videoTileController.addVideoTileObserver(tileObserver)
         videoTileController.removeVideoTileObserver(tileObserver)
         runBlockingTest {
-            videoTileController.onReceiveFrame(mockFrame, attendeeId, tileId, pauseType, tileId)
+            videoTileController.onReceiveFrame(mockFrame, attendeeId, VideoPauseState.Unpaused, tileId)
         }
 
         Assert.assertEquals(0, onAddObserverCalled)
@@ -133,11 +143,11 @@ class DefaultVideoTileControllerTest {
 
         videoTileController.addVideoTileObserver(mockObserver)
         runBlockingTest {
-            videoTileController.onReceiveFrame(mockFrame, attendeeId, tileId, pauseType, tileId)
+            videoTileController.onReceiveFrame(mockFrame, attendeeId, VideoPauseState.Unpaused, tileId)
         }
 
         Assert.assertEquals(1, onAddObserverCalled)
-        verify { mockObserver.onAddVideoTile(VideoTileState(tileId, attendeeId, false)) }
+        verify { mockObserver.onAddVideoTile(VideoTileState(tileId, attendeeId, VideoPauseState.Unpaused)) }
     }
 
     @Test
@@ -146,18 +156,49 @@ class DefaultVideoTileControllerTest {
 
         videoTileController.addVideoTileObserver(mockObserver)
         runBlockingTest {
-            videoTileController.onReceiveFrame(mockFrame, attendeeId, tileId, pauseType, tileId)
-            videoTileController.onReceiveFrame(null, attendeeId, tileId, pauseType, tileId)
+            videoTileController.onReceiveFrame(mockFrame, attendeeId, VideoPauseState.Unpaused, tileId)
+            videoTileController.onReceiveFrame(null, attendeeId, VideoPauseState.Unpaused, tileId)
         }
 
         Assert.assertEquals(1, onRemoveObserverCalled)
-        verify { mockObserver.onRemoveVideoTile(VideoTileState(tileId, attendeeId, false)) }
+        verify { mockObserver.onRemoveVideoTile(VideoTileState(tileId, attendeeId, VideoPauseState.Unpaused)) }
+    }
+
+    @Test
+    fun `onReceiveFrame should call onPauseTile on Observer when pause state is changed to paused`() {
+        val mockObserver = spyk(tileObserver)
+
+        videoTileController.addVideoTileObserver(mockObserver)
+        runBlockingTest {
+            videoTileController.onReceiveFrame(mockFrame, attendeeId, VideoPauseState.Unpaused, tileId)
+            videoTileController.onReceiveFrame(mockFrame, attendeeId, VideoPauseState.PausedForPoorConnection, tileId)
+        }
+
+        verify { mockVideoTile.setPauseState(VideoPauseState.PausedForPoorConnection) }
+        // Mock video tile state will be equal to Unpaused
+        verify(exactly = 1) { mockObserver.onPauseVideoTile(VideoTileState(tileId, attendeeId, VideoPauseState.Unpaused)) }
+    }
+
+    @Test
+    fun `onReceiveFrame should call onResumeTile on Observer when pause state is changed from paused to unpaused`() {
+        val mockObserver = spyk(tileObserver)
+        every { mockVideoTile.state } returns VideoTileState(tileId, attendeeId, VideoPauseState.PausedForPoorConnection)
+
+        videoTileController.addVideoTileObserver(mockObserver)
+        runBlockingTest {
+            videoTileController.onReceiveFrame(mockFrame, attendeeId, VideoPauseState.PausedForPoorConnection, tileId)
+            videoTileController.onReceiveFrame(mockFrame, attendeeId, VideoPauseState.Unpaused, tileId)
+        }
+
+        verify { mockVideoTile.setPauseState(VideoPauseState.Unpaused) }
+        // Mock video tile state will be equal to PausedForPoorConnection
+        verify(exactly = 1) { mockObserver.onResumeVideoTile(VideoTileState(tileId, attendeeId, VideoPauseState.PausedForPoorConnection)) }
     }
 
     @Test
     fun `pauseRemoteVideoTile should call VideoClientController's setRemotePaused when tile exists`() {
         runBlockingTest {
-            videoTileController.onReceiveFrame(mockFrame, attendeeId, tileId, pauseType, tileId)
+            videoTileController.onReceiveFrame(mockFrame, attendeeId, VideoPauseState.Unpaused, tileId)
         }
         videoTileController.pauseRemoteVideoTile(tileId)
 
@@ -165,13 +206,42 @@ class DefaultVideoTileControllerTest {
     }
 
     @Test
+    fun `pauseRemoteVideoTile should call onPauseTile on Observer when tile exists`() {
+        val mockObserver = spyk(tileObserver)
+        videoTileController.addVideoTileObserver(mockObserver)
+
+        runBlockingTest {
+            videoTileController.onReceiveFrame(mockFrame, attendeeId, VideoPauseState.Unpaused, tileId)
+            videoTileController.pauseRemoteVideoTile(tileId)
+        }
+
+        // Mock video tile state will be equal to Unpaused
+        verify(exactly = 1) { mockObserver.onPauseVideoTile(VideoTileState(tileId, attendeeId, VideoPauseState.Unpaused)) }
+    }
+
+    @Test
     fun `resumeRemoteVideoTile should call VideoClientController's setRemotePaused when tile exists`() {
         runBlockingTest {
-            videoTileController.onReceiveFrame(mockFrame, attendeeId, tileId, pauseType, tileId)
+            videoTileController.onReceiveFrame(mockFrame, attendeeId, VideoPauseState.Unpaused, tileId)
         }
         videoTileController.resumeRemoteVideoTile(tileId)
 
         verify { mockVideoTileController.setRemotePaused(false, tileId) }
+    }
+
+    @Test
+    fun `resumeRemoteVideoTile should call onResumeTile on Observer when tile exists`() {
+        val mockObserver = spyk(tileObserver)
+        every { mockVideoTile.state } returns VideoTileState(tileId, attendeeId, VideoPauseState.PausedByUserRequest)
+        videoTileController.addVideoTileObserver(mockObserver)
+
+        runBlockingTest {
+            videoTileController.onReceiveFrame(mockFrame, attendeeId, VideoPauseState.PausedByUserRequest, tileId)
+            videoTileController.resumeRemoteVideoTile(tileId)
+        }
+
+        // Mock video tile state will be equal to PausedByUserRequest
+        verify(exactly = 1) { mockObserver.onResumeVideoTile(VideoTileState(tileId, attendeeId, VideoPauseState.PausedByUserRequest)) }
     }
 
     @Test
@@ -182,10 +252,26 @@ class DefaultVideoTileControllerTest {
     }
 
     @Test
+    fun `pauseRemoteVideoTile should NOT call onPauseTile on Observer when tile does not exist`() {
+        videoTileController.addVideoTileObserver(tileObserver)
+        videoTileController.pauseRemoteVideoTile(tileId)
+
+        Assert.assertEquals(0, onPauseObserverCalled)
+    }
+
+    @Test
     fun `resumeRemoteVideoTile should NOT call VideoClientController's setRemotePaused when tile does not exist`() {
         videoTileController.resumeRemoteVideoTile(tileId)
 
         verify(exactly = 0) { mockVideoTileController.setRemotePaused(false, tileId) }
+    }
+
+    @Test
+    fun `resumeRemoteVideoTile should NOT call onResumeTile on Observer when tile does not exists`() {
+        videoTileController.addVideoTileObserver(tileObserver)
+        videoTileController.resumeRemoteVideoTile(tileId)
+
+        Assert.assertEquals(0, onResumeObserverCalled)
     }
 
     @Test
@@ -194,11 +280,11 @@ class DefaultVideoTileControllerTest {
         val tileId2 = 127
 
         every { mockVideoTileFactory.makeTile(tileId2, any()) } returns mockVideoTile2
-        every { mockVideoTile2.state } returns VideoTileState(tileId2, attendeeId, false)
+        every { mockVideoTile2.state } returns VideoTileState(tileId2, attendeeId, VideoPauseState.Unpaused)
         every { mockVideoTile2.videoRenderView } returns mockVideoRenderView
         runBlockingTest {
-            videoTileController.onReceiveFrame(mockFrame, attendeeId, tileId, pauseType, tileId)
-            videoTileController.onReceiveFrame(mockFrame, attendeeId, tileId2, pauseType, tileId2)
+            videoTileController.onReceiveFrame(mockFrame, attendeeId, VideoPauseState.Unpaused, tileId)
+            videoTileController.onReceiveFrame(mockFrame, attendeeId, VideoPauseState.Unpaused, tileId2)
         }
 
         videoTileController.bindVideoView(mockVideoRenderView, tileId)
@@ -215,11 +301,11 @@ class DefaultVideoTileControllerTest {
         val tileId2 = 127
 
         every { mockVideoTileFactory.makeTile(tileId2, any()) } returns mockVideoTile2
-        every { mockVideoTile2.state } returns VideoTileState(tileId2, attendeeId, false)
+        every { mockVideoTile2.state } returns VideoTileState(tileId2, attendeeId, VideoPauseState.Unpaused)
         every { mockVideoTile2.videoRenderView } returns mockVideoRenderView2
         runBlockingTest {
-            videoTileController.onReceiveFrame(mockFrame, attendeeId, tileId, pauseType, tileId)
-            videoTileController.onReceiveFrame(mockFrame, attendeeId, tileId2, pauseType, tileId2)
+            videoTileController.onReceiveFrame(mockFrame, attendeeId, VideoPauseState.Unpaused, tileId)
+            videoTileController.onReceiveFrame(mockFrame, attendeeId, VideoPauseState.Unpaused, tileId2)
         }
 
         videoTileController.bindVideoView(mockVideoRenderView, tileId)

@@ -5,6 +5,7 @@
 package com.amazon.chime.sdk.media.mediacontroller.video
 
 import com.amazon.chime.sdk.media.clientcontroller.VideoClientController
+import com.amazon.chime.sdk.media.enums.VideoPauseState
 import com.amazon.chime.sdk.utils.logger.Logger
 import com.amazon.chime.webrtc.EglBase
 import kotlinx.coroutines.CoroutineScope
@@ -40,8 +41,7 @@ class DefaultVideoTileController(
     override fun onReceiveFrame(
         frame: Any?,
         attendeeId: String?,
-        displayId: Int,
-        pauseType: Int,
+        pauseState: VideoPauseState,
         videoId: Int
     ) {
         /**
@@ -55,15 +55,36 @@ class DefaultVideoTileController(
          */
         val tile: VideoTile? = videoTileMap[videoId]
         if (tile != null) {
-            if (frame != null) {
-                tile.renderFrame(frame)
-            } else if (pauseType == NO_PAUSE) {
-                uiScope.launch {
-                    logger.info(
-                        TAG,
-                        "Removing video tile with videoId = $videoId & attendeeId = $attendeeId"
-                    )
-                    onRemoveVideoTile(videoId)
+            // Account for any internally changed pause states, but ignore if the tile is paused by
+            // user since the pause might not have propagated yet
+            if (pauseState != tile.state.pauseState && tile.state.pauseState != VideoPauseState.PausedByUserRequest) {
+                // Note that currently, since we preemptively mark tiles as PausedByUserRequest when requested by user
+                // this path will only be hit when we are either transitioning from .unpaused to PausedForPoorConnection
+                // or PausedForPoorConnection to Unpaused
+                tile.setPauseState(pauseState)
+                if (pauseState == VideoPauseState.Unpaused) {
+                    uiScope.launch {
+                        forEachObserver { observer -> observer.onResumeVideoTile(tile.state) }
+                    }
+                } else {
+                    uiScope.launch {
+                        forEachObserver { observer -> observer.onPauseVideoTile(tile.state) }
+                    }
+                }
+            }
+
+            // Ignore any frames which come to an already paused tile
+            if (tile.state.pauseState == VideoPauseState.Unpaused) {
+                if (frame != null) {
+                    tile.renderFrame(frame)
+                } else {
+                    uiScope.launch {
+                        logger.info(
+                            TAG,
+                            "Removing video tile with videoId = $videoId & attendeeId = $attendeeId"
+                        )
+                        onRemoveVideoTile(videoId)
+                    }
                 }
             }
         } else {
@@ -99,7 +120,14 @@ class DefaultVideoTileController(
                 true,
                 tileId
             )
-            it.pause()
+            // Don't update state/observers if we haven't changed anything
+            // Note that this will overwrite PausedForPoorConnection if that is the current state
+            if (it.state.pauseState != VideoPauseState.PausedByUserRequest) {
+                it.setPauseState(VideoPauseState.PausedByUserRequest)
+                uiScope.launch {
+                    forEachObserver { observer -> observer.onPauseVideoTile(it.state) }
+                }
+            }
         }
     }
 
@@ -115,7 +143,14 @@ class DefaultVideoTileController(
                 false,
                 tileId
             )
-            it.resume()
+            // Only update state if we are unpausing a tile which was previously paused by the user
+            // Note that this means resuming a tile with state PausedForPoorConnection will no-op
+            if (it.state.pauseState == VideoPauseState.PausedByUserRequest) {
+                it.setPauseState(VideoPauseState.Unpaused)
+                uiScope.launch {
+                    forEachObserver { observer -> observer.onResumeVideoTile(it.state) }
+                }
+            }
         }
     }
 

@@ -1,5 +1,6 @@
 package com.amazon.chime.sdk.media.mediacontroller.video
 
+import com.amazon.chime.sdk.media.enums.VideoPauseState
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
 import org.junit.Test
@@ -11,13 +12,13 @@ class VideoTileStateTest {
     private val attendeeIdScreenShare = "chimesarang#content"
 
     // local tile
-    val vtsLocal = VideoTileState(tileId, null, false)
+    val vtsLocal = VideoTileState(tileId, null, VideoPauseState.Unpaused)
 
     // regular video sharing
-    val vtsVideo = VideoTileState(tileId, attendeeIdVideo, false)
+    val vtsVideo = VideoTileState(tileId, attendeeIdVideo, VideoPauseState.Unpaused)
 
     // screen sharing
-    val vtsScreenShare = VideoTileState(tileId, attendeeIdScreenShare, false)
+    val vtsScreenShare = VideoTileState(tileId, attendeeIdScreenShare, VideoPauseState.Unpaused)
 
     @Test
     fun `isLocalTile should be true when tile is local`() {

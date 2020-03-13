@@ -21,4 +21,16 @@ interface VideoTileObserver {
      * @param tileState: [VideoTileState] - Video tile state associated with attendee who is removed
      */
     fun onRemoveVideoTile(tileState: VideoTileState)
+
+    /**
+     * Called whenever an attendee tile pauseState changes from VideoPauseState.Unpaused
+     * @param tileState: [VideoTileState] - Video tile state associated with attendee who is paused
+     */
+    fun onPauseVideoTile(tileState: VideoTileState)
+
+    /**
+     * Called whenever an attendee tile pauseState changes to VideoPauseState.Unpaused
+     * @param tileState: [VideoTileState] - Video tile state associated with attendee who is resumed
+     */
+    fun onResumeVideoTile(tileState: VideoTileState)
 }

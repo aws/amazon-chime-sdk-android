@@ -4,6 +4,7 @@
 
 package com.amazon.chime.sdk.media.mediacontroller.video
 
+import com.amazon.chime.sdk.media.enums.VideoPauseState
 import com.amazon.chime.sdk.utils.logger.Logger
 
 class DefaultVideoTile(
@@ -13,7 +14,7 @@ class DefaultVideoTile(
 ) : VideoTile {
     private val TAG = "DefaultVideoTile"
 
-    override var state: VideoTileState = VideoTileState(tileId, attendeeId, false)
+    override var state: VideoTileState = VideoTileState(tileId, attendeeId, VideoPauseState.Unpaused)
     override var videoRenderView: VideoRenderView? = null
 
     override fun bind(bindParams: Any?, videoRenderView: VideoRenderView?) {
@@ -32,11 +33,7 @@ class DefaultVideoTile(
         videoRenderView = null
     }
 
-    override fun resume() {
-        this.state.paused = false
-    }
-
-    override fun pause() {
-        this.state.paused = true
+    override fun setPauseState(pauseState: VideoPauseState) {
+        this.state.pauseState = pauseState
     }
 }
