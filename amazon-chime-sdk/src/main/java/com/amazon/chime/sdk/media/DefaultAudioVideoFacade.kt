@@ -16,6 +16,9 @@ import com.amazon.chime.sdk.media.mediacontroller.AudioVideoObserver
 import com.amazon.chime.sdk.media.mediacontroller.MetricsObserver
 import com.amazon.chime.sdk.media.mediacontroller.RealtimeControllerFacade
 import com.amazon.chime.sdk.media.mediacontroller.RealtimeObserver
+import com.amazon.chime.sdk.media.mediacontroller.activespeakerdetector.ActiveSpeakerDetectorFacade
+import com.amazon.chime.sdk.media.mediacontroller.activespeakerdetector.ActiveSpeakerObserver
+import com.amazon.chime.sdk.media.mediacontroller.activespeakerpolicy.ActiveSpeakerPolicy
 import com.amazon.chime.sdk.media.mediacontroller.video.VideoRenderView
 import com.amazon.chime.sdk.media.mediacontroller.video.VideoTileController
 import com.amazon.chime.sdk.media.mediacontroller.video.VideoTileObserver
@@ -25,7 +28,8 @@ class DefaultAudioVideoFacade(
     private val audioVideoController: AudioVideoControllerFacade,
     private val realtimeController: RealtimeControllerFacade,
     private val deviceController: DeviceController,
-    private val videoTileController: VideoTileController
+    private val videoTileController: VideoTileController,
+    private val activeSpeakerDetector: ActiveSpeakerDetectorFacade
 ) : AudioVideoFacade {
 
     private val permissions = arrayOf(
@@ -149,5 +153,16 @@ class DefaultAudioVideoFacade(
 
     override fun resumeRemoteVideoTile(tileId: Int) {
         videoTileController.resumeRemoteVideoTile(tileId)
+    }
+
+    override fun addActiveSpeakerObserver(
+        policy: ActiveSpeakerPolicy,
+        observer: ActiveSpeakerObserver
+    ) {
+        activeSpeakerDetector.addActiveSpeakerObserver(policy, observer)
+    }
+
+    override fun removeActiveSpeakerObserver(observer: ActiveSpeakerObserver) {
+        activeSpeakerDetector.removeActiveSpeakerObserver(observer)
     }
 }

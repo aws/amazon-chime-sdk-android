@@ -26,6 +26,7 @@ class InMeetingActivity : AppCompatActivity(),
     private lateinit var meetingId: String
     private lateinit var name: String
     private lateinit var audioVideo: AudioVideoFacade
+    private lateinit var rosterViewFragment: RosterViewFragment
 
     private val TAG = "InMeetingActivity"
 
@@ -69,7 +70,7 @@ class InMeetingActivity : AppCompatActivity(),
     }
 
     override fun onJoinMeetingClicked() {
-        val rosterViewFragment = RosterViewFragment.newInstance(meetingId)
+        rosterViewFragment = RosterViewFragment.newInstance(meetingId)
         supportFragmentManager
             .beginTransaction()
             .replace(R.id.root_layout, rosterViewFragment, "rosterViewFragment")
@@ -82,6 +83,7 @@ class InMeetingActivity : AppCompatActivity(),
 
     override fun onBackPressed() {
         audioVideo.stop()
+        audioVideo.removeActiveSpeakerObserver(rosterViewFragment)
         super.onBackPressed()
     }
 

@@ -15,6 +15,7 @@ import com.amazon.chime.sdk.media.mediacontroller.AudioVideoObserver
 import com.amazon.chime.sdk.media.mediacontroller.MetricsObserver
 import com.amazon.chime.sdk.media.mediacontroller.RealtimeControllerFacade
 import com.amazon.chime.sdk.media.mediacontroller.RealtimeObserver
+import com.amazon.chime.sdk.media.mediacontroller.activespeakerdetector.ActiveSpeakerDetectorFacade
 import com.amazon.chime.sdk.media.mediacontroller.video.VideoTileController
 import io.mockk.MockKAnnotations
 import io.mockk.every
@@ -58,6 +59,9 @@ class DefaultAudioVideoFacadeTest {
 
     @MockK
     private lateinit var videoTileController: VideoTileController
+
+    @MockK
+    private lateinit var activeSpeakerDetector: ActiveSpeakerDetectorFacade
 
     @InjectMockKs
     private lateinit var audioVideoFacade: DefaultAudioVideoFacade

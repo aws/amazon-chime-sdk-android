@@ -27,6 +27,8 @@ import com.amazon.chime.sdk.media.mediacontroller.MetricsObserver
 import com.amazon.chime.sdk.media.mediacontroller.RealtimeObserver
 import com.amazon.chime.sdk.media.mediacontroller.SignalUpdate
 import com.amazon.chime.sdk.media.mediacontroller.VolumeUpdate
+import com.amazon.chime.sdk.media.mediacontroller.activespeakerdetector.ActiveSpeakerObserver
+import com.amazon.chime.sdk.media.mediacontroller.activespeakerpolicy.DefaultActiveSpeakerPolicy
 import com.amazon.chime.sdk.media.mediacontroller.video.VideoTileObserver
 import com.amazon.chime.sdk.media.mediacontroller.video.VideoTileState
 import com.amazon.chime.sdk.session.MeetingSessionStatus
@@ -49,7 +51,7 @@ import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import kotlinx.coroutines.withContext
 
-class RosterViewFragment : Fragment(), RealtimeObserver, AudioVideoObserver, VideoTileObserver, MetricsObserver {
+class RosterViewFragment : Fragment(), RealtimeObserver, AudioVideoObserver, VideoTileObserver, MetricsObserver, ActiveSpeakerObserver {
     private val logger = ConsoleLogger(LogLevel.DEBUG)
     private val gson = Gson()
     private val mutex = Mutex()
@@ -64,6 +66,7 @@ class RosterViewFragment : Fragment(), RealtimeObserver, AudioVideoObserver, Vid
     private lateinit var meetingId: String
     private lateinit var audioVideo: AudioVideoFacade
     private lateinit var listener: RosterViewEventListener
+    override val scoreCallbackIntervalMs: Int? get() = 1000
 
     private val MAX_TILE_COUNT = 2
     private val LOCAL_TILE_ID = 0
@@ -143,6 +146,7 @@ class RosterViewFragment : Fragment(), RealtimeObserver, AudioVideoObserver, Vid
         audioVideo.addRealtimeObserver(this)
         audioVideo.addVideoTileObserver(this)
         audioVideo.start()
+        audioVideo.addActiveSpeakerObserver(DefaultActiveSpeakerPolicy(), this)
         return view
     }
 
@@ -540,5 +544,13 @@ class RosterViewFragment : Fragment(), RealtimeObserver, AudioVideoObserver, Vid
             Toast.makeText(activity, message, Toast.LENGTH_SHORT).show()
             logger.info(TAG, message)
         }
+    }
+
+    override fun onActiveSpeakerDetect(attendeeInfo: Array<AttendeeInfo>) {
+        logger.debug(TAG, "Active Speakers are: ${attendeeInfo.toList()}")
+    }
+
+    override fun onActiveSpeakerScoreChange(scores: Map<AttendeeInfo, Double>) {
+        logger.debug(TAG, "Active Speakers scores are: $scores")
     }
 }

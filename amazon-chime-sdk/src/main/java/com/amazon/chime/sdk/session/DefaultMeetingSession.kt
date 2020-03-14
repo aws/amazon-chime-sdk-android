@@ -18,6 +18,7 @@ import com.amazon.chime.sdk.media.clientcontroller.VideoClientController
 import com.amazon.chime.sdk.media.devicecontroller.DefaultDeviceController
 import com.amazon.chime.sdk.media.mediacontroller.DefaultAudioVideoController
 import com.amazon.chime.sdk.media.mediacontroller.DefaultRealtimeController
+import com.amazon.chime.sdk.media.mediacontroller.activespeakerdetector.DefaultActiveSpeakerDetector
 import com.amazon.chime.sdk.media.mediacontroller.video.DefaultVideoTileController
 import com.amazon.chime.sdk.media.mediacontroller.video.DefaultVideoTileFactory
 import com.amazon.chime.sdk.media.mediacontroller.video.VideoTileController
@@ -60,6 +61,8 @@ class DefaultMeetingSession(
         val deviceController =
             DefaultDeviceController(context, audioClientController, videoClientController)
 
+        val activeSpeakerDetector = DefaultActiveSpeakerDetector(audioClientObserver)
+
         val audioVideoController =
             DefaultAudioVideoController(
                 audioClientController,
@@ -74,7 +77,8 @@ class DefaultMeetingSession(
             audioVideoController,
             realtimeController,
             deviceController,
-            videoTileController
+            videoTileController,
+            activeSpeakerDetector
         )
     }
 }
