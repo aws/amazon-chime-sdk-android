@@ -12,45 +12,50 @@ enum class ObservableMetric() {
     /**
      * Percentage of audio packets lost from server to client
      */
-    audioPacketsReceivedFractionLossPercent,
+    audioReceivePacketLossPercent,
 
     /**
      * Percentage of audio packets lost from client to server
      */
-    audioPacketsSentFractionLossPercent,
+    audioSendPacketLossPercent,
 
     /**
-     * Estimated uplink bandwidth (may not all be used) from perspective of video client
+     * Estimated uplink bandwidth from perspective of video client
      */
     videoAvailableSendBandwidth,
 
     /**
-     * Estimated downlink bandwidth (may not all be used) from perspective of video client
+     * Estimated downlink bandwidth  from perspective of video client
      */
     videoAvailableReceiveBandwidth,
 
     /**
-     * Total bitrate summed accross all send streams
+     * Sum of total bitrate across all send streams
      */
     videoSendBitrate,
 
     /**
-     * Total packet lost calculated across all send streams
+     * Percentage of video packets lost from client to server across all send streams
      */
-    videoSendPacketLostPercent,
+    videoSendPacketLossPercent,
 
     /**
-     * Average send FPS across possibly multiple simulcast streams
+     * Average send FPS across all send streams
      */
     videoSendFps,
 
     /**
-     * Total bitrate summed across all receive streams
+     * Round trip time of packets sent from client to server
+     */
+    videoSendRttMs,
+
+    /**
+     * Sum of total bitrate across all receive streams
      */
     videoReceiveBitrate,
 
     /**
-     * Total packet lost calculated across all receive streams
+     * Percentage of video packets lost from server to client across all receive streams
      */
-    videoReceivePacketLostPercent,
+    videoReceivePacketLossPercent,
 }

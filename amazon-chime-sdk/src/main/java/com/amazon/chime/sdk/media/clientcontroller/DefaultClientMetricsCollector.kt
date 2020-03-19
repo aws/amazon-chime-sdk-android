@@ -21,9 +21,9 @@ class DefaultClientMetricsCollector : ClientMetricsCollector {
     private val METRICS_EMISSION_INTERVAL_MS = 1000
 
     override fun processAudioClientMetrics(metrics: Map<Int, Double>) {
-        cachedObservableMetrics[ObservableMetric.audioPacketsReceivedFractionLossPercent] =
+        cachedObservableMetrics[ObservableMetric.audioReceivePacketLossPercent] =
             metrics[AudioClient.AUDIO_CLIENT_METRIC_POST_JB_SPK_1S_PACKETS_LOST_PERCENT]
-        cachedObservableMetrics[ObservableMetric.audioPacketsSentFractionLossPercent] =
+        cachedObservableMetrics[ObservableMetric.audioSendPacketLossPercent] =
             metrics[AudioClient.AUDIO_SERVER_METRIC_POST_JB_MIC_1S_PACKETS_LOST_PERCENT]
         maybeEmitMetrics()
     }
@@ -35,14 +35,16 @@ class DefaultClientMetricsCollector : ClientMetricsCollector {
             metrics[VideoClient.VIDEO_AVAILABLE_RECEIVE_BANDWIDTH]
         cachedObservableMetrics[ObservableMetric.videoSendBitrate] =
             metrics[VideoClient.VIDEO_SEND_BITRATE]
-        cachedObservableMetrics[ObservableMetric.videoSendPacketLostPercent] =
-            metrics[VideoClient.VIDEO_SEND_PACKET_LOST_PERCENT]
+        cachedObservableMetrics[ObservableMetric.videoSendPacketLossPercent] =
+            metrics[VideoClient.VIDEO_SEND_PACKET_LOSS_PERCENT]
         cachedObservableMetrics[ObservableMetric.videoSendFps] =
             metrics[VideoClient.VIDEO_SEND_FPS]
+        cachedObservableMetrics[ObservableMetric.videoSendRttMs] =
+            metrics[VideoClient.VIDEO_SEND_RTT]
         cachedObservableMetrics[ObservableMetric.videoReceiveBitrate] =
             metrics[VideoClient.VIDEO_RECEIVE_BITRATE]
-        cachedObservableMetrics[ObservableMetric.videoReceivePacketLostPercent] =
-            metrics[VideoClient.VIDEO_RECEIVE_PACKET_LOST_PERCENT]
+        cachedObservableMetrics[ObservableMetric.videoReceivePacketLossPercent] =
+            metrics[VideoClient.VIDEO_RECEIVE_PACKET_LOSS_PERCENT]
         maybeEmitMetrics()
     }
 
