@@ -7,7 +7,8 @@ package com.amazon.chime.sdk.media.mediacontroller
 import com.amazon.chime.sdk.media.clientcontroller.AudioClientController
 import com.amazon.chime.sdk.media.clientcontroller.AudioClientObserver
 import com.amazon.chime.sdk.media.clientcontroller.ClientMetricsCollector
-import com.amazon.chime.sdk.media.clientcontroller.VideoClientController
+import com.amazon.chime.sdk.media.clientcontroller.video.VideoClientController
+import com.amazon.chime.sdk.media.clientcontroller.video.VideoClientObserver
 import com.amazon.chime.sdk.session.MeetingSessionConfiguration
 
 class DefaultAudioVideoController(
@@ -15,7 +16,8 @@ class DefaultAudioVideoController(
     private val audioClientObserver: AudioClientObserver,
     private val clientMetricsCollector: ClientMetricsCollector,
     private val configuration: MeetingSessionConfiguration,
-    private val videoClientController: VideoClientController
+    private val videoClientController: VideoClientController,
+    private val videoClientObserver: VideoClientObserver
 ) : AudioVideoControllerFacade {
 
     override fun start() {
@@ -27,8 +29,6 @@ class DefaultAudioVideoController(
             configuration.credentials.joinToken
         )
         videoClientController.start(
-            configuration.urls.turnControlURL,
-            configuration.urls.signalingURL,
             configuration.meetingId,
             configuration.credentials.joinToken
         )
@@ -57,12 +57,12 @@ class DefaultAudioVideoController(
 
     override fun addAudioVideoObserver(observer: AudioVideoObserver) {
         audioClientObserver.subscribeToAudioClientStateChange(observer)
-        videoClientController.subscribeToVideoClientStateChange(observer)
+        videoClientObserver.subscribeToVideoClientStateChange(observer)
     }
 
     override fun removeAudioVideoObserver(observer: AudioVideoObserver) {
         audioClientObserver.unsubscribeFromAudioClientStateChange(observer)
-        videoClientController.unsubscribeFromVideoClientStateChange(observer)
+        videoClientObserver.unsubscribeFromVideoClientStateChange(observer)
     }
 
     override fun addMetricsObserver(observer: MetricsObserver) {

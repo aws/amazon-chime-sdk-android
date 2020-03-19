@@ -7,7 +7,8 @@ package com.amazon.chime.sdk.media.mediacontroller
 import com.amazon.chime.sdk.media.clientcontroller.AudioClientController
 import com.amazon.chime.sdk.media.clientcontroller.AudioClientObserver
 import com.amazon.chime.sdk.media.clientcontroller.ClientMetricsCollector
-import com.amazon.chime.sdk.media.clientcontroller.VideoClientController
+import com.amazon.chime.sdk.media.clientcontroller.video.VideoClientController
+import com.amazon.chime.sdk.media.clientcontroller.video.VideoClientObserver
 import com.amazon.chime.sdk.session.MeetingSessionConfiguration
 import com.amazon.chime.sdk.session.MeetingSessionCredentials
 import com.amazon.chime.sdk.session.MeetingSessionURLs
@@ -49,6 +50,9 @@ class DefaultAudioVideoControllerTest {
     @MockK
     private lateinit var videoClientController: VideoClientController
 
+    @MockK
+    private lateinit var videoClientObserver: VideoClientObserver
+
     private lateinit var audioVideoController: DefaultAudioVideoController
 
     @Before
@@ -60,7 +64,8 @@ class DefaultAudioVideoControllerTest {
                 audioClientObserver,
                 clientMetricsCollector,
                 meetingSessionConfiguration,
-                videoClientController
+                videoClientController,
+                videoClientObserver
             )
     }
 
@@ -79,32 +84,69 @@ class DefaultAudioVideoControllerTest {
     }
 
     @Test
+    fun `start should call videoClientController start with the parameters in configuration`() {
+        audioVideoController.start()
+        verify {
+            videoClientController.start(
+                meetingId,
+                joinToken
+            )
+        }
+    }
+
+    @Test
     fun `stop should call audioClientController stop`() {
         audioVideoController.stop()
+
         verify { audioClientController.stop() }
+    }
+
+    @Test
+    fun `stop should call videoClientController stopAndDestroy`() {
+        audioVideoController.stop()
+
+        verify { videoClientController.stopAndDestroy() }
     }
 
     @Test
     fun `addAudioVideoObserver should call audioClientObserver subscribeToAudioClientStateChange with given observer`() {
         audioVideoController.addAudioVideoObserver(audioVideo)
+
         verify { audioClientObserver.subscribeToAudioClientStateChange(audioVideo) }
     }
 
     @Test
-    fun `removeObserver should call audioClientObserver unsubscribeFromAudioClientStateChange with given observer`() {
+    fun `removeAudioVideoObserver should call audioClientObserver unsubscribeFromAudioClientStateChange with given observer`() {
         audioVideoController.removeAudioVideoObserver(audioVideo)
+
         verify { audioClientObserver.unsubscribeFromAudioClientStateChange(audioVideo) }
+    }
+
+    @Test
+    fun `addAudioVideoObserver should call videoClientObserver subscribeToVideoClientStateChange with given observer`() {
+        audioVideoController.addAudioVideoObserver(audioVideo)
+
+        verify { videoClientObserver.subscribeToVideoClientStateChange(audioVideo) }
+    }
+
+    @Test
+    fun `removeAudioVideoObserver should call videoClientObserver unsubscribeFromAVideoClientStateChange with given observer`() {
+        audioVideoController.removeAudioVideoObserver(audioVideo)
+
+        verify { videoClientObserver.unsubscribeFromVideoClientStateChange(audioVideo) }
     }
 
     @Test
     fun `addMetricsObserver should call clientMetricsCollector addObserver with given observer`() {
         audioVideoController.addMetricsObserver(metricsObserver)
+
         verify { clientMetricsCollector.subscribeToMetrics(metricsObserver) }
     }
 
     @Test
-    fun `addMetricsObserver should call clientMetricsCollector removeObserver with given observer`() {
+    fun `removeMetricsObserver should call clientMetricsCollector removeObserver with given observer`() {
         audioVideoController.removeMetricsObserver(metricsObserver)
+
         verify { clientMetricsCollector.unsubscribeFromMetrics(metricsObserver) }
     }
 

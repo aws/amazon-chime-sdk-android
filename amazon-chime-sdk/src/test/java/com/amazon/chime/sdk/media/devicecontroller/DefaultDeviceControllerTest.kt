@@ -9,7 +9,7 @@ import android.content.Intent
 import android.media.AudioDeviceInfo
 import android.media.AudioManager
 import com.amazon.chime.sdk.media.clientcontroller.AudioClientController
-import com.amazon.chime.sdk.media.clientcontroller.VideoClientController
+import com.amazon.chime.sdk.media.clientcontroller.video.VideoClientController
 import com.xodee.client.audio.audioclient.AudioClient
 import com.xodee.client.video.VideoDevice
 import io.mockk.MockKAnnotations

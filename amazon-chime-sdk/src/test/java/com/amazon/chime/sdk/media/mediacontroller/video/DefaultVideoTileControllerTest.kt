@@ -3,7 +3,7 @@
  */
 package com.amazon.chime.sdk.media.mediacontroller.video
 
-import com.amazon.chime.sdk.media.clientcontroller.VideoClientController
+import com.amazon.chime.sdk.media.clientcontroller.video.VideoClientController
 import com.amazon.chime.sdk.media.enums.VideoPauseState
 import com.amazon.chime.sdk.utils.logger.Logger
 import com.amazon.chime.webrtc.VideoRenderer
@@ -260,6 +260,18 @@ class DefaultVideoTileControllerTest {
     }
 
     @Test
+    fun `pauseRemoteVideoTile should NOT call VideoClientController's setRemotePaused when local tile`() {
+        every { mockVideoTile.state } returns VideoTileState(tileId, null, VideoPauseState.Unpaused)
+        runBlockingTest {
+            videoTileController.onReceiveFrame(mockFrame, null, VideoPauseState.Unpaused, tileId)
+        }
+
+        videoTileController.pauseRemoteVideoTile(tileId)
+
+        verify(exactly = 0) { mockVideoTileController.setRemotePaused(any(), any()) }
+    }
+
+    @Test
     fun `resumeRemoteVideoTile should NOT call VideoClientController's setRemotePaused when tile does not exist`() {
         videoTileController.resumeRemoteVideoTile(tileId)
 
@@ -272,6 +284,18 @@ class DefaultVideoTileControllerTest {
         videoTileController.resumeRemoteVideoTile(tileId)
 
         Assert.assertEquals(0, onResumeObserverCalled)
+    }
+
+    @Test
+    fun `resumeRemoteVideoTile should NOT call VideoClientController's setRemotePaused when local tile`() {
+        every { mockVideoTile.state } returns VideoTileState(tileId, null, VideoPauseState.Unpaused)
+        runBlockingTest {
+            videoTileController.onReceiveFrame(mockFrame, null, VideoPauseState.Unpaused, tileId)
+        }
+
+        videoTileController.resumeRemoteVideoTile(tileId)
+
+        verify(exactly = 0) { mockVideoTileController.setRemotePaused(any(), any()) }
     }
 
     @Test

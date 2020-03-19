@@ -2,9 +2,12 @@
  * Copyright (c) 2020 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  */
 
-package com.amazon.chime.sdk.media.clientcontroller
+package com.amazon.chime.sdk.media.clientcontroller.video
 
-data class MeetingSessionTURNCredentials(
+/**
+ * The credentials needed for TURN. Obtained by making a turn request with [TURNRequestParams].
+ */
+data class TURNCredentials(
     val username: String,
     val password: String,
     val ttl: String,

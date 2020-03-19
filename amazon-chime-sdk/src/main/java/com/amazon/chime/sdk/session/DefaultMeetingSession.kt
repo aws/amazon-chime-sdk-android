@@ -14,7 +14,10 @@ import com.amazon.chime.sdk.media.clientcontroller.ClientMetricsCollector
 import com.amazon.chime.sdk.media.clientcontroller.DefaultAudioClientController
 import com.amazon.chime.sdk.media.clientcontroller.DefaultAudioClientObserver
 import com.amazon.chime.sdk.media.clientcontroller.DefaultClientMetricsCollector
-import com.amazon.chime.sdk.media.clientcontroller.VideoClientController
+import com.amazon.chime.sdk.media.clientcontroller.video.DefaultVideoClientController
+import com.amazon.chime.sdk.media.clientcontroller.video.DefaultVideoClientObserver
+import com.amazon.chime.sdk.media.clientcontroller.video.DefaultVideoClientStateController
+import com.amazon.chime.sdk.media.clientcontroller.video.TURNRequestParams
 import com.amazon.chime.sdk.media.devicecontroller.DefaultDeviceController
 import com.amazon.chime.sdk.media.mediacontroller.DefaultAudioVideoController
 import com.amazon.chime.sdk.media.mediacontroller.DefaultRealtimeController
@@ -50,14 +53,34 @@ class DefaultMeetingSession(
         val realtimeController =
             DefaultRealtimeController(audioClientController, audioClientObserver)
 
-        val videoClientController = VideoClientController(context, metricsCollector, logger)
+        val turnRequestParams = TURNRequestParams(
+            configuration.meetingId,
+            configuration.urls.signalingURL,
+            configuration.urls.turnControlURL,
+            configuration.credentials.joinToken
+        )
+
+        val videoClientStateController = DefaultVideoClientStateController(logger)
+        val videoClientObserver = DefaultVideoClientObserver(
+            logger,
+            turnRequestParams,
+            metricsCollector,
+            videoClientStateController
+        )
+
+        val videoClientController = DefaultVideoClientController(
+            context,
+            logger,
+            videoClientStateController,
+            videoClientObserver
+        )
 
         val videoTileFactory = DefaultVideoTileFactory(logger)
 
         val videoTileController: VideoTileController =
             DefaultVideoTileController(logger, videoClientController, videoTileFactory)
 
-        videoClientController.subscribeToVideoTile(videoTileController)
+        videoClientObserver.subscribeToVideoTileChange(videoTileController)
         val deviceController =
             DefaultDeviceController(context, audioClientController, videoClientController)
 
@@ -69,7 +92,8 @@ class DefaultMeetingSession(
                 audioClientObserver,
                 metricsCollector,
                 configuration,
-                videoClientController
+                videoClientController,
+                videoClientObserver
             )
 
         audioVideo = DefaultAudioVideoFacade(

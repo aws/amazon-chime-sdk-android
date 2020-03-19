@@ -4,7 +4,7 @@
 
 package com.amazon.chime.sdk.media.mediacontroller.video
 
-import com.amazon.chime.sdk.media.clientcontroller.VideoClientController
+import com.amazon.chime.sdk.media.clientcontroller.video.VideoClientController
 import com.amazon.chime.sdk.media.enums.VideoPauseState
 import com.amazon.chime.sdk.utils.logger.Logger
 import com.amazon.chime.webrtc.EglBase
@@ -17,7 +17,6 @@ class DefaultVideoTileController(
     private val videoClientController: VideoClientController,
     private val videoTileFactory: VideoTileFactory
 ) : VideoTileController {
-    private val NO_PAUSE = 0
     // A map of tile id to VideoTile to determine if VideoTileController is adding, removing, pausing, or rendering
     private val videoTileMap = mutableMapOf<Int, VideoTile>()
     // A map of VideoRenderView to tile id to determine if users are adding same video render view

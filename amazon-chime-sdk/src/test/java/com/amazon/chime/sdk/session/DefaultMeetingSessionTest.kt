@@ -54,6 +54,11 @@ class DefaultMeetingSessionTest {
         every { context.getSystemService(any()) } returns mockkClass(AudioManager::class)
         mockkObject(AudioClientFactory.Companion)
         every { AudioClientFactory.getAudioClient(any(), any()) } returns mockAudioClient
+        every { configuration.meetingId } returns "meetingId"
+        every { configuration.urls.signalingURL } returns "signalingUrl"
+        every { configuration.urls.turnControlURL } returns "turnControlUrl"
+        every { configuration.credentials.joinToken } returns "joinToken"
+
         meetingSession = DefaultMeetingSession(configuration, logger, context)
     }
 
