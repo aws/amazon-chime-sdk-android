@@ -29,7 +29,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:background="@null"
-            android:contentDescription="@string/meeting_mute"
+            android:contentDescription="@string/toggle_mute"
             android:paddingLeft="8dp"
             android:paddingRight="8dp"
             android:src="@drawable/button_mute" />
@@ -40,7 +40,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:background="@null"
-            android:contentDescription="@string/meeting_mute"
+            android:contentDescription="@string/speaker_button"
             android:paddingLeft="8dp"
             android:paddingRight="8dp"
             android:src="@drawable/button_speaker" />
@@ -51,7 +51,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:background="@null"
-            android:contentDescription="@string/meeting_mute"
+            android:contentDescription="@string/toggle_camera"
             android:paddingLeft="8dp"
             android:paddingRight="8dp"
             android:src="@drawable/button_video" />
@@ -87,6 +87,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
+            android:contentDescription="@string/video_view"
             android:padding="8dp"
             android:visibility="gone" />
 
@@ -95,6 +96,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
+            android:contentDescription="@string/screen_share_view"
             android:padding="8dp"
             android:visibility="gone" />
 

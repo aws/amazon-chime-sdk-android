@@ -59,7 +59,7 @@ class ViewHolder(inflatedView: View, audioVideoFacade: AudioVideoFacade) :
 
     fun bindVideoTile(videoCollectionTile: VideoCollectionTile) {
         audioVideo.bindVideoView(view.video_surface, videoCollectionTile.videoTileState.tileId)
-
+        view.video_surface.contentDescription = "${videoCollectionTile.attendeeName} VideoTile"
         if (videoCollectionTile.videoTileState.isLocalTile) {
             view.switch_camera.visibility = View.VISIBLE
             view.switch_camera.setOnClickListener { audioVideo.switchCamera() }

@@ -41,6 +41,7 @@
         android:id="@+id/buttonContinue"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:contentDescription="@string/main_continue"
         android:paddingLeft="20dp"
         android:paddingRight="20dp"
         android:text="@string/main_continue" />

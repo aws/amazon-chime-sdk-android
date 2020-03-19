@@ -40,11 +40,21 @@ class RosterHolder(inflatedView: View) :
     fun bindAttendee(attendee: RosterAttendee) {
         this.attendeeName = attendee.attendeeName
         view.attendeeName.text = attendeeName
+        view.attendeeName.contentDescription = attendeeName
 
         when (attendee.volumeLevel) {
-            VolumeLevel.Muted -> view.attendeeVolume.setImageResource(R.drawable.volume_muted)
-            VolumeLevel.NotSpeaking -> view.attendeeVolume.setImageResource(R.drawable.volume_0)
-            else -> view.attendeeVolume.setImageResource(R.drawable.volume_3)
+            VolumeLevel.Muted -> {
+                view.attendeeVolume.setImageResource(R.drawable.volume_muted)
+                view.attendeeVolume.contentDescription = "$attendeeName Muted"
+            }
+            VolumeLevel.NotSpeaking -> {
+                view.attendeeVolume.setImageResource(R.drawable.volume_0)
+                view.attendeeVolume.contentDescription = "$attendeeName Not Speaking"
+            }
+            else -> {
+                view.attendeeVolume.setImageResource(R.drawable.volume_3)
+                view.attendeeVolume.contentDescription = "$attendeeName Speaking"
+            }
         }
     }
 }

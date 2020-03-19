@@ -169,7 +169,7 @@ class RosterViewFragment : Fragment(), RealtimeObserver, AudioVideoObserver, Vid
         recyclerViewScreenShareCollection.adapter = screenTileAdapter
 
         tabLayout = view.findViewById(R.id.tabLayoutRosterView)
-        SubTab.values().forEach { tabLayout.addTab(tabLayout.newTab().setText(it.name)) }
+        SubTab.values().forEach { tabLayout.addTab(tabLayout.newTab().setText(it.name).setContentDescription("${it.name} Tab")) }
         tabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
             override fun onTabReselected(tab: TabLayout.Tab?) {
             }
