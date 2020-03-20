@@ -54,7 +54,7 @@ class DefaultClientMetricsCollectorTest {
         val rawMetrics =
             mutableMapOf(AudioClient.AUDIO_CLIENT_METRIC_POST_JB_SPK_1S_PACKETS_LOST_PERCENT to 1.0)
         val observableMetrics =
-            mutableMapOf(ObservableMetric.audioPacketsReceivedFractionLossPercent to 1.0)
+            mutableMapOf(ObservableMetric.audioReceivePacketLossPercent to 1.0)
 
         clientMetricsCollector.processAudioClientMetrics(rawMetrics)
 
