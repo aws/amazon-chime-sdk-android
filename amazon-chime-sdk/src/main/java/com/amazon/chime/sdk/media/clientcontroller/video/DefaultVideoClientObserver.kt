@@ -37,6 +37,8 @@ class DefaultVideoClientObserver(
 ) : VideoClientObserver {
     private val TAG = "DefaultVideoClientObserver"
     private val TOKEN_HEADER = "X-Chime-Auth-Token"
+    private val SYSPROP_USER_AGENT = "http.agent"
+    private val USER_AGENT_HEADER = "User-Agent"
     private val CONTENT_TYPE_HEADER = "Content-Type"
     private val CONTENT_TYPE = "application/json"
     private val MEETING_ID_KEY = "meetingId"
@@ -187,6 +189,9 @@ class DefaultVideoClientObserver(
                     doOutput = true
                     addRequestProperty(TOKEN_HEADER, "$TOKEN_KEY=${turnRequestParams.joinToken}")
                     setRequestProperty(CONTENT_TYPE_HEADER, CONTENT_TYPE)
+                    val user_agent = System.getProperty(SYSPROP_USER_AGENT)
+                    logger.info(TAG, "User Agent while doing TURN request is $user_agent")
+                    setRequestProperty(USER_AGENT_HEADER, user_agent)
                     val out = BufferedWriter(OutputStreamWriter(outputStream))
                     out.write(
                         JSONObject().put(
