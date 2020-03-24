@@ -90,7 +90,8 @@ Unzip and copy the aar files to `amazon-chime-sdk-android/amazon-chime-sdk/libs`
 
 ### 3. Update demo app
 
-Update `test_url` in `strings.xml` with the URL of the serverless demo
+Update `test_url` in `strings.xml` at the path `amazon-chime-sdk-android/app/src/main/res/values` 
+with the URL of the serverless demo deployed in Step 1
 
 ## Reporting a suspected vulnerability
 
