@@ -1,10 +1,13 @@
-### Getting Started
+# Amazon Chime SDK for Android
+
+## Getting Started
 
 This guide contains a quick explanation of initializing the meeting session and using that to 
-access audio and video features. For more information, please refer to the API documentation at 
-TODO - Add link to API docs or refer to the demo app.
+access audio and video features. For more information, please refer to the [SDK Documentation](https://aws.github.io/amazon-chime-sdk-android/amazon-chime-sdk/) 
+or refer to the demo app.
 
-#### Permissions
+## Permissions
+
 Before calling the APIs to start audio, the app will need to request the following permissions from the user:
 
 ```
@@ -20,7 +23,7 @@ Manifest.permission.CAMERA
 Calling the APIs without having the above permissions granted will result in a `SecurityException`. 
 Amazon Chime SDK already declares these permissions in its manifest file.
 
-#### Getting Meeting Info
+## Getting Meeting Info
 
 The first step is to get various parameters about the meeting. The client application will receive 
 this information from the server application. It is up to the builder to decide on how the client
@@ -37,9 +40,9 @@ To get the meeting info make a POST request to:
 These are the parameters to include in the request:
 * title: Meeting ID for the meeting to join
 * name: Attendee name to join the meeting with
-* region: For now you can use "us-east-1"
+* region: One of the 14 regions supported by the AWS SDK, for example "us-east-1"
 
-#### Create MeetingSessionConfiguration
+## Create MeetingSessionConfiguration
 
 Parse the JSON response obtained from your server application to create the `MeetingSessionConfiguration` object. 
 
@@ -51,7 +54,7 @@ MeetingSessionConfiguration(
 )
 ```
 
-#### Create MeetingSession
+## Create MeetingSession
 
 Create the `DefaultMeetingSession` using the `MeetingSessionConfiguration` object.
 
@@ -60,7 +63,7 @@ meetingSession =
     DefaultMeetingSession(configuration, logger, applicationContext)
 ```
 
-#### Access AudioVideoFacade
+## Access AudioVideoFacade
 
 Get the `AudioVideoFacade` object from the `MeetingSession` Object and call various APIs.
 
@@ -72,7 +75,7 @@ private lateinit var audioVideo: AudioVideoFacade
 audioVideo = meetingSession.audioVideo
 ```
 
-##### Audio
+### Audio
 
 To start audio:
 ```
@@ -87,8 +90,6 @@ audioVideo.stop()
 To listen to AudioClient’s lifecycle events:
 ```
 audioVideo.addAudioVideoObserver(AudioVideoObserver)
-```
-```
 audioVideo.removeAudioVideoObserver(AudioVideoObserver)
 ```
 
@@ -114,12 +115,12 @@ onVideoSessionStarted(sessionStatus: MeetingSessionStatus)
 onVideoSessionStopped(sessionStatus: MeetingSessionStatus)
 ```
 
-To Mute:
+To Mute the Microphone:
 ```
 audioVideo.realtimeLocalMute()
 ```
 
-To UnMute:
+To Unmute the Microphone:
 ```
 audioVideo.realtimeLocalUnmute()
 ```
@@ -128,8 +129,6 @@ To listen to Volume and Signal Strength callbacks:
 
 ```
 audioVideo.addRealtimeObserver(RealtimeObserver)
-```
-```
 audioVideo.removeRealtimeObserver(RealtimeObserver)
 ```
 
@@ -148,9 +147,6 @@ onAttendeesMuted(attendeeInfo: Array<AttendeeInfo>)
 
 onAttendeesUnmuted(attendeeInfo: Array<AttendeeInfo>)
 ```
-
-VolumeLevel is an enum with the following values: `Muted`, `NotSpeaking`, `Low`, `Medium`, `High`
-SignalStrength is an enum with the following values: `None`, `Low`, `High`
 
 To detect active speaker:
 ```
@@ -174,7 +170,7 @@ A class implementing `ActiveSpeakerPolicy` would need to implement the following
 calculateScore(attendeeInfo: AttendeeInfo, volume: VolumeLevel): Double
 ```
 
-##### Devices
+### Devices
 
 To list audio devices:
 ```
@@ -189,8 +185,6 @@ audioVideo.chooseAudioDevice(MediaDevice)
 To listen to audio device changes:
 ```
 audioVideo.addDeviceChangeObserver(DeviceChangeObserver)
-```
-```
 audioVideo.removeDeviceChangeObserver(DeviceChangeObserver)
 ```
 
@@ -200,13 +194,11 @@ A class implementing `DeviceChangeObserver` would need to implement the followin
 onAudioDeviceChanged(freshAudioDeviceList: List<MediaDevice>)
 ```
 
-##### Metrics
+###  Metrics
 
 To listen to metrics:
 ```
 audioVideo.addMetricsObserver(MetricsObserver)
-```
-```
 audioVideo.removeMetricsObserver(MetricsObserver)
 ```
 
@@ -215,21 +207,17 @@ A class implementing `MetricsObserver` would need to implement the following:
 onMetricsReceived(metrics: Map<ObservableMetric, Any>)
 ```
 
-##### Video
+### Video
 
 To start or stop local video:
 ```
 audioVideo.startLocalVideo()
-```
-```
 audioVideo.stopLocalVideo()
 ```
 
 To start or stop remove video:
 ```
 audioVideo.startRemoteVideo()
-```
-```
 audioVideo.stopRemoteVideo()
 ```
 
@@ -238,7 +226,12 @@ To switch camera:
 audioVideo.switchCamera()
 ```
 
-##### Video Rendering
+To get active camera:
+```
+audioVideo.getActiveCamera()
+```
+
+### Video Rendering
 
 Video has the following components for rendering video frames to a view:
 
@@ -250,8 +243,6 @@ Video has the following components for rendering video frames to a view:
 To listen to video tile events:
 ```
 audioVideo.addVideoTileObserver(VideoTileObserver)
-```
-```
 audioVideo.removeVideoTileObserver(VideoTileObserver)
 ```
 
@@ -269,8 +260,6 @@ onVideoTileResumed(tileState: VideoTileState)
 To bind views to video tiles:
 ```
 audioVideo.bindVideoView(VideoRenderView, Int)
-```
-```
 audioVideo.unbindVideoView(Int)
 ```
 
