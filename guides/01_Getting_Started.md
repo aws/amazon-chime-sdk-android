@@ -3,7 +3,7 @@
 ## Getting Started
 
 This guide contains a quick explanation of initializing the meeting session and using that to 
-access audio and video features. For more information, please refer to the [SDK Documentation](https://aws.github.io/amazon-chime-sdk-android/) 
+access audio and video features. For more information, please refer to the [SDK Documentation](https://aws.github.io/amazon-chime-sdk-android/amazon-chime-sdk/) 
 or refer to the demo app.
 
 ## Permissions

@@ -20,7 +20,7 @@ To get started, see the following resources:
 * [Amazon Chime](https://aws.amazon.com/chime)
 * [Amazon Chime Developer Guide](https://docs.aws.amazon.com/chime/latest/dg/what-is-chime.html)
 * [Amazon Chime SDK API Reference](http://docs.aws.amazon.com/chime/latest/APIReference/Welcome.html)
-* [SDK Documentation](https://aws.github.io/amazon-chime-sdk-android/)
+* [SDK Documentation](https://aws.github.io/amazon-chime-sdk-android/amazon-chime-sdk/)
 
 And review the following guides:
 
