@@ -226,6 +226,11 @@ To switch camera:
 audioVideo.switchCamera()
 ```
 
+To get active camera:
+```
+audioVideo.getActiveCamera()
+```
+
 ### Video Rendering
 
 Video has the following components for rendering video frames to a view:
