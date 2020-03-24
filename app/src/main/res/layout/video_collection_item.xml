@@ -9,7 +9,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <com.amazon.chime.sdk.media.mediacontroller.video.DefaultVideoRenderView
+        <com.amazonaws.services.chime.sdk.meetings.audiovideo.video.DefaultVideoRenderView
             android:id="@+id/video_surface"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />

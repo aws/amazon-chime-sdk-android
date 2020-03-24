@@ -4,7 +4,7 @@
   -->
 
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.amazon.chime.sdkdemo">
+    package="com.amazonaws.services.chime.sdkdemo">
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.BLUETOOTH" />
@@ -16,7 +16,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name="com.amazon.chime.sdkdemo.MeetingHomeActivity">
+        <activity android:name="com.amazonaws.services.chime.sdkdemo.MeetingHomeActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
