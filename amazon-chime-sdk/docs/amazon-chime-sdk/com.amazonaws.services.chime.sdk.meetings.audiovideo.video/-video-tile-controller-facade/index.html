@@ -1,0 +1,90 @@
+<HTML>
+<HEAD>
+<meta charset="UTF-8">
+<title>VideoTileControllerFacade - amazon-chime-sdk</title>
+<link rel="stylesheet" href="../../../style.css">
+</HEAD>
+<BODY>
+<a href="../../index.html">amazon-chime-sdk</a>&nbsp;/&nbsp;<a href="../index.html">com.amazonaws.services.chime.sdk.meetings.audiovideo.video</a>&nbsp;/&nbsp;<a href="./index.html">VideoTileControllerFacade</a><br/>
+<br/>
+<h1>VideoTileControllerFacade</h1>
+<code><span class="keyword">interface </span><span class="identifier">VideoTileControllerFacade</span></code>
+<p><a href="./index.html">VideoTileControllerFacade</a> manages video tile binding, pausing, and resuming as well as subscribing
+to video tile events by adding a <a href="../-video-tile-observer/index.html">VideoTileObserver</a>.</p>
+<h3>Functions</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<h4><a href="add-video-tile-observer.html">addVideoTileObserver</a></h4>
+</td>
+<td>
+<p>Subscribe to Video Tile events with an <a href="../-video-tile-observer/index.html">VideoTileObserver</a>.</p>
+<code><span class="keyword">abstract</span> <span class="keyword">fun </span><span class="identifier">addVideoTileObserver</span><span class="symbol">(</span><span class="identifier" id="com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoTileControllerFacade$addVideoTileObserver(com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoTileObserver)/observer">observer</span><span class="symbol">:</span>&nbsp;<a href="../-video-tile-observer/index.html"><span class="identifier">VideoTileObserver</span></a><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="bind-video-view.html">bindVideoView</a></h4>
+</td>
+<td>
+<p>Binds the video rendering view to Video Tile. The view will start displaying the video frame
+after the completion of this API.</p>
+<code><span class="keyword">abstract</span> <span class="keyword">fun </span><span class="identifier">bindVideoView</span><span class="symbol">(</span><span class="identifier" id="com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoTileControllerFacade$bindVideoView(com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoRenderView, kotlin.Int)/videoView">videoView</span><span class="symbol">:</span>&nbsp;<a href="../-video-render-view/index.html"><span class="identifier">VideoRenderView</span></a><span class="symbol">, </span><span class="identifier" id="com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoTileControllerFacade$bindVideoView(com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoRenderView, kotlin.Int)/tileId">tileId</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html"><span class="identifier">Int</span></a><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="pause-remote-video-tile.html">pauseRemoteVideoTile</a></h4>
+</td>
+<td>
+<p>Pauses the specified remote video tile. Ignores the tileId if it belongs to the local video tile.</p>
+<code><span class="keyword">abstract</span> <span class="keyword">fun </span><span class="identifier">pauseRemoteVideoTile</span><span class="symbol">(</span><span class="identifier" id="com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoTileControllerFacade$pauseRemoteVideoTile(kotlin.Int)/tileId">tileId</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html"><span class="identifier">Int</span></a><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="remove-video-tile-observer.html">removeVideoTileObserver</a></h4>
+</td>
+<td>
+<p>Unsubscribes from Video Tile events by removing specified <a href="../-video-tile-observer/index.html">VideoTileObserver</a>.</p>
+<code><span class="keyword">abstract</span> <span class="keyword">fun </span><span class="identifier">removeVideoTileObserver</span><span class="symbol">(</span><span class="identifier" id="com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoTileControllerFacade$removeVideoTileObserver(com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoTileObserver)/observer">observer</span><span class="symbol">:</span>&nbsp;<a href="../-video-tile-observer/index.html"><span class="identifier">VideoTileObserver</span></a><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="resume-remote-video-tile.html">resumeRemoteVideoTile</a></h4>
+</td>
+<td>
+<p>Resumes the specified remote video tile. Ignores the tileId if it belongs to the local video tile.</p>
+<code><span class="keyword">abstract</span> <span class="keyword">fun </span><span class="identifier">resumeRemoteVideoTile</span><span class="symbol">(</span><span class="identifier" id="com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoTileControllerFacade$resumeRemoteVideoTile(kotlin.Int)/tileId">tileId</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html"><span class="identifier">Int</span></a><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="unbind-video-view.html">unbindVideoView</a></h4>
+</td>
+<td>
+<p>Unbinds the video rendering view from Video Tile. The view will stop displaying the video frame
+after the completion of this API.</p>
+<code><span class="keyword">abstract</span> <span class="keyword">fun </span><span class="identifier">unbindVideoView</span><span class="symbol">(</span><span class="identifier" id="com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoTileControllerFacade$unbindVideoView(kotlin.Int)/tileId">tileId</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html"><span class="identifier">Int</span></a><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code></td>
+</tr>
+</tbody>
+</table>
+<h3>Inheritors</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<h4><a href="../../com.amazonaws.services.chime.sdk.meetings.audiovideo/-audio-video-facade.html">AudioVideoFacade</a></h4>
+</td>
+<td>
+<code><span class="keyword">interface </span><span class="identifier">AudioVideoFacade</span>&nbsp;<span class="symbol">:</span>&nbsp;<a href="../../com.amazonaws.services.chime.sdk.meetings.audiovideo/-audio-video-controller-facade/index.html"><span class="identifier">AudioVideoControllerFacade</span></a><span class="symbol">, </span><a href="../../com.amazonaws.services.chime.sdk.meetings.realtime/-realtime-controller-facade/index.html"><span class="identifier">RealtimeControllerFacade</span></a><span class="symbol">, </span><a href="../../com.amazonaws.services.chime.sdk.meetings.device/-device-controller/index.html"><span class="identifier">DeviceController</span></a><span class="symbol">, </span><a href="./index.html"><span class="identifier">VideoTileControllerFacade</span></a><span class="symbol">, </span><a href="../../com.amazonaws.services.chime.sdk.meetings.audiovideo.audio.activespeakerdetector/-active-speaker-detector-facade/index.html"><span class="identifier">ActiveSpeakerDetectorFacade</span></a></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="../-video-tile-controller/index.html">VideoTileController</a></h4>
+</td>
+<td>
+<p><a href="../-video-tile-controller/index.html">VideoTileController</a> handles rendering/creating of new <a href="../-video-tile/index.html">VideoTile</a>.</p>
+<code><span class="keyword">interface </span><span class="identifier">VideoTileController</span>&nbsp;<span class="symbol">:</span>&nbsp;<a href="./index.html"><span class="identifier">VideoTileControllerFacade</span></a></code></td>
+</tr>
+</tbody>
+</table>
+</BODY>
+</HTML>

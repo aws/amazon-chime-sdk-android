@@ -1,0 +1,95 @@
+<HTML>
+<HEAD>
+<meta charset="UTF-8">
+<title>AudioVideoObserver - amazon-chime-sdk</title>
+<link rel="stylesheet" href="../../../style.css">
+</HEAD>
+<BODY>
+<a href="../../index.html">amazon-chime-sdk</a>&nbsp;/&nbsp;<a href="../index.html">com.amazonaws.services.chime.sdk.meetings.audiovideo</a>&nbsp;/&nbsp;<a href="./index.html">AudioVideoObserver</a><br/>
+<br/>
+<h1>AudioVideoObserver</h1>
+<code><span class="keyword">interface </span><span class="identifier">AudioVideoObserver</span></code>
+<p><a href="./index.html">AudioVideoObserver</a> handles audio / video session events.</p>
+<h3>Functions</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<h4><a href="on-audio-session-cancelled-reconnect.html">onAudioSessionCancelledReconnect</a></h4>
+</td>
+<td>
+<p>Called when audio session cancelled reconnecting.</p>
+<code><span class="keyword">abstract</span> <span class="keyword">fun </span><span class="identifier">onAudioSessionCancelledReconnect</span><span class="symbol">(</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="on-audio-session-started.html">onAudioSessionStarted</a></h4>
+</td>
+<td>
+<p>Called when the audio session has started.</p>
+<code><span class="keyword">abstract</span> <span class="keyword">fun </span><span class="identifier">onAudioSessionStarted</span><span class="symbol">(</span><span class="identifier" id="com.amazonaws.services.chime.sdk.meetings.audiovideo.AudioVideoObserver$onAudioSessionStarted(kotlin.Boolean)/reconnecting">reconnecting</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html"><span class="identifier">Boolean</span></a><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="on-audio-session-started-connecting.html">onAudioSessionStartedConnecting</a></h4>
+</td>
+<td>
+<p>Called when the audio session is connecting or reconnecting.</p>
+<code><span class="keyword">abstract</span> <span class="keyword">fun </span><span class="identifier">onAudioSessionStartedConnecting</span><span class="symbol">(</span><span class="identifier" id="com.amazonaws.services.chime.sdk.meetings.audiovideo.AudioVideoObserver$onAudioSessionStartedConnecting(kotlin.Boolean)/reconnecting">reconnecting</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html"><span class="identifier">Boolean</span></a><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="on-audio-session-stopped.html">onAudioSessionStopped</a></h4>
+</td>
+<td>
+<p>Called when the audio session has stopped from a started state with the reason
+provided in the status.</p>
+<code><span class="keyword">abstract</span> <span class="keyword">fun </span><span class="identifier">onAudioSessionStopped</span><span class="symbol">(</span><span class="identifier" id="com.amazonaws.services.chime.sdk.meetings.audiovideo.AudioVideoObserver$onAudioSessionStopped(com.amazonaws.services.chime.sdk.meetings.session.MeetingSessionStatus)/sessionStatus">sessionStatus</span><span class="symbol">:</span>&nbsp;<a href="../../com.amazonaws.services.chime.sdk.meetings.session/-meeting-session-status/index.html"><span class="identifier">MeetingSessionStatus</span></a><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="on-connection-became-poor.html">onConnectionBecamePoor</a></h4>
+</td>
+<td>
+<p>Called when connection became poor.</p>
+<code><span class="keyword">abstract</span> <span class="keyword">fun </span><span class="identifier">onConnectionBecamePoor</span><span class="symbol">(</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="on-connection-recovered.html">onConnectionRecovered</a></h4>
+</td>
+<td>
+<p>Called when the connection health is recovered.</p>
+<code><span class="keyword">abstract</span> <span class="keyword">fun </span><span class="identifier">onConnectionRecovered</span><span class="symbol">(</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="on-video-session-started.html">onVideoSessionStarted</a></h4>
+</td>
+<td>
+<p>Called when the video session has started. Sometimes there is a non fatal error such as
+trying to send local video when the capacity was already reached. However, user can still
+receive remote video in the existing video session.</p>
+<code><span class="keyword">abstract</span> <span class="keyword">fun </span><span class="identifier">onVideoSessionStarted</span><span class="symbol">(</span><span class="identifier" id="com.amazonaws.services.chime.sdk.meetings.audiovideo.AudioVideoObserver$onVideoSessionStarted(com.amazonaws.services.chime.sdk.meetings.session.MeetingSessionStatus)/sessionStatus">sessionStatus</span><span class="symbol">:</span>&nbsp;<a href="../../com.amazonaws.services.chime.sdk.meetings.session/-meeting-session-status/index.html"><span class="identifier">MeetingSessionStatus</span></a><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="on-video-session-started-connecting.html">onVideoSessionStartedConnecting</a></h4>
+</td>
+<td>
+<p>Called when the video session is connecting or reconnecting.</p>
+<code><span class="keyword">abstract</span> <span class="keyword">fun </span><span class="identifier">onVideoSessionStartedConnecting</span><span class="symbol">(</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="on-video-session-stopped.html">onVideoSessionStopped</a></h4>
+</td>
+<td>
+<p>Called when the video session has stopped from a started state with the reason
+provided in the status.</p>
+<code><span class="keyword">abstract</span> <span class="keyword">fun </span><span class="identifier">onVideoSessionStopped</span><span class="symbol">(</span><span class="identifier" id="com.amazonaws.services.chime.sdk.meetings.audiovideo.AudioVideoObserver$onVideoSessionStopped(com.amazonaws.services.chime.sdk.meetings.session.MeetingSessionStatus)/sessionStatus">sessionStatus</span><span class="symbol">:</span>&nbsp;<a href="../../com.amazonaws.services.chime.sdk.meetings.session/-meeting-session-status/index.html"><span class="identifier">MeetingSessionStatus</span></a><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code></td>
+</tr>
+</tbody>
+</table>
+</BODY>
+</HTML>

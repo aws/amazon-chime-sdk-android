@@ -1,0 +1,104 @@
+<HTML>
+<HEAD>
+<meta charset="UTF-8">
+<title>DefaultVideoTileController - amazon-chime-sdk</title>
+<link rel="stylesheet" href="../../../style.css">
+</HEAD>
+<BODY>
+<a href="../../index.html">amazon-chime-sdk</a>&nbsp;/&nbsp;<a href="../index.html">com.amazonaws.services.chime.sdk.meetings.audiovideo.video</a>&nbsp;/&nbsp;<a href="./index.html">DefaultVideoTileController</a><br/>
+<br/>
+<h1>DefaultVideoTileController</h1>
+<code><span class="keyword">class </span><span class="identifier">DefaultVideoTileController</span>&nbsp;<span class="symbol">:</span>&nbsp;<a href="../-video-tile-controller/index.html"><span class="identifier">VideoTileController</span></a></code>
+<h3>Constructors</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<h4><a href="-init-.html">&lt;init&gt;</a></h4>
+</td>
+<td>
+<code><span class="identifier">DefaultVideoTileController</span><span class="symbol">(</span><span class="identifier" id="com.amazonaws.services.chime.sdk.meetings.audiovideo.video.DefaultVideoTileController$<init>(com.amazonaws.services.chime.sdk.meetings.utils.logger.Logger, com.amazonaws.services.chime.sdk.meetings.internal.video.VideoClientController, com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoTileFactory)/logger">logger</span><span class="symbol">:</span>&nbsp;<a href="../../com.amazonaws.services.chime.sdk.meetings.utils.logger/-logger/index.html"><span class="identifier">Logger</span></a><span class="symbol">, </span><span class="identifier" id="com.amazonaws.services.chime.sdk.meetings.audiovideo.video.DefaultVideoTileController$<init>(com.amazonaws.services.chime.sdk.meetings.utils.logger.Logger, com.amazonaws.services.chime.sdk.meetings.internal.video.VideoClientController, com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoTileFactory)/videoClientController">videoClientController</span><span class="symbol">:</span>&nbsp;<span class="identifier">VideoClientController</span><span class="symbol">, </span><span class="identifier" id="com.amazonaws.services.chime.sdk.meetings.audiovideo.video.DefaultVideoTileController$<init>(com.amazonaws.services.chime.sdk.meetings.utils.logger.Logger, com.amazonaws.services.chime.sdk.meetings.internal.video.VideoClientController, com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoTileFactory)/videoTileFactory">videoTileFactory</span><span class="symbol">:</span>&nbsp;<a href="../-video-tile-factory/index.html"><span class="identifier">VideoTileFactory</span></a><span class="symbol">)</span></code></td>
+</tr>
+</tbody>
+</table>
+<h3>Functions</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<h4><a href="add-video-tile-observer.html">addVideoTileObserver</a></h4>
+</td>
+<td>
+<p>Subscribe to Video Tile events with an <a href="../-video-tile-observer/index.html">VideoTileObserver</a>.</p>
+<code><span class="keyword">fun </span><span class="identifier">addVideoTileObserver</span><span class="symbol">(</span><span class="identifier" id="com.amazonaws.services.chime.sdk.meetings.audiovideo.video.DefaultVideoTileController$addVideoTileObserver(com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoTileObserver)/observer">observer</span><span class="symbol">:</span>&nbsp;<a href="../-video-tile-observer/index.html"><span class="identifier">VideoTileObserver</span></a><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="bind-video-view.html">bindVideoView</a></h4>
+</td>
+<td>
+<p>Binds the video rendering view to Video Tile. The view will start displaying the video frame
+after the completion of this API.</p>
+<code><span class="keyword">fun </span><span class="identifier">bindVideoView</span><span class="symbol">(</span><span class="identifier" id="com.amazonaws.services.chime.sdk.meetings.audiovideo.video.DefaultVideoTileController$bindVideoView(com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoRenderView, kotlin.Int)/videoView">videoView</span><span class="symbol">:</span>&nbsp;<a href="../-video-render-view/index.html"><span class="identifier">VideoRenderView</span></a><span class="symbol">, </span><span class="identifier" id="com.amazonaws.services.chime.sdk.meetings.audiovideo.video.DefaultVideoTileController$bindVideoView(com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoRenderView, kotlin.Int)/tileId">tileId</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html"><span class="identifier">Int</span></a><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="destroy.html">destroy</a></h4>
+</td>
+<td>
+<p>To destroy anything related to VideoTileController</p>
+<code><span class="keyword">fun </span><span class="identifier">destroy</span><span class="symbol">(</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="initialize.html">initialize</a></h4>
+</td>
+<td>
+<p>To initialize anything related to VideoTileController</p>
+<code><span class="keyword">fun </span><span class="identifier">initialize</span><span class="symbol">(</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="on-receive-frame.html">onReceiveFrame</a></h4>
+</td>
+<td>
+<p>Called whenever there is a new Video frame received for any of the attendee in the meeting</p>
+<code><span class="keyword">fun </span><span class="identifier">onReceiveFrame</span><span class="symbol">(</span><span class="identifier" id="com.amazonaws.services.chime.sdk.meetings.audiovideo.video.DefaultVideoTileController$onReceiveFrame(kotlin.Any, kotlin.String, com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoPauseState, kotlin.Int)/frame">frame</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-any/index.html"><span class="identifier">Any</span></a><span class="symbol">?</span><span class="symbol">, </span><span class="identifier" id="com.amazonaws.services.chime.sdk.meetings.audiovideo.video.DefaultVideoTileController$onReceiveFrame(kotlin.Any, kotlin.String, com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoPauseState, kotlin.Int)/attendeeId">attendeeId</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">?</span><span class="symbol">, </span><span class="identifier" id="com.amazonaws.services.chime.sdk.meetings.audiovideo.video.DefaultVideoTileController$onReceiveFrame(kotlin.Any, kotlin.String, com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoPauseState, kotlin.Int)/pauseState">pauseState</span><span class="symbol">:</span>&nbsp;<a href="../-video-pause-state/index.html"><span class="identifier">VideoPauseState</span></a><span class="symbol">, </span><span class="identifier" id="com.amazonaws.services.chime.sdk.meetings.audiovideo.video.DefaultVideoTileController$onReceiveFrame(kotlin.Any, kotlin.String, com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoPauseState, kotlin.Int)/videoId">videoId</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html"><span class="identifier">Int</span></a><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="pause-remote-video-tile.html">pauseRemoteVideoTile</a></h4>
+</td>
+<td>
+<p>Pauses the specified remote video tile. Ignores the tileId if it belongs to the local video tile.</p>
+<code><span class="keyword">fun </span><span class="identifier">pauseRemoteVideoTile</span><span class="symbol">(</span><span class="identifier" id="com.amazonaws.services.chime.sdk.meetings.audiovideo.video.DefaultVideoTileController$pauseRemoteVideoTile(kotlin.Int)/tileId">tileId</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html"><span class="identifier">Int</span></a><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="remove-video-tile-observer.html">removeVideoTileObserver</a></h4>
+</td>
+<td>
+<p>Unsubscribes from Video Tile events by removing specified <a href="../-video-tile-observer/index.html">VideoTileObserver</a>.</p>
+<code><span class="keyword">fun </span><span class="identifier">removeVideoTileObserver</span><span class="symbol">(</span><span class="identifier" id="com.amazonaws.services.chime.sdk.meetings.audiovideo.video.DefaultVideoTileController$removeVideoTileObserver(com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoTileObserver)/observer">observer</span><span class="symbol">:</span>&nbsp;<a href="../-video-tile-observer/index.html"><span class="identifier">VideoTileObserver</span></a><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="resume-remote-video-tile.html">resumeRemoteVideoTile</a></h4>
+</td>
+<td>
+<p>Resumes the specified remote video tile. Ignores the tileId if it belongs to the local video tile.</p>
+<code><span class="keyword">fun </span><span class="identifier">resumeRemoteVideoTile</span><span class="symbol">(</span><span class="identifier" id="com.amazonaws.services.chime.sdk.meetings.audiovideo.video.DefaultVideoTileController$resumeRemoteVideoTile(kotlin.Int)/tileId">tileId</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html"><span class="identifier">Int</span></a><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="unbind-video-view.html">unbindVideoView</a></h4>
+</td>
+<td>
+<p>Unbinds the video rendering view from Video Tile. The view will stop displaying the video frame
+after the completion of this API.</p>
+<code><span class="keyword">fun </span><span class="identifier">unbindVideoView</span><span class="symbol">(</span><span class="identifier" id="com.amazonaws.services.chime.sdk.meetings.audiovideo.video.DefaultVideoTileController$unbindVideoView(kotlin.Int)/tileId">tileId</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html"><span class="identifier">Int</span></a><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code></td>
+</tr>
+</tbody>
+</table>
+</BODY>
+</HTML>

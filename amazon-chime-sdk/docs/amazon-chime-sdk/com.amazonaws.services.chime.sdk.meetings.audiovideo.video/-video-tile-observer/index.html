@@ -1,0 +1,51 @@
+<HTML>
+<HEAD>
+<meta charset="UTF-8">
+<title>VideoTileObserver - amazon-chime-sdk</title>
+<link rel="stylesheet" href="../../../style.css">
+</HEAD>
+<BODY>
+<a href="../../index.html">amazon-chime-sdk</a>&nbsp;/&nbsp;<a href="../index.html">com.amazonaws.services.chime.sdk.meetings.audiovideo.video</a>&nbsp;/&nbsp;<a href="./index.html">VideoTileObserver</a><br/>
+<br/>
+<h1>VideoTileObserver</h1>
+<code><span class="keyword">interface </span><span class="identifier">VideoTileObserver</span></code>
+<p><a href="./index.html">VideoTileObserver</a> handles events related to <a href="../-video-tile/index.html">VideoTile</a>.</p>
+<h3>Functions</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<h4><a href="on-video-tile-added.html">onVideoTileAdded</a></h4>
+</td>
+<td>
+<p>Called whenever an attendee starts sharing the video.</p>
+<code><span class="keyword">abstract</span> <span class="keyword">fun </span><span class="identifier">onVideoTileAdded</span><span class="symbol">(</span><span class="identifier" id="com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoTileObserver$onVideoTileAdded(com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoTileState)/tileState">tileState</span><span class="symbol">:</span>&nbsp;<a href="../-video-tile-state/index.html"><span class="identifier">VideoTileState</span></a><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="on-video-tile-paused.html">onVideoTilePaused</a></h4>
+</td>
+<td>
+<p>Called whenever an attendee tile pauseState changes from <a href="../-video-pause-state/-unpaused.html">VideoPauseState.Unpaused</a>.</p>
+<code><span class="keyword">abstract</span> <span class="keyword">fun </span><span class="identifier">onVideoTilePaused</span><span class="symbol">(</span><span class="identifier" id="com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoTileObserver$onVideoTilePaused(com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoTileState)/tileState">tileState</span><span class="symbol">:</span>&nbsp;<a href="../-video-tile-state/index.html"><span class="identifier">VideoTileState</span></a><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="on-video-tile-removed.html">onVideoTileRemoved</a></h4>
+</td>
+<td>
+<p>Called whenever any attendee stops sharing the video.</p>
+<code><span class="keyword">abstract</span> <span class="keyword">fun </span><span class="identifier">onVideoTileRemoved</span><span class="symbol">(</span><span class="identifier" id="com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoTileObserver$onVideoTileRemoved(com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoTileState)/tileState">tileState</span><span class="symbol">:</span>&nbsp;<a href="../-video-tile-state/index.html"><span class="identifier">VideoTileState</span></a><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="on-video-tile-resumed.html">onVideoTileResumed</a></h4>
+</td>
+<td>
+<p>Called whenever an attendee tile pauseState changes to <a href="../-video-pause-state/-unpaused.html">VideoPauseState.Unpaused</a>.</p>
+<code><span class="keyword">abstract</span> <span class="keyword">fun </span><span class="identifier">onVideoTileResumed</span><span class="symbol">(</span><span class="identifier" id="com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoTileObserver$onVideoTileResumed(com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoTileState)/tileState">tileState</span><span class="symbol">:</span>&nbsp;<a href="../-video-tile-state/index.html"><span class="identifier">VideoTileState</span></a><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code></td>
+</tr>
+</tbody>
+</table>
+</BODY>
+</HTML>

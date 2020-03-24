@@ -1,0 +1,56 @@
+<HTML>
+<HEAD>
+<meta charset="UTF-8">
+<title>ActiveSpeakerDetectorFacade - amazon-chime-sdk</title>
+<link rel="stylesheet" href="../../../style.css">
+</HEAD>
+<BODY>
+<a href="../../index.html">amazon-chime-sdk</a>&nbsp;/&nbsp;<a href="../index.html">com.amazonaws.services.chime.sdk.meetings.audiovideo.audio.activespeakerdetector</a>&nbsp;/&nbsp;<a href="./index.html">ActiveSpeakerDetectorFacade</a><br/>
+<br/>
+<h1>ActiveSpeakerDetectorFacade</h1>
+<code><span class="keyword">interface </span><span class="identifier">ActiveSpeakerDetectorFacade</span></code>
+<p><a href="./index.html">ActiveSpeakerDetectorFacade</a> provides API calls to add and remove
+active speaker observers.</p>
+<h3>Functions</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<h4><a href="add-active-speaker-observer.html">addActiveSpeakerObserver</a></h4>
+</td>
+<td>
+<p>Adds an active speaker observer along with a policy to calculate active speaker scores</p>
+<code><span class="keyword">abstract</span> <span class="keyword">fun </span><span class="identifier">addActiveSpeakerObserver</span><span class="symbol">(</span><span class="identifier" id="com.amazonaws.services.chime.sdk.meetings.audiovideo.audio.activespeakerdetector.ActiveSpeakerDetectorFacade$addActiveSpeakerObserver(com.amazonaws.services.chime.sdk.meetings.audiovideo.audio.activespeakerpolicy.ActiveSpeakerPolicy, com.amazonaws.services.chime.sdk.meetings.audiovideo.audio.activespeakerdetector.ActiveSpeakerObserver)/policy">policy</span><span class="symbol">:</span>&nbsp;<a href="../../com.amazonaws.services.chime.sdk.meetings.audiovideo.audio.activespeakerpolicy/-active-speaker-policy/index.html"><span class="identifier">ActiveSpeakerPolicy</span></a><span class="symbol">, </span><span class="identifier" id="com.amazonaws.services.chime.sdk.meetings.audiovideo.audio.activespeakerdetector.ActiveSpeakerDetectorFacade$addActiveSpeakerObserver(com.amazonaws.services.chime.sdk.meetings.audiovideo.audio.activespeakerpolicy.ActiveSpeakerPolicy, com.amazonaws.services.chime.sdk.meetings.audiovideo.audio.activespeakerdetector.ActiveSpeakerObserver)/observer">observer</span><span class="symbol">:</span>&nbsp;<a href="../-active-speaker-observer/index.html"><span class="identifier">ActiveSpeakerObserver</span></a><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="remove-active-speaker-observer.html">removeActiveSpeakerObserver</a></h4>
+</td>
+<td>
+<p>Removes an active speaker observer.</p>
+<code><span class="keyword">abstract</span> <span class="keyword">fun </span><span class="identifier">removeActiveSpeakerObserver</span><span class="symbol">(</span><span class="identifier" id="com.amazonaws.services.chime.sdk.meetings.audiovideo.audio.activespeakerdetector.ActiveSpeakerDetectorFacade$removeActiveSpeakerObserver(com.amazonaws.services.chime.sdk.meetings.audiovideo.audio.activespeakerdetector.ActiveSpeakerObserver)/observer">observer</span><span class="symbol">:</span>&nbsp;<a href="../-active-speaker-observer/index.html"><span class="identifier">ActiveSpeakerObserver</span></a><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code></td>
+</tr>
+</tbody>
+</table>
+<h3>Inheritors</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<h4><a href="../../com.amazonaws.services.chime.sdk.meetings.audiovideo/-audio-video-facade.html">AudioVideoFacade</a></h4>
+</td>
+<td>
+<code><span class="keyword">interface </span><span class="identifier">AudioVideoFacade</span>&nbsp;<span class="symbol">:</span>&nbsp;<a href="../../com.amazonaws.services.chime.sdk.meetings.audiovideo/-audio-video-controller-facade/index.html"><span class="identifier">AudioVideoControllerFacade</span></a><span class="symbol">, </span><a href="../../com.amazonaws.services.chime.sdk.meetings.realtime/-realtime-controller-facade/index.html"><span class="identifier">RealtimeControllerFacade</span></a><span class="symbol">, </span><a href="../../com.amazonaws.services.chime.sdk.meetings.device/-device-controller/index.html"><span class="identifier">DeviceController</span></a><span class="symbol">, </span><a href="../../com.amazonaws.services.chime.sdk.meetings.audiovideo.video/-video-tile-controller-facade/index.html"><span class="identifier">VideoTileControllerFacade</span></a><span class="symbol">, </span><a href="./index.html"><span class="identifier">ActiveSpeakerDetectorFacade</span></a></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="../-default-active-speaker-detector/index.html">DefaultActiveSpeakerDetector</a></h4>
+</td>
+<td>
+<p><a href="../-default-active-speaker-detector/index.html">DefaultActiveSpeakerDetector</a> A default implementation of the Active Speaker Detector</p>
+<code><span class="keyword">class </span><span class="identifier">DefaultActiveSpeakerDetector</span>&nbsp;<span class="symbol">:</span>&nbsp;<a href="./index.html"><span class="identifier">ActiveSpeakerDetectorFacade</span></a><span class="symbol">, </span><a href="../../com.amazonaws.services.chime.sdk.meetings.realtime/-realtime-observer/index.html"><span class="identifier">RealtimeObserver</span></a></code></td>
+</tr>
+</tbody>
+</table>
+</BODY>
+</HTML>

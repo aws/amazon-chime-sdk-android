@@ -1,0 +1,20 @@
+<HTML>
+<HEAD>
+<meta charset="UTF-8">
+<title>ActiveSpeakerObserver.onActiveSpeakerScoreChanged - amazon-chime-sdk</title>
+<link rel="stylesheet" href="../../../style.css">
+</HEAD>
+<BODY>
+<a href="../../index.html">amazon-chime-sdk</a>&nbsp;/&nbsp;<a href="../index.html">com.amazonaws.services.chime.sdk.meetings.audiovideo.audio.activespeakerdetector</a>&nbsp;/&nbsp;<a href="index.html">ActiveSpeakerObserver</a>&nbsp;/&nbsp;<a href="./on-active-speaker-score-changed.html">onActiveSpeakerScoreChanged</a><br/>
+<br/>
+<h1>onActiveSpeakerScoreChanged</h1>
+<a name="com.amazonaws.services.chime.sdk.meetings.audiovideo.audio.activespeakerdetector.ActiveSpeakerObserver$onActiveSpeakerScoreChanged(kotlin.collections.Map((com.amazonaws.services.chime.sdk.meetings.audiovideo.AttendeeInfo, kotlin.Double)))"></a>
+<code><span class="keyword">abstract</span> <span class="keyword">fun </span><span class="identifier">onActiveSpeakerScoreChanged</span><span class="symbol">(</span><span class="identifier" id="com.amazonaws.services.chime.sdk.meetings.audiovideo.audio.activespeakerdetector.ActiveSpeakerObserver$onActiveSpeakerScoreChanged(kotlin.collections.Map((com.amazonaws.services.chime.sdk.meetings.audiovideo.AttendeeInfo, kotlin.Double)))/scores">scores</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-map/index.html"><span class="identifier">Map</span></a><span class="symbol">&lt;</span><a href="../../com.amazonaws.services.chime.sdk.meetings.audiovideo/-attendee-info/index.html"><span class="identifier">AttendeeInfo</span></a><span class="symbol">,</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-double/index.html"><span class="identifier">Double</span></a><span class="symbol">&gt;</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code>
+<p>Periodically sends active speaker scores to observers ONLY IF
+scoreCallbackIntervalMs is not null</p>
+<h3>Parameters</h3>
+<p><a name="scores"></a>
+<code>scores</code> - : Map&lt;<a href="../../com.amazonaws.services.chime.sdk.meetings.audiovideo/-attendee-info/index.html">AttendeeInfo</a>, Double&gt; - Map of active speakers to respective scores.
+Scores of 0 mean the attendee is not an active speaker.</p>
+</BODY>
+</HTML>

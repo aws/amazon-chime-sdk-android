@@ -1,0 +1,114 @@
+<HTML>
+<HEAD>
+<meta charset="UTF-8">
+<title>DefaultActiveSpeakerDetector - amazon-chime-sdk</title>
+<link rel="stylesheet" href="../../../style.css">
+</HEAD>
+<BODY>
+<a href="../../index.html">amazon-chime-sdk</a>&nbsp;/&nbsp;<a href="../index.html">com.amazonaws.services.chime.sdk.meetings.audiovideo.audio.activespeakerdetector</a>&nbsp;/&nbsp;<a href="./index.html">DefaultActiveSpeakerDetector</a><br/>
+<br/>
+<h1>DefaultActiveSpeakerDetector</h1>
+<code><span class="keyword">class </span><span class="identifier">DefaultActiveSpeakerDetector</span>&nbsp;<span class="symbol">:</span>&nbsp;<a href="../-active-speaker-detector-facade/index.html"><span class="identifier">ActiveSpeakerDetectorFacade</span></a><span class="symbol">, </span><a href="../../com.amazonaws.services.chime.sdk.meetings.realtime/-realtime-observer/index.html"><span class="identifier">RealtimeObserver</span></a></code>
+<p><a href="./index.html">DefaultActiveSpeakerDetector</a> A default implementation of the Active Speaker Detector</p>
+<h3>Parameters</h3>
+<p><a name="audioClientObserver"></a>
+<code>audioClientObserver</code> - : <a href="#">AudioClientObserver</a> - Needed to subscribe the detector
+to real time events like volume change, attendee mute and attendee unmute</p>
+<h3>Constructors</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<h4><a href="-init-.html">&lt;init&gt;</a></h4>
+</td>
+<td>
+<p><a href="./index.html">DefaultActiveSpeakerDetector</a> A default implementation of the Active Speaker Detector</p>
+<code><span class="identifier">DefaultActiveSpeakerDetector</span><span class="symbol">(</span><span class="identifier" id="com.amazonaws.services.chime.sdk.meetings.audiovideo.audio.activespeakerdetector.DefaultActiveSpeakerDetector$<init>(com.amazonaws.services.chime.sdk.meetings.internal.audio.AudioClientObserver)/audioClientObserver">audioClientObserver</span><span class="symbol">:</span>&nbsp;<span class="identifier">AudioClientObserver</span><span class="symbol">)</span></code></td>
+</tr>
+</tbody>
+</table>
+<h3>Properties</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<h4><a href="audio-client-observer.html">audioClientObserver</a></h4>
+</td>
+<td>
+<p>: <a href="#">AudioClientObserver</a> - Needed to subscribe the detector
+to real time events like volume change, attendee mute and attendee unmute</p>
+<code><span class="keyword">val </span><span class="identifier">audioClientObserver</span><span class="symbol">: </span><span class="identifier">AudioClientObserver</span></code></td>
+</tr>
+</tbody>
+</table>
+<h3>Functions</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<h4><a href="add-active-speaker-observer.html">addActiveSpeakerObserver</a></h4>
+</td>
+<td>
+<p>Adds an active speaker observer along with a policy to calculate active speaker scores</p>
+<code><span class="keyword">fun </span><span class="identifier">addActiveSpeakerObserver</span><span class="symbol">(</span><span class="identifier" id="com.amazonaws.services.chime.sdk.meetings.audiovideo.audio.activespeakerdetector.DefaultActiveSpeakerDetector$addActiveSpeakerObserver(com.amazonaws.services.chime.sdk.meetings.audiovideo.audio.activespeakerpolicy.ActiveSpeakerPolicy, com.amazonaws.services.chime.sdk.meetings.audiovideo.audio.activespeakerdetector.ActiveSpeakerObserver)/policy">policy</span><span class="symbol">:</span>&nbsp;<a href="../../com.amazonaws.services.chime.sdk.meetings.audiovideo.audio.activespeakerpolicy/-active-speaker-policy/index.html"><span class="identifier">ActiveSpeakerPolicy</span></a><span class="symbol">, </span><span class="identifier" id="com.amazonaws.services.chime.sdk.meetings.audiovideo.audio.activespeakerdetector.DefaultActiveSpeakerDetector$addActiveSpeakerObserver(com.amazonaws.services.chime.sdk.meetings.audiovideo.audio.activespeakerpolicy.ActiveSpeakerPolicy, com.amazonaws.services.chime.sdk.meetings.audiovideo.audio.activespeakerdetector.ActiveSpeakerObserver)/observer">observer</span><span class="symbol">:</span>&nbsp;<a href="../-active-speaker-observer/index.html"><span class="identifier">ActiveSpeakerObserver</span></a><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="on-attendees-joined.html">onAttendeesJoined</a></h4>
+</td>
+<td>
+<p>Handles attendee(s) being added.</p>
+<code><span class="keyword">fun </span><span class="identifier">onAttendeesJoined</span><span class="symbol">(</span><span class="identifier" id="com.amazonaws.services.chime.sdk.meetings.audiovideo.audio.activespeakerdetector.DefaultActiveSpeakerDetector$onAttendeesJoined(kotlin.Array((com.amazonaws.services.chime.sdk.meetings.audiovideo.AttendeeInfo)))/attendeeInfo">attendeeInfo</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-array/index.html"><span class="identifier">Array</span></a><span class="symbol">&lt;</span><a href="../../com.amazonaws.services.chime.sdk.meetings.audiovideo/-attendee-info/index.html"><span class="identifier">AttendeeInfo</span></a><span class="symbol">&gt;</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="on-attendees-left.html">onAttendeesLeft</a></h4>
+</td>
+<td>
+<p>Handles attendee(s) being removed.</p>
+<code><span class="keyword">fun </span><span class="identifier">onAttendeesLeft</span><span class="symbol">(</span><span class="identifier" id="com.amazonaws.services.chime.sdk.meetings.audiovideo.audio.activespeakerdetector.DefaultActiveSpeakerDetector$onAttendeesLeft(kotlin.Array((com.amazonaws.services.chime.sdk.meetings.audiovideo.AttendeeInfo)))/attendeeInfo">attendeeInfo</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-array/index.html"><span class="identifier">Array</span></a><span class="symbol">&lt;</span><a href="../../com.amazonaws.services.chime.sdk.meetings.audiovideo/-attendee-info/index.html"><span class="identifier">AttendeeInfo</span></a><span class="symbol">&gt;</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="on-attendees-muted.html">onAttendeesMuted</a></h4>
+</td>
+<td>
+<p>Handles attendee(s) whose <a href="../../com.amazonaws.services.chime.sdk.meetings.audiovideo/-volume-level/index.html">VolumeLevel</a> has changed to muted.</p>
+<code><span class="keyword">fun </span><span class="identifier">onAttendeesMuted</span><span class="symbol">(</span><span class="identifier" id="com.amazonaws.services.chime.sdk.meetings.audiovideo.audio.activespeakerdetector.DefaultActiveSpeakerDetector$onAttendeesMuted(kotlin.Array((com.amazonaws.services.chime.sdk.meetings.audiovideo.AttendeeInfo)))/attendeeInfo">attendeeInfo</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-array/index.html"><span class="identifier">Array</span></a><span class="symbol">&lt;</span><a href="../../com.amazonaws.services.chime.sdk.meetings.audiovideo/-attendee-info/index.html"><span class="identifier">AttendeeInfo</span></a><span class="symbol">&gt;</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="on-attendees-unmuted.html">onAttendeesUnmuted</a></h4>
+</td>
+<td>
+<p>Handles attendee(s) whose <a href="../../com.amazonaws.services.chime.sdk.meetings.audiovideo/-volume-level/index.html">VolumeLevel</a> has changed from muted.</p>
+<code><span class="keyword">fun </span><span class="identifier">onAttendeesUnmuted</span><span class="symbol">(</span><span class="identifier" id="com.amazonaws.services.chime.sdk.meetings.audiovideo.audio.activespeakerdetector.DefaultActiveSpeakerDetector$onAttendeesUnmuted(kotlin.Array((com.amazonaws.services.chime.sdk.meetings.audiovideo.AttendeeInfo)))/attendeeInfo">attendeeInfo</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-array/index.html"><span class="identifier">Array</span></a><span class="symbol">&lt;</span><a href="../../com.amazonaws.services.chime.sdk.meetings.audiovideo/-attendee-info/index.html"><span class="identifier">AttendeeInfo</span></a><span class="symbol">&gt;</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="on-signal-strength-changed.html">onSignalStrengthChanged</a></h4>
+</td>
+<td>
+<p>Handles signal strength changes for attendees whose <a href="../../com.amazonaws.services.chime.sdk.meetings.audiovideo/-signal-strength/index.html">SignalStrength</a> has changed.</p>
+<code><span class="keyword">fun </span><span class="identifier">onSignalStrengthChanged</span><span class="symbol">(</span><span class="identifier" id="com.amazonaws.services.chime.sdk.meetings.audiovideo.audio.activespeakerdetector.DefaultActiveSpeakerDetector$onSignalStrengthChanged(kotlin.Array((com.amazonaws.services.chime.sdk.meetings.audiovideo.SignalUpdate)))/signalUpdates">signalUpdates</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-array/index.html"><span class="identifier">Array</span></a><span class="symbol">&lt;</span><a href="../../com.amazonaws.services.chime.sdk.meetings.audiovideo/-signal-update/index.html"><span class="identifier">SignalUpdate</span></a><span class="symbol">&gt;</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="on-volume-changed.html">onVolumeChanged</a></h4>
+</td>
+<td>
+<p>Handles volume changes for attendees whose <a href="../../com.amazonaws.services.chime.sdk.meetings.audiovideo/-volume-level/index.html">VolumeLevel</a> has changed.</p>
+<code><span class="keyword">fun </span><span class="identifier">onVolumeChanged</span><span class="symbol">(</span><span class="identifier" id="com.amazonaws.services.chime.sdk.meetings.audiovideo.audio.activespeakerdetector.DefaultActiveSpeakerDetector$onVolumeChanged(kotlin.Array((com.amazonaws.services.chime.sdk.meetings.audiovideo.VolumeUpdate)))/volumeUpdates">volumeUpdates</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-array/index.html"><span class="identifier">Array</span></a><span class="symbol">&lt;</span><a href="../../com.amazonaws.services.chime.sdk.meetings.audiovideo/-volume-update/index.html"><span class="identifier">VolumeUpdate</span></a><span class="symbol">&gt;</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="remove-active-speaker-observer.html">removeActiveSpeakerObserver</a></h4>
+</td>
+<td>
+<p>Removes an active speaker observer.</p>
+<code><span class="keyword">fun </span><span class="identifier">removeActiveSpeakerObserver</span><span class="symbol">(</span><span class="identifier" id="com.amazonaws.services.chime.sdk.meetings.audiovideo.audio.activespeakerdetector.DefaultActiveSpeakerDetector$removeActiveSpeakerObserver(com.amazonaws.services.chime.sdk.meetings.audiovideo.audio.activespeakerdetector.ActiveSpeakerObserver)/observer">observer</span><span class="symbol">:</span>&nbsp;<a href="../-active-speaker-observer/index.html"><span class="identifier">ActiveSpeakerObserver</span></a><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code></td>
+</tr>
+</tbody>
+</table>
+</BODY>
+</HTML>
