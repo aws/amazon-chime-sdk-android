@@ -95,25 +95,23 @@ audioVideo.removeAudioVideoObserver(AudioVideoObserver)
 A class implementing `AudioVideoObserver` would need to implement the following:
 
 ```
-onAudioClientConnecting(reconnecting: Boolean)
+onAudioSessionStartedConnecting(reconnecting: Boolean)
 
-onAudioClientStart(reconnecting: Boolean)
+onAudioSessionStarted(reconnecting: Boolean)
 
-onAudioClientStop(sessionStatus: MeetingSessionStatus)
+onAudioSessionStopped(sessionStatus: MeetingSessionStatus)
 
-onAudioClientReconnectionCancel()
+onAudioSessionCancelledReconnect()
 
-onConnectionRecover()
+onConnectionRecovered()
 
-onConnectionBecomePoor()
+onConnectionBecamePoor()
 
-onVideoClientConnecting()
+onVideoSessionStartedConnecting()
 
-onVideoClientStart()
+onVideoSessionStarted(sessionStatus: MeetingSessionStatus)
 
-onVideoClientStop(sessionStatus: MeetingSessionStatus)
-
-onVideoClientError(sessionStatus: MeetingSessionStatus)
+onVideoSessionStopped(sessionStatus: MeetingSessionStatus)
 ```
 
 To Mute:
@@ -138,17 +136,17 @@ audioVideo.removeRealtimeObserver(RealtimeObserver)
 A class implementing `RealtimeObserver` would need to implement the following:
 
 ```
-onVolumeChange(volumeUpdates: Array<VolumeUpdate>)
+onVolumeChanged(volumeUpdates: Array<VolumeUpdate>)
 
-onSignalStrengthChange(signalUpdates: Array<SignalUpdate>)
+onSignalStrengthChanged(signalUpdates: Array<SignalUpdate>)
 
-onAttendeesJoin(attendeeInfo: Array<AttendeeInfo>)
+onAttendeesJoined(attendeeInfo: Array<AttendeeInfo>)
 
-onAttendeesLeave(attendeeInfo: Array<AttendeeInfo>)
+onAttendeesLeft(attendeeInfo: Array<AttendeeInfo>)
 
-onAttendeesMute(attendeeInfo: Array<AttendeeInfo>)
+onAttendeesMuted(attendeeInfo: Array<AttendeeInfo>)
 
-onAttendeesUnmute(attendeeInfo: Array<AttendeeInfo>)
+onAttendeesUnmuted(attendeeInfo: Array<AttendeeInfo>)
 ```
 
 VolumeLevel is an enum with the following values: `Muted`, `NotSpeaking`, `Low`, `Medium`, `High`
@@ -164,9 +162,9 @@ A class implementing `ActiveSpeakerObserver` would need to implement the followi
 ```
 val scoreCallbackIntervalMs: Int?
 
-onActiveSpeakerDetect(attendeeInfo: Array<AttendeeInfo>)
+onActiveSpeakerDetected(attendeeInfo: Array<AttendeeInfo>)
 
-onActiveSpeakerScoreChange(scores: Map<AttendeeInfo, Double>)
+onActiveSpeakerScoreChanged(scores: Map<AttendeeInfo, Double>)
 ```
 
 You can also define a logic to determine who are the active speakers by implementing `ActiveSpeakerPolicy` or use the default implementation `DefaultActiveSpeakerPolicy`. 
@@ -199,7 +197,7 @@ audioVideo.removeDeviceChangeObserver(DeviceChangeObserver)
 A class implementing `DeviceChangeObserver` would need to implement the following:
 
 ```
-onAudioDeviceChange(freshAudioDeviceList: List<MediaDevice>)
+onAudioDeviceChanged(freshAudioDeviceList: List<MediaDevice>)
 ```
 
 ##### Metrics
@@ -214,7 +212,7 @@ audioVideo.removeMetricsObserver(MetricsObserver)
 
 A class implementing `MetricsObserver` would need to implement the following:
 ```
-onMetricsReceive(metrics: Map<ObservableMetric, Any>)
+onMetricsReceived(metrics: Map<ObservableMetric, Any>)
 ```
 
 ##### Video
@@ -259,13 +257,13 @@ audioVideo.removeVideoTileObserver(VideoTileObserver)
 
 A class implementing VideoTileObserver would need to implement the following:
 ```
-onAddVideoTile(tileState: VideoTileState)
+onVideoTileAdded(tileState: VideoTileState)
 
-onRemoveVideoTile(tileState: VideoTileState)
+onVideoTileRemoved(tileState: VideoTileState)
 
-onPauseVideoTile(tileState: VideoTileState)
+onVideoTilePaused(tileState: VideoTileState)
 
-onResumeVideoTile(tileState: VideoTileState)
+onVideoTileResumed(tileState: VideoTileState)
 ```
 
 To bind views to video tiles:
