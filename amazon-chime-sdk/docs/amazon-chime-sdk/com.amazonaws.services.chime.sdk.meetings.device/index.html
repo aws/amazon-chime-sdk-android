@@ -1,0 +1,60 @@
+<HTML>
+<HEAD>
+<meta charset="UTF-8">
+<title>com.amazonaws.services.chime.sdk.meetings.device - amazon-chime-sdk</title>
+<link rel="stylesheet" href="../../style.css">
+</HEAD>
+<BODY>
+<a href="../index.html">amazon-chime-sdk</a>&nbsp;/&nbsp;<a href="./index.html">com.amazonaws.services.chime.sdk.meetings.device</a><br/>
+<br/>
+<h2>Package com.amazonaws.services.chime.sdk.meetings.device</h2>
+<h3>Types</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<h4><a href="-default-device-controller/index.html">DefaultDeviceController</a></h4>
+</td>
+<td>
+<code><span class="keyword">class </span><span class="identifier">DefaultDeviceController</span>&nbsp;<span class="symbol">:</span>&nbsp;<a href="-device-controller/index.html"><span class="identifier">DeviceController</span></a></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="-device-change-observer/index.html">DeviceChangeObserver</a></h4>
+</td>
+<td>
+<p><a href="-device-change-observer/index.html">DeviceChangeObserver</a> listens audio device changes.</p>
+<code><span class="keyword">interface </span><span class="identifier">DeviceChangeObserver</span></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="-device-controller/index.html">DeviceController</a></h4>
+</td>
+<td>
+<p><a href="-device-controller/index.html">DeviceController</a> keeps track of the devices being used for audio device
+(e.g. built-in speaker), video input (e.g. camera)).
+The list functions return <a href="-media-device/index.html">MediaDevice</a> objects.
+Changes in device availability are broadcast to any registered
+<a href="-device-change-observer/index.html">DeviceChangeObserver</a>.</p>
+<code><span class="keyword">interface </span><span class="identifier">DeviceController</span></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="-media-device/index.html">MediaDevice</a></h4>
+</td>
+<td>
+<p>Media device with its info.</p>
+<code><span class="keyword">data</span> <span class="keyword">class </span><span class="identifier">MediaDevice</span></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="-media-device-type/index.html">MediaDeviceType</a></h4>
+</td>
+<td>
+<p>The media device's type (Ex: video front camera, video rear camera, audio bluetooth)</p>
+<code><span class="keyword">enum</span> <span class="keyword">class </span><span class="identifier">MediaDeviceType</span></code></td>
+</tr>
+</tbody>
+</table>
+</BODY>
+</HTML>

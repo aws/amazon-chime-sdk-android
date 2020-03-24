@@ -1,0 +1,90 @@
+<HTML>
+<HEAD>
+<meta charset="UTF-8">
+<title>DeviceController - amazon-chime-sdk</title>
+<link rel="stylesheet" href="../../../style.css">
+</HEAD>
+<BODY>
+<a href="../../index.html">amazon-chime-sdk</a>&nbsp;/&nbsp;<a href="../index.html">com.amazonaws.services.chime.sdk.meetings.device</a>&nbsp;/&nbsp;<a href="./index.html">DeviceController</a><br/>
+<br/>
+<h1>DeviceController</h1>
+<code><span class="keyword">interface </span><span class="identifier">DeviceController</span></code>
+<p><a href="./index.html">DeviceController</a> keeps track of the devices being used for audio device
+(e.g. built-in speaker), video input (e.g. camera)).
+The list functions return <a href="../-media-device/index.html">MediaDevice</a> objects.
+Changes in device availability are broadcast to any registered
+<a href="../-device-change-observer/index.html">DeviceChangeObserver</a>.</p>
+<h3>Functions</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<h4><a href="add-device-change-observer.html">addDeviceChangeObserver</a></h4>
+</td>
+<td>
+<p>Adds an observer to receive callbacks about device changes.</p>
+<code><span class="keyword">abstract</span> <span class="keyword">fun </span><span class="identifier">addDeviceChangeObserver</span><span class="symbol">(</span><span class="identifier" id="com.amazonaws.services.chime.sdk.meetings.device.DeviceController$addDeviceChangeObserver(com.amazonaws.services.chime.sdk.meetings.device.DeviceChangeObserver)/observer">observer</span><span class="symbol">:</span>&nbsp;<a href="../-device-change-observer/index.html"><span class="identifier">DeviceChangeObserver</span></a><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="choose-audio-device.html">chooseAudioDevice</a></h4>
+</td>
+<td>
+<p>Selects an audio device to use.</p>
+<code><span class="keyword">abstract</span> <span class="keyword">fun </span><span class="identifier">chooseAudioDevice</span><span class="symbol">(</span><span class="identifier" id="com.amazonaws.services.chime.sdk.meetings.device.DeviceController$chooseAudioDevice(com.amazonaws.services.chime.sdk.meetings.device.MediaDevice)/mediaDevice">mediaDevice</span><span class="symbol">:</span>&nbsp;<a href="../-media-device/index.html"><span class="identifier">MediaDevice</span></a><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="get-active-camera.html">getActiveCamera</a></h4>
+</td>
+<td>
+<p>Get the active local camera in the meeting, return null if there isn't any.</p>
+<code><span class="keyword">abstract</span> <span class="keyword">fun </span><span class="identifier">getActiveCamera</span><span class="symbol">(</span><span class="symbol">)</span><span class="symbol">: </span><a href="../-media-device/index.html"><span class="identifier">MediaDevice</span></a><span class="symbol">?</span></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="list-audio-devices.html">listAudioDevices</a></h4>
+</td>
+<td>
+<p>Lists currently available audio devices.</p>
+<code><span class="keyword">abstract</span> <span class="keyword">fun </span><span class="identifier">listAudioDevices</span><span class="symbol">(</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/index.html"><span class="identifier">List</span></a><span class="symbol">&lt;</span><a href="../-media-device/index.html"><span class="identifier">MediaDevice</span></a><span class="symbol">&gt;</span></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="remove-device-change-observer.html">removeDeviceChangeObserver</a></h4>
+</td>
+<td>
+<p>Removes an observer to stop receiving callbacks about device changes.</p>
+<code><span class="keyword">abstract</span> <span class="keyword">fun </span><span class="identifier">removeDeviceChangeObserver</span><span class="symbol">(</span><span class="identifier" id="com.amazonaws.services.chime.sdk.meetings.device.DeviceController$removeDeviceChangeObserver(com.amazonaws.services.chime.sdk.meetings.device.DeviceChangeObserver)/observer">observer</span><span class="symbol">:</span>&nbsp;<a href="../-device-change-observer/index.html"><span class="identifier">DeviceChangeObserver</span></a><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="switch-camera.html">switchCamera</a></h4>
+</td>
+<td>
+<p>Switch between front and back camera in the meeting.</p>
+<code><span class="keyword">abstract</span> <span class="keyword">fun </span><span class="identifier">switchCamera</span><span class="symbol">(</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code></td>
+</tr>
+</tbody>
+</table>
+<h3>Inheritors</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<h4><a href="../../com.amazonaws.services.chime.sdk.meetings.audiovideo/-audio-video-facade.html">AudioVideoFacade</a></h4>
+</td>
+<td>
+<code><span class="keyword">interface </span><span class="identifier">AudioVideoFacade</span>&nbsp;<span class="symbol">:</span>&nbsp;<a href="../../com.amazonaws.services.chime.sdk.meetings.audiovideo/-audio-video-controller-facade/index.html"><span class="identifier">AudioVideoControllerFacade</span></a><span class="symbol">, </span><a href="../../com.amazonaws.services.chime.sdk.meetings.realtime/-realtime-controller-facade/index.html"><span class="identifier">RealtimeControllerFacade</span></a><span class="symbol">, </span><a href="./index.html"><span class="identifier">DeviceController</span></a><span class="symbol">, </span><a href="../../com.amazonaws.services.chime.sdk.meetings.audiovideo.video/-video-tile-controller-facade/index.html"><span class="identifier">VideoTileControllerFacade</span></a><span class="symbol">, </span><a href="../../com.amazonaws.services.chime.sdk.meetings.audiovideo.audio.activespeakerdetector/-active-speaker-detector-facade/index.html"><span class="identifier">ActiveSpeakerDetectorFacade</span></a></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="../-default-device-controller/index.html">DefaultDeviceController</a></h4>
+</td>
+<td>
+<code><span class="keyword">class </span><span class="identifier">DefaultDeviceController</span>&nbsp;<span class="symbol">:</span>&nbsp;<a href="./index.html"><span class="identifier">DeviceController</span></a></code></td>
+</tr>
+</tbody>
+</table>
+</BODY>
+</HTML>

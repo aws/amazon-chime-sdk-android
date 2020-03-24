@@ -1,0 +1,12 @@
+$dokka.format:html
+$dokka.linkExtension:html
+
+com.amazonaws.services.chime.sdk.meetings.audiovideo
+com.amazonaws.services.chime.sdk.meetings.audiovideo.audio.activespeakerdetector
+com.amazonaws.services.chime.sdk.meetings.audiovideo.audio.activespeakerpolicy
+com.amazonaws.services.chime.sdk.meetings.audiovideo.metric
+com.amazonaws.services.chime.sdk.meetings.audiovideo.video
+com.amazonaws.services.chime.sdk.meetings.device
+com.amazonaws.services.chime.sdk.meetings.realtime
+com.amazonaws.services.chime.sdk.meetings.session
+com.amazonaws.services.chime.sdk.meetings.utils.logger

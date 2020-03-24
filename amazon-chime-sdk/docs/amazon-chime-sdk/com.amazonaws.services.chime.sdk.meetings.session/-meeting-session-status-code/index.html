@@ -1,0 +1,158 @@
+<HTML>
+<HEAD>
+<meta charset="UTF-8">
+<title>MeetingSessionStatusCode - amazon-chime-sdk</title>
+<link rel="stylesheet" href="../../../style.css">
+</HEAD>
+<BODY>
+<a href="../../index.html">amazon-chime-sdk</a>&nbsp;/&nbsp;<a href="../index.html">com.amazonaws.services.chime.sdk.meetings.session</a>&nbsp;/&nbsp;<a href="./index.html">MeetingSessionStatusCode</a><br/>
+<br/>
+<h1>MeetingSessionStatusCode</h1>
+<code><span class="keyword">enum</span> <span class="keyword">class </span><span class="identifier">MeetingSessionStatusCode</span></code>
+<p><a href="./index.html">MeetingSessionStatusCode</a> provides additional details for the <a href="../-meeting-session-status/index.html">MeetingSessionStatus</a>
+received for a session.</p>
+<h3>Enum Values</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<h4><a href="-o-k.html">OK</a></h4>
+</td>
+<td>
+<p>Everything is OK so far.</p>
+</td>
+</tr>
+<tr>
+<td>
+<h4><a href="-left.html">Left</a></h4>
+</td>
+<td>
+<p>The attendee left the meeting normally.</p>
+</td>
+</tr>
+<tr>
+<td>
+<h4><a href="-audio-joined-from-another-device.html">AudioJoinedFromAnotherDevice</a></h4>
+</td>
+<td>
+<p>The attendee joined from another device.</p>
+</td>
+</tr>
+<tr>
+<td>
+<h4><a href="-audio-disconnect-audio.html">AudioDisconnectAudio</a></h4>
+</td>
+<td>
+<p>The attendee should explicitly switch itself from joined with audio to
+checked-in.</p>
+</td>
+</tr>
+<tr>
+<td>
+<h4><a href="-audio-authentication-rejected.html">AudioAuthenticationRejected</a></h4>
+</td>
+<td>
+<p>Authentication was rejected. The client is not allowed on this call.</p>
+</td>
+</tr>
+<tr>
+<td>
+<h4><a href="-audio-call-at-capacity.html">AudioCallAtCapacity</a></h4>
+</td>
+<td>
+<p>The client can not join because the call is at capacity.</p>
+</td>
+</tr>
+<tr>
+<td>
+<h4><a href="-audio-call-ended.html">AudioCallEnded</a></h4>
+</td>
+<td>
+<p>The call was ended.</p>
+</td>
+</tr>
+<tr>
+<td>
+<h4><a href="-audio-internal-server-error.html">AudioInternalServerError</a></h4>
+</td>
+<td>
+<p>There was an internal server error with the audio leg.</p>
+</td>
+</tr>
+<tr>
+<td>
+<h4><a href="-audio-service-unavailable.html">AudioServiceUnavailable</a></h4>
+</td>
+<td>
+<p>Could not connect the audio leg due to the service being unavailable.</p>
+</td>
+</tr>
+<tr>
+<td>
+<h4><a href="-audio-disconnected.html">AudioDisconnected</a></h4>
+</td>
+<td>
+<p>The audio leg failed.</p>
+</td>
+</tr>
+<tr>
+<td>
+<h4><a href="-connection-health-reconnect.html">ConnectionHealthReconnect</a></h4>
+</td>
+<td>
+<p>Due to connection health, a reconnect has been triggered.</p>
+</td>
+</tr>
+<tr>
+<td>
+<h4><a href="-network-became-poor.html">NetworkBecamePoor</a></h4>
+</td>
+<td>
+<p>The network has become poor and is no longer good enough for VoIP.</p>
+</td>
+</tr>
+<tr>
+<td>
+<h4><a href="-video-service-failed.html">VideoServiceFailed</a></h4>
+</td>
+<td>
+<p>Video Client Failed.</p>
+</td>
+</tr>
+<tr>
+<td>
+<h4><a href="-video-at-capacity-view-only.html">VideoAtCapacityViewOnly</a></h4>
+</td>
+<td>
+<p>The video client has tried to send video but was unable to do so due to capacity reached.
+However, the video client can still receive remote video streams.</p>
+</td>
+</tr>
+</tbody>
+</table>
+<h3>Properties</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<h4><a href="value.html">value</a></h4>
+</td>
+<td>
+<code><span class="keyword">val </span><span class="identifier">value</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html"><span class="identifier">Int</span></a></code></td>
+</tr>
+</tbody>
+</table>
+<h3>Companion Object Functions</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<h4><a href="from.html">from</a></h4>
+</td>
+<td>
+<code><span class="keyword">fun </span><span class="identifier">from</span><span class="symbol">(</span><span class="identifier" id="com.amazonaws.services.chime.sdk.meetings.session.MeetingSessionStatusCode.Companion$from(kotlin.Int)/intValue">intValue</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html"><span class="identifier">Int</span></a><span class="symbol">)</span><span class="symbol">: </span><a href="./index.html"><span class="identifier">MeetingSessionStatusCode</span></a><span class="symbol">?</span></code></td>
+</tr>
+</tbody>
+</table>
+</BODY>
+</HTML>

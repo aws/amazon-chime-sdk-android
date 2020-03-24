@@ -1,0 +1,118 @@
+<HTML>
+<HEAD>
+<meta charset="UTF-8">
+<title>AudioVideoControllerFacade - amazon-chime-sdk</title>
+<link rel="stylesheet" href="../../../style.css">
+</HEAD>
+<BODY>
+<a href="../../index.html">amazon-chime-sdk</a>&nbsp;/&nbsp;<a href="../index.html">com.amazonaws.services.chime.sdk.meetings.audiovideo</a>&nbsp;/&nbsp;<a href="./index.html">AudioVideoControllerFacade</a><br/>
+<br/>
+<h1>AudioVideoControllerFacade</h1>
+<code><span class="keyword">interface </span><span class="identifier">AudioVideoControllerFacade</span></code>
+<p><a href="./index.html">AudioVideoControllerFacade</a> manages the signaling and peer connections.</p>
+<h3>Functions</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<h4><a href="add-audio-video-observer.html">addAudioVideoObserver</a></h4>
+</td>
+<td>
+<p>Subscribe to audio, video, and connection events with an <a href="../-audio-video-observer/index.html">AudioVideoObserver</a>.</p>
+<code><span class="keyword">abstract</span> <span class="keyword">fun </span><span class="identifier">addAudioVideoObserver</span><span class="symbol">(</span><span class="identifier" id="com.amazonaws.services.chime.sdk.meetings.audiovideo.AudioVideoControllerFacade$addAudioVideoObserver(com.amazonaws.services.chime.sdk.meetings.audiovideo.AudioVideoObserver)/observer">observer</span><span class="symbol">:</span>&nbsp;<a href="../-audio-video-observer/index.html"><span class="identifier">AudioVideoObserver</span></a><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="add-metrics-observer.html">addMetricsObserver</a></h4>
+</td>
+<td>
+<p>Subscribe to metrics events with an <a href="../../com.amazonaws.services.chime.sdk.meetings.audiovideo.metric/-metrics-observer/index.html">MetricsObserver</a>.</p>
+<code><span class="keyword">abstract</span> <span class="keyword">fun </span><span class="identifier">addMetricsObserver</span><span class="symbol">(</span><span class="identifier" id="com.amazonaws.services.chime.sdk.meetings.audiovideo.AudioVideoControllerFacade$addMetricsObserver(com.amazonaws.services.chime.sdk.meetings.audiovideo.metric.MetricsObserver)/observer">observer</span><span class="symbol">:</span>&nbsp;<a href="../../com.amazonaws.services.chime.sdk.meetings.audiovideo.metric/-metrics-observer/index.html"><span class="identifier">MetricsObserver</span></a><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="remove-audio-video-observer.html">removeAudioVideoObserver</a></h4>
+</td>
+<td>
+<p>Unsubscribes from audio, video, and connection events by removing specified <a href="../-audio-video-observer/index.html">AudioVideoObserver</a>.</p>
+<code><span class="keyword">abstract</span> <span class="keyword">fun </span><span class="identifier">removeAudioVideoObserver</span><span class="symbol">(</span><span class="identifier" id="com.amazonaws.services.chime.sdk.meetings.audiovideo.AudioVideoControllerFacade$removeAudioVideoObserver(com.amazonaws.services.chime.sdk.meetings.audiovideo.AudioVideoObserver)/observer">observer</span><span class="symbol">:</span>&nbsp;<a href="../-audio-video-observer/index.html"><span class="identifier">AudioVideoObserver</span></a><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="remove-metrics-observer.html">removeMetricsObserver</a></h4>
+</td>
+<td>
+<p>Unsubscribes from metrics by removing specified <a href="../../com.amazonaws.services.chime.sdk.meetings.audiovideo.metric/-metrics-observer/index.html">MetricsObserver</a>.</p>
+<code><span class="keyword">abstract</span> <span class="keyword">fun </span><span class="identifier">removeMetricsObserver</span><span class="symbol">(</span><span class="identifier" id="com.amazonaws.services.chime.sdk.meetings.audiovideo.AudioVideoControllerFacade$removeMetricsObserver(com.amazonaws.services.chime.sdk.meetings.audiovideo.metric.MetricsObserver)/observer">observer</span><span class="symbol">:</span>&nbsp;<a href="../../com.amazonaws.services.chime.sdk.meetings.audiovideo.metric/-metrics-observer/index.html"><span class="identifier">MetricsObserver</span></a><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="start.html">start</a></h4>
+</td>
+<td>
+<p>Starts audio and video.</p>
+<code><span class="keyword">abstract</span> <span class="keyword">fun </span><span class="identifier">start</span><span class="symbol">(</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="start-local-video.html">startLocalVideo</a></h4>
+</td>
+<td>
+<p>Start local video.</p>
+<code><span class="keyword">abstract</span> <span class="keyword">fun </span><span class="identifier">startLocalVideo</span><span class="symbol">(</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="start-remote-video.html">startRemoteVideo</a></h4>
+</td>
+<td>
+<p>Start remote video.</p>
+<code><span class="keyword">abstract</span> <span class="keyword">fun </span><span class="identifier">startRemoteVideo</span><span class="symbol">(</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="stop.html">stop</a></h4>
+</td>
+<td>
+<p>Stops audio and video.</p>
+<code><span class="keyword">abstract</span> <span class="keyword">fun </span><span class="identifier">stop</span><span class="symbol">(</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="stop-local-video.html">stopLocalVideo</a></h4>
+</td>
+<td>
+<p>Stop local video.</p>
+<code><span class="keyword">abstract</span> <span class="keyword">fun </span><span class="identifier">stopLocalVideo</span><span class="symbol">(</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="stop-remote-video.html">stopRemoteVideo</a></h4>
+</td>
+<td>
+<p>Stop remote video.</p>
+<code><span class="keyword">abstract</span> <span class="keyword">fun </span><span class="identifier">stopRemoteVideo</span><span class="symbol">(</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code></td>
+</tr>
+</tbody>
+</table>
+<h3>Inheritors</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<h4><a href="../-audio-video-facade.html">AudioVideoFacade</a></h4>
+</td>
+<td>
+<code><span class="keyword">interface </span><span class="identifier">AudioVideoFacade</span>&nbsp;<span class="symbol">:</span>&nbsp;<a href="./index.html"><span class="identifier">AudioVideoControllerFacade</span></a><span class="symbol">, </span><a href="../../com.amazonaws.services.chime.sdk.meetings.realtime/-realtime-controller-facade/index.html"><span class="identifier">RealtimeControllerFacade</span></a><span class="symbol">, </span><a href="../../com.amazonaws.services.chime.sdk.meetings.device/-device-controller/index.html"><span class="identifier">DeviceController</span></a><span class="symbol">, </span><a href="../../com.amazonaws.services.chime.sdk.meetings.audiovideo.video/-video-tile-controller-facade/index.html"><span class="identifier">VideoTileControllerFacade</span></a><span class="symbol">, </span><a href="../../com.amazonaws.services.chime.sdk.meetings.audiovideo.audio.activespeakerdetector/-active-speaker-detector-facade/index.html"><span class="identifier">ActiveSpeakerDetectorFacade</span></a></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="../-default-audio-video-controller/index.html">DefaultAudioVideoController</a></h4>
+</td>
+<td>
+<code><span class="keyword">class </span><span class="identifier">DefaultAudioVideoController</span>&nbsp;<span class="symbol">:</span>&nbsp;<a href="./index.html"><span class="identifier">AudioVideoControllerFacade</span></a></code></td>
+</tr>
+</tbody>
+</table>
+</BODY>
+</HTML>

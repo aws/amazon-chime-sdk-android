@@ -1,0 +1,85 @@
+<HTML>
+<HEAD>
+<meta charset="UTF-8">
+<title>DefaultDeviceController - amazon-chime-sdk</title>
+<link rel="stylesheet" href="../../../style.css">
+</HEAD>
+<BODY>
+<a href="../../index.html">amazon-chime-sdk</a>&nbsp;/&nbsp;<a href="../index.html">com.amazonaws.services.chime.sdk.meetings.device</a>&nbsp;/&nbsp;<a href="./index.html">DefaultDeviceController</a><br/>
+<br/>
+<h1>DefaultDeviceController</h1>
+<code><span class="keyword">class </span><span class="identifier">DefaultDeviceController</span>&nbsp;<span class="symbol">:</span>&nbsp;<a href="../-device-controller/index.html"><span class="identifier">DeviceController</span></a></code>
+<h3>Constructors</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<h4><a href="-init-.html">&lt;init&gt;</a></h4>
+</td>
+<td>
+<code><span class="identifier">DefaultDeviceController</span><span class="symbol">(</span><span class="identifier" id="com.amazonaws.services.chime.sdk.meetings.device.DefaultDeviceController$<init>(android.content.Context, com.amazonaws.services.chime.sdk.meetings.internal.audio.AudioClientController, com.amazonaws.services.chime.sdk.meetings.internal.video.VideoClientController, android.media.AudioManager, kotlin.Int)/context">context</span><span class="symbol">:</span>&nbsp;<a href="https://developer.android.com/reference/android/content/Context.html"><span class="identifier">Context</span></a><span class="symbol">, </span><span class="identifier" id="com.amazonaws.services.chime.sdk.meetings.device.DefaultDeviceController$<init>(android.content.Context, com.amazonaws.services.chime.sdk.meetings.internal.audio.AudioClientController, com.amazonaws.services.chime.sdk.meetings.internal.video.VideoClientController, android.media.AudioManager, kotlin.Int)/audioClientController">audioClientController</span><span class="symbol">:</span>&nbsp;<span class="identifier">AudioClientController</span><span class="symbol">, </span><span class="identifier" id="com.amazonaws.services.chime.sdk.meetings.device.DefaultDeviceController$<init>(android.content.Context, com.amazonaws.services.chime.sdk.meetings.internal.audio.AudioClientController, com.amazonaws.services.chime.sdk.meetings.internal.video.VideoClientController, android.media.AudioManager, kotlin.Int)/videoClientController">videoClientController</span><span class="symbol">:</span>&nbsp;<span class="identifier">VideoClientController</span><span class="symbol">, </span><span class="identifier" id="com.amazonaws.services.chime.sdk.meetings.device.DefaultDeviceController$<init>(android.content.Context, com.amazonaws.services.chime.sdk.meetings.internal.audio.AudioClientController, com.amazonaws.services.chime.sdk.meetings.internal.video.VideoClientController, android.media.AudioManager, kotlin.Int)/audioManager">audioManager</span><span class="symbol">:</span>&nbsp;<a href="https://developer.android.com/reference/android/media/AudioManager.html"><span class="identifier">AudioManager</span></a>&nbsp;<span class="symbol">=</span>&nbsp;context.getSystemService(Context.AUDIO_SERVICE) as AudioManager<span class="symbol">, </span><span class="identifier" id="com.amazonaws.services.chime.sdk.meetings.device.DefaultDeviceController$<init>(android.content.Context, com.amazonaws.services.chime.sdk.meetings.internal.audio.AudioClientController, com.amazonaws.services.chime.sdk.meetings.internal.video.VideoClientController, android.media.AudioManager, kotlin.Int)/buildVersion">buildVersion</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html"><span class="identifier">Int</span></a>&nbsp;<span class="symbol">=</span>&nbsp;Build.VERSION.SDK_INT<span class="symbol">)</span></code></td>
+</tr>
+</tbody>
+</table>
+<h3>Functions</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<h4><a href="add-device-change-observer.html">addDeviceChangeObserver</a></h4>
+</td>
+<td>
+<p>Adds an observer to receive callbacks about device changes.</p>
+<code><span class="keyword">fun </span><span class="identifier">addDeviceChangeObserver</span><span class="symbol">(</span><span class="identifier" id="com.amazonaws.services.chime.sdk.meetings.device.DefaultDeviceController$addDeviceChangeObserver(com.amazonaws.services.chime.sdk.meetings.device.DeviceChangeObserver)/observer">observer</span><span class="symbol">:</span>&nbsp;<a href="../-device-change-observer/index.html"><span class="identifier">DeviceChangeObserver</span></a><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="choose-audio-device.html">chooseAudioDevice</a></h4>
+</td>
+<td>
+<p>Selects an audio device to use.</p>
+<code><span class="keyword">fun </span><span class="identifier">chooseAudioDevice</span><span class="symbol">(</span><span class="identifier" id="com.amazonaws.services.chime.sdk.meetings.device.DefaultDeviceController$chooseAudioDevice(com.amazonaws.services.chime.sdk.meetings.device.MediaDevice)/mediaDevice">mediaDevice</span><span class="symbol">:</span>&nbsp;<a href="../-media-device/index.html"><span class="identifier">MediaDevice</span></a><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="get-active-camera.html">getActiveCamera</a></h4>
+</td>
+<td>
+<p>Get the active local camera in the meeting, return null if there isn't any.</p>
+<code><span class="keyword">fun </span><span class="identifier">getActiveCamera</span><span class="symbol">(</span><span class="symbol">)</span><span class="symbol">: </span><a href="../-media-device/index.html"><span class="identifier">MediaDevice</span></a><span class="symbol">?</span></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="list-audio-devices.html">listAudioDevices</a></h4>
+</td>
+<td>
+<p>Lists currently available audio devices.</p>
+<code><span class="keyword">fun </span><span class="identifier">listAudioDevices</span><span class="symbol">(</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/index.html"><span class="identifier">List</span></a><span class="symbol">&lt;</span><a href="../-media-device/index.html"><span class="identifier">MediaDevice</span></a><span class="symbol">&gt;</span></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="notify-audio-device-change.html">notifyAudioDeviceChange</a></h4>
+</td>
+<td>
+<code><span class="keyword">fun </span><span class="identifier">notifyAudioDeviceChange</span><span class="symbol">(</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="remove-device-change-observer.html">removeDeviceChangeObserver</a></h4>
+</td>
+<td>
+<p>Removes an observer to stop receiving callbacks about device changes.</p>
+<code><span class="keyword">fun </span><span class="identifier">removeDeviceChangeObserver</span><span class="symbol">(</span><span class="identifier" id="com.amazonaws.services.chime.sdk.meetings.device.DefaultDeviceController$removeDeviceChangeObserver(com.amazonaws.services.chime.sdk.meetings.device.DeviceChangeObserver)/observer">observer</span><span class="symbol">:</span>&nbsp;<a href="../-device-change-observer/index.html"><span class="identifier">DeviceChangeObserver</span></a><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="switch-camera.html">switchCamera</a></h4>
+</td>
+<td>
+<p>Switch between front and back camera in the meeting.</p>
+<code><span class="keyword">fun </span><span class="identifier">switchCamera</span><span class="symbol">(</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code></td>
+</tr>
+</tbody>
+</table>
+</BODY>
+</HTML>

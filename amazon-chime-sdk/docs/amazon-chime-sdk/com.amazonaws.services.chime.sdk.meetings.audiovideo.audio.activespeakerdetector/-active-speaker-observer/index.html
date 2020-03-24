@@ -1,0 +1,48 @@
+<HTML>
+<HEAD>
+<meta charset="UTF-8">
+<title>ActiveSpeakerObserver - amazon-chime-sdk</title>
+<link rel="stylesheet" href="../../../style.css">
+</HEAD>
+<BODY>
+<a href="../../index.html">amazon-chime-sdk</a>&nbsp;/&nbsp;<a href="../index.html">com.amazonaws.services.chime.sdk.meetings.audiovideo.audio.activespeakerdetector</a>&nbsp;/&nbsp;<a href="./index.html">ActiveSpeakerObserver</a><br/>
+<br/>
+<h1>ActiveSpeakerObserver</h1>
+<code><span class="keyword">interface </span><span class="identifier">ActiveSpeakerObserver</span></code>
+<p><a href="./index.html">ActiveSpeakerObserver</a> handles active speaker detection and score changes for attendees.</p>
+<h3>Properties</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<h4><a href="score-callback-interval-ms.html">scoreCallbackIntervalMs</a></h4>
+</td>
+<td>
+<code><span class="keyword">abstract</span> <span class="keyword">val </span><span class="identifier">scoreCallbackIntervalMs</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html"><span class="identifier">Int</span></a><span class="symbol">?</span></code></td>
+</tr>
+</tbody>
+</table>
+<h3>Functions</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<h4><a href="on-active-speaker-detected.html">onActiveSpeakerDetected</a></h4>
+</td>
+<td>
+<p>Notifies observers of changes to active speaker.</p>
+<code><span class="keyword">abstract</span> <span class="keyword">fun </span><span class="identifier">onActiveSpeakerDetected</span><span class="symbol">(</span><span class="identifier" id="com.amazonaws.services.chime.sdk.meetings.audiovideo.audio.activespeakerdetector.ActiveSpeakerObserver$onActiveSpeakerDetected(kotlin.Array((com.amazonaws.services.chime.sdk.meetings.audiovideo.AttendeeInfo)))/attendeeInfo">attendeeInfo</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-array/index.html"><span class="identifier">Array</span></a><span class="symbol">&lt;</span><a href="../../com.amazonaws.services.chime.sdk.meetings.audiovideo/-attendee-info/index.html"><span class="identifier">AttendeeInfo</span></a><span class="symbol">&gt;</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="on-active-speaker-score-changed.html">onActiveSpeakerScoreChanged</a></h4>
+</td>
+<td>
+<p>Periodically sends active speaker scores to observers ONLY IF
+scoreCallbackIntervalMs is not null</p>
+<code><span class="keyword">abstract</span> <span class="keyword">fun </span><span class="identifier">onActiveSpeakerScoreChanged</span><span class="symbol">(</span><span class="identifier" id="com.amazonaws.services.chime.sdk.meetings.audiovideo.audio.activespeakerdetector.ActiveSpeakerObserver$onActiveSpeakerScoreChanged(kotlin.collections.Map((com.amazonaws.services.chime.sdk.meetings.audiovideo.AttendeeInfo, kotlin.Double)))/scores">scores</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-map/index.html"><span class="identifier">Map</span></a><span class="symbol">&lt;</span><a href="../../com.amazonaws.services.chime.sdk.meetings.audiovideo/-attendee-info/index.html"><span class="identifier">AttendeeInfo</span></a><span class="symbol">,</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-double/index.html"><span class="identifier">Double</span></a><span class="symbol">&gt;</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code></td>
+</tr>
+</tbody>
+</table>
+</BODY>
+</HTML>
