@@ -33,6 +33,7 @@ import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoTileObser
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoTileState
 import com.amazonaws.services.chime.sdk.meetings.realtime.RealtimeObserver
 import com.amazonaws.services.chime.sdk.meetings.session.MeetingSessionStatus
+import com.amazonaws.services.chime.sdk.meetings.session.MeetingSessionStatusCode
 import com.amazonaws.services.chime.sdk.meetings.utils.logger.ConsoleLogger
 import com.amazonaws.services.chime.sdk.meetings.utils.logger.LogLevel
 import com.amazonaws.services.chime.sdkdemo.data.AttendeeInfoResponse
@@ -211,7 +212,7 @@ class RosterViewFragment : Fragment(),
         }
     }
 
-    override fun onVolumeChange(volumeUpdates: Array<VolumeUpdate>) {
+    override fun onVolumeChanged(volumeUpdates: Array<VolumeUpdate>) {
         uiScope.launch {
             mutex.withLock {
                 volumeUpdates.forEach { (attendeeInfo, volumeLevel) ->
@@ -231,7 +232,7 @@ class RosterViewFragment : Fragment(),
         }
     }
 
-    override fun onSignalStrengthChange(signalUpdates: Array<SignalUpdate>) {
+    override fun onSignalStrengthChanged(signalUpdates: Array<SignalUpdate>) {
         uiScope.launch {
             mutex.withLock {
                 signalUpdates.forEach { (attendeeInfo, signalStrength) ->
@@ -258,7 +259,7 @@ class RosterViewFragment : Fragment(),
         }
     }
 
-    override fun onAttendeesJoin(attendeeInfo: Array<AttendeeInfo>) {
+    override fun onAttendeesJoined(attendeeInfo: Array<AttendeeInfo>) {
         uiScope.launch {
             mutex.withLock {
                 attendeeInfo.forEach { (attendeeId, _) ->
@@ -277,7 +278,7 @@ class RosterViewFragment : Fragment(),
         }
     }
 
-    override fun onAttendeesLeave(attendeeInfo: Array<AttendeeInfo>) {
+    override fun onAttendeesLeft(attendeeInfo: Array<AttendeeInfo>) {
         uiScope.launch {
             mutex.withLock {
                 attendeeInfo.forEach { (attendeeId, _) -> currentRoster.remove(attendeeId) }
@@ -287,7 +288,7 @@ class RosterViewFragment : Fragment(),
         }
     }
 
-    override fun onAttendeesMute(attendeeInfo: Array<AttendeeInfo>) {
+    override fun onAttendeesMuted(attendeeInfo: Array<AttendeeInfo>) {
         attendeeInfo.forEach { (attendeeId, externalUserId) ->
             logger.info(
                 TAG,
@@ -296,7 +297,7 @@ class RosterViewFragment : Fragment(),
         }
     }
 
-    override fun onAttendeesUnmute(attendeeInfo: Array<AttendeeInfo>) {
+    override fun onAttendeesUnmuted(attendeeInfo: Array<AttendeeInfo>) {
         attendeeInfo.forEach { (attendeeId, externalUserId) ->
             logger.info(
                 TAG,
@@ -441,35 +442,37 @@ class RosterViewFragment : Fragment(),
         return VideoCollectionTile("", tileState)
     }
 
-    override fun onAudioClientConnecting(reconnecting: Boolean) =
+    override fun onAudioSessionStartedConnecting(reconnecting: Boolean) =
         notify("Audio started connecting. reconnecting: $reconnecting")
 
-    override fun onAudioClientStart(reconnecting: Boolean) =
+    override fun onAudioSessionStarted(reconnecting: Boolean) =
         notify("Audio successfully started. reconnecting: $reconnecting")
 
-    override fun onAudioClientStop(sessionStatus: MeetingSessionStatus) {
+    override fun onAudioSessionStopped(sessionStatus: MeetingSessionStatus) {
         notify("Audio stopped for reason: ${sessionStatus.statusCode}")
         listener.onLeaveMeeting()
     }
 
-    override fun onAudioClientReconnectionCancel() = notify("Audio cancelled reconnecting")
+    override fun onAudioSessionCancelledReconnect() = notify("Audio cancelled reconnecting")
 
-    override fun onConnectionRecover() = notify("Connection quality has recovered")
+    override fun onConnectionRecovered() = notify("Connection quality has recovered")
 
-    override fun onConnectionBecomePoor() = notify("Connection quality has become poor")
+    override fun onConnectionBecamePoor() = notify("Connection quality has become poor")
 
-    override fun onVideoClientConnecting() = notify("Video started connecting.")
+    override fun onVideoSessionStartedConnecting() = notify("Video started connecting.")
 
-    override fun onVideoClientStart() = notify("Video successfully started.")
-
-    override fun onVideoClientStop(sessionStatus: MeetingSessionStatus) =
-        notify("Video stopped for reason: ${sessionStatus.statusCode}")
-
-    override fun onVideoClientError(sessionStatus: MeetingSessionStatus) {
-        notify("Video encountered an error: ${sessionStatus.statusCode}")
+    override fun onVideoSessionStarted(sessionStatus: MeetingSessionStatus) {
+        if (sessionStatus.statusCode == MeetingSessionStatusCode.VideoAtCapacityViewOnly) {
+            notify("Video encountered an error: ${sessionStatus.statusCode}")
+        } else {
+            notify("Video successfully started: ${sessionStatus.statusCode}")
+        }
     }
 
-    override fun onAddVideoTile(tileState: VideoTileState) {
+    override fun onVideoSessionStopped(sessionStatus: MeetingSessionStatus) =
+        notify("Video stopped for reason: ${sessionStatus.statusCode}")
+
+    override fun onVideoTileAdded(tileState: VideoTileState) {
         uiScope.launch {
             logger.info(
                 TAG,
@@ -495,7 +498,7 @@ class RosterViewFragment : Fragment(),
         }
     }
 
-    override fun onRemoveVideoTile(tileState: VideoTileState) {
+    override fun onVideoTileRemoved(tileState: VideoTileState) {
         uiScope.launch {
             val tileId: Int = tileState.tileId
 
@@ -524,7 +527,7 @@ class RosterViewFragment : Fragment(),
         }
     }
 
-    override fun onPauseVideoTile(tileState: VideoTileState) {
+    override fun onVideoTilePaused(tileState: VideoTileState) {
         if (tileState.pauseState == VideoPauseState.PausedForPoorConnection) {
             val attendeeName = currentRoster[tileState.attendeeId]?.attendeeName ?: ""
             notify("Video for attendee $attendeeName " +
@@ -533,12 +536,12 @@ class RosterViewFragment : Fragment(),
         }
     }
 
-    override fun onResumeVideoTile(tileState: VideoTileState) {
+    override fun onVideoTileResumed(tileState: VideoTileState) {
         val attendeeName = currentRoster[tileState.attendeeId]?.attendeeName ?: ""
         notify("Video for attendee $attendeeName has been unpaused")
     }
 
-    override fun onMetricsReceive(metrics: Map<ObservableMetric, Any>) {
+    override fun onMetricsReceived(metrics: Map<ObservableMetric, Any>) {
         logger.debug(TAG, "Media metrics received: $metrics")
     }
 
@@ -551,11 +554,11 @@ class RosterViewFragment : Fragment(),
         }
     }
 
-    override fun onActiveSpeakerDetect(attendeeInfo: Array<AttendeeInfo>) {
+    override fun onActiveSpeakerDetected(attendeeInfo: Array<AttendeeInfo>) {
         logger.debug(TAG, "Active Speakers are: ${attendeeInfo.toList()}")
     }
 
-    override fun onActiveSpeakerScoreChange(scores: Map<AttendeeInfo, Double>) {
+    override fun onActiveSpeakerScoreChanged(scores: Map<AttendeeInfo, Double>) {
         logger.debug(TAG, "Active Speakers scores are: $scores")
     }
 }

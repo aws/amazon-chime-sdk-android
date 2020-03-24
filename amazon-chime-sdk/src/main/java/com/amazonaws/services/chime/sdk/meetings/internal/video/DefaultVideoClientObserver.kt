@@ -53,7 +53,7 @@ class DefaultVideoClientObserver(
 
     override fun isConnecting(client: VideoClient?) {
         logger.info(TAG, "isConnecting")
-        forEachVideoClientStateObserver { observer -> observer.onVideoClientConnecting() }
+        forEachVideoClientStateObserver { observer -> observer.onVideoSessionStartedConnecting() }
     }
 
     override fun didConnect(client: VideoClient?, controlStatus: Int) {
@@ -61,14 +61,18 @@ class DefaultVideoClientObserver(
 
         if (controlStatus == VideoClient.VIDEO_CLIENT_STATUS_CALL_AT_CAPACITY_VIEW_ONLY) {
             forEachVideoClientStateObserver {
-                it.onVideoClientError(
+                it.onVideoSessionStarted(
                     MeetingSessionStatus(
                         MeetingSessionStatusCode.VideoAtCapacityViewOnly
                     )
                 )
             }
         } else {
-            forEachVideoClientStateObserver { observer -> observer.onVideoClientStart() }
+            forEachVideoClientStateObserver { observer ->
+                observer.onVideoSessionStarted(
+                    MeetingSessionStatus(MeetingSessionStatusCode.OK)
+                )
+            }
         }
     }
 
@@ -76,7 +80,7 @@ class DefaultVideoClientObserver(
         logger.info(TAG, "didFail with controlStatus: $controlStatus")
 
         forEachVideoClientStateObserver { observer ->
-            observer.onVideoClientStop(
+            observer.onVideoSessionStopped(
                 MeetingSessionStatus(
                     MeetingSessionStatusCode.VideoServiceFailed
                 )
@@ -89,7 +93,7 @@ class DefaultVideoClientObserver(
 
         videoClientStateController.updateState(VideoClientState.STOPPED)
         forEachVideoClientStateObserver { observer ->
-            observer.onVideoClientStop(
+            observer.onVideoSessionStopped(
                 MeetingSessionStatus(
                     MeetingSessionStatusCode.OK
                 )

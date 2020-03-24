@@ -63,11 +63,11 @@ class DefaultVideoTileController(
                 tile.setPauseState(pauseState)
                 if (pauseState == VideoPauseState.Unpaused) {
                     uiScope.launch {
-                        forEachObserver { observer -> observer.onResumeVideoTile(tile.state) }
+                        forEachObserver { observer -> observer.onVideoTileResumed(tile.state) }
                     }
                 } else {
                     uiScope.launch {
-                        forEachObserver { observer -> observer.onPauseVideoTile(tile.state) }
+                        forEachObserver { observer -> observer.onVideoTilePaused(tile.state) }
                     }
                 }
             }
@@ -124,7 +124,7 @@ class DefaultVideoTileController(
             if (it.state.pauseState != VideoPauseState.PausedByUserRequest) {
                 it.setPauseState(VideoPauseState.PausedByUserRequest)
                 uiScope.launch {
-                    forEachObserver { observer -> observer.onPauseVideoTile(it.state) }
+                    forEachObserver { observer -> observer.onVideoTilePaused(it.state) }
                 }
             }
         }
@@ -147,7 +147,7 @@ class DefaultVideoTileController(
             if (it.state.pauseState == VideoPauseState.PausedByUserRequest) {
                 it.setPauseState(VideoPauseState.Unpaused)
                 uiScope.launch {
-                    forEachObserver { observer -> observer.onResumeVideoTile(it.state) }
+                    forEachObserver { observer -> observer.onVideoTileResumed(it.state) }
                 }
             }
         }
@@ -183,14 +183,14 @@ class DefaultVideoTileController(
 
     private fun onRemoveVideoTile(tileId: Int) {
         videoTileMap[tileId]?.let {
-            forEachObserver { observer -> observer.onRemoveVideoTile(it.state) }
+            forEachObserver { observer -> observer.onVideoTileRemoved(it.state) }
         }
     }
 
     private fun onAddVideoTile(tileId: Int, attendeeId: String?) {
         val tile = videoTileFactory.makeTile(tileId, attendeeId)
         videoTileMap[tileId] = tile
-        forEachObserver { observer -> observer.onAddVideoTile(tile.state) }
+        forEachObserver { observer -> observer.onVideoTileAdded(tile.state) }
     }
 
     private fun forEachObserver(observerFunction: (observer: VideoTileObserver) -> Unit) {

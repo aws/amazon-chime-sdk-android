@@ -46,7 +46,7 @@ class DefaultAudioClientObserverTest {
     private lateinit var audioClientObserver: DefaultAudioClientObserver
 
     private val testObserverFun = { observer: AudioVideoObserver ->
-        observer.onAudioClientConnecting(
+        observer.onAudioSessionStartedConnecting(
             false
         )
     }
@@ -101,7 +101,7 @@ class DefaultAudioClientObserverTest {
     fun `notifyAudioClientObserver should notify added observers`() {
         audioClientObserver.notifyAudioClientObserver(testObserverFun)
 
-        verify(exactly = 1) { mockAudioVideoObserver.onAudioClientConnecting(any()) }
+        verify(exactly = 1) { mockAudioVideoObserver.onAudioSessionStartedConnecting(any()) }
     }
 
     @Test
@@ -117,14 +117,14 @@ class DefaultAudioClientObserverTest {
     fun `onVolumeStateChange should notify added observers`() {
         audioClientObserver.onVolumeStateChange(arrayOf(testAttendeeVolumeUpdate))
 
-        verify(exactly = 1) { mockRealtimeObserver.onVolumeChange(any()) }
+        verify(exactly = 1) { mockRealtimeObserver.onVolumeChanged(any()) }
     }
 
     @Test
     fun `onVolumeStateChange should NOT notify when no attendee updates`() {
         audioClientObserver.onVolumeStateChange(null)
 
-        verify(exactly = 0) { mockRealtimeObserver.onVolumeChange(any()) }
+        verify(exactly = 0) { mockRealtimeObserver.onVolumeChanged(any()) }
     }
 
     @Test
@@ -148,8 +148,8 @@ class DefaultAudioClientObserverTest {
         )
 
         verifyOrder {
-            mockRealtimeObserver.onVolumeChange(expectedArgs1)
-            mockRealtimeObserver.onVolumeChange(expectedArgs2)
+            mockRealtimeObserver.onVolumeChanged(expectedArgs1)
+            mockRealtimeObserver.onVolumeChanged(expectedArgs2)
         }
     }
 
@@ -163,21 +163,21 @@ class DefaultAudioClientObserverTest {
 
         audioClientObserver.onVolumeStateChange(testInput)
 
-        verify(exactly = 1) { mockRealtimeObserver.onVolumeChange(expectedArgs) }
+        verify(exactly = 1) { mockRealtimeObserver.onVolumeChanged(expectedArgs) }
     }
 
     @Test
     fun `onSignalStrengthChange should notify added observers`() {
         audioClientObserver.onSignalStrengthChange(arrayOf(testAttendeeSignalUpdate))
 
-        verify(exactly = 1) { mockRealtimeObserver.onSignalStrengthChange(any()) }
+        verify(exactly = 1) { mockRealtimeObserver.onSignalStrengthChanged(any()) }
     }
 
     @Test
     fun `onSignalStrengthChange should NOT notify when no attendee updates`() {
         audioClientObserver.onSignalStrengthChange(null)
 
-        verify(exactly = 0) { mockRealtimeObserver.onSignalStrengthChange(any()) }
+        verify(exactly = 0) { mockRealtimeObserver.onSignalStrengthChanged(any()) }
     }
 
     @Test
@@ -204,8 +204,8 @@ class DefaultAudioClientObserverTest {
         )
 
         verifyOrder {
-            mockRealtimeObserver.onSignalStrengthChange(expectedArgs1)
-            mockRealtimeObserver.onSignalStrengthChange(expectedArgs2)
+            mockRealtimeObserver.onSignalStrengthChanged(expectedArgs1)
+            mockRealtimeObserver.onSignalStrengthChanged(expectedArgs2)
         }
     }
 
@@ -219,41 +219,41 @@ class DefaultAudioClientObserverTest {
 
         audioClientObserver.onSignalStrengthChange(testInput)
 
-        verify(exactly = 1) { mockRealtimeObserver.onSignalStrengthChange(expectedArgs) }
+        verify(exactly = 1) { mockRealtimeObserver.onSignalStrengthChanged(expectedArgs) }
     }
 
     @Test
-    fun `onAttendeeJoin should notify when new attendees`() {
+    fun `onVolumeStateChange should notify about attendee join when new attendees`() {
         audioClientObserver.onVolumeStateChange(arrayOf(testAttendeeVolumeUpdate))
 
-        verify(exactly = 1) { mockRealtimeObserver.onAttendeesJoin(any()) }
+        verify(exactly = 1) { mockRealtimeObserver.onAttendeesJoined(any()) }
     }
 
     @Test
-    fun `onAttendeeJoin should NOT notify when NO new attendees`() {
+    fun `onVolumeStateChange should NOT notify about attendee join when NO new attendees`() {
         audioClientObserver.onVolumeStateChange(emptyArray())
 
-        verify(exactly = 0) { mockRealtimeObserver.onAttendeesJoin(any()) }
+        verify(exactly = 0) { mockRealtimeObserver.onAttendeesJoined(any()) }
     }
 
     @Test
-    fun `onAttendeeLeave should notify when attendees leave`() {
+    fun `onVolumeStateChange should notify about attendee leave when attendees leave`() {
         audioClientObserver.onVolumeStateChange(arrayOf(testAttendeeVolumeUpdate))
         audioClientObserver.onVolumeStateChange(emptyArray())
 
-        verify(exactly = 1) { mockRealtimeObserver.onAttendeesLeave(any()) }
+        verify(exactly = 1) { mockRealtimeObserver.onAttendeesLeft(any()) }
     }
 
     @Test
-    fun `onAttendeeJoin should NOT notify when NO attendees leave`() {
+    fun `onVolumeStateChange should NOT notify about attendee leave when NO attendees leave`() {
         audioClientObserver.onVolumeStateChange(arrayOf(testAttendeeVolumeUpdate))
         audioClientObserver.onVolumeStateChange(arrayOf(testAttendeeVolumeUpdate))
 
-        verify(exactly = 0) { mockRealtimeObserver.onAttendeesLeave(any()) }
+        verify(exactly = 0) { mockRealtimeObserver.onAttendeesLeft(any()) }
     }
 
     @Test
-    fun `onAttendeesChange should consider attendee as same when attendeeId and externalUserId are same`() {
+    fun `onVolumeStateChange should consider attendee as same when attendeeId and externalUserId are same`() {
         audioClientObserver.onVolumeStateChange(arrayOf(testAttendeeVolumeUpdate))
         audioClientObserver.onVolumeStateChange(
             arrayOf(
@@ -265,11 +265,11 @@ class DefaultAudioClientObserverTest {
             )
         )
 
-        verify(exactly = 1) { mockRealtimeObserver.onAttendeesJoin(arrayOf(testAttendeeInfo)) }
+        verify(exactly = 1) { mockRealtimeObserver.onAttendeesJoined(arrayOf(testAttendeeInfo)) }
     }
 
     @Test
-    fun `onAttendeesChange should consider attendee as different when attendeeId is different`() {
+    fun `onVolumeStateChange should consider attendee as different when attendeeId is different`() {
         audioClientObserver.onVolumeStateChange(arrayOf(testAttendeeVolumeUpdate))
         audioClientObserver.onVolumeStateChange(
             arrayOf(
@@ -282,8 +282,8 @@ class DefaultAudioClientObserverTest {
         )
 
         verifyOrder {
-            mockRealtimeObserver.onAttendeesJoin(arrayOf(testAttendeeInfo))
-            mockRealtimeObserver.onAttendeesJoin(
+            mockRealtimeObserver.onAttendeesJoined(arrayOf(testAttendeeInfo))
+            mockRealtimeObserver.onAttendeesJoined(
                 arrayOf(
                     AttendeeInfo(
                         testId2,
@@ -295,7 +295,7 @@ class DefaultAudioClientObserverTest {
     }
 
     @Test
-    fun `onAttendeesChange should consider attendee as different when externalUserId is different`() {
+    fun `onVolumeStateChange should consider attendee as different when externalUserId is different`() {
         audioClientObserver.onVolumeStateChange(arrayOf(testAttendeeVolumeUpdate))
         audioClientObserver.onVolumeStateChange(
             arrayOf(
@@ -308,8 +308,8 @@ class DefaultAudioClientObserverTest {
         )
 
         verifyOrder {
-            mockRealtimeObserver.onAttendeesJoin(arrayOf(testAttendeeInfo))
-            mockRealtimeObserver.onAttendeesJoin(
+            mockRealtimeObserver.onAttendeesJoined(arrayOf(testAttendeeInfo))
+            mockRealtimeObserver.onAttendeesJoined(
                 arrayOf(
                     AttendeeInfo(
                         testAttendeeInfo.attendeeId,
@@ -321,33 +321,33 @@ class DefaultAudioClientObserverTest {
     }
 
     @Test
-    fun `onAttendeeMute should notify newly muted attendees`() {
+    fun `onVolumeStateChange should notify about attendee mute when newly muted attendees`() {
         audioClientObserver.onVolumeStateChange(arrayOf(testAttendeeVolumeMuted))
 
-        verify(exactly = 1) { mockRealtimeObserver.onAttendeesMute(any()) }
+        verify(exactly = 1) { mockRealtimeObserver.onAttendeesMuted(any()) }
     }
 
     @Test
-    fun `onAttendeeMute should NOT notify when NO newly muted attendees`() {
+    fun `onVolumeStateChange should NOT notify about attendee mute when NO newly muted attendees`() {
         audioClientObserver.onVolumeStateChange(arrayOf(testAttendeeVolumeUpdate))
 
-        verify(exactly = 0) { mockRealtimeObserver.onAttendeesMute(any()) }
+        verify(exactly = 0) { mockRealtimeObserver.onAttendeesMuted(any()) }
     }
 
     @Test
-    fun `onAttendeeUnmute should notify newly unmuted attendees`() {
+    fun `onVolumeStateChange should notify about attendee unmute newly unmuted attendees`() {
         audioClientObserver.onVolumeStateChange(arrayOf(testAttendeeVolumeMuted))
         audioClientObserver.onVolumeStateChange(arrayOf(testAttendeeVolumeUpdate))
 
-        verify(exactly = 1) { mockRealtimeObserver.onAttendeesUnmute(any()) }
+        verify(exactly = 1) { mockRealtimeObserver.onAttendeesUnmuted(any()) }
     }
 
     @Test
-    fun `onAttendeeUnmute should NOT notify when NO newly unmuted attendees`() {
+    fun `onVolumeStateChange should NOT notify about attendee unmute when NO newly unmuted attendees`() {
         audioClientObserver.onVolumeStateChange(arrayOf(testAttendeeVolumeMuted))
         audioClientObserver.onVolumeStateChange(arrayOf(testAttendeeVolumeMuted))
 
-        verify(exactly = 0) { mockRealtimeObserver.onAttendeesUnmute(any()) }
+        verify(exactly = 0) { mockRealtimeObserver.onAttendeesUnmuted(any()) }
     }
 
     @Test
@@ -356,12 +356,12 @@ class DefaultAudioClientObserverTest {
 
         audioClientObserver.onVolumeStateChange(arrayOf(testAttendeeVolumeUpdate))
 
-        verify(exactly = 0) { mockRealtimeObserver.onVolumeChange(any()) }
-        verify(exactly = 0) { mockRealtimeObserver.onAttendeesJoin(any()) }
-        verify(exactly = 0) { mockRealtimeObserver.onAttendeesLeave(any()) }
-        verify(exactly = 0) { mockRealtimeObserver.onAttendeesMute(any()) }
-        verify(exactly = 0) { mockRealtimeObserver.onAttendeesUnmute(any()) }
-        verify(exactly = 0) { mockRealtimeObserver.onSignalStrengthChange(any()) }
+        verify(exactly = 0) { mockRealtimeObserver.onVolumeChanged(any()) }
+        verify(exactly = 0) { mockRealtimeObserver.onAttendeesJoined(any()) }
+        verify(exactly = 0) { mockRealtimeObserver.onAttendeesLeft(any()) }
+        verify(exactly = 0) { mockRealtimeObserver.onAttendeesMuted(any()) }
+        verify(exactly = 0) { mockRealtimeObserver.onAttendeesUnmuted(any()) }
+        verify(exactly = 0) { mockRealtimeObserver.onSignalStrengthChanged(any()) }
     }
 
     @Test
@@ -377,7 +377,7 @@ class DefaultAudioClientObserverTest {
     }
 
     @Test
-    fun `onAudioClientStateChange should notify of connect event when finished connecting`() {
+    fun `onAudioClientStateChange should notify of session started event when finished connecting`() {
         runBlockingTest {
             audioClientObserver.onAudioClientStateChange(
                 AudioClient.AUDIO_CLIENT_STATE_CONNECTING,
@@ -390,11 +390,11 @@ class DefaultAudioClientObserverTest {
             )
         }
 
-        verify(exactly = 1) { mockAudioVideoObserver.onAudioClientStart(false) }
+        verify(exactly = 1) { mockAudioVideoObserver.onAudioSessionStarted(false) }
     }
 
     @Test
-    fun `onAudioClientStateChange should notify of reconnect event when finished reconnecting`() {
+    fun `onAudioClientStateChange should notify of session reconnected event when finished reconnecting`() {
         runBlockingTest {
             audioClientObserver.onAudioClientStateChange(
                 AudioClient.AUDIO_CLIENT_STATE_RECONNECTING,
@@ -407,11 +407,11 @@ class DefaultAudioClientObserverTest {
             )
         }
 
-        verify(exactly = 1) { mockAudioVideoObserver.onAudioClientStart(true) }
+        verify(exactly = 1) { mockAudioVideoObserver.onAudioSessionStarted(true) }
     }
 
     @Test
-    fun `onAudioClientStateChange should notify of reconnect event when start reconnecting`() {
+    fun `onAudioClientStateChange should notify of session reconnect event when start reconnecting`() {
         runBlockingTest {
             audioClientObserver.onAudioClientStateChange(
                 AudioClient.AUDIO_CLIENT_STATE_CONNECTED,
@@ -424,7 +424,7 @@ class DefaultAudioClientObserverTest {
             )
         }
 
-        verify(exactly = 1) { mockAudioVideoObserver.onAudioClientStart(true) }
+        verify(exactly = 1) { mockAudioVideoObserver.onAudioSessionStarted(true) }
     }
 
     @Test
@@ -441,7 +441,7 @@ class DefaultAudioClientObserverTest {
             )
         }
 
-        verify(exactly = 1) { mockAudioVideoObserver.onConnectionBecomePoor() }
+        verify(exactly = 1) { mockAudioVideoObserver.onConnectionBecamePoor() }
     }
 
     @Test
@@ -458,11 +458,11 @@ class DefaultAudioClientObserverTest {
             )
         }
 
-        verify(exactly = 1) { mockAudioVideoObserver.onConnectionRecover() }
+        verify(exactly = 1) { mockAudioVideoObserver.onConnectionRecovered() }
     }
 
     @Test
-    fun `onAudioClientStateChange should notify of reconnect cancel event when cancelling reconnect`() {
+    fun `onAudioClientStateChange should notify of session reconnect cancel event when cancelling reconnect`() {
         runBlockingTest {
             audioClientObserver.onAudioClientStateChange(
                 AudioClient.AUDIO_CLIENT_STATE_RECONNECTING,
@@ -475,11 +475,11 @@ class DefaultAudioClientObserverTest {
             )
         }
 
-        verify(exactly = 1) { mockAudioVideoObserver.onAudioClientReconnectionCancel() }
+        verify(exactly = 1) { mockAudioVideoObserver.onAudioSessionCancelledReconnect() }
     }
 
     @Test
-    fun `onAudioClientStateChange should notify of disconnect event when disconnected`() {
+    fun `onAudioClientStateChange should notify of session stop event when disconnected`() {
         runBlockingTest {
             audioClientObserver.onAudioClientStateChange(
                 AudioClient.AUDIO_CLIENT_STATE_CONNECTING,
@@ -491,11 +491,11 @@ class DefaultAudioClientObserverTest {
             )
         }
 
-        verify(exactly = 1) { mockAudioVideoObserver.onAudioClientStop(any()) }
+        verify(exactly = 1) { mockAudioVideoObserver.onAudioSessionStopped(any()) }
     }
 
     @Test
-    fun `onAudioClientStateChange should notify of disconnect event when failure while connecting`() {
+    fun `onAudioClientStateChange should notify of session stop event when failure while connecting`() {
         runBlockingTest {
             audioClientObserver.onAudioClientStateChange(
                 AudioClient.AUDIO_CLIENT_STATE_CONNECTING,
@@ -508,11 +508,11 @@ class DefaultAudioClientObserverTest {
             )
         }
 
-        verify(exactly = 1) { mockAudioVideoObserver.onAudioClientStop(any()) }
+        verify(exactly = 1) { mockAudioVideoObserver.onAudioSessionStopped(any()) }
     }
 
     @Test
-    fun `onAudioClientStateChange should notify of disconnect event when failure while reconnecting`() {
+    fun `onAudioClientStateChange should notify of session stop event when failure while reconnecting`() {
         runBlockingTest {
             audioClientObserver.onAudioClientStateChange(
                 AudioClient.AUDIO_CLIENT_STATE_RECONNECTING,
@@ -525,7 +525,7 @@ class DefaultAudioClientObserverTest {
             )
         }
 
-        verify(exactly = 1) { mockAudioVideoObserver.onAudioClientStop(any()) }
+        verify(exactly = 1) { mockAudioVideoObserver.onAudioSessionStopped(any()) }
     }
 
     @Test
@@ -570,14 +570,14 @@ class DefaultAudioClientObserverTest {
     }
 
     private fun verifyAudioVideoObserverIsNotNotified() {
-        verify(exactly = 0) { mockAudioVideoObserver.onAudioClientConnecting(any()) }
-        verify(exactly = 0) { mockAudioVideoObserver.onAudioClientStart(any()) }
-        verify(exactly = 0) { mockAudioVideoObserver.onAudioClientStop(any()) }
-        verify(exactly = 0) { mockAudioVideoObserver.onAudioClientReconnectionCancel() }
-        verify(exactly = 0) { mockAudioVideoObserver.onConnectionRecover() }
-        verify(exactly = 0) { mockAudioVideoObserver.onConnectionBecomePoor() }
-        verify(exactly = 0) { mockAudioVideoObserver.onVideoClientConnecting() }
-        verify(exactly = 0) { mockAudioVideoObserver.onVideoClientStart() }
-        verify(exactly = 0) { mockAudioVideoObserver.onVideoClientStop(any()) }
+        verify(exactly = 0) { mockAudioVideoObserver.onAudioSessionStartedConnecting(any()) }
+        verify(exactly = 0) { mockAudioVideoObserver.onAudioSessionStarted(any()) }
+        verify(exactly = 0) { mockAudioVideoObserver.onAudioSessionStopped(any()) }
+        verify(exactly = 0) { mockAudioVideoObserver.onAudioSessionCancelledReconnect() }
+        verify(exactly = 0) { mockAudioVideoObserver.onConnectionRecovered() }
+        verify(exactly = 0) { mockAudioVideoObserver.onConnectionBecamePoor() }
+        verify(exactly = 0) { mockAudioVideoObserver.onVideoSessionStartedConnecting() }
+        verify(exactly = 0) { mockAudioVideoObserver.onVideoSessionStarted(any()) }
+        verify(exactly = 0) { mockAudioVideoObserver.onVideoSessionStopped(any()) }
     }
 }

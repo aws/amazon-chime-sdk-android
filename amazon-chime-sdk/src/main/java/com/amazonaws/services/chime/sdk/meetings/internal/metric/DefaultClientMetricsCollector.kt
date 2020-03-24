@@ -56,7 +56,7 @@ class DefaultClientMetricsCollector :
             lastEmittedMetricsTime = now
             var cachedObservableMetricsWithoutNullValues =
                 cachedObservableMetrics.filterValues { it != null } as Map<ObservableMetric, Any>
-            metricsObservers.forEach { it.onMetricsReceive(cachedObservableMetricsWithoutNullValues) }
+            metricsObservers.forEach { it.onMetricsReceived(cachedObservableMetricsWithoutNullValues) }
         }
     }
 

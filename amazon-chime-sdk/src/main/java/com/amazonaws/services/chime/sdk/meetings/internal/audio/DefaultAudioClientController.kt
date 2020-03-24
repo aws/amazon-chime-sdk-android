@@ -103,7 +103,7 @@ class DefaultAudioClientController(
 
         setUpAudioConfiguration()
         audioClientObserver.notifyAudioClientObserver { observer ->
-            observer.onAudioClientConnecting(
+            observer.onAudioSessionStartedConnecting(
                 false
             )
         }
@@ -131,7 +131,7 @@ class DefaultAudioClientController(
                 logger.info(TAG, "Started audio session.")
             }
             audioClientObserver.notifyAudioClientObserver { observer ->
-                observer.onAudioClientStart(
+                observer.onAudioSessionStarted(
                     false
                 )
             }

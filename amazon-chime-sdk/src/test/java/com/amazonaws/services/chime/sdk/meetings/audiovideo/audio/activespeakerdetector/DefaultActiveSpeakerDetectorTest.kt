@@ -14,6 +14,7 @@ import io.mockk.MockKAnnotations
 import io.mockk.impl.annotations.MockK
 import io.mockk.spyk
 import io.mockk.verify
+import junit.framework.Assert.assertNotNull
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.junit.Before
 import org.junit.Test
@@ -60,30 +61,30 @@ class DefaultActiveSpeakerDetectorTest {
             override val scoreCallbackIntervalMs: Int?
                 get() = 200
 
-            override fun onActiveSpeakerDetect(attendeeInfo: Array<AttendeeInfo>) {
+            override fun onActiveSpeakerDetected(attendeeInfo: Array<AttendeeInfo>) {
             }
 
-            override fun onActiveSpeakerScoreChange(scores: Map<AttendeeInfo, Double>) {
+            override fun onActiveSpeakerScoreChanged(scores: Map<AttendeeInfo, Double>) {
             }
         })
         activeSpeakerObserverWithScore2 = spyk(object : ActiveSpeakerObserver {
             override val scoreCallbackIntervalMs: Int?
                 get() = 400
 
-            override fun onActiveSpeakerDetect(attendeeInfo: Array<AttendeeInfo>) {
+            override fun onActiveSpeakerDetected(attendeeInfo: Array<AttendeeInfo>) {
             }
 
-            override fun onActiveSpeakerScoreChange(scores: Map<AttendeeInfo, Double>) {
+            override fun onActiveSpeakerScoreChanged(scores: Map<AttendeeInfo, Double>) {
             }
         })
         activeSpeakerObserverWithoutScore = spyk(object : ActiveSpeakerObserver {
             override val scoreCallbackIntervalMs: Int?
                 get() = null
 
-            override fun onActiveSpeakerDetect(attendeeInfo: Array<AttendeeInfo>) {
+            override fun onActiveSpeakerDetected(attendeeInfo: Array<AttendeeInfo>) {
             }
 
-            override fun onActiveSpeakerScoreChange(scores: Map<AttendeeInfo, Double>) {
+            override fun onActiveSpeakerScoreChanged(scores: Map<AttendeeInfo, Double>) {
             }
         })
         activeSpeakerPolicy = DefaultActiveSpeakerPolicy()
@@ -91,7 +92,7 @@ class DefaultActiveSpeakerDetectorTest {
 
     @Test
     fun `DefaultActiveSpeakerDetector should not be null`() {
-        assert(activeSpeakerDetector != null)
+        assertNotNull(activeSpeakerDetector)
     }
 
     @Test
@@ -100,11 +101,11 @@ class DefaultActiveSpeakerDetectorTest {
             activeSpeakerPolicy,
             activeSpeakerObserverWithoutScore
         )
-        activeSpeakerDetector.onAttendeesJoin(arrayOf(testAttendeeInfo1))
+        activeSpeakerDetector.onAttendeesJoined(arrayOf(testAttendeeInfo1))
         activeSpeakerDetector.removeActiveSpeakerObserver(activeSpeakerObserverWithoutScore)
 
         verify(exactly = 0) {
-            activeSpeakerObserverWithoutScore.onActiveSpeakerDetect(
+            activeSpeakerObserverWithoutScore.onActiveSpeakerDetected(
                 arrayOf(
                     testAttendeeInfo1
                 )
@@ -118,13 +119,13 @@ class DefaultActiveSpeakerDetectorTest {
             activeSpeakerPolicy,
             activeSpeakerObserverWithoutScore
         )
-        activeSpeakerDetector.onAttendeesJoin(arrayOf(testAttendeeInfo1))
-        activeSpeakerDetector.onVolumeChange(arrayOf(testVolumeUpdate1))
+        activeSpeakerDetector.onAttendeesJoined(arrayOf(testAttendeeInfo1))
+        activeSpeakerDetector.onVolumeChanged(arrayOf(testVolumeUpdate1))
         Thread.sleep(300)
         activeSpeakerDetector.removeActiveSpeakerObserver(activeSpeakerObserverWithoutScore)
 
         verify(exactly = 1) {
-            activeSpeakerObserverWithoutScore.onActiveSpeakerDetect(
+            activeSpeakerObserverWithoutScore.onActiveSpeakerDetected(
                 arrayOf(
                     testAttendeeInfo1
                 )
@@ -138,12 +139,12 @@ class DefaultActiveSpeakerDetectorTest {
             activeSpeakerPolicy,
             activeSpeakerObserverWithScore1
         )
-        activeSpeakerDetector.onAttendeesJoin(arrayOf(testAttendeeInfo1))
+        activeSpeakerDetector.onAttendeesJoined(arrayOf(testAttendeeInfo1))
         Thread.sleep(500)
         activeSpeakerDetector.removeActiveSpeakerObserver(activeSpeakerObserverWithScore1)
 
         verify(exactly = 2) {
-            activeSpeakerObserverWithScore1.onActiveSpeakerScoreChange(
+            activeSpeakerObserverWithScore1.onActiveSpeakerScoreChanged(
                 mutableMapOf(testAttendeeInfo1 to 0.0)
             )
         }
@@ -159,23 +160,23 @@ class DefaultActiveSpeakerDetectorTest {
             activeSpeakerPolicy,
             activeSpeakerObserverWithScore2
         )
-        activeSpeakerDetector.onAttendeesJoin(arrayOf(testAttendeeInfo1))
+        activeSpeakerDetector.onAttendeesJoined(arrayOf(testAttendeeInfo1))
         Thread.sleep(500)
         activeSpeakerDetector.removeActiveSpeakerObserver(activeSpeakerObserverWithScore1)
         activeSpeakerDetector.removeActiveSpeakerObserver(activeSpeakerObserverWithScore2)
 
         verify(exactly = 2) {
-            activeSpeakerObserverWithScore1.onActiveSpeakerScoreChange(
+            activeSpeakerObserverWithScore1.onActiveSpeakerScoreChanged(
                 mutableMapOf(testAttendeeInfo1 to 0.0)
             )
         }
         verify(exactly = 1) {
-            activeSpeakerObserverWithScore2.onActiveSpeakerScoreChange(
+            activeSpeakerObserverWithScore2.onActiveSpeakerScoreChanged(
                 mutableMapOf(testAttendeeInfo1 to 0.0)
             )
         }
-        verify(exactly = 0) { activeSpeakerObserverWithScore1.onActiveSpeakerDetect(any()) }
-        verify(exactly = 0) { activeSpeakerObserverWithScore2.onActiveSpeakerDetect(any()) }
+        verify(exactly = 0) { activeSpeakerObserverWithScore1.onActiveSpeakerDetected(any()) }
+        verify(exactly = 0) { activeSpeakerObserverWithScore2.onActiveSpeakerDetected(any()) }
     }
 
     @Test
@@ -184,13 +185,13 @@ class DefaultActiveSpeakerDetectorTest {
             activeSpeakerPolicy,
             activeSpeakerObserverWithoutScore
         )
-        activeSpeakerDetector.onAttendeesJoin(arrayOf(testAttendeeInfo1, testAttendeeInfo2))
-        activeSpeakerDetector.onVolumeChange(arrayOf(testVolumeUpdate1, testVolumeUpdate2))
+        activeSpeakerDetector.onAttendeesJoined(arrayOf(testAttendeeInfo1, testAttendeeInfo2))
+        activeSpeakerDetector.onVolumeChanged(arrayOf(testVolumeUpdate1, testVolumeUpdate2))
         Thread.sleep(300)
         activeSpeakerDetector.removeActiveSpeakerObserver(activeSpeakerObserverWithoutScore)
 
         verify(exactly = 1) {
-            activeSpeakerObserverWithoutScore.onActiveSpeakerDetect(
+            activeSpeakerObserverWithoutScore.onActiveSpeakerDetected(
                 arrayOf(
                     testAttendeeInfo1,
                     testAttendeeInfo2

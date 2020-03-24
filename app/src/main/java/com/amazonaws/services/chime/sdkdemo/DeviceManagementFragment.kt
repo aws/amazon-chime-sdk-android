@@ -136,7 +136,7 @@ class DeviceManagementFragment : Fragment(),
         return ArrayAdapter(context, android.R.layout.simple_spinner_item, list)
     }
 
-    override fun onAudioDeviceChange(freshAudioDeviceList: List<MediaDevice>) {
+    override fun onAudioDeviceChanged(freshAudioDeviceList: List<MediaDevice>) {
         populateDeviceList(freshAudioDeviceList)
     }
 }

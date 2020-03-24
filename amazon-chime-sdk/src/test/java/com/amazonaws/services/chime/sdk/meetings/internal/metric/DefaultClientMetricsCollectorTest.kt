@@ -47,7 +47,7 @@ class DefaultClientMetricsCollectorTest {
             mutableMapOf(AudioClient.AUDIO_CLIENT_METRIC_POST_JB_SPK_1S_PACKETS_LOST_PERCENT to 1.0)
         clientMetricsCollector.processAudioClientMetrics(rawMetrics)
 
-        verify(exactly = 0) { mockMetricsObserver.onMetricsReceive(any()) }
+        verify(exactly = 0) { mockMetricsObserver.onMetricsReceived(any()) }
     }
 
     @Test
@@ -60,7 +60,7 @@ class DefaultClientMetricsCollectorTest {
 
         clientMetricsCollector.processAudioClientMetrics(rawMetrics)
 
-        verify(exactly = 1) { mockMetricsObserver.onMetricsReceive(observableMetrics) }
+        verify(exactly = 1) { mockMetricsObserver.onMetricsReceived(observableMetrics) }
     }
 
     @Test
@@ -72,7 +72,7 @@ class DefaultClientMetricsCollectorTest {
 
         clientMetricsCollector.processVideoClientMetrics(rawMetrics)
 
-        verify(exactly = 1) { mockMetricsObserver.onMetricsReceive(observableMetrics) }
+        verify(exactly = 1) { mockMetricsObserver.onMetricsReceived(observableMetrics) }
     }
 
     @Test
@@ -84,7 +84,7 @@ class DefaultClientMetricsCollectorTest {
         clientMetricsCollector.processAudioClientMetrics(rawMetrics)
 
         val observableMetrics = mutableMapOf<ObservableMetric, Double>()
-        verify(exactly = 1) { mockMetricsObserver.onMetricsReceive(observableMetrics) }
+        verify(exactly = 1) { mockMetricsObserver.onMetricsReceived(observableMetrics) }
     }
 
     @Test
@@ -95,7 +95,7 @@ class DefaultClientMetricsCollectorTest {
         clientMetricsCollector.processAudioClientMetrics(rawMetrics)
 
         val observableMetrics = mutableMapOf<ObservableMetric, Double>()
-        verify(exactly = 1) { mockMetricsObserver.onMetricsReceive(observableMetrics) }
+        verify(exactly = 1) { mockMetricsObserver.onMetricsReceived(observableMetrics) }
     }
 
     @Test
@@ -108,6 +108,6 @@ class DefaultClientMetricsCollectorTest {
 
         clientMetricsCollector.processAudioClientMetrics(rawMetrics)
 
-        verify(exactly = 0) { mockMetricsObserver.onMetricsReceive(any()) }
+        verify(exactly = 0) { mockMetricsObserver.onMetricsReceived(any()) }
     }
 }

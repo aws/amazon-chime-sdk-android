@@ -75,28 +75,28 @@ class DefaultVideoClientObserverTest {
     }
 
     @Test
-    fun `isConnecting should notify added observers about video client connecting event`() {
+    fun `isConnecting should notify added observers about video session connecting event`() {
         testVideoClientObserver.isConnecting(mockVideoClient)
 
-        verify { mockAudioVideoObserver.onVideoClientConnecting() }
+        verify { mockAudioVideoObserver.onVideoSessionStartedConnecting() }
     }
 
     @Test
-    fun `didConnect should notify added observers about video client start event when control status is OK`() {
+    fun `didConnect should notify added observers about video session start when control status is OK`() {
         testVideoClientObserver.didConnect(mockVideoClient, videoClientSuccessCode)
 
-        verify { mockAudioVideoObserver.onVideoClientStart() }
+        verify { mockAudioVideoObserver.onVideoSessionStarted(any()) }
     }
 
     @Test
-    fun `didConnect should notify added observers about video client error when control status is NOT OK`() {
+    fun `didConnect should notify added observers about video session start with error status when control status is NOT OK`() {
         testVideoClientObserver.didConnect(
             mockVideoClient,
             VideoClient.VIDEO_CLIENT_STATUS_CALL_AT_CAPACITY_VIEW_ONLY
         )
 
         verify {
-            mockAudioVideoObserver.onVideoClientError(
+            mockAudioVideoObserver.onVideoSessionStarted(
                 MeetingSessionStatus(
                     MeetingSessionStatusCode.VideoAtCapacityViewOnly
                 )
@@ -105,7 +105,7 @@ class DefaultVideoClientObserverTest {
     }
 
     @Test
-    fun `didFail should notify added observers about video client failure event`() {
+    fun `didFail should notify added observers about video session failure event`() {
         testVideoClientObserver.didFail(
             mockVideoClient,
             videoClientSuccessCode,
@@ -113,7 +113,7 @@ class DefaultVideoClientObserverTest {
         )
 
         verify {
-            mockAudioVideoObserver.onVideoClientStop(
+            mockAudioVideoObserver.onVideoSessionStopped(
                 MeetingSessionStatus(
                     MeetingSessionStatusCode.VideoServiceFailed
                 )
@@ -122,11 +122,11 @@ class DefaultVideoClientObserverTest {
     }
 
     @Test
-    fun `didStop should notify added observers about video client stop event`() {
+    fun `didStop should notify added observers about video session stop event`() {
         testVideoClientObserver.didStop(mockVideoClient)
 
         verify {
-            mockAudioVideoObserver.onVideoClientStop(
+            mockAudioVideoObserver.onVideoSessionStopped(
                 MeetingSessionStatus(
                     MeetingSessionStatusCode.OK
                 )
@@ -182,7 +182,7 @@ class DefaultVideoClientObserverTest {
 
         testVideoClientObserver.isConnecting(mockVideoClient)
 
-        verify(exactly = 0) { mockAudioVideoObserver.onVideoClientConnecting() }
+        verify(exactly = 0) { mockAudioVideoObserver.onVideoSessionStartedConnecting() }
     }
 
     @Test

@@ -8,10 +8,8 @@ package com.amazonaws.services.chime.sdk.meetings.audiovideo.audio.activespeaker
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.AttendeeInfo
 
 /**
- * [ActiveSpeakerObserver] provides API calls to allow an
- * observer to listen to active speaker updates
+ * [ActiveSpeakerObserver] handles active speaker detection and score changes for attendees.
  */
-
 interface ActiveSpeakerObserver {
     /**
      * @property scoreCallbackIntervalMs: Int? Specifies period (in milliseconds) of updates for
@@ -21,11 +19,11 @@ interface ActiveSpeakerObserver {
     val scoreCallbackIntervalMs: Int?
 
     /**
-     * Notifies observers of changes to active speaker
+     * Notifies observers of changes to active speaker.
      *
-     * @param attendeeInfo: Array<[AttendeeInfo]> - An array of active speakers
+     * @param attendeeInfo: Array<[AttendeeInfo]> - An array of active speakers.
      */
-    fun onActiveSpeakerDetect(attendeeInfo: Array<AttendeeInfo>)
+    fun onActiveSpeakerDetected(attendeeInfo: Array<AttendeeInfo>)
 
     /**
      * Periodically sends active speaker scores to observers ONLY IF
@@ -34,5 +32,5 @@ interface ActiveSpeakerObserver {
      * @param scores: Map<[AttendeeInfo], Double> - Map of active speakers to respective scores.
      * Scores of 0 mean the attendee is not an active speaker.
      */
-    fun onActiveSpeakerScoreChange(scores: Map<AttendeeInfo, Double>)
+    fun onActiveSpeakerScoreChanged(scores: Map<AttendeeInfo, Double>)
 }

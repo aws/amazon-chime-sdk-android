@@ -280,7 +280,7 @@ class DefaultDeviceControllerTest {
 
         deviceController.notifyAudioDeviceChange()
 
-        verify { deviceChangeObserver.onAudioDeviceChange(any()) }
+        verify { deviceChangeObserver.onAudioDeviceChanged(any()) }
     }
 
     @Test
@@ -291,6 +291,6 @@ class DefaultDeviceControllerTest {
 
         deviceController.notifyAudioDeviceChange()
 
-        verify(exactly = 0) { deviceChangeObserver.onAudioDeviceChange(any()) }
+        verify(exactly = 0) { deviceChangeObserver.onAudioDeviceChanged(any()) }
     }
 }

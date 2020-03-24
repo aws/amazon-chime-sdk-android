@@ -8,7 +8,7 @@ package com.amazonaws.services.chime.sdk.meetings.audiovideo
 import com.amazonaws.services.chime.sdk.meetings.session.MeetingSessionStatus
 
 /**
- * [AudioVideoObserver] handles audio/video client events.
+ * [AudioVideoObserver] handles audio / video session events.
  */
 interface AudioVideoObserver {
     /**
@@ -16,14 +16,14 @@ interface AudioVideoObserver {
      *
      * @param reconnecting: Boolean - Whether the session is reconnecting or not.
      */
-    fun onAudioClientConnecting(reconnecting: Boolean)
+    fun onAudioSessionStartedConnecting(reconnecting: Boolean)
 
     /**
      * Called when the audio session has started.
      *
      * @param reconnecting: Boolean - Whether the session is reconnecting or not.
      */
-    fun onAudioClientStart(reconnecting: Boolean)
+    fun onAudioSessionStarted(reconnecting: Boolean)
 
     /**
      * Called when the audio session has stopped from a started state with the reason
@@ -31,32 +31,36 @@ interface AudioVideoObserver {
      *
      * @param sessionStatus: [MeetingSessionStatus] - The reason why the session has stopped.
      */
-    fun onAudioClientStop(sessionStatus: MeetingSessionStatus)
+    fun onAudioSessionStopped(sessionStatus: MeetingSessionStatus)
 
     /**
-     * Called when audio reconnection is canceled.
+     * Called when audio session cancelled reconnecting.
      */
-    fun onAudioClientReconnectionCancel()
+    fun onAudioSessionCancelledReconnect()
 
     /**
      * Called when the connection health is recovered.
      */
-    fun onConnectionRecover()
+    fun onConnectionRecovered()
 
     /**
-     * Called when connection is becoming poor.
+     * Called when connection became poor.
      */
-    fun onConnectionBecomePoor()
+    fun onConnectionBecamePoor()
 
     /**
      * Called when the video session is connecting or reconnecting.
      */
-    fun onVideoClientConnecting()
+    fun onVideoSessionStartedConnecting()
 
     /**
-     * Called when the video session has started.
+     * Called when the video session has started. Sometimes there is a non fatal error such as
+     * trying to send local video when the capacity was already reached. However, user can still
+     * receive remote video in the existing video session.
+     *
+     * @param sessionStatus: [MeetingSessionStatus] - Additional details on how the video session started.
      */
-    fun onVideoClientStart()
+    fun onVideoSessionStarted(sessionStatus: MeetingSessionStatus)
 
     /**
      * Called when the video session has stopped from a started state with the reason
@@ -64,15 +68,5 @@ interface AudioVideoObserver {
      *
      * @param sessionStatus: [MeetingSessionStatus] - The reason why the session has stopped.
      */
-    fun onVideoClientStop(sessionStatus: MeetingSessionStatus)
-
-    /**
-     * Called when an error is encountered in the video session with the reason provided in the status.
-     * In this case, the error does not cause the video session to stop. For example, the video client
-     * may have tried to send video but found that the capacity was already reached. However, the video
-     * client can still receive remote video streams.
-     *
-     * @param sessionStatus: [MeetingSessionStatus] - The reason why the session has stopped.
-     */
-    fun onVideoClientError(sessionStatus: MeetingSessionStatus)
+    fun onVideoSessionStopped(sessionStatus: MeetingSessionStatus)
 }

@@ -94,7 +94,7 @@ class DefaultActiveSpeakerDetector(
             scoresTimer.scheduleAtFixedRate(
                 object : TimerTask() {
                     override fun run() {
-                        observer.onActiveSpeakerScoreChange(speakerScores)
+                        observer.onActiveSpeakerScoreChanged(speakerScores)
                     }
                 },
                 it.toLong(),
@@ -136,7 +136,7 @@ class DefaultActiveSpeakerDetector(
         }
         val sortedSpeakers = speakerScores.filterValues { it != 0.0 }.toList().sortedBy { (_, value) -> value }.map { it.first }
         activeSpeakerObservers.forEach {
-            it.onActiveSpeakerDetect(sortedSpeakers.toTypedArray())
+            it.onActiveSpeakerDetected(sortedSpeakers.toTypedArray())
         }
         activeSpeakers = sortedSpeakers.toMutableList()
     }
@@ -147,20 +147,20 @@ class DefaultActiveSpeakerDetector(
                 (score > 0.0 && !activeSpeakers.contains(attendeeInfo)))
     }
 
-    override fun onVolumeChange(volumeUpdates: Array<VolumeUpdate>) {
+    override fun onVolumeChanged(volumeUpdates: Array<VolumeUpdate>) {
         volumeUpdates.forEach {
             mostRecentAttendeeVolumes[it.attendeeInfo] = it.volumeLevel
         }
     }
 
-    override fun onAttendeesJoin(attendeeInfo: Array<AttendeeInfo>) {
+    override fun onAttendeesJoined(attendeeInfo: Array<AttendeeInfo>) {
         attendeeInfo.forEach {
             speakerScores[it] = 0.0
             mostRecentAttendeeVolumes[it] = VolumeLevel.NotSpeaking
         }
     }
 
-    override fun onAttendeesLeave(attendeeInfo: Array<AttendeeInfo>) {
+    override fun onAttendeesLeft(attendeeInfo: Array<AttendeeInfo>) {
         attendeeInfo.forEach {
             speakerScores.remove(it)
             mostRecentAttendeeVolumes.remove(it)
@@ -169,15 +169,15 @@ class DefaultActiveSpeakerDetector(
         }
     }
 
-    override fun onSignalStrengthChange(signalUpdates: Array<SignalUpdate>) {
+    override fun onSignalStrengthChanged(signalUpdates: Array<SignalUpdate>) {
         // Not needed for active speaker detection as we solely rely on volume levels
     }
 
-    override fun onAttendeesMute(attendeeInfo: Array<AttendeeInfo>) {
+    override fun onAttendeesMuted(attendeeInfo: Array<AttendeeInfo>) {
         // Not needed as mute state is propagated in onVolumeChange
     }
 
-    override fun onAttendeesUnmute(attendeeInfo: Array<AttendeeInfo>) {
+    override fun onAttendeesUnmuted(attendeeInfo: Array<AttendeeInfo>) {
         // Not needed as unmute state can be obtained from onVolumeChange
     }
 }

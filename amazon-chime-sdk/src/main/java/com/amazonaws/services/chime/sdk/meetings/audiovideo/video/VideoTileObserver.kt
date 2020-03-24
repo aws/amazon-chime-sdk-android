@@ -11,27 +11,30 @@ package com.amazonaws.services.chime.sdk.meetings.audiovideo.video
 interface VideoTileObserver {
 
     /**
-     * Called whenever an attendee starts sharing the video
+     * Called whenever an attendee starts sharing the video.
      *
      * @param tileState: [VideoTileState] - Video tile state associated with new attendee.
      */
-    fun onAddVideoTile(tileState: VideoTileState)
+    fun onVideoTileAdded(tileState: VideoTileState)
 
     /**
-     * Called whenever any attendee stops sharing the video
-     * @param tileState: [VideoTileState] - Video tile state associated with attendee who is removed
+     * Called whenever any attendee stops sharing the video.
+     *
+     * @param tileState: [VideoTileState] - Video tile state associated with attendee who is removed.
      */
-    fun onRemoveVideoTile(tileState: VideoTileState)
+    fun onVideoTileRemoved(tileState: VideoTileState)
 
     /**
-     * Called whenever an attendee tile pauseState changes from VideoPauseState.Unpaused
-     * @param tileState: [VideoTileState] - Video tile state associated with attendee who is paused
+     * Called whenever an attendee tile pauseState changes from [VideoPauseState.Unpaused].
+     *
+     * @param tileState: [VideoTileState] - Video tile state associated with attendee who is paused.
      */
-    fun onPauseVideoTile(tileState: VideoTileState)
+    fun onVideoTilePaused(tileState: VideoTileState)
 
     /**
-     * Called whenever an attendee tile pauseState changes to VideoPauseState.Unpaused
-     * @param tileState: [VideoTileState] - Video tile state associated with attendee who is resumed
+     * Called whenever an attendee tile pauseState changes to [VideoPauseState.Unpaused].
+     *
+     * @param tileState: [VideoTileState] - Video tile state associated with attendee who is resumed.
      */
-    fun onResumeVideoTile(tileState: VideoTileState)
+    fun onVideoTileResumed(tileState: VideoTileState)
 }

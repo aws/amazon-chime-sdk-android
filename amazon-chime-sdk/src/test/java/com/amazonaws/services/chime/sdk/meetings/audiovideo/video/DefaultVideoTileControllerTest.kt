@@ -57,19 +57,19 @@ class DefaultVideoTileControllerTest {
     private var onResumeObserverCalled = 0
 
     private val tileObserver = object : VideoTileObserver {
-        override fun onAddVideoTile(tileState: VideoTileState) {
+        override fun onVideoTileAdded(tileState: VideoTileState) {
             onAddObserverCalled++
         }
 
-        override fun onRemoveVideoTile(tileState: VideoTileState) {
+        override fun onVideoTileRemoved(tileState: VideoTileState) {
             onRemoveObserverCalled++
         }
 
-        override fun onPauseVideoTile(tileState: VideoTileState) {
+        override fun onVideoTilePaused(tileState: VideoTileState) {
             onPauseObserverCalled++
         }
 
-        override fun onResumeVideoTile(tileState: VideoTileState) {
+        override fun onVideoTileResumed(tileState: VideoTileState) {
             onResumeObserverCalled++
         }
     }
@@ -134,7 +134,7 @@ class DefaultVideoTileControllerTest {
     }
 
     @Test
-    fun `onReceiveFrame should NOT call onAddVideoTile on Observer when observer has been removed`() {
+    fun `onReceiveFrame should NOT notify observer about video tile add when observer has been removed`() {
         videoTileController.addVideoTileObserver(tileObserver)
         videoTileController.removeVideoTileObserver(tileObserver)
         runBlockingTest {
@@ -150,7 +150,7 @@ class DefaultVideoTileControllerTest {
     }
 
     @Test
-    fun `onReceiveFrame should NOT call onRemoveTile on Observer when observer has been removed`() {
+    fun `onReceiveFrame should NOT notify observer about video tile remove when observer has been removed`() {
         videoTileController.addVideoTileObserver(tileObserver)
         videoTileController.removeVideoTileObserver(tileObserver)
         runBlockingTest {
@@ -166,7 +166,7 @@ class DefaultVideoTileControllerTest {
     }
 
     @Test
-    fun `onReceiveFrame should call onAddVideoTile on Observer with non-null frame and new tileId`() {
+    fun `onReceiveFrame should notify observer about video tile add with non-null frame and new tileId`() {
         val mockObserver = spyk(tileObserver)
 
         videoTileController.addVideoTileObserver(mockObserver)
@@ -181,7 +181,7 @@ class DefaultVideoTileControllerTest {
 
         Assert.assertEquals(1, onAddObserverCalled)
         verify {
-            mockObserver.onAddVideoTile(
+            mockObserver.onVideoTileAdded(
                 VideoTileState(
                     tileId,
                     attendeeId,
@@ -192,7 +192,7 @@ class DefaultVideoTileControllerTest {
     }
 
     @Test
-    fun `onReceiveFrame should call onRemoveTile on Observer with null frame and old tileId`() {
+    fun `onReceiveFrame should notify observer about video tile remove with null frame and old tileId`() {
         val mockObserver = spyk(tileObserver)
 
         videoTileController.addVideoTileObserver(mockObserver)
@@ -208,7 +208,7 @@ class DefaultVideoTileControllerTest {
 
         Assert.assertEquals(1, onRemoveObserverCalled)
         verify {
-            mockObserver.onRemoveVideoTile(
+            mockObserver.onVideoTileRemoved(
                 VideoTileState(
                     tileId,
                     attendeeId,
@@ -219,7 +219,7 @@ class DefaultVideoTileControllerTest {
     }
 
     @Test
-    fun `onReceiveFrame should call onPauseTile on Observer when pause state is changed to paused`() {
+    fun `onReceiveFrame should notify observer about video tile pause when pause state is changed to paused`() {
         val mockObserver = spyk(tileObserver)
 
         videoTileController.addVideoTileObserver(mockObserver)
@@ -241,7 +241,7 @@ class DefaultVideoTileControllerTest {
         verify { mockVideoTile.setPauseState(VideoPauseState.PausedForPoorConnection) }
         // Mock video tile state will be equal to Unpaused
         verify(exactly = 1) {
-            mockObserver.onPauseVideoTile(
+            mockObserver.onVideoTilePaused(
                 VideoTileState(
                     tileId,
                     attendeeId,
@@ -252,7 +252,7 @@ class DefaultVideoTileControllerTest {
     }
 
     @Test
-    fun `onReceiveFrame should call onResumeTile on Observer when pause state is changed from paused to unpaused`() {
+    fun `onReceiveFrame should notify observer about video tile resume when pause state is changed from paused to unpaused`() {
         val mockObserver = spyk(tileObserver)
         every { mockVideoTile.state } returns VideoTileState(
             tileId,
@@ -279,7 +279,7 @@ class DefaultVideoTileControllerTest {
         verify { mockVideoTile.setPauseState(VideoPauseState.Unpaused) }
         // Mock video tile state will be equal to PausedForPoorConnection
         verify(exactly = 1) {
-            mockObserver.onResumeVideoTile(
+            mockObserver.onVideoTileResumed(
                 VideoTileState(
                     tileId,
                     attendeeId,
@@ -305,7 +305,7 @@ class DefaultVideoTileControllerTest {
     }
 
     @Test
-    fun `pauseRemoteVideoTile should call onPauseTile on Observer when tile exists`() {
+    fun `pauseRemoteVideoTile should notify observer about video tile pause when tile exists`() {
         val mockObserver = spyk(tileObserver)
         videoTileController.addVideoTileObserver(mockObserver)
 
@@ -321,7 +321,7 @@ class DefaultVideoTileControllerTest {
 
         // Mock video tile state will be equal to Unpaused
         verify(exactly = 1) {
-            mockObserver.onPauseVideoTile(
+            mockObserver.onVideoTilePaused(
                 VideoTileState(
                     tileId,
                     attendeeId,
@@ -347,7 +347,7 @@ class DefaultVideoTileControllerTest {
     }
 
     @Test
-    fun `resumeRemoteVideoTile should call onResumeTile on Observer when tile exists`() {
+    fun `resumeRemoteVideoTile should notify observer about video tile resume when tile exists`() {
         val mockObserver = spyk(tileObserver)
         every { mockVideoTile.state } returns VideoTileState(
             tileId,
@@ -368,7 +368,7 @@ class DefaultVideoTileControllerTest {
 
         // Mock video tile state will be equal to PausedByUserRequest
         verify(exactly = 1) {
-            mockObserver.onResumeVideoTile(
+            mockObserver.onVideoTileResumed(
                 VideoTileState(
                     tileId,
                     attendeeId,
@@ -386,7 +386,7 @@ class DefaultVideoTileControllerTest {
     }
 
     @Test
-    fun `pauseRemoteVideoTile should NOT call onPauseTile on Observer when tile does not exist`() {
+    fun `pauseRemoteVideoTile should NOT notify observer about video tile pause when tile does not exist`() {
         videoTileController.addVideoTileObserver(tileObserver)
         videoTileController.pauseRemoteVideoTile(tileId)
 
@@ -413,7 +413,7 @@ class DefaultVideoTileControllerTest {
     }
 
     @Test
-    fun `resumeRemoteVideoTile should NOT call onResumeTile on Observer when tile does not exists`() {
+    fun `resumeRemoteVideoTile should NOT notify observer about video tile resume when tile does not exists`() {
         videoTileController.addVideoTileObserver(tileObserver)
         videoTileController.resumeRemoteVideoTile(tileId)
 

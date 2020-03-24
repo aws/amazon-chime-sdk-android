@@ -10,9 +10,9 @@ package com.amazonaws.services.chime.sdk.meetings.audiovideo.metric
  */
 interface MetricsObserver {
     /**
-     * Called when metrics are ready.
+     * Called when metrics are received.
      *
      * @param metrics: Map<ObservableMetric, Any> - Map of metric type to value
      */
-    fun onMetricsReceive(metrics: Map<ObservableMetric, Any>)
+    fun onMetricsReceived(metrics: Map<ObservableMetric, Any>)
 }

@@ -12,48 +12,49 @@ import com.amazonaws.services.chime.sdk.meetings.audiovideo.VolumeLevel
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.VolumeUpdate
 
 /**
- * [RealtimeObserver] lets one listen to real time events such a volume or signal strength changes
+ * [RealtimeObserver] lets one listen to real time events such a volume, signal strength, or
+ * attendee changes.
  */
 interface RealtimeObserver {
     /**
-     * Handles volume changes for attendees whose [VolumeLevel] has changed
+     * Handles volume changes for attendees whose [VolumeLevel] has changed.
      *
-     * @param volumeUpdates: Array<[VolumeUpdate]> - Attendees with updated volume levels
+     * @param volumeUpdates: Array<[VolumeUpdate]> - Attendees with updated volume levels.
      */
-    fun onVolumeChange(volumeUpdates: Array<VolumeUpdate>)
+    fun onVolumeChanged(volumeUpdates: Array<VolumeUpdate>)
 
     /**
-     * Handles signal strength changes for attendees whose [SignalStrength] has changed
+     * Handles signal strength changes for attendees whose [SignalStrength] has changed.
      *
-     * @param signalUpdates: Array<[SignalUpdate]> - Attendees with updated signal strengths
+     * @param signalUpdates: Array<[SignalUpdate]> - Attendees with updated signal strengths.
      */
-    fun onSignalStrengthChange(signalUpdates: Array<SignalUpdate>)
+    fun onSignalStrengthChanged(signalUpdates: Array<SignalUpdate>)
 
     /**
-     * Handles attendee(s) being added
+     * Handles attendee(s) being added.
      *
-     * @param attendeeInfo: Array<[AttendeeInfo]> - Attendees being added
+     * @param attendeeInfo: Array<[AttendeeInfo]> - Attendees being added.
      */
-    fun onAttendeesJoin(attendeeInfo: Array<AttendeeInfo>)
+    fun onAttendeesJoined(attendeeInfo: Array<AttendeeInfo>)
 
     /**
-     * Handles attendee(s) being removed
+     * Handles attendee(s) being removed.
      *
-     * @param attendeeInfo: Array<[AttendeeInfo]> - Attendees being removed
+     * @param attendeeInfo: Array<[AttendeeInfo]> - Attendees being removed.
      */
-    fun onAttendeesLeave(attendeeInfo: Array<AttendeeInfo>)
+    fun onAttendeesLeft(attendeeInfo: Array<AttendeeInfo>)
 
     /**
-     * Handles attendee(s) whose [VolumeLevel] has changed to muted
+     * Handles attendee(s) whose [VolumeLevel] has changed to muted.
      *
-     * @param attendeeInfo: Array<[AttendeeInfo]> - Attendees who are newly muted
+     * @param attendeeInfo: Array<[AttendeeInfo]> - Attendees who are newly muted.
      */
-    fun onAttendeesMute(attendeeInfo: Array<AttendeeInfo>)
+    fun onAttendeesMuted(attendeeInfo: Array<AttendeeInfo>)
 
     /**
-     * Handles attendee(s) whose [VolumeLevel] has changed from muted
+     * Handles attendee(s) whose [VolumeLevel] has changed from muted.
      *
-     * @param attendeeInfo: Array<[AttendeeInfo]> - Attendees who are newly unmuted
+     * @param attendeeInfo: Array<[AttendeeInfo]> - Attendees who are newly unmuted.
      */
-    fun onAttendeesUnmute(attendeeInfo: Array<AttendeeInfo>)
+    fun onAttendeesUnmuted(attendeeInfo: Array<AttendeeInfo>)
 }
