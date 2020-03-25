@@ -23,7 +23,6 @@ import java.io.BufferedReader
 import java.io.InputStreamReader
 import java.net.HttpURLConnection
 import java.net.URL
-import java.net.URLEncoder
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -190,9 +189,5 @@ class MeetingHomeActivity : AppCompatActivity() {
                 null
             }
         }
-    }
-
-    private fun encodeURLParam(string: String?): String {
-        return URLEncoder.encode(string, "utf-8")
     }
 }
