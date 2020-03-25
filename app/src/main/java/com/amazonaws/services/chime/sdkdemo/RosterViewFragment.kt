@@ -45,6 +45,7 @@ import java.io.BufferedReader
 import java.io.InputStreamReader
 import java.net.HttpURLConnection
 import java.net.URL
+import java.net.URLEncoder
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -312,7 +313,7 @@ class RosterViewFragment : Fragment(),
     ): String? {
         return withContext(ioDispatcher) {
             val serverUrl =
-                URL("${meetingUrl}attendee?title=$meetingId&attendee=$attendeeId")
+                URL("${meetingUrl}attendee?title=${encodeURLParam(meetingId)}&attendee=${encodeURLParam(attendeeId)}")
             try {
                 val response = StringBuffer()
                 with(serverUrl.openConnection() as HttpURLConnection) {
@@ -336,6 +337,10 @@ class RosterViewFragment : Fragment(),
                 null
             }
         }
+    }
+
+    private fun encodeURLParam(string: String?): String {
+        return URLEncoder.encode(string, "utf-8")
     }
 
     private fun toggleMuteMeeting() {
