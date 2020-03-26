@@ -312,7 +312,7 @@ class RosterViewFragment : Fragment(),
     ): String? {
         return withContext(ioDispatcher) {
             val serverUrl =
-                URL("${meetingUrl}attendee?title=$meetingId&attendee=$attendeeId")
+                URL("${meetingUrl}attendee?title=${encodeURLParam(meetingId)}&attendee=${encodeURLParam(attendeeId)}")
             try {
                 val response = StringBuffer()
                 with(serverUrl.openConnection() as HttpURLConnection) {

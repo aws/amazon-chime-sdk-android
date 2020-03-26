@@ -155,7 +155,11 @@ class MeetingHomeActivity : AppCompatActivity() {
     ): String? {
         return withContext(ioDispatcher) {
             val serverUrl =
-                URL("${meetingUrl}join?title=$meetingId&name=$attendeeName&region=$MEETING_REGION")
+                URL(
+                    "${meetingUrl}join?title=${encodeURLParam(meetingId)}&name=${encodeURLParam(
+                        attendeeName
+                    )}&region=${encodeURLParam(MEETING_REGION)}"
+                )
 
             try {
                 val response = StringBuffer()
