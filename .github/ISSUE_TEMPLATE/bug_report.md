@@ -26,9 +26,11 @@ If applicable, add logs from logcat to help explain your problem.
 **Screenshots**
 If applicable, add screenshots to help explain your problem.
 
-**Device Info (please complete the following information):**
+**Test environment Info (please complete the following information):**
  - Device: [e.g. Pixel3]
  - OS: [e.g. Android 10]
+ - Version AmazonChimeSDK: [e.g. 0.4.0]
+ - Version AmazonChimeSDKMedia: [e.g. 0.4.0]
 
 **Additional context**
 Add any other context about the problem here.
