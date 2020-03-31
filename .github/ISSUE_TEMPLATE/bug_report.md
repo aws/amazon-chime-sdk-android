@@ -29,8 +29,8 @@ If applicable, add screenshots to help explain your problem.
 **Test environment Info (please complete the following information):**
  - Device: [e.g. Pixel3]
  - OS: [e.g. Android 10]
- - Version AmazonChimeSDK: [e.g. 0.4.0]
- - Version AmazonChimeSDKMedia: [e.g. 0.4.0]
+ - Version amazon-chime-sdk: [e.g. 0.4.0]
+ - Version amazon-chime-sdk-media: [e.g. 0.4.0]
 
 **Additional context**
 Add any other context about the problem here.
