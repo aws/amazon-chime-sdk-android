@@ -9,6 +9,7 @@ import android.Manifest
 import android.content.Context
 import android.content.pm.PackageManager
 import androidx.core.content.ContextCompat
+import com.amazonaws.services.chime.sdk.BuildConfig
 import com.amazonaws.services.chime.sdk.meetings.utils.logger.Logger
 import com.xodee.client.video.VideoClient
 import com.xodee.client.video.VideoClientCapturer
@@ -165,13 +166,17 @@ class DefaultVideoClientController constructor(
         val packageInfo = context.packageManager.getPackageInfo(packageName, 0)
         val appVer = packageInfo.versionName
         val appCode = packageInfo.versionCode.toString()
+        val clientSource = "amazon-chime-sdk"
+        val sdkVersion = BuildConfig.VERSION_NAME
 
-        VideoClient.AppDetailedInfo.intialize(
+        VideoClient.AppDetailedInfo.initialize(
             String.format("Android %s", appVer),
             appCode,
             model,
             manufacturer,
-            osVersion
+            osVersion,
+            clientSource,
+            sdkVersion
         )
     }
 }
