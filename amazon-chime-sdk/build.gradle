@@ -8,6 +8,10 @@ apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'org.jetbrains.dokka'
 
+ext.versionMajor = 0
+ext.versionMinor = 4
+ext.versionPatch = 0
+
 android {
     compileSdkVersion project.ext.chimeCompileSdkVersion
     buildToolsVersion project.ext.chimeBuildToolsVersion
@@ -15,8 +19,8 @@ android {
     defaultConfig {
         minSdkVersion project.ext.chimeMinSdkVersion
         targetSdkVersion project.ext.chimeTargetSdkVersion
-        versionCode 1
-        versionName "1.0"
+        versionCode generateVersionCode()
+        versionName generateVersionName()
         consumerProguardFiles 'consumer-rules.pro'
         ndk {
             abiFilters 'armeabi-v7a', 'arm64-v8a'
@@ -45,6 +49,14 @@ android {
             }
         }
     }
+}
+
+private Integer generateVersionCode() {
+    return project.ext.chimeMinSdkVersion * 10000000 + ext.versionMajor * 10000 + ext.versionMinor * 100 + ext.versionPatch
+}
+
+private String generateVersionName() {
+    return "${ext.versionMajor}.${ext.versionMinor}.${ext.versionPatch}"
 }
 
 dependencies {
