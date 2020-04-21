@@ -62,8 +62,10 @@ class DefaultAudioClientObserver(
 
     override fun onVolumeStateChange(attendeeUpdates: Array<out AttendeeUpdate>?) {
         if (attendeeUpdates == null) return
+        val attendeeUpdatesNonEmptyExternalId =
+            attendeeUpdates.filter { it.externalUserId.isNotEmpty() }
 
-        onAttendeesChange(attendeeUpdates.map {
+        onAttendeesChange(attendeeUpdatesNonEmptyExternalId.map {
             AttendeeInfo(
                 it.profileId,
                 it.externalUserId
@@ -71,7 +73,7 @@ class DefaultAudioClientObserver(
         }.toTypedArray())
 
         val newAttendeeVolumeMap: Map<String, VolumeUpdate> =
-            attendeeUpdates.mapNotNull { attendeeUpdate ->
+            attendeeUpdatesNonEmptyExternalId.mapNotNull { attendeeUpdate ->
                 VolumeLevel.from(attendeeUpdate.data)?.let {
                     val attendeeInfo =
                         AttendeeInfo(
@@ -104,19 +106,20 @@ class DefaultAudioClientObserver(
         if (attendeeUpdates == null) return
 
         val newAttendeeSignalMap: Map<String, SignalUpdate> =
-            attendeeUpdates.mapNotNull { attendeeUpdate ->
-                SignalStrength.from(attendeeUpdate.data)?.let {
-                    val attendeeInfo =
-                        AttendeeInfo(
-                            attendeeUpdate.profileId,
-                            attendeeUpdate.externalUserId
+            attendeeUpdates.filter { it.externalUserId.isNotEmpty() }
+                .mapNotNull { attendeeUpdate ->
+                    SignalStrength.from(attendeeUpdate.data)?.let {
+                        val attendeeInfo =
+                            AttendeeInfo(
+                                attendeeUpdate.profileId,
+                                attendeeUpdate.externalUserId
+                            )
+                        attendeeUpdate.profileId to SignalUpdate(
+                            attendeeInfo,
+                            it
                         )
-                    attendeeUpdate.profileId to SignalUpdate(
-                        attendeeInfo,
-                        it
-                    )
-                }
-            }.toMap()
+                    }
+                }.toMap()
 
         val changedAttendeeSignalMap: Map<String, SignalUpdate> =
             newAttendeeSignalMap.filter { (key, value) ->

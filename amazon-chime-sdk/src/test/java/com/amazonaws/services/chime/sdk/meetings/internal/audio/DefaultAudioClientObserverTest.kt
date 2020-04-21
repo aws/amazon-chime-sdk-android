@@ -154,6 +154,21 @@ class DefaultAudioClientObserverTest {
     }
 
     @Test
+    fun `onVolumeChange should filter out empty external id`() {
+        val testInput = arrayOf(
+            testAttendeeVolumeUpdate,
+            AttendeeUpdate(testId2, "", VolumeLevel.Low.value)
+        )
+        val expectedArgs: Array<VolumeUpdate> = arrayOf(testVolumeUpdate)
+        val expectedArgsJoined: Array<AttendeeInfo> = arrayOf(AttendeeInfo(testAttendeeVolumeUpdate.profileId, testAttendeeVolumeUpdate.externalUserId))
+
+        audioClientObserver.onVolumeStateChange(testInput)
+
+        verify(exactly = 1) { mockRealtimeObserver.onVolumeChanged(expectedArgs) }
+        verify(exactly = 1) { mockRealtimeObserver.onAttendeesJoined(expectedArgsJoined) }
+    }
+
+    @Test
     fun `onVolumeChange should filter out invalid volume levels`() {
         val testInput = arrayOf(
             testAttendeeVolumeUpdate,
@@ -207,6 +222,19 @@ class DefaultAudioClientObserverTest {
             mockRealtimeObserver.onSignalStrengthChanged(expectedArgs1)
             mockRealtimeObserver.onSignalStrengthChanged(expectedArgs2)
         }
+    }
+
+    @Test
+    fun `onSignalStrengthChange should filter out empty external user id`() {
+        val testInput = arrayOf(
+            testAttendeeSignalUpdate,
+            AttendeeUpdate(testId2, "", SignalStrength.High.value)
+        )
+        val expectedArgs: Array<SignalUpdate> = arrayOf(testSignalUpdate)
+
+        audioClientObserver.onSignalStrengthChange(testInput)
+
+        verify(exactly = 1) { mockRealtimeObserver.onSignalStrengthChanged(expectedArgs) }
     }
 
     @Test
