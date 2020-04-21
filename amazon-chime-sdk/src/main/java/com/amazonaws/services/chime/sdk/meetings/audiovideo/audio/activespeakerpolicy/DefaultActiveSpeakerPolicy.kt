@@ -27,7 +27,7 @@ class DefaultActiveSpeakerPolicy : ActiveSpeakerPolicy {
     /**
      * Only scores above this threshold will be considered active
      */
-    private val cutoffThreshold = 0.09
+    private val cutoffThreshold = 0.01
 
     /**
      * This constant is used to reduce the active speaker score of other attendees
