@@ -1,0 +1,1 @@
+-keep class com.amazonaws.services.chime.sdk.meetings.session.** { *; }
