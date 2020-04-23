@@ -1,4 +1,4 @@
-## [0.4.1] - 2020-04-22
+## [0.4.1] - 2020-04-23
 
 ### Added
 * Added proguard rules for release build type
