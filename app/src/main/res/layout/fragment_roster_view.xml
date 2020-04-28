@@ -1,4 +1,5 @@
-<?xml version="1.0" encoding="utf-8"?><!--
+<?xml version="1.0" encoding="utf-8"?>
+<!--
   ~ Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
   ~ SPDX-License-Identifier: Apache-2.0
   -->
@@ -74,31 +75,25 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:orientation="vertical">
+        android:orientation="vertical" >
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recyclerViewRoster"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:padding="8dp" />
+            android:layout_height="match_parent" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recyclerViewVideoCollection"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
+            android:layout_height="match_parent"
             android:contentDescription="@string/video_view"
-            android:padding="8dp"
             android:visibility="gone" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recyclerViewScreenShareCollection"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
+            android:layout_height="match_parent"
             android:contentDescription="@string/screen_share_view"
-            android:padding="8dp"
             android:visibility="gone" />
 
     </LinearLayout>

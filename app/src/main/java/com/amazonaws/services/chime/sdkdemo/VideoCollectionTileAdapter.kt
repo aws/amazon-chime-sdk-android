@@ -4,10 +4,9 @@
 package com.amazonaws.services.chime.sdkdemo
 
 import android.content.Context
-import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.FrameLayout
+import android.widget.RelativeLayout
 import androidx.recyclerview.widget.RecyclerView
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.AudioVideoFacade
 import com.amazonaws.services.chime.sdkdemo.data.VideoCollectionTile
@@ -22,10 +21,9 @@ class VideoCollectionTileAdapter(
 ) :
     RecyclerView.Adapter<ViewHolder>() {
     private val VIDEO_ASPECT_RATIO_16_9 = 0.5625
-    private val PADDING_RATIO = 0.9
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val inflatedView = LayoutInflater.from(parent.context).inflate(R.layout.video_collection_item, parent, false)
+        val inflatedView = parent.inflate(R.layout.video_collection_item, false)
         return ViewHolder(inflatedView, audioVideoFacade)
     }
 
@@ -38,7 +36,7 @@ class VideoCollectionTileAdapter(
         holder.bindVideoTile(videoCollectionTile)
         context?.let {
             val displayMetrics = context.resources.displayMetrics
-            val width = displayMetrics.widthPixels * PADDING_RATIO
+            val width = displayMetrics.widthPixels
             val height = (width * VIDEO_ASPECT_RATIO_16_9).toInt()
             holder.tileContainer.layoutParams.height = height
             holder.tileContainer.layoutParams.width = width.toInt()
@@ -51,7 +49,7 @@ class ViewHolder(inflatedView: View, audioVideoFacade: AudioVideoFacade) :
 
     private var view: View = inflatedView
     private var audioVideo = audioVideoFacade
-    val tileContainer: FrameLayout = view.findViewById(R.id.tile_container)
+    val tileContainer: RelativeLayout = view.findViewById(R.id.tile_container)
 
     init {
         setIsRecyclable(false)

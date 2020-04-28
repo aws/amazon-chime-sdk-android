@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<selector xmlns:android="http://schemas.android.com/apk/res/android" >
-<item android:state_pressed="true" android:drawable="@drawable/meeting_mute_tap" />
-<item android:drawable="@drawable/meeting_mute" />
+<!--
+  ~ Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+  ~ SPDX-License-Identifier: Apache-2.0
+  -->
 
+<selector xmlns:android="http://schemas.android.com/apk/res/android" >
+    <item android:drawable="@drawable/ic_mute" />
 </selector>

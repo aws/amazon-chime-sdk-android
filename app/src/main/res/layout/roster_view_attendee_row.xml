@@ -4,18 +4,20 @@
   ~ SPDX-License-Identifier: Apache-2.0
   -->
 
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="horizontal"
-    android:padding="8dp">
+    android:layout_gravity="center_horizontal"
+    android:paddingHorizontal="24dp"
+    android:paddingVertical="8dp"
+    android:orientation="horizontal">
 
     <TextView
         android:id="@+id/attendeeName"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_weight="3"
-        android:padding="8dp"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_alignParentStart="true"
+        android:gravity="center_vertical"
         android:textSize="20sp"
         android:maxLines="1"
         android:ellipsize="end"
@@ -23,10 +25,10 @@
 
     <ImageView
         android:id="@+id/attendeeVolume"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:contentDescription="@string/volume_indicator"
-        android:padding="8dp" />
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_alignParentEnd="true"
+        android:gravity="center_vertical"
+        android:contentDescription="@string/volume_indicator" />
 
-</LinearLayout>
+</RelativeLayout>
