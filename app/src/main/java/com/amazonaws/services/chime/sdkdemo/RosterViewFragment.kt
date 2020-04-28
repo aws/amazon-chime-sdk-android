@@ -310,6 +310,12 @@ class RosterViewFragment : Fragment(),
         meetingUrl: String,
         attendeeId: String
     ): String? {
+        if (attendeeId.endsWith("#content")) {
+            val contentOwner = attendeeId.split("#")[0]
+            currentRoster[contentOwner]?.let {
+                return "${it.attendeeName} <<Content>>"
+            }
+        }
         return withContext(ioDispatcher) {
             val serverUrl =
                 URL("${meetingUrl}attendee?title=${encodeURLParam(meetingId)}&attendee=${encodeURLParam(attendeeId)}")
