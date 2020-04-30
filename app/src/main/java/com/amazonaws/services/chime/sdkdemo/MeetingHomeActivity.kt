@@ -127,7 +127,7 @@ class MeetingHomeActivity : AppCompatActivity() {
     ) =
         uiScope.launch {
             authenticationProgressBar?.visibility = View.VISIBLE
-            logger.info(TAG, "Joining meeting. URL: $meetingUrl")
+            logger.info(TAG, "Joining meeting. meetingUrl: $meetingUrl, meetingId: $meetingId, attendeeName: $attendeeName")
 
             val meetingResponseJson: String? = joinMeeting(meetingUrl, meetingId, attendeeName)
 

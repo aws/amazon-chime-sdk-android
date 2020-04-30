@@ -36,31 +36,21 @@ import com.amazonaws.services.chime.sdk.meetings.session.MeetingSessionStatus
 import com.amazonaws.services.chime.sdk.meetings.session.MeetingSessionStatusCode
 import com.amazonaws.services.chime.sdk.meetings.utils.logger.ConsoleLogger
 import com.amazonaws.services.chime.sdk.meetings.utils.logger.LogLevel
-import com.amazonaws.services.chime.sdkdemo.data.AttendeeInfoResponse
 import com.amazonaws.services.chime.sdkdemo.data.RosterAttendee
 import com.amazonaws.services.chime.sdkdemo.data.VideoCollectionTile
 import com.google.android.material.tabs.TabLayout
-import com.google.gson.Gson
-import java.io.BufferedReader
-import java.io.InputStreamReader
-import java.net.HttpURLConnection
-import java.net.URL
-import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
-import kotlinx.coroutines.withContext
 
 class RosterViewFragment : Fragment(),
     RealtimeObserver, AudioVideoObserver, VideoTileObserver,
     MetricsObserver, ActiveSpeakerObserver {
     private val logger = ConsoleLogger(LogLevel.DEBUG)
-    private val gson = Gson()
     private val mutex = Mutex()
     private val uiScope = CoroutineScope(Dispatchers.Main)
-    private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO
     private val currentRoster = mutableMapOf<String, RosterAttendee>()
     private val currentVideoTiles = mutableMapOf<Int, VideoCollectionTile>()
     private val currentScreenTiles = mutableMapOf<Int, VideoCollectionTile>()
@@ -77,9 +67,16 @@ class RosterViewFragment : Fragment(),
     private val WEBRTC_PERMISSION_REQUEST_CODE = 1
     private val TAG = "RosterViewFragment"
 
+    // Check if attendee Id contains this at the end to identify content share
+    private val CONTENT_DELIMITER = "#content"
+
+    // Append to attendee name if it's for content share
+    private val CONTENT_NAME_SUFFIX = "<<Content>>"
+
     private val WEBRTC_PERM = arrayOf(
         Manifest.permission.CAMERA
     )
+
     enum class SubTab(val position: Int) {
         Attendee(0),
         Video(1),
@@ -169,11 +166,13 @@ class RosterViewFragment : Fragment(),
         recyclerViewScreenShareCollection =
             view.findViewById(R.id.recyclerViewScreenShareCollection)
         recyclerViewScreenShareCollection.layoutManager = LinearLayoutManager(activity)
-        screenTileAdapter = VideoCollectionTileAdapter(currentScreenTiles.values, audioVideo, context)
+        screenTileAdapter =
+            VideoCollectionTileAdapter(currentScreenTiles.values, audioVideo, context)
         recyclerViewScreenShareCollection.adapter = screenTileAdapter
 
         tabLayout = view.findViewById(R.id.tabLayoutRosterView)
-        SubTab.values().forEach { tabLayout.addTab(tabLayout.newTab().setText(it.name).setContentDescription("${it.name} Tab")) }
+        SubTab.values()
+            .forEach { tabLayout.addTab(tabLayout.newTab().setText(it.name).setContentDescription("${it.name} Tab")) }
         tabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
             override fun onTabReselected(tab: TabLayout.Tab?) {
             }
@@ -262,13 +261,13 @@ class RosterViewFragment : Fragment(),
     override fun onAttendeesJoined(attendeeInfo: Array<AttendeeInfo>) {
         uiScope.launch {
             mutex.withLock {
-                attendeeInfo.forEach { (attendeeId, _) ->
+                attendeeInfo.forEach { (attendeeId, externalUserId) ->
                     currentRoster.getOrPut(
                         attendeeId,
                         {
                             RosterAttendee(
                                 attendeeId,
-                                getAttendeeName(getString(R.string.test_url), attendeeId) ?: ""
+                                getAttendeeName(attendeeId, externalUserId)
                             )
                         })
                 }
@@ -306,41 +305,13 @@ class RosterViewFragment : Fragment(),
         }
     }
 
-    private suspend fun getAttendeeName(
-        meetingUrl: String,
-        attendeeId: String
-    ): String? {
-        if (attendeeId.endsWith("#content")) {
-            val contentOwner = attendeeId.split("#")[0]
-            currentRoster[contentOwner]?.let {
-                return "${it.attendeeName} <<Content>>"
-            }
-        }
-        return withContext(ioDispatcher) {
-            val serverUrl =
-                URL("${meetingUrl}attendee?title=${encodeURLParam(meetingId)}&attendee=${encodeURLParam(attendeeId)}")
-            try {
-                val response = StringBuffer()
-                with(serverUrl.openConnection() as HttpURLConnection) {
-                    requestMethod = "GET"
+    private fun getAttendeeName(attendeeId: String, externalUserId: String): String {
+        val attendeeName = externalUserId.split('#')[1]
 
-                    BufferedReader(InputStreamReader(inputStream)).use {
-                        var inputLine = it.readLine()
-                        while (inputLine != null) {
-                            response.append(inputLine)
-                            inputLine = it.readLine()
-                        }
-                        it.close()
-                    }
-                    gson.fromJson(
-                        response.toString(),
-                        AttendeeInfoResponse::class.java
-                    ).attendeeInfo.name
-                }
-            } catch (exception: Exception) {
-                logger.error(TAG, "Error getting attendee info. Exception: ${exception.message}")
-                null
-            }
+        return if (attendeeId.endsWith(CONTENT_DELIMITER)) {
+            "$attendeeName $CONTENT_NAME_SUFFIX"
+        } else {
+            attendeeName
         }
     }
 
@@ -483,7 +454,7 @@ class RosterViewFragment : Fragment(),
             logger.info(
                 TAG,
                 "Video track added, titleId: ${tileState.tileId}, attendeeId: ${tileState.attendeeId}" +
-                ", isContent ${tileState.isContent}"
+                        ", isContent ${tileState.isContent}"
             )
             if (tileState.isContent) {
                 if (!currentScreenTiles.containsKey(tileState.tileId) && canShowMoreRemoteScreenTile()) {
@@ -524,7 +495,7 @@ class RosterViewFragment : Fragment(),
                 }
                 videoTileAdapter.notifyDataSetChanged()
             } else if (nextVideoTiles.containsKey(tileId)) {
-                    nextVideoTiles.remove(tileId)
+                nextVideoTiles.remove(tileId)
             } else if (currentScreenTiles.containsKey(tileId)) {
                 audioVideo.unbindVideoView(tileId)
                 currentScreenTiles.remove(tileId)
@@ -536,9 +507,11 @@ class RosterViewFragment : Fragment(),
     override fun onVideoTilePaused(tileState: VideoTileState) {
         if (tileState.pauseState == VideoPauseState.PausedForPoorConnection) {
             val attendeeName = currentRoster[tileState.attendeeId]?.attendeeName ?: ""
-            notify("Video for attendee $attendeeName " +
-                    " has been paused for poor network connection," +
-                    " video will automatically resume when connection improves")
+            notify(
+                "Video for attendee $attendeeName " +
+                        " has been paused for poor network connection," +
+                        " video will automatically resume when connection improves"
+            )
         }
     }
 

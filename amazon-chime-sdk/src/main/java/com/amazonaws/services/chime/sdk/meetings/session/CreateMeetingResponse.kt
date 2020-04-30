@@ -9,13 +9,15 @@ package com.amazonaws.services.chime.sdk.meetings.session
 data class CreateMeetingResponse(val Meeting: Meeting)
 
 data class Meeting(
-    val MeetingId: String,
-    val MediaPlacement: MediaPlacement
+    val ExternalMeetingId: String,
+    val MediaPlacement: MediaPlacement,
+    val MediaRegion: String,
+    val MeetingId: String
 )
 
 data class MediaPlacement(
     val AudioFallbackUrl: String,
     val AudioHostUrl: String,
-    val TurnControlUrl: String,
-    val SignalingUrl: String
+    val SignalingUrl: String,
+    val TurnControlUrl: String
 )

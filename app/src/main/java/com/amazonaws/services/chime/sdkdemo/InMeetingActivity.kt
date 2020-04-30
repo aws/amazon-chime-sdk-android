@@ -15,7 +15,7 @@ import com.amazonaws.services.chime.sdk.meetings.session.DefaultMeetingSession
 import com.amazonaws.services.chime.sdk.meetings.session.MeetingSessionConfiguration
 import com.amazonaws.services.chime.sdk.meetings.utils.logger.ConsoleLogger
 import com.amazonaws.services.chime.sdk.meetings.utils.logger.LogLevel
-import com.amazonaws.services.chime.sdkdemo.data.MeetingResponse
+import com.amazonaws.services.chime.sdkdemo.data.JoinMeetingResponse
 import com.google.gson.Gson
 
 class InMeetingActivity : AppCompatActivity(),
@@ -43,7 +43,7 @@ class InMeetingActivity : AppCompatActivity(),
         val meetingSession = sessionConfig?.let {
             logger.info(TAG, "Creating meeting session for meeting Id: $meetingId")
             DefaultMeetingSession(
-                sessionConfig,
+                it,
                 logger,
                 applicationContext
             )
@@ -55,7 +55,7 @@ class InMeetingActivity : AppCompatActivity(),
                 getString(R.string.user_notification_meeting_start_error),
                 Toast.LENGTH_LONG
             ).show()
-            onBackPressed()
+            finish()
         } else {
             audioVideo = meetingSession.audioVideo
         }
@@ -93,10 +93,10 @@ class InMeetingActivity : AppCompatActivity(),
         if (response.isNullOrBlank()) return null
 
         return try {
-            val meetingResponse = gson.fromJson(response, MeetingResponse::class.java)
+            val joinMeetingResponse = gson.fromJson(response, JoinMeetingResponse::class.java)
             MeetingSessionConfiguration(
-                CreateMeetingResponse(meetingResponse.joinInfo.meeting),
-                CreateAttendeeResponse(meetingResponse.joinInfo.attendee)
+                CreateMeetingResponse(joinMeetingResponse.joinInfo.meetingResponse.meeting),
+                CreateAttendeeResponse(joinMeetingResponse.joinInfo.attendeeResponse.attendee)
             )
         } catch (exception: Exception) {
             logger.error(
