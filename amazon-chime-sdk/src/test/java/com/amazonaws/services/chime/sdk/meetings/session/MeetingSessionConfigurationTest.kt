@@ -11,9 +11,17 @@ import org.junit.Test
 class MeetingSessionConfigurationTest {
     @Test
     fun `constructor should return object with data from parameters`() {
+        // Meeting
+        val externalMeetingId = "I am the meeting"
+        val mediaRegion = "us-east-1"
         val meetingId = "meetingId"
+
+        // Attendee
         val attendeeId = "attendeeId"
+        val externalUserId = "Alice"
         val joinToken = "joinToken"
+
+        // MediaPlacement
         val audioFallbackURL = "audioFallbackURL"
         val audioHostURL = "audioHostURL"
         val turnControlURL = "turnControlURL"
@@ -22,10 +30,12 @@ class MeetingSessionConfigurationTest {
         val meetingSessionConfiguration = MeetingSessionConfiguration(
             CreateMeetingResponse(
                 Meeting(
-                    meetingId,
-                    MediaPlacement(audioFallbackURL, audioHostURL, turnControlURL, signalingURL)
+                    externalMeetingId,
+                    MediaPlacement(audioFallbackURL, audioHostURL, signalingURL, turnControlURL),
+                    mediaRegion,
+                    meetingId
                 )
-            ), CreateAttendeeResponse(Attendee(attendeeId, joinToken))
+            ), CreateAttendeeResponse(Attendee(attendeeId, externalUserId, joinToken))
         )
 
         assertEquals(meetingId, meetingSessionConfiguration.meetingId)

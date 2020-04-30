@@ -10,5 +10,6 @@ data class CreateAttendeeResponse(val Attendee: Attendee)
 
 data class Attendee(
     val AttendeeId: String,
+    val ExternalUserId: String,
     val JoinToken: String
 )
