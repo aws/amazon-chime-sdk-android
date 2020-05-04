@@ -22,6 +22,7 @@
     <string name="speaker_button">Toggle Speaker</string>
     <string name="toggle_mute">Toggle Mute</string>
     <string name="screen_share_view">Screen Share</string>
+    <string name="version_prefix">amazon-chime-sdk-android@</string>
     <string name="video_view">Video Collection</string>
 
     <!-- Notify users for errors -->

@@ -8,9 +8,17 @@ apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'org.jetbrains.dokka'
 
-ext.versionMajor = 0
-ext.versionMinor = 4
-ext.versionPatch = 0
+def versionFile = new File(getProjectDir(), "version.properties")
+Properties versionProperties = new Properties()
+if (versionFile.exists()) {
+    versionFile.withInputStream { instr ->
+        versionProperties.load(instr)
+    }
+}
+
+ext.versionMajor = versionProperties.getProperty('versionMajor') as Integer
+ext.versionMinor = versionProperties.getProperty('versionMinor') as Integer
+ext.versionPatch = versionProperties.getProperty('versionPatch') as Integer
 
 android {
     compileSdkVersion project.ext.chimeCompileSdkVersion
