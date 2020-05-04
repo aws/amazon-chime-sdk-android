@@ -1,6 +1,7 @@
 ## [Unreleased]
 ### Added
-* Added additional fields for `CreateAttendeeResponse` and `CreateMeetingResponse`
+* **Breaking** Added additional fields for `CreateAttendeeResponse` and `CreateMeetingResponse`
+* Added `Versioning` class and `sdkVersion` API for retrieving current version of SDK
 
 ### Changed
 * Updated demo app to work with updated [amazon-chime-sdk-js serverless demo](https://github.com/aws/amazon-chime-sdk-js/tree/master/demos/serverless). Note that you 

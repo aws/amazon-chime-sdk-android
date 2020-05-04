@@ -13,10 +13,12 @@ import android.view.View
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ProgressBar
+import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import com.amazonaws.services.chime.sdk.meetings.utils.Versioning
 import com.amazonaws.services.chime.sdk.meetings.utils.logger.ConsoleLogger
 import com.amazonaws.services.chime.sdk.meetings.utils.logger.LogLevel
 import java.io.BufferedReader
@@ -63,6 +65,9 @@ class MeetingHomeActivity : AppCompatActivity() {
         authenticationProgressBar = findViewById(R.id.progressAuthentication)
 
         findViewById<Button>(R.id.buttonContinue)?.setOnClickListener { joinMeeting() }
+
+        val versionText: TextView = findViewById(R.id.versionText) as TextView
+        versionText.text = "${getString(R.string.version_prefix)}${Versioning.sdkVersion()}"
     }
 
     private fun joinMeeting() {

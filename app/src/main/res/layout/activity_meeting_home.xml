@@ -56,5 +56,13 @@
         android:indeterminate="true"
         android:visibility="gone" />
 
+    <TextView
+        android:id="@+id/versionText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="@string/version_prefix"
+        android:textSize="12sp" />
+
 
 </LinearLayout>
