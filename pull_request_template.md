@@ -13,8 +13,8 @@
 * [ ] Rejoin meeting
 * [ ] Send audio
 * [ ] Receive audio
-* [ ] Mute self
-* [ ] Unmute self
+* [ ] See active speaker indicator when speaking
+* [ ] Mute/Unmute self
 * [ ] See local mute indicator when muted
 * [ ] See remote mute indicator when other is muted
 * [ ] See audio video events
@@ -25,6 +25,7 @@
 * [ ] See local video tile
 * [ ] See remote video tile
 * [ ] Switch camera
+* [ ] See remote screen sharing content with attendee name
 * [ ] Pause remote video tile
 * [ ] Resume remote video tile
 * [ ] First time audio permissions

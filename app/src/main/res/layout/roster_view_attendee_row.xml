@@ -6,7 +6,7 @@
 
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="48dp"
     android:layout_gravity="center_horizontal"
     android:paddingHorizontal="24dp"
     android:paddingVertical="8dp"
@@ -22,6 +22,16 @@
         android:maxLines="1"
         android:ellipsize="end"
         android:textColor="@color/colorText" />
+
+    <TextView
+        android:id="@+id/activeSpeakerIndicator"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_toStartOf="@id/attendeeVolume"
+        android:gravity="center_vertical"
+        android:paddingEnd="8dp"
+        android:text="@string/active_speaker_text"
+        android:visibility="invisible" />
 
     <ImageView
         android:id="@+id/attendeeVolume"

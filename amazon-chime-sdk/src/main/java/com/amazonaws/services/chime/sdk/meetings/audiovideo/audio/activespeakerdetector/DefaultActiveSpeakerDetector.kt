@@ -14,6 +14,7 @@ import com.amazonaws.services.chime.sdk.meetings.internal.audio.AudioClientObser
 import com.amazonaws.services.chime.sdk.meetings.realtime.RealtimeObserver
 import java.util.Timer
 import java.util.TimerTask
+import java.util.concurrent.ConcurrentHashMap
 
 /**
  * [DefaultActiveSpeakerDetector] A default implementation of the Active Speaker Detector
@@ -26,7 +27,7 @@ class DefaultActiveSpeakerDetector(
     val audioClientObserver: AudioClientObserver
 ) : ActiveSpeakerDetectorFacade,
     RealtimeObserver {
-    private var speakerScores = mutableMapOf<AttendeeInfo, Double>()
+    private var speakerScores = ConcurrentHashMap<AttendeeInfo, Double>()
     private var activeSpeakers = mutableListOf<AttendeeInfo>()
     private var mostRecentUpdateTimestamp = mutableMapOf<AttendeeInfo, Long>()
     private var mostRecentAttendeeVolumes = mutableMapOf<AttendeeInfo, VolumeLevel>()
@@ -68,8 +69,8 @@ class DefaultActiveSpeakerDetector(
         activityTimer.scheduleAtFixedRate(
             object : TimerTask() {
                 override fun run() {
-                    observerToPolicy.forEach { (_, policy) ->
-                        speakerScores.forEach { (attendeeInfo, _) ->
+                    observerToPolicy.values.forEach { policy ->
+                        speakerScores.keys.forEach { attendeeInfo ->
                             val lastTimestamp = mostRecentUpdateTimestamp[attendeeInfo] ?: 0
                             if (System.currentTimeMillis() - lastTimestamp > ACTIVITY_WAIT_INTERVAL_MS) {
                                 updateScore(

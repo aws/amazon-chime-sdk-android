@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.SignalStrength
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.VolumeLevel
 import com.amazonaws.services.chime.sdkdemo.data.RosterAttendee
+import kotlinx.android.synthetic.main.roster_view_attendee_row.view.activeSpeakerIndicator
 import kotlinx.android.synthetic.main.roster_view_attendee_row.view.attendeeName
 import kotlinx.android.synthetic.main.roster_view_attendee_row.view.attendeeVolume
 
@@ -43,9 +44,11 @@ class RosterHolder(inflatedView: View) :
         this.attendeeName = attendee.attendeeName
         view.attendeeName.text = attendeeName
         view.attendeeName.contentDescription = attendeeName
+        view.activeSpeakerIndicator.visibility = if (attendee.isActiveSpeaker) View.VISIBLE else View.INVISIBLE
 
         if (attendee.signalStrength == SignalStrength.None ||
-            attendee.signalStrength == SignalStrength.Low) {
+            attendee.signalStrength == SignalStrength.Low
+        ) {
             val drawable = if (attendee.volumeLevel == VolumeLevel.Muted) {
                 R.drawable.ic_microphone_poor_connectivity_dissabled
             } else {

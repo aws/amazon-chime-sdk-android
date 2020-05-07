@@ -17,6 +17,7 @@
     <string name="device_management_title">Select devices</string>
     <string name="audio_device_title">Audio Device</string>
     <string name="volume_indicator">Volume Indicator</string>
+    <string name="active_speaker_text">Active Speaker</string>
     <string name="switch_camera">Switch Camera</string>
     <string name="toggle_camera">Toggle Camera</string>
     <string name="speaker_button">Toggle Speaker</string>
