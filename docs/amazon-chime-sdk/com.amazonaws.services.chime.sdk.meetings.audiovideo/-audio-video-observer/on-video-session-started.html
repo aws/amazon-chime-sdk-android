@@ -13,6 +13,7 @@
 <p>Called when the video session has started. Sometimes there is a non fatal error such as
 trying to send local video when the capacity was already reached. However, user can still
 receive remote video in the existing video session.</p>
+<p>Note: this callback will be called on main thread.</p>
 <h3>Parameters</h3>
 <p><a name="sessionStatus"></a>
 <code>sessionStatus</code> - : <a href="../../com.amazonaws.services.chime.sdk.meetings.session/-meeting-session-status/index.html">MeetingSessionStatus</a> - Additional details on how the video session started.</p>

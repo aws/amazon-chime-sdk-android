@@ -18,9 +18,15 @@ import io.mockk.every
 import io.mockk.impl.annotations.MockK
 import io.mockk.mockkClass
 import io.mockk.verify
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.test.TestCoroutineDispatcher
+import kotlinx.coroutines.test.resetMain
+import kotlinx.coroutines.test.setMain
+import org.junit.After
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNull
 import org.junit.Assert.assertTrue
+import org.junit.Before
 import org.junit.Test
 
 class DefaultDeviceControllerTest {
@@ -52,6 +58,8 @@ class DefaultDeviceControllerTest {
     private lateinit var deviceChangeObserver: DeviceChangeObserver
 
     private lateinit var deviceController: DefaultDeviceController
+
+    private val testDispatcher = TestCoroutineDispatcher()
 
     private fun setupForNewAPILevel() {
         MockKAnnotations.init(this, relaxUnitFun = true)
@@ -87,6 +95,17 @@ class DefaultDeviceControllerTest {
         every { wiredHeadsetInfo.productName } returns "my wired headset"
         every { bluetoothInfo.type } returns AudioDeviceInfo.TYPE_BLUETOOTH_SCO
         every { bluetoothInfo.productName } returns "my bluetooth headphone"
+    }
+
+    @Before
+    fun setup() {
+        Dispatchers.setMain(testDispatcher)
+    }
+
+    @After
+    fun tearDown() {
+        Dispatchers.resetMain()
+        testDispatcher.cleanupTestCoroutines()
     }
 
     @Test

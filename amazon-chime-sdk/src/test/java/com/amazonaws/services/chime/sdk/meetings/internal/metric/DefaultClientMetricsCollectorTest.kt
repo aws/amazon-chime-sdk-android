@@ -16,6 +16,11 @@ import io.mockk.mockk
 import io.mockk.mockkStatic
 import io.mockk.verify
 import java.util.Calendar
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.test.TestCoroutineDispatcher
+import kotlinx.coroutines.test.resetMain
+import kotlinx.coroutines.test.setMain
+import org.junit.After
 import org.junit.Before
 import org.junit.Test
 
@@ -28,9 +33,11 @@ class DefaultClientMetricsCollectorTest {
 
     // See https://github.com/mockk/mockk/issues/98
     private lateinit var calendar: Calendar
+    private val testDispatcher = TestCoroutineDispatcher()
 
     @Before
     fun setup() {
+        Dispatchers.setMain(testDispatcher)
         calendar = mockk()
         every { calendar.timeInMillis } returnsMany listOf<Long>(0, 1100)
         MockKAnnotations.init(this, relaxUnitFun = true)
@@ -38,6 +45,12 @@ class DefaultClientMetricsCollectorTest {
         every { Calendar.getInstance() } returns calendar
         clientMetricsCollector =
             DefaultClientMetricsCollector()
+    }
+
+    @After
+    fun tearDown() {
+        Dispatchers.resetMain()
+        testDispatcher.cleanupTestCoroutines()
     }
 
     @Test

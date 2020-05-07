@@ -11,6 +11,7 @@
 <a name="com.amazonaws.services.chime.sdk.meetings.audiovideo.metric.MetricsObserver$onMetricsReceived(kotlin.collections.Map((com.amazonaws.services.chime.sdk.meetings.audiovideo.metric.ObservableMetric, kotlin.Any)))"></a>
 <code><span class="keyword">abstract</span> <span class="keyword">fun </span><span class="identifier">onMetricsReceived</span><span class="symbol">(</span><span class="identifier" id="com.amazonaws.services.chime.sdk.meetings.audiovideo.metric.MetricsObserver$onMetricsReceived(kotlin.collections.Map((com.amazonaws.services.chime.sdk.meetings.audiovideo.metric.ObservableMetric, kotlin.Any)))/metrics">metrics</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-map/index.html"><span class="identifier">Map</span></a><span class="symbol">&lt;</span><a href="../-observable-metric/index.html"><span class="identifier">ObservableMetric</span></a><span class="symbol">,</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-any/index.html"><span class="identifier">Any</span></a><span class="symbol">&gt;</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code>
 <p>Called when metrics are received.</p>
+<p>Note: this callback will be called on main thread.</p>
 <h3>Parameters</h3>
 <p><a name="metrics"></a>
 <code>metrics</code> - : Map&lt;ObservableMetric, Any&gt; - Map of metric type to value</p>

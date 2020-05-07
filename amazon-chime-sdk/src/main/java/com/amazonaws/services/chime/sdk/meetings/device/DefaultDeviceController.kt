@@ -17,6 +17,7 @@ import android.media.AudioManager
 import android.os.Build
 import androidx.annotation.VisibleForTesting
 import com.amazonaws.services.chime.sdk.meetings.internal.audio.AudioClientController
+import com.amazonaws.services.chime.sdk.meetings.internal.utils.ObserverUtils
 import com.amazonaws.services.chime.sdk.meetings.internal.video.VideoClientController
 import com.xodee.client.audio.audioclient.AudioClient
 
@@ -188,8 +189,6 @@ class DefaultDeviceController(
 
     @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
     fun notifyAudioDeviceChange() {
-        for (observer in deviceChangeObservers) {
-            observer.onAudioDeviceChanged(listAudioDevices())
-        }
+        ObserverUtils.notifyObserverOnMainThread(deviceChangeObservers) { it.onAudioDeviceChanged(listAudioDevices()) }
     }
 }
