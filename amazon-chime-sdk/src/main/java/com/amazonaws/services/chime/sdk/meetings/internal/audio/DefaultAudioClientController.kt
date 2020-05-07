@@ -130,11 +130,6 @@ class DefaultAudioClientController(
             } else {
                 logger.info(TAG, "Started audio session.")
             }
-            audioClientObserver.notifyAudioClientObserver { observer ->
-                observer.onAudioSessionStarted(
-                    false
-                )
-            }
         }
     }
 

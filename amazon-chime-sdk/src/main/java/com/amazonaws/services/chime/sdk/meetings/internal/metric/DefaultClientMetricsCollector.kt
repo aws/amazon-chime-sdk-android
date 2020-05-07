@@ -7,6 +7,7 @@ package com.amazonaws.services.chime.sdk.meetings.internal.metric
 
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.metric.MetricsObserver
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.metric.ObservableMetric
+import com.amazonaws.services.chime.sdk.meetings.internal.utils.ObserverUtils
 import com.xodee.client.audio.audioclient.AudioClient
 import com.xodee.client.video.VideoClient
 import java.util.Calendar
@@ -56,7 +57,8 @@ class DefaultClientMetricsCollector :
             lastEmittedMetricsTime = now
             var cachedObservableMetricsWithoutNullValues =
                 cachedObservableMetrics.filterValues { it != null } as Map<ObservableMetric, Any>
-            metricsObservers.forEach { it.onMetricsReceived(cachedObservableMetricsWithoutNullValues) }
+
+            ObserverUtils.notifyObserverOnMainThread(metricsObservers) { it.onMetricsReceived(cachedObservableMetricsWithoutNullValues) }
         }
     }
 

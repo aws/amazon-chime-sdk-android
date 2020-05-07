@@ -221,7 +221,7 @@ class DefaultAudioClientControllerTest {
             testJoinToken
         )
 
-        verify(exactly = 2) { mockAudioClientObserver.notifyAudioClientObserver(any()) }
+        verify(exactly = 1) { mockAudioClientObserver.notifyAudioClientObserver(any()) }
     }
 
     @Test

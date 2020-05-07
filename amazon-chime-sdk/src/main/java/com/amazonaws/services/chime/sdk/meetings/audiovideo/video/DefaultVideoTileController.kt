@@ -6,11 +6,9 @@
 package com.amazonaws.services.chime.sdk.meetings.audiovideo.video
 
 import com.amazon.chime.webrtc.EglBase
+import com.amazonaws.services.chime.sdk.meetings.internal.utils.ObserverUtils
 import com.amazonaws.services.chime.sdk.meetings.internal.video.VideoClientController
 import com.amazonaws.services.chime.sdk.meetings.utils.logger.Logger
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 
 class DefaultVideoTileController(
     private val logger: Logger,
@@ -22,7 +20,6 @@ class DefaultVideoTileController(
     // A map of VideoRenderView to tile id to determine if users are adding same video render view
     private val boundVideoViewMap = mutableMapOf<VideoRenderView, Int>()
     private val TAG = "DefaultVideoTileController"
-    private val uiScope = CoroutineScope(Dispatchers.Main)
 
     private var videoTileObservers = mutableSetOf<VideoTileObserver>()
     private var rootEglBase: EglBase? = null
@@ -62,13 +59,9 @@ class DefaultVideoTileController(
                 // or PausedForPoorConnection to Unpaused
                 tile.setPauseState(pauseState)
                 if (pauseState == VideoPauseState.Unpaused) {
-                    uiScope.launch {
-                        forEachObserver { observer -> observer.onVideoTileResumed(tile.state) }
-                    }
+                    forEachObserver { observer -> observer.onVideoTileResumed(tile.state) }
                 } else {
-                    uiScope.launch {
-                        forEachObserver { observer -> observer.onVideoTilePaused(tile.state) }
-                    }
+                    forEachObserver { observer -> observer.onVideoTilePaused(tile.state) }
                 }
             }
 
@@ -77,24 +70,20 @@ class DefaultVideoTileController(
                 if (frame != null) {
                     tile.renderFrame(frame)
                 } else {
-                    uiScope.launch {
-                        logger.info(
-                            TAG,
-                            "Removing video tile with videoId = $videoId & attendeeId = $attendeeId"
-                        )
-                        onRemoveVideoTile(videoId)
-                    }
+                    logger.info(
+                        TAG,
+                        "Removing video tile with videoId = $videoId & attendeeId = $attendeeId"
+                    )
+                    onRemoveVideoTile(videoId)
                 }
             }
         } else {
             frame?.run {
-                uiScope.launch {
-                    logger.info(
-                        TAG,
-                        "Adding video tile with videoId = $videoId & attendeeId = $attendeeId"
-                    )
-                    onAddVideoTile(videoId, attendeeId)
-                }
+                logger.info(
+                    TAG,
+                    "Adding video tile with videoId = $videoId & attendeeId = $attendeeId"
+                )
+                onAddVideoTile(videoId, attendeeId)
             }
         }
     }
@@ -123,9 +112,7 @@ class DefaultVideoTileController(
             // Note that this will overwrite PausedForPoorConnection if that is the current state
             if (it.state.pauseState != VideoPauseState.PausedByUserRequest) {
                 it.setPauseState(VideoPauseState.PausedByUserRequest)
-                uiScope.launch {
-                    forEachObserver { observer -> observer.onVideoTilePaused(it.state) }
-                }
+                forEachObserver { observer -> observer.onVideoTilePaused(it.state) }
             }
         }
     }
@@ -146,9 +133,7 @@ class DefaultVideoTileController(
             // Note that this means resuming a tile with state PausedForPoorConnection will no-op
             if (it.state.pauseState == VideoPauseState.PausedByUserRequest) {
                 it.setPauseState(VideoPauseState.Unpaused)
-                uiScope.launch {
-                    forEachObserver { observer -> observer.onVideoTileResumed(it.state) }
-                }
+                forEachObserver { observer -> observer.onVideoTileResumed(it.state) }
             }
         }
     }
@@ -194,8 +179,6 @@ class DefaultVideoTileController(
     }
 
     private fun forEachObserver(observerFunction: (observer: VideoTileObserver) -> Unit) {
-        for (observer in videoTileObservers) {
-            observerFunction(observer)
-        }
+        ObserverUtils.notifyObserverOnMainThread(videoTileObservers, observerFunction)
     }
 }

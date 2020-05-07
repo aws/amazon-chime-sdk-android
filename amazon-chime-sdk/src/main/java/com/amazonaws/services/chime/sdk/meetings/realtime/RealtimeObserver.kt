@@ -14,10 +14,14 @@ import com.amazonaws.services.chime.sdk.meetings.audiovideo.VolumeUpdate
 /**
  * [RealtimeObserver] lets one listen to real time events such a volume, signal strength, or
  * attendee changes.
+ *
+ * Note: all callbacks will be called on main thread.
  */
 interface RealtimeObserver {
     /**
      * Handles volume changes for attendees whose [VolumeLevel] has changed.
+     *
+     * Note: this callback will be called on main thread.
      *
      * @param volumeUpdates: Array<[VolumeUpdate]> - Attendees with updated volume levels.
      */
@@ -26,12 +30,16 @@ interface RealtimeObserver {
     /**
      * Handles signal strength changes for attendees whose [SignalStrength] has changed.
      *
+     * Note: this callback will be called on main thread.
+     *
      * @param signalUpdates: Array<[SignalUpdate]> - Attendees with updated signal strengths.
      */
     fun onSignalStrengthChanged(signalUpdates: Array<SignalUpdate>)
 
     /**
      * Handles attendee(s) being added.
+     *
+     * Note: this callback will be called on main thread.
      *
      * @param attendeeInfo: Array<[AttendeeInfo]> - Attendees being added.
      */
@@ -40,6 +48,8 @@ interface RealtimeObserver {
     /**
      * Handles attendee(s) being removed.
      *
+     * Note: this callback will be called on main thread.
+     *
      * @param attendeeInfo: Array<[AttendeeInfo]> - Attendees being removed.
      */
     fun onAttendeesLeft(attendeeInfo: Array<AttendeeInfo>)
@@ -47,12 +57,16 @@ interface RealtimeObserver {
     /**
      * Handles attendee(s) whose [VolumeLevel] has changed to muted.
      *
+     * Note: this callback will be called on main thread.
+     *
      * @param attendeeInfo: Array<[AttendeeInfo]> - Attendees who are newly muted.
      */
     fun onAttendeesMuted(attendeeInfo: Array<AttendeeInfo>)
 
     /**
      * Handles attendee(s) whose [VolumeLevel] has changed from muted.
+     *
+     * Note: this callback will be called on main thread.
      *
      * @param attendeeInfo: Array<[AttendeeInfo]> - Attendees who are newly unmuted.
      */

@@ -20,6 +20,11 @@ import io.mockk.just
 import io.mockk.mockkStatic
 import io.mockk.runs
 import io.mockk.verify
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.test.TestCoroutineDispatcher
+import kotlinx.coroutines.test.resetMain
+import kotlinx.coroutines.test.setMain
+import org.junit.After
 import org.junit.Before
 import org.junit.Test
 
@@ -57,11 +62,13 @@ class DefaultVideoClientObserverTest {
     private val testFrame = "I am the frame"
     private val testProfileId = "aliceId"
     private val testVideoId = 1
+    private val testDispatcher = TestCoroutineDispatcher()
 
     @Before
     fun setUp() {
         mockkStatic(System::class)
         every { System.loadLibrary(any()) } just runs
+        Dispatchers.setMain(testDispatcher)
         MockKAnnotations.init(this, relaxUnitFun = true)
         testVideoClientObserver =
             DefaultVideoClientObserver(
@@ -72,6 +79,12 @@ class DefaultVideoClientObserverTest {
             )
         testVideoClientObserver.subscribeToVideoClientStateChange(mockAudioVideoObserver)
         testVideoClientObserver.subscribeToVideoTileChange(mockVideoTileController)
+    }
+
+    @After
+    fun tearDown() {
+        Dispatchers.resetMain()
+        testDispatcher.cleanupTestCoroutines()
     }
 
     @Test

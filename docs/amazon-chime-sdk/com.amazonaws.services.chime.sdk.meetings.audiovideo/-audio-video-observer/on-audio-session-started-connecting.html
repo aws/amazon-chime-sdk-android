@@ -11,6 +11,7 @@
 <a name="com.amazonaws.services.chime.sdk.meetings.audiovideo.AudioVideoObserver$onAudioSessionStartedConnecting(kotlin.Boolean)"></a>
 <code><span class="keyword">abstract</span> <span class="keyword">fun </span><span class="identifier">onAudioSessionStartedConnecting</span><span class="symbol">(</span><span class="identifier" id="com.amazonaws.services.chime.sdk.meetings.audiovideo.AudioVideoObserver$onAudioSessionStartedConnecting(kotlin.Boolean)/reconnecting">reconnecting</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html"><span class="identifier">Boolean</span></a><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code>
 <p>Called when the audio session is connecting or reconnecting.</p>
+<p>Note: this callback will be called on main thread.</p>
 <h3>Parameters</h3>
 <p><a name="reconnecting"></a>
 <code>reconnecting</code> - : Boolean - Whether the session is reconnecting or not.</p>
