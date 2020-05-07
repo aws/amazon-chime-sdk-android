@@ -221,7 +221,8 @@ class RosterViewFragment : Fragment(),
                                 it.attendeeId,
                                 it.attendeeName,
                                 volumeLevel,
-                                it.signalStrength
+                                it.signalStrength,
+                                it.isActiveSpeaker
                             )
                     }
                 }
@@ -235,20 +236,14 @@ class RosterViewFragment : Fragment(),
         uiScope.launch {
             mutex.withLock {
                 signalUpdates.forEach { (attendeeInfo, signalStrength) ->
-                    val attendeeId: String = attendeeInfo.attendeeId
-
-                    logger.info(
-                        TAG,
-                        "AttendeeId: $attendeeId externalUserId: ${attendeeInfo.externalUserId} signalStrength: $signalStrength"
-                    )
-
-                    currentRoster[attendeeId]?.let {
-                        currentRoster[attendeeId] =
+                    currentRoster[attendeeInfo.attendeeId]?.let {
+                        currentRoster[attendeeInfo.attendeeId] =
                             RosterAttendee(
                                 it.attendeeId,
                                 it.attendeeName,
                                 it.volumeLevel,
-                                signalStrength
+                                signalStrength,
+                                it.isActiveSpeaker
                             )
                     }
                 }
@@ -303,6 +298,36 @@ class RosterViewFragment : Fragment(),
                 "Attendee with attendeeId $attendeeId and externalUserId $externalUserId unmuted"
             )
         }
+    }
+
+    override fun onActiveSpeakerDetected(attendeeInfo: Array<AttendeeInfo>) {
+        uiScope.launch {
+            mutex.withLock {
+                var needUpdate = false
+                val activeSpeakers = attendeeInfo.map { it.attendeeId }.toSet()
+                currentRoster.values.forEach { attendee ->
+                    if (activeSpeakers.contains(attendee.attendeeId) != attendee.isActiveSpeaker) {
+                        currentRoster[attendee.attendeeId] =
+                            RosterAttendee(
+                                attendee.attendeeId,
+                                attendee.attendeeName,
+                                attendee.volumeLevel,
+                                attendee.signalStrength,
+                                !attendee.isActiveSpeaker
+                            )
+                        needUpdate = true
+                    }
+                }
+
+                if (needUpdate) {
+                    rosterAdapter.notifyDataSetChanged()
+                }
+            }
+        }
+    }
+
+    override fun onActiveSpeakerScoreChanged(scores: Map<AttendeeInfo, Double>) {
+        logger.debug(TAG, "Active Speakers scores are: $scores")
     }
 
     private fun getAttendeeName(attendeeId: String, externalUserId: String): String {
@@ -531,13 +556,5 @@ class RosterViewFragment : Fragment(),
             }
             logger.info(TAG, message)
         }
-    }
-
-    override fun onActiveSpeakerDetected(attendeeInfo: Array<AttendeeInfo>) {
-        logger.debug(TAG, "Active Speakers are: ${attendeeInfo.toList()}")
-    }
-
-    override fun onActiveSpeakerScoreChanged(scores: Map<AttendeeInfo, Double>) {
-        logger.debug(TAG, "Active Speakers scores are: $scores")
     }
 }
