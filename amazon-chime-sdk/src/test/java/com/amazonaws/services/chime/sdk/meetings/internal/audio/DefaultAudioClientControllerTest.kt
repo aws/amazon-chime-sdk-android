@@ -225,11 +225,28 @@ class DefaultAudioClientControllerTest {
     }
 
     @Test
-    fun `stop should call AudioClient stopSession`() {
+    fun `stop should not call AudioClient stopSession when audio client status is not started`() {
         every { mockAudioClient.stopSession() } returns testAudioClientSuccessCode
 
         audioClientController.stop()
 
-        verify { mockAudioClient.stopSession() }
+        verify(exactly = 0) { mockAudioClient.stopSession() }
+    }
+
+    @Test
+    fun `stop should call AudioClient stopSession when audio client status is started`() {
+        setupStartTests()
+        audioClientController.start(
+            testAudioFallbackUrl,
+            testAudioHostUrl,
+            testMeetingId,
+            testAttendeeId,
+            testJoinToken
+        )
+        every { mockAudioClient.stopSession() } returns testAudioClientSuccessCode
+
+        audioClientController.stop()
+
+        verify(exactly = 1) { mockAudioClient.stopSession() }
     }
 }

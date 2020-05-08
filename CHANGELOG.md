@@ -7,11 +7,13 @@
 ### Changed
 * Updated demo app to work with updated [amazon-chime-sdk-js serverless demo](https://github.com/aws/amazon-chime-sdk-js/tree/master/demos/serverless). Note that you 
 need to redeploy the serverless demo to work with the updated demo app
-* `AudioVideoObserver`, `RealtimeObserver`, `DeviceChangeObserver`, `VideoTileObserver`, and `MetricsObserver`'s methods will be called on main thread.
+* `AudioVideoObserver`, `RealtimeObserver`, `DeviceChangeObserver`, `VideoTileObserver`, and `MetricsObserver`'s methods will be called on main thread
 
 ### Fixed
-* Fix bug where `onAudioSessionStarted` was called twice
-* Fix bug where `audioVideo.stop()` hung when it was called in `onAttendeesLeft`.
+* Fixed bug where `onAudioSessionStarted` was called twice
+* Fixed bug where `audioVideo.stop()` hung when it was called in `onAttendeesLeft`
+* Fixed main thread freezing issue caused by calling `audioVideo.stop()` when in reconnecting state
+* Fixed bug where `onAudioSessionStopped(sessionStatus: MeetingSessionStatus)` not getting called after calling `audioVideo.stop()`
 
 ## [0.4.1] - 2020-04-23
 

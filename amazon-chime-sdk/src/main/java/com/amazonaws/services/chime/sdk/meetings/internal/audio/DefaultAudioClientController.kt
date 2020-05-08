@@ -9,10 +9,13 @@ import android.media.AudioFormat
 import android.media.AudioManager
 import android.media.AudioRecord
 import android.media.AudioTrack
+import com.amazonaws.services.chime.sdk.meetings.session.MeetingSessionStatus
+import com.amazonaws.services.chime.sdk.meetings.session.MeetingSessionStatusCode
 import com.amazonaws.services.chime.sdk.meetings.utils.logger.Logger
 import com.xodee.client.audio.audioclient.AudioClient
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
 class DefaultAudioClientController(
@@ -25,9 +28,11 @@ class DefaultAudioClientController(
     private val AUDIO_PORT_OFFSET = 200 // Offset by 200 so that subtraction results in 0
     private val DEFAULT_MIC_AND_SPEAKER = false
     private val DEFAULT_PRESENTER = true
-    private val AUDIO_CLIENT_RESULT_SUCCESS = 0
+    private val AUDIO_CLIENT_RESULT_SUCCESS = AudioClient.AUDIO_CLIENT_OK
 
     private val uiScope = CoroutineScope(Dispatchers.Main)
+
+    private var audioClientState = AudioClientState.INITIALIZED
 
     private fun setUpAudioConfiguration() {
         // There seems to be no call that gives us the native input sample rate, so we just use the output rate
@@ -82,6 +87,16 @@ class DefaultAudioClientController(
         attendeeId: String,
         joinToken: String
     ) {
+        // Validate audio client state
+        if (audioClientState != AudioClientState.INITIALIZED &&
+            audioClientState != AudioClientState.STOPPED) {
+            logger.warn(
+                TAG,
+                "Current audio client state $audioClientState is invalid to start audio, ignoring"
+            )
+            return
+        }
+
         val audioUrlParts: List<String> =
             audioHostUrl.split(":".toRegex()).dropLastWhile { it.isEmpty() }
 
@@ -129,12 +144,36 @@ class DefaultAudioClientController(
                 logger.error(TAG, "Failed to start audio session. Response code: $res")
             } else {
                 logger.info(TAG, "Started audio session.")
+                audioClientState = AudioClientState.STARTED
             }
         }
     }
 
     override fun stop() {
-        audioClient.stopSession()
+        if (audioClientState != AudioClientState.STARTED) {
+            logger.error(
+                TAG,
+                "Current audio client state $audioClientState is invalid to stop audio, ignoring"
+            )
+            return
+        }
+
+        GlobalScope.launch {
+            val res = audioClient.stopSession()
+
+            if (res != AUDIO_CLIENT_RESULT_SUCCESS) {
+                logger.error(TAG, "Failed to stop audio session. Response code: $res")
+            } else {
+                logger.info(TAG, "Stopped audio session.")
+                audioClientState = AudioClientState.STOPPED
+
+                audioClientObserver.notifyAudioClientObserver { observer ->
+                    observer.onAudioSessionStopped(
+                        MeetingSessionStatus(MeetingSessionStatusCode.OK)
+                    )
+                }
+            }
+        }
     }
 
     override fun setMute(isMuted: Boolean): Boolean {

@@ -86,16 +86,8 @@ class DefaultAudioClientObserver(
                 }
             }
             SessionStateControllerAction.FinishDisconnecting -> {
-                when (currentAudioState) {
-                    SessionStateControllerAction.Connecting,
-                    SessionStateControllerAction.FinishConnecting ->
-                        notifyAudioClientObserver { observer ->
-                            observer.onAudioSessionStopped(
-                                MeetingSessionStatus(MeetingSessionStatusCode.OK)
-                            )
-                        }
-                    SessionStateControllerAction.Reconnecting ->
-                        notifyAudioClientObserver { observer -> observer.onAudioSessionCancelledReconnect() }
+                if (currentAudioState == SessionStateControllerAction.Reconnecting) {
+                    notifyAudioClientObserver { observer -> observer.onAudioSessionCancelledReconnect() }
                 }
             }
             SessionStateControllerAction.Fail -> {

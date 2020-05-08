@@ -456,7 +456,9 @@ class RosterViewFragment : Fragment(),
 
     override fun onAudioSessionStopped(sessionStatus: MeetingSessionStatus) {
         notify("Audio stopped for reason: ${sessionStatus.statusCode}")
-        listener.onLeaveMeeting()
+        if (sessionStatus.statusCode != MeetingSessionStatusCode.OK) {
+            listener.onLeaveMeeting()
+        }
     }
 
     override fun onAudioSessionCancelledReconnect() = notify("Audio cancelled reconnecting")

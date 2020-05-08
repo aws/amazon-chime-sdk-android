@@ -14,6 +14,8 @@ import com.amazonaws.services.chime.sdk.meetings.utils.logger.Logger
 import com.xodee.client.video.VideoClient
 import com.xodee.client.video.VideoClientCapturer
 import com.xodee.client.video.VideoDevice
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 
 class DefaultVideoClientController constructor(
     private val context: Context,
@@ -44,7 +46,9 @@ class DefaultVideoClientController constructor(
     }
 
     override fun stopAndDestroy() {
-        videoClientStateController.stop()
+        GlobalScope.launch {
+            videoClientStateController.stop()
+        }
     }
 
     override fun startLocalVideo() {
