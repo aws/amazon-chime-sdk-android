@@ -32,8 +32,18 @@ interface AudioVideoObserver {
     fun onAudioSessionStarted(reconnecting: Boolean)
 
     /**
-     * Called when the audio session has stopped from a started state with the reason
-     * provided in the status.
+     * Called when audio session got dropped due to poor network conditions.
+     * There will be an automatic attempt of reconnecting it.
+     * If the reconnection is successful, [onAudioSessionStarted] will be called with value of reconnecting as true
+     *
+     * Note: this callback will be called on main thread.
+     */
+    fun onAudioSessionDropped()
+
+    /**
+     * Called when the audio session has stopped with the reason
+     * provided in the status. This callback implies that audio client has stopped permanently for this session and there will be
+     * no attempt of reconnecting it.
      *
      * Note: this callback will be called on main thread.
      *

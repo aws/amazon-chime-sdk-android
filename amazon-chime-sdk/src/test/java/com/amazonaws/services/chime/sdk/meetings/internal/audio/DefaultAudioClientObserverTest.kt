@@ -462,7 +462,7 @@ class DefaultAudioClientObserverTest {
             )
         }
 
-        verify(exactly = 1) { mockAudioVideoObserver.onAudioSessionStarted(true) }
+        verify(exactly = 1) { mockAudioVideoObserver.onAudioSessionDropped() }
     }
 
     @Test
