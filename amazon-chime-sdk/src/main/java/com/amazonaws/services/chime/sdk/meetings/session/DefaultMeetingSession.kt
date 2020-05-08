@@ -12,14 +12,10 @@ import com.amazonaws.services.chime.sdk.meetings.audiovideo.DefaultAudioVideoFac
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.audio.activespeakerdetector.DefaultActiveSpeakerDetector
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.DefaultVideoTileController
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.DefaultVideoTileFactory
-import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoTileController
 import com.amazonaws.services.chime.sdk.meetings.device.DefaultDeviceController
-import com.amazonaws.services.chime.sdk.meetings.internal.audio.AudioClientController
 import com.amazonaws.services.chime.sdk.meetings.internal.audio.AudioClientFactory
-import com.amazonaws.services.chime.sdk.meetings.internal.audio.AudioClientObserver
 import com.amazonaws.services.chime.sdk.meetings.internal.audio.DefaultAudioClientController
 import com.amazonaws.services.chime.sdk.meetings.internal.audio.DefaultAudioClientObserver
-import com.amazonaws.services.chime.sdk.meetings.internal.metric.ClientMetricsCollector
 import com.amazonaws.services.chime.sdk.meetings.internal.metric.DefaultClientMetricsCollector
 import com.amazonaws.services.chime.sdk.meetings.internal.video.DefaultVideoClientController
 import com.amazonaws.services.chime.sdk.meetings.internal.video.DefaultVideoClientObserver
@@ -27,7 +23,6 @@ import com.amazonaws.services.chime.sdk.meetings.internal.video.DefaultVideoClie
 import com.amazonaws.services.chime.sdk.meetings.internal.video.TURNRequestParams
 import com.amazonaws.services.chime.sdk.meetings.realtime.DefaultRealtimeController
 import com.amazonaws.services.chime.sdk.meetings.utils.logger.Logger
-import com.xodee.client.audio.audioclient.AudioClient
 
 class DefaultMeetingSession(
     override val configuration: MeetingSessionConfiguration,
@@ -38,18 +33,20 @@ class DefaultMeetingSession(
     override val audioVideo: AudioVideoFacade
 
     init {
-        val metricsCollector: ClientMetricsCollector =
+        val metricsCollector =
             DefaultClientMetricsCollector()
-        val audioClientObserver: AudioClientObserver =
+        val audioClientObserver =
             DefaultAudioClientObserver(
                 logger,
                 metricsCollector
             )
 
-        val audioClient: AudioClient =
+        val audioClient =
             AudioClientFactory.getAudioClient(context, audioClientObserver)
 
-        val audioClientController: AudioClientController =
+        audioClientObserver.audioClient = audioClient
+
+        val audioClientController =
             DefaultAudioClientController(
                 logger,
                 audioClientObserver,
@@ -92,7 +89,7 @@ class DefaultMeetingSession(
 
         val videoTileFactory = DefaultVideoTileFactory(logger)
 
-        val videoTileController: VideoTileController =
+        val videoTileController =
             DefaultVideoTileController(logger, videoClientController, videoTileFactory)
 
         videoClientObserver.subscribeToVideoTileChange(videoTileController)

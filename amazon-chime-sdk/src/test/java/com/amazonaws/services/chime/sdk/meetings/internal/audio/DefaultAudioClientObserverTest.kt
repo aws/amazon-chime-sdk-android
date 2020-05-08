@@ -5,6 +5,7 @@
 
 package com.amazonaws.services.chime.sdk.meetings.internal.audio
 
+import android.util.Log
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.AttendeeInfo
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.AudioVideoObserver
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.SignalStrength
@@ -19,7 +20,9 @@ import com.amazonaws.services.chime.sdk.meetings.utils.logger.Logger
 import com.xodee.client.audio.audioclient.AttendeeUpdate
 import com.xodee.client.audio.audioclient.AudioClient
 import io.mockk.MockKAnnotations
+import io.mockk.every
 import io.mockk.impl.annotations.MockK
+import io.mockk.mockkStatic
 import io.mockk.verify
 import io.mockk.verifyOrder
 import kotlinx.coroutines.Dispatchers
@@ -42,6 +45,9 @@ class DefaultAudioClientObserverTest {
 
     @MockK
     private lateinit var mockRealtimeObserver: RealtimeObserver
+
+    @MockK
+    private lateinit var mockAudioClient: AudioClient
 
     private lateinit var audioClientObserver: DefaultAudioClientObserver
 
@@ -80,6 +86,9 @@ class DefaultAudioClientObserverTest {
 
     @Before
     fun setup() {
+        // Mock Log.d first because initializing the AudioClient mock appears to fail otherwise
+        mockkStatic(Log::class)
+        every { Log.d(any(), any()) } returns 0
         MockKAnnotations.init(this, relaxUnitFun = true)
         audioClientObserver =
             DefaultAudioClientObserver(
@@ -88,6 +97,7 @@ class DefaultAudioClientObserverTest {
             )
         audioClientObserver.subscribeToAudioClientStateChange(mockAudioVideoObserver)
         audioClientObserver.subscribeToRealTimeEvents(mockRealtimeObserver)
+        audioClientObserver.audioClient = mockAudioClient
         Dispatchers.setMain(testDispatcher)
     }
 
@@ -523,7 +533,9 @@ class DefaultAudioClientObserverTest {
     }
 
     @Test
-    fun `onAudioClientStateChange should notify of session stop event when failure while connecting`() {
+    fun `onAudioClientStateChange should stop session and notify of session stop event when failure while connecting`() {
+        every { mockAudioClient.stopSession() } returns 0
+
         runBlockingTest {
             audioClientObserver.onAudioClientStateChange(
                 AudioClient.AUDIO_CLIENT_STATE_CONNECTING,
@@ -537,10 +549,13 @@ class DefaultAudioClientObserverTest {
         }
 
         verify(exactly = 1) { mockAudioVideoObserver.onAudioSessionStopped(any()) }
+        verify(exactly = 1) { mockAudioClient.stopSession() }
     }
 
     @Test
-    fun `onAudioClientStateChange should notify of session stop event when failure while reconnecting`() {
+    fun `onAudioClientStateChange should stop session and notify of session stop event when failure while reconnecting`() {
+        every { mockAudioClient.stopSession() } returns 0
+
         runBlockingTest {
             audioClientObserver.onAudioClientStateChange(
                 AudioClient.AUDIO_CLIENT_STATE_RECONNECTING,
@@ -554,6 +569,7 @@ class DefaultAudioClientObserverTest {
         }
 
         verify(exactly = 1) { mockAudioVideoObserver.onAudioSessionStopped(any()) }
+        verify(exactly = 1) { mockAudioClient.stopSession() }
     }
 
     @Test
