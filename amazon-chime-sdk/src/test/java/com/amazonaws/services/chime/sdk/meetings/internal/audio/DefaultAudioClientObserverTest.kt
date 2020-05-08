@@ -517,7 +517,7 @@ class DefaultAudioClientObserverTest {
     }
 
     @Test
-    fun `onAudioClientStateChange should notify of session stop event when disconnected`() {
+    fun `onAudioClientStateChange should not notify of session stop event when disconnected`() {
         runBlockingTest {
             audioClientObserver.onAudioClientStateChange(
                 AudioClient.AUDIO_CLIENT_STATE_CONNECTING,
@@ -529,7 +529,7 @@ class DefaultAudioClientObserverTest {
             )
         }
 
-        verify(exactly = 1) { mockAudioVideoObserver.onAudioSessionStopped(any()) }
+        verify(exactly = 0) { mockAudioVideoObserver.onAudioSessionStopped(any()) }
     }
 
     @Test
