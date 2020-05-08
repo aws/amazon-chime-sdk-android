@@ -192,9 +192,9 @@ class DefaultActiveSpeakerDetectorTest {
 
         verify(exactly = 1) {
             activeSpeakerObserverWithoutScore.onActiveSpeakerDetected(
-                arrayOf(
-                    testAttendeeInfo1,
-                    testAttendeeInfo2
+                attendeeInfo = or(
+                    arrayOf(testAttendeeInfo1, testAttendeeInfo2),
+                    arrayOf(testAttendeeInfo2, testAttendeeInfo1)
                 )
             )
         }

@@ -20,10 +20,13 @@ import com.amazonaws.services.chime.sdk.meetings.session.MeetingSessionStatusCod
 import com.amazonaws.services.chime.sdk.meetings.utils.logger.Logger
 import com.xodee.client.audio.audioclient.AttendeeUpdate
 import com.xodee.client.audio.audioclient.AudioClient
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 
 class DefaultAudioClientObserver(
     private val logger: Logger,
-    private val clientMetricsCollector: ClientMetricsCollector
+    private val clientMetricsCollector: ClientMetricsCollector,
+    var audioClient: AudioClient? = null
 ) : AudioClientObserver {
     private val TAG = "DefaultAudioClientObserver"
 
@@ -99,14 +102,13 @@ class DefaultAudioClientObserver(
                 when (currentAudioState) {
                     SessionStateControllerAction.Connecting,
                     SessionStateControllerAction.FinishConnecting ->
-                        notifyAudioClientObserver { observer ->
-                            observer.onAudioSessionStopped(MeetingSessionStatus(newAudioStatus))
-                        }
-                    SessionStateControllerAction.Reconnecting ->
+                        handleOnAudioSessionFailed(newAudioStatus)
+                    SessionStateControllerAction.Reconnecting -> {
                         notifyAudioClientObserver { observer ->
                             observer.onAudioSessionCancelledReconnect()
-                            observer.onAudioSessionStopped(MeetingSessionStatus(newAudioStatus))
                         }
+                        handleOnAudioSessionFailed(newAudioStatus)
+                    }
                 }
             }
         }
@@ -302,6 +304,19 @@ class DefaultAudioClientObserver(
             AudioClient.AUDIO_CLIENT_ERR_SHOULD_DISCONNECT_AUDIO -> MeetingSessionStatusCode.AudioDisconnectAudio
             AudioClient.AUDIO_CLIENT_ERR_CALL_ENDED -> MeetingSessionStatusCode.AudioCallEnded
             else -> null
+        }
+    }
+
+    private fun handleOnAudioSessionFailed(statusCode: MeetingSessionStatusCode?) {
+        if (audioClient != null) {
+            GlobalScope.launch {
+                audioClient?.stopSession()
+                notifyAudioClientObserver { observer ->
+                    observer.onAudioSessionStopped(MeetingSessionStatus(statusCode))
+                }
+            }
+        } else {
+            logger.error(TAG, "Failed to stop audio session since audioClient is null")
         }
     }
 }
