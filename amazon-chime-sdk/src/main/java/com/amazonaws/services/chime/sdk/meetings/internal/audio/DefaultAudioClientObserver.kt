@@ -82,7 +82,7 @@ class DefaultAudioClientObserver(
             }
             SessionStateControllerAction.Reconnecting -> {
                 if (currentAudioState == SessionStateControllerAction.FinishConnecting) {
-                    notifyAudioClientObserver { observer -> observer.onAudioSessionStarted(true) }
+                    notifyAudioClientObserver { observer -> observer.onAudioSessionDropped() }
                 }
             }
             SessionStateControllerAction.FinishDisconnecting -> {
