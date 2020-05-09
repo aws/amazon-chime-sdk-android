@@ -1,0 +1,18 @@
+<HTML>
+<HEAD>
+<meta charset="UTF-8">
+<title>AudioVideoObserver.onAudioSessionDropped - amazon-chime-sdk</title>
+<link rel="stylesheet" href="../../../style.css">
+</HEAD>
+<BODY>
+<a href="../../index.html">amazon-chime-sdk</a>&nbsp;/&nbsp;<a href="../index.html">com.amazonaws.services.chime.sdk.meetings.audiovideo</a>&nbsp;/&nbsp;<a href="index.html">AudioVideoObserver</a>&nbsp;/&nbsp;<a href="./on-audio-session-dropped.html">onAudioSessionDropped</a><br/>
+<br/>
+<h1>onAudioSessionDropped</h1>
+<a name="com.amazonaws.services.chime.sdk.meetings.audiovideo.AudioVideoObserver$onAudioSessionDropped()"></a>
+<code><span class="keyword">abstract</span> <span class="keyword">fun </span><span class="identifier">onAudioSessionDropped</span><span class="symbol">(</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code>
+<p>Called when audio session got dropped due to poor network conditions.
+There will be an automatic attempt of reconnecting it.
+If the reconnection is successful, <a href="on-audio-session-started.html">onAudioSessionStarted</a> will be called with value of reconnecting as true</p>
+<p>Note: this callback will be called on main thread.</p>
+</BODY>
+</HTML>

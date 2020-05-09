@@ -24,6 +24,16 @@
 </tr>
 <tr>
 <td>
+<h4><a href="on-audio-session-dropped.html">onAudioSessionDropped</a></h4>
+</td>
+<td>
+<p>Called when audio session got dropped due to poor network conditions.
+There will be an automatic attempt of reconnecting it.
+If the reconnection is successful, <a href="on-audio-session-started.html">onAudioSessionStarted</a> will be called with value of reconnecting as true</p>
+<code><span class="keyword">abstract</span> <span class="keyword">fun </span><span class="identifier">onAudioSessionDropped</span><span class="symbol">(</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code></td>
+</tr>
+<tr>
+<td>
 <h4><a href="on-audio-session-started.html">onAudioSessionStarted</a></h4>
 </td>
 <td>
@@ -43,8 +53,9 @@
 <h4><a href="on-audio-session-stopped.html">onAudioSessionStopped</a></h4>
 </td>
 <td>
-<p>Called when the audio session has stopped from a started state with the reason
-provided in the status.</p>
+<p>Called when the audio session has stopped with the reason
+provided in the status. This callback implies that audio client has stopped permanently for this session and there will be
+no attempt of reconnecting it.</p>
 <code><span class="keyword">abstract</span> <span class="keyword">fun </span><span class="identifier">onAudioSessionStopped</span><span class="symbol">(</span><span class="identifier" id="com.amazonaws.services.chime.sdk.meetings.audiovideo.AudioVideoObserver$onAudioSessionStopped(com.amazonaws.services.chime.sdk.meetings.session.MeetingSessionStatus)/sessionStatus">sessionStatus</span><span class="symbol">:</span>&nbsp;<a href="../../com.amazonaws.services.chime.sdk.meetings.session/-meeting-session-status/index.html"><span class="identifier">MeetingSessionStatus</span></a><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code></td>
 </tr>
 <tr>
