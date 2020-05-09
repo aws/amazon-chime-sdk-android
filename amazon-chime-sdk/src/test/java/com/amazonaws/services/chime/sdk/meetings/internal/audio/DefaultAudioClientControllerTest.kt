@@ -104,6 +104,7 @@ class DefaultAudioClientControllerTest {
         every { AudioTrack.getNativeOutputSampleRate(any()) } returns testSampleBuffer
         every { AudioTrack.getMinBufferSize(any(), any(), any()) } returns testSampleBuffer
         every { AudioRecord.getMinBufferSize(any(), any(), any()) } returns testSampleBuffer
+        DefaultAudioClientController.audioClientState = AudioClientState.INITIALIZED
     }
 
     @Test
