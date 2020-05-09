@@ -303,6 +303,7 @@ class DefaultAudioClientObserver(
         if (audioClient != null) {
             GlobalScope.launch {
                 audioClient?.stopSession()
+                DefaultAudioClientController.audioClientState = AudioClientState.STOPPED
                 notifyAudioClientObserver { observer ->
                     observer.onAudioSessionStopped(MeetingSessionStatus(statusCode))
                 }

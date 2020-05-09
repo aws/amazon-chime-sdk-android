@@ -32,7 +32,9 @@ class DefaultAudioClientController(
 
     private val uiScope = CoroutineScope(Dispatchers.Main)
 
-    private var audioClientState = AudioClientState.INITIALIZED
+    companion object {
+        var audioClientState = AudioClientState.INITIALIZED
+    }
 
     private fun setUpAudioConfiguration() {
         // There seems to be no call that gives us the native input sample rate, so we just use the output rate
