@@ -1,4 +1,4 @@
-## [Unreleased]
+## [0.5.0] - 2020-05-08
 ### Added
 * **Breaking** Added additional fields for `CreateAttendeeResponse` and `CreateMeetingResponse`
 * Added `Versioning` class and `sdkVersion` API for retrieving current version of SDK
