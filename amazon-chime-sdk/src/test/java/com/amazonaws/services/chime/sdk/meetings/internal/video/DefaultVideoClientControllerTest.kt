@@ -11,6 +11,7 @@ import io.mockk.MockKAnnotations
 import io.mockk.impl.annotations.InjectMockKs
 import io.mockk.impl.annotations.MockK
 import io.mockk.verify
+import kotlinx.coroutines.test.runBlockingTest
 import org.junit.Before
 import org.junit.Test
 
@@ -44,7 +45,9 @@ class DefaultVideoClientControllerTest {
 
     @Test
     fun `startLocalVideo should call VideoClientStateController stop`() {
-        testVideoClientController.stopAndDestroy()
+        runBlockingTest {
+            testVideoClientController.stopAndDestroy()
+        }
 
         verify { mockVideoClientStateController.stop() }
     }
