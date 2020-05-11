@@ -20,6 +20,7 @@ import com.amazonaws.services.chime.sdk.meetings.utils.logger.Logger
 import com.xodee.client.audio.audioclient.AttendeeUpdate
 import com.xodee.client.audio.audioclient.AudioClient
 import io.mockk.MockKAnnotations
+import io.mockk.coVerify
 import io.mockk.every
 import io.mockk.impl.annotations.MockK
 import io.mockk.mockkStatic
@@ -567,8 +568,7 @@ class DefaultAudioClientObserverTest {
                 AudioClient.AUDIO_CLIENT_ERR_SERVICE_UNAVAILABLE
             )
         }
-
-        verify(exactly = 1) { mockAudioVideoObserver.onAudioSessionStopped(any()) }
+        coVerify(exactly = 1) { mockAudioVideoObserver.onAudioSessionStopped(any()) }
         verify(exactly = 1) { mockAudioClient.stopSession() }
     }
 
