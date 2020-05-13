@@ -12,6 +12,7 @@ import com.amazonaws.services.chime.sdk.meetings.internal.metric.ClientMetricsCo
 import com.amazonaws.services.chime.sdk.meetings.internal.utils.ObserverUtils
 import com.amazonaws.services.chime.sdk.meetings.session.MeetingSessionStatus
 import com.amazonaws.services.chime.sdk.meetings.session.MeetingSessionStatusCode
+import com.amazonaws.services.chime.sdk.meetings.session.URLRewriter
 import com.amazonaws.services.chime.sdk.meetings.utils.logger.Logger
 import com.xodee.client.audio.audioclient.AudioClient
 import com.xodee.client.video.VideoClient
@@ -35,7 +36,8 @@ class DefaultVideoClientObserver(
     private val logger: Logger,
     private val turnRequestParams: TURNRequestParams,
     private val clientMetricsCollector: ClientMetricsCollector,
-    private val videoClientStateController: VideoClientStateController
+    private val videoClientStateController: VideoClientStateController,
+    private val urlRewriter: URLRewriter
 ) : VideoClientObserver {
     private val TAG = "DefaultVideoClientObserver"
     private val TOKEN_HEADER = "X-Chime-Auth-Token"
@@ -162,11 +164,14 @@ class DefaultVideoClientObserver(
             with(turnResponse) {
                 val isActive = client?.isActive ?: false
                 if (this != null && isActive) {
+                    val newUris = uris.map { url -> url?.let {
+                        urlRewriter(it)
+                    } }.toTypedArray()
                     client?.updateTurnCredentials(
                         username,
                         password,
                         ttl,
-                        uris,
+                        newUris,
                         turnRequestParams.signalingUrl,
                         VideoClient.VideoClientTurnStatus.VIDEO_CLIENT_TURN_FEATURE_ON
                     )

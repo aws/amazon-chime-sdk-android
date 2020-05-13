@@ -14,6 +14,7 @@ import com.amazonaws.services.chime.sdk.meetings.internal.video.VideoClientObser
 import com.amazonaws.services.chime.sdk.meetings.session.MeetingSessionConfiguration
 import com.amazonaws.services.chime.sdk.meetings.session.MeetingSessionCredentials
 import com.amazonaws.services.chime.sdk.meetings.session.MeetingSessionURLs
+import com.amazonaws.services.chime.sdk.meetings.session.defaultUrlRewriter
 import io.mockk.MockKAnnotations
 import io.mockk.impl.annotations.MockK
 import io.mockk.verify
@@ -37,7 +38,7 @@ class DefaultAudioVideoControllerTest {
     private val meetingSessionConfiguration = MeetingSessionConfiguration(
         meetingId,
         MeetingSessionCredentials(attendeeId, joinToken),
-        MeetingSessionURLs(audioFallbackURL, audioHostURL, turnControlURL, signalingURL)
+        MeetingSessionURLs(audioFallbackURL, audioHostURL, turnControlURL, signalingURL, ::defaultUrlRewriter)
     )
 
     @MockK

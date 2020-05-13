@@ -10,7 +10,8 @@ package com.amazonaws.services.chime.sdk.meetings.session
  * attendee credentials and URLs for audio and video
  *
  * Constructs a MeetingSessionConfiguration with a chime:[CreateMeetingResponse] and
- * chime:[CreateAttendeeResponse] response.
+ * chime:[CreateAttendeeResponse] response and optional custom [URLRewriter] that will
+ * rewrite urls given to new urls.
  */
 data class MeetingSessionConfiguration(
     val meetingId: String,
@@ -19,7 +20,8 @@ data class MeetingSessionConfiguration(
 ) {
     constructor(
         createMeetingResponse: CreateMeetingResponse,
-        createAttendeeResponse: CreateAttendeeResponse
+        createAttendeeResponse: CreateAttendeeResponse,
+        urlRewriter: URLRewriter = ::defaultUrlRewriter
     ) : this(
         createMeetingResponse.Meeting.MeetingId,
         MeetingSessionCredentials(
@@ -30,7 +32,8 @@ data class MeetingSessionConfiguration(
             createMeetingResponse.Meeting.MediaPlacement.AudioFallbackUrl,
             createMeetingResponse.Meeting.MediaPlacement.AudioHostUrl,
             createMeetingResponse.Meeting.MediaPlacement.TurnControlUrl,
-            createMeetingResponse.Meeting.MediaPlacement.SignalingUrl
+            createMeetingResponse.Meeting.MediaPlacement.SignalingUrl,
+            urlRewriter
         )
     )
 }
