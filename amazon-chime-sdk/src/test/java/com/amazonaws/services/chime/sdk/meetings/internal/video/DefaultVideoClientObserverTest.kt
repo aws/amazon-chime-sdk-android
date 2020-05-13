@@ -10,6 +10,7 @@ import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoTileContr
 import com.amazonaws.services.chime.sdk.meetings.internal.metric.ClientMetricsCollector
 import com.amazonaws.services.chime.sdk.meetings.session.MeetingSessionStatus
 import com.amazonaws.services.chime.sdk.meetings.session.MeetingSessionStatusCode
+import com.amazonaws.services.chime.sdk.meetings.session.defaultUrlRewriter
 import com.amazonaws.services.chime.sdk.meetings.utils.logger.Logger
 import com.xodee.client.audio.audioclient.AudioClient
 import com.xodee.client.video.VideoClient
@@ -75,7 +76,8 @@ class DefaultVideoClientObserverTest {
                 mockLogger,
                 turnRequestParams,
                 mockMetricsCollector,
-                mockVideoClientStateController
+                mockVideoClientStateController,
+                ::defaultUrlRewriter
             )
         testVideoClientObserver.subscribeToVideoClientStateChange(mockAudioVideoObserver)
         testVideoClientObserver.subscribeToVideoTileChange(mockVideoTileController)

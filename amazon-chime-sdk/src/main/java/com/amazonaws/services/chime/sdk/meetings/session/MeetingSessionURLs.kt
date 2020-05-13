@@ -10,8 +10,14 @@ package com.amazonaws.services.chime.sdk.meetings.session
  * meeting service.
  */
 data class MeetingSessionURLs(
-    val audioFallbackURL: String,
-    val audioHostURL: String,
-    val turnControlURL: String,
-    val signalingURL: String
-)
+    private val _audioFallbackURL: String,
+    private val _audioHostURL: String,
+    private val _turnControlURL: String,
+    private val _signalingURL: String,
+    val urlRewriter: URLRewriter
+) {
+    val audioHostURL = urlRewriter(_audioHostURL)
+    val audioFallbackURL = urlRewriter(_audioFallbackURL)
+    val turnControlURL = urlRewriter(_turnControlURL)
+    val signalingURL = urlRewriter(_signalingURL)
+}

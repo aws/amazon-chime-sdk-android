@@ -76,7 +76,8 @@ class DefaultMeetingSession(
                 logger,
                 turnRequestParams,
                 metricsCollector,
-                videoClientStateController
+                videoClientStateController,
+                configuration.urls.urlRewriter
             )
 
         val videoClientController =

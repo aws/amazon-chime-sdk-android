@@ -89,6 +89,11 @@ class InMeetingActivity : AppCompatActivity(),
 
     fun getAudioVideo(): AudioVideoFacade = audioVideo
 
+    private fun urlRewriter(url: String): String {
+        // You can change urls by url.replace("example.com", "my.example.com")
+        return url
+    }
+
     private fun createSessionConfiguration(response: String?): MeetingSessionConfiguration? {
         if (response.isNullOrBlank()) return null
 
@@ -96,7 +101,8 @@ class InMeetingActivity : AppCompatActivity(),
             val joinMeetingResponse = gson.fromJson(response, JoinMeetingResponse::class.java)
             MeetingSessionConfiguration(
                 CreateMeetingResponse(joinMeetingResponse.joinInfo.meetingResponse.meeting),
-                CreateAttendeeResponse(joinMeetingResponse.joinInfo.attendeeResponse.attendee)
+                CreateAttendeeResponse(joinMeetingResponse.joinInfo.attendeeResponse.attendee),
+                ::urlRewriter
             )
         } catch (exception: Exception) {
             logger.error(
