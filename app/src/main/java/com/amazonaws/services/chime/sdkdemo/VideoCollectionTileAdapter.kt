@@ -9,9 +9,10 @@ import android.view.ViewGroup
 import android.widget.RelativeLayout
 import androidx.recyclerview.widget.RecyclerView
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.AudioVideoFacade
+import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoPauseState
 import com.amazonaws.services.chime.sdkdemo.data.VideoCollectionTile
 import kotlinx.android.synthetic.main.video_collection_item.view.attendee_name
-import kotlinx.android.synthetic.main.video_collection_item.view.switch_camera
+import kotlinx.android.synthetic.main.video_collection_item.view.on_tile_button
 import kotlinx.android.synthetic.main.video_collection_item.view.video_surface
 
 class VideoCollectionTileAdapter(
@@ -59,11 +60,27 @@ class ViewHolder(inflatedView: View, audioVideoFacade: AudioVideoFacade) :
         audioVideo.bindVideoView(view.video_surface, videoCollectionTile.videoTileState.tileId)
         view.video_surface.contentDescription = "${videoCollectionTile.attendeeName} VideoTile"
         if (videoCollectionTile.videoTileState.isLocalTile) {
-            view.switch_camera.visibility = View.VISIBLE
-            view.switch_camera.setOnClickListener { audioVideo.switchCamera() }
+            view.on_tile_button.visibility = View.VISIBLE
+            view.on_tile_button.setOnClickListener { audioVideo.switchCamera() }
         } else {
             view.attendee_name.text = videoCollectionTile.attendeeName
             view.attendee_name.visibility = View.VISIBLE
+            view.on_tile_button.visibility = View.VISIBLE
+            if (videoCollectionTile.videoTileState.pauseState == VideoPauseState.Unpaused) {
+                view.on_tile_button.setImageResource(R.drawable.ic_pause_video)
+            } else {
+                view.on_tile_button.setImageResource(R.drawable.ic_resume_video)
+            }
+
+            view.on_tile_button.setOnClickListener {
+                if (videoCollectionTile.videoTileState.pauseState == VideoPauseState.Unpaused) {
+                    audioVideo.pauseRemoteVideoTile(videoCollectionTile.videoTileState.tileId)
+                    view.on_tile_button.setImageResource(R.drawable.ic_resume_video)
+                } else {
+                    audioVideo.resumeRemoteVideoTile(videoCollectionTile.videoTileState.tileId)
+                    view.on_tile_button.setImageResource(R.drawable.ic_pause_video)
+                }
+            }
         }
     }
 }

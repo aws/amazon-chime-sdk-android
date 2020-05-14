@@ -1,6 +1,10 @@
 ## Unreleased
 ### Added
 * Added new parameter `urlRewriter` in `MeetingSessionConfiguration` which allows you to customize url
+* Updated demo application to use pause and resume feature
+
+### Fixed
+* Fixed an issue that blocked user from removing paused video tiles.
 
 ## [0.5.0] - 2020-05-08
 ### Added
