@@ -50,7 +50,16 @@ class DefaultVideoTileController(
          * In both pause and stop cases, the frame is null but the pauseType differs
          */
         val tile: VideoTile? = videoTileMap[videoId]
+
         if (tile != null) {
+            if (frame == null && pauseState == VideoPauseState.Unpaused) {
+                logger.info(
+                    TAG,
+                    "Removing video tile with videoId = $videoId & attendeeId = $attendeeId"
+                )
+                onRemoveVideoTile(videoId)
+                return
+            }
             // Account for any internally changed pause states, but ignore if the tile is paused by
             // user since the pause might not have propagated yet
             if (pauseState != tile.state.pauseState && tile.state.pauseState != VideoPauseState.PausedByUserRequest) {
@@ -67,14 +76,8 @@ class DefaultVideoTileController(
 
             // Ignore any frames which come to an already paused tile
             if (tile.state.pauseState == VideoPauseState.Unpaused) {
-                if (frame != null) {
+                frame?.run {
                     tile.renderFrame(frame)
-                } else {
-                    logger.info(
-                        TAG,
-                        "Removing video tile with videoId = $videoId & attendeeId = $attendeeId"
-                    )
-                    onRemoveVideoTile(videoId)
                 }
             }
         } else {
