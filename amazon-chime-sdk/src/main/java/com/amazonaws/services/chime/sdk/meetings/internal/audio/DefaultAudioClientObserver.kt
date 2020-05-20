@@ -11,6 +11,7 @@ import com.amazonaws.services.chime.sdk.meetings.audiovideo.SignalStrength
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.SignalUpdate
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.VolumeLevel
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.VolumeUpdate
+import com.amazonaws.services.chime.sdk.meetings.internal.AttendeeStatus
 import com.amazonaws.services.chime.sdk.meetings.internal.SessionStateControllerAction
 import com.amazonaws.services.chime.sdk.meetings.internal.metric.ClientMetricsCollector
 import com.amazonaws.services.chime.sdk.meetings.internal.utils.ObserverUtils
@@ -113,13 +114,6 @@ class DefaultAudioClientObserver(
         val attendeeUpdatesNonEmptyExternalId =
             attendeeUpdates.filter { it.externalUserId.isNotEmpty() }
 
-        onAttendeesChange(attendeeUpdatesNonEmptyExternalId.map {
-            AttendeeInfo(
-                it.profileId,
-                it.externalUserId
-            )
-        }.toTypedArray())
-
         val newAttendeeVolumeMap: Map<String, VolumeUpdate> =
             attendeeUpdatesNonEmptyExternalId.mapNotNull { attendeeUpdate ->
                 VolumeLevel.from(attendeeUpdate.data)?.let {
@@ -206,29 +200,6 @@ class DefaultAudioClientObserver(
         }
     }
 
-    private fun onAttendeesChange(attendeeInfo: Array<AttendeeInfo>) {
-        val newAttendeeSet: MutableSet<AttendeeInfo> = attendeeInfo.toMutableSet()
-        val addedAttendeeSet: Set<AttendeeInfo> = newAttendeeSet.minus(currentAttendees)
-        val removedAttendeeSet: Set<AttendeeInfo> = currentAttendees.minus(newAttendeeSet)
-
-        logger.debug(TAG, "Current: $currentAttendees")
-        logger.debug(TAG, "Added: $addedAttendeeSet")
-        logger.debug(TAG, "Removed: $removedAttendeeSet")
-        logger.debug(TAG, "New: $newAttendeeSet")
-
-        if (addedAttendeeSet.isNotEmpty()) {
-            val addedAttendeeArray: Array<AttendeeInfo> = addedAttendeeSet.toTypedArray()
-            ObserverUtils.notifyObserverOnMainThread(realtimeEventObservers) { it.onAttendeesJoined(addedAttendeeArray) }
-        }
-
-        if (removedAttendeeSet.isNotEmpty()) {
-            val removedAttendeeArray: Array<AttendeeInfo> = removedAttendeeSet.toTypedArray()
-            ObserverUtils.notifyObserverOnMainThread(realtimeEventObservers) { it.onAttendeesLeft(removedAttendeeArray) }
-        }
-
-        currentAttendees = newAttendeeSet
-    }
-
     override fun onLogMessage(logLevel: Int, message: String?) {
         if (message == null) return
 
@@ -245,6 +216,53 @@ class DefaultAudioClientObserver(
         val metricMap = mutableMapOf<Int, Double>()
         (metrics.indices).map { i -> metricMap[metrics[i]] = values[i] }
         clientMetricsCollector.processAudioClientMetrics(metricMap)
+    }
+
+    /**
+     * This will be called by media library whenever there is attendee presence change
+     * There could be duplicate attendee join, but no duplicate left/drop will be provided
+     * from media library side.
+     */
+    override fun onAttendeesPresenceChange(attendeeUpdates: Array<out AttendeeUpdate>?) {
+        if (attendeeUpdates == null) return
+
+        // group by attendee status
+        val attendeesByStatus = attendeeUpdates
+            .filter { it.externalUserId.isNotEmpty() }
+            .groupBy({ AttendeeStatus.from(it.data) }, { AttendeeInfo(it.profileId, it.externalUserId) })
+        attendeesByStatus[AttendeeStatus.Joined]?.let {
+            val attendeeJoined = it.minus(currentAttendees)
+            if (attendeeJoined.isNotEmpty()) {
+                onAttendeesJoin(attendeeJoined.toTypedArray())
+                currentAttendees.addAll(attendeeJoined)
+            }
+        }
+
+        attendeesByStatus[AttendeeStatus.Left]?.let {
+            onAttendeesLeft(it.toTypedArray())
+            currentAttendees.removeAll(it)
+        }
+
+        attendeesByStatus[AttendeeStatus.Dropped]?.let {
+            onAttendeesDropped(it.toTypedArray())
+            currentAttendees.removeAll(it)
+        }
+    }
+
+    private fun onAttendeesJoin(attendeeInfo: Array<AttendeeInfo>) {
+        logger.debug(TAG, "Added: ${attendeeInfo.joinToString(" ")}")
+
+        ObserverUtils.notifyObserverOnMainThread(realtimeEventObservers) { it.onAttendeesJoined(attendeeInfo) }
+    }
+    private fun onAttendeesLeft(attendeeInfo: Array<AttendeeInfo>) {
+        logger.debug(TAG, "Left: ${attendeeInfo.joinToString(" ")}")
+
+        ObserverUtils.notifyObserverOnMainThread(realtimeEventObservers) { it.onAttendeesLeft(attendeeInfo) }
+    }
+    private fun onAttendeesDropped(attendeeInfo: Array<AttendeeInfo>) {
+        logger.debug(TAG, "Dropped: ${attendeeInfo.joinToString(" ")}")
+
+        ObserverUtils.notifyObserverOnMainThread(realtimeEventObservers) { it.onAttendeesDropped(attendeeInfo) }
     }
 
     override fun subscribeToAudioClientStateChange(observer: AudioVideoObserver) {

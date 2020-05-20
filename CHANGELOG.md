@@ -1,3 +1,7 @@
+## Unreleased
+### Added
+* Added `onAttendeesDropped` API in `RealtimeObserver` for attendee who got dropped
+
 ## [0.5.0] - 2020-05-14
 
 ### Added
@@ -6,6 +10,7 @@
 * Added `onAudioSessionDropped` API in `AudioVideoObserver` for temporary disconnects
 * Added new parameter `urlRewriter` in `MeetingSessionConfiguration` for customizing url
 * Updated demo application to use pause and resume feature
+
 
 ### Changed
 * Updated demo app to work with updated [amazon-chime-sdk-js serverless demo](https://github.com/aws/amazon-chime-sdk-js/tree/master/demos/serverless). Note that you will need to redeploy the serverless demo to work with the updated demo app

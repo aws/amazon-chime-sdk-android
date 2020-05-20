@@ -282,6 +282,22 @@ class RosterViewFragment : Fragment(),
         }
     }
 
+    override fun onAttendeesDropped(attendeeInfo: Array<AttendeeInfo>) {
+        attendeeInfo.forEach { (attendeeId, externalUserId) ->
+            logger.info(
+                TAG,
+                "Attendee with attendeeId $attendeeId and externalUserId $externalUserId dropped"
+            )
+        }
+        uiScope.launch {
+            mutex.withLock {
+                attendeeInfo.forEach { (attendeeId, _) -> currentRoster.remove(attendeeId) }
+
+                rosterAdapter.notifyDataSetChanged()
+            }
+        }
+    }
+
     override fun onAttendeesMuted(attendeeInfo: Array<AttendeeInfo>) {
         attendeeInfo.forEach { (attendeeId, externalUserId) ->
             logger.info(

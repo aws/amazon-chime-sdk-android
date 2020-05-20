@@ -9,6 +9,7 @@ import com.amazonaws.services.chime.sdk.meetings.audiovideo.AudioVideoObserver
 import com.amazonaws.services.chime.sdk.meetings.realtime.RealtimeObserver
 import com.xodee.client.audio.audioclient.AudioClientLogListener
 import com.xodee.client.audio.audioclient.AudioClientMetricsListener
+import com.xodee.client.audio.audioclient.AudioClientPresenceListener
 import com.xodee.client.audio.audioclient.AudioClientSignalStrengthChangeListener
 import com.xodee.client.audio.audioclient.AudioClientStateChangeListener
 import com.xodee.client.audio.audioclient.AudioClientVolumeStateChangeListener
@@ -20,7 +21,7 @@ import com.xodee.client.audio.audioclient.AudioClientVolumeStateChangeListener
 interface AudioClientObserver : AudioClientStateChangeListener,
     AudioClientVolumeStateChangeListener,
     AudioClientSignalStrengthChangeListener, AudioClientLogListener,
-    AudioClientMetricsListener {
+    AudioClientMetricsListener, AudioClientPresenceListener {
 
     fun subscribeToAudioClientStateChange(observer: AudioVideoObserver)
     fun unsubscribeFromAudioClientStateChange(observer: AudioVideoObserver)

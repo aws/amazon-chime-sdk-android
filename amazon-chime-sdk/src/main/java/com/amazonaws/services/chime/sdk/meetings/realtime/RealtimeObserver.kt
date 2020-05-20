@@ -55,6 +55,15 @@ interface RealtimeObserver {
     fun onAttendeesLeft(attendeeInfo: Array<AttendeeInfo>)
 
     /**
+     * Handles attendee(s) being dropped due to network.
+     *
+     * Note: this callback will be called on main thread.
+     *
+     * @param attendeeInfo: Array<[AttendeeInfo]> - Attendees being dropped.
+     */
+    fun onAttendeesDropped(attendeeInfo: Array<AttendeeInfo>)
+
+    /**
      * Handles attendee(s) whose [VolumeLevel] has changed to muted.
      *
      * Note: this callback will be called on main thread.

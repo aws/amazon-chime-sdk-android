@@ -170,6 +170,10 @@ class DefaultActiveSpeakerDetector(
         }
     }
 
+    override fun onAttendeesDropped(attendeeInfo: Array<AttendeeInfo>) {
+        onAttendeesLeft(attendeeInfo)
+    }
+
     override fun onSignalStrengthChanged(signalUpdates: Array<SignalUpdate>) {
         // Not needed for active speaker detection as we solely rely on volume levels
     }
