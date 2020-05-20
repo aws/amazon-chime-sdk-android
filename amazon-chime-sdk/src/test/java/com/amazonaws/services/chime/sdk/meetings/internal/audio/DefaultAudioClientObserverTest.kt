@@ -12,6 +12,7 @@ import com.amazonaws.services.chime.sdk.meetings.audiovideo.SignalStrength
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.SignalUpdate
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.VolumeLevel
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.VolumeUpdate
+import com.amazonaws.services.chime.sdk.meetings.internal.AttendeeStatus
 import com.amazonaws.services.chime.sdk.meetings.internal.SessionStateControllerAction
 import com.amazonaws.services.chime.sdk.meetings.internal.metric.ClientMetricsCollector
 import com.amazonaws.services.chime.sdk.meetings.realtime.RealtimeObserver
@@ -68,6 +69,12 @@ class DefaultAudioClientObserverTest {
         AttendeeUpdate(testId1, testId1, SignalStrength.High.value)
     private val testAttendeeVolumeMuted =
         AttendeeUpdate(testId1, testId1, VolumeLevel.Muted.value)
+    private val testAttendeeUpdateJoined =
+        AttendeeUpdate(testId1, testId1, AttendeeStatus.Joined.value)
+    private val testAttendeeUpdateLeft =
+        AttendeeUpdate(testId1, testId1, AttendeeStatus.Left.value)
+    private val testAttendeeUpdateDropped =
+        AttendeeUpdate(testId1, testId1, AttendeeStatus.Dropped.value)
     private val testAttendeeInfo =
         AttendeeInfo(testId1, testId1)
     private val testVolumeUpdate =
@@ -81,6 +88,8 @@ class DefaultAudioClientObserverTest {
             SignalStrength.High
         )
     private val testDispatcher = TestCoroutineDispatcher()
+
+    private val expectedAttendeeInfos: Array<AttendeeInfo> = arrayOf(testAttendeeInfo)
 
     @MockK
     private lateinit var clientMetricsCollector: ClientMetricsCollector
@@ -122,6 +131,179 @@ class DefaultAudioClientObserverTest {
         audioClientObserver.notifyAudioClientObserver(testObserverFun)
 
         verifyAudioVideoObserverIsNotNotified()
+    }
+
+    @Test
+    fun `onAttendeesPresenceChange should NOT notify about attendee presence events when NO attendees updates`() {
+        audioClientObserver.onAttendeesPresenceChange(emptyArray())
+
+        verify(exactly = 0) { mockRealtimeObserver.onAttendeesJoined(any()) }
+        verify(exactly = 0) { mockRealtimeObserver.onAttendeesLeft(any()) }
+        verify(exactly = 0) { mockRealtimeObserver.onAttendeesDropped(any()) }
+    }
+
+    @Test
+    fun `onAttendeesPresenceChange should notify added observers when a new attendee joined`() {
+        audioClientObserver.onAttendeesPresenceChange(arrayOf(
+            testAttendeeUpdateJoined
+        ))
+
+        verify(exactly = 1) { mockRealtimeObserver.onAttendeesJoined(expectedAttendeeInfos) }
+    }
+
+    @Test
+    fun `onAttendeesPresenceChange should notify added observers when an attendee left`() {
+        audioClientObserver.onAttendeesPresenceChange(arrayOf(
+            testAttendeeUpdateLeft
+        ))
+
+        verify(exactly = 1) { mockRealtimeObserver.onAttendeesLeft(expectedAttendeeInfos) }
+    }
+
+    @Test
+    fun `onAttendeesPresenceChange should notify added observers when an attendee got dropped`() {
+        audioClientObserver.onAttendeesPresenceChange(arrayOf(
+            testAttendeeUpdateDropped
+        ))
+
+        verify(exactly = 1) { mockRealtimeObserver.onAttendeesDropped(expectedAttendeeInfos) }
+    }
+
+    @Test
+    fun `onAttendeesPresenceChange should NOT notify added observers twice when duplicate attendee joined`() {
+        audioClientObserver.onAttendeesPresenceChange(arrayOf(
+            testAttendeeUpdateJoined
+        ))
+        audioClientObserver.onAttendeesPresenceChange(arrayOf(
+            testAttendeeUpdateJoined
+        ))
+
+        verify(exactly = 1) { mockRealtimeObserver.onAttendeesJoined(expectedAttendeeInfos) }
+    }
+
+    @Test
+    fun `onAttendeesPresenceChange should notify added observers when attendee who had left rejoined`() {
+        audioClientObserver.onAttendeesPresenceChange(arrayOf(
+            testAttendeeUpdateJoined
+        ))
+        audioClientObserver.onAttendeesPresenceChange(arrayOf(
+            testAttendeeUpdateLeft
+        ))
+        audioClientObserver.onAttendeesPresenceChange(arrayOf(
+            testAttendeeUpdateJoined
+        ))
+
+        verify(exactly = 2) { mockRealtimeObserver.onAttendeesJoined(expectedAttendeeInfos) }
+    }
+
+    @Test
+    fun `onAttendeesPresenceChange should notify added observers with rejoined attendee who has dropped `() {
+        audioClientObserver.onAttendeesPresenceChange(arrayOf(
+            testAttendeeUpdateJoined
+        ))
+        audioClientObserver.onAttendeesPresenceChange(arrayOf(
+            testAttendeeUpdateDropped
+        ))
+        audioClientObserver.onAttendeesPresenceChange(arrayOf(
+            testAttendeeUpdateJoined
+        ))
+
+        verify(exactly = 2) { mockRealtimeObserver.onAttendeesJoined(expectedAttendeeInfos) }
+    }
+
+    @Test
+    fun `onAttendeesPresenceChange should NOT consider attendee as same only when externalUserId is same`() {
+        audioClientObserver.onAttendeesPresenceChange(arrayOf(testAttendeeUpdateJoined))
+        audioClientObserver.onAttendeesPresenceChange(
+            arrayOf(
+                AttendeeUpdate(
+                    testId2,
+                    testAttendeeUpdateJoined.externalUserId,
+                    testAttendeeUpdateJoined.data
+                )
+            )
+        )
+
+        verifyOrder {
+            mockRealtimeObserver.onAttendeesJoined(arrayOf(testAttendeeInfo))
+            mockRealtimeObserver.onAttendeesJoined(
+                arrayOf(
+                    AttendeeInfo(
+                        testId2,
+                        testAttendeeInfo.externalUserId
+                    )
+                )
+            )
+        }
+    }
+
+    @Test
+    fun `onAttendeesPresenceChange should consider attendee as same when attendeeId and externalUserId are same`() {
+        audioClientObserver.onAttendeesPresenceChange(arrayOf(testAttendeeUpdateJoined))
+        audioClientObserver.onAttendeesPresenceChange(
+            arrayOf(
+                AttendeeUpdate(
+                    testAttendeeUpdateJoined.profileId,
+                    testAttendeeUpdateJoined.externalUserId,
+                    testAttendeeUpdateJoined.data
+                )
+            )
+        )
+
+        verify(exactly = 1) { mockRealtimeObserver.onAttendeesJoined(arrayOf(testAttendeeInfo)) }
+    }
+
+    @Test
+    fun `onAttendeesPresenceChange should consider attendee as different when externalUserId is different`() {
+        audioClientObserver.onAttendeesPresenceChange(arrayOf(testAttendeeUpdateJoined))
+        audioClientObserver.onAttendeesPresenceChange(
+            arrayOf(
+                AttendeeUpdate(
+                    testAttendeeUpdateJoined.profileId,
+                    testId2,
+                    testAttendeeUpdateJoined.data
+                )
+            )
+        )
+
+        verifyOrder {
+            mockRealtimeObserver.onAttendeesJoined(arrayOf(testAttendeeInfo))
+            mockRealtimeObserver.onAttendeesJoined(
+                arrayOf(
+                    AttendeeInfo(
+                        testAttendeeInfo.attendeeId,
+                        testId2
+                    )
+                )
+            )
+        }
+    }
+
+    @Test
+    fun `onAttendeesPresenceChange should ONLY notify delta on subsequent calls`() {
+        audioClientObserver.onAttendeesPresenceChange(arrayOf(testAttendeeUpdateJoined))
+        audioClientObserver.onAttendeesPresenceChange(
+            arrayOf(
+                testAttendeeUpdateJoined,
+                AttendeeUpdate(
+                    testId2,
+                    testId2,
+                    testAttendeeUpdateJoined.data
+                )
+            )
+        )
+
+        verifyOrder {
+            mockRealtimeObserver.onAttendeesJoined(arrayOf(testAttendeeInfo))
+            mockRealtimeObserver.onAttendeesJoined(
+                arrayOf(
+                    AttendeeInfo(
+                        testId2,
+                        testId2
+                    )
+                )
+            )
+        }
     }
 
     @Test
@@ -171,12 +353,10 @@ class DefaultAudioClientObserverTest {
             AttendeeUpdate(testId2, "", VolumeLevel.Low.value)
         )
         val expectedArgs: Array<VolumeUpdate> = arrayOf(testVolumeUpdate)
-        val expectedArgsJoined: Array<AttendeeInfo> = arrayOf(AttendeeInfo(testAttendeeVolumeUpdate.profileId, testAttendeeVolumeUpdate.externalUserId))
 
         audioClientObserver.onVolumeStateChange(testInput)
 
         verify(exactly = 1) { mockRealtimeObserver.onVolumeChanged(expectedArgs) }
-        verify(exactly = 1) { mockRealtimeObserver.onAttendeesJoined(expectedArgsJoined) }
     }
 
     @Test
@@ -262,104 +442,6 @@ class DefaultAudioClientObserverTest {
     }
 
     @Test
-    fun `onVolumeStateChange should notify about attendee join when new attendees`() {
-        audioClientObserver.onVolumeStateChange(arrayOf(testAttendeeVolumeUpdate))
-
-        verify(exactly = 1) { mockRealtimeObserver.onAttendeesJoined(any()) }
-    }
-
-    @Test
-    fun `onVolumeStateChange should NOT notify about attendee join when NO new attendees`() {
-        audioClientObserver.onVolumeStateChange(emptyArray())
-
-        verify(exactly = 0) { mockRealtimeObserver.onAttendeesJoined(any()) }
-    }
-
-    @Test
-    fun `onVolumeStateChange should notify about attendee leave when attendees leave`() {
-        audioClientObserver.onVolumeStateChange(arrayOf(testAttendeeVolumeUpdate))
-        audioClientObserver.onVolumeStateChange(emptyArray())
-
-        verify(exactly = 1) { mockRealtimeObserver.onAttendeesLeft(any()) }
-    }
-
-    @Test
-    fun `onVolumeStateChange should NOT notify about attendee leave when NO attendees leave`() {
-        audioClientObserver.onVolumeStateChange(arrayOf(testAttendeeVolumeUpdate))
-        audioClientObserver.onVolumeStateChange(arrayOf(testAttendeeVolumeUpdate))
-
-        verify(exactly = 0) { mockRealtimeObserver.onAttendeesLeft(any()) }
-    }
-
-    @Test
-    fun `onVolumeStateChange should consider attendee as same when attendeeId and externalUserId are same`() {
-        audioClientObserver.onVolumeStateChange(arrayOf(testAttendeeVolumeUpdate))
-        audioClientObserver.onVolumeStateChange(
-            arrayOf(
-                AttendeeUpdate(
-                    testAttendeeVolumeUpdate.profileId,
-                    testAttendeeVolumeUpdate.externalUserId,
-                    testAttendeeVolumeUpdate.data
-                )
-            )
-        )
-
-        verify(exactly = 1) { mockRealtimeObserver.onAttendeesJoined(arrayOf(testAttendeeInfo)) }
-    }
-
-    @Test
-    fun `onVolumeStateChange should consider attendee as different when attendeeId is different`() {
-        audioClientObserver.onVolumeStateChange(arrayOf(testAttendeeVolumeUpdate))
-        audioClientObserver.onVolumeStateChange(
-            arrayOf(
-                AttendeeUpdate(
-                    testId2,
-                    testAttendeeVolumeUpdate.externalUserId,
-                    testAttendeeVolumeUpdate.data
-                )
-            )
-        )
-
-        verifyOrder {
-            mockRealtimeObserver.onAttendeesJoined(arrayOf(testAttendeeInfo))
-            mockRealtimeObserver.onAttendeesJoined(
-                arrayOf(
-                    AttendeeInfo(
-                        testId2,
-                        testAttendeeInfo.externalUserId
-                    )
-                )
-            )
-        }
-    }
-
-    @Test
-    fun `onVolumeStateChange should consider attendee as different when externalUserId is different`() {
-        audioClientObserver.onVolumeStateChange(arrayOf(testAttendeeVolumeUpdate))
-        audioClientObserver.onVolumeStateChange(
-            arrayOf(
-                AttendeeUpdate(
-                    testAttendeeVolumeUpdate.profileId,
-                    testId2,
-                    testAttendeeVolumeUpdate.data
-                )
-            )
-        )
-
-        verifyOrder {
-            mockRealtimeObserver.onAttendeesJoined(arrayOf(testAttendeeInfo))
-            mockRealtimeObserver.onAttendeesJoined(
-                arrayOf(
-                    AttendeeInfo(
-                        testAttendeeInfo.attendeeId,
-                        testId2
-                    )
-                )
-            )
-        }
-    }
-
-    @Test
     fun `onVolumeStateChange should notify about attendee mute when newly muted attendees`() {
         audioClientObserver.onVolumeStateChange(arrayOf(testAttendeeVolumeMuted))
 
@@ -394,6 +476,8 @@ class DefaultAudioClientObserverTest {
         audioClientObserver.unsubscribeFromRealTimeEvents(mockRealtimeObserver)
 
         audioClientObserver.onVolumeStateChange(arrayOf(testAttendeeVolumeUpdate))
+        audioClientObserver.onSignalStrengthChange(arrayOf(testAttendeeSignalUpdate))
+        audioClientObserver.onAttendeesPresenceChange(arrayOf(testAttendeeUpdateJoined))
 
         verify(exactly = 0) { mockRealtimeObserver.onVolumeChanged(any()) }
         verify(exactly = 0) { mockRealtimeObserver.onAttendeesJoined(any()) }
