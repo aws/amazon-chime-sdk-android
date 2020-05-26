@@ -76,6 +76,8 @@ compileOptions {
 
 To run the demo application, follow these steps.
 
+> NOTE: Please make sure that you are running on ARM supported devices (real devices) or simulator with arm supported. We do not support x86 currently, so simulators with x86 will not work.
+
 ### 1. Deploy serverless demo
 
 Deploy the serverless demo from [amazon-chime-sdk-js](https://github.com/aws/amazon-chime-sdk-js)
