@@ -154,29 +154,76 @@ class DefaultAudioClientControllerTest {
 
     @Test
     fun `setMute should call AudioClient setMicMute`() {
+        val state = DefaultAudioClientController.audioClientState
+        DefaultAudioClientController.audioClientState = AudioClientState.STARTED
         every { mockAudioClient.setMicMute(any()) } returns testAudioClientSuccessCode
 
         audioClientController.setMute(testMicMute)
 
         verify { mockAudioClient.setMicMute(any()) }
+
+        DefaultAudioClientController.audioClientState = state
     }
 
     @Test
     fun `setMute should return true upon success`() {
+        val state = DefaultAudioClientController.audioClientState
+        DefaultAudioClientController.audioClientState = AudioClientState.STARTED
         every { mockAudioClient.setMicMute(any()) } returns testAudioClientSuccessCode
 
         val testOutput: Boolean = audioClientController.setMute(testMicMute)
 
         assertTrue(testOutput)
+
+        DefaultAudioClientController.audioClientState = state
     }
 
     @Test
     fun `setMute should return false upon failure`() {
+        val state = DefaultAudioClientController.audioClientState
+        DefaultAudioClientController.audioClientState = AudioClientState.STARTED
         every { mockAudioClient.setMicMute(any()) } returns testAudioClientFailureCode
 
         val testOutput: Boolean = audioClientController.setMute(testMicMute)
 
         assertFalse(testOutput)
+
+        DefaultAudioClientController.audioClientState = state
+    }
+
+    @Test
+    fun `setMute should return true when audio client state is started`() {
+        val state = DefaultAudioClientController.audioClientState
+        DefaultAudioClientController.audioClientState = AudioClientState.STARTED
+        every { mockAudioClient.setMicMute(any()) } returns testAudioClientSuccessCode
+
+        val testOutput: Boolean = audioClientController.setMute(testMicMute)
+
+        assertTrue(testOutput)
+
+        DefaultAudioClientController.audioClientState = state
+    }
+
+    @Test
+    fun `setMute should return false when audio client state is initialized`() {
+        val state = DefaultAudioClientController.audioClientState
+        DefaultAudioClientController.audioClientState = AudioClientState.INITIALIZED
+        val testOutput: Boolean = audioClientController.setMute(testMicMute)
+
+        assertFalse(testOutput)
+
+        DefaultAudioClientController.audioClientState = state
+    }
+
+    @Test
+    fun `setMute should return false when audio client state is stopped`() {
+        val state = DefaultAudioClientController.audioClientState
+        DefaultAudioClientController.audioClientState = AudioClientState.STOPPED
+        val testOutput: Boolean = audioClientController.setMute(testMicMute)
+
+        assertFalse(testOutput)
+
+        DefaultAudioClientController.audioClientState = state
     }
 
     @Test

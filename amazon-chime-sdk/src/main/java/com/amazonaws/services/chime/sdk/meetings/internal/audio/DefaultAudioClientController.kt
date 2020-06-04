@@ -179,6 +179,10 @@ class DefaultAudioClientController(
     }
 
     override fun setMute(isMuted: Boolean): Boolean {
-        return AudioClient.AUDIO_CLIENT_OK == audioClient.setMicMute(isMuted)
+        if (audioClientState == AudioClientState.STARTED) {
+            return AudioClient.AUDIO_CLIENT_OK == audioClient.setMicMute(isMuted)
+        } else {
+            return false
+        }
     }
 }
