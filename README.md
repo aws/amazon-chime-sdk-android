@@ -36,8 +36,8 @@ For the purpose of setup, your project's root folder will be referred to as `roo
 
 Download the following zips:
 
-* [amazon-chime-sdk-0.5.1.tar.gz](https://amazon-chime-sdk.s3.amazonaws.com/android/amazon-chime-sdk/0.5.1/amazon-chime-sdk-0.5.1.tar.gz)
-* [amazon-chime-sdk-media-0.4.3.tar.gz](https://amazon-chime-sdk.s3.amazonaws.com/android/amazon-chime-sdk-media/0.4.3/amazon-chime-sdk-media-0.4.3.tar.gz)
+* [amazon-chime-sdk-0.5.2.tar.gz](https://amazon-chime-sdk.s3.amazonaws.com/android/amazon-chime-sdk/0.5.2/amazon-chime-sdk-0.5.2.tar.gz)
+* [amazon-chime-sdk-media-0.5.0.tar.gz](https://amazon-chime-sdk.s3.amazonaws.com/android/amazon-chime-sdk-media/0.5.0/amazon-chime-sdk-media-0.5.0.tar.gz)
 
 Unzip them and copy the aar files to `root/app/libs`
 
@@ -86,7 +86,7 @@ Deploy the serverless demo from [amazon-chime-sdk-js](https://github.com/aws/ama
 
 Download the following zip:
 
-* [amazon-chime-sdk-media-0.4.3.tar.gz](https://amazon-chime-sdk.s3.amazonaws.com/android/amazon-chime-sdk-media/0.4.3/amazon-chime-sdk-media-0.4.3.tar.gz)
+* [amazon-chime-sdk-media-0.5.0.tar.gz](https://amazon-chime-sdk.s3.amazonaws.com/android/amazon-chime-sdk-media/0.5.0/amazon-chime-sdk-media-0.5.0.tar.gz)
 
 Unzip and copy the aar files to `amazon-chime-sdk-android/amazon-chime-sdk/libs`
 
