@@ -14,5 +14,4 @@
     <!-- For roster view -->
     <color name="colorBackground">#E9E9E9</color>
     <color name="colorAttendeeName">#FFFFFFFF</color>
-    <color name="colorAttendeeNameBackground">#99000000</color>
 </resources>
