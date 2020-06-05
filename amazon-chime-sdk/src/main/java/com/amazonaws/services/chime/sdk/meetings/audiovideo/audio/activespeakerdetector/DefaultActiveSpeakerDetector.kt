@@ -66,6 +66,7 @@ class DefaultActiveSpeakerDetector(
     }
 
     private fun startActivityTimer() {
+        activityTimer = Timer("ScheduleActivityTimer", false)
         activityTimer.scheduleAtFixedRate(
             object : TimerTask() {
                 override fun run() {

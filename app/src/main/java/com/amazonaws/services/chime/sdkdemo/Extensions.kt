@@ -5,6 +5,8 @@
 
 package com.amazonaws.services.chime.sdkdemo
 
+import android.content.Context
+import android.content.res.Configuration
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -17,4 +19,8 @@ fun ViewGroup.inflate(@LayoutRes layoutRes: Int, attachToRoot: Boolean = false):
 
 fun encodeURLParam(string: String?): String {
     return URLEncoder.encode(string, "utf-8")
+}
+
+fun isLandscapeMode(context: Context?): Boolean? {
+    return context?.let { it.resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE }
 }
