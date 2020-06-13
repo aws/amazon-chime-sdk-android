@@ -1,4 +1,4 @@
-# Amazon Chime SDK for Android
+# Amazon Chime SDK for Android Device
 
 ## Build video calling, audio calling, and screen sharing applications powered by Amazon Chime.
 
