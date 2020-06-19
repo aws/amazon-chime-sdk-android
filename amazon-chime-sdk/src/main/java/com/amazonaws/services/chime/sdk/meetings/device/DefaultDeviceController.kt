@@ -136,6 +136,8 @@ class DefaultDeviceController(
                 audioManager.apply {
                     mode = AudioManager.MODE_IN_COMMUNICATION
                     isSpeakerphoneOn = true
+                    isBluetoothScoOn = false
+                    stopBluetoothSco()
                 }
             MediaDeviceType.AUDIO_BLUETOOTH ->
                 audioManager.apply {

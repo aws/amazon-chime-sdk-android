@@ -5,7 +5,9 @@
 
 package com.amazonaws.services.chime.sdk.meetings.internal.audio
 
+import android.content.Context
 import android.media.AudioDeviceInfo
+import android.media.AudioManager
 import android.media.AudioRecord
 import android.media.AudioTrack
 import android.util.Log
@@ -13,9 +15,9 @@ import com.amazonaws.services.chime.sdk.meetings.utils.logger.Logger
 import com.xodee.client.audio.audioclient.AudioClient
 import io.mockk.MockKAnnotations
 import io.mockk.every
-import io.mockk.impl.annotations.InjectMockKs
 import io.mockk.impl.annotations.MockK
 import io.mockk.just
+import io.mockk.mockkClass
 import io.mockk.mockkStatic
 import io.mockk.runs
 import io.mockk.verify
@@ -33,6 +35,9 @@ import org.junit.Test
 @ExperimentalCoroutinesApi
 class DefaultAudioClientControllerTest {
     @MockK
+    private lateinit var context: Context
+
+    @MockK
     private lateinit var mockLogger: Logger
 
     @MockK
@@ -41,7 +46,8 @@ class DefaultAudioClientControllerTest {
     @MockK
     private lateinit var mockAudioClientObserver: AudioClientObserver
 
-    @InjectMockKs
+    private lateinit var audioManager: AudioManager
+
     private lateinit var audioClientController: DefaultAudioClientController
 
     private val testDispatcher = TestCoroutineDispatcher()
@@ -66,6 +72,15 @@ class DefaultAudioClientControllerTest {
         every { System.loadLibrary(any()) } just runs
 
         MockKAnnotations.init(this, relaxUnitFun = true)
+
+        setupAudioManager()
+
+        audioClientController = DefaultAudioClientController(
+            context,
+            mockLogger,
+            mockAudioClientObserver,
+            mockAudioClient
+        )
         Dispatchers.setMain(testDispatcher)
     }
 
@@ -73,6 +88,17 @@ class DefaultAudioClientControllerTest {
     fun teardown() {
         Dispatchers.resetMain()
         testDispatcher.cleanupTestCoroutines()
+    }
+
+    private fun setupAudioManager() {
+        audioManager = mockkClass(AudioManager::class)
+        every { audioManager.mode } returns AudioManager.MODE_NORMAL
+        every { audioManager.isSpeakerphoneOn } returns false
+        every { audioManager.setBluetoothScoOn(any()) } just runs
+        every { audioManager.stopBluetoothSco() } just runs
+        every { audioManager.setMode(any()) } just runs
+        every { audioManager.setSpeakerphoneOn(any()) } just runs
+        every { context.getSystemService(any()) } returns audioManager
     }
 
     private fun setupRouteTests(audioClientStatusCode: Int) {
@@ -296,5 +322,9 @@ class DefaultAudioClientControllerTest {
         audioClientController.stop()
 
         verify(exactly = 1) { mockAudioClient.stopSession() }
+        verify { audioManager.setBluetoothScoOn(false) }
+        verify { audioManager.stopBluetoothSco() }
+        verify { audioManager.setMode(AudioManager.MODE_NORMAL) }
+        verify { audioManager.setSpeakerphoneOn(false) }
     }
 }

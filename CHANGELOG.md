@@ -1,3 +1,8 @@
+## Unreleased
+
+### Changed
+* Updated `DefaultAudioClientController` to teardown bluetooth SCO connection after audioClient is stopped. Also reset AudioManager mode and speakerphone state to what it was before the call when audioClient is stopped. Also added bluetooth SCO connection teardown when audio device other than bluetooth is chosen
+
 ## [0.5.1] - 2020-05-22
 
 ### Added

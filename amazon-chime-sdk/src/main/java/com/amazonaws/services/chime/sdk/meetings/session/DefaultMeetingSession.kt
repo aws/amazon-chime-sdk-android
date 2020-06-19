@@ -48,6 +48,7 @@ class DefaultMeetingSession(
 
         val audioClientController =
             DefaultAudioClientController(
+                context,
                 logger,
                 audioClientObserver,
                 audioClient
