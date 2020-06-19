@@ -52,7 +52,10 @@ class DefaultMeetingSessionTest {
         MockKAnnotations.init(this)
         every { context.assets } returns assetManager
         every { context.registerReceiver(any(), any()) } returns mockkClass(Intent::class)
-        every { context.getSystemService(any()) } returns mockkClass(AudioManager::class)
+        val audioManager = mockkClass(AudioManager::class)
+        every { audioManager.mode } returns AudioManager.MODE_NORMAL
+        every { audioManager.isSpeakerphoneOn } returns true
+        every { context.getSystemService(any()) } returns audioManager
         mockkObject(AudioClientFactory.Companion)
         every { AudioClientFactory.getAudioClient(any(), any()) } returns mockAudioClient
         every { configuration.meetingId } returns "meetingId"
@@ -60,6 +63,7 @@ class DefaultMeetingSessionTest {
         every { configuration.urls.turnControlURL } returns "turnControlUrl"
         every { configuration.credentials.joinToken } returns "joinToken"
         every { configuration.urls.urlRewriter } returns ::defaultUrlRewriter
+        every { logger.info(any(), any()) } just runs
 
         meetingSession = DefaultMeetingSession(configuration, logger, context)
     }

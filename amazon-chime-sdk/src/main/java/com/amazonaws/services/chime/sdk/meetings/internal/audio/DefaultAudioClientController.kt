@@ -5,6 +5,7 @@
 
 package com.amazonaws.services.chime.sdk.meetings.internal.audio
 
+import android.content.Context
 import android.media.AudioFormat
 import android.media.AudioManager
 import android.media.AudioRecord
@@ -19,6 +20,7 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
 class DefaultAudioClientController(
+    private val context: Context,
     private val logger: Logger,
     private val audioClientObserver: AudioClientObserver,
     private val audioClient: AudioClient
@@ -31,6 +33,9 @@ class DefaultAudioClientController(
     private val AUDIO_CLIENT_RESULT_SUCCESS = AudioClient.AUDIO_CLIENT_OK
 
     private val uiScope = CoroutineScope(Dispatchers.Main)
+    private val audioManager: AudioManager = context.getSystemService(Context.AUDIO_SERVICE) as AudioManager
+    private var audioModePreCall: Int = audioManager.mode
+    private var speakerphoneStatePreCall: Boolean = audioManager.isSpeakerphoneOn
 
     companion object {
         var audioClientState = AudioClientState.INITIALIZED
@@ -168,7 +173,7 @@ class DefaultAudioClientController(
             } else {
                 logger.info(TAG, "Stopped audio session.")
                 audioClientState = AudioClientState.STOPPED
-
+                resetAudioManager()
                 audioClientObserver.notifyAudioClientObserver { observer ->
                     observer.onAudioSessionStopped(
                         MeetingSessionStatus(MeetingSessionStatusCode.OK)
@@ -176,6 +181,15 @@ class DefaultAudioClientController(
                 }
             }
         }
+    }
+
+    private fun resetAudioManager() {
+        audioManager.apply {
+            isBluetoothScoOn = false
+            stopBluetoothSco()
+        }
+        audioManager.mode = audioModePreCall
+        audioManager.isSpeakerphoneOn = speakerphoneStatePreCall
     }
 
     override fun setMute(isMuted: Boolean): Boolean {
