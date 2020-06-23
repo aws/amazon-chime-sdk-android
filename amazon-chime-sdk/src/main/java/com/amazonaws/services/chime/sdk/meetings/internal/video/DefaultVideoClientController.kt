@@ -26,6 +26,11 @@ class DefaultVideoClientController constructor(
     VideoClientLifecycleHandler {
     private val TAG = "DefaultVideoClientController"
 
+    /**
+     * This flag will enable higher resolution for videos
+     */
+    private val VIDEO_CLIENT_FLAG_ENABLE_TWO_SIMULCAST_STREAMS = 4096
+
     private val permissions = arrayOf(
         Manifest.permission.CAMERA
     )
@@ -137,6 +142,8 @@ class DefaultVideoClientController constructor(
     override fun startVideoClient() {
         logger.info(TAG, "Starting video client")
         videoClient?.setReceiving(false)
+        var flag = 0
+        flag = flag or VIDEO_CLIENT_FLAG_ENABLE_TWO_SIMULCAST_STREAMS
         videoClient?.startServiceV2(
             "",
             "",
@@ -144,7 +151,7 @@ class DefaultVideoClientController constructor(
             joinToken,
             false,
             0,
-            0
+            flag
         )
     }
 
