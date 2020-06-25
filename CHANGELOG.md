@@ -17,7 +17,6 @@
 * Added new parameter `urlRewriter` in `MeetingSessionConfiguration` for customizing url
 * Updated demo application to use pause and resume feature
 
-
 ### Changed
 * Updated demo app to work with updated [amazon-chime-sdk-js serverless demo](https://github.com/aws/amazon-chime-sdk-js/tree/master/demos/serverless). Note that you will need to redeploy the serverless demo to work with the updated demo app
 * Updated methods for `AudioVideoObserver`, `RealtimeObserver`, `DeviceChangeObserver`, `VideoTileObserver`, and `MetricsObserver` to be called on main thread. Make sure to dispatch long-running tasks to another thread to avoid blocking the main thread.
