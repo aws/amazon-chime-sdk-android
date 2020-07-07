@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-package com.amazonaws.services.chime.sdkdemo
+package com.amazonaws.services.chime.sdkdemo.utils
 
 import android.content.Context
 import android.content.res.Configuration

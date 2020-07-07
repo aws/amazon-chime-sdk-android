@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+  ~ SPDX-License-Identifier: Apache-2.0
+  -->
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="48dp"
+    android:layout_gravity="center_horizontal"
+    android:paddingHorizontal="24dp"
+    android:paddingVertical="8dp"
+    android:orientation="horizontal">
+
+    <ImageView
+        android:id="@+id/activeSpeakerIndicator"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_alignParentStart="false"
+        android:layout_centerVertical="true"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:contentDescription="@string/active_speaker_indicator"
+        android:visibility="invisible"
+        app:srcCompat="@drawable/active_speaker_circle"
+        tools:srcCompat="@drawable/active_speaker_circle" />
+
+    <TextView
+        android:id="@+id/attendeeName"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_toStartOf="@id/attendeeVolume"
+        android:layout_toEndOf="@id/activeSpeakerIndicator"
+        android:ellipsize="end"
+        android:gravity="center_vertical"
+        android:maxLines="1"
+        android:textSize="20sp" />
+
+    <ImageView
+        android:id="@+id/attendeeVolume"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_alignParentEnd="true"
+        android:layout_marginEnd="8dp"
+        android:contentDescription="@string/volume_indicator"
+        android:gravity="center_vertical|end"
+        android:tint="?android:attr/textColorSecondary" />
+
+</RelativeLayout>

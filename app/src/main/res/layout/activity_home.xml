@@ -5,11 +5,12 @@
   -->
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     android:gravity="center"
-    android:background="@color/colorBackground">
+    android:orientation="vertical">
 
     <TextView
         android:id="@+id/textView"
@@ -25,27 +26,32 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="16dp"
         android:hint="@string/edit_meeting_id"
-        android:inputType="text"
         android:importantForAutofill="no"
-        android:maxLength="35" />
+        android:inputType="text"
+        android:maxLength="35"
+        android:textAlignment="center" />
 
     <EditText
         android:id="@+id/editName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
         android:hint="@string/edit_name"
-        android:inputType="text"
         android:importantForAutofill="no"
-        android:layout_marginBottom="16dp" />
+        android:inputType="text"
+        android:textAlignment="center" />
 
-    <Button
+    <ImageButton
         android:id="@+id/buttonContinue"
+        style="@style/Widget.AppCompat.ImageButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:background="@null"
         android:contentDescription="@string/main_continue"
         android:paddingLeft="20dp"
         android:paddingRight="20dp"
-        android:text="@string/main_continue" />
+        android:src="@drawable/ic_dial_in"
+        android:tint="?android:attr/textColorPrimary" />
 
     <ProgressBar
         android:id="@+id/progressAuthentication"

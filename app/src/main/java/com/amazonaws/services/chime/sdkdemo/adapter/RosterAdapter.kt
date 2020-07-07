@@ -3,24 +3,26 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-package com.amazonaws.services.chime.sdkdemo
+package com.amazonaws.services.chime.sdkdemo.adapter
 
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.SignalStrength
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.VolumeLevel
+import com.amazonaws.services.chime.sdkdemo.R
 import com.amazonaws.services.chime.sdkdemo.data.RosterAttendee
-import kotlinx.android.synthetic.main.roster_view_attendee_row.view.activeSpeakerIndicator
-import kotlinx.android.synthetic.main.roster_view_attendee_row.view.attendeeName
-import kotlinx.android.synthetic.main.roster_view_attendee_row.view.attendeeVolume
+import com.amazonaws.services.chime.sdkdemo.utils.inflate
+import kotlinx.android.synthetic.main.row_roster.view.activeSpeakerIndicator
+import kotlinx.android.synthetic.main.row_roster.view.attendeeName
+import kotlinx.android.synthetic.main.row_roster.view.attendeeVolume
 
 class RosterAdapter(
     private val roster: MutableCollection<RosterAttendee>
 ) :
     RecyclerView.Adapter<RosterHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RosterHolder {
-        val inflatedView = parent.inflate(R.layout.roster_view_attendee_row, false)
+        val inflatedView = parent.inflate(R.layout.row_roster, false)
         return RosterHolder(inflatedView)
     }
 
@@ -45,6 +47,7 @@ class RosterHolder(inflatedView: View) :
         view.attendeeName.text = attendeeName
         view.attendeeName.contentDescription = attendeeName
         view.activeSpeakerIndicator.visibility = if (attendee.isActiveSpeaker) View.VISIBLE else View.INVISIBLE
+        view.activeSpeakerIndicator.contentDescription = if (attendee.isActiveSpeaker) "${attendee.attendeeName} Active" else ""
 
         if (attendee.signalStrength == SignalStrength.None ||
             attendee.signalStrength == SignalStrength.Low
