@@ -18,6 +18,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
         android:layout_alignParentBottom="true"
+        android:background="@null"
         android:contentDescription="@string/switch_camera"
         android:src="@drawable/button_switch_camera"
         android:visibility="invisible" />

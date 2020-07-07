@@ -7,16 +7,15 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:background="@color/colorBackground">
+    android:orientation="vertical">
 
     <TextView
         android:id="@+id/textViewTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_gravity="center"
         android:layout_marginTop="32dp"
         android:layout_marginBottom="32dp"
-        android:layout_gravity="center"
         android:text="@string/device_management_title"
         android:textAppearance="@style/TextAppearance.AppCompat.Display1" />
 
@@ -52,7 +51,7 @@
         android:id="@+id/textViewMeetingPreview"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_gravity="center"
         android:paddingLeft="20dp"
-        android:paddingRight="20dp"
-        android:layout_gravity="center" />
+        android:paddingRight="20dp" />
 </LinearLayout>

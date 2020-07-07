@@ -3,15 +3,16 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-package com.amazonaws.services.chime.sdkdemo
+package com.amazonaws.services.chime.sdkdemo.activity
 
 import android.Manifest
+import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.view.View
-import android.widget.Button
 import android.widget.EditText
+import android.widget.ImageButton
 import android.widget.ProgressBar
 import android.widget.TextView
 import android.widget.Toast
@@ -21,6 +22,8 @@ import androidx.core.content.ContextCompat
 import com.amazonaws.services.chime.sdk.meetings.utils.Versioning
 import com.amazonaws.services.chime.sdk.meetings.utils.logger.ConsoleLogger
 import com.amazonaws.services.chime.sdk.meetings.utils.logger.LogLevel
+import com.amazonaws.services.chime.sdkdemo.R
+import com.amazonaws.services.chime.sdkdemo.utils.encodeURLParam
 import java.io.BufferedReader
 import java.io.InputStreamReader
 import java.net.HttpURLConnection
@@ -31,7 +34,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
-class MeetingHomeActivity : AppCompatActivity() {
+class HomeActivity : AppCompatActivity() {
     private val logger = ConsoleLogger(LogLevel.INFO)
     private val uiScope = CoroutineScope(Dispatchers.Main)
     private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO
@@ -59,15 +62,23 @@ class MeetingHomeActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_meeting_home)
+        setContentView(R.layout.activity_home)
         meetingEditText = findViewById(R.id.editMeetingId)
         nameEditText = findViewById(R.id.editName)
         authenticationProgressBar = findViewById(R.id.progressAuthentication)
 
-        findViewById<Button>(R.id.buttonContinue)?.setOnClickListener { joinMeeting() }
+        findViewById<ImageButton>(R.id.buttonContinue)?.setOnClickListener { joinMeeting() }
 
         val versionText: TextView = findViewById(R.id.versionText) as TextView
         versionText.text = "${getString(R.string.version_prefix)}${Versioning.sdkVersion()}"
+    }
+
+    private fun showToast(context: Context, msg: String) {
+        Toast.makeText(
+            context,
+            msg,
+            Toast.LENGTH_LONG
+        ).show()
     }
 
     private fun joinMeeting() {
@@ -75,17 +86,9 @@ class MeetingHomeActivity : AppCompatActivity() {
         yourName = nameEditText?.text.toString().trim().replace("\\s+".toRegex(), "+")
 
         if (meetingID.isNullOrBlank()) {
-            Toast.makeText(
-                this,
-                getString(R.string.user_notification_meeting_id_invalid),
-                Toast.LENGTH_LONG
-            ).show()
+            showToast(this, getString(R.string.user_notification_meeting_id_invalid))
         } else if (yourName.isNullOrBlank()) {
-            Toast.makeText(
-                this,
-                getString(R.string.user_notification_attendee_name_invalid),
-                Toast.LENGTH_LONG
-            ).show()
+            showToast(this, getString(R.string.user_notification_attendee_name_invalid))
         } else {
             if (hasPermissionsAlready()) {
                 authenticate(getString(R.string.test_url), meetingID, yourName)
@@ -112,12 +115,7 @@ class MeetingHomeActivity : AppCompatActivity() {
                     grantResults.isEmpty() || grantResults.any { PackageManager.PERMISSION_GRANTED != it }
 
                 if (isMissingPermission) {
-                    Toast.makeText(
-                        this,
-                        getString(R.string.user_notification_permission_error),
-                        Toast.LENGTH_LONG
-                    )
-                        .show()
+                    showToast(this, getString(R.string.user_notification_permission_error))
                     return
                 }
                 authenticate(getString(R.string.test_url), meetingID, yourName)
@@ -131,25 +129,27 @@ class MeetingHomeActivity : AppCompatActivity() {
         attendeeName: String?
     ) =
         uiScope.launch {
-            authenticationProgressBar?.visibility = View.VISIBLE
-            logger.info(TAG, "Joining meeting. meetingUrl: $meetingUrl, meetingId: $meetingId, attendeeName: $attendeeName")
-
-            val meetingResponseJson: String? = joinMeeting(meetingUrl, meetingId, attendeeName)
-
-            authenticationProgressBar?.visibility = View.INVISIBLE
-
-            if (meetingResponseJson == null) {
-                Toast.makeText(
-                    applicationContext,
-                    getString(R.string.user_notification_meeting_start_error),
-                    Toast.LENGTH_LONG
-                ).show()
+            logger.info(
+                TAG,
+                "Joining meeting. meetingUrl: $meetingUrl, meetingId: $meetingId, attendeeName: $attendeeName"
+            )
+            if (!meetingUrl.startsWith("http")) {
+                showToast(applicationContext, getString(R.string.user_notification_meeting_url_error))
             } else {
-                val intent = Intent(applicationContext, InMeetingActivity::class.java)
-                intent.putExtra(MEETING_RESPONSE_KEY, meetingResponseJson)
-                intent.putExtra(MEETING_ID_KEY, meetingId)
-                intent.putExtra(NAME_KEY, attendeeName)
-                startActivity(intent)
+                authenticationProgressBar?.visibility = View.VISIBLE
+                val meetingResponseJson: String? = joinMeeting(meetingUrl, meetingId, attendeeName)
+
+                authenticationProgressBar?.visibility = View.INVISIBLE
+
+                if (meetingResponseJson == null) {
+                    showToast(applicationContext, getString(R.string.user_notification_meeting_start_error))
+                } else {
+                    val intent = Intent(applicationContext, MeetingActivity::class.java)
+                    intent.putExtra(MEETING_RESPONSE_KEY, meetingResponseJson)
+                    intent.putExtra(MEETING_ID_KEY, meetingId)
+                    intent.putExtra(NAME_KEY, attendeeName)
+                    startActivity(intent)
+                }
             }
         }
 
@@ -159,9 +159,10 @@ class MeetingHomeActivity : AppCompatActivity() {
         attendeeName: String?
     ): String? {
         return withContext(ioDispatcher) {
+            val url = if (meetingUrl.endsWith("/")) meetingUrl else "$meetingUrl/"
             val serverUrl =
                 URL(
-                    "${meetingUrl}join?title=${encodeURLParam(meetingId)}&name=${encodeURLParam(
+                    "${url}join?title=${encodeURLParam(meetingId)}&name=${encodeURLParam(
                         attendeeName
                     )}&region=${encodeURLParam(MEETING_REGION)}"
                 )

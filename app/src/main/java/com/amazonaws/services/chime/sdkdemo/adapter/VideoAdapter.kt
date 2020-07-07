@@ -1,7 +1,7 @@
 /*
  * Copyright 2020 Amazon.com, Inc. or its affiliates. All Rights Reserved.
  */
-package com.amazonaws.services.chime.sdkdemo
+package com.amazonaws.services.chime.sdkdemo.adapter
 
 import android.content.Context
 import android.view.View
@@ -10,29 +10,32 @@ import android.widget.RelativeLayout
 import androidx.recyclerview.widget.RecyclerView
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.AudioVideoFacade
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoPauseState
+import com.amazonaws.services.chime.sdkdemo.R
 import com.amazonaws.services.chime.sdkdemo.data.VideoCollectionTile
-import kotlinx.android.synthetic.main.video_collection_item.view.attendee_name
-import kotlinx.android.synthetic.main.video_collection_item.view.on_tile_button
-import kotlinx.android.synthetic.main.video_collection_item.view.video_surface
+import com.amazonaws.services.chime.sdkdemo.utils.inflate
+import com.amazonaws.services.chime.sdkdemo.utils.isLandscapeMode
+import kotlinx.android.synthetic.main.item_video.view.attendee_name
+import kotlinx.android.synthetic.main.item_video.view.on_tile_button
+import kotlinx.android.synthetic.main.item_video.view.video_surface
 
-class VideoCollectionTileAdapter(
+class VideoAdapter(
     private val videoCollectionTiles: MutableCollection<VideoCollectionTile>,
     private val audioVideoFacade: AudioVideoFacade,
     private val context: Context?
 ) :
-    RecyclerView.Adapter<ViewHolder>() {
+    RecyclerView.Adapter<VideoHolder>() {
     private val VIDEO_ASPECT_RATIO_16_9 = 0.5625
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val inflatedView = parent.inflate(R.layout.video_collection_item, false)
-        return ViewHolder(inflatedView, audioVideoFacade)
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): VideoHolder {
+        val inflatedView = parent.inflate(R.layout.item_video, false)
+        return VideoHolder(inflatedView, audioVideoFacade)
     }
 
     override fun getItemCount(): Int {
         return videoCollectionTiles.size
     }
 
-    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: VideoHolder, position: Int) {
         val videoCollectionTile = videoCollectionTiles.elementAt(position)
         holder.bindVideoTile(videoCollectionTile)
         context?.let {
@@ -46,7 +49,7 @@ class VideoCollectionTileAdapter(
     }
 }
 
-class ViewHolder(inflatedView: View, audioVideoFacade: AudioVideoFacade) :
+class VideoHolder(inflatedView: View, audioVideoFacade: AudioVideoFacade) :
     RecyclerView.ViewHolder(inflatedView) {
 
     private var view: View = inflatedView
@@ -59,8 +62,13 @@ class ViewHolder(inflatedView: View, audioVideoFacade: AudioVideoFacade) :
 
     fun bindVideoTile(videoCollectionTile: VideoCollectionTile) {
         audioVideo.bindVideoView(view.video_surface, videoCollectionTile.videoTileState.tileId)
-        view.video_surface.contentDescription = "${videoCollectionTile.attendeeName} VideoTile"
+        if (videoCollectionTile.videoTileState.isContent) {
+            view.video_surface.contentDescription = "ScreenTile"
+        } else {
+            view.video_surface.contentDescription = "${videoCollectionTile.attendeeName} VideoTile"
+        }
         if (videoCollectionTile.videoTileState.isLocalTile) {
+            view.attendee_name.visibility = View.GONE
             view.on_tile_button.visibility = View.VISIBLE
             view.on_tile_button.setOnClickListener { audioVideo.switchCamera() }
         } else {

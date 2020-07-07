@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-package com.amazonaws.services.chime.sdkdemo
+package com.amazonaws.services.chime.sdkdemo.fragment
 
 import android.content.Context
 import android.os.Bundle
@@ -22,6 +22,9 @@ import com.amazonaws.services.chime.sdk.meetings.device.MediaDevice
 import com.amazonaws.services.chime.sdk.meetings.device.MediaDeviceType
 import com.amazonaws.services.chime.sdk.meetings.utils.logger.ConsoleLogger
 import com.amazonaws.services.chime.sdk.meetings.utils.logger.LogLevel
+import com.amazonaws.services.chime.sdkdemo.R
+import com.amazonaws.services.chime.sdkdemo.activity.HomeActivity
+import com.amazonaws.services.chime.sdkdemo.activity.MeetingActivity
 import java.lang.ClassCastException
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -47,8 +50,8 @@ class DeviceManagementFragment : Fragment(),
 
             fragment.arguments =
                 Bundle().apply {
-                    putString(MeetingHomeActivity.MEETING_ID_KEY, meetingId)
-                    putString(MeetingHomeActivity.NAME_KEY, name)
+                    putString(HomeActivity.MEETING_ID_KEY, meetingId)
+                    putString(HomeActivity.NAME_KEY, name)
                 }
             return fragment
         }
@@ -77,9 +80,9 @@ class DeviceManagementFragment : Fragment(),
         val view = inflater.inflate(R.layout.fragment_device_management, container, false)
         val context = activity as Context
 
-        val meetingId = arguments?.getString(MeetingHomeActivity.MEETING_ID_KEY)
-        val name = arguments?.getString(MeetingHomeActivity.NAME_KEY)
-        audioVideo = (activity as InMeetingActivity).getAudioVideo()
+        val meetingId = arguments?.getString(HomeActivity.MEETING_ID_KEY)
+        val name = arguments?.getString(HomeActivity.NAME_KEY)
+        audioVideo = (activity as MeetingActivity).getAudioVideo()
 
         val displayedText = getString(R.string.preview_meeting_info, meetingId, name)
         view.findViewById<TextView>(R.id.textViewMeetingPreview)?.text = displayedText

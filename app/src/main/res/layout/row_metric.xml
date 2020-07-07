@@ -13,32 +13,25 @@
     android:orientation="horizontal">
 
     <TextView
-        android:id="@+id/attendeeName"
+        android:id="@+id/metricName"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_alignParentStart="true"
-        android:gravity="center_vertical"
-        android:textSize="20sp"
-        android:maxLines="1"
         android:ellipsize="end"
-        android:textColor="@color/colorText" />
+        android:gravity="start|center_vertical"
+        android:maxLines="1"
+        android:textColor="@color/colorText"
+        android:textSize="18sp" />
 
     <TextView
-        android:id="@+id/activeSpeakerIndicator"
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:layout_toStartOf="@id/attendeeVolume"
-        android:gravity="center_vertical"
-        android:paddingEnd="8dp"
-        android:text="@string/active_speaker_text"
-        android:visibility="invisible" />
-
-    <ImageView
-        android:id="@+id/attendeeVolume"
+        android:id="@+id/metricValue"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_alignParentEnd="true"
-        android:gravity="center_vertical"
-        android:contentDescription="@string/volume_indicator" />
+        android:layout_marginEnd="16dp"
+        android:layout_toEndOf="@id/metricName"
+        android:ellipsize="end"
+        android:gravity="center_vertical|end" />
+
 
 </RelativeLayout>

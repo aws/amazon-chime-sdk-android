@@ -5,5 +5,5 @@
   -->
 
 <selector xmlns:android="http://schemas.android.com/apk/res/android" >
-    <item android:drawable="@drawable/ic_video_disabled" />
+    <item android:drawable="@drawable/ic_attendees_video" />
 </selector>
