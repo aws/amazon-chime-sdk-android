@@ -146,6 +146,7 @@ class MeetingFragment : Fragment(),
 
         noVideoOrScreenShareAvailable = view.findViewById(R.id.noVideoOrScreenShareAvailable)
         noVideoOrScreenShareAvailable.visibility = View.VISIBLE
+        refreshNoVideosOrScreenShareAvailableText()
 
         subscribeToAttendeeChangeHandlers()
         audioVideo.start()
