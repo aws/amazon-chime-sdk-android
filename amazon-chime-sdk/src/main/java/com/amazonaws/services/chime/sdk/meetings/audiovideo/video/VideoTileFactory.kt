@@ -14,5 +14,10 @@ interface VideoTileFactory {
      *
      * @return [VideoTile] to use with [VideoTileController]
     */
-    fun makeTile(tileId: Int, attendeeId: String?): VideoTile
+    fun makeTile(
+        tileId: Int,
+        attendeeId: String?,
+        videoStreamContentHeight: Int,
+        videoStreamContentWidth: Int
+    ): VideoTile
 }

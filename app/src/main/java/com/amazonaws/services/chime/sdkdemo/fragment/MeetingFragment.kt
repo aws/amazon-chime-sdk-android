@@ -620,7 +620,7 @@ class MeetingFragment : Fragment(),
             logger.info(
                 TAG,
                 "Video track added, titleId: ${tileState.tileId}, attendeeId: ${tileState.attendeeId}" +
-                        ", isContent ${tileState.isContent}"
+                        ", isContent ${tileState.isContent} with size ${tileState.videoStreamContentWidth}*${tileState.videoStreamContentHeight}"
             )
             if (tileState.isContent) {
                 if (!meetingModel.currentScreenTiles.containsKey(tileState.tileId) && canShowMoreRemoteScreenTile()) {
@@ -688,6 +688,10 @@ class MeetingFragment : Fragment(),
     override fun onVideoTileResumed(tileState: VideoTileState) {
         val attendeeName = meetingModel.currentRoster[tileState.attendeeId]?.attendeeName ?: ""
         notify("Video for attendee $attendeeName has been unpaused")
+    }
+
+    override fun onVideoTileSizeChanged(tileState: VideoTileState) {
+        logger.info(TAG, "Video stream content size changed to ${tileState.videoStreamContentWidth}*${tileState.videoStreamContentHeight} for tileId: ${tileState.tileId}")
     }
 
     override fun onMetricsReceived(metrics: Map<ObservableMetric, Any>) {

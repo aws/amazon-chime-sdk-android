@@ -7,17 +7,19 @@ import org.junit.Test
 class VideoTileStateTest {
 
     private val tileId = 117 // some random id
+    private val testHeight = 1280
+    private val testWidth = 720
     private val attendeeIdVideo = "chimesarang"
     private val attendeeIdScreenShare = "chimesarang#content"
 
     // local tile
-    val vtsLocal = VideoTileState(tileId, null, VideoPauseState.Unpaused)
+    val vtsLocal = VideoTileState(tileId, null, testHeight, testWidth, VideoPauseState.Unpaused)
 
     // regular video sharing
-    val vtsVideo = VideoTileState(tileId, attendeeIdVideo, VideoPauseState.Unpaused)
+    val vtsVideo = VideoTileState(tileId, attendeeIdVideo, testHeight, testWidth, VideoPauseState.Unpaused)
 
     // screen sharing
-    val vtsScreenShare = VideoTileState(tileId, attendeeIdScreenShare, VideoPauseState.Unpaused)
+    val vtsScreenShare = VideoTileState(tileId, attendeeIdScreenShare, testHeight, testWidth, VideoPauseState.Unpaused)
 
     @Test
     fun `isLocalTile should be true when tile is local`() {
