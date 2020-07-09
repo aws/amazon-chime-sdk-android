@@ -42,6 +42,6 @@ class MetricHolder(inflatedView: View) :
         view.metricName.text = name
         view.metricValue.text = value
         view.metricName.contentDescription = "$name metric"
-        view.metricValue.contentDescription = "$value value"
+        view.metricValue.contentDescription = "$name value"
     }
 }
