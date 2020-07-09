@@ -133,9 +133,9 @@ class DefaultVideoClientObserver(
         notifyVideoTileObserver { observer ->
             observer.onReceiveFrame(
                 frame,
+                videoId,
                 profileId,
-                pauseState,
-                videoId
+                pauseState
             )
         }
     }

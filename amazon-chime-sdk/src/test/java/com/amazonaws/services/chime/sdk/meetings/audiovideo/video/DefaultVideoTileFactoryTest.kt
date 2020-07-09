@@ -14,13 +14,17 @@ class DefaultVideoTileFactoryTest {
     fun `makeTile should return object with data from parameters`() {
         val testTileId = 1
         val testAttendeeId = "attendeeId"
+        val testHeight = 1280
+        val testWidth = 720
         val testLogger = ConsoleLogger()
         val videoTileFactory = DefaultVideoTileFactory(testLogger)
 
-        val testOutput: VideoTile = videoTileFactory.makeTile(testTileId, testAttendeeId)
+        val testOutput: VideoTile = videoTileFactory.makeTile(testTileId, testAttendeeId, testHeight, testWidth)
 
         assertNotNull(testOutput)
         assertEquals(testTileId, testOutput.state.tileId)
         assertEquals(testAttendeeId, testOutput.state.attendeeId)
+        assertEquals(testHeight, testOutput.state.videoStreamContentHeight)
+        assertEquals(testWidth, testOutput.state.videoStreamContentWidth)
     }
 }

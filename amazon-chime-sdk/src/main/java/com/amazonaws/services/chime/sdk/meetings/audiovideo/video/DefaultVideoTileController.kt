@@ -6,6 +6,7 @@
 package com.amazonaws.services.chime.sdk.meetings.audiovideo.video
 
 import com.amazon.chime.webrtc.EglBase
+import com.amazon.chime.webrtc.VideoRenderer
 import com.amazonaws.services.chime.sdk.meetings.internal.utils.ObserverUtils
 import com.amazonaws.services.chime.sdk.meetings.internal.video.VideoClientController
 import com.amazonaws.services.chime.sdk.meetings.utils.logger.Logger
@@ -36,9 +37,9 @@ class DefaultVideoTileController(
 
     override fun onReceiveFrame(
         frame: Any?,
+        videoId: Int,
         attendeeId: String?,
-        pauseState: VideoPauseState,
-        videoId: Int
+        pauseState: VideoPauseState
     ) {
         /**
          * There are FOUR possible outcomes:
@@ -50,6 +51,13 @@ class DefaultVideoTileController(
          * In both pause and stop cases, the frame is null but the pauseType differs
          */
         val tile: VideoTile? = videoTileMap[videoId]
+        var videoStreamContentHeight = 0
+        var videoStreamContentWidth = 0
+
+        if (frame is VideoRenderer.I420Frame) {
+            videoStreamContentHeight = frame.height
+            videoStreamContentWidth = frame.width
+        }
 
         if (tile != null) {
             if (frame == null && pauseState == VideoPauseState.Unpaused) {
@@ -60,6 +68,14 @@ class DefaultVideoTileController(
                 onRemoveVideoTile(videoId)
                 return
             }
+
+            if (videoStreamContentHeight != tile.state.videoStreamContentHeight ||
+                videoStreamContentWidth != tile.state.videoStreamContentWidth) {
+                tile.state.videoStreamContentHeight = videoStreamContentHeight
+                tile.state.videoStreamContentWidth = videoStreamContentWidth
+                forEachObserver { observer -> observer.onVideoTileSizeChanged(tile.state) }
+            }
+
             // Account for any internally changed pause states, but ignore if the tile is paused by
             // user since the pause might not have propagated yet
             if (pauseState != tile.state.pauseState && tile.state.pauseState != VideoPauseState.PausedByUserRequest) {
@@ -86,7 +102,7 @@ class DefaultVideoTileController(
                     TAG,
                     "Adding video tile with videoId = $videoId & attendeeId = $attendeeId"
                 )
-                onAddVideoTile(videoId, attendeeId)
+                onAddVideoTile(videoId, attendeeId, videoStreamContentHeight, videoStreamContentWidth)
             }
         }
     }
@@ -175,8 +191,8 @@ class DefaultVideoTileController(
         }
     }
 
-    private fun onAddVideoTile(tileId: Int, attendeeId: String?) {
-        val tile = videoTileFactory.makeTile(tileId, attendeeId)
+    private fun onAddVideoTile(tileId: Int, attendeeId: String?, videoStreamContentHeight: Int, videoStreamContentWidth: Int) {
+        val tile = videoTileFactory.makeTile(tileId, attendeeId, videoStreamContentHeight, videoStreamContentWidth)
         videoTileMap[tileId] = tile
         forEachObserver { observer -> observer.onVideoTileAdded(tile.state) }
     }

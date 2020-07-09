@@ -50,11 +50,14 @@ class DefaultVideoTileControllerTest {
 
     private val tileId = 7 // some random prime number
     private val attendeeId = "chimesarang"
+    private val testHeight = 0
+    private val testWidth = 0
 
     private var onAddObserverCalled = 0
     private var onRemoveObserverCalled = 0
     private var onPauseObserverCalled = 0
     private var onResumeObserverCalled = 0
+    private var onSizeChangedObserverCalled = 0
 
     private val tileObserver = object : VideoTileObserver {
         override fun onVideoTileAdded(tileState: VideoTileState) {
@@ -72,15 +75,21 @@ class DefaultVideoTileControllerTest {
         override fun onVideoTileResumed(tileState: VideoTileState) {
             onResumeObserverCalled++
         }
+
+        override fun onVideoTileSizeChanged(tileState: VideoTileState) {
+            onSizeChangedObserverCalled++
+        }
     }
 
     @Before
     fun setUp() {
         MockKAnnotations.init(this, relaxUnitFun = true)
-        every { mockVideoTileFactory.makeTile(tileId, any()) } returns mockVideoTile
+        every { mockVideoTileFactory.makeTile(tileId, any(), testWidth, testHeight) } returns mockVideoTile
         every { mockVideoTile.state } returns VideoTileState(
             tileId,
             attendeeId,
+            testHeight,
+            testWidth,
             VideoPauseState.Unpaused
         )
         every { mockVideoTile.videoRenderView } returns mockVideoRenderView
@@ -99,9 +108,9 @@ class DefaultVideoTileControllerTest {
         runBlockingTest {
             videoTileController.onReceiveFrame(
                 mockFrame,
+                tileId,
                 attendeeId,
-                VideoPauseState.Unpaused,
-                tileId
+                VideoPauseState.Unpaused
             )
         }
         videoTileController.bindVideoView(mockVideoRenderView, tileId)
@@ -115,18 +124,18 @@ class DefaultVideoTileControllerTest {
         runBlockingTest {
             videoTileController.onReceiveFrame(
                 mockFrame,
+                tileId,
                 attendeeId,
-                VideoPauseState.Unpaused,
-                tileId
+                VideoPauseState.Unpaused
             )
         }
         videoTileController.bindVideoView(mockVideoRenderView, tileId)
         runBlockingTest {
             videoTileController.onReceiveFrame(
                 mockFrame,
+                tileId,
                 attendeeId,
-                VideoPauseState.Unpaused,
-                tileId
+                VideoPauseState.Unpaused
             )
         }
 
@@ -140,9 +149,9 @@ class DefaultVideoTileControllerTest {
         runBlockingTest {
             videoTileController.onReceiveFrame(
                 mockFrame,
+                tileId,
                 attendeeId,
-                VideoPauseState.Unpaused,
-                tileId
+                VideoPauseState.Unpaused
             )
         }
 
@@ -156,9 +165,9 @@ class DefaultVideoTileControllerTest {
         runBlockingTest {
             videoTileController.onReceiveFrame(
                 mockFrame,
+                tileId,
                 attendeeId,
-                VideoPauseState.Unpaused,
-                tileId
+                VideoPauseState.Unpaused
             )
         }
 
@@ -173,9 +182,9 @@ class DefaultVideoTileControllerTest {
         runBlockingTest {
             videoTileController.onReceiveFrame(
                 mockFrame,
+                tileId,
                 attendeeId,
-                VideoPauseState.Unpaused,
-                tileId
+                VideoPauseState.Unpaused
             )
         }
 
@@ -185,6 +194,8 @@ class DefaultVideoTileControllerTest {
                 VideoTileState(
                     tileId,
                     attendeeId,
+                    testHeight,
+                    testWidth,
                     VideoPauseState.Unpaused
                 )
             )
@@ -199,11 +210,11 @@ class DefaultVideoTileControllerTest {
         runBlockingTest {
             videoTileController.onReceiveFrame(
                 mockFrame,
+                tileId,
                 attendeeId,
-                VideoPauseState.Unpaused,
-                tileId
+                VideoPauseState.Unpaused
             )
-            videoTileController.onReceiveFrame(null, attendeeId, VideoPauseState.Unpaused, tileId)
+            videoTileController.onReceiveFrame(null, tileId, attendeeId, VideoPauseState.Unpaused)
         }
 
         Assert.assertEquals(1, onRemoveObserverCalled)
@@ -212,6 +223,8 @@ class DefaultVideoTileControllerTest {
                 VideoTileState(
                     tileId,
                     attendeeId,
+                    testHeight,
+                    testWidth,
                     VideoPauseState.Unpaused
                 )
             )
@@ -226,15 +239,15 @@ class DefaultVideoTileControllerTest {
         runBlockingTest {
             videoTileController.onReceiveFrame(
                 mockFrame,
+                tileId,
                 attendeeId,
-                VideoPauseState.Unpaused,
-                tileId
+                VideoPauseState.Unpaused
             )
             videoTileController.onReceiveFrame(
                 mockFrame,
+                tileId,
                 attendeeId,
-                VideoPauseState.PausedForPoorConnection,
-                tileId
+                VideoPauseState.PausedForPoorConnection
             )
         }
 
@@ -245,6 +258,8 @@ class DefaultVideoTileControllerTest {
                 VideoTileState(
                     tileId,
                     attendeeId,
+                    testHeight,
+                    testWidth,
                     VideoPauseState.Unpaused
                 )
             )
@@ -257,6 +272,8 @@ class DefaultVideoTileControllerTest {
         every { mockVideoTile.state } returns VideoTileState(
             tileId,
             attendeeId,
+            testHeight,
+            testWidth,
             VideoPauseState.PausedForPoorConnection
         )
 
@@ -264,15 +281,15 @@ class DefaultVideoTileControllerTest {
         runBlockingTest {
             videoTileController.onReceiveFrame(
                 mockFrame,
+                tileId,
                 attendeeId,
-                VideoPauseState.PausedForPoorConnection,
-                tileId
+                VideoPauseState.PausedForPoorConnection
             )
             videoTileController.onReceiveFrame(
                 mockFrame,
+                tileId,
                 attendeeId,
-                VideoPauseState.Unpaused,
-                tileId
+                VideoPauseState.Unpaused
             )
         }
 
@@ -283,6 +300,8 @@ class DefaultVideoTileControllerTest {
                 VideoTileState(
                     tileId,
                     attendeeId,
+                    testHeight,
+                    testWidth,
                     VideoPauseState.PausedForPoorConnection
                 )
             )
@@ -294,9 +313,9 @@ class DefaultVideoTileControllerTest {
         runBlockingTest {
             videoTileController.onReceiveFrame(
                 mockFrame,
+                tileId,
                 attendeeId,
-                VideoPauseState.Unpaused,
-                tileId
+                VideoPauseState.Unpaused
             )
         }
         videoTileController.pauseRemoteVideoTile(tileId)
@@ -312,9 +331,9 @@ class DefaultVideoTileControllerTest {
         runBlockingTest {
             videoTileController.onReceiveFrame(
                 mockFrame,
+                tileId,
                 attendeeId,
-                VideoPauseState.Unpaused,
-                tileId
+                VideoPauseState.Unpaused
             )
             videoTileController.pauseRemoteVideoTile(tileId)
         }
@@ -325,6 +344,8 @@ class DefaultVideoTileControllerTest {
                 VideoTileState(
                     tileId,
                     attendeeId,
+                    testHeight,
+                    testWidth,
                     VideoPauseState.Unpaused
                 )
             )
@@ -336,9 +357,9 @@ class DefaultVideoTileControllerTest {
         runBlockingTest {
             videoTileController.onReceiveFrame(
                 mockFrame,
+                tileId,
                 attendeeId,
-                VideoPauseState.Unpaused,
-                tileId
+                VideoPauseState.Unpaused
             )
         }
         videoTileController.resumeRemoteVideoTile(tileId)
@@ -352,6 +373,8 @@ class DefaultVideoTileControllerTest {
         every { mockVideoTile.state } returns VideoTileState(
             tileId,
             attendeeId,
+            testHeight,
+            testWidth,
             VideoPauseState.PausedByUserRequest
         )
         videoTileController.addVideoTileObserver(mockObserver)
@@ -359,9 +382,9 @@ class DefaultVideoTileControllerTest {
         runBlockingTest {
             videoTileController.onReceiveFrame(
                 mockFrame,
+                tileId,
                 attendeeId,
-                VideoPauseState.PausedByUserRequest,
-                tileId
+                VideoPauseState.PausedByUserRequest
             )
             videoTileController.resumeRemoteVideoTile(tileId)
         }
@@ -372,6 +395,8 @@ class DefaultVideoTileControllerTest {
                 VideoTileState(
                     tileId,
                     attendeeId,
+                    testHeight,
+                    testWidth,
                     VideoPauseState.PausedByUserRequest
                 )
             )
@@ -395,9 +420,9 @@ class DefaultVideoTileControllerTest {
 
     @Test
     fun `pauseRemoteVideoTile should NOT call VideoClientController's setRemotePaused when local tile`() {
-        every { mockVideoTile.state } returns VideoTileState(tileId, null, VideoPauseState.Unpaused)
+        every { mockVideoTile.state } returns VideoTileState(tileId, null, testHeight, testWidth, VideoPauseState.Unpaused)
         runBlockingTest {
-            videoTileController.onReceiveFrame(mockFrame, null, VideoPauseState.Unpaused, tileId)
+            videoTileController.onReceiveFrame(mockFrame, tileId, null, VideoPauseState.Unpaused)
         }
 
         videoTileController.pauseRemoteVideoTile(tileId)
@@ -422,9 +447,9 @@ class DefaultVideoTileControllerTest {
 
     @Test
     fun `resumeRemoteVideoTile should NOT call VideoClientController's setRemotePaused when local tile`() {
-        every { mockVideoTile.state } returns VideoTileState(tileId, null, VideoPauseState.Unpaused)
+        every { mockVideoTile.state } returns VideoTileState(tileId, null, testHeight, testWidth, VideoPauseState.Unpaused)
         runBlockingTest {
-            videoTileController.onReceiveFrame(mockFrame, null, VideoPauseState.Unpaused, tileId)
+            videoTileController.onReceiveFrame(mockFrame, tileId, null, VideoPauseState.Unpaused)
         }
 
         videoTileController.resumeRemoteVideoTile(tileId)
@@ -437,25 +462,27 @@ class DefaultVideoTileControllerTest {
         val mockVideoTile2: VideoTile = mockk(relaxUnitFun = true)
         val tileId2 = 127
 
-        every { mockVideoTileFactory.makeTile(tileId2, any()) } returns mockVideoTile2
+        every { mockVideoTileFactory.makeTile(tileId2, any(), testHeight, testWidth) } returns mockVideoTile2
         every { mockVideoTile2.state } returns VideoTileState(
             tileId2,
             attendeeId,
+            testHeight,
+            testWidth,
             VideoPauseState.Unpaused
         )
         every { mockVideoTile2.videoRenderView } returns mockVideoRenderView
         runBlockingTest {
             videoTileController.onReceiveFrame(
                 mockFrame,
+                tileId,
                 attendeeId,
-                VideoPauseState.Unpaused,
-                tileId
+                VideoPauseState.Unpaused
             )
             videoTileController.onReceiveFrame(
                 mockFrame,
+                tileId2,
                 attendeeId,
-                VideoPauseState.Unpaused,
-                tileId2
+                VideoPauseState.Unpaused
             )
         }
 
@@ -471,26 +498,27 @@ class DefaultVideoTileControllerTest {
         val mockVideoTile2: VideoTile = mockk(relaxUnitFun = true)
         val mockVideoRenderView2: VideoRenderView = mockk(relaxUnitFun = true)
         val tileId2 = 127
-
-        every { mockVideoTileFactory.makeTile(tileId2, any()) } returns mockVideoTile2
+        every { mockVideoTileFactory.makeTile(tileId2, any(), testHeight, testWidth) } returns mockVideoTile2
         every { mockVideoTile2.state } returns VideoTileState(
             tileId2,
             attendeeId,
+            testHeight,
+            testWidth,
             VideoPauseState.Unpaused
         )
         every { mockVideoTile2.videoRenderView } returns mockVideoRenderView2
         runBlockingTest {
             videoTileController.onReceiveFrame(
                 mockFrame,
+                tileId,
                 attendeeId,
-                VideoPauseState.Unpaused,
-                tileId
+                VideoPauseState.Unpaused
             )
             videoTileController.onReceiveFrame(
                 mockFrame,
+                tileId2,
                 attendeeId,
-                VideoPauseState.Unpaused,
-                tileId2
+                VideoPauseState.Unpaused
             )
         }
 
@@ -501,5 +529,91 @@ class DefaultVideoTileControllerTest {
         verify(exactly = 0) { mockVideoTile2.unbind() }
         verify(exactly = 1) { mockVideoTile.bind(any(), any()) }
         verify(exactly = 1) { mockVideoTile2.bind(any(), any()) }
+    }
+
+    @Test
+    fun `onReceiveFrame should notify observer about video tile size change with new frame size`() {
+        val mockObserver = spyk(tileObserver)
+
+        videoTileController.addVideoTileObserver(mockObserver)
+        runBlockingTest {
+            videoTileController.onReceiveFrame(
+                mockFrame,
+                tileId,
+                attendeeId,
+                VideoPauseState.Unpaused
+            )
+        }
+
+        runBlockingTest {
+            videoTileController.onReceiveFrame(
+                VideoRenderer.I420Frame(
+                    testWidth + 1,
+                    testHeight + 1,
+                    0,
+                    0,
+                    null
+                ),
+                tileId,
+                attendeeId,
+                VideoPauseState.Unpaused
+            )
+        }
+
+        Assert.assertEquals(1, onSizeChangedObserverCalled)
+        verify {
+            mockObserver.onVideoTileAdded(
+                VideoTileState(
+                    tileId,
+                    attendeeId,
+                    testHeight + 1,
+                    testWidth + 1,
+                    VideoPauseState.Unpaused
+                )
+            )
+        }
+    }
+
+    @Test
+    fun `onReceiveFrame should NOT notify observer about video tile size change with the same frame size`() {
+        val mockObserver = spyk(tileObserver)
+
+        videoTileController.addVideoTileObserver(mockObserver)
+        runBlockingTest {
+            videoTileController.onReceiveFrame(
+                mockFrame,
+                tileId,
+                attendeeId,
+                VideoPauseState.Unpaused
+            )
+        }
+
+        runBlockingTest {
+            videoTileController.onReceiveFrame(
+                VideoRenderer.I420Frame(
+                    testWidth,
+                    testHeight,
+                    0,
+                    0,
+                    null
+                ),
+                tileId,
+                attendeeId,
+                VideoPauseState.Unpaused
+            )
+        }
+
+        Assert.assertEquals(0, onSizeChangedObserverCalled)
+        verify {
+            mockObserver.onVideoTileAdded(
+                VideoTileState(
+                    tileId,
+                    attendeeId,
+                    testHeight,
+                    testWidth,
+                    VideoPauseState.Unpaused
+                )
+            )
+        }
     }
 }

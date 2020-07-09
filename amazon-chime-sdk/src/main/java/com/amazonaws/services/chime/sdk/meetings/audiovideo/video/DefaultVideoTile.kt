@@ -10,11 +10,17 @@ import com.amazonaws.services.chime.sdk.meetings.utils.logger.Logger
 class DefaultVideoTile(
     private val logger: Logger,
     tileId: Int,
-    attendeeId: String?
+    attendeeId: String?,
+    videoStreamContentHeight: Int,
+    videoStreamContentWidth: Int
 ) : VideoTile {
     private val TAG = "DefaultVideoTile"
 
-    override var state: VideoTileState = VideoTileState(tileId, attendeeId, VideoPauseState.Unpaused)
+    override var state: VideoTileState = VideoTileState(tileId,
+                                                        attendeeId,
+                                                        videoStreamContentHeight,
+                                                        videoStreamContentWidth,
+                                                        VideoPauseState.Unpaused)
     override var videoRenderView: VideoRenderView? = null
 
     override fun bind(bindParams: Any?, videoRenderView: VideoRenderView?) {

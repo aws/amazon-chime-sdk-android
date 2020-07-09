@@ -47,4 +47,13 @@ interface VideoTileObserver {
      * @param tileState: [VideoTileState] - Video tile state associated with attendee who is resumed.
      */
     fun onVideoTileResumed(tileState: VideoTileState)
+
+    /**
+     * Called whenever a video steam content size is changed
+     *
+     * Note: this callback will be called on main thread.
+     *
+     * @param tileState: [VideoTileState] - Video tile state associated with attendee who is resumed.
+     */
+    fun onVideoTileSizeChanged(tileState: VideoTileState)
 }
