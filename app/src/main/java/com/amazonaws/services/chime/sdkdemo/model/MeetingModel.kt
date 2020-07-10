@@ -5,7 +5,6 @@
 
 package com.amazonaws.services.chime.sdkdemo.model
 
-import android.view.View
 import androidx.lifecycle.ViewModel
 import com.amazonaws.services.chime.sdk.meetings.device.MediaDevice
 import com.amazonaws.services.chime.sdkdemo.data.MetricData
@@ -23,10 +22,6 @@ class MeetingModel : ViewModel() {
 
     var isMuted = false
     var isCameraOn = false
-    var isScreenShareViewOn = false
     var isDeviceListDialogOn = false
-    var screenShareVisibility = View.GONE
-    var rosterVisibility = View.GONE
-    var metricVisibility = View.GONE
-    var videoVisibility = View.VISIBLE
+    var tabIndex = 0
 }

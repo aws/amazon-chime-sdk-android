@@ -6,7 +6,6 @@
 * Added `onVideoTileSizeChanged` API in `VideoTileObserver` for video stream content size change
 
 ### Changed
-* Changed to layout buttons instead of tabs
 * Changed the theme to support dark theme
 
 ## [0.5.3] - 2020-06-24
