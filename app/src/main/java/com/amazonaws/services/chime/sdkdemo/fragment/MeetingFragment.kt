@@ -53,6 +53,7 @@ import com.amazonaws.services.chime.sdkdemo.data.RosterAttendee
 import com.amazonaws.services.chime.sdkdemo.data.VideoCollectionTile
 import com.amazonaws.services.chime.sdkdemo.model.MeetingModel
 import com.amazonaws.services.chime.sdkdemo.utils.isLandscapeMode
+import com.google.android.material.tabs.TabLayout
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -86,19 +87,26 @@ class MeetingFragment : Fragment(),
         Manifest.permission.CAMERA
     )
 
+    enum class SubTab(val position: Int) {
+        Attendees(0),
+        Video(1),
+        Screen(2),
+        Metrics(3)
+    }
+
     private lateinit var buttonMute: ImageButton
     private lateinit var buttonCamera: ImageButton
-    private lateinit var buttonVideo: ImageButton
     private lateinit var deviceAlertDialogBuilder: AlertDialog.Builder
+    private lateinit var metricsAdapter: MetricAdapter
+    private lateinit var noVideoOrScreenShareAvailable: TextView
     private lateinit var recyclerViewMetrics: RecyclerView
     private lateinit var recyclerViewRoster: RecyclerView
     private lateinit var recyclerViewVideoCollection: RecyclerView
     private lateinit var recyclerViewScreenShareCollection: RecyclerView
-    private lateinit var metricsAdapter: MetricAdapter
-    private lateinit var noVideoOrScreenShareAvailable: TextView
     private lateinit var rosterAdapter: RosterAdapter
-    private lateinit var videoTileAdapter: VideoAdapter
     private lateinit var screenTileAdapter: VideoAdapter
+    private lateinit var videoTileAdapter: VideoAdapter
+    private lateinit var tabLayout: TabLayout
 
     private var deviceListAdapter: ArrayAdapter<String>? = null
 
@@ -142,12 +150,13 @@ class MeetingFragment : Fragment(),
         ) as String
         setupButtons(view)
         setupRecyclerViews(view)
+        setupTab(view)
         setupAlertDialog()
 
         noVideoOrScreenShareAvailable = view.findViewById(R.id.noVideoOrScreenShareAvailable)
-        noVideoOrScreenShareAvailable.visibility = View.VISIBLE
         refreshNoVideosOrScreenShareAvailableText()
 
+        selectTab(meetingModel.tabIndex)
         subscribeToAttendeeChangeHandlers()
         audioVideo.start()
         audioVideo.startRemoteVideo()
@@ -163,35 +172,19 @@ class MeetingFragment : Fragment(),
         buttonCamera.setImageResource(if (meetingModel.isCameraOn) R.drawable.button_camera_on else R.drawable.button_camera)
         buttonCamera.setOnClickListener { toggleVideo() }
 
-        buttonVideo = view.findViewById(R.id.buttonVideo)
-        buttonVideo.setImageResource(if (meetingModel.isScreenShareViewOn) R.drawable.button_screen_share else R.drawable.button_attendees_video)
-        buttonVideo.setOnClickListener { toggleScreenShare() }
-
-        view.findViewById<ImageButton>(R.id.buttonMetrics)
-            ?.setOnClickListener { toggleMetrics() }
-
         view.findViewById<ImageButton>(R.id.buttonSpeaker)
             ?.setOnClickListener { toggleSpeaker() }
-
-        view.findViewById<ImageButton>(R.id.buttonAttendeesList)
-            ?.setOnClickListener { toggleAttendeesList() }
 
         view.findViewById<ImageButton>(R.id.buttonLeave)
             ?.setOnClickListener { listener.onLeaveMeeting() }
     }
 
     private fun setupRecyclerViews(view: View) {
-        recyclerViewMetrics = view.findViewById(R.id.recyclerViewMetrics)
-        recyclerViewMetrics.layoutManager = LinearLayoutManager(activity)
-        metricsAdapter = MetricAdapter(meetingModel.currentMetrics.values)
-        recyclerViewMetrics.adapter = metricsAdapter
-        recyclerViewMetrics.visibility = meetingModel.metricVisibility
-
         recyclerViewRoster = view.findViewById(R.id.recyclerViewRoster)
         recyclerViewRoster.layoutManager = LinearLayoutManager(activity)
         rosterAdapter = RosterAdapter(meetingModel.currentRoster.values)
         recyclerViewRoster.adapter = rosterAdapter
-        recyclerViewRoster.visibility = meetingModel.rosterVisibility
+        recyclerViewRoster.visibility = View.VISIBLE
 
         recyclerViewVideoCollection =
             view.findViewById(R.id.recyclerViewVideoCollection)
@@ -202,7 +195,7 @@ class MeetingFragment : Fragment(),
             context
         )
         recyclerViewVideoCollection.adapter = videoTileAdapter
-        recyclerViewVideoCollection.visibility = meetingModel.videoVisibility
+        recyclerViewVideoCollection.visibility = View.GONE
 
         recyclerViewScreenShareCollection =
             view.findViewById(R.id.recyclerViewScreenShareCollection)
@@ -214,7 +207,66 @@ class MeetingFragment : Fragment(),
                 context
             )
         recyclerViewScreenShareCollection.adapter = screenTileAdapter
-        recyclerViewScreenShareCollection.visibility = meetingModel.screenShareVisibility
+        recyclerViewScreenShareCollection.visibility = View.GONE
+
+        recyclerViewMetrics = view.findViewById(R.id.recyclerViewMetrics)
+        recyclerViewMetrics.layoutManager = LinearLayoutManager(activity)
+        metricsAdapter = MetricAdapter(meetingModel.currentMetrics.values)
+        recyclerViewMetrics.adapter = metricsAdapter
+        recyclerViewMetrics.visibility = View.GONE
+    }
+
+    private fun setupTab(view: View) {
+        tabLayout = view.findViewById(R.id.tabLayoutMeetingView)
+        SubTab.values().forEach {
+            tabLayout.addTab(
+                tabLayout.newTab().setText(it.name).setContentDescription("${it.name} Tab")
+            )
+        }
+        tabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
+            override fun onTabSelected(tab: TabLayout.Tab?) {
+                showViewAt(tab?.position ?: SubTab.Attendees.position)
+            }
+
+            override fun onTabReselected(tab: TabLayout.Tab?) {
+            }
+
+            override fun onTabUnselected(tab: TabLayout.Tab?) {
+                if (tab?.position == SubTab.Video.position || tab?.position == SubTab.Screen.position)
+                (activity as MeetingActivity).getAudioVideo().stopRemoteVideo()
+            }
+        })
+    }
+
+    private fun showViewAt(index: Int) {
+        recyclerViewRoster.visibility = View.GONE
+        recyclerViewVideoCollection.visibility = View.GONE
+        recyclerViewScreenShareCollection.visibility = View.GONE
+        recyclerViewMetrics.visibility = View.GONE
+
+        when (index) {
+            SubTab.Attendees.position -> {
+                recyclerViewRoster.visibility = View.VISIBLE
+            }
+            SubTab.Video.position -> {
+                recyclerViewVideoCollection.visibility = View.VISIBLE
+                audioVideo.startRemoteVideo()
+            }
+            SubTab.Screen.position -> {
+                recyclerViewScreenShareCollection.visibility = View.VISIBLE
+                audioVideo.startRemoteVideo()
+            }
+            SubTab.Metrics.position -> {
+                recyclerViewMetrics.visibility = View.VISIBLE
+            }
+            else -> return
+        }
+        meetingModel.tabIndex = index
+        refreshNoVideosOrScreenShareAvailableText()
+    }
+
+    private fun selectTab(index: Int) {
+        tabLayout.selectTab(tabLayout.getTabAt(index))
     }
 
     private fun createLinearLayoutManagerForOrientation(): LinearLayoutManager {
@@ -427,31 +479,6 @@ class MeetingFragment : Fragment(),
         meetingModel.isDeviceListDialogOn = true
     }
 
-    private fun toggleAttendeesList() {
-        recyclerViewMetrics.visibility = View.GONE
-        meetingModel.metricVisibility = View.GONE
-
-        if (recyclerViewRoster.visibility == View.VISIBLE) {
-            recyclerViewRoster.visibility = View.GONE
-            meetingModel.rosterVisibility = View.GONE
-        } else {
-            recyclerViewRoster.visibility = View.VISIBLE
-            meetingModel.rosterVisibility = View.VISIBLE
-        }
-    }
-
-    private fun toggleMetrics() {
-        recyclerViewRoster.visibility = View.GONE
-        meetingModel.rosterVisibility = View.GONE
-        if (recyclerViewMetrics.visibility == View.VISIBLE) {
-            recyclerViewMetrics.visibility = View.GONE
-            meetingModel.metricVisibility = View.GONE
-        } else {
-            recyclerViewMetrics.visibility = View.VISIBLE
-            meetingModel.metricVisibility = View.VISIBLE
-        }
-    }
-
     private fun toggleVideo() {
         if (meetingModel.isCameraOn) {
             audioVideo.stopLocalVideo()
@@ -470,48 +497,30 @@ class MeetingFragment : Fragment(),
         refreshNoVideosOrScreenShareAvailableText()
     }
 
-    private fun toggleScreenShare() {
-        recyclerViewRoster.visibility = View.GONE
-        meetingModel.rosterVisibility = View.GONE
-        if (meetingModel.isScreenShareViewOn) {
-            recyclerViewVideoCollection.visibility = View.VISIBLE
-            meetingModel.videoVisibility = View.VISIBLE
-            recyclerViewScreenShareCollection.visibility = View.GONE
-            meetingModel.screenShareVisibility = View.GONE
-            buttonVideo.setImageResource(R.drawable.button_attendees_video)
-            noVideoOrScreenShareAvailable.text = getString(R.string.no_videos_available)
-        } else {
-            recyclerViewVideoCollection.visibility = View.GONE
-            meetingModel.videoVisibility = View.GONE
-            recyclerViewScreenShareCollection.visibility = View.VISIBLE
-            meetingModel.screenShareVisibility = View.VISIBLE
-            buttonVideo.setImageResource(R.drawable.button_screen_share)
-            noVideoOrScreenShareAvailable.text = getString(R.string.no_screen_share_available)
-        }
-        refreshNoVideosOrScreenShareAvailableText()
-        meetingModel.isScreenShareViewOn = !meetingModel.isScreenShareViewOn
-        audioVideo.startRemoteVideo()
-    }
-
     private fun refreshNoVideosOrScreenShareAvailableText() {
-        if (recyclerViewVideoCollection.visibility == View.VISIBLE) {
+        if (meetingModel.tabIndex == SubTab.Video.position) {
             if (meetingModel.currentVideoTiles.size > 0) {
                 noVideoOrScreenShareAvailable.visibility = View.GONE
             } else {
+                noVideoOrScreenShareAvailable.text = getString(R.string.no_videos_available)
                 noVideoOrScreenShareAvailable.visibility = View.VISIBLE
             }
-        } else {
+        } else if (meetingModel.tabIndex == SubTab.Screen.position) {
             if (meetingModel.currentScreenTiles.size > 0) {
                 noVideoOrScreenShareAvailable.visibility = View.GONE
             } else {
+                noVideoOrScreenShareAvailable.text = getString(R.string.no_screen_share_available)
                 noVideoOrScreenShareAvailable.visibility = View.VISIBLE
             }
+        } else {
+            noVideoOrScreenShareAvailable.visibility = View.GONE
         }
     }
 
     private fun startLocalVideo() {
         audioVideo.startLocalVideo()
         buttonCamera.setImageResource(R.drawable.button_camera_on)
+        selectTab(SubTab.Video.position)
     }
 
     override fun onRequestPermissionsResult(

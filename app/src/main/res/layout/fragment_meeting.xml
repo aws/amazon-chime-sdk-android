@@ -20,25 +20,20 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentStart="true"
+            android:layout_alignParentEnd="true"
             android:layout_centerVertical="true"
             android:layout_marginStart="16dp"
-            android:layout_toStartOf="@id/buttonMetrics"
             android:ellipsize="end"
+            android:gravity="start"
             android:textAppearance="@style/TextAppearance.AppCompat.Display1"
             android:textSize="32sp" />
 
-        <ImageButton
-            android:id="@+id/buttonMetrics"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:layout_centerVertical="true"
-            android:layout_marginEnd="32dp"
-            android:background="@null"
-            android:contentDescription="@string/toggle_metrics"
-            android:src="@drawable/button_more_actions" />
-
     </RelativeLayout>
+
+    <com.google.android.material.tabs.TabLayout
+        android:id="@+id/tabLayoutMeetingView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/constraintLayout"
@@ -58,11 +53,21 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerViewRoster"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:visibility="visible"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recyclerViewVideoCollection"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:contentDescription="@string/video_view"
-            android:visibility="visible"
+            android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -83,18 +88,7 @@
             android:id="@+id/recyclerViewMetrics"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:background="#E6FFFFFF"
             android:visibility="gone"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recyclerViewRoster"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:background="#E6FFFFFF"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -143,30 +137,6 @@
             android:paddingLeft="8dp"
             android:paddingRight="8dp"
             android:src="@drawable/button_camera"
-            android:tint="?android:attr/textColorPrimary" />
-
-        <ImageButton
-            android:id="@+id/buttonVideo"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:background="@null"
-            android:contentDescription="@string/toggle_screen"
-            android:paddingLeft="8dp"
-            android:paddingRight="8dp"
-            android:src="@drawable/button_screen_share"
-            android:tint="?android:attr/textColorPrimary" />
-
-        <ImageButton
-            android:id="@+id/buttonAttendeesList"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:background="@null"
-            android:contentDescription="@string/toggle_attendees_list"
-            android:paddingLeft="8dp"
-            android:paddingRight="8dp"
-            android:src="@drawable/button_attendees_list"
             android:tint="?android:attr/textColorPrimary" />
 
         <ImageButton
