@@ -1,8 +1,10 @@
 ## [Unreleased]
 
 ### Added
+* Added icons for the demo app
+* Added `SplashActivity` in demo app for displaying the launch screen
 * Added choose device list in the demo app for speaker button
-* Added metrics in the demo app
+* Added metrics table in the demo app
 * Added `onVideoTileSizeChanged` API in `VideoTileObserver` for video stream content size change
 
 ### Changed
