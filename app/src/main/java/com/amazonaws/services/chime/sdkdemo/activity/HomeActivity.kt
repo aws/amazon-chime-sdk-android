@@ -39,9 +39,9 @@ class HomeActivity : AppCompatActivity() {
     private val uiScope = CoroutineScope(Dispatchers.Main)
     private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO
 
-    private val WEBRTC_PERMISSION_REQUEST_CODE = 1
     private val MEETING_REGION = "us-east-1"
     private val TAG = "MeetingHomeActivity"
+    private val WEBRTC_PERMISSION_REQUEST_CODE = 1
 
     private val WEBRTC_PERM = arrayOf(
         Manifest.permission.MODIFY_AUDIO_SETTINGS,
@@ -63,6 +63,7 @@ class HomeActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_home)
+
         meetingEditText = findViewById(R.id.editMeetingId)
         nameEditText = findViewById(R.id.editName)
         authenticationProgressBar = findViewById(R.id.progressAuthentication)

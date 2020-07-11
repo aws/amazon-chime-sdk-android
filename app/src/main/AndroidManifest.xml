@@ -17,13 +17,14 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name="com.amazonaws.services.chime.sdkdemo.activity.HomeActivity">
+        <activity android:name="com.amazonaws.services.chime.sdkdemo.activity.SplashActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".activity.HomeActivity" />
         <activity android:name=".activity.MeetingActivity" />
     </application>
 

@@ -4,7 +4,7 @@
   -->
 
 <resources>
-    <string name="app_name">MobileSdkDemo</string>
+    <string name="app_name">AmazonChimeSDKDemo</string>
     <string name="edit_meeting_id">Meeting ID</string>
     <string name="edit_name">Your Name</string>
     <string name="main_title">Join a meeting</string>
