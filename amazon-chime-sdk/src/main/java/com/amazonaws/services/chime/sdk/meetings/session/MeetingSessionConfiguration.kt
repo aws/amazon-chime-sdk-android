@@ -18,7 +18,7 @@ data class MeetingSessionConfiguration(
     val credentials: MeetingSessionCredentials,
     val urls: MeetingSessionURLs
 ) {
-    constructor(
+    @JvmOverloads constructor(
         createMeetingResponse: CreateMeetingResponse,
         createAttendeeResponse: CreateAttendeeResponse,
         urlRewriter: URLRewriter = ::defaultUrlRewriter
