@@ -51,12 +51,12 @@ class DefaultVideoTileController(
          * In both pause and stop cases, the frame is null but the pauseType differs
          */
         val tile: VideoTile? = videoTileMap[videoId]
-        var videoStreamContentHeight = 0
         var videoStreamContentWidth = 0
+        var videoStreamContentHeight = 0
 
         if (frame is VideoRenderer.I420Frame) {
-            videoStreamContentHeight = frame.height
             videoStreamContentWidth = frame.width
+            videoStreamContentHeight = frame.height
         }
 
         if (tile != null) {
@@ -69,10 +69,10 @@ class DefaultVideoTileController(
                 return
             }
 
-            if (videoStreamContentHeight != tile.state.videoStreamContentHeight ||
-                videoStreamContentWidth != tile.state.videoStreamContentWidth) {
-                tile.state.videoStreamContentHeight = videoStreamContentHeight
+            if (videoStreamContentWidth != tile.state.videoStreamContentWidth ||
+                videoStreamContentHeight != tile.state.videoStreamContentHeight) {
                 tile.state.videoStreamContentWidth = videoStreamContentWidth
+                tile.state.videoStreamContentHeight = videoStreamContentHeight
                 forEachObserver { observer -> observer.onVideoTileSizeChanged(tile.state) }
             }
 
@@ -102,7 +102,7 @@ class DefaultVideoTileController(
                     TAG,
                     "Adding video tile with videoId = $videoId & attendeeId = $attendeeId"
                 )
-                onAddVideoTile(videoId, attendeeId, videoStreamContentHeight, videoStreamContentWidth)
+                onAddVideoTile(videoId, attendeeId, videoStreamContentWidth, videoStreamContentHeight)
             }
         }
     }
@@ -191,7 +191,7 @@ class DefaultVideoTileController(
         }
     }
 
-    private fun onAddVideoTile(tileId: Int, attendeeId: String?, videoStreamContentHeight: Int, videoStreamContentWidth: Int) {
+    private fun onAddVideoTile(tileId: Int, attendeeId: String?, videoStreamContentWidth: Int, videoStreamContentHeight: Int) {
         var isLocalTile: Boolean
         var thisAttendeeId: String
 
@@ -202,7 +202,7 @@ class DefaultVideoTileController(
             thisAttendeeId = videoClientController.getConfiguration().credentials.attendeeId
             isLocalTile = true
         }
-        val tile = videoTileFactory.makeTile(tileId, thisAttendeeId, videoStreamContentHeight, videoStreamContentWidth, isLocalTile)
+        val tile = videoTileFactory.makeTile(tileId, thisAttendeeId, videoStreamContentWidth, videoStreamContentHeight, isLocalTile)
         videoTileMap[tileId] = tile
         forEachObserver { observer -> observer.onVideoTileAdded(tile.state) }
     }

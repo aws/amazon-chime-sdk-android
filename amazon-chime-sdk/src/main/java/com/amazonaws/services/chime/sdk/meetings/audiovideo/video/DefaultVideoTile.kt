@@ -11,16 +11,16 @@ class DefaultVideoTile(
     private val logger: Logger,
     tileId: Int,
     attendeeId: String,
-    videoStreamContentHeight: Int,
     videoStreamContentWidth: Int,
+    videoStreamContentHeight: Int,
     isLocalTile: Boolean
 ) : VideoTile {
     private val TAG = "DefaultVideoTile"
 
     override var state: VideoTileState = VideoTileState(tileId,
                                                         attendeeId,
-                                                        videoStreamContentHeight,
                                                         videoStreamContentWidth,
+                                                        videoStreamContentHeight,
                                                         VideoPauseState.Unpaused,
                                                         isLocalTile)
     override var videoRenderView: VideoRenderView? = null

@@ -54,8 +54,8 @@ class DefaultVideoTileControllerTest {
 
     private val tileId = 7 // some random prime number
     private val attendeeId = "chimesarang"
-    private val testHeight = 0
     private val testWidth = 0
+    private val testHeight = 0
     private val localTile = true
     private val remoteTile = false
 
@@ -96,8 +96,8 @@ class DefaultVideoTileControllerTest {
         every { mockVideoTile.state } returns VideoTileState(
             tileId,
             attendeeId,
-            testHeight,
             testWidth,
+            testHeight,
             VideoPauseState.Unpaused,
             remoteTile
         )
@@ -203,8 +203,8 @@ class DefaultVideoTileControllerTest {
                 VideoTileState(
                     tileId,
                     attendeeId,
-                    testHeight,
                     testWidth,
+                    testHeight,
                     VideoPauseState.Unpaused,
                     remoteTile
                 )
@@ -233,8 +233,8 @@ class DefaultVideoTileControllerTest {
                 VideoTileState(
                     tileId,
                     attendeeId,
-                    testHeight,
                     testWidth,
+                    testHeight,
                     VideoPauseState.Unpaused,
                     remoteTile
                 )
@@ -269,8 +269,8 @@ class DefaultVideoTileControllerTest {
                 VideoTileState(
                     tileId,
                     attendeeId,
-                    testHeight,
                     testWidth,
+                    testHeight,
                     VideoPauseState.Unpaused,
                     remoteTile
                 )
@@ -284,8 +284,8 @@ class DefaultVideoTileControllerTest {
         every { mockVideoTile.state } returns VideoTileState(
             tileId,
             attendeeId,
-            testHeight,
             testWidth,
+            testHeight,
             VideoPauseState.PausedForPoorConnection,
             remoteTile
         )
@@ -313,8 +313,8 @@ class DefaultVideoTileControllerTest {
                 VideoTileState(
                     tileId,
                     attendeeId,
-                    testHeight,
                     testWidth,
+                    testHeight,
                     VideoPauseState.PausedForPoorConnection,
                     remoteTile
                 )
@@ -358,8 +358,8 @@ class DefaultVideoTileControllerTest {
                 VideoTileState(
                     tileId,
                     attendeeId,
-                    testHeight,
                     testWidth,
+                    testHeight,
                     VideoPauseState.Unpaused,
                     remoteTile
                 )
@@ -388,8 +388,8 @@ class DefaultVideoTileControllerTest {
         every { mockVideoTile.state } returns VideoTileState(
             tileId,
             attendeeId,
-            testHeight,
             testWidth,
+            testHeight,
             VideoPauseState.PausedByUserRequest,
             remoteTile
         )
@@ -411,8 +411,8 @@ class DefaultVideoTileControllerTest {
                 VideoTileState(
                     tileId,
                     attendeeId,
-                    testHeight,
                     testWidth,
+                    testHeight,
                     VideoPauseState.PausedByUserRequest,
                     remoteTile
                 )
@@ -437,7 +437,7 @@ class DefaultVideoTileControllerTest {
 
     @Test
     fun `pauseRemoteVideoTile should NOT call VideoClientController's setRemotePaused when local tile`() {
-        every { mockVideoTile.state } returns VideoTileState(tileId, attendeeId, testHeight, testWidth, VideoPauseState.Unpaused, localTile)
+        every { mockVideoTile.state } returns VideoTileState(tileId, attendeeId, testWidth, testHeight, VideoPauseState.Unpaused, localTile)
         runBlockingTest {
             videoTileController.onReceiveFrame(mockFrame, tileId, null, VideoPauseState.Unpaused)
         }
@@ -464,7 +464,7 @@ class DefaultVideoTileControllerTest {
 
     @Test
     fun `resumeRemoteVideoTile should NOT call VideoClientController's setRemotePaused when local tile`() {
-        every { mockVideoTile.state } returns VideoTileState(tileId, attendeeId, testHeight, testWidth, VideoPauseState.Unpaused, localTile)
+        every { mockVideoTile.state } returns VideoTileState(tileId, attendeeId, testWidth, testHeight, VideoPauseState.Unpaused, localTile)
         runBlockingTest {
             videoTileController.onReceiveFrame(mockFrame, tileId, null, VideoPauseState.Unpaused)
         }
@@ -479,12 +479,12 @@ class DefaultVideoTileControllerTest {
         val mockVideoTile2: VideoTile = mockk(relaxUnitFun = true)
         val tileId2 = 127
 
-        every { mockVideoTileFactory.makeTile(tileId2, any(), testHeight, testWidth, remoteTile) } returns mockVideoTile2
+        every { mockVideoTileFactory.makeTile(tileId2, any(), testWidth, testHeight, remoteTile) } returns mockVideoTile2
         every { mockVideoTile2.state } returns VideoTileState(
             tileId2,
             attendeeId,
-            testHeight,
             testWidth,
+            testHeight,
             VideoPauseState.Unpaused,
             remoteTile
         )
@@ -516,12 +516,12 @@ class DefaultVideoTileControllerTest {
         val mockVideoTile2: VideoTile = mockk(relaxUnitFun = true)
         val mockVideoRenderView2: VideoRenderView = mockk(relaxUnitFun = true)
         val tileId2 = 127
-        every { mockVideoTileFactory.makeTile(tileId2, any(), testHeight, testWidth, remoteTile) } returns mockVideoTile2
+        every { mockVideoTileFactory.makeTile(tileId2, any(), testWidth, testHeight, remoteTile) } returns mockVideoTile2
         every { mockVideoTile2.state } returns VideoTileState(
             tileId2,
             attendeeId,
-            testHeight,
             testWidth,
+            testHeight,
             VideoPauseState.Unpaused,
             remoteTile
         )
@@ -585,8 +585,8 @@ class DefaultVideoTileControllerTest {
                 VideoTileState(
                     tileId,
                     attendeeId,
-                    testHeight + 1,
                     testWidth + 1,
+                    testHeight + 1,
                     VideoPauseState.Unpaused,
                     remoteTile
                 )
@@ -629,8 +629,8 @@ class DefaultVideoTileControllerTest {
                 VideoTileState(
                     tileId,
                     attendeeId,
-                    testHeight,
                     testWidth,
+                    testHeight,
                     VideoPauseState.Unpaused,
                     remoteTile
                 )
@@ -644,8 +644,8 @@ class DefaultVideoTileControllerTest {
         every { mockVideoTile.state } returns VideoTileState(
             tileId,
             attendeeId,
-            testHeight,
             testWidth,
+            testHeight,
             VideoPauseState.Unpaused,
             localTile
         )
@@ -665,8 +665,8 @@ class DefaultVideoTileControllerTest {
                 VideoTileState(
                     tileId,
                     attendeeId,
-                    testHeight,
                     testWidth,
+                    testHeight,
                     VideoPauseState.Unpaused,
                     localTile
                 )
