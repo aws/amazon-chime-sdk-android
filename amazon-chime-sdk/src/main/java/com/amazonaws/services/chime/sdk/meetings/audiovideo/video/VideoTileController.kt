@@ -26,8 +26,6 @@ interface VideoTileController : VideoTileControllerFacade {
      * @param frame: [Any] - A frame of video
      * @param videoId: [Int] - Unique id that belongs to video being transmitted
      * @param attendeeId: [String] - An id of user who is transmitting current frame
-     * @param videoStreamContentHeight - Height of the video stream being transmitted
-     * @param videoStreamContentWidth - Width of the video stream being transmitted
      * @param pauseState: [VideoPauseState] - Current pause state of the video being received
      */
     fun onReceiveFrame(

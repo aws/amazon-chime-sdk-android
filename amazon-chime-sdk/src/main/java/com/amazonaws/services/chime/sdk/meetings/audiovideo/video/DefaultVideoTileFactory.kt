@@ -11,10 +11,10 @@ class DefaultVideoTileFactory(private val logger: Logger) : VideoTileFactory {
     override fun makeTile(
         tileId: Int,
         attendeeId: String,
-        videoStreamContentHeight: Int,
         videoStreamContentWidth: Int,
+        videoStreamContentHeight: Int,
         isLocalTile: Boolean
     ): VideoTile {
-        return DefaultVideoTile(logger, tileId, attendeeId, videoStreamContentHeight, videoStreamContentWidth, isLocalTile)
+        return DefaultVideoTile(logger, tileId, attendeeId, videoStreamContentWidth, videoStreamContentHeight, isLocalTile)
     }
 }
