@@ -11,13 +11,17 @@ interface VideoTileFactory {
      *
      * @param tileId: Int - Tile ID
      * @param attendeeId: String? - Attendee ID
+     * @param videoStreamContentHeight: Int - Height of video stream content
+     * @param videoStreamContentWidth: Int - Width of video stream content
+     * @param isLocalTile: Boolean: Whether the video tile is for the local attendee
      *
      * @return [VideoTile] to use with [VideoTileController]
     */
     fun makeTile(
         tileId: Int,
-        attendeeId: String?,
+        attendeeId: String,
         videoStreamContentHeight: Int,
-        videoStreamContentWidth: Int
+        videoStreamContentWidth: Int,
+        isLocalTile: Boolean
     ): VideoTile
 }

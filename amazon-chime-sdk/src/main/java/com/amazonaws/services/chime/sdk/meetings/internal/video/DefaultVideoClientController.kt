@@ -10,6 +10,7 @@ import android.content.Context
 import android.content.pm.PackageManager
 import androidx.core.content.ContextCompat
 import com.amazonaws.services.chime.sdk.BuildConfig
+import com.amazonaws.services.chime.sdk.meetings.session.MeetingSessionConfiguration
 import com.amazonaws.services.chime.sdk.meetings.utils.logger.Logger
 import com.xodee.client.video.VideoClient
 import com.xodee.client.video.VideoClientCapturer
@@ -21,7 +22,8 @@ class DefaultVideoClientController constructor(
     private val context: Context,
     private val logger: Logger,
     private val videoClientStateController: VideoClientStateController,
-    private val videoClientObserver: VideoClientObserver
+    private val videoClientObserver: VideoClientObserver,
+    private val configuration: MeetingSessionConfiguration
 ) : VideoClientController,
     VideoClientLifecycleHandler {
     private val TAG = "DefaultVideoClientController"
@@ -40,13 +42,8 @@ class DefaultVideoClientController constructor(
     }
 
     private var videoClient: VideoClient? = null
-    private var meetingId: String? = null
-    private var joinToken: String? = null
 
-    override fun start(meetingId: String, joinToken: String) {
-        this.meetingId = meetingId
-        this.joinToken = joinToken
-
+    override fun start() {
         videoClientStateController.start()
     }
 
@@ -130,6 +127,10 @@ class DefaultVideoClientController constructor(
         videoClient?.setRemotePause(videoId, isPaused)
     }
 
+    override fun getConfiguration(): MeetingSessionConfiguration {
+        return configuration
+    }
+
     override fun initializeVideoClient() {
         logger.info(TAG, "Initializing video client")
         initializeAppDetailedInfo()
@@ -147,8 +148,8 @@ class DefaultVideoClientController constructor(
         videoClient?.startServiceV2(
             "",
             "",
-            meetingId,
-            joinToken,
+            configuration.meetingId,
+            configuration.credentials.joinToken,
             false,
             0,
             flag

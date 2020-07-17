@@ -90,10 +90,7 @@ class DefaultAudioVideoControllerTest {
     fun `start should call videoClientController start with the parameters in configuration`() {
         audioVideoController.start()
         verify {
-            videoClientController.start(
-                meetingId,
-                joinToken
-            )
+            videoClientController.start()
         }
     }
 

@@ -10,10 +10,11 @@ import com.amazonaws.services.chime.sdk.meetings.utils.logger.Logger
 class DefaultVideoTileFactory(private val logger: Logger) : VideoTileFactory {
     override fun makeTile(
         tileId: Int,
-        attendeeId: String?,
+        attendeeId: String,
         videoStreamContentHeight: Int,
-        videoStreamContentWidth: Int
+        videoStreamContentWidth: Int,
+        isLocalTile: Boolean
     ): VideoTile {
-        return DefaultVideoTile(logger, tileId, attendeeId, videoStreamContentHeight, videoStreamContentWidth)
+        return DefaultVideoTile(logger, tileId, attendeeId, videoStreamContentHeight, videoStreamContentWidth, isLocalTile)
     }
 }

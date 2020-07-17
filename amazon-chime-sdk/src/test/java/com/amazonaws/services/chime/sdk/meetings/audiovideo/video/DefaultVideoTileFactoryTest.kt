@@ -19,7 +19,7 @@ class DefaultVideoTileFactoryTest {
         val testLogger = ConsoleLogger()
         val videoTileFactory = DefaultVideoTileFactory(testLogger)
 
-        val testOutput: VideoTile = videoTileFactory.makeTile(testTileId, testAttendeeId, testHeight, testWidth)
+        val testOutput: VideoTile = videoTileFactory.makeTile(testTileId, testAttendeeId, testHeight, testWidth, false)
 
         assertNotNull(testOutput)
         assertEquals(testTileId, testOutput.state.tileId)

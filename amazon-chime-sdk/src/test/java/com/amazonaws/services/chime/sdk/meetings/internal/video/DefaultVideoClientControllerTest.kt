@@ -6,6 +6,7 @@
 package com.amazonaws.services.chime.sdk.meetings.internal.video
 
 import android.content.Context
+import com.amazonaws.services.chime.sdk.meetings.session.MeetingSessionConfiguration
 import com.amazonaws.services.chime.sdk.meetings.utils.logger.Logger
 import io.mockk.MockKAnnotations
 import io.mockk.impl.annotations.InjectMockKs
@@ -28,6 +29,9 @@ class DefaultVideoClientControllerTest {
     @MockK
     private lateinit var mockVideoClientObserver: VideoClientObserver
 
+    @MockK
+    private lateinit var mockConfiguration: MeetingSessionConfiguration
+
     @InjectMockKs
     private lateinit var testVideoClientController: DefaultVideoClientController
 
@@ -38,7 +42,7 @@ class DefaultVideoClientControllerTest {
 
     @Test
     fun `start should call VideoClientStateController start`() {
-        testVideoClientController.start("meetingId", "joinToken")
+        testVideoClientController.start()
 
         verify { mockVideoClientStateController.start() }
     }

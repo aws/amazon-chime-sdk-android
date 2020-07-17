@@ -62,6 +62,7 @@ class DefaultMeetingSessionTest {
         every { configuration.urls.signalingURL } returns "signalingUrl"
         every { configuration.urls.turnControlURL } returns "turnControlUrl"
         every { configuration.credentials.joinToken } returns "joinToken"
+        every { configuration.credentials.attendeeId } returns "attendeeId"
         every { configuration.urls.urlRewriter } returns ::defaultUrlRewriter
         every { logger.info(any(), any()) } just runs
 
