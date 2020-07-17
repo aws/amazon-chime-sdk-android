@@ -30,10 +30,7 @@ class DefaultAudioVideoController(
             configuration.credentials.attendeeId,
             configuration.credentials.joinToken
         )
-        videoClientController.start(
-            configuration.meetingId,
-            configuration.credentials.joinToken
-        )
+        videoClientController.start()
     }
 
     override fun stop() {

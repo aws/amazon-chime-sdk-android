@@ -13,13 +13,13 @@ class VideoTileStateTest {
     private val attendeeIdScreenShare = "chimesarang#content"
 
     // local tile
-    val vtsLocal = VideoTileState(tileId, null, testHeight, testWidth, VideoPauseState.Unpaused)
+    val vtsLocal = VideoTileState(tileId, attendeeIdVideo, testHeight, testWidth, VideoPauseState.Unpaused, true)
 
     // regular video sharing
-    val vtsVideo = VideoTileState(tileId, attendeeIdVideo, testHeight, testWidth, VideoPauseState.Unpaused)
+    val vtsVideo = VideoTileState(tileId, attendeeIdVideo, testHeight, testWidth, VideoPauseState.Unpaused, false)
 
     // screen sharing
-    val vtsScreenShare = VideoTileState(tileId, attendeeIdScreenShare, testHeight, testWidth, VideoPauseState.Unpaused)
+    val vtsScreenShare = VideoTileState(tileId, attendeeIdScreenShare, testHeight, testWidth, VideoPauseState.Unpaused, false)
 
     @Test
     fun `isLocalTile should be true when tile is local`() {

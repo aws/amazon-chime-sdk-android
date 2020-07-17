@@ -5,6 +5,7 @@
 
 package com.amazonaws.services.chime.sdk.meetings.internal.video
 
+import com.amazonaws.services.chime.sdk.meetings.session.MeetingSessionConfiguration
 import com.xodee.client.video.VideoDevice
 
 /**
@@ -14,11 +15,8 @@ import com.xodee.client.video.VideoDevice
 interface VideoClientController {
     /**
      * Start the video client.
-     *
-     * @param meetingId: String - Meeting Id for the meeting session.
-     * @param joinToken: String - Join token for the meeting session.
      */
-    fun start(meetingId: String, joinToken: String)
+    fun start()
 
     /**
      * Stop and destroy the video client.
@@ -64,4 +62,11 @@ interface VideoClientController {
      * @param videoId: Int - Id of the remote video tile to pause or resume.
      */
     fun setRemotePaused(isPaused: Boolean, videoId: Int)
+
+    /**
+     * Get the meeting session configuration
+     *
+     * @return [MeetingSessionConfiguration] - Configuration of current meeting session
+     */
+    fun getConfiguration(): MeetingSessionConfiguration
 }

@@ -86,13 +86,18 @@ class DefaultMeetingSession(
                 context,
                 logger,
                 videoClientStateController,
-                videoClientObserver
+                videoClientObserver,
+                configuration
             )
 
         val videoTileFactory = DefaultVideoTileFactory(logger)
 
         val videoTileController =
-            DefaultVideoTileController(logger, videoClientController, videoTileFactory)
+            DefaultVideoTileController(
+                logger,
+                videoClientController,
+                videoTileFactory
+            )
 
         videoClientObserver.subscribeToVideoTileChange(videoTileController)
         val deviceController =
