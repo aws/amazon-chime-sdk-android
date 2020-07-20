@@ -1,7 +1,7 @@
-## [Unreleased]
+## [0.6.0] - 2020-07-20
 
 ### Added
-- **Breaking** Added `isLocalTile` to constructor of `DefaultVideoTile`, `VideoTileFactory` and `VideoTileState`
+* **Breaking** Added `isLocalTile` to constructor of `DefaultVideoTile`, `VideoTileFactory` and `VideoTileState`
 * Added icons for the demo app
 * Added `SplashActivity` in demo app for displaying the launch screen
 * Added choose device list in the demo app for speaker button
