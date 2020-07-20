@@ -19,7 +19,7 @@
 </td>
 <td>
 <p>Contains properties related to the current state of the <a href="../-video-tile/index.html">VideoTile</a></p>
-<code><span class="identifier">VideoTileState</span><span class="symbol">(</span><span class="identifier" id="com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoTileState$<init>(kotlin.Int, kotlin.String, com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoPauseState)/tileId">tileId</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html"><span class="identifier">Int</span></a><span class="symbol">, </span><span class="identifier" id="com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoTileState$<init>(kotlin.Int, kotlin.String, com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoPauseState)/attendeeId">attendeeId</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">?</span><span class="symbol">, </span><span class="identifier" id="com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoTileState$<init>(kotlin.Int, kotlin.String, com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoPauseState)/pauseState">pauseState</span><span class="symbol">:</span>&nbsp;<a href="../-video-pause-state/index.html"><span class="identifier">VideoPauseState</span></a><span class="symbol">)</span></code></td>
+<code><span class="identifier">VideoTileState</span><span class="symbol">(</span><span class="identifier" id="com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoTileState$<init>(kotlin.Int, kotlin.String, kotlin.Int, kotlin.Int, com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoPauseState, kotlin.Boolean)/tileId">tileId</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html"><span class="identifier">Int</span></a><span class="symbol">, </span><span class="identifier" id="com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoTileState$<init>(kotlin.Int, kotlin.String, kotlin.Int, kotlin.Int, com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoPauseState, kotlin.Boolean)/attendeeId">attendeeId</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">, </span><span class="identifier" id="com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoTileState$<init>(kotlin.Int, kotlin.String, kotlin.Int, kotlin.Int, com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoPauseState, kotlin.Boolean)/videoStreamContentWidth">videoStreamContentWidth</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html"><span class="identifier">Int</span></a><span class="symbol">, </span><span class="identifier" id="com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoTileState$<init>(kotlin.Int, kotlin.String, kotlin.Int, kotlin.Int, com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoPauseState, kotlin.Boolean)/videoStreamContentHeight">videoStreamContentHeight</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html"><span class="identifier">Int</span></a><span class="symbol">, </span><span class="identifier" id="com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoTileState$<init>(kotlin.Int, kotlin.String, kotlin.Int, kotlin.Int, com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoPauseState, kotlin.Boolean)/pauseState">pauseState</span><span class="symbol">:</span>&nbsp;<a href="../-video-pause-state/index.html"><span class="identifier">VideoPauseState</span></a><span class="symbol">, </span><span class="identifier" id="com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoTileState$<init>(kotlin.Int, kotlin.String, kotlin.Int, kotlin.Int, com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoPauseState, kotlin.Boolean)/isLocalTile">isLocalTile</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html"><span class="identifier">Boolean</span></a><span class="symbol">)</span></code></td>
 </tr>
 </tbody>
 </table>
@@ -31,8 +31,8 @@
 <h4><a href="attendee-id.html">attendeeId</a></h4>
 </td>
 <td>
-<p>: String? - Attendee Id of the user associated with this tile</p>
-<code><span class="keyword">val </span><span class="identifier">attendeeId</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">?</span></code></td>
+<p>: String - Attendee Id of the user associated with this tile</p>
+<code><span class="keyword">val </span><span class="identifier">attendeeId</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a></code></td>
 </tr>
 <tr>
 <td>
@@ -47,7 +47,7 @@
 <h4><a href="is-local-tile.html">isLocalTile</a></h4>
 </td>
 <td>
-<p>Whether the video tile is for the local attendee</p>
+<p>: Boolean - Whether the video tile is for the local attendee</p>
 <code><span class="keyword">val </span><span class="identifier">isLocalTile</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html"><span class="identifier">Boolean</span></a></code></td>
 </tr>
 <tr>
@@ -65,6 +65,22 @@
 <td>
 <p>: Int - Unique Id associated with this tile</p>
 <code><span class="keyword">val </span><span class="identifier">tileId</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html"><span class="identifier">Int</span></a></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="video-stream-content-height.html">videoStreamContentHeight</a></h4>
+</td>
+<td>
+<p>: Int - Height of video stream content</p>
+<code><span class="keyword">var </span><span class="identifier">videoStreamContentHeight</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html"><span class="identifier">Int</span></a></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="video-stream-content-width.html">videoStreamContentWidth</a></h4>
+</td>
+<td>
+<p>: Int - Width of video stream content</p>
+<code><span class="keyword">var </span><span class="identifier">videoStreamContentWidth</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html"><span class="identifier">Int</span></a></code></td>
 </tr>
 </tbody>
 </table>
