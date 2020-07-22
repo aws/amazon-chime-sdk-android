@@ -75,7 +75,7 @@ class MeetingFragment : Fragment(),
     private val MAX_TILE_COUNT = 4
     private val LOCAL_TILE_ID = 0
     private val WEBRTC_PERMISSION_REQUEST_CODE = 1
-    private val TAG = "RosterViewFragment"
+    private val TAG = "MeetingFragment"
 
     // Check if attendee Id contains this at the end to identify content share
     private val CONTENT_DELIMITER = "#content"
@@ -233,7 +233,7 @@ class MeetingFragment : Fragment(),
 
             override fun onTabUnselected(tab: TabLayout.Tab?) {
                 if (tab?.position == SubTab.Video.position || tab?.position == SubTab.Screen.position)
-                (activity as MeetingActivity).getAudioVideo().stopRemoteVideo()
+                    (activity as MeetingActivity).getAudioVideo().stopRemoteVideo()
             }
         })
     }
@@ -278,9 +278,16 @@ class MeetingFragment : Fragment(),
     }
 
     private fun setupAlertDialog() {
-        meetingModel.currentMediaDevices = audioVideo.listAudioDevices().filter { device -> device.type != MediaDeviceType.OTHER }
+        meetingModel.currentMediaDevices =
+            audioVideo.listAudioDevices().filter { device -> device.type != MediaDeviceType.OTHER }
         deviceListAdapter =
-            context?.let { ArrayAdapter(it, android.R.layout.simple_list_item_1, android.R.id.text1) }
+            context?.let {
+                ArrayAdapter(
+                    it,
+                    android.R.layout.simple_list_item_1,
+                    android.R.id.text1
+                )
+            }
         deviceListAdapter?.addAll(meetingModel.currentMediaDevices.map { device -> device.label })
         deviceAlertDialogBuilder = AlertDialog.Builder(activity)
         deviceAlertDialogBuilder.setTitle("Choose a device")
@@ -336,6 +343,11 @@ class MeetingFragment : Fragment(),
         uiScope.launch {
             mutex.withLock {
                 signalUpdates.forEach { (attendeeInfo, signalStrength) ->
+                    logWithFunctionName(
+                        "onSignalStrengthChanged",
+                        "${attendeeInfo.externalUserId} $signalStrength",
+                        LogLevel.DEBUG
+                    )
                     meetingModel.currentRoster[attendeeInfo.attendeeId]?.let {
                         meetingModel.currentRoster[attendeeInfo.attendeeId] =
                             RosterAttendee(
@@ -388,7 +400,8 @@ class MeetingFragment : Fragment(),
 
     override fun onAttendeesDropped(attendeeInfo: Array<AttendeeInfo>) {
         attendeeInfo.forEach { (_, externalUserId) ->
-            notify("$externalUserId dropped")
+            notifyHandler("$externalUserId dropped")
+            logWithFunctionName(object {}.javaClass.enclosingMethod?.name, "$externalUserId dropped")
         }
 
         uiScope.launch {
@@ -406,10 +419,7 @@ class MeetingFragment : Fragment(),
 
     override fun onAttendeesMuted(attendeeInfo: Array<AttendeeInfo>) {
         attendeeInfo.forEach { (attendeeId, externalUserId) ->
-            logger.info(
-                TAG,
-                "Attendee with attendeeId $attendeeId and externalUserId $externalUserId muted"
-            )
+            logWithFunctionName(object {}.javaClass.enclosingMethod?.name, "Attendee with attendeeId $attendeeId and externalUserId $externalUserId muted")
         }
     }
 
@@ -449,7 +459,13 @@ class MeetingFragment : Fragment(),
     }
 
     override fun onActiveSpeakerScoreChanged(scores: Map<AttendeeInfo, Double>) {
-        logger.debug(TAG, "Active Speakers scores are: $scores")
+        val scoresStr =
+            scores.map { entry -> "${entry.key.externalUserId}: ${entry.value}" }.joinToString(",")
+        logWithFunctionName(
+            object {}.javaClass.enclosingMethod?.name,
+            scoresStr,
+            LogLevel.DEBUG
+        )
     }
 
     private fun getAttendeeName(attendeeId: String, externalUserId: String): String {
@@ -486,6 +502,7 @@ class MeetingFragment : Fragment(),
         } else {
             if (hasPermissionsAlready()) {
                 startLocalVideo()
+                logWithFunctionName("getActiveCamera", "${audioVideo.getActiveCamera()?.type}")
             } else {
                 requestPermissions(
                     WEBRTC_PERM,
@@ -499,14 +516,14 @@ class MeetingFragment : Fragment(),
 
     private fun refreshNoVideosOrScreenShareAvailableText() {
         if (meetingModel.tabIndex == SubTab.Video.position) {
-            if (meetingModel.currentVideoTiles.size > 0) {
+            if (meetingModel.currentVideoTiles.isNotEmpty()) {
                 noVideoOrScreenShareAvailable.visibility = View.GONE
             } else {
                 noVideoOrScreenShareAvailable.text = getString(R.string.no_videos_available)
                 noVideoOrScreenShareAvailable.visibility = View.VISIBLE
             }
         } else if (meetingModel.tabIndex == SubTab.Screen.position) {
-            if (meetingModel.currentScreenTiles.size > 0) {
+            if (meetingModel.currentScreenTiles.isNotEmpty()) {
                 noVideoOrScreenShareAvailable.visibility = View.GONE
             } else {
                 noVideoOrScreenShareAvailable.text = getString(R.string.no_screen_share_available)
@@ -588,41 +605,92 @@ class MeetingFragment : Fragment(),
         return VideoCollectionTile("", tileState)
     }
 
-    override fun onAudioSessionStartedConnecting(reconnecting: Boolean) =
-        notify("Audio started connecting. reconnecting: $reconnecting")
+    override fun onAudioSessionStartedConnecting(reconnecting: Boolean) {
+        notifyHandler(
+            "Audio started connecting. reconnecting: $reconnecting"
+        )
+        logWithFunctionName(
+            object {}.javaClass.enclosingMethod?.name,
+            "reconnecting: $reconnecting"
+        )
+    }
 
-    override fun onAudioSessionStarted(reconnecting: Boolean) =
-        notify("Audio successfully started. reconnecting: $reconnecting")
+    override fun onAudioSessionStarted(reconnecting: Boolean) {
+        notifyHandler(
+            "Audio successfully started. reconnecting: $reconnecting"
+        )
+        logWithFunctionName(
+            object {}.javaClass.enclosingMethod?.name,
+            "reconnecting: $reconnecting"
+        )
+    }
 
     override fun onAudioSessionDropped() {
-        notify("Audio session dropped")
+        notifyHandler("Audio session dropped")
+        logWithFunctionName(object {}.javaClass.enclosingMethod?.name)
     }
 
     override fun onAudioSessionStopped(sessionStatus: MeetingSessionStatus) {
-        notify("Audio stopped for reason: ${sessionStatus.statusCode}")
+        notifyHandler(
+            "Audio stopped for reason: ${sessionStatus.statusCode}"
+        )
+        logWithFunctionName(
+            object {}.javaClass.enclosingMethod?.name,
+            "${sessionStatus.statusCode}"
+        )
         if (sessionStatus.statusCode != MeetingSessionStatusCode.OK) {
             listener.onLeaveMeeting()
         }
     }
 
-    override fun onAudioSessionCancelledReconnect() = notify("Audio cancelled reconnecting")
-
-    override fun onConnectionRecovered() = notify("Connection quality has recovered")
-
-    override fun onConnectionBecamePoor() = notify("Connection quality has become poor")
-
-    override fun onVideoSessionStartedConnecting() = notify("Video started connecting.")
-
-    override fun onVideoSessionStarted(sessionStatus: MeetingSessionStatus) {
-        if (sessionStatus.statusCode == MeetingSessionStatusCode.VideoAtCapacityViewOnly) {
-            notify("Video encountered an error: ${sessionStatus.statusCode}")
-        } else {
-            notify("Video successfully started: ${sessionStatus.statusCode}")
-        }
+    override fun onAudioSessionCancelledReconnect() {
+        notifyHandler("Audio cancelled reconnecting")
+        logWithFunctionName(object {}.javaClass.enclosingMethod?.name)
     }
 
-    override fun onVideoSessionStopped(sessionStatus: MeetingSessionStatus) =
-        notify("Video stopped for reason: ${sessionStatus.statusCode}")
+    override fun onConnectionRecovered() {
+        notifyHandler(
+            "Connection quality has recovered"
+        )
+        logWithFunctionName(
+            object {}.javaClass.enclosingMethod?.name
+        )
+    }
+
+    override fun onConnectionBecamePoor() {
+        notifyHandler(
+            "Connection quality has become poor"
+        )
+        logWithFunctionName(
+            object {}.javaClass.enclosingMethod?.name
+        )
+    }
+
+    override fun onVideoSessionStartedConnecting() {
+        notifyHandler("Video started connecting.")
+        logWithFunctionName(object {}.javaClass.enclosingMethod?.name)
+    }
+
+    override fun onVideoSessionStarted(sessionStatus: MeetingSessionStatus) {
+        val message =
+            if (sessionStatus.statusCode == MeetingSessionStatusCode.VideoAtCapacityViewOnly) "Video encountered an error: ${sessionStatus.statusCode}" else "Video successfully started: ${sessionStatus.statusCode}"
+
+        notifyHandler(message)
+        logWithFunctionName(
+            object {}.javaClass.enclosingMethod?.name,
+            "${sessionStatus.statusCode}"
+        )
+    }
+
+    override fun onVideoSessionStopped(sessionStatus: MeetingSessionStatus) {
+        notifyHandler(
+            "Video stopped for reason: ${sessionStatus.statusCode}"
+        )
+        logWithFunctionName(
+            object {}.javaClass.enclosingMethod?.name,
+            "${sessionStatus.statusCode}"
+        )
+    }
 
     override fun onVideoTileAdded(tileState: VideoTileState) {
         uiScope.launch {
@@ -686,21 +754,26 @@ class MeetingFragment : Fragment(),
         if (tileState.pauseState == VideoPauseState.PausedForPoorConnection) {
             val attendeeName =
                 meetingModel.currentRoster[tileState.attendeeId]?.attendeeName ?: ""
-            notify(
+            notifyHandler(
                 "Video for attendee $attendeeName " +
                         " has been paused for poor network connection," +
                         " video will automatically resume when connection improves"
             )
+            logWithFunctionName(object {}.javaClass.enclosingMethod?.name, "$attendeeName video paused")
         }
     }
 
     override fun onVideoTileResumed(tileState: VideoTileState) {
         val attendeeName = meetingModel.currentRoster[tileState.attendeeId]?.attendeeName ?: ""
-        notify("Video for attendee $attendeeName has been unpaused")
+        notifyHandler("Video for attendee $attendeeName has been unpaused")
+        logWithFunctionName(object {}.javaClass.enclosingMethod?.name, "$attendeeName video resumed")
     }
 
     override fun onVideoTileSizeChanged(tileState: VideoTileState) {
-        logger.info(TAG, "Video stream content size changed to ${tileState.videoStreamContentWidth}*${tileState.videoStreamContentHeight} for tileId: ${tileState.tileId}")
+        logger.info(
+            TAG,
+            "Video stream content size changed to ${tileState.videoStreamContentWidth}*${tileState.videoStreamContentHeight} for tileId: ${tileState.tileId}"
+        )
     }
 
     override fun onMetricsReceived(metrics: Map<ObservableMetric, Any>) {
@@ -708,22 +781,33 @@ class MeetingFragment : Fragment(),
         uiScope.launch {
             mutex.withLock {
                 metrics.forEach { (metricsName, metricsValue) ->
-                    if (metricsValue.toString() != null) {
-                        meetingModel.currentMetrics[metricsName.name] =
-                            MetricData(metricsName.name, metricsValue.toString())
-                    }
+                    meetingModel.currentMetrics[metricsName.name] =
+                        MetricData(metricsName.name, metricsValue.toString())
                 }
                 metricsAdapter.notifyDataSetChanged()
             }
         }
     }
 
-    private fun notify(message: String) {
+    private fun notifyHandler(
+        toastMessage: String
+    ) {
         uiScope.launch {
             activity?.let {
-                Toast.makeText(activity, message, Toast.LENGTH_SHORT).show()
+                Toast.makeText(activity, toastMessage, Toast.LENGTH_SHORT).show()
             }
-            logger.info(TAG, message)
+        }
+    }
+
+    private fun logWithFunctionName(
+        fnName: String?,
+        msg: String = "",
+        logLevel: LogLevel = LogLevel.INFO
+    ) {
+        val newMsg = if (fnName == null) msg else "[Function] [$fnName]: $msg"
+        when (logLevel) {
+            LogLevel.DEBUG -> logger.debug(TAG, newMsg)
+            else -> logger.info(TAG, newMsg)
         }
     }
 
