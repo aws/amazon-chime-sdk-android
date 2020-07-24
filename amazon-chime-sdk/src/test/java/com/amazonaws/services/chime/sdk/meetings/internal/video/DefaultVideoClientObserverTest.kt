@@ -8,11 +8,13 @@ package com.amazonaws.services.chime.sdk.meetings.internal.video
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.AudioVideoObserver
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoTileController
 import com.amazonaws.services.chime.sdk.meetings.internal.metric.ClientMetricsCollector
+import com.amazonaws.services.chime.sdk.meetings.realtime.datamessage.DataMessageObserver
 import com.amazonaws.services.chime.sdk.meetings.session.MeetingSessionStatus
 import com.amazonaws.services.chime.sdk.meetings.session.MeetingSessionStatusCode
 import com.amazonaws.services.chime.sdk.meetings.session.defaultUrlRewriter
 import com.amazonaws.services.chime.sdk.meetings.utils.logger.Logger
 import com.xodee.client.audio.audioclient.AudioClient
+import com.xodee.client.video.DataMessage
 import com.xodee.client.video.VideoClient
 import io.mockk.MockKAnnotations
 import io.mockk.every
@@ -35,6 +37,12 @@ class DefaultVideoClientObserverTest {
 
     @MockK
     private lateinit var mockVideoTileController: VideoTileController
+
+    @MockK
+    private lateinit var mockDataMessageObserver: DataMessageObserver
+
+    @MockK
+    private lateinit var mockAnotherDataMessageObserver: DataMessageObserver
 
     @MockK
     private lateinit var mockLogger: Logger
@@ -64,6 +72,25 @@ class DefaultVideoClientObserverTest {
     private val testProfileId = "aliceId"
     private val testVideoId = 1
     private val testDispatcher = TestCoroutineDispatcher()
+
+    private val topic = "topic1"
+    private val anotherTopic = "topic2"
+    private val dataMessageWithTopic = DataMessage(
+        10000,
+        topic,
+        "hello".toByteArray(),
+        "attendeeId",
+        "externalId",
+        false
+    )
+    private val dataMessageWithAnotherTopic = DataMessage(
+        10000,
+        anotherTopic,
+        "hello".toByteArray(),
+        "attendeeId",
+        "externalId",
+        false
+    )
 
     @Before
     fun setUp() {
@@ -214,5 +241,35 @@ class DefaultVideoClientObserverTest {
         )
 
         verify(exactly = 0) { mockVideoTileController.onReceiveFrame(any(), any(), any(), any()) }
+    }
+
+    @Test
+    fun `onDataMessageReceived should notify observers that subscribe to the topic`() {
+        testVideoClientObserver.subscribeToReceiveDataMessage(topic, mockDataMessageObserver)
+        testVideoClientObserver.subscribeToReceiveDataMessage(anotherTopic, mockAnotherDataMessageObserver)
+
+        testVideoClientObserver.onDataMessageReceived(arrayOf(dataMessageWithTopic))
+
+        verify(exactly = 1) { mockDataMessageObserver.onDataMessageReceived(any()) }
+    }
+
+    @Test
+    fun `onDataMessageReceived should notify all observers that subscribe to the topic`() {
+        testVideoClientObserver.subscribeToReceiveDataMessage(topic, mockDataMessageObserver)
+        testVideoClientObserver.subscribeToReceiveDataMessage(topic, mockAnotherDataMessageObserver)
+
+        testVideoClientObserver.onDataMessageReceived(arrayOf(dataMessageWithTopic))
+
+        verify(exactly = 1) { mockDataMessageObserver.onDataMessageReceived(any()) }
+        verify(exactly = 1) { mockAnotherDataMessageObserver.onDataMessageReceived(any()) }
+    }
+
+    @Test
+    fun `onDataMessageReceived should notify observers for the following message when the first message's topic is not subscribed to`() {
+        testVideoClientObserver.subscribeToReceiveDataMessage(topic, mockDataMessageObserver)
+
+        testVideoClientObserver.onDataMessageReceived(arrayOf(dataMessageWithAnotherTopic, dataMessageWithTopic))
+
+        verify(exactly = 1) { mockDataMessageObserver.onDataMessageReceived(any()) }
     }
 }

@@ -35,6 +35,7 @@
 
     <!-- Alert -->
     <string name="cancel">Cancel</string>
+    <string name="alert_title_choose_audio">Choose a device</string>
 
     <!-- Notify users for errors -->
     <string name="user_notification_meeting_id_invalid">Meeting ID is invalid</string>
@@ -42,4 +43,6 @@
     <string name="user_notification_permission_error">WebRTC cannot work without permissions</string>
     <string name="user_notification_meeting_url_error">Your url is invalid</string>
     <string name="user_notification_meeting_start_error">There was an error starting the meeting. Please try again</string>
+    <string name="enter_message">Enter message</string>
+    <string name="send_message">Send Message</string>
 </resources>

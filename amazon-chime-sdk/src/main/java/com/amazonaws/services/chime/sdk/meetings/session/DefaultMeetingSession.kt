@@ -18,6 +18,7 @@ import com.amazonaws.services.chime.sdk.meetings.internal.audio.DefaultAudioClie
 import com.amazonaws.services.chime.sdk.meetings.internal.audio.DefaultAudioClientObserver
 import com.amazonaws.services.chime.sdk.meetings.internal.metric.DefaultClientMetricsCollector
 import com.amazonaws.services.chime.sdk.meetings.internal.video.DefaultVideoClientController
+import com.amazonaws.services.chime.sdk.meetings.internal.video.DefaultVideoClientFactory
 import com.amazonaws.services.chime.sdk.meetings.internal.video.DefaultVideoClientObserver
 import com.amazonaws.services.chime.sdk.meetings.internal.video.DefaultVideoClientStateController
 import com.amazonaws.services.chime.sdk.meetings.internal.video.TURNRequestParams
@@ -54,12 +55,6 @@ class DefaultMeetingSession(
                 audioClient
             )
 
-        val realtimeController =
-            DefaultRealtimeController(
-                audioClientController,
-                audioClientObserver
-            )
-
         val turnRequestParams =
             TURNRequestParams(
                 configuration.meetingId,
@@ -87,7 +82,8 @@ class DefaultMeetingSession(
                 logger,
                 videoClientStateController,
                 videoClientObserver,
-                configuration
+                configuration,
+                DefaultVideoClientFactory()
             )
 
         val videoTileFactory = DefaultVideoTileFactory(logger)
@@ -105,6 +101,14 @@ class DefaultMeetingSession(
                 context,
                 audioClientController,
                 videoClientController
+            )
+
+        val realtimeController =
+            DefaultRealtimeController(
+                audioClientController,
+                audioClientObserver,
+                videoClientController,
+                videoClientObserver
             )
 
         val activeSpeakerDetector = DefaultActiveSpeakerDetector(audioClientObserver)

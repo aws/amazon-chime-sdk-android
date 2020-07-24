@@ -14,7 +14,7 @@ import com.amazonaws.services.chime.sdkdemo.utils.inflate
 import kotlinx.android.synthetic.main.row_metric.view.*
 
 class MetricAdapter(
-    private val metricsList: MutableCollection<MetricData>
+    private val metricsList: Collection<MetricData>
 ) :
     RecyclerView.Adapter<MetricHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MetricHolder {
