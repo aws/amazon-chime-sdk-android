@@ -16,6 +16,7 @@ import com.amazonaws.services.chime.sdk.meetings.device.MediaDevice
 import com.amazonaws.services.chime.sdk.meetings.device.MediaDeviceType
 import com.amazonaws.services.chime.sdk.meetings.realtime.RealtimeControllerFacade
 import com.amazonaws.services.chime.sdk.meetings.realtime.RealtimeObserver
+import com.amazonaws.services.chime.sdk.meetings.realtime.datamessage.DataMessageObserver
 import io.mockk.MockKAnnotations
 import io.mockk.every
 import io.mockk.impl.annotations.InjectMockKs
@@ -35,11 +36,18 @@ class DefaultAudioVideoFacadeTest {
         MediaDeviceType.OTHER
     )
 
+    private val messageTopic = "topic"
+    private val messageData = "data"
+    private val messageLifetimeMs = 3000
+
     @MockK
     private lateinit var mockAudioVideoObserver: AudioVideoObserver
 
     @MockK
     private lateinit var mockRealtimeObserver: RealtimeObserver
+
+    @MockK
+    private lateinit var mockDataMessageObserver: DataMessageObserver
 
     @MockK
     private lateinit var mockDeviceChangeObserver: DeviceChangeObserver
@@ -138,6 +146,30 @@ class DefaultAudioVideoFacadeTest {
     fun `removeRealtimeObserver should call realtimeController removeRealtimeObserver with given observer`() {
         audioVideoFacade.removeRealtimeObserver(mockRealtimeObserver)
         verify { realtimeController.removeRealtimeObserver(mockRealtimeObserver) }
+    }
+
+    @Test
+    fun `realtimeSendDataMessage should call realtimeController realtimeSendDataMessage with given data`() {
+        audioVideoFacade.realtimeSendDataMessage(messageTopic, messageData, messageLifetimeMs)
+        verify { realtimeController.realtimeSendDataMessage(messageTopic, messageData, messageLifetimeMs) }
+    }
+
+    @Test
+    fun `realtimeSendDataMessage should call realtimeController realtimeSendDataMessage with 0 lifetime ms as default`() {
+        audioVideoFacade.realtimeSendDataMessage(messageTopic, messageData)
+        verify { realtimeController.realtimeSendDataMessage(messageTopic, messageData, 0) }
+    }
+
+    @Test
+    fun `addRealtimeDataMessageObserver should call realtimeController addRealtimeDataMessageObserver with given observer`() {
+        audioVideoFacade.addRealtimeDataMessageObserver(messageTopic, mockDataMessageObserver)
+        verify { realtimeController.addRealtimeDataMessageObserver(messageTopic, mockDataMessageObserver) }
+    }
+
+    @Test
+    fun `removeRealtimeDataMessageObserverFromTopic should call realtimeController removeRealtimeDataMessageObserverFromTopic with given topic`() {
+        audioVideoFacade.removeRealtimeDataMessageObserverFromTopic(messageTopic)
+        verify { realtimeController.removeRealtimeDataMessageObserverFromTopic(messageTopic) }
     }
 
     @Test

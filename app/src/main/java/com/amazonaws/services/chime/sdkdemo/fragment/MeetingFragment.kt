@@ -13,8 +13,11 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.EditorInfo
 import android.widget.ArrayAdapter
+import android.widget.EditText
 import android.widget.ImageButton
+import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.core.content.ContextCompat
@@ -38,6 +41,9 @@ import com.amazonaws.services.chime.sdk.meetings.device.DeviceChangeObserver
 import com.amazonaws.services.chime.sdk.meetings.device.MediaDevice
 import com.amazonaws.services.chime.sdk.meetings.device.MediaDeviceType
 import com.amazonaws.services.chime.sdk.meetings.realtime.RealtimeObserver
+import com.amazonaws.services.chime.sdk.meetings.realtime.datamessage.DataMessage
+import com.amazonaws.services.chime.sdk.meetings.realtime.datamessage.DataMessageObserver
+import com.amazonaws.services.chime.sdk.meetings.session.MeetingSessionCredentials
 import com.amazonaws.services.chime.sdk.meetings.session.MeetingSessionStatus
 import com.amazonaws.services.chime.sdk.meetings.session.MeetingSessionStatusCode
 import com.amazonaws.services.chime.sdk.meetings.utils.logger.ConsoleLogger
@@ -45,15 +51,18 @@ import com.amazonaws.services.chime.sdk.meetings.utils.logger.LogLevel
 import com.amazonaws.services.chime.sdkdemo.R
 import com.amazonaws.services.chime.sdkdemo.activity.HomeActivity
 import com.amazonaws.services.chime.sdkdemo.activity.MeetingActivity
+import com.amazonaws.services.chime.sdkdemo.adapter.MessageAdapter
 import com.amazonaws.services.chime.sdkdemo.adapter.MetricAdapter
 import com.amazonaws.services.chime.sdkdemo.adapter.RosterAdapter
 import com.amazonaws.services.chime.sdkdemo.adapter.VideoAdapter
+import com.amazonaws.services.chime.sdkdemo.data.Message
 import com.amazonaws.services.chime.sdkdemo.data.MetricData
 import com.amazonaws.services.chime.sdkdemo.data.RosterAttendee
 import com.amazonaws.services.chime.sdkdemo.data.VideoCollectionTile
 import com.amazonaws.services.chime.sdkdemo.model.MeetingModel
 import com.amazonaws.services.chime.sdkdemo.utils.isLandscapeMode
 import com.google.android.material.tabs.TabLayout
+import java.util.Calendar
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -62,12 +71,13 @@ import kotlinx.coroutines.sync.withLock
 
 class MeetingFragment : Fragment(),
     RealtimeObserver, AudioVideoObserver, VideoTileObserver,
-    MetricsObserver, ActiveSpeakerObserver, DeviceChangeObserver {
+    MetricsObserver, ActiveSpeakerObserver, DeviceChangeObserver, DataMessageObserver {
     private val logger = ConsoleLogger(LogLevel.DEBUG)
     private val mutex = Mutex()
     private val uiScope = CoroutineScope(Dispatchers.Main)
     private val meetingModel: MeetingModel by lazy { ViewModelProvider(this)[MeetingModel::class.java] }
 
+    private lateinit var credentials: MeetingSessionCredentials
     private lateinit var audioVideo: AudioVideoFacade
     private lateinit var listener: RosterViewEventListener
     override val scoreCallbackIntervalMs: Int? get() = 1000
@@ -86,29 +96,35 @@ class MeetingFragment : Fragment(),
     private val WEBRTC_PERM = arrayOf(
         Manifest.permission.CAMERA
     )
+    private val DATA_MESSAGE_TOPIC = "chat"
+    private val DATA_MESSAGE_LIFETIME_MS = 300000
 
     enum class SubTab(val position: Int) {
         Attendees(0),
-        Video(1),
-        Screen(2),
-        Metrics(3)
+        Chat(1),
+        Video(2),
+        Screen(3),
+        Metrics(4)
     }
 
+    private lateinit var noVideoOrScreenShareAvailable: TextView
+    private lateinit var editTextMessage: EditText
     private lateinit var buttonMute: ImageButton
     private lateinit var buttonCamera: ImageButton
     private lateinit var deviceAlertDialogBuilder: AlertDialog.Builder
-    private lateinit var metricsAdapter: MetricAdapter
-    private lateinit var noVideoOrScreenShareAvailable: TextView
+    private lateinit var viewChat: LinearLayout
     private lateinit var recyclerViewMetrics: RecyclerView
     private lateinit var recyclerViewRoster: RecyclerView
     private lateinit var recyclerViewVideoCollection: RecyclerView
     private lateinit var recyclerViewScreenShareCollection: RecyclerView
+    private lateinit var recyclerViewMessages: RecyclerView
+    private lateinit var deviceListAdapter: ArrayAdapter<String>
+    private lateinit var metricsAdapter: MetricAdapter
     private lateinit var rosterAdapter: RosterAdapter
-    private lateinit var screenTileAdapter: VideoAdapter
     private lateinit var videoTileAdapter: VideoAdapter
+    private lateinit var screenTileAdapter: VideoAdapter
+    private lateinit var messageAdapter: MessageAdapter
     private lateinit var tabLayout: TabLayout
-
-    private var deviceListAdapter: ArrayAdapter<String>? = null
 
     companion object {
         fun newInstance(meetingId: String): MeetingFragment {
@@ -143,15 +159,16 @@ class MeetingFragment : Fragment(),
         val view: View = inflater.inflate(R.layout.fragment_meeting, container, false)
         val activity = activity as Context
 
-        audioVideo = (activity as MeetingActivity).getAudioVideo()
+        credentials = (activity as MeetingActivity).getMeetingSessionCredentials()
+        audioVideo = activity.getAudioVideo()
 
         view.findViewById<TextView>(R.id.textViewMeetingId)?.text = arguments?.getString(
             HomeActivity.MEETING_ID_KEY
         ) as String
-        setupButtons(view)
-        setupRecyclerViews(view)
+        setupButtonsBar(view)
+        setupSubViews(view)
         setupTab(view)
-        setupAlertDialog()
+        setupAudioDeviceSelectionDialog()
 
         noVideoOrScreenShareAvailable = view.findViewById(R.id.noVideoOrScreenShareAvailable)
         refreshNoVideosOrScreenShareAvailableText()
@@ -163,7 +180,7 @@ class MeetingFragment : Fragment(),
         return view
     }
 
-    private fun setupButtons(view: View) {
+    private fun setupButtonsBar(view: View) {
         buttonMute = view.findViewById(R.id.buttonMute)
         buttonMute.setImageResource(if (meetingModel.isMuted) R.drawable.button_mute_on else R.drawable.button_mute)
         buttonMute.setOnClickListener { toggleMute() }
@@ -179,13 +196,15 @@ class MeetingFragment : Fragment(),
             ?.setOnClickListener { listener.onLeaveMeeting() }
     }
 
-    private fun setupRecyclerViews(view: View) {
+    private fun setupSubViews(view: View) {
+        // Roster
         recyclerViewRoster = view.findViewById(R.id.recyclerViewRoster)
         recyclerViewRoster.layoutManager = LinearLayoutManager(activity)
         rosterAdapter = RosterAdapter(meetingModel.currentRoster.values)
         recyclerViewRoster.adapter = rosterAdapter
         recyclerViewRoster.visibility = View.VISIBLE
 
+        // Video (camera & content)
         recyclerViewVideoCollection =
             view.findViewById(R.id.recyclerViewVideoCollection)
         recyclerViewVideoCollection.layoutManager = createLinearLayoutManagerForOrientation()
@@ -214,6 +233,29 @@ class MeetingFragment : Fragment(),
         metricsAdapter = MetricAdapter(meetingModel.currentMetrics.values)
         recyclerViewMetrics.adapter = metricsAdapter
         recyclerViewMetrics.visibility = View.GONE
+
+        // Chat
+        viewChat = view.findViewById(R.id.subViewChat)
+        recyclerViewMessages = view.findViewById(R.id.recyclerViewMessages)
+        recyclerViewMessages.layoutManager = LinearLayoutManager(activity)
+        messageAdapter = MessageAdapter(meetingModel.currentMessages)
+        recyclerViewMessages.adapter = messageAdapter
+
+        editTextMessage = view.findViewById(R.id.editTextChatBox)
+        editTextMessage.setOnEditorActionListener { _, actionId, _ ->
+            return@setOnEditorActionListener when (actionId) {
+                EditorInfo.IME_ACTION_SEND -> {
+                    sendMessage()
+                    true
+                }
+                else -> false
+            }
+        }
+        view.findViewById<ImageButton>(R.id.buttonSubmitMessage)?.let {
+            it.setOnClickListener { sendMessage() }
+        }
+
+        viewChat.visibility = View.GONE
     }
 
     private fun setupTab(view: View) {
@@ -240,6 +282,7 @@ class MeetingFragment : Fragment(),
 
     private fun showViewAt(index: Int) {
         recyclerViewRoster.visibility = View.GONE
+        viewChat.visibility = View.GONE
         recyclerViewVideoCollection.visibility = View.GONE
         recyclerViewScreenShareCollection.visibility = View.GONE
         recyclerViewMetrics.visibility = View.GONE
@@ -247,6 +290,10 @@ class MeetingFragment : Fragment(),
         when (index) {
             SubTab.Attendees.position -> {
                 recyclerViewRoster.visibility = View.VISIBLE
+            }
+            SubTab.Chat.position -> {
+                viewChat.visibility = View.VISIBLE
+                scrollToLastMessage()
             }
             SubTab.Video.position -> {
                 recyclerViewVideoCollection.visibility = View.VISIBLE
@@ -277,20 +324,14 @@ class MeetingFragment : Fragment(),
         }
     }
 
-    private fun setupAlertDialog() {
+    private fun setupAudioDeviceSelectionDialog() {
         meetingModel.currentMediaDevices =
             audioVideo.listAudioDevices().filter { device -> device.type != MediaDeviceType.OTHER }
         deviceListAdapter =
-            context?.let {
-                ArrayAdapter(
-                    it,
-                    android.R.layout.simple_list_item_1,
-                    android.R.id.text1
-                )
-            }
-        deviceListAdapter?.addAll(meetingModel.currentMediaDevices.map { device -> device.label })
+            ArrayAdapter(requireContext(), android.R.layout.simple_list_item_1, android.R.id.text1)
+        deviceListAdapter.addAll(meetingModel.currentMediaDevices.map { device -> device.label })
         deviceAlertDialogBuilder = AlertDialog.Builder(activity)
-        deviceAlertDialogBuilder.setTitle("Choose a device")
+        deviceAlertDialogBuilder.setTitle(R.string.alert_title_choose_audio)
         deviceAlertDialogBuilder.setNegativeButton(R.string.cancel) { dialog, _ ->
             dialog.dismiss()
             meetingModel.isDeviceListDialogOn = false
@@ -313,9 +354,9 @@ class MeetingFragment : Fragment(),
         meetingModel.currentMediaDevices = freshAudioDeviceList
             .filter { device -> device.type != MediaDeviceType.OTHER }
         val deviceNameList = meetingModel.currentMediaDevices.map { device -> device.label }
-        deviceListAdapter?.clear()
-        deviceListAdapter?.addAll(deviceNameList)
-        deviceListAdapter?.notifyDataSetChanged()
+        deviceListAdapter.clear()
+        deviceListAdapter.addAll(deviceNameList)
+        deviceListAdapter.notifyDataSetChanged()
     }
 
     override fun onVolumeChanged(volumeUpdates: Array<VolumeUpdate>) {
@@ -789,6 +830,53 @@ class MeetingFragment : Fragment(),
         }
     }
 
+    private fun sendMessage() {
+        val text = editTextMessage.text.toString().trim()
+        if (text.isBlank()) return
+        audioVideo.realtimeSendDataMessage(
+            DATA_MESSAGE_TOPIC,
+            text,
+            DATA_MESSAGE_LIFETIME_MS
+        )
+        editTextMessage.text.clear()
+        // echo the message to the handler
+        onDataMessageReceived(
+            DataMessage(
+                Calendar.getInstance().timeInMillis,
+                DATA_MESSAGE_TOPIC,
+                text.toByteArray(),
+                credentials.attendeeId,
+                credentials.externalUserId,
+                false
+            )
+        )
+    }
+
+    override fun onDataMessageReceived(dataMessage: DataMessage) {
+        if (!dataMessage.throttled) {
+            if (dataMessage.timestampMs <= meetingModel.lastReceivedMessageTimestamp) return
+            meetingModel.lastReceivedMessageTimestamp = dataMessage.timestampMs
+            meetingModel.currentMessages.add(
+                Message(
+                    getAttendeeName(dataMessage.senderAttendeeId, dataMessage.senderExternalUserId),
+                    dataMessage.timestampMs,
+                    dataMessage.text(),
+                    dataMessage.senderAttendeeId == credentials.attendeeId
+                )
+            )
+            messageAdapter.notifyItemInserted(meetingModel.currentMessages.size - 1)
+            scrollToLastMessage()
+        } else {
+            notifyHandler("Message is throttled. Please resend")
+        }
+    }
+
+    private fun scrollToLastMessage() {
+        if (meetingModel.currentMessages.isNotEmpty()) {
+            recyclerViewMessages.scrollToPosition(meetingModel.currentMessages.size - 1)
+        }
+    }
+
     private fun notifyHandler(
         toastMessage: String
     ) {
@@ -816,6 +904,7 @@ class MeetingFragment : Fragment(),
         audioVideo.addDeviceChangeObserver(this)
         audioVideo.addMetricsObserver(this)
         audioVideo.addRealtimeObserver(this)
+        audioVideo.addRealtimeDataMessageObserver(DATA_MESSAGE_TOPIC, this)
         audioVideo.addVideoTileObserver(this)
         audioVideo.addActiveSpeakerObserver(DefaultActiveSpeakerPolicy(), this)
     }
@@ -825,6 +914,7 @@ class MeetingFragment : Fragment(),
         audioVideo.removeDeviceChangeObserver(this)
         audioVideo.removeMetricsObserver(this)
         audioVideo.removeRealtimeObserver(this)
+        audioVideo.removeRealtimeDataMessageObserverFromTopic(DATA_MESSAGE_TOPIC)
         audioVideo.removeVideoTileObserver(this)
         audioVideo.removeActiveSpeakerObserver(this)
     }

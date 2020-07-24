@@ -7,6 +7,8 @@ package com.amazonaws.services.chime.sdk.meetings.internal.video
 
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.AudioVideoObserver
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoTileController
+import com.amazonaws.services.chime.sdk.meetings.realtime.datamessage.DataMessageObserver
+import com.xodee.client.video.VideoClientDataMessageListener
 import com.xodee.client.video.VideoClientDelegate
 import com.xodee.client.video.VideoClientLogListener
 
@@ -14,7 +16,8 @@ import com.xodee.client.video.VideoClientLogListener
  * [VideoClientObserver] handles all callbacks related to the Video Client and allows higher level
  * components to observe the lower level Video Client events.
  */
-interface VideoClientObserver : VideoClientDelegate, VideoClientLogListener {
+interface VideoClientObserver : VideoClientDelegate, VideoClientLogListener,
+    VideoClientDataMessageListener {
     /**
      * Subscribe to audio, video, and connection events with an [AudioVideoObserver].
      *
@@ -49,4 +52,18 @@ interface VideoClientObserver : VideoClientDelegate, VideoClientLogListener {
      * @param observer: [VideoTileController] - The observer to unsubscribe from events with.
      */
     fun unsubscribeFromVideoTileChange(observer: VideoTileController)
+
+    /**
+     * Subscribe to data message events with [DataMessageObserver].
+     *
+     * @param observer: [DataMessageObserver] - The observer to subscribe to events with.
+     */
+    fun subscribeToReceiveDataMessage(topic: String, observer: DataMessageObserver)
+
+    /**
+     * Unsubscribe from data message events with given topic.
+     *
+     * @param topic: String - The topic to unsubscribe from events with.
+     */
+    fun unsubscribeFromReceiveDataMessage(topic: String)
 }

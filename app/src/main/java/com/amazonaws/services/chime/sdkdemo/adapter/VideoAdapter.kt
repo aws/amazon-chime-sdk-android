@@ -21,7 +21,7 @@ import kotlinx.android.synthetic.main.item_video.view.on_tile_button
 import kotlinx.android.synthetic.main.item_video.view.video_surface
 
 class VideoAdapter(
-    private val videoCollectionTiles: MutableCollection<VideoCollectionTile>,
+    private val videoCollectionTiles: Collection<VideoCollectionTile>,
     private val audioVideoFacade: AudioVideoFacade,
     private val context: Context?
 ) :

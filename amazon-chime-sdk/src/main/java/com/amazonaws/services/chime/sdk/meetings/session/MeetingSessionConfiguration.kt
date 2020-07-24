@@ -26,6 +26,7 @@ data class MeetingSessionConfiguration(
         createMeetingResponse.Meeting.MeetingId,
         MeetingSessionCredentials(
             createAttendeeResponse.Attendee.AttendeeId,
+            createAttendeeResponse.Attendee.ExternalUserId,
             createAttendeeResponse.Attendee.JoinToken
         ),
         MeetingSessionURLs(

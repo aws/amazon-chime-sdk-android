@@ -12,6 +12,6 @@ package com.amazonaws.services.chime.sdk.meetings.internal.video
 enum class VideoClientState(val value: Int) {
     UNINITIALIZED(-1),
     INITIALIZED(0),
+    STOPPED(0),
     STARTED(1),
-    STOPPED(2),
 }

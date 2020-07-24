@@ -10,11 +10,14 @@ import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoPauseStat
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoTileController
 import com.amazonaws.services.chime.sdk.meetings.internal.metric.ClientMetricsCollector
 import com.amazonaws.services.chime.sdk.meetings.internal.utils.ObserverUtils
+import com.amazonaws.services.chime.sdk.meetings.realtime.datamessage.DataMessage
+import com.amazonaws.services.chime.sdk.meetings.realtime.datamessage.DataMessageObserver
 import com.amazonaws.services.chime.sdk.meetings.session.MeetingSessionStatus
 import com.amazonaws.services.chime.sdk.meetings.session.MeetingSessionStatusCode
 import com.amazonaws.services.chime.sdk.meetings.session.URLRewriter
 import com.amazonaws.services.chime.sdk.meetings.utils.logger.Logger
 import com.xodee.client.audio.audioclient.AudioClient
+import com.xodee.client.video.DataMessage as mediaDataMessage
 import com.xodee.client.video.VideoClient
 import com.xodee.client.video.VideoClient.VIDEO_CLIENT_NO_PAUSE
 import com.xodee.client.video.VideoClient.VIDEO_CLIENT_REMOTE_PAUSED_BY_LOCAL_BAD_NETWORK
@@ -50,6 +53,7 @@ class DefaultVideoClientObserver(
 
     private var videoClientStateObservers = mutableSetOf<AudioVideoObserver>()
     private var videoClientTileObservers = mutableSetOf<VideoTileController>()
+    private var dataMessageObserversByTopic = mutableMapOf<String, MutableSet<DataMessageObserver>>()
 
     private val uiScope = CoroutineScope(Dispatchers.Main)
     private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO
@@ -62,6 +66,7 @@ class DefaultVideoClientObserver(
     override fun didConnect(client: VideoClient?, controlStatus: Int) {
         logger.info(TAG, "didConnect with controlStatus: $controlStatus")
 
+        videoClientStateController.updateState(VideoClientState.STARTED)
         if (controlStatus == VideoClient.VIDEO_CLIENT_STATUS_CALL_AT_CAPACITY_VIEW_ONLY) {
             forEachVideoClientStateObserver {
                 it.onVideoSessionStarted(
@@ -250,6 +255,28 @@ class DefaultVideoClientObserver(
         }
     }
 
+    override fun onDataMessageReceived(dataMessages: Array<mediaDataMessage>?) {
+        if (dataMessages == null) return
+
+        logger.debug(TAG, "onDataMessageReceived with size: ${dataMessages.size}")
+        for (dataMessage in dataMessages) {
+            if (!dataMessageObserversByTopic.containsKey(dataMessage.topic)) continue
+            val sdkDataMessage = DataMessage(
+                dataMessage.timestampMs,
+                dataMessage.topic,
+                dataMessage.data,
+                dataMessage.senderAttendeeId,
+                dataMessage.senderExternalUserId,
+                dataMessage.throttled
+            )
+            dataMessageObserversByTopic[dataMessage.topic]?.let { observers ->
+                ObserverUtils.notifyObserverOnMainThread(observers) {
+                    it.onDataMessageReceived(sdkDataMessage)
+                }
+            }
+        }
+    }
+
     override fun subscribeToVideoClientStateChange(observer: AudioVideoObserver) {
         videoClientStateObservers.add(observer)
     }
@@ -264,6 +291,14 @@ class DefaultVideoClientObserver(
 
     override fun unsubscribeFromVideoTileChange(observer: VideoTileController) {
         videoClientTileObservers.remove(observer)
+    }
+
+    override fun subscribeToReceiveDataMessage(topic: String, observer: DataMessageObserver) {
+        dataMessageObserversByTopic.getOrPut(topic, { mutableSetOf() }).add(observer)
+    }
+
+    override fun unsubscribeFromReceiveDataMessage(topic: String) {
+        dataMessageObserversByTopic.remove(topic)
     }
 
     override fun notifyVideoTileObserver(observerFunction: (observer: VideoTileController) -> Unit) {

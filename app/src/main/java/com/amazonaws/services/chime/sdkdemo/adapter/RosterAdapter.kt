@@ -18,7 +18,7 @@ import kotlinx.android.synthetic.main.row_roster.view.attendeeName
 import kotlinx.android.synthetic.main.row_roster.view.attendeeVolume
 
 class RosterAdapter(
-    private val roster: MutableCollection<RosterAttendee>
+    private val roster: Collection<RosterAttendee>
 ) :
     RecyclerView.Adapter<RosterHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RosterHolder {
@@ -40,10 +40,9 @@ class RosterHolder(inflatedView: View) :
     RecyclerView.ViewHolder(inflatedView) {
 
     private var view: View = inflatedView
-    private var attendeeName: String? = null
 
     fun bindAttendee(attendee: RosterAttendee) {
-        this.attendeeName = attendee.attendeeName
+        val attendeeName = attendee.attendeeName
         view.attendeeName.text = attendeeName
         view.attendeeName.contentDescription = attendeeName
         view.activeSpeakerIndicator.visibility = if (attendee.isActiveSpeaker) View.VISIBLE else View.INVISIBLE

@@ -21,6 +21,7 @@ import com.amazonaws.services.chime.sdk.meetings.device.DeviceController
 import com.amazonaws.services.chime.sdk.meetings.device.MediaDevice
 import com.amazonaws.services.chime.sdk.meetings.realtime.RealtimeControllerFacade
 import com.amazonaws.services.chime.sdk.meetings.realtime.RealtimeObserver
+import com.amazonaws.services.chime.sdk.meetings.realtime.datamessage.DataMessageObserver
 
 class DefaultAudioVideoFacade(
     private val context: Context,
@@ -104,6 +105,18 @@ class DefaultAudioVideoFacade(
 
     override fun removeRealtimeObserver(observer: RealtimeObserver) {
         realtimeController.removeRealtimeObserver(observer)
+    }
+
+    override fun realtimeSendDataMessage(topic: String, data: Any, lifetimeMs: Int) {
+        realtimeController.realtimeSendDataMessage(topic, data, lifetimeMs)
+    }
+
+    override fun addRealtimeDataMessageObserver(topic: String, observer: DataMessageObserver) {
+        realtimeController.addRealtimeDataMessageObserver(topic, observer)
+    }
+
+    override fun removeRealtimeDataMessageObserverFromTopic(topic: String) {
+        realtimeController.removeRealtimeDataMessageObserverFromTopic(topic)
     }
 
     override fun listAudioDevices(): List<MediaDevice> {

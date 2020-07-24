@@ -1,3 +1,9 @@
+## Unreleased
+
+### Added
+* **Breaking** Added additional field for `MeetingSessionCredentials`
+* Added data message APIs
+
 ## [0.6.0] - 2020-07-20
 
 ### Added

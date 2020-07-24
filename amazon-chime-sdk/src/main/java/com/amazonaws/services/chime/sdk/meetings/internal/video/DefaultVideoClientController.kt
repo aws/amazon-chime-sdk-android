@@ -12,9 +12,11 @@ import androidx.core.content.ContextCompat
 import com.amazonaws.services.chime.sdk.BuildConfig
 import com.amazonaws.services.chime.sdk.meetings.session.MeetingSessionConfiguration
 import com.amazonaws.services.chime.sdk.meetings.utils.logger.Logger
+import com.google.gson.Gson
 import com.xodee.client.video.VideoClient
 import com.xodee.client.video.VideoClientCapturer
 import com.xodee.client.video.VideoDevice
+import java.security.InvalidParameterException
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
@@ -23,9 +25,13 @@ class DefaultVideoClientController constructor(
     private val logger: Logger,
     private val videoClientStateController: VideoClientStateController,
     private val videoClientObserver: VideoClientObserver,
-    private val configuration: MeetingSessionConfiguration
+    private val configuration: MeetingSessionConfiguration,
+    private val videoClientFactory: VideoClientFactory
 ) : VideoClientController,
     VideoClientLifecycleHandler {
+
+    private val DATA_MAX_SIZE = 2048
+    private val TOPIC_REGEX = "^[a-zA-Z0-9_-]{1,36}$".toRegex()
     private val TAG = "DefaultVideoClientController"
 
     /**
@@ -33,6 +39,7 @@ class DefaultVideoClientController constructor(
      */
     private val VIDEO_CLIENT_FLAG_ENABLE_TWO_SIMULCAST_STREAMS = 4096
 
+    private val gson = Gson()
     private val permissions = arrayOf(
         Manifest.permission.CAMERA
     )
@@ -131,12 +138,35 @@ class DefaultVideoClientController constructor(
         return configuration
     }
 
+    override fun sendDataMessage(topic: String, data: Any, lifetimeMs: Int) {
+        if (!videoClientStateController.canAct(VideoClientState.STARTED)) return
+
+        val byteArray = data as? ByteArray
+            ?: if (data is String) {
+                data.toByteArray()
+            } else {
+                gson.toJson(data).toByteArray()
+            }
+
+        if (!TOPIC_REGEX.matches(topic)) {
+            throw InvalidParameterException("Invalid topic")
+        }
+        if (byteArray.size > DATA_MAX_SIZE) {
+            throw InvalidParameterException("Data size has to be less than or equal to 2048 bytes")
+        }
+        if (lifetimeMs < 0) {
+            throw InvalidParameterException("The life time of the message has to be non negative")
+        }
+
+        videoClient?.sendDataMessage(topic, byteArray, lifetimeMs)
+    }
+
     override fun initializeVideoClient() {
         logger.info(TAG, "Initializing video client")
         initializeAppDetailedInfo()
         VideoClient.initializeGlobals(context)
         VideoClientCapturer.getInstance(context)
-        videoClient = VideoClient(videoClientObserver, videoClientObserver)
+        videoClient = videoClientFactory.getVideoClient(videoClientObserver)
         videoClientObserver.notifyVideoTileObserver { observer -> observer.initialize() }
     }
 

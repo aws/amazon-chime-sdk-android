@@ -11,5 +11,6 @@ package com.amazonaws.services.chime.sdk.meetings.session
  */
 data class MeetingSessionCredentials(
     val attendeeId: String,
+    val externalUserId: String,
     val joinToken: String
 )

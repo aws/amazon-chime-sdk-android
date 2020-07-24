@@ -240,3 +240,32 @@ To remove a MetricsObserver, call meetingSession.audioVideo.[removeMetricsObserv
 A MetricsObserver has the following method:
 
 * [onMetricsReceived](https://aws.github.io/amazon-chime-sdk-android/amazon-chime-sdk/com.amazonaws.services.chime.sdk.meetings.audiovideo.metric/-metrics-observer/on-metrics-received.html): occurs when metrics are received
+
+## 10. Send and receive data messages (optional)
+Attendees can broadcast small (2KB max) data messages to other attendees. Data messages can be used 
+to signal attendees of changes to meeting state or develop custom collaborative features. Each message
+is sent on a particular topic, which allows you to tag messages according to their function to make it easier to handle messages of different types.
+
+To send a message on a given topic, meetingSession.audioVideo.[realtimeSendDataMessage(topic, data, lifetimeMs)](https://aws.github.io/amazon-chime-sdk-android/amazon-chime-sdk/com.amazonaws.services.chime.sdk.meetings.realtime/-realtime-controller-facade/realtime-send-data-message.html).
+When sending a message if you specify a lifetime, then the media server stores the messages for 
+the lifetime. Up to 1024 messages may be stored for a maximum of 5 minutes. Any attendee joining late 
+or reconnecting will automatically receive the messages in this buffer once they connect. You can use 
+this feature to help paper over gaps in connectivity or give attendees some context into messages that were recently received.
+
+To receive messages on a given topic, implement a [DataMessageObserver](https://aws.github.io/amazon-chime-sdk-android/amazon-chime-sdk/com.amazonaws.services.chime.sdk.meetings.realtime/-realtime-controller-facade/add-realtime-data-message-observer.html)
+and subscribe it by using meetingSession.audioVideo.[addRealtimeDataMessageObserver(topic, observer)](https://aws.github.io/amazon-chime-sdk-android/amazon-chime-sdk/com.amazonaws.services.chime.sdk.meetings.realtime/-realtime-controller-facade/add-realtime-data-message-observer.html). 
+In the observer, you receive a [DataMessage](https://aws.github.io/amazon-chime-sdk-android/amazon-chime-sdk/com.amazonaws.services.chime.sdk.meetings.realtime.datamessage/-data-message/index.html) 
+containing the payload of the message and other metadata about the message.
+
+To unsubscribe the receive message observers, call meetingSession.audioVideo.[removeRealtimeDataMessageObserverFromTopic(topic)](https://aws.github.io/amazon-chime-sdk-android/amazon-chime-sdk/com.amazonaws.services.chime.sdk.meetings.realtime/-realtime-controller-facade/remove-realtime-data-message-observer-from-topic.html). 
+It removes all observers for the topic.
+
+If you send too many messages at once, your messages may be returned to you with the [throttled](https://aws.github.io/amazon-chime-sdk-android/amazon-chime-sdk/com.amazonaws.services.chime.sdk.meetings.realtime.datamessage/-data-message/throttled.html) 
+flag set. If you continue to exceed the throttle limit, then the server may hang up the connection.
+
+Note: You can only receive and send data message when audio video is started. Make sure to call meetingSession.audioVideo.[start()](https://aws.github.io/amazon-chime-sdk-android/amazon-chime-sdk/com.amazonaws.services.chime.sdk.meetings.audiovideo/-audio-video-controller-facade/start.html)
+before sending messages. Also, in order to avoid missing messages from server, subscribe the observer to the topic before start audio video.
+Take care when using data messages for functionality involving asymmetric permissions 
+(e.g. a moderator attendee sending a message to regular attendees). Any attendee may, in theory, 
+send any message on any topic. You should always confirm that the message's senderAttendeeId belongs 
+to an attendee that is allowed to send that type of message, and your handler should tolerate messages that are not serialized in the format you are expecting.

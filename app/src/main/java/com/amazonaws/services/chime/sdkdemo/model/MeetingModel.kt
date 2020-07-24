@@ -7,6 +7,7 @@ package com.amazonaws.services.chime.sdkdemo.model
 
 import androidx.lifecycle.ViewModel
 import com.amazonaws.services.chime.sdk.meetings.device.MediaDevice
+import com.amazonaws.services.chime.sdkdemo.data.Message
 import com.amazonaws.services.chime.sdkdemo.data.MetricData
 import com.amazonaws.services.chime.sdkdemo.data.RosterAttendee
 import com.amazonaws.services.chime.sdkdemo.data.VideoCollectionTile
@@ -19,9 +20,11 @@ class MeetingModel : ViewModel() {
     val currentScreenTiles = mutableMapOf<Int, VideoCollectionTile>()
     val nextVideoTiles = LinkedHashMap<Int, VideoCollectionTile>()
     var currentMediaDevices = listOf<MediaDevice>()
+    var currentMessages = mutableListOf<Message>()
 
     var isMuted = false
     var isCameraOn = false
     var isDeviceListDialogOn = false
+    var lastReceivedMessageTimestamp = 0L
     var tabIndex = 0
 }

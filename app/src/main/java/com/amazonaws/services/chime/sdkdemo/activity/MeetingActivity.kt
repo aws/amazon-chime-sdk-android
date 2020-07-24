@@ -14,6 +14,7 @@ import com.amazonaws.services.chime.sdk.meetings.session.CreateAttendeeResponse
 import com.amazonaws.services.chime.sdk.meetings.session.CreateMeetingResponse
 import com.amazonaws.services.chime.sdk.meetings.session.DefaultMeetingSession
 import com.amazonaws.services.chime.sdk.meetings.session.MeetingSessionConfiguration
+import com.amazonaws.services.chime.sdk.meetings.session.MeetingSessionCredentials
 import com.amazonaws.services.chime.sdk.meetings.utils.logger.ConsoleLogger
 import com.amazonaws.services.chime.sdk.meetings.utils.logger.LogLevel
 import com.amazonaws.services.chime.sdkdemo.R
@@ -91,6 +92,8 @@ class MeetingActivity : AppCompatActivity(),
     }
 
     fun getAudioVideo(): AudioVideoFacade = meetingSessionModel.audioVideo
+
+    fun getMeetingSessionCredentials(): MeetingSessionCredentials = meetingSessionModel.credentials
 
     private fun urlRewriter(url: String): String {
         // You can change urls by url.replace("example.com", "my.example.com")
