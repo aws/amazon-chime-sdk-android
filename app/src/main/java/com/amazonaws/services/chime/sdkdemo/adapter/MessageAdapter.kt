@@ -42,6 +42,7 @@ class MessageHolder(inflatedView: View) :
         view.senderName.text = message.senderName
         view.messageTimestamp.text = message.displayTime
         view.messageText.text = message.text
+        view.messageText.contentDescription = message.text
         view.messageText.textAlignment =
             if (message.isLocal) View.TEXT_ALIGNMENT_TEXT_END else View.TEXT_ALIGNMENT_TEXT_START
     }
