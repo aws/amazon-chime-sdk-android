@@ -58,10 +58,6 @@ class VideoHolder(inflatedView: View, audioVideoFacade: AudioVideoFacade) :
     private var audioVideo = audioVideoFacade
     val tileContainer: RelativeLayout = view.findViewById(R.id.tile_container)
 
-    init {
-        setIsRecyclable(false)
-    }
-
     fun bindVideoTile(videoCollectionTile: VideoCollectionTile) {
         audioVideo.bindVideoView(view.video_surface, videoCollectionTile.videoTileState.tileId)
         if (videoCollectionTile.videoTileState.isContent) {

@@ -488,7 +488,7 @@ class DefaultVideoTileControllerTest {
             VideoPauseState.Unpaused,
             remoteTile
         )
-        every { mockVideoTile2.videoRenderView } returns mockVideoRenderView
+        every { mockVideoTile2.videoRenderView } returns null
         runBlockingTest {
             videoTileController.onReceiveFrame(
                 mockFrame,
@@ -525,7 +525,7 @@ class DefaultVideoTileControllerTest {
             VideoPauseState.Unpaused,
             remoteTile
         )
-        every { mockVideoTile2.videoRenderView } returns mockVideoRenderView2
+        every { mockVideoTile2.videoRenderView } returns null
         runBlockingTest {
             videoTileController.onReceiveFrame(
                 mockFrame,
@@ -544,7 +544,7 @@ class DefaultVideoTileControllerTest {
         videoTileController.bindVideoView(mockVideoRenderView, tileId)
         videoTileController.bindVideoView(mockVideoRenderView2, tileId2)
 
-        verify(exactly = 0) { mockVideoTile.unbind() }
+        verify(exactly = 1) { mockVideoTile.unbind() }
         verify(exactly = 0) { mockVideoTile2.unbind() }
         verify(exactly = 1) { mockVideoTile.bind(any(), any()) }
         verify(exactly = 1) { mockVideoTile2.bind(any(), any()) }

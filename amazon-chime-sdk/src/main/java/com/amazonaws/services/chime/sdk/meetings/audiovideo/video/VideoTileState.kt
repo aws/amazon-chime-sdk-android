@@ -26,5 +26,5 @@ data class VideoTileState(
     /**
      * Whether the video tile is from screen share
      */
-    val isContent: Boolean = attendeeId.endsWith("#content") ?: false
+    val isContent: Boolean = attendeeId.endsWith("#content")
 }

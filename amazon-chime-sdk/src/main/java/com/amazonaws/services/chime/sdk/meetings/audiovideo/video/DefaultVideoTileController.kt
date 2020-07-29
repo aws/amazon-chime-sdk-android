@@ -166,6 +166,10 @@ class DefaultVideoTileController(
         }
 
         videoTileMap[tileId]?.let {
+            it.videoRenderView?.let {
+                logger.info(TAG, "tileId = $tileId already had a different video view. Unbinding the old one and associating the new one")
+                removeVideoViewFromMap(tileId)
+            }
             it.bind(rootEglBase, videoView)
             boundVideoViewMap[videoView] = tileId
         }
