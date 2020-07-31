@@ -1,0 +1,33 @@
+<HTML>
+<HEAD>
+<meta charset="UTF-8">
+<title>DefaultAudioVideoFacade.realtimeSendDataMessage - amazon-chime-sdk</title>
+<link rel="stylesheet" href="../../../style.css">
+</HEAD>
+<BODY>
+<a href="../../index.html">amazon-chime-sdk</a>&nbsp;/&nbsp;<a href="../index.html">com.amazonaws.services.chime.sdk.meetings.audiovideo</a>&nbsp;/&nbsp;<a href="index.html">DefaultAudioVideoFacade</a>&nbsp;/&nbsp;<a href="./realtime-send-data-message.html">realtimeSendDataMessage</a><br/>
+<br/>
+<h1>realtimeSendDataMessage</h1>
+<a name="com.amazonaws.services.chime.sdk.meetings.audiovideo.DefaultAudioVideoFacade$realtimeSendDataMessage(kotlin.String, kotlin.Any, kotlin.Int)"></a>
+<code><span class="keyword">fun </span><span class="identifier">realtimeSendDataMessage</span><span class="symbol">(</span><span class="identifier" id="com.amazonaws.services.chime.sdk.meetings.audiovideo.DefaultAudioVideoFacade$realtimeSendDataMessage(kotlin.String, kotlin.Any, kotlin.Int)/topic">topic</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">, </span><span class="identifier" id="com.amazonaws.services.chime.sdk.meetings.audiovideo.DefaultAudioVideoFacade$realtimeSendDataMessage(kotlin.String, kotlin.Any, kotlin.Int)/data">data</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-any/index.html"><span class="identifier">Any</span></a><span class="symbol">, </span><span class="identifier" id="com.amazonaws.services.chime.sdk.meetings.audiovideo.DefaultAudioVideoFacade$realtimeSendDataMessage(kotlin.String, kotlin.Any, kotlin.Int)/lifetimeMs">lifetimeMs</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html"><span class="identifier">Int</span></a><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code>
+<p>Send message via data channel. Messages are only expected to be sent after audio video has started,
+otherwise will be ignored.
+Even though one can send data messages to any valid topic,
+in order to receive the messages from the given topic, one need to subscribed to the topic
+by calling <a href="../../com.amazonaws.services.chime.sdk.meetings.realtime/-realtime-controller-facade/add-realtime-data-message-observer.html">addRealtimeDataMessageObserver</a>.
+LifetimeMs specifies milliseconds for the given message can be stored in server side.
+Up to 1024 messages may be stored for a maximum of 5 minutes.</p>
+<h3>Parameters</h3>
+<p><a name="topic"></a>
+<code>topic</code> - : String - topic the message is sent to</p>
+<p><a name="data"></a>
+<code>data</code> - : Any - data payload, it can be ByteArray, String or other serializable object,
+which will be convert to ByteArray</p>
+<p><a name="lifetimeMs"></a>
+<code>lifetimeMs</code> - : Int - the milliseconds of lifetime that is available to late subscribers, default as 0</p>
+<h3>Exceptions</h3>
+<p><a name="InvalidParameterException"></a>
+<code>InvalidParameterException</code> - when topic is not match regex "^<a href="#">a-zA-Z0-9_-</a>{1,36}$",
+or data size is over 2kb, or lifetime ms is negative</p>
+</BODY>
+</HTML>

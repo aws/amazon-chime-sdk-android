@@ -58,6 +58,15 @@
 </tr>
 <tr>
 <td>
+<h4><a href="add-realtime-data-message-observer.html">addRealtimeDataMessageObserver</a></h4>
+</td>
+<td>
+<p>Subscribes to receive message on a topic, there could be multiple
+observers per topic</p>
+<code><span class="keyword">fun </span><span class="identifier">addRealtimeDataMessageObserver</span><span class="symbol">(</span><span class="identifier" id="com.amazonaws.services.chime.sdk.meetings.audiovideo.DefaultAudioVideoFacade$addRealtimeDataMessageObserver(kotlin.String, com.amazonaws.services.chime.sdk.meetings.realtime.datamessage.DataMessageObserver)/topic">topic</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">, </span><span class="identifier" id="com.amazonaws.services.chime.sdk.meetings.audiovideo.DefaultAudioVideoFacade$addRealtimeDataMessageObserver(kotlin.String, com.amazonaws.services.chime.sdk.meetings.realtime.datamessage.DataMessageObserver)/observer">observer</span><span class="symbol">:</span>&nbsp;<a href="../../com.amazonaws.services.chime.sdk.meetings.realtime.datamessage/-data-message-observer/index.html"><span class="identifier">DataMessageObserver</span></a><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code></td>
+</tr>
+<tr>
+<td>
 <h4><a href="add-realtime-observer.html">addRealtimeObserver</a></h4>
 </td>
 <td>
@@ -131,6 +140,20 @@ after the completion of this API.</p>
 </tr>
 <tr>
 <td>
+<h4><a href="realtime-send-data-message.html">realtimeSendDataMessage</a></h4>
+</td>
+<td>
+<p>Send message via data channel. Messages are only expected to be sent after audio video has started,
+otherwise will be ignored.
+Even though one can send data messages to any valid topic,
+in order to receive the messages from the given topic, one need to subscribed to the topic
+by calling <a href="../../com.amazonaws.services.chime.sdk.meetings.realtime/-realtime-controller-facade/add-realtime-data-message-observer.html">addRealtimeDataMessageObserver</a>.
+LifetimeMs specifies milliseconds for the given message can be stored in server side.
+Up to 1024 messages may be stored for a maximum of 5 minutes.</p>
+<code><span class="keyword">fun </span><span class="identifier">realtimeSendDataMessage</span><span class="symbol">(</span><span class="identifier" id="com.amazonaws.services.chime.sdk.meetings.audiovideo.DefaultAudioVideoFacade$realtimeSendDataMessage(kotlin.String, kotlin.Any, kotlin.Int)/topic">topic</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">, </span><span class="identifier" id="com.amazonaws.services.chime.sdk.meetings.audiovideo.DefaultAudioVideoFacade$realtimeSendDataMessage(kotlin.String, kotlin.Any, kotlin.Int)/data">data</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-any/index.html"><span class="identifier">Any</span></a><span class="symbol">, </span><span class="identifier" id="com.amazonaws.services.chime.sdk.meetings.audiovideo.DefaultAudioVideoFacade$realtimeSendDataMessage(kotlin.String, kotlin.Any, kotlin.Int)/lifetimeMs">lifetimeMs</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html"><span class="identifier">Int</span></a><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code></td>
+</tr>
+<tr>
+<td>
 <h4><a href="remove-active-speaker-observer.html">removeActiveSpeakerObserver</a></h4>
 </td>
 <td>
@@ -160,6 +183,14 @@ after the completion of this API.</p>
 <td>
 <p>Unsubscribes from metrics by removing specified <a href="../../com.amazonaws.services.chime.sdk.meetings.audiovideo.metric/-metrics-observer/index.html">MetricsObserver</a>.</p>
 <code><span class="keyword">fun </span><span class="identifier">removeMetricsObserver</span><span class="symbol">(</span><span class="identifier" id="com.amazonaws.services.chime.sdk.meetings.audiovideo.DefaultAudioVideoFacade$removeMetricsObserver(com.amazonaws.services.chime.sdk.meetings.audiovideo.metric.MetricsObserver)/observer">observer</span><span class="symbol">:</span>&nbsp;<a href="../../com.amazonaws.services.chime.sdk.meetings.audiovideo.metric/-metrics-observer/index.html"><span class="identifier">MetricsObserver</span></a><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="remove-realtime-data-message-observer-from-topic.html">removeRealtimeDataMessageObserverFromTopic</a></h4>
+</td>
+<td>
+<p>Unsubscribes from a message topic</p>
+<code><span class="keyword">fun </span><span class="identifier">removeRealtimeDataMessageObserverFromTopic</span><span class="symbol">(</span><span class="identifier" id="com.amazonaws.services.chime.sdk.meetings.audiovideo.DefaultAudioVideoFacade$removeRealtimeDataMessageObserverFromTopic(kotlin.String)/topic">topic</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code></td>
 </tr>
 <tr>
 <td>

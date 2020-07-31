@@ -8,6 +8,7 @@ com.amazonaws.services.chime.sdk.meetings.audiovideo.metric
 com.amazonaws.services.chime.sdk.meetings.audiovideo.video
 com.amazonaws.services.chime.sdk.meetings.device
 com.amazonaws.services.chime.sdk.meetings.realtime
+com.amazonaws.services.chime.sdk.meetings.realtime.datamessage
 com.amazonaws.services.chime.sdk.meetings.session
 com.amazonaws.services.chime.sdk.meetings.utils
 com.amazonaws.services.chime.sdk.meetings.utils.logger

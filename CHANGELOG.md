@@ -1,4 +1,4 @@
-## Unreleased
+## [0.7.0] - 2020-07-31
 
 ### Added
 * **Breaking** Added additional field for `MeetingSessionCredentials`
