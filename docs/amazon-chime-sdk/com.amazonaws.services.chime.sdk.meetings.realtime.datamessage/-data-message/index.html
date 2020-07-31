@@ -1,0 +1,105 @@
+<HTML>
+<HEAD>
+<meta charset="UTF-8">
+<title>DataMessage - amazon-chime-sdk</title>
+<link rel="stylesheet" href="../../../style.css">
+</HEAD>
+<BODY>
+<a href="../../index.html">amazon-chime-sdk</a>&nbsp;/&nbsp;<a href="../index.html">com.amazonaws.services.chime.sdk.meetings.realtime.datamessage</a>&nbsp;/&nbsp;<a href="./index.html">DataMessage</a><br/>
+<br/>
+<h1>DataMessage</h1>
+<code><span class="keyword">data</span> <span class="keyword">class </span><span class="identifier">DataMessage</span></code>
+<p>Data message received from server.</p>
+<h3>Constructors</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<h4><a href="-init-.html">&lt;init&gt;</a></h4>
+</td>
+<td>
+<p>Data message received from server.</p>
+<code><span class="identifier">DataMessage</span><span class="symbol">(</span><span class="identifier" id="com.amazonaws.services.chime.sdk.meetings.realtime.datamessage.DataMessage$<init>(kotlin.Long, kotlin.String, kotlin.ByteArray, kotlin.String, kotlin.String, kotlin.Boolean)/timestampMs">timestampMs</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html"><span class="identifier">Long</span></a><span class="symbol">, </span><span class="identifier" id="com.amazonaws.services.chime.sdk.meetings.realtime.datamessage.DataMessage$<init>(kotlin.Long, kotlin.String, kotlin.ByteArray, kotlin.String, kotlin.String, kotlin.Boolean)/topic">topic</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">, </span><span class="identifier" id="com.amazonaws.services.chime.sdk.meetings.realtime.datamessage.DataMessage$<init>(kotlin.Long, kotlin.String, kotlin.ByteArray, kotlin.String, kotlin.String, kotlin.Boolean)/data">data</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-byte-array/index.html"><span class="identifier">ByteArray</span></a><span class="symbol">, </span><span class="identifier" id="com.amazonaws.services.chime.sdk.meetings.realtime.datamessage.DataMessage$<init>(kotlin.Long, kotlin.String, kotlin.ByteArray, kotlin.String, kotlin.String, kotlin.Boolean)/senderAttendeeId">senderAttendeeId</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">, </span><span class="identifier" id="com.amazonaws.services.chime.sdk.meetings.realtime.datamessage.DataMessage$<init>(kotlin.Long, kotlin.String, kotlin.ByteArray, kotlin.String, kotlin.String, kotlin.Boolean)/senderExternalUserId">senderExternalUserId</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">, </span><span class="identifier" id="com.amazonaws.services.chime.sdk.meetings.realtime.datamessage.DataMessage$<init>(kotlin.Long, kotlin.String, kotlin.ByteArray, kotlin.String, kotlin.String, kotlin.Boolean)/throttled">throttled</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html"><span class="identifier">Boolean</span></a><span class="symbol">)</span></code></td>
+</tr>
+</tbody>
+</table>
+<h3>Properties</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<h4><a href="data.html">data</a></h4>
+</td>
+<td>
+<p>: ByteArray - Data payload</p>
+<code><span class="keyword">val </span><span class="identifier">data</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-byte-array/index.html"><span class="identifier">ByteArray</span></a></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="sender-attendee-id.html">senderAttendeeId</a></h4>
+</td>
+<td>
+<ul><li>Sender attendee</li>
+</ul>
+<code><span class="keyword">val </span><span class="identifier">senderAttendeeId</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="sender-external-user-id.html">senderExternalUserId</a></h4>
+</td>
+<td>
+<ul><li>Sender attendee external user Id</li>
+</ul>
+<code><span class="keyword">val </span><span class="identifier">senderExternalUserId</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="throttled.html">throttled</a></h4>
+</td>
+<td>
+<ul><li>true if server throttled or rejected message,
+false if server has posted the message to its recipients or it's not a sender receipt</li>
+</ul>
+<code><span class="keyword">val </span><span class="identifier">throttled</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html"><span class="identifier">Boolean</span></a></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="timestamp-ms.html">timestampMs</a></h4>
+</td>
+<td>
+<p>: Long - Monotonically increasing server ingest time</p>
+<code><span class="keyword">val </span><span class="identifier">timestampMs</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html"><span class="identifier">Long</span></a></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="topic.html">topic</a></h4>
+</td>
+<td>
+<p>: String - Topic this message was sent on</p>
+<code><span class="keyword">val </span><span class="identifier">topic</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a></code></td>
+</tr>
+</tbody>
+</table>
+<h3>Functions</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<h4><a href="from-json.html">fromJson</a></h4>
+</td>
+<td>
+<p>Helper method to convert ByteArray data to object of given type</p>
+<code><span class="keyword">fun </span><span class="symbol">&lt;</span><span class="identifier">T</span><span class="symbol">&gt;</span> <span class="identifier">fromJson</span><span class="symbol">(</span><span class="identifier" id="com.amazonaws.services.chime.sdk.meetings.realtime.datamessage.DataMessage$fromJson(java.lang.Class((com.amazonaws.services.chime.sdk.meetings.realtime.datamessage.DataMessage.fromJson.T)))/clazz">clazz</span><span class="symbol">:</span>&nbsp;<a href="https://docs.oracle.com/javase/6/docs/api/java/lang/Class.html"><span class="identifier">Class</span></a><span class="symbol">&lt;</span><span class="identifier">T</span><span class="symbol">&gt;</span><span class="symbol">)</span><span class="symbol">: </span><span class="identifier">T</span></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="text.html">text</a></h4>
+</td>
+<td>
+<p>Helper method to convert ByteArray data to String</p>
+<code><span class="keyword">fun </span><span class="identifier">text</span><span class="symbol">(</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a></code></td>
+</tr>
+</tbody>
+</table>
+</BODY>
+</HTML>
