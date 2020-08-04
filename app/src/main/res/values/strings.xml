@@ -45,4 +45,5 @@
     <string name="user_notification_meeting_start_error">There was an error starting the meeting. Please try again</string>
     <string name="enter_message">Enter message</string>
     <string name="send_message">Send Message</string>
+    <string name="tab_layout">Tab Layout</string>
 </resources>
