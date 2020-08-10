@@ -97,7 +97,10 @@ class DefaultVideoClientController constructor(
     }
 
     override fun startRemoteVideo() {
-        if (!videoClientStateController.canAct(VideoClientState.INITIALIZED)) return
+        if (!videoClientStateController.canAct(VideoClientState.INITIALIZED)) {
+            logger.info(TAG, "not initialized not doing anything")
+            return
+        }
 
         logger.info(TAG, "Starting remote video")
         videoClient?.setReceiving(true)

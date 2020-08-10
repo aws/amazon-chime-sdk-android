@@ -175,8 +175,6 @@ class MeetingFragment : Fragment(),
 
         selectTab(meetingModel.tabIndex)
         subscribeToAttendeeChangeHandlers()
-        audioVideo.start()
-        audioVideo.startRemoteVideo()
         return view
     }
 
@@ -297,11 +295,9 @@ class MeetingFragment : Fragment(),
             }
             SubTab.Video.position -> {
                 recyclerViewVideoCollection.visibility = View.VISIBLE
-                audioVideo.startRemoteVideo()
             }
             SubTab.Screen.position -> {
                 recyclerViewScreenShareCollection.visibility = View.VISIBLE
-                audioVideo.startRemoteVideo()
             }
             SubTab.Metrics.position -> {
                 recyclerViewMetrics.visibility = View.VISIBLE
@@ -918,8 +914,5 @@ class MeetingFragment : Fragment(),
     override fun onDestroy() {
         super.onDestroy()
         unsubscribeFromAttendeeChangeHandlers()
-        meetingModel.currentVideoTiles.forEach { (tileId, _) ->
-            audioVideo.unbindVideoView(tileId)
-        }
     }
 }

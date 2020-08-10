@@ -22,6 +22,7 @@ import androidx.core.content.ContextCompat
 import com.amazonaws.services.chime.sdk.meetings.utils.Versioning
 import com.amazonaws.services.chime.sdk.meetings.utils.logger.ConsoleLogger
 import com.amazonaws.services.chime.sdk.meetings.utils.logger.LogLevel
+import com.amazonaws.services.chime.sdkdemo.MeetingService
 import com.amazonaws.services.chime.sdkdemo.R
 import com.amazonaws.services.chime.sdkdemo.utils.encodeURLParam
 import java.io.BufferedReader
@@ -145,6 +146,7 @@ class HomeActivity : AppCompatActivity() {
                 if (meetingResponseJson == null) {
                     showToast(applicationContext, getString(R.string.user_notification_meeting_start_error))
                 } else {
+                    MeetingService.startService(applicationContext, meetingResponseJson, meetingId, attendeeName)
                     val intent = Intent(applicationContext, MeetingActivity::class.java)
                     intent.putExtra(MEETING_RESPONSE_KEY, meetingResponseJson)
                     intent.putExtra(MEETING_ID_KEY, meetingId)
