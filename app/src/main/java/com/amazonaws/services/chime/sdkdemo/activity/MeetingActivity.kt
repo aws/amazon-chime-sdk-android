@@ -42,7 +42,6 @@ class MeetingActivity : AppCompatActivity(),
             mService = binder.getService()
             mBound = true
             mService.audioVideo?.startRemoteVideo()
-            mService.audioVideo?.startLocalVideo()
             val rosterViewFragment = MeetingFragment.newInstance(meetingId)
             supportFragmentManager
                 .beginTransaction()
@@ -89,15 +88,14 @@ class MeetingActivity : AppCompatActivity(),
             logger.info(TAG, "stopping remote video")
             mService.audioVideo?.stopRemoteVideo()
             mService.audioVideo?.stopLocalVideo()
+            unbindService(connection)
+            mBound = false
         }
-        unbindService(connection)
-        mBound = false
-        logger.info(TAG, "Nick: onStop")
     }
 
     override fun onDestroy() {
         super.onDestroy()
-        logger.info(TAG, "Nick: onDestroy")
+        logger.info(TAG, "onDestroy")
     }
 
     override fun onStart() {
@@ -108,6 +106,6 @@ class MeetingActivity : AppCompatActivity(),
         if (mBound) {
             mService.audioVideo?.startRemoteVideo()
         }
-        logger.info(TAG, "Nick: onStart")
+        logger.info(TAG, "onStart")
     }
 }
