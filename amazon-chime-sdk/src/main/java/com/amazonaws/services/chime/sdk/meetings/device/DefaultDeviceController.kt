@@ -67,18 +67,36 @@ class DefaultDeviceController(
         @SuppressLint("NewApi")
         if (buildVersion >= AUDIO_MANAGER_API_LEVEL) {
             var isWiredHeadsetOn = false
-            val audioDevices = audioManager.getDevices(AudioManager.GET_DEVICES_OUTPUTS).map {
+            var isHandsetAvailable = false
+            val handsetDevicesInfo = setOf(
+                AudioDeviceInfo.TYPE_BUILTIN_EARPIECE,
+                AudioDeviceInfo.TYPE_TELEPHONY
+            )
+
+            val audioDevices = mutableListOf<MediaDevice>()
+            for (device in audioManager.getDevices(AudioManager.GET_DEVICES_OUTPUTS)) {
                 // System will select wired headset over receiver
                 // so we want to filter receiver out when wired headset is connected
-                if (it.type == AudioDeviceInfo.TYPE_WIRED_HEADSET ||
-                    it.type == AudioDeviceInfo.TYPE_WIRED_HEADPHONES
+                if (device.type == AudioDeviceInfo.TYPE_WIRED_HEADSET ||
+                    device.type == AudioDeviceInfo.TYPE_WIRED_HEADPHONES
                 ) {
                     isWiredHeadsetOn = true
                 }
-                MediaDevice(
-                    "${it.productName} (${getReadableType(it.type)})",
-                    MediaDeviceType.fromAudioDeviceInfo(
-                        it.type
+
+                // Return only one handset device to avoid confusion
+                if (handsetDevicesInfo.contains(device.type)) {
+                    if (isHandsetAvailable) continue
+                    else {
+                        isHandsetAvailable = true
+                    }
+                }
+
+                audioDevices.add(
+                    MediaDevice(
+                        "${device.productName} (${getReadableType(device.type)})",
+                        MediaDeviceType.fromAudioDeviceInfo(
+                            device.type
+                        )
                     )
                 )
             }
@@ -101,7 +119,7 @@ class DefaultDeviceController(
             } else {
                 res.add(
                     MediaDevice(
-                        getReadableType(AudioDeviceInfo.TYPE_TELEPHONY),
+                        getReadableType(AudioDeviceInfo.TYPE_BUILTIN_EARPIECE),
                         MediaDeviceType.AUDIO_HANDSET
                     )
                 )
@@ -160,10 +178,11 @@ class DefaultDeviceController(
             AudioDeviceInfo.TYPE_WIRED_HEADSET -> "Wired Headset"
             AudioDeviceInfo.TYPE_BUILTIN_SPEAKER -> "Speaker"
             AudioDeviceInfo.TYPE_WIRED_HEADPHONES -> "Wired Headphone"
+            AudioDeviceInfo.TYPE_BUILTIN_EARPIECE,
             AudioDeviceInfo.TYPE_TELEPHONY -> "Handset"
             AudioDeviceInfo.TYPE_BLUETOOTH_A2DP,
             AudioDeviceInfo.TYPE_BLUETOOTH_SCO -> "Bluetooth"
-            else -> "Unknown"
+            else -> "Unknown (AudioDeviceInfo: $type)"
         }
     }
 
