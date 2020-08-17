@@ -14,7 +14,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
-import android.widget.ArrayAdapter
 import android.widget.EditText
 import android.widget.ImageButton
 import android.widget.LinearLayout
@@ -51,6 +50,7 @@ import com.amazonaws.services.chime.sdk.meetings.utils.logger.LogLevel
 import com.amazonaws.services.chime.sdkdemo.R
 import com.amazonaws.services.chime.sdkdemo.activity.HomeActivity
 import com.amazonaws.services.chime.sdkdemo.activity.MeetingActivity
+import com.amazonaws.services.chime.sdkdemo.adapter.DeviceAdapter
 import com.amazonaws.services.chime.sdkdemo.adapter.MessageAdapter
 import com.amazonaws.services.chime.sdkdemo.adapter.MetricAdapter
 import com.amazonaws.services.chime.sdkdemo.adapter.RosterAdapter
@@ -118,7 +118,7 @@ class MeetingFragment : Fragment(),
     private lateinit var recyclerViewVideoCollection: RecyclerView
     private lateinit var recyclerViewScreenShareCollection: RecyclerView
     private lateinit var recyclerViewMessages: RecyclerView
-    private lateinit var deviceListAdapter: ArrayAdapter<String>
+    private lateinit var deviceListAdapter: DeviceAdapter
     private lateinit var metricsAdapter: MetricAdapter
     private lateinit var rosterAdapter: RosterAdapter
     private lateinit var videoTileAdapter: VideoAdapter
@@ -327,9 +327,10 @@ class MeetingFragment : Fragment(),
     private fun setupAudioDeviceSelectionDialog() {
         meetingModel.currentMediaDevices =
             audioVideo.listAudioDevices().filter { device -> device.type != MediaDeviceType.OTHER }
-        deviceListAdapter =
-            ArrayAdapter(requireContext(), android.R.layout.simple_list_item_1, android.R.id.text1)
-        deviceListAdapter.addAll(meetingModel.currentMediaDevices.map { device -> device.label })
+        deviceListAdapter = DeviceAdapter(
+            requireContext(),
+            android.R.layout.simple_list_item_1,
+            meetingModel.currentMediaDevices)
         deviceAlertDialogBuilder = AlertDialog.Builder(activity)
         deviceAlertDialogBuilder.setTitle(R.string.alert_title_choose_audio)
         deviceAlertDialogBuilder.setNegativeButton(R.string.cancel) { dialog, _ ->
@@ -353,9 +354,8 @@ class MeetingFragment : Fragment(),
     override fun onAudioDeviceChanged(freshAudioDeviceList: List<MediaDevice>) {
         meetingModel.currentMediaDevices = freshAudioDeviceList
             .filter { device -> device.type != MediaDeviceType.OTHER }
-        val deviceNameList = meetingModel.currentMediaDevices.map { device -> device.label }
         deviceListAdapter.clear()
-        deviceListAdapter.addAll(deviceNameList)
+        deviceListAdapter.addAll(meetingModel.currentMediaDevices)
         deviceListAdapter.notifyDataSetChanged()
     }
 
@@ -638,12 +638,8 @@ class MeetingFragment : Fragment(),
 
     private fun createVideoCollectionTile(tileState: VideoTileState): VideoCollectionTile {
         val attendeeId = tileState.attendeeId
-        attendeeId?.let {
-            val attendeeName = meetingModel.currentRoster[attendeeId]?.attendeeName ?: ""
-            return VideoCollectionTile(attendeeName, tileState)
-        }
-
-        return VideoCollectionTile("", tileState)
+        val attendeeName = meetingModel.currentRoster[attendeeId]?.attendeeName ?: ""
+        return VideoCollectionTile(attendeeName, tileState)
     }
 
     override fun onAudioSessionStartedConnecting(reconnecting: Boolean) {

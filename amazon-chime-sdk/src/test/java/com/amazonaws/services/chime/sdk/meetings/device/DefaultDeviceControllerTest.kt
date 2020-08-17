@@ -34,7 +34,10 @@ class DefaultDeviceControllerTest {
     private lateinit var speakerInfo: AudioDeviceInfo
 
     @MockK
-    private lateinit var receiverInfo: AudioDeviceInfo
+    private lateinit var earpieceInfo: AudioDeviceInfo
+
+    @MockK
+    private lateinit var telephonyInfo: AudioDeviceInfo
 
     @MockK
     private lateinit var wiredHeadsetInfo: AudioDeviceInfo
@@ -89,8 +92,10 @@ class DefaultDeviceControllerTest {
     private fun commonSetup() {
         every { speakerInfo.type } returns AudioDeviceInfo.TYPE_BUILTIN_SPEAKER
         every { speakerInfo.productName } returns "default speaker"
-        every { receiverInfo.type } returns AudioDeviceInfo.TYPE_TELEPHONY
-        every { receiverInfo.productName } returns "default receiver"
+        every { earpieceInfo.type } returns AudioDeviceInfo.TYPE_BUILTIN_EARPIECE
+        every { earpieceInfo.productName } returns "default receiver"
+        every { telephonyInfo.type } returns AudioDeviceInfo.TYPE_TELEPHONY
+        every { telephonyInfo.productName } returns "telephony receiver"
         every { wiredHeadsetInfo.type } returns AudioDeviceInfo.TYPE_WIRED_HEADSET
         every { wiredHeadsetInfo.productName } returns "my wired headset"
         every { bluetoothInfo.type } returns AudioDeviceInfo.TYPE_BLUETOOTH_SCO
@@ -124,7 +129,7 @@ class DefaultDeviceControllerTest {
     fun `listAudioDevices should return a list of connected devices with product name when build version is high`() {
         setupForNewAPILevel()
         every { audioManager.getDevices(AudioManager.GET_DEVICES_OUTPUTS) } returns arrayOf(
-            speakerInfo, receiverInfo, bluetoothInfo
+            speakerInfo, earpieceInfo, bluetoothInfo
         )
 
         val devices = deviceController.listAudioDevices()
@@ -167,7 +172,7 @@ class DefaultDeviceControllerTest {
     fun `listAudioDevices should not return both wired headset and receiver when build version is high`() {
         setupForNewAPILevel()
         every { audioManager.getDevices(AudioManager.GET_DEVICES_OUTPUTS) } returns arrayOf(
-            speakerInfo, receiverInfo, wiredHeadsetInfo
+            speakerInfo, earpieceInfo, wiredHeadsetInfo
         )
 
         val devices = deviceController.listAudioDevices()
@@ -178,6 +183,18 @@ class DefaultDeviceControllerTest {
                         it.type == MediaDeviceType.AUDIO_BUILTIN_SPEAKER
             )
         }
+    }
+
+    @Test
+    fun `listAudioDevices should return one handset when multiple handset available (only apply to higher API level)`() {
+        setupForNewAPILevel()
+        every { audioManager.getDevices(AudioManager.GET_DEVICES_OUTPUTS) } returns arrayOf(
+            earpieceInfo, telephonyInfo
+        )
+
+        val devices = deviceController.listAudioDevices()
+        assertEquals(1, devices.size)
+        assertEquals(MediaDeviceType.AUDIO_HANDSET, devices[0].type)
     }
 
     @Test

@@ -29,9 +29,6 @@
     <!-- toggle tab -->
     <string name="toggle_camera">Toggle Camera</string>
     <string name="toggle_mute">Toggle Mute</string>
-    <string name="toggle_screen">Screen Tab</string>
-    <string name="toggle_attendees_list">Attendee Tab</string>
-    <string name="toggle_metrics">Metrics Tab</string>
 
     <!-- Alert -->
     <string name="cancel">Cancel</string>
