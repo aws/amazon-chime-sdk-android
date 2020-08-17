@@ -45,6 +45,8 @@ enum class MediaDeviceType {
                 AudioDeviceInfo.TYPE_WIRED_HEADSET,
                 AudioDeviceInfo.TYPE_WIRED_HEADPHONES -> AUDIO_WIRED_HEADSET
                 AudioDeviceInfo.TYPE_BUILTIN_SPEAKER -> AUDIO_BUILTIN_SPEAKER
+                AudioDeviceInfo.TYPE_BUILTIN_EARPIECE,
+                AudioDeviceInfo.TYPE_BUILTIN_MIC,
                 AudioDeviceInfo.TYPE_TELEPHONY -> AUDIO_HANDSET
                 else -> OTHER
             }

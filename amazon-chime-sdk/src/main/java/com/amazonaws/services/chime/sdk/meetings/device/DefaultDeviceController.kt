@@ -160,6 +160,8 @@ class DefaultDeviceController(
             AudioDeviceInfo.TYPE_WIRED_HEADSET -> "Wired Headset"
             AudioDeviceInfo.TYPE_BUILTIN_SPEAKER -> "Speaker"
             AudioDeviceInfo.TYPE_WIRED_HEADPHONES -> "Wired Headphone"
+            AudioDeviceInfo.TYPE_BUILTIN_EARPIECE,
+            AudioDeviceInfo.TYPE_BUILTIN_MIC,
             AudioDeviceInfo.TYPE_TELEPHONY -> "Handset"
             AudioDeviceInfo.TYPE_BLUETOOTH_A2DP,
             AudioDeviceInfo.TYPE_BLUETOOTH_SCO -> "Bluetooth"
