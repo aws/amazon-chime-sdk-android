@@ -16,6 +16,7 @@ import com.amazonaws.services.chime.sdk.meetings.internal.SessionStateController
 import com.amazonaws.services.chime.sdk.meetings.internal.metric.ClientMetricsCollector
 import com.amazonaws.services.chime.sdk.meetings.internal.utils.ObserverUtils
 import com.amazonaws.services.chime.sdk.meetings.realtime.RealtimeObserver
+import com.amazonaws.services.chime.sdk.meetings.session.MeetingSessionConfiguration
 import com.amazonaws.services.chime.sdk.meetings.session.MeetingSessionStatus
 import com.amazonaws.services.chime.sdk.meetings.session.MeetingSessionStatusCode
 import com.amazonaws.services.chime.sdk.meetings.utils.logger.Logger
@@ -27,6 +28,7 @@ import kotlinx.coroutines.launch
 class DefaultAudioClientObserver(
     private val logger: Logger,
     private val clientMetricsCollector: ClientMetricsCollector,
+    private val configuration: MeetingSessionConfiguration,
     var audioClient: AudioClient? = null
 ) : AudioClientObserver {
     private val TAG = "DefaultAudioClientObserver"
@@ -111,17 +113,11 @@ class DefaultAudioClientObserver(
 
     override fun onVolumeStateChange(attendeeUpdates: Array<out AttendeeUpdate>?) {
         if (attendeeUpdates == null) return
-        val attendeeUpdatesNonEmptyExternalId =
-            attendeeUpdates.filter { it.externalUserId.isNotEmpty() }
 
         val newAttendeeVolumeMap: Map<String, VolumeUpdate> =
-            attendeeUpdatesNonEmptyExternalId.mapNotNull { attendeeUpdate ->
+            attendeeUpdates.mapNotNull { attendeeUpdate ->
                 VolumeLevel.from(attendeeUpdate.data)?.let {
-                    val attendeeInfo =
-                        AttendeeInfo(
-                            attendeeUpdate.profileId,
-                            attendeeUpdate.externalUserId
-                        )
+                    val attendeeInfo = createAttendeeInfo(attendeeUpdate)
                     attendeeUpdate.profileId to VolumeUpdate(
                         attendeeInfo,
                         it
@@ -138,7 +134,11 @@ class DefaultAudioClientObserver(
 
         if (changedAttendeeVolumeMap.isNotEmpty()) {
             val volumeUpdates: Array<VolumeUpdate> = changedAttendeeVolumeMap.values.toTypedArray()
-            ObserverUtils.notifyObserverOnMainThread(realtimeEventObservers) { it.onVolumeChanged(volumeUpdates) }
+            ObserverUtils.notifyObserverOnMainThread(realtimeEventObservers) {
+                it.onVolumeChanged(
+                    volumeUpdates
+                )
+            }
         }
 
         currentAttendeeVolumeMap = newAttendeeVolumeMap
@@ -148,14 +148,10 @@ class DefaultAudioClientObserver(
         if (attendeeUpdates == null) return
 
         val newAttendeeSignalMap: Map<String, SignalUpdate> =
-            attendeeUpdates.filter { it.externalUserId.isNotEmpty() }
+            attendeeUpdates
                 .mapNotNull { attendeeUpdate ->
                     SignalStrength.from(attendeeUpdate.data)?.let {
-                        val attendeeInfo =
-                            AttendeeInfo(
-                                attendeeUpdate.profileId,
-                                attendeeUpdate.externalUserId
-                            )
+                        val attendeeInfo = createAttendeeInfo(attendeeUpdate)
                         attendeeUpdate.profileId to SignalUpdate(
                             attendeeInfo,
                             it
@@ -170,7 +166,11 @@ class DefaultAudioClientObserver(
 
         if (changedAttendeeSignalMap.isNotEmpty()) {
             val signalUpdates: Array<SignalUpdate> = changedAttendeeSignalMap.values.toTypedArray()
-            ObserverUtils.notifyObserverOnMainThread(realtimeEventObservers) { it.onSignalStrengthChanged(signalUpdates) }
+            ObserverUtils.notifyObserverOnMainThread(realtimeEventObservers) {
+                it.onSignalStrengthChanged(
+                    signalUpdates
+                )
+            }
         }
 
         currentAttendeeSignalMap = newAttendeeSignalMap
@@ -185,7 +185,11 @@ class DefaultAudioClientObserver(
             val mutedAttendeeInfo: Array<AttendeeInfo> =
                 mutedAttendeeMap.map { (_, value) -> value.attendeeInfo }.toTypedArray()
 
-            ObserverUtils.notifyObserverOnMainThread(realtimeEventObservers) { it.onAttendeesMuted(mutedAttendeeInfo) }
+            ObserverUtils.notifyObserverOnMainThread(realtimeEventObservers) {
+                it.onAttendeesMuted(
+                    mutedAttendeeInfo
+                )
+            }
         }
 
         val unMutedAttendeeMap = volumesDelta.filter { (key, _) ->
@@ -196,7 +200,11 @@ class DefaultAudioClientObserver(
             val unMutedAttendeeInfo: Array<AttendeeInfo> =
                 unMutedAttendeeMap.map { (_, value) -> value.attendeeInfo }.toTypedArray()
 
-            ObserverUtils.notifyObserverOnMainThread(realtimeEventObservers) { it.onAttendeesUnmuted(unMutedAttendeeInfo) }
+            ObserverUtils.notifyObserverOnMainThread(realtimeEventObservers) {
+                it.onAttendeesUnmuted(
+                    unMutedAttendeeInfo
+                )
+            }
         }
     }
 
@@ -228,8 +236,7 @@ class DefaultAudioClientObserver(
 
         // group by attendee status
         val attendeesByStatus = attendeeUpdates
-            .filter { it.externalUserId.isNotEmpty() }
-            .groupBy({ AttendeeStatus.from(it.data) }, { AttendeeInfo(it.profileId, it.externalUserId) })
+            .groupBy({ AttendeeStatus.from(it.data) }, { createAttendeeInfo(it) })
         attendeesByStatus[AttendeeStatus.Joined]?.let {
             val attendeeJoined = it.minus(currentAttendees)
             if (attendeeJoined.isNotEmpty()) {
@@ -249,20 +256,49 @@ class DefaultAudioClientObserver(
         }
     }
 
+    // Create AttendeeInfo based on AttendeeUpdate, fill up external ID for local attendee
+    private fun createAttendeeInfo(attendeeUpdate: AttendeeUpdate): AttendeeInfo {
+        val externalUserId =
+            if (attendeeUpdate.externalUserId.isEmpty() &&
+                (attendeeUpdate.profileId == configuration.credentials.attendeeId)) {
+                configuration.credentials.externalUserId
+            } else {
+                attendeeUpdate.externalUserId
+            }
+        return AttendeeInfo(
+            attendeeUpdate.profileId,
+            externalUserId
+        )
+    }
+
     private fun onAttendeesJoin(attendeeInfo: Array<AttendeeInfo>) {
         logger.debug(TAG, "Added: ${attendeeInfo.joinToString(" ")}")
 
-        ObserverUtils.notifyObserverOnMainThread(realtimeEventObservers) { it.onAttendeesJoined(attendeeInfo) }
+        ObserverUtils.notifyObserverOnMainThread(realtimeEventObservers) {
+            it.onAttendeesJoined(
+                attendeeInfo
+            )
+        }
     }
+
     private fun onAttendeesLeft(attendeeInfo: Array<AttendeeInfo>) {
         logger.debug(TAG, "Left: ${attendeeInfo.joinToString(" ")}")
 
-        ObserverUtils.notifyObserverOnMainThread(realtimeEventObservers) { it.onAttendeesLeft(attendeeInfo) }
+        ObserverUtils.notifyObserverOnMainThread(realtimeEventObservers) {
+            it.onAttendeesLeft(
+                attendeeInfo
+            )
+        }
     }
+
     private fun onAttendeesDropped(attendeeInfo: Array<AttendeeInfo>) {
         logger.debug(TAG, "Dropped: ${attendeeInfo.joinToString(" ")}")
 
-        ObserverUtils.notifyObserverOnMainThread(realtimeEventObservers) { it.onAttendeesDropped(attendeeInfo) }
+        ObserverUtils.notifyObserverOnMainThread(realtimeEventObservers) {
+            it.onAttendeesDropped(
+                attendeeInfo
+            )
+        }
     }
 
     override fun subscribeToAudioClientStateChange(observer: AudioVideoObserver) {

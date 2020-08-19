@@ -2,6 +2,7 @@
 
 ### Fixed
 * Fixed the issue that `listAudioDevices` does not return built-in handset for some devices 
+* Fixed a bug that attendee events got filtered out due to absence of `externalUserId`
 
 ## [0.7.1] - 2020-08-13
 

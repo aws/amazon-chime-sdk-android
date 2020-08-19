@@ -39,7 +39,8 @@ class DefaultMeetingSession(
         val audioClientObserver =
             DefaultAudioClientObserver(
                 logger,
-                metricsCollector
+                metricsCollector,
+                configuration
             )
 
         val audioClient =
