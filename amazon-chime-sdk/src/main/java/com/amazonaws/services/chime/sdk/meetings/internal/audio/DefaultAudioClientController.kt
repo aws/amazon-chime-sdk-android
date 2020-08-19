@@ -14,10 +14,12 @@ import com.amazonaws.services.chime.sdk.meetings.session.MeetingSessionStatus
 import com.amazonaws.services.chime.sdk.meetings.session.MeetingSessionStatusCode
 import com.amazonaws.services.chime.sdk.meetings.utils.logger.Logger
 import com.xodee.client.audio.audioclient.AudioClient
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.withContext
 
 class DefaultAudioClientController(
     private val context: Context,
@@ -33,6 +35,7 @@ class DefaultAudioClientController(
     private val AUDIO_CLIENT_RESULT_SUCCESS = AudioClient.AUDIO_CLIENT_OK
 
     private val uiScope = CoroutineScope(Dispatchers.Main)
+    private val defaultDispatcher: CoroutineDispatcher = Dispatchers.Default
     private val audioManager: AudioManager = context.getSystemService(Context.AUDIO_SERVICE) as AudioManager
     private var audioModePreCall: Int = audioManager.mode
     private var speakerphoneStatePreCall: Boolean = audioManager.isSpeakerphoneOn
@@ -165,7 +168,13 @@ class DefaultAudioClientController(
             return
         }
 
-        GlobalScope.launch {
+        runBlocking {
+            stopAsync()
+        }
+    }
+
+    private suspend fun stopAsync() {
+        withContext(defaultDispatcher) {
             val res = audioClient.stopSession()
 
             if (res != AUDIO_CLIENT_RESULT_SUCCESS) {

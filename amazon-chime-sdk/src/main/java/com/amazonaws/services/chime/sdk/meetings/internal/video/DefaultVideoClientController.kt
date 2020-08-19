@@ -17,8 +17,9 @@ import com.xodee.client.video.VideoClient
 import com.xodee.client.video.VideoClientCapturer
 import com.xodee.client.video.VideoDevice
 import java.security.InvalidParameterException
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.withContext
 
 class DefaultVideoClientController constructor(
     private val context: Context,
@@ -55,7 +56,13 @@ class DefaultVideoClientController constructor(
     }
 
     override fun stopAndDestroy() {
-        GlobalScope.launch {
+        runBlocking {
+            stopAsync()
+        }
+    }
+
+    private suspend fun stopAsync() {
+        withContext(Dispatchers.Default) {
             videoClientStateController.stop()
         }
     }
