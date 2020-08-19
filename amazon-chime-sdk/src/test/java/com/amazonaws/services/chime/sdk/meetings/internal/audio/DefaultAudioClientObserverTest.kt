@@ -16,6 +16,7 @@ import com.amazonaws.services.chime.sdk.meetings.internal.AttendeeStatus
 import com.amazonaws.services.chime.sdk.meetings.internal.SessionStateControllerAction
 import com.amazonaws.services.chime.sdk.meetings.internal.metric.ClientMetricsCollector
 import com.amazonaws.services.chime.sdk.meetings.realtime.RealtimeObserver
+import com.amazonaws.services.chime.sdk.meetings.session.MeetingSessionConfiguration
 import com.amazonaws.services.chime.sdk.meetings.session.MeetingSessionStatusCode
 import com.amazonaws.services.chime.sdk.meetings.utils.logger.Logger
 import com.xodee.client.audio.audioclient.AttendeeUpdate
@@ -43,6 +44,12 @@ class DefaultAudioClientObserverTest {
     private lateinit var mockLogger: Logger
 
     @MockK
+    private lateinit var mockClientMetricsCollector: ClientMetricsCollector
+
+    @MockK
+    private lateinit var mockConfiguration: MeetingSessionConfiguration
+
+    @MockK
     private lateinit var mockAudioVideoObserver: AudioVideoObserver
 
     @MockK
@@ -61,6 +68,7 @@ class DefaultAudioClientObserverTest {
 
     private val testId1 = "aliceId"
     private val testId2 = "bobId"
+    private val testIdLocal = "me myself & I"
     private val invalidInput = 1000
 
     private val testAttendeeVolumeUpdate =
@@ -91,9 +99,6 @@ class DefaultAudioClientObserverTest {
 
     private val expectedAttendeeInfos: Array<AttendeeInfo> = arrayOf(testAttendeeInfo)
 
-    @MockK
-    private lateinit var clientMetricsCollector: ClientMetricsCollector
-
     @Before
     fun setup() {
         // Mock Log.d first because initializing the AudioClient mock appears to fail otherwise
@@ -103,11 +108,14 @@ class DefaultAudioClientObserverTest {
         audioClientObserver =
             DefaultAudioClientObserver(
                 mockLogger,
-                clientMetricsCollector
+                mockClientMetricsCollector,
+                mockConfiguration
             )
         audioClientObserver.subscribeToAudioClientStateChange(mockAudioVideoObserver)
         audioClientObserver.subscribeToRealTimeEvents(mockRealtimeObserver)
         audioClientObserver.audioClient = mockAudioClient
+        every { mockConfiguration.credentials.attendeeId } returns testIdLocal
+        every { mockConfiguration.credentials.externalUserId } returns testIdLocal
         Dispatchers.setMain(testDispatcher)
     }
 
@@ -307,6 +315,20 @@ class DefaultAudioClientObserverTest {
     }
 
     @Test
+    fun `onAttendeesPresenceChange should send local attendee event with non-empty externalUserId`() {
+        val testInput = arrayOf(
+            AttendeeUpdate(testIdLocal, "", AttendeeStatus.Joined.value)
+        )
+        val expectedArgs: Array<AttendeeInfo> = arrayOf(
+            AttendeeInfo(testIdLocal, testIdLocal)
+        )
+
+        audioClientObserver.onAttendeesPresenceChange(testInput)
+
+        verify(exactly = 1) { mockRealtimeObserver.onAttendeesJoined(expectedArgs) }
+    }
+
+    @Test
     fun `onVolumeStateChange should notify added observers`() {
         audioClientObserver.onVolumeStateChange(arrayOf(testAttendeeVolumeUpdate))
 
@@ -347,12 +369,15 @@ class DefaultAudioClientObserverTest {
     }
 
     @Test
-    fun `onVolumeChange should filter out empty external id`() {
+    fun `onVolumeChange should send remote attendee event when it has an empty externalUserId`() {
         val testInput = arrayOf(
             testAttendeeVolumeUpdate,
             AttendeeUpdate(testId2, "", VolumeLevel.Low.value)
         )
-        val expectedArgs: Array<VolumeUpdate> = arrayOf(testVolumeUpdate)
+        val expectedArgs: Array<VolumeUpdate> = arrayOf(
+            testVolumeUpdate,
+            VolumeUpdate(AttendeeInfo(testId2, ""), VolumeLevel.Low)
+        )
 
         audioClientObserver.onVolumeStateChange(testInput)
 
@@ -416,12 +441,15 @@ class DefaultAudioClientObserverTest {
     }
 
     @Test
-    fun `onSignalStrengthChange should filter out empty external user id`() {
+    fun `onSignalStrengthChange should send remote attendee event when it has an empty externalUserId`() {
         val testInput = arrayOf(
             testAttendeeSignalUpdate,
             AttendeeUpdate(testId2, "", SignalStrength.High.value)
         )
-        val expectedArgs: Array<SignalUpdate> = arrayOf(testSignalUpdate)
+        val expectedArgs: Array<SignalUpdate> = arrayOf(
+            testSignalUpdate,
+            SignalUpdate(AttendeeInfo(testId2, ""), SignalStrength.High)
+        )
 
         audioClientObserver.onSignalStrengthChange(testInput)
 
@@ -435,6 +463,20 @@ class DefaultAudioClientObserverTest {
             AttendeeUpdate(testId2, testId2, invalidInput)
         )
         val expectedArgs: Array<SignalUpdate> = arrayOf(testSignalUpdate)
+
+        audioClientObserver.onSignalStrengthChange(testInput)
+
+        verify(exactly = 1) { mockRealtimeObserver.onSignalStrengthChanged(expectedArgs) }
+    }
+
+    @Test
+    fun `onSignalStrengthChange should send local attendee event with non-empty externalUserId`() {
+        val testInput = arrayOf(
+            AttendeeUpdate(testIdLocal, "", SignalStrength.High.value)
+        )
+        val expectedArgs: Array<SignalUpdate> = arrayOf(
+            SignalUpdate(AttendeeInfo(testIdLocal, testIdLocal), SignalStrength.High)
+        )
 
         audioClientObserver.onSignalStrengthChange(testInput)
 
@@ -469,6 +511,20 @@ class DefaultAudioClientObserverTest {
         audioClientObserver.onVolumeStateChange(arrayOf(testAttendeeVolumeMuted))
 
         verify(exactly = 0) { mockRealtimeObserver.onAttendeesUnmuted(any()) }
+    }
+
+    @Test
+    fun `onVolumeStateChange should send local attendee event with non-empty externalUserId`() {
+        val testInput = arrayOf(
+            AttendeeUpdate(testIdLocal, "", VolumeLevel.High.value)
+        )
+        val expectedArgs: Array<VolumeUpdate> = arrayOf(
+            VolumeUpdate(AttendeeInfo(testIdLocal, testIdLocal), VolumeLevel.High)
+        )
+
+        audioClientObserver.onVolumeStateChange(testInput)
+
+        verify(exactly = 1) { mockRealtimeObserver.onVolumeChanged(expectedArgs) }
     }
 
     @Test
@@ -694,7 +750,7 @@ class DefaultAudioClientObserverTest {
         val metrics = mutableMapOf(1 to 2.3, 4 to 5.6)
         audioClientObserver.onMetrics(metrics.keys.toIntArray(), metrics.values.toDoubleArray())
 
-        verify { clientMetricsCollector.processAudioClientMetrics(metrics) }
+        verify { mockClientMetricsCollector.processAudioClientMetrics(metrics) }
     }
 
     private fun verifyAudioVideoObserverIsNotNotified() {
