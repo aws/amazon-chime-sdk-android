@@ -918,7 +918,7 @@ class MeetingFragment : Fragment(),
     override fun onDestroy() {
         super.onDestroy()
         unsubscribeFromAttendeeChangeHandlers()
-        meetingModel.currentVideoTiles.forEach { (tileId, tileData) ->
+        meetingModel.currentVideoTiles.forEach { (tileId, _) ->
             audioVideo.unbindVideoView(tileId)
         }
     }
