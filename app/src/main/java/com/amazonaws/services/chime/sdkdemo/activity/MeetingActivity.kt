@@ -112,6 +112,8 @@ class MeetingActivity : AppCompatActivity(),
     }
 
     override fun onBackPressed() {
+        meetingSessionModel.audioVideo.stopLocalVideo()
+        meetingSessionModel.audioVideo.stopRemoteVideo()
         meetingSessionModel.audioVideo.stop()
         meetingSessionModel.cameraCaptureSource.stop()
         meetingSessionModel.gpuVideoProcessor.release()
