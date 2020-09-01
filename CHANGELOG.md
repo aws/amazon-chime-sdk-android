@@ -1,4 +1,4 @@
-## Unreleased
+## [0.7.2] - 2020-09-01
 
 ### Fixed
 * Fixed the issue that `listAudioDevices` does not return built-in handset for some devices 
