@@ -22,6 +22,7 @@ import com.amazonaws.services.chime.sdkdemo.R
 import com.amazonaws.services.chime.sdkdemo.data.RosterAttendee
 import com.amazonaws.services.chime.sdkdemo.fragment.DeviceManagementFragment
 import com.amazonaws.services.chime.sdkdemo.fragment.MeetingFragment
+import java.lang.IllegalStateException
 import java.util.concurrent.ConcurrentHashMap
 
 class MeetingActivity : AppCompatActivity(),
@@ -103,10 +104,17 @@ class MeetingActivity : AppCompatActivity(),
         super.onBackPressed()
     }
 
-    // TODO: fix force casting
-    fun getAudioVideo(): AudioVideoFacade = mService.audioVideo!!
+    fun getAudioVideo(): AudioVideoFacade {
+        mService.audioVideo
+            ?: throw IllegalStateException("AudioVideo should have been initialized")
+        return mService.audioVideo as AudioVideoFacade
+    }
 
-    fun getMeetingSessionCredentials(): MeetingSessionCredentials = mService.credentials!!
+    fun getMeetingSessionCredentials(): MeetingSessionCredentials {
+        mService.credentials
+            ?: throw IllegalStateException("Credentials should have been initialized")
+        return mService.credentials as MeetingSessionCredentials
+    }
 
     fun getMeetingAttendeeList(): ConcurrentHashMap<String, RosterAttendee> = mService.attendees
 
