@@ -16,6 +16,7 @@ import android.os.Build
 import android.os.IBinder
 import androidx.core.app.NotificationCompat
 import androidx.core.content.ContextCompat
+import com.amazonaws.services.chime.sdk.meetings.audiovideo.AttendeeInfo
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.AudioVideoFacade
 import com.amazonaws.services.chime.sdk.meetings.session.CreateAttendeeResponse
 import com.amazonaws.services.chime.sdk.meetings.session.CreateMeetingResponse
@@ -28,15 +29,20 @@ import com.amazonaws.services.chime.sdkdemo.activity.HomeActivity.Companion.MEET
 import com.amazonaws.services.chime.sdkdemo.activity.HomeActivity.Companion.NAME_KEY
 import com.amazonaws.services.chime.sdkdemo.activity.MeetingActivity
 import com.amazonaws.services.chime.sdkdemo.data.JoinMeetingResponse
+import com.amazonaws.services.chime.sdkdemo.data.RosterAttendee
+import com.amazonaws.services.chime.sdkdemo.utils.AttendeeUtils
 import com.google.gson.Gson
+import java.util.concurrent.ConcurrentHashMap
 
 class MeetingService : Service() {
-    private val CHANNEL_ID = "FS"
+    private val CHANNEL_ID = "MS"
     private val gson = Gson()
     private val TAG = "MeetingService"
     private val logger = ConsoleLogger()
     var audioVideo: AudioVideoFacade? = null
     var credentials: MeetingSessionCredentials? = null
+    private val _attendees = ConcurrentHashMap<String, RosterAttendee>()
+    val attendees get() = _attendees
 
     private val binder = MeetingBinder()
 
@@ -99,10 +105,11 @@ class MeetingService : Service() {
             0, notificationIntent, 0
         )
         val notification = NotificationCompat.Builder(this, CHANNEL_ID)
-            .setContentTitle("Foreground Service Kotlin Example")
-            .setSmallIcon(android.R.drawable.ic_notification_overlay)
+            .setContentTitle("Meeting $meetingId")
+            .setSmallIcon(android.R.drawable.ic_media_play)
             .setContentIntent(pendingIntent)
             .build()
+        // this id can be anything other than 0
         startForeground(1, notification)
         return START_NOT_STICKY
     }
@@ -114,11 +121,11 @@ class MeetingService : Service() {
     private fun createNotificationChannel() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val serviceChannel = NotificationChannel(
-                CHANNEL_ID, "Foreground Service Channel",
+                CHANNEL_ID, "Meeting Service Channel",
                 NotificationManager.IMPORTANCE_DEFAULT
             )
             val manager = getSystemService(NotificationManager::class.java)
-            manager!!.createNotificationChannel(serviceChannel)
+            manager?.createNotificationChannel(serviceChannel)
         }
     }
 
@@ -150,5 +157,26 @@ class MeetingService : Service() {
     private fun urlRewriter(url: String): String {
         // You can change urls by url.replace("example.com", "my.example.com")
         return url
+    }
+
+    fun onAttendeesJoined(attendeeInfo: Array<AttendeeInfo>) {
+        attendeeInfo.forEach { (attendeeId, externalUserId) ->
+            _attendees.getOrPut(
+                attendeeId,
+                {
+                    RosterAttendee(
+                        attendeeId,
+                        AttendeeUtils.getAttendeeName(attendeeId, externalUserId)
+                    )
+                })
+        }
+    }
+
+    fun onAttendeesRemoved(attendeeInfo: Array<AttendeeInfo>) {
+        attendeeInfo.forEach { (attendeeId, _) ->
+            _attendees.remove(
+                attendeeId
+            )
+        }
     }
 }

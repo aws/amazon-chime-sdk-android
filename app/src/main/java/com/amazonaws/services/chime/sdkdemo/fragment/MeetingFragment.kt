@@ -60,9 +60,11 @@ import com.amazonaws.services.chime.sdkdemo.data.MetricData
 import com.amazonaws.services.chime.sdkdemo.data.RosterAttendee
 import com.amazonaws.services.chime.sdkdemo.data.VideoCollectionTile
 import com.amazonaws.services.chime.sdkdemo.model.MeetingModel
+import com.amazonaws.services.chime.sdkdemo.utils.AttendeeUtils
 import com.amazonaws.services.chime.sdkdemo.utils.isLandscapeMode
 import com.google.android.material.tabs.TabLayout
 import java.util.Calendar
+import java.util.concurrent.ConcurrentHashMap
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -80,6 +82,7 @@ class MeetingFragment : Fragment(),
     private lateinit var credentials: MeetingSessionCredentials
     private lateinit var audioVideo: AudioVideoFacade
     private lateinit var listener: RosterViewEventListener
+    private lateinit var roster: ConcurrentHashMap<String, RosterAttendee>
     override val scoreCallbackIntervalMs: Int? get() = 1000
 
     private val MAX_TILE_COUNT = 4
@@ -88,11 +91,8 @@ class MeetingFragment : Fragment(),
     private val TAG = "MeetingFragment"
 
     // Check if attendee Id contains this at the end to identify content share
-    private val CONTENT_DELIMITER = "#content"
 
     // Append to attendee name if it's for content share
-    private val CONTENT_NAME_SUFFIX = "<<Content>>"
-
     private val WEBRTC_PERM = arrayOf(
         Manifest.permission.CAMERA
     )
@@ -138,6 +138,8 @@ class MeetingFragment : Fragment(),
 
     interface RosterViewEventListener {
         fun onLeaveMeeting()
+        fun onAttendeeAdded(attendeeInfo: Array<AttendeeInfo>)
+        fun onAttendeeRemoved(attendeeInfo: Array<AttendeeInfo>)
     }
 
     override fun onAttach(context: Context) {
@@ -161,6 +163,7 @@ class MeetingFragment : Fragment(),
 
         credentials = (activity as MeetingActivity).getMeetingSessionCredentials()
         audioVideo = activity.getAudioVideo()
+        roster = activity.getMeetingAttendeeList()
 
         view.findViewById<TextView>(R.id.textViewMeetingId)?.text = arguments?.getString(
             HomeActivity.MEETING_ID_KEY
@@ -198,7 +201,7 @@ class MeetingFragment : Fragment(),
         // Roster
         recyclerViewRoster = view.findViewById(R.id.recyclerViewRoster)
         recyclerViewRoster.layoutManager = LinearLayoutManager(activity)
-        rosterAdapter = RosterAdapter(meetingModel.currentRoster.values)
+        rosterAdapter = RosterAdapter(roster.values)
         recyclerViewRoster.adapter = rosterAdapter
         recyclerViewRoster.visibility = View.VISIBLE
 
@@ -357,106 +360,82 @@ class MeetingFragment : Fragment(),
 
     override fun onVolumeChanged(volumeUpdates: Array<VolumeUpdate>) {
         uiScope.launch {
-            mutex.withLock {
-                volumeUpdates.forEach { (attendeeInfo, volumeLevel) ->
-                    meetingModel.currentRoster[attendeeInfo.attendeeId]?.let {
-                        meetingModel.currentRoster[attendeeInfo.attendeeId] =
-                            RosterAttendee(
-                                it.attendeeId,
-                                it.attendeeName,
-                                volumeLevel,
-                                it.signalStrength,
-                                it.isActiveSpeaker
-                            )
-                    }
+            volumeUpdates.forEach { (attendeeInfo, volumeLevel) ->
+                roster[attendeeInfo.attendeeId]?.let {
+                    roster[attendeeInfo.attendeeId] =
+                        RosterAttendee(
+                            it.attendeeId,
+                            it.attendeeName,
+                            volumeLevel,
+                            it.signalStrength,
+                            it.isActiveSpeaker
+                        )
                 }
-
-                rosterAdapter.notifyDataSetChanged()
             }
+
+            rosterAdapter.notifyDataSetChanged()
         }
     }
 
     override fun onSignalStrengthChanged(signalUpdates: Array<SignalUpdate>) {
         uiScope.launch {
-            mutex.withLock {
-                signalUpdates.forEach { (attendeeInfo, signalStrength) ->
-                    logWithFunctionName(
-                        "onSignalStrengthChanged",
-                        "${attendeeInfo.externalUserId} $signalStrength",
-                        LogLevel.DEBUG
-                    )
-                    meetingModel.currentRoster[attendeeInfo.attendeeId]?.let {
-                        meetingModel.currentRoster[attendeeInfo.attendeeId] =
-                            RosterAttendee(
-                                it.attendeeId,
-                                it.attendeeName,
-                                it.volumeLevel,
-                                signalStrength,
-                                it.isActiveSpeaker
-                            )
-                    }
+            signalUpdates.forEach { (attendeeInfo, signalStrength) ->
+                logWithFunctionName(
+                    "onSignalStrengthChanged",
+                    "${attendeeInfo.externalUserId} $signalStrength",
+                    LogLevel.DEBUG
+                )
+                roster[attendeeInfo.attendeeId]?.let {
+                    roster[attendeeInfo.attendeeId] =
+                        RosterAttendee(
+                            it.attendeeId,
+                            it.attendeeName,
+                            it.volumeLevel,
+                            signalStrength,
+                            it.isActiveSpeaker
+                        )
                 }
-
-                rosterAdapter.notifyDataSetChanged()
             }
+
+            rosterAdapter.notifyDataSetChanged()
         }
     }
 
     override fun onAttendeesJoined(attendeeInfo: Array<AttendeeInfo>) {
         uiScope.launch {
-            mutex.withLock {
-                attendeeInfo.forEach { (attendeeId, externalUserId) ->
-                    meetingModel.currentRoster.getOrPut(
-                        attendeeId,
-                        {
-                            RosterAttendee(
-                                attendeeId,
-                                getAttendeeName(attendeeId, externalUserId)
-                            )
-                        })
-                }
-
-                rosterAdapter.notifyDataSetChanged()
-            }
+            listener.onAttendeeAdded(attendeeInfo)
+            rosterAdapter.notifyDataSetChanged()
         }
     }
 
     override fun onAttendeesLeft(attendeeInfo: Array<AttendeeInfo>) {
         uiScope.launch {
-            mutex.withLock {
-                attendeeInfo.forEach { (attendeeId, _) ->
-                    meetingModel.currentRoster.remove(
-                        attendeeId
-                    )
-                }
-
-                rosterAdapter.notifyDataSetChanged()
-            }
+            listener.onAttendeeRemoved(attendeeInfo)
+            rosterAdapter.notifyDataSetChanged()
         }
     }
 
     override fun onAttendeesDropped(attendeeInfo: Array<AttendeeInfo>) {
         attendeeInfo.forEach { (_, externalUserId) ->
             notifyHandler("$externalUserId dropped")
-            logWithFunctionName(object {}.javaClass.enclosingMethod?.name, "$externalUserId dropped")
+            logWithFunctionName(
+                object {}.javaClass.enclosingMethod?.name,
+                "$externalUserId dropped"
+            )
         }
 
         uiScope.launch {
-            mutex.withLock {
-                attendeeInfo.forEach { (attendeeId, _) ->
-                    meetingModel.currentRoster.remove(
-                        attendeeId
-                    )
-                }
-
-                rosterAdapter.notifyDataSetChanged()
-            }
+            listener.onAttendeeRemoved(attendeeInfo)
+            rosterAdapter.notifyDataSetChanged()
         }
     }
 
     override fun onAttendeesMuted(attendeeInfo: Array<AttendeeInfo>) {
         attendeeInfo.forEach { (attendeeId, externalUserId) ->
-            logWithFunctionName(object {}.javaClass.enclosingMethod?.name, "Attendee with attendeeId $attendeeId and externalUserId $externalUserId muted")
+            logWithFunctionName(
+                object {}.javaClass.enclosingMethod?.name,
+                "Attendee with attendeeId $attendeeId and externalUserId $externalUserId muted"
+            )
         }
     }
 
@@ -474,9 +453,9 @@ class MeetingFragment : Fragment(),
             mutex.withLock {
                 var needUpdate = false
                 val activeSpeakers = attendeeInfo.map { it.attendeeId }.toSet()
-                meetingModel.currentRoster.values.forEach { attendee ->
+                roster.values.forEach { attendee ->
                     if (activeSpeakers.contains(attendee.attendeeId) != attendee.isActiveSpeaker) {
-                        meetingModel.currentRoster[attendee.attendeeId] =
+                        roster[attendee.attendeeId] =
                             RosterAttendee(
                                 attendee.attendeeId,
                                 attendee.attendeeName,
@@ -503,16 +482,6 @@ class MeetingFragment : Fragment(),
             scoresStr,
             LogLevel.DEBUG
         )
-    }
-
-    private fun getAttendeeName(attendeeId: String, externalUserId: String): String {
-        val attendeeName = externalUserId.split('#')[1]
-
-        return if (attendeeId.endsWith(CONTENT_DELIMITER)) {
-            "$attendeeName $CONTENT_NAME_SUFFIX"
-        } else {
-            attendeeName
-        }
     }
 
     private fun toggleMute() {
@@ -786,20 +755,26 @@ class MeetingFragment : Fragment(),
     override fun onVideoTilePaused(tileState: VideoTileState) {
         if (tileState.pauseState == VideoPauseState.PausedForPoorConnection) {
             val attendeeName =
-                meetingModel.currentRoster[tileState.attendeeId]?.attendeeName ?: ""
+                roster[tileState.attendeeId]?.attendeeName ?: ""
             notifyHandler(
                 "Video for attendee $attendeeName " +
                         " has been paused for poor network connection," +
                         " video will automatically resume when connection improves"
             )
-            logWithFunctionName(object {}.javaClass.enclosingMethod?.name, "$attendeeName video paused")
+            logWithFunctionName(
+                object {}.javaClass.enclosingMethod?.name,
+                "$attendeeName video paused"
+            )
         }
     }
 
     override fun onVideoTileResumed(tileState: VideoTileState) {
-        val attendeeName = meetingModel.currentRoster[tileState.attendeeId]?.attendeeName ?: ""
+        val attendeeName = roster[tileState.attendeeId]?.attendeeName ?: ""
         notifyHandler("Video for attendee $attendeeName has been unpaused")
-        logWithFunctionName(object {}.javaClass.enclosingMethod?.name, "$attendeeName video resumed")
+        logWithFunctionName(
+            object {}.javaClass.enclosingMethod?.name,
+            "$attendeeName video resumed"
+        )
     }
 
     override fun onVideoTileSizeChanged(tileState: VideoTileState) {
@@ -850,7 +825,10 @@ class MeetingFragment : Fragment(),
             meetingModel.lastReceivedMessageTimestamp = dataMessage.timestampMs
             meetingModel.currentMessages.add(
                 Message(
-                    getAttendeeName(dataMessage.senderAttendeeId, dataMessage.senderExternalUserId),
+                    AttendeeUtils.getAttendeeName(
+                        dataMessage.senderAttendeeId,
+                        dataMessage.senderExternalUserId
+                    ),
                     dataMessage.timestampMs,
                     dataMessage.text(),
                     dataMessage.senderAttendeeId == credentials.attendeeId

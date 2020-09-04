@@ -9,13 +9,11 @@ import androidx.lifecycle.ViewModel
 import com.amazonaws.services.chime.sdk.meetings.device.MediaDevice
 import com.amazonaws.services.chime.sdkdemo.data.Message
 import com.amazonaws.services.chime.sdkdemo.data.MetricData
-import com.amazonaws.services.chime.sdkdemo.data.RosterAttendee
 import com.amazonaws.services.chime.sdkdemo.data.VideoCollectionTile
 
 // This will be used for keeping state after rotation
 class MeetingModel : ViewModel() {
     val currentMetrics = mutableMapOf<String, MetricData>()
-    val currentRoster = mutableMapOf<String, RosterAttendee>()
     val currentVideoTiles = mutableMapOf<Int, VideoCollectionTile>()
     val currentScreenTiles = mutableMapOf<Int, VideoCollectionTile>()
     val nextVideoTiles = LinkedHashMap<Int, VideoCollectionTile>()

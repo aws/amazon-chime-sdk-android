@@ -12,14 +12,17 @@ import android.content.ServiceConnection
 import android.os.Bundle
 import android.os.IBinder
 import androidx.appcompat.app.AppCompatActivity
+import com.amazonaws.services.chime.sdk.meetings.audiovideo.AttendeeInfo
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.AudioVideoFacade
 import com.amazonaws.services.chime.sdk.meetings.session.MeetingSessionCredentials
 import com.amazonaws.services.chime.sdk.meetings.utils.logger.ConsoleLogger
 import com.amazonaws.services.chime.sdk.meetings.utils.logger.LogLevel
 import com.amazonaws.services.chime.sdkdemo.MeetingService
 import com.amazonaws.services.chime.sdkdemo.R
+import com.amazonaws.services.chime.sdkdemo.data.RosterAttendee
 import com.amazonaws.services.chime.sdkdemo.fragment.DeviceManagementFragment
 import com.amazonaws.services.chime.sdkdemo.fragment.MeetingFragment
+import java.util.concurrent.ConcurrentHashMap
 
 class MeetingActivity : AppCompatActivity(),
     DeviceManagementFragment.DeviceManagementEventListener,
@@ -41,12 +44,15 @@ class MeetingActivity : AppCompatActivity(),
             val binder = service as MeetingService.MeetingBinder
             mService = binder.getService()
             mBound = true
-            mService.audioVideo?.startRemoteVideo()
-            val rosterViewFragment = MeetingFragment.newInstance(meetingId)
-            supportFragmentManager
-                .beginTransaction()
-                .replace(R.id.root_layout, rosterViewFragment, "rosterViewFragment")
-                .commit()
+            mService.audioVideo?.let {
+                mService.audioVideo?.startRemoteVideo()
+
+                val rosterViewFragment = MeetingFragment.newInstance(meetingId)
+                supportFragmentManager
+                    .beginTransaction()
+                    .replace(R.id.root_layout, rosterViewFragment, "rosterViewFragment")
+                    .commit()
+            }
         }
     }
     private val TAG = "InMeetingActivity"
@@ -56,7 +62,6 @@ class MeetingActivity : AppCompatActivity(),
         setContentView(R.layout.activity_meeting)
         meetingId = intent.getStringExtra(HomeActivity.MEETING_ID_KEY) as String
         name = intent.getStringExtra(HomeActivity.NAME_KEY) as String
-        logger.info(TAG, "Nick: onCreate")
     }
 
     override fun onJoinMeetingClicked() {
@@ -71,31 +76,46 @@ class MeetingActivity : AppCompatActivity(),
         onBackPressed()
     }
 
-    override fun onBackPressed() {
-        mService.audioVideo?.stop()
+    override fun onAttendeeAdded(attendeeInfo: Array<AttendeeInfo>) {
+        if (mBound) {
+            mService.onAttendeesJoined(attendeeInfo)
+        }
+    }
+
+    override fun onAttendeeRemoved(attendeeInfo: Array<AttendeeInfo>) {
+        if (mBound) {
+            mService.onAttendeesRemoved(attendeeInfo)
+        }
+    }
+
+    private fun stopAudioVideoAndUnbindService() {
+        mService.audioVideo?.stopRemoteVideo()
+        mService.audioVideo?.stopLocalVideo()
         unbindService(connection)
-        MeetingService.stopService(this)
+    }
+
+    override fun onBackPressed() {
+        if (mBound) {
+            stopAudioVideoAndUnbindService()
+            MeetingService.stopService(this)
+            mBound = false
+        }
         super.onBackPressed()
     }
 
+    // TODO: fix force casting
     fun getAudioVideo(): AudioVideoFacade = mService.audioVideo!!
 
     fun getMeetingSessionCredentials(): MeetingSessionCredentials = mService.credentials!!
 
+    fun getMeetingAttendeeList(): ConcurrentHashMap<String, RosterAttendee> = mService.attendees
+
     override fun onStop() {
         super.onStop()
         if (mBound) {
-            logger.info(TAG, "stopping remote video")
-            mService.audioVideo?.stopRemoteVideo()
-            mService.audioVideo?.stopLocalVideo()
-            unbindService(connection)
+            stopAudioVideoAndUnbindService()
             mBound = false
         }
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        logger.info(TAG, "onDestroy")
     }
 
     override fun onStart() {
@@ -106,6 +126,5 @@ class MeetingActivity : AppCompatActivity(),
         if (mBound) {
             mService.audioVideo?.startRemoteVideo()
         }
-        logger.info(TAG, "onStart")
     }
 }
