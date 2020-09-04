@@ -90,6 +90,7 @@ class MeetingService : Service() {
         audioVideo = meetingSession?.audioVideo
         audioVideo?.start()
         audioVideo?.startRemoteVideo()
+        // TODO: instead of choosing speaker / need to have page for device
         val mediaDevice = audioVideo?.listAudioDevices()
         mediaDevice?.let {
             audioVideo?.chooseAudioDevice(it[1])
@@ -111,7 +112,7 @@ class MeetingService : Service() {
             .build()
         // this id can be anything other than 0
         startForeground(1, notification)
-        return START_NOT_STICKY
+        return START_STICKY
     }
 
     override fun onBind(intent: Intent): IBinder? {

@@ -603,7 +603,7 @@ class MeetingFragment : Fragment(),
 
     private fun createVideoCollectionTile(tileState: VideoTileState): VideoCollectionTile {
         val attendeeId = tileState.attendeeId
-        val attendeeName = meetingModel.currentRoster[attendeeId]?.attendeeName ?: ""
+        val attendeeName = roster[attendeeId]?.attendeeName ?: ""
         return VideoCollectionTile(attendeeName, tileState)
     }
 
