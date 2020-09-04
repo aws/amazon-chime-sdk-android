@@ -1,3 +1,8 @@
+## Unreleased
+
+### Changed
+* Replace usage of GlobalScope with structured concurrency 
+
 ## [0.7.2] - 2020-09-01
 
 ### Fixed
