@@ -1,7 +1,9 @@
 ## Unreleased
+### Fixed
+* Pass correct value for audio client in `DefaultAudioClientController`
 
 ### Changed
-* Replace usage of GlobalScope with structured concurrency 
+* Replace usage of GlobalScope with structured concurrency
 
 ## [0.7.2] - 2020-09-01
 
