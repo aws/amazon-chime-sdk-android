@@ -74,7 +74,7 @@ class DefaultAudioClientController(
 
         audioClient.sendMessage(AudioClient.MESS_SET_MIC_FRAMES_PER_BUFFER, micMinBufSizeInSamples)
         audioClient.sendMessage(AudioClient.MESS_SET_SPK_FRAMES_PER_BUFFER, spkMinBufSizeInSamples)
-        audioClient.sendMessage(AudioClient.MESS_SET_SPEAKERPHONE_MIC, 2)
+        audioClient.sendMessage(AudioClient.MESS_SET_SPEAKERPHONE_MIC, AudioClient.OPENSL_MIC_DEFAULT)
         audioClient.sendMessage(AudioClient.MESS_SET_CVP_MODULE_FLAG, AudioClient.CVP_MODULE_NONE)
         audioClient.sendMessage(AudioClient.MESS_SET_CVP_PREF_FLAG, AudioClient.CVP_PREF_NONE)
     }
