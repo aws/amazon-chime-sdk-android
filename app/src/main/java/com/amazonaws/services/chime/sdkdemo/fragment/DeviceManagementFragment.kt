@@ -24,7 +24,6 @@ import com.amazonaws.services.chime.sdk.meetings.utils.logger.ConsoleLogger
 import com.amazonaws.services.chime.sdk.meetings.utils.logger.LogLevel
 import com.amazonaws.services.chime.sdkdemo.R
 import com.amazonaws.services.chime.sdkdemo.activity.HomeActivity
-import com.amazonaws.services.chime.sdkdemo.activity.MeetingActivity
 import java.lang.ClassCastException
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -82,7 +81,6 @@ class DeviceManagementFragment : Fragment(),
 
         val meetingId = arguments?.getString(HomeActivity.MEETING_ID_KEY)
         val name = arguments?.getString(HomeActivity.NAME_KEY)
-        audioVideo = (activity as MeetingActivity).getAudioVideo()
 
         val displayedText = getString(R.string.preview_meeting_info, meetingId, name)
         view.findViewById<TextView>(R.id.textViewMeetingPreview)?.text = displayedText

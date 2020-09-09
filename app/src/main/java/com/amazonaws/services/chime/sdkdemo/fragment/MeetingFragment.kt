@@ -7,9 +7,13 @@ package com.amazonaws.services.chime.sdkdemo.fragment
 
 import android.Manifest
 import android.app.AlertDialog
+import android.content.ComponentName
 import android.content.Context
+import android.content.Intent
+import android.content.ServiceConnection
 import android.content.pm.PackageManager
 import android.os.Bundle
+import android.os.IBinder
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -20,6 +24,7 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.core.content.ContextCompat
+import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -47,9 +52,9 @@ import com.amazonaws.services.chime.sdk.meetings.session.MeetingSessionStatus
 import com.amazonaws.services.chime.sdk.meetings.session.MeetingSessionStatusCode
 import com.amazonaws.services.chime.sdk.meetings.utils.logger.ConsoleLogger
 import com.amazonaws.services.chime.sdk.meetings.utils.logger.LogLevel
+import com.amazonaws.services.chime.sdkdemo.MeetingService
 import com.amazonaws.services.chime.sdkdemo.R
 import com.amazonaws.services.chime.sdkdemo.activity.HomeActivity
-import com.amazonaws.services.chime.sdkdemo.activity.MeetingActivity
 import com.amazonaws.services.chime.sdkdemo.adapter.DeviceAdapter
 import com.amazonaws.services.chime.sdkdemo.adapter.MessageAdapter
 import com.amazonaws.services.chime.sdkdemo.adapter.MetricAdapter
@@ -59,6 +64,7 @@ import com.amazonaws.services.chime.sdkdemo.data.Message
 import com.amazonaws.services.chime.sdkdemo.data.MetricData
 import com.amazonaws.services.chime.sdkdemo.data.RosterAttendee
 import com.amazonaws.services.chime.sdkdemo.data.VideoCollectionTile
+import com.amazonaws.services.chime.sdkdemo.databinding.FragmentMeetingBinding
 import com.amazonaws.services.chime.sdkdemo.model.MeetingModel
 import com.amazonaws.services.chime.sdkdemo.utils.AttendeeUtils
 import com.amazonaws.services.chime.sdkdemo.utils.isLandscapeMode
@@ -89,7 +95,31 @@ class MeetingFragment : Fragment(),
     private val LOCAL_TILE_ID = 0
     private val WEBRTC_PERMISSION_REQUEST_CODE = 1
     private val TAG = "MeetingFragment"
+    private lateinit var mService: MeetingService
+    private var mBound = false
 
+    private val connection = object : ServiceConnection {
+        override fun onServiceDisconnected(name: ComponentName?) {
+            mBound = false
+        }
+
+        override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
+            val binder = service as MeetingService.MeetingBinder
+            mService = binder.getService()
+            mBound = true
+            if (mService.audioVideo != null && mService.credentials != null) {
+                audioVideo = mService.audioVideo as AudioVideoFacade
+                credentials = mService.credentials as MeetingSessionCredentials
+                roster = mService.attendees
+                setupButtonsBar()
+                setupSubViews()
+                setupTab()
+                setupAudioDeviceSelectionDialog()
+                selectTab(meetingModel.tabIndex)
+                subscribeToAttendeeChangeHandlers()
+            }
+        }
+    }
     // Check if attendee Id contains this at the end to identify content share
 
     // Append to attendee name if it's for content share
@@ -125,6 +155,7 @@ class MeetingFragment : Fragment(),
     private lateinit var screenTileAdapter: VideoAdapter
     private lateinit var messageAdapter: MessageAdapter
     private lateinit var tabLayout: TabLayout
+    private lateinit var binding: FragmentMeetingBinding
 
     companion object {
         fun newInstance(meetingId: String): MeetingFragment {
@@ -138,8 +169,6 @@ class MeetingFragment : Fragment(),
 
     interface RosterViewEventListener {
         fun onLeaveMeeting()
-        fun onAttendeeAdded(attendeeInfo: Array<AttendeeInfo>)
-        fun onAttendeeRemoved(attendeeInfo: Array<AttendeeInfo>)
     }
 
     override fun onAttach(context: Context) {
@@ -158,56 +187,47 @@ class MeetingFragment : Fragment(),
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val view: View = inflater.inflate(R.layout.fragment_meeting, container, false)
-        val activity = activity as Context
+        binding =
+            DataBindingUtil.inflate(layoutInflater, R.layout.fragment_meeting, container, false)
 
-        credentials = (activity as MeetingActivity).getMeetingSessionCredentials()
-        audioVideo = activity.getAudioVideo()
-        roster = activity.getMeetingAttendeeList()
-
-        view.findViewById<TextView>(R.id.textViewMeetingId)?.text = arguments?.getString(
+        binding.textViewMeetingId.text = arguments?.getString(
             HomeActivity.MEETING_ID_KEY
         ) as String
-        setupButtonsBar(view)
-        setupSubViews(view)
-        setupTab(view)
-        setupAudioDeviceSelectionDialog()
-
-        noVideoOrScreenShareAvailable = view.findViewById(R.id.noVideoOrScreenShareAvailable)
+        noVideoOrScreenShareAvailable = binding.noVideoOrScreenShareAvailable
         refreshNoVideosOrScreenShareAvailableText()
-
-        selectTab(meetingModel.tabIndex)
-        subscribeToAttendeeChangeHandlers()
-        return view
+        return binding.root
     }
 
-    private fun setupButtonsBar(view: View) {
-        buttonMute = view.findViewById(R.id.buttonMute)
+    private fun setupButtonsBar() {
+        buttonMute = binding.buttonMute
         buttonMute.setImageResource(if (meetingModel.isMuted) R.drawable.button_mute_on else R.drawable.button_mute)
         buttonMute.setOnClickListener { toggleMute() }
 
-        buttonCamera = view.findViewById(R.id.buttonCamera)
+        buttonCamera = binding.buttonCamera
         buttonCamera.setImageResource(if (meetingModel.isCameraOn) R.drawable.button_camera_on else R.drawable.button_camera)
         buttonCamera.setOnClickListener { toggleVideo() }
 
-        view.findViewById<ImageButton>(R.id.buttonSpeaker)
-            ?.setOnClickListener { toggleSpeaker() }
-
-        view.findViewById<ImageButton>(R.id.buttonLeave)
-            ?.setOnClickListener { listener.onLeaveMeeting() }
+        binding.buttonSpeaker.setOnClickListener { toggleSpeaker() }
+        binding.buttonLeave.setOnClickListener {
+            if (mBound) {
+                stopAudioVideoAndUnbindService()
+                MeetingService.stopService(requireContext())
+                mBound = false
+            }
+            listener.onLeaveMeeting()
+        }
     }
 
-    private fun setupSubViews(view: View) {
+    private fun setupSubViews() {
         // Roster
-        recyclerViewRoster = view.findViewById(R.id.recyclerViewRoster)
+        recyclerViewRoster = binding.recyclerViewRoster
         recyclerViewRoster.layoutManager = LinearLayoutManager(activity)
         rosterAdapter = RosterAdapter(roster.values)
         recyclerViewRoster.adapter = rosterAdapter
         recyclerViewRoster.visibility = View.VISIBLE
 
         // Video (camera & content)
-        recyclerViewVideoCollection =
-            view.findViewById(R.id.recyclerViewVideoCollection)
+        recyclerViewVideoCollection = binding.recyclerViewVideoCollection
         recyclerViewVideoCollection.layoutManager = createLinearLayoutManagerForOrientation()
         videoTileAdapter = VideoAdapter(
             meetingModel.currentVideoTiles.values,
@@ -218,7 +238,7 @@ class MeetingFragment : Fragment(),
         recyclerViewVideoCollection.visibility = View.GONE
 
         recyclerViewScreenShareCollection =
-            view.findViewById(R.id.recyclerViewScreenShareCollection)
+            binding.recyclerViewScreenShareCollection
         recyclerViewScreenShareCollection.layoutManager = LinearLayoutManager(activity)
         screenTileAdapter =
             VideoAdapter(
@@ -229,20 +249,20 @@ class MeetingFragment : Fragment(),
         recyclerViewScreenShareCollection.adapter = screenTileAdapter
         recyclerViewScreenShareCollection.visibility = View.GONE
 
-        recyclerViewMetrics = view.findViewById(R.id.recyclerViewMetrics)
+        recyclerViewMetrics = binding.recyclerViewMetrics
         recyclerViewMetrics.layoutManager = LinearLayoutManager(activity)
         metricsAdapter = MetricAdapter(meetingModel.currentMetrics.values)
         recyclerViewMetrics.adapter = metricsAdapter
         recyclerViewMetrics.visibility = View.GONE
 
         // Chat
-        viewChat = view.findViewById(R.id.subViewChat)
-        recyclerViewMessages = view.findViewById(R.id.recyclerViewMessages)
+        viewChat = binding.subViewChat
+        recyclerViewMessages = binding.recyclerViewMessages
         recyclerViewMessages.layoutManager = LinearLayoutManager(activity)
         messageAdapter = MessageAdapter(meetingModel.currentMessages)
         recyclerViewMessages.adapter = messageAdapter
 
-        editTextMessage = view.findViewById(R.id.editTextChatBox)
+        editTextMessage = binding.editTextChatBox
         editTextMessage.setOnEditorActionListener { _, actionId, _ ->
             return@setOnEditorActionListener when (actionId) {
                 EditorInfo.IME_ACTION_SEND -> {
@@ -252,15 +272,15 @@ class MeetingFragment : Fragment(),
                 else -> false
             }
         }
-        view.findViewById<ImageButton>(R.id.buttonSubmitMessage)?.let {
+        binding.buttonSubmitMessage.let {
             it.setOnClickListener { sendMessage() }
         }
 
         viewChat.visibility = View.GONE
     }
 
-    private fun setupTab(view: View) {
-        tabLayout = view.findViewById(R.id.tabLayoutMeetingView)
+    private fun setupTab() {
+        tabLayout = binding.tabLayoutMeetingView
         SubTab.values().forEach {
             tabLayout.addTab(
                 tabLayout.newTab().setText(it.name).setContentDescription("${it.name} Tab")
@@ -268,6 +288,7 @@ class MeetingFragment : Fragment(),
         }
         tabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
             override fun onTabSelected(tab: TabLayout.Tab?) {
+                if (tab?.position == SubTab.Video.position || tab?.position == SubTab.Screen.position) audioVideo.startRemoteVideo()
                 showViewAt(tab?.position ?: SubTab.Attendees.position)
             }
 
@@ -276,7 +297,7 @@ class MeetingFragment : Fragment(),
 
             override fun onTabUnselected(tab: TabLayout.Tab?) {
                 if (tab?.position == SubTab.Video.position || tab?.position == SubTab.Screen.position)
-                    (activity as MeetingActivity).getAudioVideo().stopRemoteVideo()
+                    audioVideo.stopRemoteVideo()
             }
         })
     }
@@ -329,7 +350,8 @@ class MeetingFragment : Fragment(),
         deviceListAdapter = DeviceAdapter(
             requireContext(),
             android.R.layout.simple_list_item_1,
-            meetingModel.currentMediaDevices)
+            meetingModel.currentMediaDevices
+        )
         deviceAlertDialogBuilder = AlertDialog.Builder(activity)
         deviceAlertDialogBuilder.setTitle(R.string.alert_title_choose_audio)
         deviceAlertDialogBuilder.setNegativeButton(R.string.cancel) { dialog, _ ->
@@ -403,14 +425,14 @@ class MeetingFragment : Fragment(),
 
     override fun onAttendeesJoined(attendeeInfo: Array<AttendeeInfo>) {
         uiScope.launch {
-            listener.onAttendeeAdded(attendeeInfo)
+            mService.onAttendeesJoined(attendeeInfo)
             rosterAdapter.notifyDataSetChanged()
         }
     }
 
     override fun onAttendeesLeft(attendeeInfo: Array<AttendeeInfo>) {
         uiScope.launch {
-            listener.onAttendeeRemoved(attendeeInfo)
+            mService.onAttendeesRemoved(attendeeInfo)
             rosterAdapter.notifyDataSetChanged()
         }
     }
@@ -425,7 +447,7 @@ class MeetingFragment : Fragment(),
         }
 
         uiScope.launch {
-            listener.onAttendeeRemoved(attendeeInfo)
+            mService.onAttendeesRemoved(attendeeInfo)
             rosterAdapter.notifyDataSetChanged()
         }
     }
@@ -891,6 +913,29 @@ class MeetingFragment : Fragment(),
 
     override fun onDestroy() {
         super.onDestroy()
-        unsubscribeFromAttendeeChangeHandlers()
+        if (mBound) {
+            unsubscribeFromAttendeeChangeHandlers()
+        }
+    }
+
+    override fun onStart() {
+        super.onStart()
+        Intent(context, MeetingService::class.java).also { intent ->
+            activity?.bindService(intent, connection, Context.BIND_AUTO_CREATE)
+        }
+    }
+
+    override fun onStop() {
+        super.onStop()
+        if (mBound) {
+            stopAudioVideoAndUnbindService()
+            mBound = false
+        }
+    }
+
+    private fun stopAudioVideoAndUnbindService() {
+        mService.audioVideo?.stopRemoteVideo()
+        mService.audioVideo?.stopLocalVideo()
+        activity?.unbindService(connection)
     }
 }

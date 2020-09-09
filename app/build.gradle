@@ -9,6 +9,7 @@ apply plugin: 'kotlin-android'
 
 apply plugin: 'kotlin-android-extensions'
 
+
 android {
     compileSdkVersion project.ext.chimeCompileSdkVersion
     buildToolsVersion project.ext.chimeBuildToolsVersion
@@ -28,6 +29,9 @@ android {
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
+    }
+    buildFeatures {
+        dataBinding true
     }
 }
 
