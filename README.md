@@ -40,7 +40,7 @@ For the purpose of setup, your project's root folder will be referred to as `roo
 
 Download the following zips:
 
-* [amazon-chime-sdk-0.7.2.tar.gz](https://amazon-chime-sdk-android.s3.amazonaws.com/sdk/0.7.2/amazon-chime-sdk-0.7.2.tar.gz)
+* [amazon-chime-sdk-0.7.3.tar.gz](https://amazon-chime-sdk-android.s3.amazonaws.com/sdk/0.7.3/amazon-chime-sdk-0.7.3.tar.gz)
 * [amazon-chime-sdk-media-0.6.2.tar.gz](https://amazon-chime-sdk-android.s3.amazonaws.com/media/0.6.2/amazon-chime-sdk-media-0.6.2.tar.gz)
 
 Unzip them and copy the aar files to `root/app/libs`
