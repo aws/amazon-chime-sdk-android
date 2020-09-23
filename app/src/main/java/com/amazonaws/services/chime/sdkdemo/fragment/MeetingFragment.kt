@@ -82,7 +82,7 @@ class MeetingFragment : Fragment(),
     private lateinit var listener: RosterViewEventListener
     override val scoreCallbackIntervalMs: Int? get() = 1000
 
-    private val MAX_TILE_COUNT = 4
+    private val MAX_TILE_COUNT = 16
     private val LOCAL_TILE_ID = 0
     private val WEBRTC_PERMISSION_REQUEST_CODE = 1
     private val TAG = "MeetingFragment"
