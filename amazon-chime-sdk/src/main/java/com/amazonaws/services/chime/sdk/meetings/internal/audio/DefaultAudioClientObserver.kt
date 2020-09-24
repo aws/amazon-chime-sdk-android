@@ -58,6 +58,8 @@ class DefaultAudioClientObserver(
     private var currentAttendeeSignalMap = mapOf<String, SignalUpdate>()
 
     override fun onAudioClientStateChange(newInternalAudioState: Int, newInternalAudioStatus: Int) {
+        logger.verbose(TAG, "AudioClient State: $newInternalAudioState Status: $newInternalAudioStatus")
+
         val newAudioState: SessionStateControllerAction = toAudioClientState(newInternalAudioState)
         val newAudioStatus: MeetingSessionStatusCode? = toAudioStatus(newInternalAudioStatus)
 
