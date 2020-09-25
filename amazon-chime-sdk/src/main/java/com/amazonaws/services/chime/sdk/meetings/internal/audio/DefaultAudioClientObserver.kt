@@ -62,7 +62,7 @@ class DefaultAudioClientObserver(
         val newAudioStatus: MeetingSessionStatusCode? = toAudioStatus(newInternalAudioStatus)
 
         if (newAudioStatus == null) {
-            logger.warn(TAG, "AudioClient State: $newAudioState Unknown Status raw value: $newInternalAudioStatus")
+            logger.warn(TAG, "AudioClient State raw value: $newInternalAudioState Unknown Status raw value: $newInternalAudioStatus")
         } else {
             logger.info(TAG, "AudioClient State: $newAudioState Status: $newAudioStatus")
         }
