@@ -36,9 +36,29 @@ class DefaultVideoClientController constructor(
     private val TAG = "DefaultVideoClientController"
 
     /**
+     * This flag will enable adaptive probing subscription for videos
+     */
+    private val VIDEO_CLIENT_FLAG_ENABLE_PROBING_ADAPTIVE_SUBSCRIBE = 0x10
+
+    /**
      * This flag will enable higher resolution for videos
      */
-    private val VIDEO_CLIENT_FLAG_ENABLE_TWO_SIMULCAST_STREAMS = 4096
+    private val VIDEO_CLIENT_FLAG_ENABLE_TWO_SIMULCAST_STREAMS = 0x1000
+
+    /**
+     * This flag Raise the threshold for lowering target rate to WebRTC rate to 0.04 average packet loss and 0.5 unit variance
+     */
+    private val VIDEO_CLIENT_FLAG_SHIFT_SINGLE_SIMULCAST_STREAM = 0x8000
+
+    /**
+     * This flag raises the threshold for keeping same subscribe streams below a given change of target rate to 30 when below 200
+     */
+    private val VIDEO_CLIENT_FLAG_RAISE_ADAPTIVE_SUBSCRIBE_SUBSCRIBE_THRESHOLD = 0x10000
+
+    /**
+     * This flag will shift up the lowest simulcast stream so that receivers with good connections won't have to resubscribe.
+     */
+    private val VIDEO_CLIENT_FLAG_RAISE_DOWNLINK_KEEP_THRESHOLD = 0x20000
 
     private val gson = Gson()
     private val permissions = arrayOf(
@@ -180,8 +200,11 @@ class DefaultVideoClientController constructor(
     override fun startVideoClient() {
         logger.info(TAG, "Starting video client")
         videoClient?.setReceiving(false)
-        var flag = 0
-        flag = flag or VIDEO_CLIENT_FLAG_ENABLE_TWO_SIMULCAST_STREAMS
+        var flag = 0x0
+        flag = flag or VIDEO_CLIENT_FLAG_ENABLE_TWO_SIMULCAST_STREAMS or VIDEO_CLIENT_FLAG_ENABLE_PROBING_ADAPTIVE_SUBSCRIBE
+        flag = flag or VIDEO_CLIENT_FLAG_SHIFT_SINGLE_SIMULCAST_STREAM or VIDEO_CLIENT_FLAG_RAISE_ADAPTIVE_SUBSCRIBE_SUBSCRIBE_THRESHOLD
+        flag = flag or VIDEO_CLIENT_FLAG_RAISE_DOWNLINK_KEEP_THRESHOLD
+        logger.debug(TAG, "Features: enable two_simulcast_streams, probing_adaptive_subscript, shift_single_simulcast, raise_adptive_subscribe_threshold and downraise_downlink_keep_threshold")
         videoClient?.startServiceV2(
             "",
             "",
