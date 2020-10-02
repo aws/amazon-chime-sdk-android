@@ -58,6 +58,7 @@ import com.amazonaws.services.chime.sdkdemo.data.Message
 import com.amazonaws.services.chime.sdkdemo.data.MetricData
 import com.amazonaws.services.chime.sdkdemo.data.RosterAttendee
 import com.amazonaws.services.chime.sdkdemo.data.VideoCollectionTile
+import com.amazonaws.services.chime.sdkdemo.device.AudioDeviceManager
 import com.amazonaws.services.chime.sdkdemo.model.MeetingModel
 import com.amazonaws.services.chime.sdkdemo.utils.CpuVideoProcessor
 import com.amazonaws.services.chime.sdkdemo.utils.GpuVideoProcessor
@@ -127,6 +128,7 @@ class MeetingFragment : Fragment(),
     private lateinit var screenTileAdapter: VideoAdapter
     private lateinit var messageAdapter: MessageAdapter
     private lateinit var tabLayout: TabLayout
+    private lateinit var audioDeviceManager: AudioDeviceManager
 
     companion object {
         fun newInstance(meetingId: String): MeetingFragment {
@@ -166,6 +168,7 @@ class MeetingFragment : Fragment(),
         cameraCaptureSource = activity.getCameraCaptureSource()
         gpuVideoProcessor = activity.getGpuVideoProcessor()
         cpuVideoProcessor = activity.getCpuVideoProcessor()
+        audioDeviceManager = AudioDeviceManager(audioVideo)
 
         view.findViewById<TextView>(R.id.textViewMeetingId)?.text = arguments?.getString(
             HomeActivity.MEETING_ID_KEY
@@ -341,8 +344,8 @@ class MeetingFragment : Fragment(),
         deviceListAdapter = DeviceAdapter(
             requireContext(),
             android.R.layout.simple_list_item_1,
-            meetingModel.currentMediaDevices
-        )
+            meetingModel.currentMediaDevices,
+            audioVideo, audioDeviceManager)
         deviceAlertDialogBuilder = AlertDialog.Builder(activity)
         deviceAlertDialogBuilder.setTitle(R.string.alert_title_choose_audio)
         deviceAlertDialogBuilder.setNegativeButton(R.string.cancel) { dialog, _ ->
@@ -404,9 +407,14 @@ class MeetingFragment : Fragment(),
     override fun onAudioDeviceChanged(freshAudioDeviceList: List<MediaDevice>) {
         meetingModel.currentMediaDevices = freshAudioDeviceList
             .filter { device -> device.type != MediaDeviceType.OTHER }
+        audioDeviceManager.reconfigureCurrentAudioDevice()
         deviceListAdapter.clear()
         deviceListAdapter.addAll(meetingModel.currentMediaDevices)
         deviceListAdapter.notifyDataSetChanged()
+    }
+
+    override fun onChooseAudioDeviceCalled(device: MediaDevice) {
+        audioDeviceManager.setCurrentAudioDevice(device)
     }
 
     override fun onVolumeChanged(volumeUpdates: Array<VolumeUpdate>) {
@@ -586,6 +594,7 @@ class MeetingFragment : Fragment(),
         meetingModel.isMuted = !meetingModel.isMuted
     }
 
+    @SuppressLint("NewApi")
     private fun toggleSpeaker() {
         deviceAlertDialogBuilder.create()
         deviceAlertDialogBuilder.show()

@@ -10,8 +10,8 @@ import androidx.core.content.ContextCompat
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.audio.activespeakerdetector.ActiveSpeakerDetectorFacade
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.metric.MetricsObserver
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoTileController
+import com.amazonaws.services.chime.sdk.meetings.device.DefaultDeviceController
 import com.amazonaws.services.chime.sdk.meetings.device.DeviceChangeObserver
-import com.amazonaws.services.chime.sdk.meetings.device.DeviceController
 import com.amazonaws.services.chime.sdk.meetings.device.MediaDevice
 import com.amazonaws.services.chime.sdk.meetings.device.MediaDeviceType
 import com.amazonaws.services.chime.sdk.meetings.realtime.RealtimeControllerFacade
@@ -66,7 +66,7 @@ class DefaultAudioVideoFacadeTest {
     private lateinit var realtimeController: RealtimeControllerFacade
 
     @MockK
-    private lateinit var deviceController: DeviceController
+    private lateinit var deviceController: DefaultDeviceController
 
     @MockK
     private lateinit var videoTileController: VideoTileController

@@ -93,6 +93,7 @@ class DeviceManagementFragment : Fragment(), DeviceChangeObserver {
             logger.error(TAG, "$context must implement DeviceManagementEventListener.")
             throw ClassCastException("$context must implement DeviceManagementEventListener.")
         }
+        isAttached = true
     }
 
     override fun onCreateView(
@@ -207,6 +208,7 @@ class DeviceManagementFragment : Fragment(), DeviceChangeObserver {
         cameraCaptureSource.stop()
         cameraCaptureSource.removeVideoSink(videoPreview)
         videoPreview.release()
+        audioVideo.removeDeviceChangeObserver(this)
     }
 
     private val onAudioDeviceSelected = object : AdapterView.OnItemSelectedListener {

@@ -5,10 +5,12 @@
 
 package com.amazonaws.services.chime.sdk.meetings.device
 
+import android.bluetooth.BluetoothAdapter
 import android.content.Context
 import android.content.Intent
 import android.media.AudioDeviceInfo
 import android.media.AudioManager
+import android.media.AudioRecordingConfiguration
 import com.amazonaws.services.chime.sdk.meetings.internal.audio.AudioClientController
 import com.amazonaws.services.chime.sdk.meetings.internal.video.VideoClientController
 import com.xodee.client.audio.audioclient.AudioClient
@@ -29,6 +31,15 @@ import org.junit.Before
 import org.junit.Test
 
 class DefaultDeviceControllerTest {
+    @MockK
+    private lateinit var bluetoothDeviceController: BluetoothDeviceController
+
+    @MockK
+    private lateinit var activeConfiguration: AudioRecordingConfiguration
+
+    @MockK
+    private lateinit var audioDevice: AudioDeviceInfo
+
     @MockK
     private lateinit var speakerInfo: AudioDeviceInfo
 
@@ -63,6 +74,9 @@ class DefaultDeviceControllerTest {
 
     private val testDispatcher = TestCoroutineDispatcher()
 
+    @MockK
+    private lateinit var btAdapter: BluetoothAdapter
+
     private fun setupForNewAPILevel() {
         MockKAnnotations.init(this, relaxUnitFun = true)
         deviceController = DefaultDeviceController(
@@ -70,7 +84,8 @@ class DefaultDeviceControllerTest {
             audioClientController,
             videoClientController,
             audioManager,
-            23
+            24,
+            bluetoothDeviceController
         )
         commonSetup()
     }
@@ -83,12 +98,16 @@ class DefaultDeviceControllerTest {
             audioClientController,
             videoClientController,
             audioManager,
-            21
+            21,
+            bluetoothDeviceController
         )
         commonSetup()
     }
 
     private fun commonSetup() {
+        every { bluetoothDeviceController.getBluetoothName() } returns "Bluetooth"
+        every { bluetoothDeviceController.startListening() } returns Unit
+        every { bluetoothDeviceController.stopListening() } returns Unit
         every { speakerInfo.type } returns AudioDeviceInfo.TYPE_BUILTIN_SPEAKER
         every { speakerInfo.productName } returns "default speaker"
         every { earpieceInfo.type } returns AudioDeviceInfo.TYPE_BUILTIN_EARPIECE
@@ -99,6 +118,10 @@ class DefaultDeviceControllerTest {
         every { wiredHeadsetInfo.productName } returns "my wired headset"
         every { bluetoothInfo.type } returns AudioDeviceInfo.TYPE_BLUETOOTH_SCO
         every { bluetoothInfo.productName } returns "my bluetooth headphone"
+        every { audioDevice.productName } returns "my product name"
+        every { audioDevice.type } returns AudioDeviceInfo.TYPE_BLUETOOTH_SCO
+        every { activeConfiguration.audioDevice } returns audioDevice
+        every { audioManager.activeRecordingConfigurations } returns listOf(activeConfiguration)
     }
 
     @Before
@@ -116,6 +139,30 @@ class DefaultDeviceControllerTest {
     fun `deviceController should register device change event when build version is high`() {
         setupForNewAPILevel()
         verify { audioManager.registerAudioDeviceCallback(any(), null) }
+    }
+
+    @Test
+    fun `deviceController should call BluetoothDeviceController startListening`() {
+        setupForNewAPILevel()
+        verify { bluetoothDeviceController.startListening() }
+    }
+
+    @Test
+    fun `deviceController stopListening should call BluetoothDeviceController stopListening`() {
+        setupForNewAPILevel()
+        deviceController.stopListening()
+        verify { bluetoothDeviceController.stopListening() }
+    }
+
+    @Test
+    fun `deviceController getActiveAudioDevice should return device from audioManager active recording`() {
+        setupForNewAPILevel()
+        every { audioManager.getDevices(AudioManager.GET_DEVICES_OUTPUTS) } returns arrayOf(
+            speakerInfo, earpieceInfo, audioDevice
+        )
+        val expected = MediaDevice("my product name (Bluetooth)", MediaDeviceType.AUDIO_BLUETOOTH)
+        val mediaDevice = deviceController.getActiveAudioDevice()
+        assertEquals(expected, mediaDevice)
     }
 
     @Test
@@ -327,5 +374,25 @@ class DefaultDeviceControllerTest {
         deviceController.notifyAudioDeviceChange()
 
         verify(exactly = 0) { deviceChangeObserver.onAudioDeviceChanged(any()) }
+    }
+
+    @Test
+    fun `getActiveAudioDevice should return null for old API Level`() {
+        setupForOldAPILevel()
+        val mediaDevice = deviceController.getActiveAudioDevice()
+        assertNull(mediaDevice)
+    }
+
+    @Test
+    fun `deviceController should call BluetoothDeviceController startListening for old API level`() {
+        setupForOldAPILevel()
+        verify { bluetoothDeviceController.startListening() }
+    }
+
+    @Test
+    fun `deviceController stopListening should call BluetoothDeviceController stopListening for old API level`() {
+        setupForOldAPILevel()
+        deviceController.stopListening()
+        verify { bluetoothDeviceController.stopListening() }
     }
 }

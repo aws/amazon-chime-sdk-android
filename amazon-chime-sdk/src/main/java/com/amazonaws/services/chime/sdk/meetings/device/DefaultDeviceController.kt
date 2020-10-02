@@ -15,6 +15,7 @@ import android.media.AudioDeviceCallback
 import android.media.AudioDeviceInfo
 import android.media.AudioManager
 import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.annotation.VisibleForTesting
 import com.amazonaws.services.chime.sdk.meetings.internal.audio.AudioClientController
 import com.amazonaws.services.chime.sdk.meetings.internal.utils.ObserverUtils
@@ -26,27 +27,34 @@ class DefaultDeviceController(
     private val audioClientController: AudioClientController,
     private val videoClientController: VideoClientController,
     private val audioManager: AudioManager = context.getSystemService(Context.AUDIO_SERVICE) as AudioManager,
-    private val buildVersion: Int = Build.VERSION.SDK_INT
+    private val buildVersion: Int = Build.VERSION.SDK_INT,
+    private val bluetoothDeviceController: BluetoothDeviceController = BluetoothDeviceController(context)
 ) : DeviceController {
     private val deviceChangeObservers = mutableSetOf<DeviceChangeObserver>()
-
     // TODO: remove code blocks for lower API level after the minimum SDK version becomes 23
     private val AUDIO_MANAGER_API_LEVEL = 23
+    private val AUDIO_RECORDING_CONFIG_API_LEVEL = 24
+
+    private var receiver: BroadcastReceiver? = null
+
+    private var audioDeviceCallback: AudioDeviceCallback? = null
 
     init {
         @SuppressLint("NewApi")
         if (buildVersion >= AUDIO_MANAGER_API_LEVEL) {
-            audioManager.registerAudioDeviceCallback(object : AudioDeviceCallback() {
+            audioDeviceCallback = object : AudioDeviceCallback() {
                 override fun onAudioDevicesAdded(addedDevices: Array<out AudioDeviceInfo>?) {
                     notifyAudioDeviceChange()
                 }
 
                 override fun onAudioDevicesRemoved(removedDevices: Array<out AudioDeviceInfo>?) {
+                    audioManager.mode = AudioManager.MODE_IN_COMMUNICATION
                     notifyAudioDeviceChange()
                 }
-            }, null)
+            }
+            audioManager.registerAudioDeviceCallback(audioDeviceCallback, null)
         } else {
-            val receiver = object : BroadcastReceiver() {
+            receiver = object : BroadcastReceiver() {
                 override fun onReceive(context: Context?, intent: Intent?) {
                     // There is gap between notification and audioManager recognizing bluetooth devices
                     if (intent?.action == BluetoothDevice.ACTION_ACL_CONNECTED) {
@@ -61,9 +69,10 @@ class DefaultDeviceController(
                 receiver, IntentFilter(BluetoothDevice.ACTION_ACL_DISCONNECTED)
             )
         }
+        bluetoothDeviceController.startListening()
     }
 
-    override fun listAudioDevices(): List<MediaDevice> {
+    private fun listAudioDevicesWithType(excludeType: Int?): List<MediaDevice> {
         @SuppressLint("NewApi")
         if (buildVersion >= AUDIO_MANAGER_API_LEVEL) {
             var isWiredHeadsetOn = false
@@ -91,9 +100,18 @@ class DefaultDeviceController(
                     }
                 }
 
+                if (device.type == excludeType) continue
+
+                var name = device.productName
+                // One plus device with Android 10 is not able to show the bluetooth name
+                // We'll remap it so that it shows either bluetooth device name or "Bluetooth"
+                if (device.type == AudioDeviceInfo.TYPE_BLUETOOTH_SCO && device.productName == Build.MODEL) {
+                    name = bluetoothDeviceController.getBluetoothName()
+                }
+
                 audioDevices.add(
                     MediaDevice(
-                        "${device.productName} (${getReadableType(device.type)})",
+                        "$name (${getReadableType(device.type)})",
                         MediaDeviceType.fromAudioDeviceInfo(
                             device.type
                         )
@@ -124,7 +142,7 @@ class DefaultDeviceController(
                     )
                 )
             }
-            if (audioManager.isBluetoothScoOn || audioManager.isBluetoothA2dpOn) {
+            if (audioManager.isBluetoothScoOn) {
                 res.add(
                     MediaDevice(
                         getReadableType(AudioDeviceInfo.TYPE_BLUETOOTH_SCO),
@@ -136,39 +154,86 @@ class DefaultDeviceController(
         }
     }
 
+    @SuppressLint("NewApi")
+    override fun listAudioDevices(): List<MediaDevice> {
+        if (buildVersion >= AUDIO_MANAGER_API_LEVEL) {
+            // A2DP doesn't allow two way communication. We'll filter it out
+            return listAudioDevicesWithType(AudioDeviceInfo.TYPE_BLUETOOTH_A2DP)
+        }
+        return listAudioDevicesWithType(null)
+    }
+
     override fun chooseAudioDevice(mediaDevice: MediaDevice) {
         setupAudioDevice(mediaDevice.type)
-
         val route = when (mediaDevice.type) {
             MediaDeviceType.AUDIO_BUILTIN_SPEAKER -> AudioClient.SPK_STREAM_ROUTE_SPEAKER
             MediaDeviceType.AUDIO_BLUETOOTH -> AudioClient.SPK_STREAM_ROUTE_BT_AUDIO
             MediaDeviceType.AUDIO_WIRED_HEADSET -> AudioClient.SPK_STREAM_ROUTE_HEADSET
             else -> AudioClient.SPK_STREAM_ROUTE_RECEIVER
         }
-        audioClientController.setRoute(route)
+        if (audioClientController.setRoute(route)) {
+            ObserverUtils.notifyObserverOnMainThread(deviceChangeObservers) {
+                it.onChooseAudioDeviceCalled(
+                    mediaDevice
+                )
+            }
+        }
+    }
+
+    @RequiresApi(Build.VERSION_CODES.N)
+    override fun getActiveAudioDevice(): MediaDevice? {
+        if (buildVersion >= AUDIO_RECORDING_CONFIG_API_LEVEL) {
+            if (audioManager.activeRecordingConfigurations.isNotEmpty()) {
+                val device =
+                    audioManager.activeRecordingConfigurations.firstOrNull { config -> config.audioDevice != null }?.audioDevice
+                if (device != null) {
+                    val type = device.type
+                    var mediaDeviceType: MediaDeviceType = MediaDeviceType.fromAudioDeviceInfo(type)
+                    if (type == AudioDeviceInfo.TYPE_BUILTIN_MIC) {
+                        // Built-in mic has two case speaker, built-in receiver
+                        mediaDeviceType = if (audioManager.isSpeakerphoneOn) {
+                            MediaDeviceType.fromAudioDeviceInfo(AudioDeviceInfo.TYPE_BUILTIN_SPEAKER)
+                        } else {
+                            MediaDeviceType.fromAudioDeviceInfo(AudioDeviceInfo.TYPE_BUILTIN_EARPIECE)
+                        }
+                    }
+                    return listAudioDevicesWithType(AudioDeviceInfo.TYPE_BLUETOOTH_A2DP).firstOrNull {
+                        it.type == mediaDeviceType
+                    }
+                }
+
+                // Some android devices doesn't have audio device for speaker
+                if (audioManager.isSpeakerphoneOn) return listAudioDevicesWithType(AudioDeviceInfo.TYPE_BLUETOOTH_A2DP).firstOrNull {
+                    it.type == MediaDeviceType.AUDIO_BUILTIN_SPEAKER
+                }
+            }
+        }
+        return null
     }
 
     private fun setupAudioDevice(type: MediaDeviceType) {
         when (type) {
-            MediaDeviceType.AUDIO_BUILTIN_SPEAKER ->
+            MediaDeviceType.AUDIO_BUILTIN_SPEAKER -> {
                 audioManager.apply {
-                    mode = AudioManager.MODE_IN_COMMUNICATION
-                    isSpeakerphoneOn = true
-                    isBluetoothScoOn = false
                     stopBluetoothSco()
+                    mode = AudioManager.MODE_IN_COMMUNICATION
+                    isBluetoothScoOn = false
+                    isSpeakerphoneOn = true
                 }
+            }
             MediaDeviceType.AUDIO_BLUETOOTH ->
                 audioManager.apply {
                     mode = AudioManager.MODE_IN_COMMUNICATION
                     isSpeakerphoneOn = false
+                    isBluetoothScoOn = true
                     startBluetoothSco()
                 }
             else ->
                 audioManager.apply {
-                    mode = AudioManager.MODE_IN_COMMUNICATION
-                    isSpeakerphoneOn = false
-                    isBluetoothScoOn = false
                     stopBluetoothSco()
+                    mode = AudioManager.MODE_IN_COMMUNICATION
+                    isBluetoothScoOn = false
+                    isSpeakerphoneOn = false
                 }
         }
     }
@@ -209,5 +274,20 @@ class DefaultDeviceController(
                 listAudioDevices()
             )
         }
+    }
+
+    @SuppressLint("NewApi")
+    fun stopListening() {
+        if (buildVersion >= AUDIO_MANAGER_API_LEVEL) {
+            audioDeviceCallback?.let {
+                audioManager.unregisterAudioDeviceCallback(it)
+            }
+        } else {
+            receiver?.let {
+                context.unregisterReceiver(it)
+            }
+        }
+
+        bluetoothDeviceController.stopListening()
     }
 }
