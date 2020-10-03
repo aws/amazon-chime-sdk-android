@@ -571,7 +571,8 @@ class DefaultVideoTileControllerTest {
                     testHeight + 1,
                     0,
                     0,
-                    null
+                    null,
+                    0
                 ),
                 tileId,
                 attendeeId,
@@ -615,7 +616,8 @@ class DefaultVideoTileControllerTest {
                     testHeight,
                     0,
                     0,
-                    null
+                    null,
+                    0
                 ),
                 tileId,
                 attendeeId,
