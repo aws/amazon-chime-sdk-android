@@ -12,7 +12,7 @@
     <string name="meeting_join">Join</string>
     <string name="meeting_leave">Leave Meeting</string>
     <string name="meeting_mute">Toggle Mute</string>
-    <string name="test_url"></string>
+    <string name="test_url">https://g4eowuwvpf.execute-api.us-east-1.amazonaws.com/Prod/</string>
     <string name="preview_meeting_info">Ready to join meeting %1$s as %2$s.</string>
     <string name="device_management_title">Select devices</string>
     <string name="audio_device_title">Audio Device</string>

@@ -170,6 +170,18 @@
             android:tint="?android:attr/textColorPrimary" />
 
         <ImageButton
+            android:id="@+id/buttonVoiceFocus"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@null"
+            android:contentDescription="@string/toggle_mute"
+            android:paddingLeft="8dp"
+            android:paddingRight="8dp"
+            android:src="@android:drawable/btn_star_big_on"
+            android:tint="?android:attr/textColorPrimary" />
+
+        <ImageButton
             android:id="@+id/buttonSpeaker"
             android:layout_width="0dp"
             android:layout_height="wrap_content"

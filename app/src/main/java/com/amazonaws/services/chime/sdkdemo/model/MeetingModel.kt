@@ -23,6 +23,8 @@ class MeetingModel : ViewModel() {
     var currentMessages = mutableListOf<Message>()
 
     var isMuted = false
+    // Voice Focus is started in the beginning of the call so init to true
+    var isVoiceFocusOn = true
     var isCameraOn = false
     var isDeviceListDialogOn = false
     var lastReceivedMessageTimestamp = 0L

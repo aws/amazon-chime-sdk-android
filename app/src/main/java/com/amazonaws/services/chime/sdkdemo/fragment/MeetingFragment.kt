@@ -110,6 +110,7 @@ class MeetingFragment : Fragment(),
     private lateinit var noVideoOrScreenShareAvailable: TextView
     private lateinit var editTextMessage: EditText
     private lateinit var buttonMute: ImageButton
+    private lateinit var buttonVoiceFocus: ImageButton
     private lateinit var buttonCamera: ImageButton
     private lateinit var deviceAlertDialogBuilder: AlertDialog.Builder
     private lateinit var viewChat: LinearLayout
@@ -176,6 +177,8 @@ class MeetingFragment : Fragment(),
         selectTab(meetingModel.tabIndex)
         subscribeToAttendeeChangeHandlers()
         audioVideo.start()
+        // Start Voice Focus right in the beginning of the call
+        audioVideo.realtimeToggleVoiceFocus(true)
         audioVideo.startRemoteVideo()
         return view
     }
@@ -184,6 +187,10 @@ class MeetingFragment : Fragment(),
         buttonMute = view.findViewById(R.id.buttonMute)
         buttonMute.setImageResource(if (meetingModel.isMuted) R.drawable.button_mute_on else R.drawable.button_mute)
         buttonMute.setOnClickListener { toggleMute() }
+
+        buttonVoiceFocus = view.findViewById(R.id.buttonVoiceFocus)
+        buttonVoiceFocus.setImageResource(if (meetingModel.isVoiceFocusOn) R.drawable.button_voice_focus_on else R.drawable.button_voice_focus_off)
+        buttonVoiceFocus.setOnClickListener { toggleVoiceFocus() }
 
         buttonCamera = view.findViewById(R.id.buttonCamera)
         buttonCamera.setImageResource(if (meetingModel.isCameraOn) R.drawable.button_camera_on else R.drawable.button_camera)
@@ -534,6 +541,17 @@ class MeetingFragment : Fragment(),
         deviceAlertDialogBuilder.create()
         deviceAlertDialogBuilder.show()
         meetingModel.isDeviceListDialogOn = true
+    }
+
+    private fun toggleVoiceFocus() {
+        meetingModel.isVoiceFocusOn = audioVideo.isVoiceFocusOn()
+        if (meetingModel.isVoiceFocusOn) {
+            audioVideo.realtimeToggleVoiceFocus(false)
+            buttonVoiceFocus.setImageResource(R.drawable.button_voice_focus_off)
+        } else {
+            audioVideo.realtimeToggleVoiceFocus(true)
+            buttonVoiceFocus.setImageResource(R.drawable.button_voice_focus_on)
+        }
     }
 
     private fun toggleVideo() {
