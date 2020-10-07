@@ -210,7 +210,7 @@ class DefaultAudioClientController(
     }
 
     override fun toggleVoiceFocus(on: Boolean): Boolean {
-        if (audioClientState == AudioClientState.INITIALIZED || audioClientState == AudioClientState.STARTED) {
+        if (audioClientState == AudioClientState.STARTED) {
             return AudioClient.AUDIO_CLIENT_OK == audioClient.setVoiceFocusNoiseSuppression(on)
         } else {
             return false
@@ -218,7 +218,7 @@ class DefaultAudioClientController(
     }
 
     override fun isVoiceFocusOn(): Boolean {
-        if (audioClientState == AudioClientState.INITIALIZED || audioClientState == AudioClientState.STARTED) {
+        if (audioClientState == AudioClientState.STARTED) {
             return audioClient.getVoiceFocusNoiseSuppression()
         } else {
             return false

@@ -95,5 +95,5 @@ interface RealtimeControllerFacade {
      *
      * @return Boolean whether Voice Focus is running or not
      */
-    fun isVoiceFocusOn(): Boolean
+    fun realtimeIsVoiceFocusOn(): Boolean
 }
