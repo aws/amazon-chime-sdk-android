@@ -264,4 +264,4 @@ To unsubscribe all `DataMessageObserver`s from the topic, call meetingSession.au
 If you send too many messages at once, your messages may be returned to you with the [throttled](https://aws.github.io/amazon-chime-sdk-android/amazon-chime-sdk/com.amazonaws.services.chime.sdk.meetings.realtime.datamessage/-data-message/throttled.html) 
 flag set. If you continue to exceed the throttle limit, the server may hang up the connection.
 
-Note: You can only send and receive data message after calling meetingSession.audioVideo.[start()](https://aws.github.io/amazon-chime-sdk-android/amazon-chime-sdk/com.amazonaws.services.chime.sdk.meetings.audiovideo/-audio-video-controller-facade/start.html). To avoid missing messages, subscribe the `DataMessageObserver` to the topic prior to starting audio video.
+Note: You can only send and receive data messages after calling meetingSession.audioVideo.[start()](https://aws.github.io/amazon-chime-sdk-android/amazon-chime-sdk/com.amazonaws.services.chime.sdk.meetings.audiovideo/-audio-video-controller-facade/start.html). To avoid missing messages, subscribe the `DataMessageObserver` to the topic prior to starting audio video.
