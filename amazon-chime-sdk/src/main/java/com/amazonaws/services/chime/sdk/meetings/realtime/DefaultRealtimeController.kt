@@ -51,7 +51,7 @@ class DefaultRealtimeController(
         return audioClientController.toggleVoiceFocus(on)
     }
 
-    override fun isVoiceFocusOn(): Boolean {
+    override fun realtimeIsVoiceFocusOn(): Boolean {
         return audioClientController.isVoiceFocusOn()
     }
 }

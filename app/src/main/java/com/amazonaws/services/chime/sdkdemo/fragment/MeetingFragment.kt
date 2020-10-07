@@ -177,8 +177,6 @@ class MeetingFragment : Fragment(),
         selectTab(meetingModel.tabIndex)
         subscribeToAttendeeChangeHandlers()
         audioVideo.start()
-        // Start Voice Focus right in the beginning of the call
-        audioVideo.realtimeToggleVoiceFocus(true)
         audioVideo.startRemoteVideo()
         return view
     }
@@ -544,7 +542,7 @@ class MeetingFragment : Fragment(),
     }
 
     private fun toggleVoiceFocus() {
-        meetingModel.isVoiceFocusOn = audioVideo.isVoiceFocusOn()
+        meetingModel.isVoiceFocusOn = audioVideo.realtimeIsVoiceFocusOn()
         if (meetingModel.isVoiceFocusOn) {
             audioVideo.realtimeToggleVoiceFocus(false)
             buttonVoiceFocus.setImageResource(R.drawable.button_voice_focus_off)
@@ -674,6 +672,8 @@ class MeetingFragment : Fragment(),
         notifyHandler(
             "Audio successfully started. reconnecting: $reconnecting"
         )
+        // Start Voice Focus as soon as audio session started
+        audioVideo.realtimeToggleVoiceFocus(true)
         logWithFunctionName(
             object {}.javaClass.enclosingMethod?.name,
             "reconnecting: $reconnecting"

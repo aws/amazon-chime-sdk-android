@@ -173,6 +173,30 @@ class DefaultAudioVideoFacadeTest {
     }
 
     @Test
+    fun `realtimeToggleVoiceFocus(true) should call realtimeController realtimeToggleVoiceFocus(true) and return the status`() {
+        every { realtimeController.realtimeToggleVoiceFocus(true) } returns true
+        assertTrue(audioVideoFacade.realtimeToggleVoiceFocus(true))
+    }
+
+    @Test
+    fun `realtimeIsVoiceFocusOn should call realtimeController realtimeIsVoiceFocusOn and return the status true`() {
+        every { realtimeController.realtimeIsVoiceFocusOn() } returns true
+        assertTrue(audioVideoFacade.realtimeIsVoiceFocusOn())
+    }
+
+    @Test
+    fun `realtimeToggleVoiceFocus(false) should call realtimeController realtimeToggleVoiceFocus(false) and return the status`() {
+        every { realtimeController.realtimeToggleVoiceFocus(false) } returns true
+        assertTrue(audioVideoFacade.realtimeToggleVoiceFocus(false))
+    }
+
+    @Test
+    fun `realtimeIsVoiceFocusOn should call realtimeController realtimeIsVoiceFocusOn and return the status false`() {
+        every { realtimeController.realtimeIsVoiceFocusOn() } returns false
+        assertTrue(!audioVideoFacade.realtimeIsVoiceFocusOn())
+    }
+
+    @Test
     fun `listAudioDevices should call devices deviceController listAudioDevices and return the list of devices`() {
         every { deviceController.listAudioDevices() } returns devices
         assertEquals(devices, audioVideoFacade.listAudioDevices())
