@@ -244,6 +244,7 @@ class DefaultDeviceController(
                 audioManager.apply {
                     stopBluetoothSco()
                     mode = AudioManager.MODE_IN_COMMUNICATION
+                    isBluetoothScoOn = false
                     isSpeakerphoneOn = true
                 }
             }
@@ -252,10 +253,12 @@ class DefaultDeviceController(
                     mode = AudioManager.MODE_IN_COMMUNICATION
                     isSpeakerphoneOn = false
                     startBluetoothSco()
+                    isBluetoothScoOn = true
                 }
             else ->
                 audioManager.apply {
                     stopBluetoothSco()
+                    isBluetoothScoOn = false
                     mode = AudioManager.MODE_IN_COMMUNICATION
                     isSpeakerphoneOn = false
                 }

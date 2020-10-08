@@ -71,6 +71,7 @@ class DefaultMeetingSessionTest {
         every { btAdapter.getProfileProxy(any(), any(), any()) } returns true
         every { btAdapter.closeProfileProxy(any(), any()) } returns Unit
         every { btManager.adapter } returns btAdapter
+        every { audioManager.mode = any() } returns Unit
         every { audioManager.mode } returns AudioManager.MODE_NORMAL
         every { audioManager.isSpeakerphoneOn } returns true
         val cameraManager = mockkClass(CameraManager::class)

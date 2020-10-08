@@ -12,12 +12,15 @@ import android.media.AudioDeviceInfo
 import android.media.AudioManager
 import android.media.AudioRecordingConfiguration
 import com.amazonaws.services.chime.sdk.meetings.internal.audio.AudioClientController
+import com.amazonaws.services.chime.sdk.meetings.internal.audio.AudioClientState
+import com.amazonaws.services.chime.sdk.meetings.internal.audio.DefaultAudioClientController
 import com.amazonaws.services.chime.sdk.meetings.internal.video.VideoClientController
 import com.xodee.client.audio.audioclient.AudioClient
 import io.mockk.MockKAnnotations
 import io.mockk.every
 import io.mockk.impl.annotations.MockK
 import io.mockk.mockkClass
+import io.mockk.mockkStatic
 import io.mockk.verify
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.test.TestCoroutineDispatcher
@@ -264,7 +267,8 @@ class DefaultDeviceControllerTest {
     fun `chooseAudioDevice should call AudioClientController setRoute`() {
         setupForOldAPILevel()
         every { audioClientController.setRoute(any()) } returns true
-
+        mockkStatic(DefaultAudioClientController::class)
+        DefaultAudioClientController.audioClientState = AudioClientState.STARTED
         deviceController.chooseAudioDevice(
             MediaDevice(
                 "speaker",
@@ -279,7 +283,8 @@ class DefaultDeviceControllerTest {
     fun `chooseAudioDevice should call audioManager startBluetoothSco when choosing bluetooth device`() {
         setupForOldAPILevel()
         every { audioClientController.setRoute(any()) } returns true
-
+        mockkStatic(DefaultAudioClientController::class)
+        DefaultAudioClientController.audioClientState = AudioClientState.STARTED
         deviceController.chooseAudioDevice(
             MediaDevice(
                 "bluetooth",
@@ -294,7 +299,8 @@ class DefaultDeviceControllerTest {
     fun `chooseAudioDevice should disable speaker and bluetooth when choosing other devices`() {
         setupForOldAPILevel()
         every { audioClientController.setRoute(any()) } returns true
-
+        mockkStatic(DefaultAudioClientController::class)
+        DefaultAudioClientController.audioClientState = AudioClientState.STARTED
         deviceController.chooseAudioDevice(
             MediaDevice(
                 "wired headset",
@@ -310,7 +316,8 @@ class DefaultDeviceControllerTest {
     fun `chooseAudioDevice should default to handset when not bluetooth, wired headset, or speaker`() {
         setupForOldAPILevel()
         every { audioClientController.setRoute(any()) } returns true
-
+        mockkStatic(DefaultAudioClientController::class)
+        DefaultAudioClientController.audioClientState = AudioClientState.STARTED
         deviceController.chooseAudioDevice(
             MediaDevice(
                 "handset",
