@@ -10,6 +10,7 @@ import android.media.AudioFormat
 import android.media.AudioManager
 import android.media.AudioRecord
 import android.media.AudioTrack
+import com.amazonaws.services.chime.sdk.meetings.internal.DefaultDeviceControllerListener
 import com.amazonaws.services.chime.sdk.meetings.session.MeetingSessionStatus
 import com.amazonaws.services.chime.sdk.meetings.session.MeetingSessionStatusCode
 import com.amazonaws.services.chime.sdk.meetings.utils.logger.Logger
@@ -36,9 +37,14 @@ class DefaultAudioClientController(
     private val audioManager: AudioManager = context.getSystemService(Context.AUDIO_SERVICE) as AudioManager
     private var audioModePreCall: Int = audioManager.mode
     private var speakerphoneStatePreCall: Boolean = audioManager.isSpeakerphoneOn
+    private var defaultDeviceControllerListener: DefaultDeviceControllerListener? = null
 
     companion object {
         var audioClientState = AudioClientState.INITIALIZED
+    }
+
+    fun addDefaultDeviceControllerListener(listener: DefaultDeviceControllerListener) {
+        defaultDeviceControllerListener = listener
     }
 
     private fun setUpAudioConfiguration() {
@@ -68,7 +74,6 @@ class DefaultAudioClientController(
             TAG,
             "spkMinBufSizeInSamples $spkMinBufSizeInSamples micMinBufSizeInSamples $micMinBufSizeInSamples"
         )
-
         audioClient.sendMessage(AudioClient.MESS_SET_MIC_FRAMES_PER_BUFFER, micMinBufSizeInSamples)
         audioClient.sendMessage(AudioClient.MESS_SET_SPK_FRAMES_PER_BUFFER, spkMinBufSizeInSamples)
         audioClient.sendMessage(AudioClient.MESS_SET_SPEAKERPHONE_MIC, AudioClient.OPENSL_MIC_DEFAULT)
@@ -152,6 +157,7 @@ class DefaultAudioClientController(
             } else {
                 logger.info(TAG, "Started audio session.")
                 audioClientState = AudioClientState.STARTED
+                defaultDeviceControllerListener?.setupDefaultDeviceController()
             }
         }
     }
@@ -174,6 +180,7 @@ class DefaultAudioClientController(
                 logger.info(TAG, "Stopped audio session.")
                 audioClientState = AudioClientState.STOPPED
                 resetAudioManager()
+                defaultDeviceControllerListener?.cleanupDefaultDeviceController()
                 audioClientObserver.notifyAudioClientObserver { observer ->
                     observer.onAudioSessionStopped(
                         MeetingSessionStatus(MeetingSessionStatusCode.OK)

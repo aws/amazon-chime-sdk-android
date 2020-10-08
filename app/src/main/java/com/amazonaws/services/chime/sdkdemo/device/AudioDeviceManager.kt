@@ -27,6 +27,7 @@ class AudioDeviceManager(private val audioVideo: AudioVideoFacade) {
     fun reconfigureCurrentAudioDevice() {
         val devices = audioVideo.listAudioDevices().sortedBy { it.order }
         if (devices.isNotEmpty()) {
+            if (devices[0] == currentAudioDevice) return
             audioVideo.chooseAudioDevice(devices[0])
         }
     }

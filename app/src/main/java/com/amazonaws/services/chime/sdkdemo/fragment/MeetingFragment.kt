@@ -79,6 +79,8 @@ class MeetingFragment : Fragment(),
     private val uiScope = CoroutineScope(Dispatchers.Main)
     private val meetingModel: MeetingModel by lazy { ViewModelProvider(this)[MeetingModel::class.java] }
 
+    private var deviceDialog: AlertDialog? = null
+
     private lateinit var credentials: MeetingSessionCredentials
     private lateinit var audioVideo: AudioVideoFacade
     private lateinit var cameraCaptureSource: CameraCaptureSource
@@ -355,13 +357,16 @@ class MeetingFragment : Fragment(),
         deviceAlertDialogBuilder.setAdapter(deviceListAdapter) { _, which ->
             run {
                 audioVideo.chooseAudioDevice(meetingModel.currentMediaDevices[which])
+                meetingModel.isDeviceListDialogOn = false
             }
         }
-        deviceAlertDialogBuilder.setOnDismissListener {
+
+        deviceAlertDialogBuilder.setOnCancelListener {
             meetingModel.isDeviceListDialogOn = false
         }
         if (meetingModel.isDeviceListDialogOn) {
-            deviceAlertDialogBuilder.create().show()
+            deviceDialog = deviceAlertDialogBuilder.create()
+            deviceDialog?.show()
         }
     }
 
@@ -596,8 +601,12 @@ class MeetingFragment : Fragment(),
 
     @SuppressLint("NewApi")
     private fun toggleSpeaker() {
-        deviceAlertDialogBuilder.create()
-        deviceAlertDialogBuilder.show()
+        meetingModel.currentMediaDevices = audioVideo.listAudioDevices().filter { it.type != MediaDeviceType.OTHER }
+        deviceListAdapter.clear()
+        deviceListAdapter.addAll(meetingModel.currentMediaDevices)
+        deviceListAdapter.notifyDataSetChanged()
+        deviceDialog = deviceAlertDialogBuilder.create()
+        deviceDialog?.show()
         meetingModel.isDeviceListDialogOn = true
     }
 
@@ -1121,6 +1130,7 @@ class MeetingFragment : Fragment(),
 
     override fun onDestroy() {
         super.onDestroy()
+        deviceDialog?.dismiss()
         unsubscribeFromAttendeeChangeHandlers()
         meetingModel.currentVideoTiles.forEach { (tileId, _) ->
             audioVideo.unbindVideoView(tileId)

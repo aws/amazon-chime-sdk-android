@@ -7,7 +7,7 @@ import android.bluetooth.BluetoothProfile
 import android.content.Context
 
 /**
- * [BluetoothDeviceController] will get bluetooth devices
+ * [BluetoothDeviceController] will get bluetooth device name
  */
 class BluetoothDeviceController(
     private val context: Context,
@@ -41,8 +41,8 @@ class BluetoothDeviceController(
     }
 
     /**
-     * Get the name of bluetooth device. If there is multiple bluetooth, it is hard to tell
-     * which has bluetooth connection, so it will only return "Bluetooth"
+     * Get the name of bluetooth device. If there is multiple bluetooth and none of them has active audio connection,
+     * it is hard to tell which has bluetooth connection, so it will only return "Bluetooth"
      */
     fun getBluetoothName(): String {
         var bluetoothName: String? = null
@@ -56,6 +56,7 @@ class BluetoothDeviceController(
         } else if (size == 1) {
             bluetoothName = btDevices?.get(0)?.name
         }
+
         return bluetoothName ?: "Bluetooth"
     }
 }
