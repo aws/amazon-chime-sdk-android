@@ -53,7 +53,7 @@ To remove a DeviceChangeObserver, call meetingSession.audioVideo.[removeDeviceCh
 
 A DeviceChangeObserver has the following method:
 
-* [onAudioDeviceChanged](https://aws.github.io/amazon-chime-sdk-android/amazon-chime-sdk/com.amazonaws.services.chime.sdk.meetings.device/-device-change-observer/on-audio-device-changed.html): occurs when audio devices are changed
+* [onAudioDeviceChanged](https://aws.github.io/amazon-chime-sdk-android/amazon-chime-sdk/com.amazonaws.services.chime.sdk.meetings.device/-device-change-observer/on-audio-device-changed.html): called when audio devices are changed
 
 ## 3. Request permissions for audio and video
 
@@ -83,15 +83,16 @@ To remove an AudioVideoObserver, call meetingSession.audioVideo.[removeAudioVide
 
 An AudioVideoObserver has the following methods:
 
-* [onAudioSessionStartedConnecting](https://aws.github.io/amazon-chime-sdk-android/amazon-chime-sdk/com.amazonaws.services.chime.sdk.meetings.audiovideo/-audio-video-observer/on-audio-session-started-connecting.html): occurs when the audio session is connecting or reconnecting
-* [onAudioSessionStarted](https://aws.github.io/amazon-chime-sdk-android/amazon-chime-sdk/com.amazonaws.services.chime.sdk.meetings.audiovideo/-audio-video-observer/on-audio-session-started.html): occurs when the audio session has started
-* [onAudioSessionStopped](https://aws.github.io/amazon-chime-sdk-android/amazon-chime-sdk/com.amazonaws.services.chime.sdk.meetings.audiovideo/-audio-video-observer/on-audio-session-stopped.html): occurs when the audio session has stopped
-* [onAudioSessionCancelledReconnect](https://aws.github.io/amazon-chime-sdk-android/amazon-chime-sdk/com.amazonaws.services.chime.sdk.meetings.audiovideo/-audio-video-observer/on-audio-session-cancelled-reconnect.html): occurs when the audio session cancelled reconnecting
-* [onConnectionBecamePoor](https://aws.github.io/amazon-chime-sdk-android/amazon-chime-sdk/com.amazonaws.services.chime.sdk.meetings.audiovideo/-audio-video-observer/on-connection-became-poor.html) : occurs when connection health has become poor
-* [onConnectionRecovered](https://aws.github.io/amazon-chime-sdk-android/amazon-chime-sdk/com.amazonaws.services.chime.sdk.meetings.audiovideo/-audio-video-observer/on-connection-recovered.html): occurs when connection health has recovered
-* [onVideoSessionStartedConnecting](https://aws.github.io/amazon-chime-sdk-android/amazon-chime-sdk/com.amazonaws.services.chime.sdk.meetings.audiovideo/-audio-video-observer/on-video-session-started-connecting.html): occurs when the video session is connecting or reconnecting
-* [onVideoSessionStarted](https://aws.github.io/amazon-chime-sdk-android/amazon-chime-sdk/com.amazonaws.services.chime.sdk.meetings.audiovideo/-audio-video-observer/on-video-session-started.html): occurs when the video session has started
-* [onVideoSessionStopped](https://aws.github.io/amazon-chime-sdk-android/amazon-chime-sdk/com.amazonaws.services.chime.sdk.meetings.audiovideo/-audio-video-observer/on-video-session-stopped.html): occurs when the video session has stopped
+* [onAudioSessionStartedConnecting](https://aws.github.io/amazon-chime-sdk-android/amazon-chime-sdk/com.amazonaws.services.chime.sdk.meetings.audiovideo/-audio-video-observer/on-audio-session-started-connecting.html): called when the audio session is connecting or reconnecting
+* [onAudioSessionStarted](https://aws.github.io/amazon-chime-sdk-android/amazon-chime-sdk/com.amazonaws.services.chime.sdk.meetings.audiovideo/-audio-video-observer/on-audio-session-started.html): called when the audio session has started
+* [onAudioSessionDropped](https://aws.github.io/amazon-chime-sdk-android/amazon-chime-sdk/com.amazonaws.services.chime.sdk.meetings.audiovideo/-audio-video-observer/on-audio-session-dropped.html): called when the audio session got dropped due to poor network conditions
+* [onAudioSessionStopped](https://aws.github.io/amazon-chime-sdk-android/amazon-chime-sdk/com.amazonaws.services.chime.sdk.meetings.audiovideo/-audio-video-observer/on-audio-session-stopped.html): called when the audio session has stopped
+* [onAudioSessionCancelledReconnect](https://aws.github.io/amazon-chime-sdk-android/amazon-chime-sdk/com.amazonaws.services.chime.sdk.meetings.audiovideo/-audio-video-observer/on-audio-session-cancelled-reconnect.html): called when the audio session cancelled reconnecting
+* [onConnectionBecamePoor](https://aws.github.io/amazon-chime-sdk-android/amazon-chime-sdk/com.amazonaws.services.chime.sdk.meetings.audiovideo/-audio-video-observer/on-connection-became-poor.html) : called when connection health has become poor
+* [onConnectionRecovered](https://aws.github.io/amazon-chime-sdk-android/amazon-chime-sdk/com.amazonaws.services.chime.sdk.meetings.audiovideo/-audio-video-observer/on-connection-recovered.html): called when connection health has recovered
+* [onVideoSessionStartedConnecting](https://aws.github.io/amazon-chime-sdk-android/amazon-chime-sdk/com.amazonaws.services.chime.sdk.meetings.audiovideo/-audio-video-observer/on-video-session-started-connecting.html): called when the video session is connecting or reconnecting
+* [onVideoSessionStarted](https://aws.github.io/amazon-chime-sdk-android/amazon-chime-sdk/com.amazonaws.services.chime.sdk.meetings.audiovideo/-audio-video-observer/on-video-session-started.html): called when the video session has started
+* [onVideoSessionStopped](https://aws.github.io/amazon-chime-sdk-android/amazon-chime-sdk/com.amazonaws.services.chime.sdk.meetings.audiovideo/-audio-video-observer/on-video-session-stopped.html): called when the video session has stopped
 
 ## 5. Starting and stopping the meeting session
 
@@ -116,12 +117,13 @@ To remove a RealtimeObserver, call meetingSession.audioVideo.[removeRealtimeObse
 
 A RealtimeObserver has the following methods:
 
-* [onVolumeChanged](https://aws.github.io/amazon-chime-sdk-android/amazon-chime-sdk/com.amazonaws.services.chime.sdk.meetings.realtime/-realtime-observer/on-volume-changed.html): occurs when attendees' volume level has changed
-* [onSignalStrengthChanged](https://aws.github.io/amazon-chime-sdk-android/amazon-chime-sdk/com.amazonaws.services.chime.sdk.meetings.realtime/-realtime-observer/on-signal-strength-changed.html): occurs when attendees' signal strength has changed
-* [onAttendeesJoined](https://aws.github.io/amazon-chime-sdk-android/amazon-chime-sdk/com.amazonaws.services.chime.sdk.meetings.realtime/-realtime-observer/on-attendees-joined.html): occurs when an attendee joins the meeting
-* [onAttendeesLeft](https://aws.github.io/amazon-chime-sdk-android/amazon-chime-sdk/com.amazonaws.services.chime.sdk.meetings.realtime/-realtime-observer/on-attendees-left.html): occurs when an attendee leaves the meeting
-* [onAttendeesMuted](https://aws.github.io/amazon-chime-sdk-android/amazon-chime-sdk/com.amazonaws.services.chime.sdk.meetings.realtime/-realtime-observer/on-attendees-muted.html): occurs when an attendee becomes muted
-* [onAttendeesUnmuted](https://aws.github.io/amazon-chime-sdk-android/amazon-chime-sdk/com.amazonaws.services.chime.sdk.meetings.realtime/-realtime-observer/on-attendees-unmuted.html): occurs when an attendee becomes unmuted
+* [onVolumeChanged](https://aws.github.io/amazon-chime-sdk-android/amazon-chime-sdk/com.amazonaws.services.chime.sdk.meetings.realtime/-realtime-observer/on-volume-changed.html): called when one or more attendees' volume levels change
+* [onSignalStrengthChanged](https://aws.github.io/amazon-chime-sdk-android/amazon-chime-sdk/com.amazonaws.services.chime.sdk.meetings.realtime/-realtime-observer/on-signal-strength-changed.html): called when one or more attendees' signal strengths change
+* [onAttendeesJoined](https://aws.github.io/amazon-chime-sdk-android/amazon-chime-sdk/com.amazonaws.services.chime.sdk.meetings.realtime/-realtime-observer/on-attendees-joined.html): called when one or more attendees join the meeting
+* [onAttendeesDropped](https://aws.github.io/amazon-chime-sdk-android/amazon-chime-sdk/com.amazonaws.services.chime.sdk.meetings.realtime/-realtime-observer/on-attendees-dropped.html): called when one or more attendees drop from the meeting
+* [onAttendeesLeft](https://aws.github.io/amazon-chime-sdk-android/amazon-chime-sdk/com.amazonaws.services.chime.sdk.meetings.realtime/-realtime-observer/on-attendees-left.html): called when one or more attendees leave the meeting
+* [onAttendeesMuted](https://aws.github.io/amazon-chime-sdk-android/amazon-chime-sdk/com.amazonaws.services.chime.sdk.meetings.realtime/-realtime-observer/on-attendees-muted.html): called when one or more attendees become muted
+* [onAttendeesUnmuted](https://aws.github.io/amazon-chime-sdk-android/amazon-chime-sdk/com.amazonaws.services.chime.sdk.meetings.realtime/-realtime-observer/on-attendees-unmuted.html): called when one or more attendees become unmuted
 
 Note that only attendees whose volume level, mute state, or signal strength has changed will be 
 included. All callbacks provide both the attendee ID and external user ID from [chime:CreateAttendee](https://docs.aws.amazon.com/chime/latest/APIReference/API_CreateAttendee.html) 
@@ -142,8 +144,8 @@ To remove an ActiveSpeakerObserver, call meetingSession.audioVideo.[removeActive
 
 An ActiveSpeakerObserver has the following methods:
 
-* [onActiveSpeakerDetected](https://aws.github.io/amazon-chime-sdk-android/amazon-chime-sdk/com.amazonaws.services.chime.sdk.meetings.audiovideo.audio.activespeakerdetector/-active-speaker-observer/on-active-speaker-detected.html): occurs when an active speaker has been detected
-* [onActiveSpeakerScoreChanged](https://aws.github.io/amazon-chime-sdk-android/amazon-chime-sdk/com.amazonaws.services.chime.sdk.meetings.audiovideo.audio.activespeakerdetector/-active-speaker-observer/on-active-speaker-score-changed.html): occurs periodically and provides the attendee's active speaker score
+* [onActiveSpeakerDetected](https://aws.github.io/amazon-chime-sdk-android/amazon-chime-sdk/com.amazonaws.services.chime.sdk.meetings.audiovideo.audio.activespeakerdetector/-active-speaker-observer/on-active-speaker-detected.html): called when one or more active speakers have been detected
+* [onActiveSpeakerScoreChanged](https://aws.github.io/amazon-chime-sdk-android/amazon-chime-sdk/com.amazonaws.services.chime.sdk.meetings.audiovideo.audio.activespeakerdetector/-active-speaker-observer/on-active-speaker-score-changed.html): called when active speaker scores change at a given interval
 
 You can control `onActiveSpeakerScoreChanged`'s interval by providing a value for 
 `scoreCallbackIntervalMs` while implementing ActiveSpeakerPolicy. You can prevent this callback
@@ -201,15 +203,16 @@ To remove a VideoTileObserver, call meetingSession.audioVideo.[removeVideoTileOb
 
 A VideoTileObserver has the following methods:
 
-* [onVideoTileAdded](https://aws.github.io/amazon-chime-sdk-android/amazon-chime-sdk/com.amazonaws.services.chime.sdk.meetings.audiovideo.video/-video-tile-observer/on-video-tile-added.html): occurs when an attendee starts sharing video
-* [onVideoTileRemoved](https://aws.github.io/amazon-chime-sdk-android/amazon-chime-sdk/com.amazonaws.services.chime.sdk.meetings.audiovideo.video/-video-tile-observer/on-video-tile-removed.html): occurs when an attendee stops sharing video
-* [onVideoTilePaused](https://aws.github.io/amazon-chime-sdk-android/amazon-chime-sdk/com.amazonaws.services.chime.sdk.meetings.audiovideo.video/-video-tile-observer/on-video-tile-paused.html): occurs when a video tile's pause state changes from Unpaused
-* [onVideoTileResumed](https://aws.github.io/amazon-chime-sdk-android/amazon-chime-sdk/com.amazonaws.services.chime.sdk.meetings.audiovideo.video/-video-tile-observer/on-video-tile-resumed.html): occurs when a video tile's pause state changes to Unpaused
+* [onVideoTileAdded](https://aws.github.io/amazon-chime-sdk-android/amazon-chime-sdk/com.amazonaws.services.chime.sdk.meetings.audiovideo.video/-video-tile-observer/on-video-tile-added.html): called when an attendee starts sharing video
+* [onVideoTileRemoved](https://aws.github.io/amazon-chime-sdk-android/amazon-chime-sdk/com.amazonaws.services.chime.sdk.meetings.audiovideo.video/-video-tile-observer/on-video-tile-removed.html): called when an attendee stops sharing video
+* [onVideoTilePaused](https://aws.github.io/amazon-chime-sdk-android/amazon-chime-sdk/com.amazonaws.services.chime.sdk.meetings.audiovideo.video/-video-tile-observer/on-video-tile-paused.html): called when a video tile's pause state changes from Unpaused
+* [onVideoTileResumed](https://aws.github.io/amazon-chime-sdk-android/amazon-chime-sdk/com.amazonaws.services.chime.sdk.meetings.audiovideo.video/-video-tile-observer/on-video-tile-resumed.html): called when a video tile's pause state changes to Unpaused
+* [onVideoTileSizeChanged](https://aws.github.io/amazon-chime-sdk-android/amazon-chime-sdk/com.amazonaws.services.chime.sdk.meetings.audiovideo.video/-video-tile-observer/on-video-tile-size-changed.html): called when a video tile's content size changes
 
 A pause or resume event can occur when the underlying media client pauses the video tile for 
 connection reasons or when the pause or resume video tile methods are called.
 
-The video tile state contains a [VideoPauseState](https://aws.github.io/amazon-chime-sdk-android/amazon-chime-sdk/com.amazonaws.services.chime.sdk.meetings.audiovideo.video/-video-pause-state/index.html) to differentiate how the video tile was paused.
+The video tile state is represented by a [VideoPauseState](https://aws.github.io/amazon-chime-sdk-android/amazon-chime-sdk/com.amazonaws.services.chime.sdk.meetings.audiovideo.video/-video-pause-state/index.html) that describes if and why (e.g., paused by user request, or paused for poor connection) it was paused.
 
 ### 8e. Binding a video tile to a video view
 
@@ -239,33 +242,26 @@ To remove a MetricsObserver, call meetingSession.audioVideo.[removeMetricsObserv
 
 A MetricsObserver has the following method:
 
-* [onMetricsReceived](https://aws.github.io/amazon-chime-sdk-android/amazon-chime-sdk/com.amazonaws.services.chime.sdk.meetings.audiovideo.metric/-metrics-observer/on-metrics-received.html): occurs when metrics are received
+* [onMetricsReceived](https://aws.github.io/amazon-chime-sdk-android/amazon-chime-sdk/com.amazonaws.services.chime.sdk.meetings.audiovideo.metric/-metrics-observer/on-metrics-received.html): called when audio/video related metrics are received
 
-## 10. Send and receive data messages (optional)
+## 10. Sending and receiving data messages (optional)
 Attendees can broadcast small (2KB max) data messages to other attendees. Data messages can be used 
 to signal attendees of changes to meeting state or develop custom collaborative features. Each message
 is sent on a particular topic, which allows you to tag messages according to their function to make it easier to handle messages of different types.
 
 To send a message on a given topic, meetingSession.audioVideo.[realtimeSendDataMessage(topic, data, lifetimeMs)](https://aws.github.io/amazon-chime-sdk-android/amazon-chime-sdk/com.amazonaws.services.chime.sdk.meetings.realtime/-realtime-controller-facade/realtime-send-data-message.html).
-When sending a message if you specify a lifetime, then the media server stores the messages for 
-the lifetime. Up to 1024 messages may be stored for a maximum of 5 minutes. Any attendee joining late 
+When sending a message, the media server stores the messages for the duration specified by `lifetimeMs`. Up to 1024 messages may be stored for a maximum of 5 minutes. Any attendee joining late 
 or reconnecting will automatically receive the messages in this buffer once they connect. You can use 
 this feature to help paper over gaps in connectivity or give attendees some context into messages that were recently received.
 
 To receive messages on a given topic, implement a [DataMessageObserver](https://aws.github.io/amazon-chime-sdk-android/amazon-chime-sdk/com.amazonaws.services.chime.sdk.meetings.realtime/-realtime-controller-facade/add-realtime-data-message-observer.html)
-and subscribe it by using meetingSession.audioVideo.[addRealtimeDataMessageObserver(topic, observer)](https://aws.github.io/amazon-chime-sdk-android/amazon-chime-sdk/com.amazonaws.services.chime.sdk.meetings.realtime/-realtime-controller-facade/add-realtime-data-message-observer.html). 
-In the observer, you receive a [DataMessage](https://aws.github.io/amazon-chime-sdk-android/amazon-chime-sdk/com.amazonaws.services.chime.sdk.meetings.realtime.datamessage/-data-message/index.html) 
+and subscribe it to the topic using meetingSession.audioVideo.[addRealtimeDataMessageObserver(topic, observer)](https://aws.github.io/amazon-chime-sdk-android/amazon-chime-sdk/com.amazonaws.services.chime.sdk.meetings.realtime/-realtime-controller-facade/add-realtime-data-message-observer.html). 
+Through [onDataMessageReceived](https://aws.github.io/amazon-chime-sdk-android/amazon-chime-sdk/com.amazonaws.services.chime.sdk.meetings.realtime.datamessage/-data-message-observer/on-data-message-received.html) method in the observer, you receive a [DataMessage](https://aws.github.io/amazon-chime-sdk-android/amazon-chime-sdk/com.amazonaws.services.chime.sdk.meetings.realtime.datamessage/-data-message/index.html) 
 containing the payload of the message and other metadata about the message.
 
-To unsubscribe the receive message observers, call meetingSession.audioVideo.[removeRealtimeDataMessageObserverFromTopic(topic)](https://aws.github.io/amazon-chime-sdk-android/amazon-chime-sdk/com.amazonaws.services.chime.sdk.meetings.realtime/-realtime-controller-facade/remove-realtime-data-message-observer-from-topic.html). 
-It removes all observers for the topic.
+To unsubscribe all `DataMessageObserver`s from the topic, call meetingSession.audioVideo.[removeRealtimeDataMessageObserverFromTopic(topic)](https://aws.github.io/amazon-chime-sdk-android/amazon-chime-sdk/com.amazonaws.services.chime.sdk.meetings.realtime/-realtime-controller-facade/remove-realtime-data-message-observer-from-topic.html).
 
 If you send too many messages at once, your messages may be returned to you with the [throttled](https://aws.github.io/amazon-chime-sdk-android/amazon-chime-sdk/com.amazonaws.services.chime.sdk.meetings.realtime.datamessage/-data-message/throttled.html) 
-flag set. If you continue to exceed the throttle limit, then the server may hang up the connection.
+flag set. If you continue to exceed the throttle limit, the server may hang up the connection.
 
-Note: You can only receive and send data message when audio video is started. Make sure to call meetingSession.audioVideo.[start()](https://aws.github.io/amazon-chime-sdk-android/amazon-chime-sdk/com.amazonaws.services.chime.sdk.meetings.audiovideo/-audio-video-controller-facade/start.html)
-before sending messages. Also, in order to avoid missing messages from server, subscribe the observer to the topic before start audio video.
-Take care when using data messages for functionality involving asymmetric permissions 
-(e.g. a moderator attendee sending a message to regular attendees). Any attendee may, in theory, 
-send any message on any topic. You should always confirm that the message's senderAttendeeId belongs 
-to an attendee that is allowed to send that type of message, and your handler should tolerate messages that are not serialized in the format you are expecting.
+Note: You can only send and receive data messages after calling meetingSession.audioVideo.[start()](https://aws.github.io/amazon-chime-sdk-android/amazon-chime-sdk/com.amazonaws.services.chime.sdk.meetings.audiovideo/-audio-video-controller-facade/start.html). To avoid missing messages, subscribe the `DataMessageObserver` to the topic prior to starting audio video.

@@ -26,7 +26,7 @@ To get started, see the following resources:
 
 And review the following guides:
 
-* [Getting Started](https://github.com/aws/amazon-chime-sdk-android/blob/master/guides/01_Getting_Started.md)
+* [API Overview](guides/api_overview.md)
 
 ## Setup
 
