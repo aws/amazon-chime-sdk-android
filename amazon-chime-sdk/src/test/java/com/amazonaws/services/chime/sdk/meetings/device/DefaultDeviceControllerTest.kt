@@ -35,9 +35,6 @@ import org.junit.Test
 
 class DefaultDeviceControllerTest {
     @MockK
-    private lateinit var bluetoothDeviceController: BluetoothDeviceController
-
-    @MockK
     private lateinit var activeConfiguration: AudioRecordingConfiguration
 
     @MockK
@@ -87,8 +84,7 @@ class DefaultDeviceControllerTest {
             audioClientController,
             videoClientController,
             audioManager,
-            24,
-            bluetoothDeviceController
+            24
         )
         commonSetup()
     }
@@ -101,16 +97,12 @@ class DefaultDeviceControllerTest {
             audioClientController,
             videoClientController,
             audioManager,
-            21,
-            bluetoothDeviceController
+            21
         )
         commonSetup()
     }
 
     private fun commonSetup() {
-        every { bluetoothDeviceController.getBluetoothName() } returns "Bluetooth"
-        every { bluetoothDeviceController.startListening() } returns Unit
-        every { bluetoothDeviceController.stopListening() } returns Unit
         every { speakerInfo.type } returns AudioDeviceInfo.TYPE_BUILTIN_SPEAKER
         every { speakerInfo.productName } returns "default speaker"
         every { earpieceInfo.type } returns AudioDeviceInfo.TYPE_BUILTIN_EARPIECE
@@ -147,14 +139,12 @@ class DefaultDeviceControllerTest {
     @Test
     fun `deviceController should call BluetoothDeviceController startListening`() {
         setupForNewAPILevel()
-        verify { bluetoothDeviceController.startListening() }
     }
 
     @Test
     fun `deviceController stopListening should call BluetoothDeviceController stopListening`() {
         setupForNewAPILevel()
         deviceController.stopListening()
-        verify { bluetoothDeviceController.stopListening() }
     }
 
     @Test
@@ -393,13 +383,11 @@ class DefaultDeviceControllerTest {
     @Test
     fun `deviceController should call BluetoothDeviceController startListening for old API level`() {
         setupForOldAPILevel()
-        verify { bluetoothDeviceController.startListening() }
     }
 
     @Test
     fun `deviceController stopListening should call BluetoothDeviceController stopListening for old API level`() {
         setupForOldAPILevel()
         deviceController.stopListening()
-        verify { bluetoothDeviceController.stopListening() }
     }
 }

@@ -30,10 +30,7 @@ class DefaultDeviceController(
     private val audioClientController: AudioClientController,
     private val videoClientController: VideoClientController,
     private val audioManager: AudioManager = context.getSystemService(Context.AUDIO_SERVICE) as AudioManager,
-    private val buildVersion: Int = Build.VERSION.SDK_INT,
-    private val bluetoothDeviceController: BluetoothDeviceController = BluetoothDeviceController(
-        context
-    )
+    private val buildVersion: Int = Build.VERSION.SDK_INT
 ) : DeviceController, DefaultDeviceControllerListener {
     private val deviceChangeObservers = mutableSetOf<DeviceChangeObserver>()
 
@@ -79,7 +76,6 @@ class DefaultDeviceController(
             )
         }
         audioManager.mode = AudioManager.MODE_IN_COMMUNICATION
-        bluetoothDeviceController.startListening()
     }
 
     private fun listAudioDevicesExcludeType(excludeType: Int?): List<MediaDevice> {
@@ -116,7 +112,7 @@ class DefaultDeviceController(
                 // OnePlus device with Android 9/10 is not able to get bluetooth name with AudioManager.getDevices
                 // We'll remap it so that it shows either bluetooth device name or "Bluetooth"
                 if (device.type == AudioDeviceInfo.TYPE_BLUETOOTH_SCO && device.productName == Build.MODEL) {
-                    name = bluetoothDeviceController.getBluetoothName()
+                    name = "Bluetooth"
                 }
 
                 audioDevices.add(
@@ -314,7 +310,5 @@ class DefaultDeviceController(
                 context.unregisterReceiver(it)
             }
         }
-
-        bluetoothDeviceController.stopListening()
     }
 }
