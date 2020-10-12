@@ -18,6 +18,8 @@ import androidx.annotation.RequiresApi
 interface DeviceController {
     /**
      * Lists currently available audio devices.
+     * For bluetooth devices, if bluetooth device name is not able to be recognized,
+     * this returns "Bluetooth (Bluetooth)" as label
      *
      * @return a list of currently available audio devices.
      */

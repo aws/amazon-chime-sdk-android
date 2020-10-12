@@ -93,7 +93,8 @@ class DefaultDeviceController(
                 // System will select wired headset over receiver
                 // so we want to filter receiver out when wired headset is connected
                 if (device.type == AudioDeviceInfo.TYPE_WIRED_HEADSET ||
-                    device.type == AudioDeviceInfo.TYPE_WIRED_HEADPHONES
+                    device.type == AudioDeviceInfo.TYPE_WIRED_HEADPHONES ||
+                    device.type == AudioDeviceInfo.TYPE_USB_HEADSET
                 ) {
                     isWiredHeadsetOn = true
                 }
@@ -107,7 +108,6 @@ class DefaultDeviceController(
                 }
 
                 if (device.type == excludeType) continue
-
                 var name = device.productName
                 // OnePlus device with Android 9/10 is not able to get bluetooth name with AudioManager.getDevices
                 // We'll remap it so that it shows either bluetooth device name or "Bluetooth"
@@ -263,6 +263,7 @@ class DefaultDeviceController(
 
     private fun getReadableType(type: Int): String {
         return when (type) {
+            AudioDeviceInfo.TYPE_USB_HEADSET,
             AudioDeviceInfo.TYPE_WIRED_HEADSET -> "Wired Headset"
             AudioDeviceInfo.TYPE_BUILTIN_SPEAKER -> "Speaker"
             AudioDeviceInfo.TYPE_WIRED_HEADPHONES -> "Wired Headphone"

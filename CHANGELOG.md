@@ -15,6 +15,7 @@ This release includes support for custom video sources, and therefore includes a
 * Added `SurfaceRenderView` and `TextureRenderView` an open source implementation of rendering onto a `SurfaceView` and `TextureView` respectively.
 * Added `VideoLayoutMeasure` and `EglRenderer` + `DefaultEglRenderer` internal helper classes for use within aforementioned render views.
 * Added more verbose logging from media layer to SDK layer for builders to control log level. Set `LogLevel` to `INFO` or above for production application to not be bombarded with logs..
+* Added `getActiveAudioDevice` in `DefaultDeviceController` for API 24 or greater
 
 ### Changed
 * The render path has been changed to use `VideoFrame`s for consistency with the send side, this includes:
@@ -52,12 +53,18 @@ This release includes support for custom video sources, and therefore includes a
 ### Changed
 * Changed `MAX_TILE_COUNT` in the demo app from 4 to 16. Now the demo app can support at most 16 remote video tiles.
 
-### Added
-* Added `getActiveAudioDevice` in `DefaultDeviceController` for API 24 or greater
+
 
 ### Fixed
-* **Breaking** Fixed `DefaultDeviceController` returning A2DP bluetooth devices, which are all one way communication devices
-such as Bluetooth Speaker
+* **Breaking** Fixed `DefaultDeviceController` returning A2DP bluetooth devices, which are one way communication devices such as Bluetooth Speaker
+
+### Changed
+* `chooseAudioDevice` will now cache if audio client has not been started.
+
+## [0.7.4] - 2020-10-08
+
+### Changed
+* Changed `MAX_TILE_COUNT` in the demo app from 4 to 16. Now the demo app can support at most 16 remote video tiles.
 
 ## [0.7.3] - 2020-09-10
 
