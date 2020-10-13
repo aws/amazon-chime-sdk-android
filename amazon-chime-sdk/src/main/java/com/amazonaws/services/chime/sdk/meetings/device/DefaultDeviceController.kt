@@ -236,14 +236,13 @@ class DefaultDeviceController(
 
     private fun setupAudioDevice(type: MediaDeviceType) {
         when (type) {
-            MediaDeviceType.AUDIO_BUILTIN_SPEAKER -> {
+            MediaDeviceType.AUDIO_BUILTIN_SPEAKER ->
                 audioManager.apply {
                     stopBluetoothSco()
                     mode = AudioManager.MODE_IN_COMMUNICATION
                     isBluetoothScoOn = false
                     isSpeakerphoneOn = true
                 }
-            }
             MediaDeviceType.AUDIO_BLUETOOTH ->
                 audioManager.apply {
                     mode = AudioManager.MODE_IN_COMMUNICATION
