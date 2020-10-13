@@ -27,6 +27,7 @@ To get started, see the following resources:
 And review the following guides:
 
 * [API Overview](guides/api_overview.md)
+* [Getting Started](guides/getting_started.md)
 
 ## Setup
 
