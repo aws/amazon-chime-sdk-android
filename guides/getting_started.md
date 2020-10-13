@@ -47,13 +47,14 @@ private val PERMISSIONS = arrayOf(
 
 ActivityCompat.requestPermissions(applicationContext, PERMISSIONS, PERMISSION_REQUEST_CODE)
 ```
-You are now ready to integrate with the Amazon Chime SDK for Android. Next we will walk you through the key APIs in order to have a basic audio, video and screen share viewing experience. You can refer to the [API document](https://aws.github.io/amazon-chime-sdk-android/amazon-chime-sdk/) in our GitHub repository for additional details
+You are now ready to integrate with the Amazon Chime SDK for Android. Next we will walk you through the key APIs in order to have a basic audio, video and screen share viewing experience. You can refer to the [API overview](guides/api_overview.md) or the [API document](https://aws.github.io/amazon-chime-sdk-android/amazon-chime-sdk/) for additional details.
 
 ## Create a meeting session
 
 To start a meeting, you must complete the following steps to create a meeting session.
 
 1. Make a POST request to `meetingUrl` to create a meeting and an attendee. The `meetingUrl` is the URL of the serverless demo meeting application you deployed (see Prerequisites section). Don’t forget to escape the inputs appropriately as shown in the following code.
+Note: use https://xxxxx.xxxxx.xxx.com/Prod/ instead of v2 url
 
 ```
 val attendeeName = java.net.URLEncoder.encode(attendee, "utf-8");
@@ -134,7 +135,7 @@ To render a video tile (both local and remote), you must define a `VideoRenderVi
 By implementing `onVideoTileAdded` and `onVideoTileRemoved` on the `VideoTileObserver`, you can track the currently active video tiles. The video track can come from either camera or screen share.
 ```
 // Register the observer.
-audioVideo.addVideoTileObserver(observer: VideoTileObserver)
+audioVideo.addVideoTileObserver(observer)
 
 override fun onVideoTileAdded(tileState: VideoTileState) {
     logger.info(
