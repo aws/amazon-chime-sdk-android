@@ -58,9 +58,6 @@ This release includes support for custom video sources, and therefore includes a
 ### Fixed
 * **Breaking** Fixed `DefaultDeviceController` returning A2DP bluetooth devices, which are one way communication devices such as Bluetooth Speaker
 
-### Changed
-* `chooseAudioDevice` will now cache if audio client has not been started.
-
 ## [0.7.4] - 2020-10-08
 
 ### Changed

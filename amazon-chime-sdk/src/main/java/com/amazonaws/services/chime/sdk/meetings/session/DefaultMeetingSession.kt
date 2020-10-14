@@ -108,7 +108,6 @@ class DefaultMeetingSession(
                 audioClientController,
                 videoClientController
             )
-        audioClientController.addDefaultDeviceControllerListener(deviceController)
 
         val realtimeController =
             DefaultRealtimeController(

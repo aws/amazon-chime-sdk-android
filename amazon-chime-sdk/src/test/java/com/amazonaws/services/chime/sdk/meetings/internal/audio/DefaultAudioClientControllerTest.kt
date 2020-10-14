@@ -48,9 +48,6 @@ class DefaultAudioClientControllerTest {
     @MockK
     private lateinit var mockAudioClientObserver: AudioClientObserver
 
-    @MockK
-    private lateinit var mockDeviceListener: DefaultDeviceControllerListener
-
     private lateinit var audioManager: AudioManager
 
     private lateinit var audioClientController: DefaultAudioClientController

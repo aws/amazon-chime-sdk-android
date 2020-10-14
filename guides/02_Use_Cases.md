@@ -1,9 +1,9 @@
 # Use Cases
 
-This guide gives an overview of the API methods you can use to create meeting with audio and video with a roster of attendees and basic controls. Several additional API methods that may be helpful are also described and marked optional.
+This guides provides use cases of Chime Mobile SDK
 
 ## Display currently used audio device from list
-You can use `getActiveAudioDevice` in order to achieve display of currently active audio device. For instance, if you see `DeviceAdapter` in our demo app over API 24 (Android 7.0+)
+For Android API 24 >=, You can use `getActiveAudioDevice` in order to achieve display of currently active audio device. For instance, if you see `DeviceAdapter` in our demo app
 ```kt
 if (Build.VERSION.SDK_INT >= AUDIO_RECORDING_CONFIG_API_LEVEL) {
     view.text = if (currentDevice == devices[position]) "${devices[position]} ✓" else devices[position].toString()

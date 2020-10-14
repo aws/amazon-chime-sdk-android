@@ -17,7 +17,6 @@ import android.media.AudioManager
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.annotation.VisibleForTesting
-import com.amazonaws.services.chime.sdk.meetings.internal.DefaultDeviceControllerListener
 import com.amazonaws.services.chime.sdk.meetings.internal.audio.AudioClientController
 import com.amazonaws.services.chime.sdk.meetings.internal.audio.AudioClientState
 import com.amazonaws.services.chime.sdk.meetings.internal.audio.DefaultAudioClientController
@@ -31,7 +30,7 @@ class DefaultDeviceController(
     private val videoClientController: VideoClientController,
     private val audioManager: AudioManager = context.getSystemService(Context.AUDIO_SERVICE) as AudioManager,
     private val buildVersion: Int = Build.VERSION.SDK_INT
-) : DeviceController, DefaultDeviceControllerListener {
+) : DeviceController {
     private val deviceChangeObservers = mutableSetOf<DeviceChangeObserver>()
 
     // TODO: remove code blocks for lower API level after the minimum SDK version becomes 23
@@ -41,9 +40,6 @@ class DefaultDeviceController(
     private var receiver: BroadcastReceiver? = null
 
     private var audioDeviceCallback: AudioDeviceCallback? = null
-
-    // Since chooseAudioVideo should be called after AudioClient is started, we'll cache it and run it after audio starts
-    private var cachedDevice: MediaDevice? = null
 
     init {
         @SuppressLint("NewApi")
@@ -169,19 +165,8 @@ class DefaultDeviceController(
         return listAudioDevicesExcludeType(null)
     }
 
-    override fun setupDefaultDeviceController() {
-        cachedDevice?.let {
-            chooseAudioDevice(it)
-        }
-    }
-
-    override fun cleanupDefaultDeviceController() {
-        cachedDevice = null
-    }
-
     override fun chooseAudioDevice(mediaDevice: MediaDevice) {
         if (DefaultAudioClientController.audioClientState != AudioClientState.STARTED) {
-            cachedDevice = mediaDevice
             return
         }
         setupAudioDevice(mediaDevice.type)
@@ -192,7 +177,6 @@ class DefaultDeviceController(
             else -> AudioClient.SPK_STREAM_ROUTE_RECEIVER
         }
         if (audioClientController.setRoute(route)) {
-            cachedDevice = null
             ObserverUtils.notifyObserverOnMainThread(deviceChangeObservers) {
                 it.onChooseAudioDeviceCalled(
                     mediaDevice
@@ -296,19 +280,6 @@ class DefaultDeviceController(
             it.onAudioDeviceChanged(
                 listAudioDevices()
             )
-        }
-    }
-
-    @SuppressLint("NewApi")
-    fun stopListening() {
-        if (buildVersion >= AUDIO_MANAGER_API_LEVEL) {
-            audioDeviceCallback?.let {
-                audioManager.unregisterAudioDeviceCallback(it)
-            }
-        } else {
-            receiver?.let {
-                context.unregisterReceiver(it)
-            }
         }
     }
 }

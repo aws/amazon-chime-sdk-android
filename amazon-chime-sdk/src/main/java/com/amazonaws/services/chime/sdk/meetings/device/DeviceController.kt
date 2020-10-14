@@ -33,7 +33,7 @@ interface DeviceController {
     fun chooseAudioDevice(mediaDevice: MediaDevice)
 
     /**
-     * Get the active local audio device in the meeting, return null if there isn't any.
+     * Get the active input/output audio device in the meeting, return null if there isn't any.
      *
      * NOTE: This requires Android API 24 and above
      *

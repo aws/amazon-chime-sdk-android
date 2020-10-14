@@ -19,8 +19,8 @@ import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoRenderVie
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoSource
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoTileController
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoTileObserver
-import com.amazonaws.services.chime.sdk.meetings.device.DefaultDeviceController
 import com.amazonaws.services.chime.sdk.meetings.device.DeviceChangeObserver
+import com.amazonaws.services.chime.sdk.meetings.device.DeviceController
 import com.amazonaws.services.chime.sdk.meetings.device.MediaDevice
 import com.amazonaws.services.chime.sdk.meetings.realtime.RealtimeControllerFacade
 import com.amazonaws.services.chime.sdk.meetings.realtime.RealtimeObserver
@@ -30,7 +30,7 @@ class DefaultAudioVideoFacade(
     private val context: Context,
     private val audioVideoController: AudioVideoControllerFacade,
     private val realtimeController: RealtimeControllerFacade,
-    private val deviceController: DefaultDeviceController,
+    private val deviceController: DeviceController,
     private val videoTileController: VideoTileController,
     private val activeSpeakerDetector: ActiveSpeakerDetectorFacade
 ) : AudioVideoFacade {
@@ -76,7 +76,6 @@ class DefaultAudioVideoFacade(
 
     override fun stop() {
         audioVideoController.stop()
-        deviceController.stopListening()
     }
 
     override fun startLocalVideo() {

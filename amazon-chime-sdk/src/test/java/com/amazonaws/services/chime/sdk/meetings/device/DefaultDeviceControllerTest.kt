@@ -144,7 +144,6 @@ class DefaultDeviceControllerTest {
     @Test
     fun `deviceController stopListening should call BluetoothDeviceController stopListening`() {
         setupForNewAPILevel()
-        deviceController.stopListening()
     }
 
     @Test
@@ -388,6 +387,5 @@ class DefaultDeviceControllerTest {
     @Test
     fun `deviceController stopListening should call BluetoothDeviceController stopListening for old API level`() {
         setupForOldAPILevel()
-        deviceController.stopListening()
     }
 }
