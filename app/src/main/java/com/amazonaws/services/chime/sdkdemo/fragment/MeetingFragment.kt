@@ -544,11 +544,15 @@ class MeetingFragment : Fragment(),
     private fun toggleVoiceFocus() {
         meetingModel.isVoiceFocusOn = audioVideo.realtimeIsVoiceFocusOn()
         if (meetingModel.isVoiceFocusOn) {
-            audioVideo.realtimeToggleVoiceFocus(false)
-            buttonVoiceFocus.setImageResource(R.drawable.button_voice_focus_off)
+            if (audioVideo.realtimeToggleVoiceFocus(false)) {
+                buttonVoiceFocus.setImageResource(R.drawable.button_voice_focus_off)
+                notifyHandler("Voice Focus disabled")
+            }
         } else {
-            audioVideo.realtimeToggleVoiceFocus(true)
-            buttonVoiceFocus.setImageResource(R.drawable.button_voice_focus_on)
+            if (audioVideo.realtimeToggleVoiceFocus(true)) {
+                buttonVoiceFocus.setImageResource(R.drawable.button_voice_focus_on)
+                notifyHandler("Voice Focus enabled")
+            }
         }
     }
 
@@ -673,7 +677,9 @@ class MeetingFragment : Fragment(),
             "Audio successfully started. reconnecting: $reconnecting"
         )
         // Start Voice Focus as soon as audio session started
-        audioVideo.realtimeToggleVoiceFocus(true)
+        if (audioVideo.realtimeToggleVoiceFocus(true)) {
+            notifyHandler("Voice Focus enabled")
+        }
         logWithFunctionName(
             object {}.javaClass.enclosingMethod?.name,
             "reconnecting: $reconnecting"
