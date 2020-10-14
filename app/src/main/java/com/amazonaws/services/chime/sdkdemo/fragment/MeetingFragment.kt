@@ -867,6 +867,12 @@ class MeetingFragment : Fragment(),
             object {}.javaClass.enclosingMethod?.name,
             "reconnecting: $reconnecting"
         )
+
+        val cachedDevice = (activity as MeetingActivity).getCachedDevice()
+        cachedDevice?.let {
+            audioVideo.chooseAudioDevice(it)
+            (activity as MeetingActivity).resetCachedDevice()
+        }
     }
 
     override fun onAudioSessionDropped() {

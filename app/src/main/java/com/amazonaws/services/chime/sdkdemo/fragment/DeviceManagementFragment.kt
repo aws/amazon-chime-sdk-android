@@ -82,6 +82,7 @@ class DeviceManagementFragment : Fragment(), DeviceChangeObserver {
 
     interface DeviceManagementEventListener {
         fun onJoinMeetingClicked()
+        fun onCachedDeviceSelected(mediaDevice: MediaDevice)
     }
 
     override fun onAttach(context: Context) {
@@ -213,7 +214,7 @@ class DeviceManagementFragment : Fragment(), DeviceChangeObserver {
 
     private val onAudioDeviceSelected = object : AdapterView.OnItemSelectedListener {
         override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-            audioVideo.chooseAudioDevice(parent?.getItemAtPosition(position) as MediaDevice)
+            listener.onCachedDeviceSelected(parent?.getItemAtPosition(position) as MediaDevice)
         }
 
         // Abstract, requires implementation
@@ -252,6 +253,9 @@ class DeviceManagementFragment : Fragment(), DeviceChangeObserver {
                 }.sortedBy { it.order }
         )
         adapter.notifyDataSetChanged()
+        if (currentDeviceList.isNotEmpty()) {
+            listener.onCachedDeviceSelected(currentDeviceList[0])
+        }
     }
 
     private fun populateVideoFormatList(freshVideoCaptureFormatList: List<VideoCaptureFormat>) {
