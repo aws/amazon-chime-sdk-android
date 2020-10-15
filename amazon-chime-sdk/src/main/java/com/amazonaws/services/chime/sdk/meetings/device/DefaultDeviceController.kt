@@ -89,8 +89,7 @@ class DefaultDeviceController(
                 // System will select wired headset over receiver
                 // so we want to filter receiver out when wired headset is connected
                 if (device.type == AudioDeviceInfo.TYPE_WIRED_HEADSET ||
-                    device.type == AudioDeviceInfo.TYPE_WIRED_HEADPHONES ||
-                    device.type == AudioDeviceInfo.TYPE_USB_HEADSET
+                    device.type == AudioDeviceInfo.TYPE_WIRED_HEADPHONES
                 ) {
                     isWiredHeadsetOn = true
                 }
@@ -246,7 +245,6 @@ class DefaultDeviceController(
 
     private fun getReadableType(type: Int): String {
         return when (type) {
-            AudioDeviceInfo.TYPE_USB_HEADSET,
             AudioDeviceInfo.TYPE_WIRED_HEADSET -> "Wired Headset"
             AudioDeviceInfo.TYPE_BUILTIN_SPEAKER -> "Speaker"
             AudioDeviceInfo.TYPE_WIRED_HEADPHONES -> "Wired Headphone"
