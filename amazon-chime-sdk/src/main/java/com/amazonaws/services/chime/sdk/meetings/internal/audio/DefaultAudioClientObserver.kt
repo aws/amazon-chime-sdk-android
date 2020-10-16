@@ -22,9 +22,8 @@ import com.amazonaws.services.chime.sdk.meetings.session.MeetingSessionStatusCod
 import com.amazonaws.services.chime.sdk.meetings.utils.logger.Logger
 import com.xodee.client.audio.audioclient.AttendeeUpdate
 import com.xodee.client.audio.audioclient.AudioClient
-import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
 
 class DefaultAudioClientObserver(
     private val logger: Logger,
@@ -360,9 +359,9 @@ class DefaultAudioClientObserver(
         }
     }
 
-    private fun handleOnAudioSessionFailed(statusCode: MeetingSessionStatusCode?) = runBlocking {
+    private fun handleOnAudioSessionFailed(statusCode: MeetingSessionStatusCode?) {
         if (audioClient != null) {
-            launch(Dispatchers.Default) {
+            GlobalScope.launch {
                 audioClient?.stopSession()
                 DefaultAudioClientController.audioClientState = AudioClientState.STOPPED
                 notifyAudioClientObserver { observer ->

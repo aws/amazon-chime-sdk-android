@@ -1,3 +1,7 @@
+### Unreleased
+### Fixed
+* Revert structured concurrency which can lead to deadlock
+
 ## [0.7.4] - 2020-10-08
 
 ### Changed
