@@ -119,12 +119,12 @@ class DefaultAudioVideoFacade(
         realtimeController.removeRealtimeDataMessageObserverFromTopic(topic)
     }
 
-    override fun realtimeToggleVoiceFocus(on: Boolean): Boolean {
-        return realtimeController.realtimeToggleVoiceFocus(on)
+    override fun realtimeSetVoiceFocusEnabled(enabled: Boolean): Boolean {
+        return realtimeController.realtimeSetVoiceFocusEnabled(enabled)
     }
 
-    override fun realtimeIsVoiceFocusOn(): Boolean {
-        return realtimeController.realtimeIsVoiceFocusOn()
+    override fun realtimeIsVoiceFocusEnabled(): Boolean {
+        return realtimeController.realtimeIsVoiceFocusEnabled()
     }
 
     override fun listAudioDevices(): List<MediaDevice> {

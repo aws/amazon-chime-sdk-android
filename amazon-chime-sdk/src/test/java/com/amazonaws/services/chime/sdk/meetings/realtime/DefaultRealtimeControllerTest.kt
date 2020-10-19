@@ -93,30 +93,30 @@ class DefaultRealtimeControllerTest {
     }
 
     @Test
-    fun `realtimeToggleVoiceFocus(true) should call audioClientController toggleVoiceFocus with true and return the status`() {
-        every { audioClientController.toggleVoiceFocus(true) } returns true
-        assertTrue(realtimeController.realtimeToggleVoiceFocus(true))
-        verify { audioClientController.toggleVoiceFocus(true) }
+    fun `realtimeSetVoiceFocusEnabled(true) should call audioClientController setVoiceFocusEnabled with true and return the status`() {
+        every { audioClientController.setVoiceFocusEnabled(true) } returns true
+        assertTrue(realtimeController.realtimeSetVoiceFocusEnabled(true))
+        verify { audioClientController.setVoiceFocusEnabled(true) }
     }
 
     @Test
-    fun `realtimeIsVoiceFocusOn() should call audioClientController IsVoiceFocusOn and return the status true`() {
-        every { audioClientController.isVoiceFocusOn() } returns true
-        assertTrue(realtimeController.realtimeIsVoiceFocusOn())
-        verify { audioClientController.isVoiceFocusOn() }
+    fun `realtimeIsVoiceFocusEnabled() should call audioClientController IsVoiceFocusEnabled and return the status true`() {
+        every { audioClientController.isVoiceFocusEnabled() } returns true
+        assertTrue(realtimeController.realtimeIsVoiceFocusEnabled())
+        verify { audioClientController.isVoiceFocusEnabled() }
     }
 
     @Test
-    fun `realtimeToggleVoiceFocus(false) should call audioClientController toggleVoiceFocus with false and return the status`() {
-        every { audioClientController.toggleVoiceFocus(false) } returns true
-        assertTrue(realtimeController.realtimeToggleVoiceFocus(false))
-        verify { audioClientController.toggleVoiceFocus(false) }
+    fun `realtimeSetVoiceFocusEnabled(false) should call audioClientController setVoiceFocusEnabled with false and return the status`() {
+        every { audioClientController.setVoiceFocusEnabled(false) } returns true
+        assertTrue(realtimeController.realtimeSetVoiceFocusEnabled(false))
+        verify { audioClientController.setVoiceFocusEnabled(false) }
     }
 
     @Test
-    fun `realtimeIsVoiceFocusOn() should call audioClientController IsVoiceFocusOn and return the status false`() {
-        every { audioClientController.isVoiceFocusOn() } returns false
-        assertTrue(!realtimeController.realtimeIsVoiceFocusOn())
-        verify { audioClientController.isVoiceFocusOn() }
+    fun `realtimeIsVoiceFocusEnabled() should call audioClientController IsVoiceFocusEnabled and return the status false`() {
+        every { audioClientController.isVoiceFocusEnabled() } returns false
+        assertTrue(!realtimeController.realtimeIsVoiceFocusEnabled())
+        verify { audioClientController.isVoiceFocusEnabled() }
     }
 }
