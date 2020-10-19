@@ -47,11 +47,11 @@ class DefaultRealtimeController(
         videoClientObserver.unsubscribeFromReceiveDataMessage(topic)
     }
 
-    override fun realtimeToggleVoiceFocus(on: Boolean): Boolean {
-        return audioClientController.toggleVoiceFocus(on)
+    override fun realtimeSetVoiceFocusEnabled(enabled: Boolean): Boolean {
+        return audioClientController.setVoiceFocusEnabled(enabled)
     }
 
-    override fun realtimeIsVoiceFocusOn(): Boolean {
-        return audioClientController.isVoiceFocusOn()
+    override fun realtimeIsVoiceFocusEnabled(): Boolean {
+        return audioClientController.isVoiceFocusEnabled()
     }
 }

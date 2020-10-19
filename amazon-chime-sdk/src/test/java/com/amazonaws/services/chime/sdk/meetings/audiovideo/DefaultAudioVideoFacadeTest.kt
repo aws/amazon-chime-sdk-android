@@ -173,27 +173,27 @@ class DefaultAudioVideoFacadeTest {
     }
 
     @Test
-    fun `realtimeToggleVoiceFocus(true) should call realtimeController realtimeToggleVoiceFocus(true) and return the status`() {
-        every { realtimeController.realtimeToggleVoiceFocus(true) } returns true
-        assertTrue(audioVideoFacade.realtimeToggleVoiceFocus(true))
+    fun `realtimeSetVoiceFocusEnabled(true) should call realtimeController realtimeSetVoiceFocusEnabled(true) and return the status`() {
+        every { realtimeController.realtimeSetVoiceFocusEnabled(true) } returns true
+        assertTrue(audioVideoFacade.realtimeSetVoiceFocusEnabled(true))
     }
 
     @Test
-    fun `realtimeIsVoiceFocusOn should call realtimeController realtimeIsVoiceFocusOn and return the status true`() {
-        every { realtimeController.realtimeIsVoiceFocusOn() } returns true
-        assertTrue(audioVideoFacade.realtimeIsVoiceFocusOn())
+    fun `realtimeIsVoiceFocusEnabled should call realtimeController realtimeIsVoiceFocusEnabled and return the status true`() {
+        every { realtimeController.realtimeIsVoiceFocusEnabled() } returns true
+        assertTrue(audioVideoFacade.realtimeIsVoiceFocusEnabled())
     }
 
     @Test
-    fun `realtimeToggleVoiceFocus(false) should call realtimeController realtimeToggleVoiceFocus(false) and return the status`() {
-        every { realtimeController.realtimeToggleVoiceFocus(false) } returns true
-        assertTrue(audioVideoFacade.realtimeToggleVoiceFocus(false))
+    fun `realtimeSetVoiceFocusEnabled(false) should call realtimeController realtimeSetVoiceFocusEnabled(false) and return the status`() {
+        every { realtimeController.realtimeSetVoiceFocusEnabled(false) } returns true
+        assertTrue(audioVideoFacade.realtimeSetVoiceFocusEnabled(false))
     }
 
     @Test
-    fun `realtimeIsVoiceFocusOn should call realtimeController realtimeIsVoiceFocusOn and return the status false`() {
-        every { realtimeController.realtimeIsVoiceFocusOn() } returns false
-        assertTrue(!audioVideoFacade.realtimeIsVoiceFocusOn())
+    fun `realtimeIsVoiceFocusEnabled should call realtimeController realtimeIsVoiceFocusEnabled and return the status false`() {
+        every { realtimeController.realtimeIsVoiceFocusEnabled() } returns false
+        assertTrue(!audioVideoFacade.realtimeIsVoiceFocusEnabled())
     }
 
     @Test

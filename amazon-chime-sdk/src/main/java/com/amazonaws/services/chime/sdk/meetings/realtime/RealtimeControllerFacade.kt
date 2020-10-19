@@ -84,16 +84,16 @@ interface RealtimeControllerFacade {
     fun removeRealtimeDataMessageObserverFromTopic(topic: String)
 
     /**
-     * Toggle Voice Focus (ML-based noise suppression) on the audio input.
+     * Enable or disable Voice Focus (ML-based noise suppression) on the audio input.
      *
-     * @return Boolean whether the toggle action succeeded
+     * @return Boolean whether the enable/disable action succeeded
      */
-    fun realtimeToggleVoiceFocus(on: Boolean): Boolean
+    fun realtimeSetVoiceFocusEnabled(enabled: Boolean): Boolean
 
     /**
-     * Checks if Voice Focus is running
+     * Checks if Voice Focus is enabled
      *
-     * @return Boolean whether Voice Focus is running or not
+     * @return Boolean whether Voice Focus is enabled or not
      */
-    fun realtimeIsVoiceFocusOn(): Boolean
+    fun realtimeIsVoiceFocusEnabled(): Boolean
 }
