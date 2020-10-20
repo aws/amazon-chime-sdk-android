@@ -321,7 +321,7 @@ class DefaultAudioClientControllerTest {
 
         audioClientController.stop()
 
-        verify(exactly = 1) { mockAudioClient.stopSession() }
+        verify(exactly = 1, timeout = 5000L) { mockAudioClient.stopSession() }
         verify { audioManager.setBluetoothScoOn(false) }
         verify { audioManager.stopBluetoothSco() }
         verify { audioManager.setMode(AudioManager.MODE_NORMAL) }

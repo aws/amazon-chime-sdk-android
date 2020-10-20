@@ -80,7 +80,7 @@ class DefaultVideoClientControllerTest {
             testVideoClientController.stopAndDestroy()
         }
 
-        coVerify { mockVideoClientStateController.stop() }
+        coVerify(exactly = 1, timeout = 5000L) { mockVideoClientStateController.stop() }
     }
 
     @Test

@@ -689,8 +689,8 @@ class DefaultAudioClientObserverTest {
             )
         }
 
-        verify(exactly = 1) { mockAudioVideoObserver.onAudioSessionStopped(any()) }
-        verify(exactly = 1) { mockAudioClient.stopSession() }
+        verify(exactly = 1, timeout = 5000L) { mockAudioVideoObserver.onAudioSessionStopped(any()) }
+        verify(exactly = 1, timeout = 5000L) { mockAudioClient.stopSession() }
     }
 
     @Test
@@ -708,8 +708,8 @@ class DefaultAudioClientObserverTest {
                 AudioClient.AUDIO_CLIENT_ERR_SERVICE_UNAVAILABLE
             )
         }
-        coVerify(exactly = 1) { mockAudioVideoObserver.onAudioSessionStopped(any()) }
-        verify(exactly = 1) { mockAudioClient.stopSession() }
+        coVerify(exactly = 1, timeout = 5000L) { mockAudioVideoObserver.onAudioSessionStopped(any()) }
+        verify(exactly = 1, timeout = 5000L) { mockAudioClient.stopSession() }
     }
 
     @Test
