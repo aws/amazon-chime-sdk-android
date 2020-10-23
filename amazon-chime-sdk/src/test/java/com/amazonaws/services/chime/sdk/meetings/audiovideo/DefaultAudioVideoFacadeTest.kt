@@ -24,6 +24,7 @@ import io.mockk.impl.annotations.MockK
 import io.mockk.mockkStatic
 import io.mockk.verify
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
@@ -176,24 +177,28 @@ class DefaultAudioVideoFacadeTest {
     fun `realtimeSetVoiceFocusEnabled(true) should call realtimeController realtimeSetVoiceFocusEnabled(true) and return the status`() {
         every { realtimeController.realtimeSetVoiceFocusEnabled(true) } returns true
         assertTrue(audioVideoFacade.realtimeSetVoiceFocusEnabled(true))
+        verify { realtimeController.realtimeSetVoiceFocusEnabled(true) }
     }
 
     @Test
     fun `realtimeIsVoiceFocusEnabled should call realtimeController realtimeIsVoiceFocusEnabled and return the status true`() {
         every { realtimeController.realtimeIsVoiceFocusEnabled() } returns true
         assertTrue(audioVideoFacade.realtimeIsVoiceFocusEnabled())
+        verify { realtimeController.realtimeIsVoiceFocusEnabled() }
     }
 
     @Test
     fun `realtimeSetVoiceFocusEnabled(false) should call realtimeController realtimeSetVoiceFocusEnabled(false) and return the status`() {
         every { realtimeController.realtimeSetVoiceFocusEnabled(false) } returns true
         assertTrue(audioVideoFacade.realtimeSetVoiceFocusEnabled(false))
+        verify { realtimeController.realtimeSetVoiceFocusEnabled(false) }
     }
 
     @Test
     fun `realtimeIsVoiceFocusEnabled should call realtimeController realtimeIsVoiceFocusEnabled and return the status false`() {
         every { realtimeController.realtimeIsVoiceFocusEnabled() } returns false
-        assertTrue(!audioVideoFacade.realtimeIsVoiceFocusEnabled())
+        assertFalse(audioVideoFacade.realtimeIsVoiceFocusEnabled())
+        verify { realtimeController.realtimeIsVoiceFocusEnabled() }
     }
 
     @Test

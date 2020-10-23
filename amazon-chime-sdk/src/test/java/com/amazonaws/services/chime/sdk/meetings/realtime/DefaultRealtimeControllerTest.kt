@@ -15,6 +15,7 @@ import io.mockk.every
 import io.mockk.impl.annotations.InjectMockKs
 import io.mockk.impl.annotations.MockK
 import io.mockk.verify
+import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
@@ -116,7 +117,7 @@ class DefaultRealtimeControllerTest {
     @Test
     fun `realtimeIsVoiceFocusEnabled() should call audioClientController IsVoiceFocusEnabled and return the status false`() {
         every { audioClientController.isVoiceFocusEnabled() } returns false
-        assertTrue(!realtimeController.realtimeIsVoiceFocusEnabled())
+        assertFalse(realtimeController.realtimeIsVoiceFocusEnabled())
         verify { audioClientController.isVoiceFocusEnabled() }
     }
 }
