@@ -1,4 +1,4 @@
-### [0.7.5] - 2020-10-23
+## [0.7.5] - 2020-10-23
 
 ### Fixed
 * Revert structured concurrency which can lead to deadlock
