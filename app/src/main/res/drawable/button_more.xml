@@ -5,5 +5,5 @@
   -->
 
 <selector xmlns:android="http://schemas.android.com/apk/res/android" >
-    <item android:drawable="@drawable/ic_resume_video" />
+    <item android:drawable="@drawable/ic_more_horiz" />
 </selector>

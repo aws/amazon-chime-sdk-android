@@ -86,6 +86,8 @@ interface RealtimeControllerFacade {
     /**
      * Enable or disable Voice Focus (ML-based noise suppression) on the audio input.
      *
+     * Voice Focus is disabled by default when audioClient starts.
+     *
      * @param enabled: Boolean - whether to enable Voice Focus or not
      * @return Boolean whether the enable/disable action succeeded
      */
