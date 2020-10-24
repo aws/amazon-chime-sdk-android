@@ -1,3 +1,9 @@
+## Unreleased
+
+### Added
+* Added new APIs in `RealtimeControllerFacade` to enable/disable Voice Focus (ML-based noise suppression) and get the on/off status of Voice Focus.
+* Added Voice Focus feature in Android demo app.
+
 ## [0.7.5] - 2020-10-23
 
 ### Fixed
