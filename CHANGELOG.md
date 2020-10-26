@@ -1,7 +1,7 @@
 ### Unreleased
 
 ### Fixed
-* **Breaking** Changed behavior to no longer call `videoTileSizeChanged` when a video is paused to fix a bug where pausing triggered this callback with width=0 and height=0
+* **Breaking** Changed behavior to no longer call `onVideoTileSizeChanged` when a video is paused to fix a bug where pausing triggered this callback with width=0 and height=0
 
 ## [0.7.5] - 2020-10-23
 
