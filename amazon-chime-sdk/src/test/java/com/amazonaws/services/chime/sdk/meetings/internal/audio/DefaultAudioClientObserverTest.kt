@@ -6,6 +6,7 @@
 package com.amazonaws.services.chime.sdk.meetings.internal.audio
 
 import android.util.Log
+import com.amazonaws.services.chime.sdk.meetings.TestConstant
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.AttendeeInfo
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.AudioVideoObserver
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.SignalStrength
@@ -689,8 +690,8 @@ class DefaultAudioClientObserverTest {
             )
         }
 
-        verify(exactly = 1) { mockAudioVideoObserver.onAudioSessionStopped(any()) }
-        verify(exactly = 1) { mockAudioClient.stopSession() }
+        verify(exactly = 1, timeout = TestConstant.globalScopeTimeoutMs) { mockAudioVideoObserver.onAudioSessionStopped(any()) }
+        verify(exactly = 1, timeout = TestConstant.globalScopeTimeoutMs) { mockAudioClient.stopSession() }
     }
 
     @Test
@@ -708,8 +709,8 @@ class DefaultAudioClientObserverTest {
                 AudioClient.AUDIO_CLIENT_ERR_SERVICE_UNAVAILABLE
             )
         }
-        coVerify(exactly = 1) { mockAudioVideoObserver.onAudioSessionStopped(any()) }
-        verify(exactly = 1) { mockAudioClient.stopSession() }
+        coVerify(exactly = 1, timeout = TestConstant.globalScopeTimeoutMs) { mockAudioVideoObserver.onAudioSessionStopped(any()) }
+        verify(exactly = 1, timeout = TestConstant.globalScopeTimeoutMs) { mockAudioClient.stopSession() }
     }
 
     @Test
