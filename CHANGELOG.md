@@ -1,8 +1,12 @@
+### Unreleased
+
+### Fixed
+* Fix `VideoTileSizeChanged` called even when frame is null
+
 ## [0.7.5] - 2020-10-23
 
 ### Fixed
 * Revert structured concurrency which can lead to deadlock
-* Fix `VideoTileSizeChanged` called even when frame is null
 
 ## [0.7.4] - 2020-10-08
 
