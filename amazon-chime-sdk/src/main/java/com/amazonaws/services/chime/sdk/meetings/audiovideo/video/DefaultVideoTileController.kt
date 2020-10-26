@@ -69,8 +69,8 @@ class DefaultVideoTileController(
                 return
             }
 
-            if (videoStreamContentWidth != tile.state.videoStreamContentWidth ||
-                videoStreamContentHeight != tile.state.videoStreamContentHeight) {
+            if (frame != null && (videoStreamContentWidth != tile.state.videoStreamContentWidth ||
+                videoStreamContentHeight != tile.state.videoStreamContentHeight)) {
                 tile.state.videoStreamContentWidth = videoStreamContentWidth
                 tile.state.videoStreamContentHeight = videoStreamContentHeight
                 forEachObserver { observer -> observer.onVideoTileSizeChanged(tile.state) }
