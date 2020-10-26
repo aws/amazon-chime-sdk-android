@@ -17,7 +17,7 @@
 ## [0.7.3] - 2020-09-10
 
 ### Fixed
-* Pass correct value for audio client in `DefaultAudioClientController`
+* Pass correct microphone input value for audio client in `DefaultAudioClientController` for better audio input quality
 
 ### Changed
 * Replace usage of GlobalScope with structured concurrency
