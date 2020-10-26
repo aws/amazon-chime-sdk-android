@@ -1,5 +1,16 @@
 ## Unreleased
 
+### Added
+* Added new APIs in `RealtimeControllerFacade` to enable/disable Voice Focus (ML-based noise suppression) and get the on/off status of Voice Focus.
+* Added Voice Focus feature in Android demo app.
+
+## [0.7.5] - 2020-10-23
+
+### Fixed
+* Revert structured concurrency which can lead to deadlock
+
+## [0.7.4] - 2020-10-08
+
 ### Changed
 * Changed `MAX_TILE_COUNT` in the demo app from 4 to 16. Now the demo app can support at most 16 remote video tiles.
 
