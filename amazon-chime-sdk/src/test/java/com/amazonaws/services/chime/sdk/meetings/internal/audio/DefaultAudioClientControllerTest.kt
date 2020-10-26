@@ -11,6 +11,7 @@ import android.media.AudioManager
 import android.media.AudioRecord
 import android.media.AudioTrack
 import android.util.Log
+import com.amazonaws.services.chime.sdk.meetings.TestConstant
 import com.amazonaws.services.chime.sdk.meetings.utils.logger.Logger
 import com.xodee.client.audio.audioclient.AudioClient
 import io.mockk.MockKAnnotations
@@ -321,7 +322,7 @@ class DefaultAudioClientControllerTest {
 
         audioClientController.stop()
 
-        verify(exactly = 1) { mockAudioClient.stopSession() }
+        verify(exactly = 1, timeout = TestConstant.globalScopeTimeoutMs) { mockAudioClient.stopSession() }
         verify { audioManager.setBluetoothScoOn(false) }
         verify { audioManager.stopBluetoothSco() }
         verify { audioManager.setMode(AudioManager.MODE_NORMAL) }

@@ -8,6 +8,7 @@ package com.amazonaws.services.chime.sdk.meetings.internal.video
 import android.content.Context
 import android.content.pm.PackageInfo
 import android.util.Log
+import com.amazonaws.services.chime.sdk.meetings.TestConstant
 import com.amazonaws.services.chime.sdk.meetings.session.MeetingSessionConfiguration
 import com.amazonaws.services.chime.sdk.meetings.utils.logger.Logger
 import com.xodee.client.video.VideoClient
@@ -80,7 +81,7 @@ class DefaultVideoClientControllerTest {
             testVideoClientController.stopAndDestroy()
         }
 
-        coVerify { mockVideoClientStateController.stop() }
+        coVerify(exactly = 1, timeout = TestConstant.globalScopeTimeoutMs) { mockVideoClientStateController.stop() }
     }
 
     @Test
