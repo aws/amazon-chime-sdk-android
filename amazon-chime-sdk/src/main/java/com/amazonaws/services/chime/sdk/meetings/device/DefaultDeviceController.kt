@@ -103,12 +103,7 @@ class DefaultDeviceController(
                 }
 
                 if (device.type == excludeType) continue
-                var name = device.productName
-                // OnePlus device with Android 9/10 is not able to get bluetooth name with AudioManager.getDevices
-                // We'll remap it so that it shows either bluetooth device name or "Bluetooth"
-                if (device.type == AudioDeviceInfo.TYPE_BLUETOOTH_SCO && device.productName == Build.MODEL) {
-                    name = "Bluetooth"
-                }
+                val name = device.productName
 
                 audioDevices.add(
                     MediaDevice(
