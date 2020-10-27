@@ -14,7 +14,6 @@ class AudioDeviceManager(private val audioVideo: AudioVideoFacade) {
 
     /**
      * Set current device whenever chooseAudioDevice is called.
-     * This will be called by [DeviceChangeObserver.onChooseAudioDeviceCalled] in [MeetingFragment]
      */
     fun setCurrentAudioDevice(mediaDevice: MediaDevice) {
         currentAudioDevice = mediaDevice
@@ -29,6 +28,7 @@ class AudioDeviceManager(private val audioVideo: AudioVideoFacade) {
         if (devices.isNotEmpty()) {
             if (devices[0] == currentAudioDevice) return
             audioVideo.chooseAudioDevice(devices[0])
+            setCurrentAudioDevice(devices[0])
         }
     }
 }

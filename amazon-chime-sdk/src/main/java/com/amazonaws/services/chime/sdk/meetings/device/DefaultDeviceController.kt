@@ -175,13 +175,7 @@ class DefaultDeviceController(
             MediaDeviceType.AUDIO_WIRED_HEADSET -> AudioClient.SPK_STREAM_ROUTE_HEADSET
             else -> AudioClient.SPK_STREAM_ROUTE_RECEIVER
         }
-        if (audioClientController.setRoute(route)) {
-            ObserverUtils.notifyObserverOnMainThread(deviceChangeObservers) {
-                it.onChooseAudioDeviceCalled(
-                    mediaDevice
-                )
-            }
-        }
+        audioClientController.setRoute(route)
     }
 
     @RequiresApi(Build.VERSION_CODES.N)

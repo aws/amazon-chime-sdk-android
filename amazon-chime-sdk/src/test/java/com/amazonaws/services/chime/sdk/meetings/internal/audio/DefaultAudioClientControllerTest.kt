@@ -12,7 +12,6 @@ import android.media.AudioRecord
 import android.media.AudioTrack
 import android.util.Log
 import com.amazonaws.services.chime.sdk.meetings.TestConstant
-import com.amazonaws.services.chime.sdk.meetings.internal.DefaultDeviceControllerListener
 import com.amazonaws.services.chime.sdk.meetings.utils.logger.Logger
 import com.xodee.client.audio.audioclient.AudioClient
 import io.mockk.MockKAnnotations

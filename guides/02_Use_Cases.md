@@ -11,10 +11,10 @@ if (Build.VERSION.SDK_INT >= AUDIO_RECORDING_CONFIG_API_LEVEL) {
 ```
 You can use `getActiveAudioDevice` to get currentDevice and put a check mark or make some UI change
 
-In order to support from Android API 21 - 23 (5.0 - 6.0), we need to manually handle cases for connection/reconnection. Since there is optional API `onChooseAudioDeviceCalled` which is called when chooseAudioDevice is called. This will let you make less mistakes. 
+In order to support from Android API 21 - 23 (5.0 - 6.0), we need to manually handle cases for connection/reconnection. We'll need to update our current device when chooseAudioDevice is called. 
 ```
     override fun onChooseAudioDeviceCalled(device: MediaDevice) {
-        audioDeviceManager.setCurrentAudioDevice(device) // update your current device
+        
     }
 ```
 
@@ -27,5 +27,6 @@ if (devices.isNotEmpty()) {
     if (devices[0] == currentAudioDevice) return
     // choose based on priority
     audioVideo.chooseAudioDevice(devices[0])
+    audioDeviceManager.setCurrentAudioDevice(device) // update your current device
 }
 ```

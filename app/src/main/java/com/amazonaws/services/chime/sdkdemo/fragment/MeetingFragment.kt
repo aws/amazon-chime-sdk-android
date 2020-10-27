@@ -357,6 +357,7 @@ class MeetingFragment : Fragment(),
         deviceAlertDialogBuilder.setAdapter(deviceListAdapter) { _, which ->
             run {
                 audioVideo.chooseAudioDevice(meetingModel.currentMediaDevices[which])
+                audioDeviceManager.setCurrentAudioDevice(meetingModel.currentMediaDevices[which])
                 meetingModel.isDeviceListDialogOn = false
             }
         }
@@ -416,10 +417,6 @@ class MeetingFragment : Fragment(),
         deviceListAdapter.clear()
         deviceListAdapter.addAll(meetingModel.currentMediaDevices)
         deviceListAdapter.notifyDataSetChanged()
-    }
-
-    override fun onChooseAudioDeviceCalled(device: MediaDevice) {
-        audioDeviceManager.setCurrentAudioDevice(device)
     }
 
     override fun onVolumeChanged(volumeUpdates: Array<VolumeUpdate>) {
@@ -871,6 +868,7 @@ class MeetingFragment : Fragment(),
         val cachedDevice = (activity as MeetingActivity).getCachedDevice()
         cachedDevice?.let {
             audioVideo.chooseAudioDevice(it)
+            audioDeviceManager.setCurrentAudioDevice(it)
             (activity as MeetingActivity).resetCachedDevice()
         }
     }
