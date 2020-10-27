@@ -199,4 +199,20 @@ class DefaultAudioClientController(
             return false
         }
     }
+
+    override fun setVoiceFocusEnabled(enabled: Boolean): Boolean {
+        if (audioClientState == AudioClientState.STARTED) {
+            return AudioClient.AUDIO_CLIENT_OK == audioClient.setVoiceFocusNoiseSuppression(enabled)
+        } else {
+            return false
+        }
+    }
+
+    override fun isVoiceFocusEnabled(): Boolean {
+        if (audioClientState == AudioClientState.STARTED) {
+            return audioClient.getVoiceFocusNoiseSuppression()
+        } else {
+            return false
+        }
+    }
 }

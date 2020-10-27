@@ -15,6 +15,7 @@ import io.mockk.every
 import io.mockk.impl.annotations.InjectMockKs
 import io.mockk.impl.annotations.MockK
 import io.mockk.verify
+import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
@@ -90,5 +91,33 @@ class DefaultRealtimeControllerTest {
     fun `removeRealtimeDataMessageObserverFromTopic should call videoClientObserver unsubscribeFromReceiveDataMessage with given topic`() {
         realtimeController.removeRealtimeDataMessageObserverFromTopic(messageTopic)
         verify { videoClientObserver.unsubscribeFromReceiveDataMessage(messageTopic) }
+    }
+
+    @Test
+    fun `realtimeSetVoiceFocusEnabled(true) should call audioClientController setVoiceFocusEnabled with true and return the status`() {
+        every { audioClientController.setVoiceFocusEnabled(true) } returns true
+        assertTrue(realtimeController.realtimeSetVoiceFocusEnabled(true))
+        verify { audioClientController.setVoiceFocusEnabled(true) }
+    }
+
+    @Test
+    fun `realtimeIsVoiceFocusEnabled() should call audioClientController IsVoiceFocusEnabled and return the status true`() {
+        every { audioClientController.isVoiceFocusEnabled() } returns true
+        assertTrue(realtimeController.realtimeIsVoiceFocusEnabled())
+        verify { audioClientController.isVoiceFocusEnabled() }
+    }
+
+    @Test
+    fun `realtimeSetVoiceFocusEnabled(false) should call audioClientController setVoiceFocusEnabled with false and return the status`() {
+        every { audioClientController.setVoiceFocusEnabled(false) } returns true
+        assertTrue(realtimeController.realtimeSetVoiceFocusEnabled(false))
+        verify { audioClientController.setVoiceFocusEnabled(false) }
+    }
+
+    @Test
+    fun `realtimeIsVoiceFocusEnabled() should call audioClientController IsVoiceFocusEnabled and return the status false`() {
+        every { audioClientController.isVoiceFocusEnabled() } returns false
+        assertFalse(realtimeController.realtimeIsVoiceFocusEnabled())
+        verify { audioClientController.isVoiceFocusEnabled() }
     }
 }

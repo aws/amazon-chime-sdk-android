@@ -25,4 +25,6 @@ interface AudioClientController {
 
     fun stop()
     fun setMute(isMuted: Boolean): Boolean
+    fun setVoiceFocusEnabled(enabled: Boolean): Boolean
+    fun isVoiceFocusEnabled(): Boolean
 }
