@@ -2,7 +2,7 @@
 
 ### Fixed
 * **Breaking** Changed behavior to no longer call `onVideoTileSizeChanged` when a video is paused to fix a bug where pausing triggered this callback with width=0 and height=0
-* Pass correct IO sample rate for audio client in `DefaultAudioClientController` for better audio handling when using Bluetooth
+* Fix audio issue when using Bluetooth device by forcing the sample rate to 16kHz, which should be supported in most of devices
 
 ## [0.7.5] - 2020-10-23
 
