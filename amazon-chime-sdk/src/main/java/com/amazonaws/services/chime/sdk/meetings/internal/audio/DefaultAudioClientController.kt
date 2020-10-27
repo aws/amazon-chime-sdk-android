@@ -49,7 +49,7 @@ class DefaultAudioClientController(
         audioClient.sendMessage(AudioClient.MESS_SET_HARDWARE_SAMPLE_RATE, nativeSR)
 
         // This IO_SAMPLE_RATE is used to create OpenSLES:
-        audioClient.sendMessage(AudioClient.MESS_SET_IO_SAMPLE_RATE, nativeSR)
+        audioClient.sendMessage(AudioClient.MESS_SET_IO_SAMPLE_RATE, AudioClient.AUDIO_CLIENT_SAMPLE_RATE)
 
         // Result is in bytes, so we divide by 2 (16-bit samples)
         val spkMinBufSizeInSamples = AudioTrack.getMinBufferSize(

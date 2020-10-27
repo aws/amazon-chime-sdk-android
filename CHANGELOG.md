@@ -2,6 +2,7 @@
 
 ### Fixed
 * **Breaking** Changed behavior to no longer call `onVideoTileSizeChanged` when a video is paused to fix a bug where pausing triggered this callback with width=0 and height=0
+* Fix audio issue when using Bluetooth device by changing the sample rate to 16kHz
 
 ## [0.7.6] - 2020-11-13
 
@@ -18,7 +19,7 @@
 ## [0.7.3] - 2020-09-10
 
 ### Fixed
-* Pass correct value for audio client in `DefaultAudioClientController`
+* Pass correct microphone input value for audio client in `DefaultAudioClientController` for better audio input quality
 
 ### Changed
 * Replace usage of GlobalScope with structured concurrency
