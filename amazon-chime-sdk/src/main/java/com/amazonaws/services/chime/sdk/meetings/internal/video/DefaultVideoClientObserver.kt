@@ -153,6 +153,10 @@ class DefaultVideoClientObserver(
         clientMetricsCollector.processVideoClientMetrics(metricMap)
     }
 
+    override fun getAvailableDnsServers(): Array<String> {
+        return emptyArray()
+    }
+
     override fun onLogMessage(logLevel: Int, message: String?) {
         if (message == null) return
         // Only print error and fatal as the Media team's request to avoid noise
