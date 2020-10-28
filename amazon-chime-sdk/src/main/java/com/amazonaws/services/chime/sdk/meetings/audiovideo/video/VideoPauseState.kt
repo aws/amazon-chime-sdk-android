@@ -20,8 +20,8 @@ enum class VideoPauseState(val value: Int) {
     PausedByUserRequest(1),
 
     /**
-     * The video tile has been paused to save on local downlink bandwidth.  When the connection improves,
-     * it will be automatically unpaused by the client.  User requested pauses will shadow this pause,
+     * The video tile has been paused to save on local downlink bandwidth. When the connection improves,
+     * it will be automatically unpaused by the client. User requested pauses will shadow this pause,
      * but if the connection has not recovered on resume the tile will still be paused with this state.
      */
     PausedForPoorConnection(2);

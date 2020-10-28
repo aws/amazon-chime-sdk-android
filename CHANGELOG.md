@@ -1,11 +1,31 @@
 ## Unreleased
 
+### Custom Video Source
+This release includes support for custom video sources, and therefore includes a lot of additional APIs.  Though most builders who have not been making modifications to internal render path should not need to make any changes, there are some small breaking changes to certain APIs to ensure consistancy within data flow accross the SDK.
+
 ### Added
 * Added new APIs in `RealtimeControllerFacade` to enable/disable Voice Focus (ML-based noise suppression) and get the on/off status of Voice Focus
 * Added Voice Focus feature in Android demo app
+* Added `VideoFrame`, `VideoRotation`, `VideoContentHint`, `VideoFrameBuffer`, `VideoFrameI420Buffer`, `VideoFrameRGBABuffer`, `VideoFrameTextureBuffer` classes, enums, and interfaces to hold video frames of various raw types
+* Added `VideoSource` and `VideoSink` to facilitate transfer of `VideoFrame` objects
+* Added `CameraCaptureSource`, `CaptureSourceError`, `CaptureSourceObserver`, `VideoCaptureFormat`, and `VideoCaptureSource` interfaces and enums to facilitate releasing capturers as part of the SDK
+* Added `DefaultCameraCaptureSource` implementation of `CameraCaptureSource`
+* Added `EglCore`, `DefaultEglCore`, `EglCoreFactory`, `DefaultEglCoreFactory`, `GlVideoFrameDrawer`, `DefaultGlVideoFrameDrawer`, `SurfaceTextureCaptureSource`, `DefaultSurfaceTextureCaptureSource`, `SurfaceTextureCaptureSourceFactory`, `DefaultSurfaceTextureCaptureSourceFactory`, for shared graphics related needs
+* Added `listVideoDevices` and `listSupportedVideoCaptureFormats` to `MediaDevice.Companion`
+* Added `SurfaceRenderView` and `TextureRenderView` an open source implementation of rendering onto a `SurfaceView` and `TextureView` respectively
+* Added `VideoLayoutMeasure` and `EglRenderer` + `DefaultEglRenderer` internal helper classes for use within aforementioned render views
 
 ### Added
 * Added more verbose logging from media layer to SDK layer for builders to control log level. Set `LogLevel` to `INFO` or above for production application to not be bombarded with logs.
+
+### Changed
+* The render path has been changed to use `VideoFrame`s for consistency with the send side, this includes:
+  * **Breaking** `VideoTileController.onReceiveFrame` now takes `VideoFrame?` instead of `Any?` .  Builders with a custom `VideoTileController` will have to update APIs.
+  * **Breaking** `VideoTile.renderFrame` now takes `VideoFrame` instead of `Any` and has been replaced by extending `VideoSink` and using `onReceivedVideoFrame`
+  * **Breaking** `VideoRenderView` is now just a `VideoSink` (i.e. it now accepts `VideoFrame` object via `VideoSink.onReceivedVideoFrame` rather then `Any?` via `render`)
+  * **Breaking** `VideoRenderView.initialize` and `VideoRenderView.finalize` have been abstracted away to `EglVideoRenderView` and are now named `init` and `release` respectively
+  * `DefaultVideoRenderView` now inherits from `SurfaceTextureView`
+* If no custom source is provided, the SDK level video client will use a `DefaultCameraCaptureSource` instead of relying on capture implementations within the MediaSDK; though behavior should be identical, please open an issue if any differences are noticed.
 
 ### Fixed
 * **Breaking** Changed behavior to no longer call `onVideoTileSizeChanged` when a video is paused to fix a bug where pausing triggered this callback with width=0 and height=0

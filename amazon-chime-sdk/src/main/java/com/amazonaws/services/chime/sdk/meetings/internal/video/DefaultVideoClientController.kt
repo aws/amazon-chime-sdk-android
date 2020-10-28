@@ -5,28 +5,32 @@
 
 package com.amazonaws.services.chime.sdk.meetings.internal.video
 
-import android.Manifest
 import android.content.Context
-import android.content.pm.PackageManager
-import androidx.core.content.ContextCompat
 import com.amazonaws.services.chime.sdk.BuildConfig
+import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoSource
+import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.capture.CameraCaptureSource
+import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.capture.DefaultCameraCaptureSource
+import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.capture.DefaultSurfaceTextureCaptureSourceFactory
+import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.gl.EglCore
+import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.gl.EglCoreFactory
+import com.amazonaws.services.chime.sdk.meetings.device.MediaDevice
 import com.amazonaws.services.chime.sdk.meetings.session.MeetingSessionConfiguration
 import com.amazonaws.services.chime.sdk.meetings.utils.logger.Logger
 import com.google.gson.Gson
 import com.xodee.client.video.VideoClient
 import com.xodee.client.video.VideoClientCapturer
-import com.xodee.client.video.VideoDevice
 import java.security.InvalidParameterException
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
-class DefaultVideoClientController constructor(
+class DefaultVideoClientController(
     private val context: Context,
     private val logger: Logger,
     private val videoClientStateController: VideoClientStateController,
     private val videoClientObserver: VideoClientObserver,
     private val configuration: MeetingSessionConfiguration,
-    private val videoClientFactory: VideoClientFactory
+    private val videoClientFactory: VideoClientFactory,
+    private val eglCoreFactory: EglCoreFactory
 ) : VideoClientController,
     VideoClientLifecycleHandler {
 
@@ -34,52 +38,76 @@ class DefaultVideoClientController constructor(
     private val TOPIC_REGEX = "^[a-zA-Z0-9_-]{1,36}$".toRegex()
     private val TAG = "DefaultVideoClientController"
 
-    /**
-     * This flag will enable higher resolution for videos
-     */
-    private val VIDEO_CLIENT_FLAG_ENABLE_TWO_SIMULCAST_STREAMS = 4096
+    private val VIDEO_CLIENT_FLAG_ENABLE_USE_HW_DECODE_AND_RENDER = 1 shl 6
+    private val VIDEO_CLIENT_FLAG_ENABLE_TWO_SIMULCAST_STREAMS = 1 shl 12
+    private val VIDEO_CLIENT_FLAG_DISABLE_CAPTURER = 1 shl 20
 
     private val gson = Gson()
-    private val permissions = arrayOf(
-        Manifest.permission.CAMERA
-    )
+
+    private val cameraCaptureSource: CameraCaptureSource
+    private var videoSourceAdapter: VideoSourceAdapter? = null
+    private var isUsingInternalCaptureSource = false
 
     init {
         videoClientStateController.bindLifecycleHandler(this)
+
+        val surfaceTextureCaptureSourceFactory =
+            DefaultSurfaceTextureCaptureSourceFactory(logger, eglCoreFactory)
+        cameraCaptureSource =
+            DefaultCameraCaptureSource(
+                context,
+                logger,
+                surfaceTextureCaptureSourceFactory
+            )
     }
 
     private var videoClient: VideoClient? = null
 
+    private var eglCore: EglCore? = null
+
     override fun start() {
+        if (eglCore == null) {
+            eglCore = eglCoreFactory.createEglCore()
+        }
+
         videoClientStateController.start()
     }
 
     override fun stopAndDestroy() {
         GlobalScope.launch {
             videoClientStateController.stop()
+
+            eglCore?.release()
+            eglCore = null
         }
     }
 
     override fun startLocalVideo() {
         if (!videoClientStateController.canAct(VideoClientState.INITIALIZED)) return
 
-        logger.info(TAG, "Starting local video")
-        val hasPermission: Boolean = permissions.all {
-            ContextCompat.checkSelfPermission(context, it) == PackageManager.PERMISSION_GRANTED
-        }
-
-        if (!hasPermission) {
-            throw SecurityException(
-                "Missing necessary permissions for WebRTC: ${permissions.joinToString(
-                    separator = ", ",
-                    prefix = "",
-                    postfix = ""
-                )}"
+        videoSourceAdapter =
+            VideoSourceAdapter(
+                cameraCaptureSource
             )
-        }
-
-        getActiveCamera() ?: setFrontCameraAsCurrentDevice()
+        logger.info(TAG, "Setting external video source in media client to internal camera source")
+        videoClient?.setExternalVideoSource(videoSourceAdapter, eglCore?.eglContext)
         videoClient?.setSending(true)
+
+        cameraCaptureSource.start()
+        isUsingInternalCaptureSource = true
+    }
+
+    override fun startLocalVideo(source: VideoSource) {
+        if (!videoClientStateController.canAct(VideoClientState.INITIALIZED)) return
+
+        videoSourceAdapter =
+            VideoSourceAdapter(
+                source
+            )
+        logger.info(TAG, "Setting external video source in media client to custom source")
+        videoClient?.setExternalVideoSource(videoSourceAdapter, eglCore?.eglContext)
+        videoClient?.setSending(true)
+        isUsingInternalCaptureSource = false
     }
 
     override fun stopLocalVideo() {
@@ -87,6 +115,10 @@ class DefaultVideoClientController constructor(
 
         logger.info(TAG, "Stopping local video")
         videoClient?.setSending(false)
+        if (isUsingInternalCaptureSource) {
+            cameraCaptureSource.stop()
+            isUsingInternalCaptureSource = false
+        }
     }
 
     override fun startRemoteVideo() {
@@ -103,28 +135,15 @@ class DefaultVideoClientController constructor(
         videoClient?.setReceiving(false)
     }
 
-    override fun getActiveCamera(): VideoDevice? {
-        return videoClient?.currentDevice
+    override fun getActiveCamera(): MediaDevice? {
+        if (isUsingInternalCaptureSource) {
+            return cameraCaptureSource.device
+        }
+        return null
     }
 
     override fun switchCamera() {
-        if (!videoClientStateController.canAct(VideoClientState.INITIALIZED)) return
-
-        logger.info(TAG, "Switching camera")
-        val nextDevice: VideoDevice? = videoClient?.devices
-            ?.filter { it.identifier != (getActiveCamera()?.identifier) }
-            ?.elementAtOrNull(0)
-        nextDevice?.let { videoClient?.currentDevice = it }
-    }
-
-    private fun setFrontCameraAsCurrentDevice() {
-        logger.info(TAG, "Setting front camera as current device")
-        val currentDevice: VideoDevice? = getActiveCamera()
-        if (currentDevice == null || !currentDevice.isFrontFacing) {
-            val frontDevice: VideoDevice? =
-                videoClient?.devices?.filter { it.isFrontFacing }?.elementAtOrNull(0)
-            frontDevice?.let { videoClient?.currentDevice = it }
-        }
+        cameraCaptureSource.switchCamera()
     }
 
     override fun setRemotePaused(isPaused: Boolean, videoId: Int) {
@@ -167,23 +186,27 @@ class DefaultVideoClientController constructor(
         VideoClient.initializeGlobals(context)
         VideoClientCapturer.getInstance(context)
         videoClient = videoClientFactory.getVideoClient(videoClientObserver)
-        videoClientObserver.notifyVideoTileObserver { observer -> observer.initialize() }
     }
 
     override fun startVideoClient() {
         logger.info(TAG, "Starting video client")
         videoClient?.setReceiving(false)
         var flag = 0
+        flag = flag or VIDEO_CLIENT_FLAG_ENABLE_USE_HW_DECODE_AND_RENDER
         flag = flag or VIDEO_CLIENT_FLAG_ENABLE_TWO_SIMULCAST_STREAMS
-        videoClient?.startServiceV2(
+        flag = flag or VIDEO_CLIENT_FLAG_DISABLE_CAPTURER
+        videoClient?.startServiceV3(
             "",
             "",
             configuration.meetingId,
             configuration.credentials.joinToken,
             false,
             0,
-            flag
+            flag,
+            eglCore?.eglContext
         )
+
+        videoSourceAdapter?.let { videoClient?.setExternalVideoSource(it, eglCore?.eglContext) }
     }
 
     override fun stopVideoClient() {
@@ -193,8 +216,6 @@ class DefaultVideoClientController constructor(
 
     override fun destroyVideoClient() {
         logger.info(TAG, "Destroying video client")
-        videoClient?.clearCurrentDevice()
-        videoClientObserver.notifyVideoTileObserver { observer -> observer.destroy() }
         videoClient?.destroy()
         videoClient = null
         VideoClient.finalizeGlobals()

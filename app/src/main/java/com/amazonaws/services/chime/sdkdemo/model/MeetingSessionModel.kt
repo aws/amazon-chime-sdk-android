@@ -7,8 +7,13 @@ package com.amazonaws.services.chime.sdkdemo.model
 
 import androidx.lifecycle.ViewModel
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.AudioVideoFacade
+import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.capture.CameraCaptureSource
+import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.gl.DefaultEglCoreFactory
+import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.gl.EglCoreFactory
 import com.amazonaws.services.chime.sdk.meetings.session.MeetingSession
 import com.amazonaws.services.chime.sdk.meetings.session.MeetingSessionCredentials
+import com.amazonaws.services.chime.sdkdemo.utils.CpuVideoProcessor
+import com.amazonaws.services.chime.sdkdemo.utils.GpuVideoProcessor
 
 class MeetingSessionModel : ViewModel() {
     private lateinit var meetingSession: MeetingSession
@@ -22,4 +27,10 @@ class MeetingSessionModel : ViewModel() {
 
     val audioVideo: AudioVideoFacade
         get() = meetingSession.audioVideo
+
+    // Graphics/capture related objects
+    val eglCoreFactory: EglCoreFactory = DefaultEglCoreFactory()
+    lateinit var cameraCaptureSource: CameraCaptureSource
+    lateinit var gpuVideoProcessor: GpuVideoProcessor
+    lateinit var cpuVideoProcessor: CpuVideoProcessor
 }

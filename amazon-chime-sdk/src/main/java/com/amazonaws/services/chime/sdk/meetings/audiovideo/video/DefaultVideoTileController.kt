@@ -5,8 +5,8 @@
 
 package com.amazonaws.services.chime.sdk.meetings.audiovideo.video
 
-import com.amazon.chime.webrtc.EglBase
-import com.amazon.chime.webrtc.VideoRenderer
+import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.gl.EglCoreFactory
+import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.gl.EglVideoRenderView
 import com.amazonaws.services.chime.sdk.meetings.internal.utils.ObserverUtils
 import com.amazonaws.services.chime.sdk.meetings.internal.video.VideoClientController
 import com.amazonaws.services.chime.sdk.meetings.utils.logger.Logger
@@ -14,7 +14,8 @@ import com.amazonaws.services.chime.sdk.meetings.utils.logger.Logger
 class DefaultVideoTileController(
     private val logger: Logger,
     private val videoClientController: VideoClientController,
-    private val videoTileFactory: VideoTileFactory
+    private val videoTileFactory: VideoTileFactory,
+    private val eglCoreFactory: EglCoreFactory
 ) : VideoTileController {
     // A map of tile id to VideoTile to determine if VideoTileController is adding, removing, pausing, or rendering
     private val videoTileMap = mutableMapOf<Int, VideoTile>()
@@ -23,20 +24,9 @@ class DefaultVideoTileController(
     private val TAG = "DefaultVideoTileController"
 
     private var videoTileObservers = mutableSetOf<VideoTileObserver>()
-    private var rootEglBase: EglBase? = null
-
-    override fun initialize() {
-        logger.info(TAG, "initializing VideoTileController")
-        rootEglBase = EglBase.create()
-    }
-
-    override fun destroy() {
-        logger.info(TAG, "destroying VideoTileController")
-        rootEglBase?.release()
-    }
 
     override fun onReceiveFrame(
-        frame: Any?,
+        frame: VideoFrame?,
         videoId: Int,
         attendeeId: String?,
         pauseState: VideoPauseState
@@ -51,13 +41,9 @@ class DefaultVideoTileController(
          * In both pause and stop cases, the frame is null but the pauseType differs
          */
         val tile: VideoTile? = videoTileMap[videoId]
-        var videoStreamContentWidth = 0
-        var videoStreamContentHeight = 0
 
-        if (frame is VideoRenderer.I420Frame) {
-            videoStreamContentWidth = frame.width
-            videoStreamContentHeight = frame.height
-        }
+        val videoStreamContentWidth = frame?.width ?: 0
+        val videoStreamContentHeight = frame?.height ?: 0
 
         if (tile != null) {
             if (frame == null && pauseState == VideoPauseState.Unpaused) {
@@ -92,9 +78,7 @@ class DefaultVideoTileController(
 
             // Ignore any frames which come to an already paused tile
             if (tile.state.pauseState == VideoPauseState.Unpaused) {
-                frame?.run {
-                    tile.renderFrame(frame)
-                }
+                frame?.run { tile.onVideoFrameReceived(frame) }
             }
         } else {
             frame?.run {
@@ -170,7 +154,11 @@ class DefaultVideoTileController(
                 logger.info(TAG, "tileId = $tileId already had a different video view. Unbinding the old one and associating the new one")
                 removeVideoViewFromMap(tileId)
             }
-            it.bind(rootEglBase, videoView)
+            if (videoView is EglVideoRenderView) {
+                logger.info(TAG, "Initializing EGL state on EGL render view")
+                videoView.init(eglCoreFactory)
+            }
+            it.bind(videoView)
             boundVideoViewMap[videoView] = tileId
         }
     }
@@ -179,6 +167,11 @@ class DefaultVideoTileController(
         videoTileMap[tileId]?.let {
             val renderView = it.videoRenderView
             it.unbind()
+            if (renderView is EglVideoRenderView) {
+                logger.info(TAG, "Releasing EGL state on EGL render view")
+                renderView.release()
+            }
+
             boundVideoViewMap.remove(renderView)
         }
     }
