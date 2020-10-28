@@ -221,6 +221,12 @@ class DefaultAudioClientObserver(
         // Will be changed back to respect logger settings once sanitize the logs
         if (logLevel == AudioClient.L_ERROR || logLevel == AudioClient.L_FATAL) {
             logger.error(TAG, message)
+        } else if (logLevel == AudioClient.L_WARNING) {
+            logger.warn(TAG, message)
+        } else if (logLevel == AudioClient.L_INFO) {
+            logger.debug(TAG, message)
+        } else {
+            logger.verbose(TAG, message)
         }
     }
 

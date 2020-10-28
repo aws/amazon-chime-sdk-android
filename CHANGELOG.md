@@ -4,6 +4,9 @@
 * Added new APIs in `RealtimeControllerFacade` to enable/disable Voice Focus (ML-based noise suppression) and get the on/off status of Voice Focus
 * Added Voice Focus feature in Android demo app
 
+### Added
+* Added more verbose logging from media layer to SDK layer for builders to control log level
+
 ### Fixed
 * **Breaking** Changed behavior to no longer call `onVideoTileSizeChanged` when a video is paused to fix a bug where pausing triggered this callback with width=0 and height=0
 * Fix audio issue when using Bluetooth device by changing the sample rate to 16kHz
