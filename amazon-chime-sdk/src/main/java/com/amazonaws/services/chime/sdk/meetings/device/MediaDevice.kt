@@ -127,6 +127,7 @@ enum class MediaDeviceType {
                 AudioDeviceInfo.TYPE_BLUETOOTH_SCO,
                 AudioDeviceInfo.TYPE_BLUETOOTH_A2DP -> AUDIO_BLUETOOTH
                 AudioDeviceInfo.TYPE_WIRED_HEADSET,
+                AudioDeviceInfo.TYPE_USB_HEADSET,
                 AudioDeviceInfo.TYPE_WIRED_HEADPHONES -> AUDIO_WIRED_HEADSET
                 AudioDeviceInfo.TYPE_BUILTIN_SPEAKER -> AUDIO_BUILTIN_SPEAKER
                 AudioDeviceInfo.TYPE_BUILTIN_EARPIECE,

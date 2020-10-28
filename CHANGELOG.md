@@ -118,6 +118,9 @@ This release includes support for custom video sources, and therefore includes a
 * Added additional, optional `id` (unique ID) parameter to `MediaDevice` for video capture devices.
 * **Breaking** Changed the default log level of `ConsoleLogger` to `INFO` level from `WARN`.
 
+### Added
+* Added `TYPE_USB_HEADSET` to `DefaultDeviceController` for cases like headphone jack wired with USB.
+
 ### Fixed
 * **Breaking** Changed behavior to no longer call `onVideoTileSizeChanged` when a video is paused to fix a bug where pausing triggered this callback with width=0 and height=0.
 * Fix audio issue when using Bluetooth device by changing the sample rate to 16kHz.
