@@ -1,4 +1,4 @@
-### Unreleased
+## Unreleased
 
 ### Added
 * Added new APIs in `RealtimeControllerFacade` to enable/disable Voice Focus (ML-based noise suppression) and get the on/off status of Voice Focus.

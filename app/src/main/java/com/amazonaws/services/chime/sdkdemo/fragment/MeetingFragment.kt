@@ -340,10 +340,24 @@ class MeetingFragment : Fragment(),
         deviceAlertDialogBuilder.setTitle(R.string.alert_title_choose_audio)
         deviceAlertDialogBuilder.setNegativeButton(R.string.cancel) { dialog, _ ->
             dialog.dismiss()
+            meetingModel.isDeviceListDialogOn = false
         }
         deviceAlertDialogBuilder.setAdapter(deviceListAdapter) { _, which ->
             run {
                 audioVideo.chooseAudioDevice(meetingModel.currentMediaDevices[which])
+            }
+            additionalOptionsAlertDialogBuilder.setOnDismissListener {
+                meetingModel.isAdditionalOptionsDialogOn = false
+            }
+            deviceAlertDialogBuilder.setOnDismissListener {
+                meetingModel.isDeviceListDialogOn = false
+            }
+
+            if (meetingModel.isAdditionalOptionsDialogOn) {
+                additionalOptionsAlertDialogBuilder.create().show()
+            }
+            if (meetingModel.isDeviceListDialogOn) {
+                deviceAlertDialogBuilder.create().show()
             }
         }
     }
@@ -353,6 +367,7 @@ class MeetingFragment : Fragment(),
         additionalOptionsAlertDialogBuilder.setTitle(R.string.additional_options)
         additionalOptionsAlertDialogBuilder.setNegativeButton(R.string.cancel) { dialog, _ ->
             dialog.dismiss()
+            meetingModel.isAdditionalOptionsDialogOn = false
         }
         refreshAdditionalOptionsDialogItems()
     }
@@ -553,6 +568,7 @@ class MeetingFragment : Fragment(),
     private fun toggleSpeaker() {
         deviceAlertDialogBuilder.create()
         deviceAlertDialogBuilder.show()
+        meetingModel.isDeviceListDialogOn = true
     }
 
     private fun setVoiceFocusEnabled(enabled: Boolean) {
@@ -590,6 +606,7 @@ class MeetingFragment : Fragment(),
     private fun toggleAdditionalOptionsMenu() {
         additionalOptionsAlertDialogBuilder.create()
         additionalOptionsAlertDialogBuilder.show()
+        meetingModel.isAdditionalOptionsDialogOn = true
     }
 
     private fun refreshNoVideosOrScreenShareAvailableText() {
