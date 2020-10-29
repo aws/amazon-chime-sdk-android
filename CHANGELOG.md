@@ -5,7 +5,7 @@
 * Added Voice Focus feature in Android demo app
 
 ### Added
-* Added more verbose logging from media layer to SDK layer for builders to control log level
+* Added more verbose logging from media layer to SDK layer for builders to control log level. Set `LogLevel` to `INFO` or above for production application to not be bombarded with logs.
 
 ### Fixed
 * **Breaking** Changed behavior to no longer call `onVideoTileSizeChanged` when a video is paused to fix a bug where pausing triggered this callback with width=0 and height=0
