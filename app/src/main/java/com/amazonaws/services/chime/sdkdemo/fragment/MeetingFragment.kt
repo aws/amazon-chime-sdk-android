@@ -346,19 +346,12 @@ class MeetingFragment : Fragment(),
             run {
                 audioVideo.chooseAudioDevice(meetingModel.currentMediaDevices[which])
             }
-            additionalOptionsAlertDialogBuilder.setOnDismissListener {
-                meetingModel.isAdditionalOptionsDialogOn = false
-            }
-            deviceAlertDialogBuilder.setOnDismissListener {
-                meetingModel.isDeviceListDialogOn = false
-            }
-
-            if (meetingModel.isAdditionalOptionsDialogOn) {
-                additionalOptionsAlertDialogBuilder.create().show()
-            }
-            if (meetingModel.isDeviceListDialogOn) {
-                deviceAlertDialogBuilder.create().show()
-            }
+        }
+        deviceAlertDialogBuilder.setOnDismissListener {
+            meetingModel.isDeviceListDialogOn = false
+        }
+        if (meetingModel.isDeviceListDialogOn) {
+            deviceAlertDialogBuilder.create().show()
         }
     }
 
@@ -370,6 +363,12 @@ class MeetingFragment : Fragment(),
             meetingModel.isAdditionalOptionsDialogOn = false
         }
         refreshAdditionalOptionsDialogItems()
+        additionalOptionsAlertDialogBuilder.setOnDismissListener {
+            meetingModel.isAdditionalOptionsDialogOn = false
+        }
+        if (meetingModel.isAdditionalOptionsDialogOn) {
+            additionalOptionsAlertDialogBuilder.create().show()
+        }
     }
 
     private fun refreshAdditionalOptionsDialogItems() {
