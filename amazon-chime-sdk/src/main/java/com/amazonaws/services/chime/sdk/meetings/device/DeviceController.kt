@@ -26,6 +26,8 @@ interface DeviceController {
     /**
      * Selects an audio device to use.
      *
+     * Note: [chooseAudioDevice] is no-op when audio client is not started.
+     *
      * @param mediaDevice the audio device selected to use.
      */
     fun chooseAudioDevice(mediaDevice: MediaDevice)
