@@ -126,6 +126,8 @@ class DefaultAudioClientControllerTest {
                 any()
             )
         } returns testAudioClientSuccessCode
+        every { mockAudioClient.setVoiceFocusNoiseSuppression(any()) } returns AudioClient.AUDIO_CLIENT_OK
+        every { mockAudioClient.getVoiceFocusNoiseSuppression() } returns true
 
         mockkStatic(AudioTrack::class, AudioRecord::class)
         every { AudioTrack.getNativeOutputSampleRate(any()) } returns testSampleBuffer
@@ -301,6 +303,7 @@ class DefaultAudioClientControllerTest {
 
     @Test
     fun `stop should not call AudioClient stopSession when audio client status is not started`() {
+        setupStartTests()
         every { mockAudioClient.stopSession() } returns testAudioClientSuccessCode
 
         audioClientController.stop()
@@ -327,5 +330,61 @@ class DefaultAudioClientControllerTest {
         verify { audioManager.stopBluetoothSco() }
         verify { audioManager.setMode(AudioManager.MODE_NORMAL) }
         verify { audioManager.setSpeakerphoneOn(false) }
+    }
+
+    @Test
+    fun `setVoiceEnabled should call AudioClient setVoiceFocusNoiseSuppression when audio client status is started`() {
+        setupStartTests()
+        audioClientController.start(
+            testAudioFallbackUrl,
+            testAudioHostUrl,
+            testMeetingId,
+            testAttendeeId,
+            testJoinToken
+        )
+
+        val enableOutput: Boolean = audioClientController.setVoiceFocusEnabled(true)
+        verify(exactly = 1) { mockAudioClient.setVoiceFocusNoiseSuppression(true) }
+        assertTrue(enableOutput)
+
+        val disableOutput: Boolean = audioClientController.setVoiceFocusEnabled(false)
+        verify(exactly = 1) { mockAudioClient.setVoiceFocusNoiseSuppression(false) }
+        assertTrue(disableOutput)
+    }
+
+    @Test
+    fun `setVoiceEnabled should not call AudioClient setVoiceFocusNoiseSuppression when audio client status is not started`() {
+        setupStartTests()
+
+        val enableOutput: Boolean = audioClientController.setVoiceFocusEnabled(true)
+        verify(exactly = 0) { mockAudioClient.setVoiceFocusNoiseSuppression(any()) }
+        assertFalse(enableOutput)
+
+        val disableOutput: Boolean = audioClientController.setVoiceFocusEnabled(false)
+        verify(exactly = 0) { mockAudioClient.setVoiceFocusNoiseSuppression(any()) }
+        assertFalse(disableOutput)
+    }
+
+    @Test
+    fun `isVoiceEnabled should call AudioClient getVoiceFocusNoiseSuppression when audio client status is started`() {
+        setupStartTests()
+        audioClientController.start(
+            testAudioFallbackUrl,
+            testAudioHostUrl,
+            testMeetingId,
+            testAttendeeId,
+            testJoinToken
+        )
+
+        audioClientController.isVoiceFocusEnabled()
+        verify(exactly = 1) { mockAudioClient.getVoiceFocusNoiseSuppression() }
+    }
+
+    @Test
+    fun `isVoiceEnabled should not call AudioClient getVoiceFocusNoiseSuppression when audio client status is not started`() {
+        setupStartTests()
+
+        audioClientController.isVoiceFocusEnabled()
+        verify(exactly = 0) { mockAudioClient.getVoiceFocusNoiseSuppression() }
     }
 }
