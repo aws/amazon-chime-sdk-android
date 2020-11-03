@@ -10,6 +10,7 @@
     <string name="main_title">Join a meeting</string>
     <string name="main_continue">Continue</string>
     <string name="meeting_join">Join</string>
+    <string name="additional_options">Additional Options</string>
     <string name="meeting_leave">Leave Meeting</string>
     <string name="meeting_mute">Toggle Mute</string>
     <string name="test_url"></string>
@@ -25,6 +26,8 @@
     <string name="video_view">Video Collection</string>
     <string name="no_screen_share_available">No screen share available</string>
     <string name="no_videos_available">No videos available</string>
+    <string name="enable_voice_focus">Turn on Voice Focus</string>
+    <string name="disable_voice_focus">Turn off Voice Focus</string>
 
     <!-- toggle tab -->
     <string name="toggle_camera">Toggle Camera</string>

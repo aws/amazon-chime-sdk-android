@@ -199,4 +199,22 @@ class DefaultAudioClientController(
             return false
         }
     }
+
+    override fun setVoiceFocusEnabled(enabled: Boolean): Boolean {
+        if (audioClientState == AudioClientState.STARTED) {
+            return AudioClient.AUDIO_CLIENT_OK == audioClient.setVoiceFocusNoiseSuppression(enabled)
+        } else {
+            logger.error(TAG, "Failed to set VoiceFocus to $enabled; audio client state is $audioClientState")
+            return false
+        }
+    }
+
+    override fun isVoiceFocusEnabled(): Boolean {
+        if (audioClientState == AudioClientState.STARTED) {
+            return audioClient.getVoiceFocusNoiseSuppression()
+        } else {
+            logger.error(TAG, "Failed to get VoiceFocus enabled state; audio client state is $audioClientState")
+            return false
+        }
+    }
 }

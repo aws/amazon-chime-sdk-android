@@ -112,6 +112,7 @@ class MeetingFragment : Fragment(),
     private lateinit var buttonMute: ImageButton
     private lateinit var buttonCamera: ImageButton
     private lateinit var deviceAlertDialogBuilder: AlertDialog.Builder
+    private lateinit var additionalOptionsAlertDialogBuilder: AlertDialog.Builder
     private lateinit var viewChat: LinearLayout
     private lateinit var recyclerViewMetrics: RecyclerView
     private lateinit var recyclerViewRoster: RecyclerView
@@ -169,6 +170,7 @@ class MeetingFragment : Fragment(),
         setupSubViews(view)
         setupTab(view)
         setupAudioDeviceSelectionDialog()
+        setupAdditionalOptionsDialog()
 
         noVideoOrScreenShareAvailable = view.findViewById(R.id.noVideoOrScreenShareAvailable)
         refreshNoVideosOrScreenShareAvailableText()
@@ -188,6 +190,9 @@ class MeetingFragment : Fragment(),
         buttonCamera = view.findViewById(R.id.buttonCamera)
         buttonCamera.setImageResource(if (meetingModel.isCameraOn) R.drawable.button_camera_on else R.drawable.button_camera)
         buttonCamera.setOnClickListener { toggleVideo() }
+
+        view.findViewById<ImageButton>(R.id.buttonMore)
+            ?.setOnClickListener { toggleAdditionalOptionsMenu() }
 
         view.findViewById<ImageButton>(R.id.buttonSpeaker)
             ?.setOnClickListener { toggleSpeaker() }
@@ -345,9 +350,38 @@ class MeetingFragment : Fragment(),
         deviceAlertDialogBuilder.setOnDismissListener {
             meetingModel.isDeviceListDialogOn = false
         }
-
         if (meetingModel.isDeviceListDialogOn) {
             deviceAlertDialogBuilder.create().show()
+        }
+    }
+
+    private fun setupAdditionalOptionsDialog() {
+        additionalOptionsAlertDialogBuilder = AlertDialog.Builder(activity)
+        additionalOptionsAlertDialogBuilder.setTitle(R.string.additional_options)
+        additionalOptionsAlertDialogBuilder.setNegativeButton(R.string.cancel) { dialog, _ ->
+            dialog.dismiss()
+            meetingModel.isAdditionalOptionsDialogOn = false
+        }
+        refreshAdditionalOptionsDialogItems()
+        additionalOptionsAlertDialogBuilder.setOnDismissListener {
+            meetingModel.isAdditionalOptionsDialogOn = false
+        }
+        if (meetingModel.isAdditionalOptionsDialogOn) {
+            additionalOptionsAlertDialogBuilder.create().show()
+        }
+    }
+
+    private fun refreshAdditionalOptionsDialogItems() {
+        val isVoiceFocusEnabled = audioVideo.realtimeIsVoiceFocusEnabled()
+
+        val additionalToggles = arrayOf(
+            context?.getString(if (isVoiceFocusEnabled) R.string.disable_voice_focus else R.string.enable_voice_focus)
+        )
+
+        additionalOptionsAlertDialogBuilder?.setItems(additionalToggles) { _, which ->
+            when (which) {
+                0 -> setVoiceFocusEnabled(!isVoiceFocusEnabled)
+            }
         }
     }
 
@@ -536,6 +570,19 @@ class MeetingFragment : Fragment(),
         meetingModel.isDeviceListDialogOn = true
     }
 
+    private fun setVoiceFocusEnabled(enabled: Boolean) {
+        val action = if (enabled) "enable" else "disable"
+
+        val success = audioVideo.realtimeSetVoiceFocusEnabled(enabled)
+
+        if (success) {
+            notifyHandler("Voice Focus ${action}d")
+            refreshAdditionalOptionsDialogItems()
+        } else {
+            notifyHandler("Failed to $action Voice Focus")
+        }
+    }
+
     private fun toggleVideo() {
         if (meetingModel.isCameraOn) {
             audioVideo.stopLocalVideo()
@@ -553,6 +600,12 @@ class MeetingFragment : Fragment(),
         }
         meetingModel.isCameraOn = !meetingModel.isCameraOn
         refreshNoVideosOrScreenShareAvailableText()
+    }
+
+    private fun toggleAdditionalOptionsMenu() {
+        additionalOptionsAlertDialogBuilder.create()
+        additionalOptionsAlertDialogBuilder.show()
+        meetingModel.isAdditionalOptionsDialogOn = true
     }
 
     private fun refreshNoVideosOrScreenShareAvailableText() {
@@ -656,6 +709,8 @@ class MeetingFragment : Fragment(),
         notifyHandler(
             "Audio successfully started. reconnecting: $reconnecting"
         )
+        // Start Voice Focus as soon as audio session started
+        setVoiceFocusEnabled(true)
         logWithFunctionName(
             object {}.javaClass.enclosingMethod?.name,
             "reconnecting: $reconnecting"
