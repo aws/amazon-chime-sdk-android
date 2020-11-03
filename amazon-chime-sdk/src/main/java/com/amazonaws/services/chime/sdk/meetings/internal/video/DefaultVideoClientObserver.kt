@@ -159,10 +159,12 @@ class DefaultVideoClientObserver(
 
     override fun onLogMessage(logLevel: Int, message: String?) {
         if (message == null) return
-        // Only print error and fatal as the Media team's request to avoid noise
-        // Will be changed back to respect logger settings once sanitize the logs
+        // Only print error and fatal as the Media team's request to avoid noise for application
+        // that has log level set to INFO or higher. All other cases, print as verbose
         if (logLevel == AudioClient.L_ERROR || logLevel == AudioClient.L_FATAL) {
             logger.error(TAG, message)
+        } else {
+            logger.verbose(TAG, message)
         }
     }
 

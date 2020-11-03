@@ -35,7 +35,7 @@ class ConsoleLoggerTest {
     fun `constructor should use default log level when no parameters`() {
         val logger = ConsoleLogger()
 
-        assertEquals(LogLevel.WARN, logger.getLogLevel())
+        assertEquals(LogLevel.INFO, logger.getLogLevel())
     }
 
     @Test
@@ -68,7 +68,7 @@ class ConsoleLoggerTest {
 
         verify(exactly = 0) { Log.v(any(), any()) }
         verify(exactly = 0) { Log.d(any(), any()) }
-        verify(exactly = 0) { Log.i(any(), any()) }
+        verify(exactly = 1) { Log.i(any(), any()) }
         verify(exactly = 1) { Log.w(testTag, testWarnMsg) }
         verify(exactly = 1) { Log.e(testTag, testErrorMsg) }
     }
