@@ -12,7 +12,7 @@
 * Fix audio issue when using Bluetooth device by changing the sample rate to 16kHz
 
 ### Changed
-* **Breaking** Changed the log level of `ConsoleLogger` to INFO level.
+* **Breaking** Changed the default log level of `ConsoleLogger` to `INFO` level from `WARN`
 
 ## [0.7.5] - 2020-10-23
 
