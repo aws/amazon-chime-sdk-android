@@ -25,7 +25,7 @@ import android.util.Log
  * logger.debug("debug"); // print
  * ```
  */
-class ConsoleLogger(private var level: LogLevel = LogLevel.WARN) : Logger {
+class ConsoleLogger(private var level: LogLevel = LogLevel.INFO) : Logger {
 
     override fun verbose(tag: String, msg: String) {
         this.log(LogLevel.VERBOSE, tag, msg)
