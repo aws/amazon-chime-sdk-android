@@ -94,7 +94,6 @@ class DeviceManagementFragment : Fragment(), DeviceChangeObserver {
             logger.error(TAG, "$context must implement DeviceManagementEventListener.")
             throw ClassCastException("$context must implement DeviceManagementEventListener.")
         }
-        isAttached = true
     }
 
     override fun onCreateView(

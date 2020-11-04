@@ -347,7 +347,8 @@ class MeetingFragment : Fragment(),
             requireContext(),
             android.R.layout.simple_list_item_1,
             meetingModel.currentMediaDevices,
-            audioVideo, audioDeviceManager)
+            audioVideo,
+            audioDeviceManager)
         deviceAlertDialogBuilder = AlertDialog.Builder(activity)
         deviceAlertDialogBuilder.setTitle(R.string.alert_title_choose_audio)
         deviceAlertDialogBuilder.setNegativeButton(R.string.cancel) { dialog, _ ->

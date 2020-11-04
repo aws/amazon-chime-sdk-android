@@ -35,7 +35,6 @@ class DefaultDeviceController(
 
     // TODO: remove code blocks for lower API level after the minimum SDK version becomes 23
     private val AUDIO_MANAGER_API_LEVEL = 23
-    private val AUDIO_RECORDING_CONFIG_API_LEVEL = 24
 
     private var receiver: BroadcastReceiver? = null
 
@@ -103,11 +102,10 @@ class DefaultDeviceController(
                 }
 
                 if (device.type == excludeType) continue
-                val name = device.productName
 
                 audioDevices.add(
                     MediaDevice(
-                        "$name (${getReadableType(device.type)})",
+                        "${device.productName} (${getReadableType(device.type)})",
                         MediaDeviceType.fromAudioDeviceInfo(
                             device.type
                         )
@@ -175,7 +173,7 @@ class DefaultDeviceController(
 
     @RequiresApi(Build.VERSION_CODES.N)
     override fun getActiveAudioDevice(): MediaDevice? {
-        if (buildVersion >= AUDIO_RECORDING_CONFIG_API_LEVEL) {
+        if (buildVersion >= Build.VERSION_CODES.N) {
             if (audioManager.activeRecordingConfigurations.isNotEmpty()) {
                 val device =
                     audioManager.activeRecordingConfigurations.firstOrNull { config -> config.audioDevice != null }?.audioDevice
@@ -210,6 +208,8 @@ class DefaultDeviceController(
         when (type) {
             MediaDeviceType.AUDIO_BUILTIN_SPEAKER ->
                 audioManager.apply {
+                    // Sometimes stopBluetoothSco makes isSpeakerphoneOn to be false
+                    // calling it before isSpeakerphoneOn
                     stopBluetoothSco()
                     mode = AudioManager.MODE_IN_COMMUNICATION
                     isBluetoothScoOn = false
