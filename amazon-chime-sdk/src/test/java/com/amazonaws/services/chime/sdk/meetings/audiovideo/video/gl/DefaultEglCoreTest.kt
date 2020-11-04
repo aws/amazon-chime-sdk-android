@@ -48,7 +48,7 @@ class DefaultEglCoreTest {
 
     @Test
     fun `constructor calls eglInitialize and eglCreateContext`() {
-        val testEglCore = DefaultEglCore(Runnable {}, mockContext)
+        DefaultEglCore(Runnable {}, mockContext)
 
         verify { EGL14.eglInitialize(any(), any(), any(), any(), any()) }
         verify { EGL14.eglCreateContext(any(), any(), any(), any(), any()) }
