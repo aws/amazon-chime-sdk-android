@@ -134,6 +134,13 @@ class MeetingActivity : AppCompatActivity(),
     fun resetCachedDevice() {
         cachedDevice = null
     }
+    fun getEglCoreFactory(): EglCoreFactory = meetingSessionModel.eglCoreFactory
+
+    fun getCameraCaptureSource(): CameraCaptureSource = meetingSessionModel.cameraCaptureSource
+
+    fun getGpuVideoProcessor(): GpuVideoProcessor = meetingSessionModel.gpuVideoProcessor
+
+    fun getCpuVideoProcessor(): CpuVideoProcessor = meetingSessionModel.cpuVideoProcessor
 
     private fun urlRewriter(url: String): String {
         // You can change urls by url.replace("example.com", "my.example.com")
