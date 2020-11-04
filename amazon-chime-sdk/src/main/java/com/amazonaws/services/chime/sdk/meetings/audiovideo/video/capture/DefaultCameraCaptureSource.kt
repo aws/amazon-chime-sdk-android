@@ -172,8 +172,12 @@ class DefaultCameraCaptureSource(
             logger.info(TAG, "Cannot start camera capture with null device")
             return
         }
+        val id = device.id ?: run {
+            logger.info(TAG, "Cannot start camera capture with null device id")
+            return
+        }
 
-        cameraCharacteristics = cameraManager.getCameraCharacteristics(device.id).also {
+        cameraCharacteristics = cameraManager.getCameraCharacteristics(id).also {
             // Store these immediately for convenience
             sensorOrientation = it.get(CameraCharacteristics.SENSOR_ORIENTATION) ?: 0
             isCameraFrontFacing =
@@ -199,7 +203,7 @@ class DefaultCameraCaptureSource(
         surfaceTextureSource?.addVideoSink(this)
         surfaceTextureSource?.start()
 
-        cameraManager.openCamera(device.id, cameraDeviceStateCallback, handler)
+        cameraManager.openCamera(id, cameraDeviceStateCallback, handler)
     }
 
     override fun stop() {
