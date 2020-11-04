@@ -597,7 +597,6 @@ class MeetingFragment : Fragment(),
         meetingModel.isMuted = !meetingModel.isMuted
     }
 
-    @SuppressLint("NewApi")
     private fun toggleSpeaker() {
         meetingModel.currentMediaDevices = audioVideo.listAudioDevices().filter { it.type != MediaDeviceType.OTHER }
         deviceListAdapter.clear()

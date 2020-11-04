@@ -73,7 +73,7 @@ class DefaultDeviceController(
         audioManager.mode = AudioManager.MODE_IN_COMMUNICATION
     }
 
-    private fun listAudioDevicesExcludeType(excludeType: Int?): List<MediaDevice> {
+    override fun listAudioDevices(): List<MediaDevice> {
         @SuppressLint("NewApi")
         if (buildVersion >= AUDIO_MANAGER_API_LEVEL) {
             var isWiredHeadsetOn = false
@@ -101,7 +101,7 @@ class DefaultDeviceController(
                     }
                 }
 
-                if (device.type == excludeType) continue
+                if (device.type == AudioDeviceInfo.TYPE_BLUETOOTH_A2DP) continue
 
                 audioDevices.add(
                     MediaDevice(
@@ -148,15 +148,6 @@ class DefaultDeviceController(
         }
     }
 
-    @SuppressLint("NewApi")
-    override fun listAudioDevices(): List<MediaDevice> {
-        if (buildVersion >= AUDIO_MANAGER_API_LEVEL) {
-            // A2DP doesn't allow two way communication. We'll filter it out
-            return listAudioDevicesExcludeType(AudioDeviceInfo.TYPE_BLUETOOTH_A2DP)
-        }
-        return listAudioDevicesExcludeType(null)
-    }
-
     override fun chooseAudioDevice(mediaDevice: MediaDevice) {
         if (DefaultAudioClientController.audioClientState != AudioClientState.STARTED) {
             return
@@ -188,15 +179,13 @@ class DefaultDeviceController(
                             MediaDeviceType.fromAudioDeviceInfo(AudioDeviceInfo.TYPE_BUILTIN_EARPIECE)
                         }
                     }
-                    return listAudioDevicesExcludeType(AudioDeviceInfo.TYPE_BLUETOOTH_A2DP).firstOrNull {
+                    return listAudioDevices().firstOrNull {
                         it.type == mediaDeviceType
                     }
                 }
 
                 // Some android devices doesn't have audio device for speaker
-                if (audioManager.isSpeakerphoneOn) return listAudioDevicesExcludeType(
-                    AudioDeviceInfo.TYPE_BLUETOOTH_A2DP
-                ).firstOrNull {
+                if (audioManager.isSpeakerphoneOn) return listAudioDevices().firstOrNull {
                     it.type == MediaDeviceType.AUDIO_BUILTIN_SPEAKER
                 }
             }
