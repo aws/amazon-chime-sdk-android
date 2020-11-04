@@ -123,13 +123,6 @@ class MeetingActivity : AppCompatActivity(),
 
     fun getMeetingSessionCredentials(): MeetingSessionCredentials = meetingSessionModel.credentials
 
-    fun getEglCoreFactory(): EglCoreFactory = meetingSessionModel.eglCoreFactory
-
-    fun getCameraCaptureSource(): CameraCaptureSource = meetingSessionModel.cameraCaptureSource
-
-    fun getGpuVideoProcessor(): GpuVideoProcessor = meetingSessionModel.gpuVideoProcessor
-
-    fun getCpuVideoProcessor(): CpuVideoProcessor = meetingSessionModel.cpuVideoProcessor
     fun getCachedDevice(): MediaDevice? = cachedDevice
     fun resetCachedDevice() {
         cachedDevice = null
