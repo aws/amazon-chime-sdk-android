@@ -14,8 +14,6 @@ This release includes support for custom video sources, and therefore includes a
 * Added `listVideoDevices` and `listSupportedVideoCaptureFormats` to `MediaDevice.Companion`.
 * Added `SurfaceRenderView` and `TextureRenderView` an open source implementation of rendering onto a `SurfaceView` and `TextureView` respectively.
 * Added `VideoLayoutMeasure` and `EglRenderer` + `DefaultEglRenderer` internal helper classes for use within aforementioned render views.
-
-### Added
 * Added more verbose logging from media layer to SDK layer for builders to control log level. Set `LogLevel` to `INFO` or above for production application to not be bombarded with logs..
 
 ### Changed
@@ -38,12 +36,11 @@ This release includes support for custom video sources, and therefore includes a
   * `DefaultVideoRenderView` now inherits from `SurfaceTextureView`.
 * If no custom source is provided, the SDK level video client will use a `DefaultCameraCaptureSource` instead of relying on capture implementations within the MediaSDK; though behavior should be identical, please open an issue if any differences are noticed..
 * Added additional, optional `id` (unique ID) parameter to `MediaDevice` for video capture devices.
+* **Breaking** Changed the default log level of `ConsoleLogger` to `INFO` level from `WARN`.
+
 ### Fixed.
 * **Breaking** Changed behavior to no longer call `onVideoTileSizeChanged` when a video is paused to fix a bug where pausing triggered this callback with width=0 and height=0.
 * Fix audio issue when using Bluetooth device by changing the sample rate to 16kHz.
-
-### Changed
-* **Breaking** Changed the default log level of `ConsoleLogger` to `INFO` level from `WARN`.
 
 ## [0.7.5] - 2020-10-23
 
