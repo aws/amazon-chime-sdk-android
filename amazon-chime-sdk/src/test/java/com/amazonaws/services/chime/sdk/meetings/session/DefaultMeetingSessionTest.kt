@@ -8,8 +8,12 @@ package com.amazonaws.services.chime.sdk.meetings.session
 import android.content.Context
 import android.content.Intent
 import android.content.res.AssetManager
+import android.hardware.camera2.CameraManager
 import android.media.AudioManager
+import android.os.HandlerThread
+import android.os.Looper
 import android.util.Log
+import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.gl.EglCoreFactory
 import com.amazonaws.services.chime.sdk.meetings.internal.audio.AudioClientFactory
 import com.amazonaws.services.chime.sdk.meetings.utils.logger.Logger
 import com.xodee.client.audio.audioclient.AudioClient
@@ -18,6 +22,7 @@ import io.mockk.every
 import io.mockk.impl.annotations.MockK
 import io.mockk.just
 import io.mockk.mockkClass
+import io.mockk.mockkConstructor
 import io.mockk.mockkObject
 import io.mockk.mockkStatic
 import io.mockk.runs
@@ -41,6 +46,12 @@ class DefaultMeetingSessionTest {
     @MockK
     private lateinit var assetManager: AssetManager
 
+    @MockK
+    private lateinit var mockEglCoreFactory: EglCoreFactory
+
+    @MockK
+    private lateinit var mockLooper: Looper
+
     lateinit var meetingSession: DefaultMeetingSession
 
     @Before
@@ -55,7 +66,10 @@ class DefaultMeetingSessionTest {
         val audioManager = mockkClass(AudioManager::class)
         every { audioManager.mode } returns AudioManager.MODE_NORMAL
         every { audioManager.isSpeakerphoneOn } returns true
-        every { context.getSystemService(any()) } returns audioManager
+        val cameraManager = mockkClass(CameraManager::class)
+        every { cameraManager.cameraIdList } returns emptyArray()
+        every { context.getSystemService(Context.AUDIO_SERVICE) } returns audioManager
+        every { context.getSystemService(Context.CAMERA_SERVICE) } returns cameraManager
         mockkObject(AudioClientFactory.Companion)
         every { AudioClientFactory.getAudioClient(any(), any()) } returns mockAudioClient
         every { configuration.meetingId } returns "meetingId"
@@ -66,7 +80,11 @@ class DefaultMeetingSessionTest {
         every { configuration.urls.urlRewriter } returns ::defaultUrlRewriter
         every { logger.info(any(), any()) } just runs
 
-        meetingSession = DefaultMeetingSession(configuration, logger, context)
+        mockkConstructor(HandlerThread::class)
+        every { anyConstructed<HandlerThread>().looper } returns mockLooper
+        every { anyConstructed<HandlerThread>().run() } just runs
+
+        meetingSession = DefaultMeetingSession(configuration, logger, context, mockEglCoreFactory)
     }
 
     @Test

@@ -12,6 +12,8 @@ import com.amazonaws.services.chime.sdk.meetings.audiovideo.DefaultAudioVideoFac
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.audio.activespeakerdetector.DefaultActiveSpeakerDetector
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.DefaultVideoTileController
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.DefaultVideoTileFactory
+import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.gl.DefaultEglCoreFactory
+import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.gl.EglCoreFactory
 import com.amazonaws.services.chime.sdk.meetings.device.DefaultDeviceController
 import com.amazonaws.services.chime.sdk.meetings.internal.audio.AudioClientFactory
 import com.amazonaws.services.chime.sdk.meetings.internal.audio.DefaultAudioClientController
@@ -28,7 +30,8 @@ import com.amazonaws.services.chime.sdk.meetings.utils.logger.Logger
 class DefaultMeetingSession(
     override val configuration: MeetingSessionConfiguration,
     override val logger: Logger,
-    context: Context
+    context: Context,
+    eglCoreFactory: EglCoreFactory = DefaultEglCoreFactory()
 ) : MeetingSession {
 
     override val audioVideo: AudioVideoFacade
@@ -84,7 +87,8 @@ class DefaultMeetingSession(
                 videoClientStateController,
                 videoClientObserver,
                 configuration,
-                DefaultVideoClientFactory()
+                DefaultVideoClientFactory(),
+                eglCoreFactory
             )
 
         val videoTileFactory = DefaultVideoTileFactory(logger)
@@ -93,10 +97,11 @@ class DefaultMeetingSession(
             DefaultVideoTileController(
                 logger,
                 videoClientController,
-                videoTileFactory
+                videoTileFactory,
+                eglCoreFactory
             )
-
         videoClientObserver.subscribeToVideoTileChange(videoTileController)
+
         val deviceController =
             DefaultDeviceController(
                 context,

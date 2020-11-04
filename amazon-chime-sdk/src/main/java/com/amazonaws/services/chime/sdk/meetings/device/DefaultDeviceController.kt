@@ -187,13 +187,7 @@ class DefaultDeviceController(
     }
 
     override fun getActiveCamera(): MediaDevice? {
-        val activeCamera = videoClientController.getActiveCamera()
-        return activeCamera?.let {
-            MediaDevice(
-                activeCamera.name,
-                if (activeCamera.isFrontFacing) MediaDeviceType.VIDEO_FRONT_CAMERA else MediaDeviceType.VIDEO_BACK_CAMERA
-            )
-        }
+        return videoClientController.getActiveCamera()
     }
 
     override fun switchCamera() {
@@ -210,6 +204,10 @@ class DefaultDeviceController(
 
     @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
     fun notifyAudioDeviceChange() {
-        ObserverUtils.notifyObserverOnMainThread(deviceChangeObservers) { it.onAudioDeviceChanged(listAudioDevices()) }
+        ObserverUtils.notifyObserverOnMainThread(deviceChangeObservers) {
+            it.onAudioDeviceChanged(
+                listAudioDevices()
+            )
+        }
     }
 }

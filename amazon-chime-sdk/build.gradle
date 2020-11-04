@@ -42,6 +42,14 @@ android {
         }
     }
 
+    testOptions {
+        // This causes system calls to return default (i.e. null or zero) values rather then
+        // immediately throwing exceptions.  Without this, tests covering anything with significant OpenGLES or
+        // EGL calls requires the unit test to basically mock every single line of the original file which is excessive
+        // In return, unit tests should account for these null or 0 values and still mock where appropriate
+        unitTests.returnDefaultValues = true
+    }
+
     dokka {
         outputFormat = 'html'
         outputDirectory = "docs"

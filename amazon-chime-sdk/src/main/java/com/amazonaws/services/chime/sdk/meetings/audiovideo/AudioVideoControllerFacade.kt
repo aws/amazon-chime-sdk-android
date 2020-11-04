@@ -6,6 +6,7 @@
 package com.amazonaws.services.chime.sdk.meetings.audiovideo
 
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.metric.MetricsObserver
+import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoSource
 
 /**
  * [AudioVideoControllerFacade] manages the signaling and peer connections.
@@ -50,12 +51,30 @@ interface AudioVideoControllerFacade {
     fun removeMetricsObserver(observer: MetricsObserver)
 
     /**
-     * Start local video.
+     * Start local video and begin transmitting frames from an internally held [DefaultCameraCaptureSource].
+     * [stopLocalVideo] will stop the internal capture source if being used.
+     *
+     * Calling this after passing in a custom [VideoSource] will replace it with the internal capture source.
+     *
+     * This function will only have effect if [start] has already been called
      */
     fun startLocalVideo()
 
     /**
-     * Stop local video.
+     * Start local video with a provided custom [VideoSource] which can be used to provide custom
+     * [VideoFrame]s to be transmitted to remote clients
+     *
+     * Calling this function repeatedly will replace the previous [VideoSource] as the one being
+     * transmitted. It will also stop and replace the internal capture source if [startLocalVideo]
+     * was called with no arguments.
+     *
+     * @param source: [VideoSource] - The source of video frames to be sent to other clients
+     */
+    fun startLocalVideo(source: VideoSource)
+
+    /**
+     * Stops sending video for local attendee. This will additionally stop the internal capture source if being used.
+     * If using a custom video source, this will call [VideoSource.removeVideoSink] on the previously provided source.
      */
     fun stopLocalVideo()
 

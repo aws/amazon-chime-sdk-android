@@ -10,6 +10,10 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.AudioVideoFacade
+import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.capture.CameraCaptureSource
+import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.capture.DefaultCameraCaptureSource
+import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.capture.DefaultSurfaceTextureCaptureSourceFactory
+import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.gl.EglCoreFactory
 import com.amazonaws.services.chime.sdk.meetings.session.CreateAttendeeResponse
 import com.amazonaws.services.chime.sdk.meetings.session.CreateMeetingResponse
 import com.amazonaws.services.chime.sdk.meetings.session.DefaultMeetingSession
@@ -21,7 +25,10 @@ import com.amazonaws.services.chime.sdkdemo.R
 import com.amazonaws.services.chime.sdkdemo.data.JoinMeetingResponse
 import com.amazonaws.services.chime.sdkdemo.fragment.DeviceManagementFragment
 import com.amazonaws.services.chime.sdkdemo.fragment.MeetingFragment
+import com.amazonaws.services.chime.sdkdemo.model.MeetingModel
 import com.amazonaws.services.chime.sdkdemo.model.MeetingSessionModel
+import com.amazonaws.services.chime.sdkdemo.utils.CpuVideoProcessor
+import com.amazonaws.services.chime.sdkdemo.utils.GpuVideoProcessor
 import com.google.gson.Gson
 
 class MeetingActivity : AppCompatActivity(),
@@ -31,6 +38,7 @@ class MeetingActivity : AppCompatActivity(),
     private val logger = ConsoleLogger(LogLevel.DEBUG)
     private val gson = Gson()
     private val meetingSessionModel: MeetingSessionModel by lazy { ViewModelProvider(this)[MeetingSessionModel::class.java] }
+    private val meetingModel: MeetingModel by lazy { ViewModelProvider(this)[MeetingModel::class.java] }
     private lateinit var meetingId: String
     private lateinit var name: String
 
@@ -51,7 +59,13 @@ class MeetingActivity : AppCompatActivity(),
                 DefaultMeetingSession(
                     it,
                     logger,
-                    applicationContext
+                    applicationContext,
+                    // Note if the following isn't provided app will (as expected) crash if we use custom video source
+                    // since an EglCoreFactory will be internal created and will be using a different shared EGLContext.
+                    // However the internal default capture would work fine, since it is initialized using
+                    // that internally created default EglCoreFactory, and can be smoke tested by removing this
+                    // argument and toggling use of custom video source before starting video
+                    meetingSessionModel.eglCoreFactory
                 )
             }
 
@@ -65,6 +79,11 @@ class MeetingActivity : AppCompatActivity(),
             } else {
                 meetingSessionModel.setMeetingSession(meetingSession)
             }
+
+            val surfaceTextureCaptureSourceFactory = DefaultSurfaceTextureCaptureSourceFactory(logger, meetingSessionModel.eglCoreFactory)
+            meetingSessionModel.cameraCaptureSource = DefaultCameraCaptureSource(applicationContext, logger, surfaceTextureCaptureSourceFactory)
+            meetingSessionModel.cpuVideoProcessor = CpuVideoProcessor(logger, meetingSessionModel.eglCoreFactory)
+            meetingSessionModel.gpuVideoProcessor = GpuVideoProcessor(logger, meetingSessionModel.eglCoreFactory)
 
             val deviceManagementFragment = DeviceManagementFragment.newInstance(meetingId, name)
             supportFragmentManager
@@ -88,12 +107,23 @@ class MeetingActivity : AppCompatActivity(),
 
     override fun onBackPressed() {
         meetingSessionModel.audioVideo.stop()
+        meetingSessionModel.cameraCaptureSource.stop()
+        meetingSessionModel.gpuVideoProcessor.release()
+        meetingSessionModel.cpuVideoProcessor.release()
         super.onBackPressed()
     }
 
     fun getAudioVideo(): AudioVideoFacade = meetingSessionModel.audioVideo
 
     fun getMeetingSessionCredentials(): MeetingSessionCredentials = meetingSessionModel.credentials
+
+    fun getEglCoreFactory(): EglCoreFactory = meetingSessionModel.eglCoreFactory
+
+    fun getCameraCaptureSource(): CameraCaptureSource = meetingSessionModel.cameraCaptureSource
+
+    fun getGpuVideoProcessor(): GpuVideoProcessor = meetingSessionModel.gpuVideoProcessor
+
+    fun getCpuVideoProcessor(): CpuVideoProcessor = meetingSessionModel.cpuVideoProcessor
 
     private fun urlRewriter(url: String): String {
         // You can change urls by url.replace("example.com", "my.example.com")
