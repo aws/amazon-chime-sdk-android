@@ -41,6 +41,7 @@ interface DeviceController {
      */
     @RequiresApi(Build.VERSION_CODES.N)
     fun getActiveAudioDevice(): MediaDevice?
+    
     /**
      * Adds an observer to receive callbacks about device changes.
      *
