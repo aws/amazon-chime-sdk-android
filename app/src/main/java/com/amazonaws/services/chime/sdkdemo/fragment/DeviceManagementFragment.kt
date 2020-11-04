@@ -35,8 +35,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-class DeviceManagementFragment : Fragment(),
-        DeviceChangeObserver {
+class DeviceManagementFragment : Fragment(), DeviceChangeObserver {
     private val logger = ConsoleLogger(LogLevel.INFO)
     private val uiScope = CoroutineScope(Dispatchers.Main)
     private val audioDevices = mutableListOf<MediaDevice>()

@@ -22,6 +22,9 @@ import com.amazonaws.services.chime.sdk.meetings.internal.video.gl.GlUtil
 import com.amazonaws.services.chime.sdk.meetings.utils.logger.Logger
 import com.xodee.client.video.JniUtil
 
+/**
+ * [CpuVideoProcessor] draws frames to RGBA, converts to CPU, and then applies a simple black and white filter before forwarding
+ */
 class CpuVideoProcessor(private val logger: Logger, eglCoreFactory: EglCoreFactory) : VideoSource,
     VideoSink {
     // The camera capture source currently output OES texture frames, so we draw them to a frame buffer that

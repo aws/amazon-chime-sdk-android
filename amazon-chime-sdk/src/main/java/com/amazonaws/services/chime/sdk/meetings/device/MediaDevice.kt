@@ -24,7 +24,7 @@ import kotlin.math.roundToInt
 data class MediaDevice(
     val label: String,
     val type: MediaDeviceType,
-    val id: String = ""
+    val id: String? = null
 ) {
     val order: Int = when (type) {
         MediaDeviceType.AUDIO_BLUETOOTH -> 0
@@ -72,7 +72,7 @@ data class MediaDevice(
             cameraManager: CameraManager,
             mediaDevice: MediaDevice
         ): List<VideoCaptureFormat> {
-            val characteristics = cameraManager.getCameraCharacteristics(mediaDevice.id)
+            val characteristics = cameraManager.getCameraCharacteristics(mediaDevice.id ?: return emptyList())
 
             val streamMap =
                     characteristics.get(CameraCharacteristics.SCALER_STREAM_CONFIGURATION_MAP)

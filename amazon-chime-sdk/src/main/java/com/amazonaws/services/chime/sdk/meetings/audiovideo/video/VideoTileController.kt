@@ -12,7 +12,7 @@ interface VideoTileController : VideoTileControllerFacade {
     /**
      * Called whenever there is a new Video frame received for any of the attendee in the meeting
      *
-     * @param frame: [Any] - A frame of video
+     * @param frame: [VideoFrame] - A frame of video
      * @param videoId: [Int] - Unique id that belongs to video being transmitted
      * @param attendeeId: [String] - An id of user who is transmitting current frame
      * @param pauseState: [VideoPauseState] - Current pause state of the video being received

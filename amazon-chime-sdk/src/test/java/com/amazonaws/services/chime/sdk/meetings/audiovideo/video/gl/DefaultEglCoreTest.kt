@@ -1,3 +1,7 @@
+/*
+ * Copyright 2020 Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ */
+
 package com.amazonaws.services.chime.sdk.meetings.audiovideo.video.gl
 
 import android.opengl.EGL14
@@ -29,7 +33,6 @@ class DefaultEglCoreTest {
         MockKAnnotations.init(this, relaxUnitFun = true)
 
         // Set up some static functions which need to return valid values
-
         mockkStatic(EGL14::class)
         every { EGL14.eglGetDisplay(EGL14.EGL_DEFAULT_DISPLAY) } returns mockDisplay
         every { EGL14.eglInitialize(any(), any(), any(), any(), any()) } returns true
