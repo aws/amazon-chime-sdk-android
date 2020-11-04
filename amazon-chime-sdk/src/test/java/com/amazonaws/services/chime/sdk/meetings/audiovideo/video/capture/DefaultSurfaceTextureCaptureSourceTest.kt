@@ -96,7 +96,7 @@ class DefaultSurfaceTextureCaptureSourceTest {
 
     @Test
     fun `constructor sets expected dimensions of surface`() {
-        val testSurfaceTextureCaptureSource = DefaultSurfaceTextureCaptureSource(
+        DefaultSurfaceTextureCaptureSource(
                 mockLogger,
                 testWidth,
                 testHeight,
