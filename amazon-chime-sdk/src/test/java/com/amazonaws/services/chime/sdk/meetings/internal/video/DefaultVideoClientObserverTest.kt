@@ -6,7 +6,11 @@
 package com.amazonaws.services.chime.sdk.meetings.internal.video
 
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.AudioVideoObserver
+import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoFrame
+import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoRotation
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoTileController
+import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.buffer.VideoFrameI420Buffer
+import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.buffer.VideoFrameTextureBuffer
 import com.amazonaws.services.chime.sdk.meetings.internal.metric.ClientMetricsCollector
 import com.amazonaws.services.chime.sdk.meetings.realtime.datamessage.DataMessageObserver
 import com.amazonaws.services.chime.sdk.meetings.session.MeetingSessionStatus
@@ -22,12 +26,15 @@ import io.mockk.impl.annotations.MockK
 import io.mockk.just
 import io.mockk.mockkStatic
 import io.mockk.runs
+import io.mockk.slot
 import io.mockk.verify
+import java.nio.ByteBuffer
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.test.TestCoroutineDispatcher
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.setMain
 import org.junit.After
+import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
 
@@ -56,6 +63,23 @@ class DefaultVideoClientObserverTest {
     @MockK
     private lateinit var mockVideoClient: VideoClient
 
+    @MockK(relaxed = true)
+    private lateinit var mockMediaVideoFrame: com.xodee.client.video.VideoFrame
+
+    @MockK(relaxed = true)
+    private lateinit var mockMediaVideoFrameI420Buffer: com.xodee.client.video.VideoFrameI420Buffer
+
+    @MockK(relaxed = true)
+    private lateinit var mockMediaVideoFrameTextureBuffer: com.xodee.client.video.VideoFrameTextureBuffer
+
+    // Required even if not queried
+    private val testDataY = ByteBuffer.allocateDirect(0)
+    private val testDataU = ByteBuffer.allocateDirect(0)
+    private val testDataV = ByteBuffer.allocateDirect(0)
+
+    private val testTimestamp: Long = 1
+    private val testRotation = VideoRotation.Rotation90
+
     private lateinit var testVideoClientObserver: DefaultVideoClientObserver
 
     private val turnRequestParams =
@@ -68,7 +92,6 @@ class DefaultVideoClientObserverTest {
 
     private val videoClientSuccessCode = 0
     private val testMessage = "Hello world"
-    private val testFrame = "I am the frame"
     private val testProfileId = "aliceId"
     private val testVideoId = 1
     private val testDispatcher = TestCoroutineDispatcher()
@@ -108,6 +131,12 @@ class DefaultVideoClientObserverTest {
             )
         testVideoClientObserver.subscribeToVideoClientStateChange(mockAudioVideoObserver)
         testVideoClientObserver.subscribeToVideoTileChange(mockVideoTileController)
+
+        every { mockMediaVideoFrameI420Buffer.dataY } returns testDataY
+        every { mockMediaVideoFrameI420Buffer.dataU } returns testDataU
+        every { mockMediaVideoFrameI420Buffer.dataV } returns testDataV
+        every { mockMediaVideoFrame.timestampNs } returns testTimestamp
+        every { mockMediaVideoFrame.rotation } returns 90
     }
 
     @After
@@ -177,17 +206,55 @@ class DefaultVideoClientObserverTest {
     }
 
     @Test
-    fun `didReceiveFrame should notify added observers about frame receive event`() {
+    fun `didReceiveFrame should notify added observers about frame receive event and maintains timestamp and rotation`() {
+        every { mockMediaVideoFrame.buffer } returns mockMediaVideoFrameI420Buffer
         testVideoClientObserver.didReceiveFrame(
             mockVideoClient,
-            testFrame,
+            mockMediaVideoFrame,
             testProfileId,
             testVideoId,
             VideoClient.VIDEO_CLIENT_NO_PAUSE,
             testVideoId
         )
 
-        verify { mockVideoTileController.onReceiveFrame(any(), any(), any(), any()) }
+        val slot = slot<VideoFrame>()
+        verify { mockVideoTileController.onReceiveFrame(capture(slot), any(), any(), any()) }
+        Assert.assertEquals(slot.captured.rotation, testRotation)
+        Assert.assertEquals(slot.captured.timestampNs, testTimestamp)
+    }
+
+    @Test
+    fun `didReceiveFrame should convert Media I420 frame to SDK I420 frame`() {
+        every { mockMediaVideoFrame.buffer } returns mockMediaVideoFrameI420Buffer
+        testVideoClientObserver.didReceiveFrame(
+                mockVideoClient,
+                mockMediaVideoFrame,
+                testProfileId,
+                testVideoId,
+                VideoClient.VIDEO_CLIENT_NO_PAUSE,
+                testVideoId
+        )
+
+        val slot = slot<VideoFrame>()
+        verify { mockVideoTileController.onReceiveFrame(capture(slot), any(), any(), any()) }
+        assert(slot.captured.buffer is VideoFrameI420Buffer)
+    }
+
+    @Test
+    fun `didReceiveFrame should convert Media texture frame buffer to SDK texture frame buffer`() {
+        every { mockMediaVideoFrame.buffer } returns mockMediaVideoFrameTextureBuffer
+        testVideoClientObserver.didReceiveFrame(
+                mockVideoClient,
+                mockMediaVideoFrame,
+                testProfileId,
+                testVideoId,
+                VideoClient.VIDEO_CLIENT_NO_PAUSE,
+                testVideoId
+        )
+
+        val slot = slot<VideoFrame>()
+        verify { mockVideoTileController.onReceiveFrame(capture(slot), any(), any(), any()) }
+        assert(slot.captured.buffer is VideoFrameTextureBuffer)
     }
 
     @Test
@@ -229,11 +296,13 @@ class DefaultVideoClientObserverTest {
 
     @Test
     fun `unsubscribeFromVideoTile should result in no notification`() {
+        every { mockMediaVideoFrame.buffer } returns mockMediaVideoFrameI420Buffer
+
         testVideoClientObserver.unsubscribeFromVideoTileChange(mockVideoTileController)
 
         testVideoClientObserver.didReceiveFrame(
             mockVideoClient,
-            testFrame,
+            mockMediaVideoFrame,
             testProfileId,
             testVideoId,
             VideoClient.VIDEO_CLIENT_NO_PAUSE,

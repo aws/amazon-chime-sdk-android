@@ -12,7 +12,6 @@ import android.media.AudioManager
 import com.amazonaws.services.chime.sdk.meetings.internal.audio.AudioClientController
 import com.amazonaws.services.chime.sdk.meetings.internal.video.VideoClientController
 import com.xodee.client.audio.audioclient.AudioClient
-import com.xodee.client.video.VideoDevice
 import io.mockk.MockKAnnotations
 import io.mockk.every
 import io.mockk.impl.annotations.MockK
@@ -286,14 +285,14 @@ class DefaultDeviceControllerTest {
     @Test
     fun `getActiveCamera should return a media device when active camera existing`() {
         setupForOldAPILevel()
-        val videoDevice = mockkClass(VideoDevice::class)
-        every { videoDevice.name } returns "camera"
-        every { videoDevice.isFrontFacing } returns true
+        val videoDevice = mockkClass(MediaDevice::class)
+        every { videoDevice.id } returns "0"
+        every { videoDevice.type } returns MediaDeviceType.VIDEO_FRONT_CAMERA
         every { videoClientController.getActiveCamera() } returns videoDevice
 
         val mediaDevice = deviceController.getActiveCamera()!!
 
-        assertEquals("camera", mediaDevice.label)
+        assertEquals("0", mediaDevice.id)
         assertEquals(MediaDeviceType.VIDEO_FRONT_CAMERA, mediaDevice.type)
     }
 

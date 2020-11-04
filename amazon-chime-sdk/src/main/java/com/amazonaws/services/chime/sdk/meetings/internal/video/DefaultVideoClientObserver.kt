@@ -6,8 +6,13 @@
 package com.amazonaws.services.chime.sdk.meetings.internal.video
 
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.AudioVideoObserver
+import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoFrame
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoPauseState
+import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoRotation
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoTileController
+import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.buffer.VideoFrameBuffer
+import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.buffer.VideoFrameI420Buffer
+import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.buffer.VideoFrameTextureBuffer
 import com.amazonaws.services.chime.sdk.meetings.internal.metric.ClientMetricsCollector
 import com.amazonaws.services.chime.sdk.meetings.internal.utils.ObserverUtils
 import com.amazonaws.services.chime.sdk.meetings.realtime.datamessage.DataMessage
@@ -28,6 +33,7 @@ import java.io.InputStreamReader
 import java.io.OutputStreamWriter
 import java.net.HttpURLConnection
 import java.net.URL
+import java.security.InvalidParameterException
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -135,14 +141,43 @@ class DefaultVideoClientObserver(
             VIDEO_CLIENT_REMOTE_PAUSED_BY_LOCAL_BAD_NETWORK -> VideoPauseState.PausedForPoorConnection
             else -> VideoPauseState.Unpaused
         }
+
+        val sdkFrame = (frame as? com.xodee.client.video.VideoFrame)?.let {
+            val bufferAdapter: VideoFrameBuffer = when (frame.buffer) {
+                is com.xodee.client.video.VideoFrameTextureBuffer -> {
+                    val buffer = frame.buffer as com.xodee.client.video.VideoFrameTextureBuffer
+                    val type = when (buffer.type) {
+                        com.xodee.client.video.VideoFrameTextureBuffer.Type.OES -> VideoFrameTextureBuffer.Type.TEXTURE_OES
+                        com.xodee.client.video.VideoFrameTextureBuffer.Type.RGB -> VideoFrameTextureBuffer.Type.TEXTURE_2D
+                        else -> throw InvalidParameterException("Unsupported texture buffer type")
+                    }
+                    // Retain this buffer and create a new buffer with same internals that releases the original buffer when released itself
+                    buffer.retain()
+                    VideoFrameTextureBuffer(buffer.width, buffer.height, buffer.textureId, buffer.transformMatrix, type, Runnable { buffer.release() })
+                }
+                is com.xodee.client.video.VideoFrameI420Buffer -> {
+                    val buffer = frame.buffer as com.xodee.client.video.VideoFrameI420Buffer
+                    // Retain this buffer and create a new buffer with same internals that releases the original buffer when released itself
+                    buffer.retain()
+                    VideoFrameI420Buffer(buffer.width, buffer.height, buffer.dataY, buffer.dataU, buffer.dataV, buffer.strideY, buffer.strideU, buffer.strideV, Runnable { buffer.release() })
+                }
+                else -> throw InvalidParameterException("Video frame must have non null I420 or texture buffer")
+            }
+            VideoFrame(frame.timestampNs, bufferAdapter, VideoRotation.from(frame.rotation) ?: VideoRotation.Rotation0)
+        }
+
         notifyVideoTileObserver { observer ->
             observer.onReceiveFrame(
-                frame,
+                sdkFrame,
                 videoId,
                 profileId,
                 pauseState
             )
         }
+
+        // Frames passed up have additional ref count added so we need to release when finished
+        // to not leak the frame/buffer
+        sdkFrame?.release()
     }
 
     override fun onMetrics(metrics: IntArray?, values: DoubleArray?) {
@@ -151,10 +186,6 @@ class DefaultVideoClientObserver(
         val metricMap = mutableMapOf<Int, Double>()
         (metrics.indices).map { i -> metricMap[metrics[i]] = values[i] }
         clientMetricsCollector.processVideoClientMetrics(metricMap)
-    }
-
-    override fun getAvailableDnsServers(): Array<String> {
-        return emptyArray()
     }
 
     override fun onLogMessage(logLevel: Int, message: String?) {
@@ -198,6 +229,10 @@ class DefaultVideoClientObserver(
                 }
             }
         }
+    }
+
+    override fun getAvailableDnsServers(): Array<String> {
+        return emptyArray()
     }
 
     private suspend fun doTurnRequest(): TURNCredentials? {

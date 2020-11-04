@@ -17,6 +17,9 @@
     <string name="preview_meeting_info">Ready to join meeting %1$s as %2$s.</string>
     <string name="device_management_title">Select devices</string>
     <string name="audio_device_title">Audio Device</string>
+    <string name="video_device_title">Video Device</string>
+    <string name="video_format_title">Video Format</string>
+    <string name="video_preview_title">Video Preview</string>
     <string name="volume_indicator">Volume Indicator</string>
     <string name="active_speaker_indicator">Active Speaker Indicator</string>
     <string name="switch_camera">Switch Camera</string>
@@ -31,16 +34,26 @@
 
     <!-- toggle tab -->
     <string name="toggle_camera">Toggle Camera</string>
+    <string name="toggle_additional_options_menu">Toggle Additional Options Menu</string>
+    <string name="toggle_flashlight">Toggle flashlight on current camera</string>
+    <string name="toggle_cpu_filter">Toggle demo filter (CPU)</string>
+    <string name="toggle_gpu_filter">Toggle demo filter (GPU)</string>
+    <string name="toggle_custom_capture_source">Toggle using custom capture source</string>
     <string name="toggle_mute">Toggle Mute</string>
 
     <!-- Alert -->
     <string name="cancel">Cancel</string>
     <string name="alert_title_choose_audio">Choose a device</string>
+    <string name="alert_title_additional_options">Additional Options</string>
 
     <!-- Notify users for errors -->
     <string name="user_notification_meeting_id_invalid">Meeting ID is invalid</string>
     <string name="user_notification_attendee_name_invalid">Attendee name is invalid</string>
     <string name="user_notification_permission_error">WebRTC cannot work without permissions</string>
+    <string name="user_notification_flashlight_unavailable_error">Flashlight not available on current device</string>
+    <string name="user_notification_flashlight_custom_source_error">Cannot toggle flashlight without using custom camera capture source</string>
+    <string name="user_notification_filter_custom_source_error">Cannot toggle filters without using custom camera capture source</string>
+    <string name="user_notification_filter_both_enabled_error">Cannot toggle both filters on at same time</string>
     <string name="user_notification_meeting_url_error">Your url is invalid</string>
     <string name="user_notification_meeting_start_error">There was an error starting the meeting. Please try again</string>
     <string name="enter_message">Enter message</string>

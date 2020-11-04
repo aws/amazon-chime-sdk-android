@@ -25,19 +25,17 @@ class DefaultVideoTile(
                                                         isLocalTile)
     override var videoRenderView: VideoRenderView? = null
 
-    override fun bind(bindParams: Any?, videoRenderView: VideoRenderView?) {
+    override fun bind(videoRenderView: VideoRenderView?) {
         logger.info(TAG, "Binding the View to Tile")
-        videoRenderView?.initialize(bindParams)
         this.videoRenderView = videoRenderView
     }
 
-    override fun renderFrame(frame: Any) {
-        videoRenderView?.renderFrame(frame)
+    override fun onVideoFrameReceived(frame: VideoFrame) {
+        videoRenderView?.onVideoFrameReceived(frame)
     }
 
     override fun unbind() {
         logger.info(TAG, "Unbinding the View from Tile")
-        videoRenderView?.finalize()
         videoRenderView = null
     }
 
