@@ -128,7 +128,7 @@ class DefaultVideoClientControllerTest {
         }
 
         coVerify(exactly = 1, timeout = TestConstant.globalScopeTimeoutMs) { mockVideoClientStateController.stop() }
-        coVerify { mockEglCore.release() }
+        coVerify(exactly = 1, timeout = TestConstant.globalScopeTimeoutMs) { mockEglCore.release() }
     }
 
     @Test
