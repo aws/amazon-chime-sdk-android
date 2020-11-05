@@ -5,6 +5,8 @@
 
 package com.amazonaws.services.chime.sdk.meetings.session
 
+import android.bluetooth.BluetoothAdapter
+import android.bluetooth.BluetoothManager
 import android.content.Context
 import android.content.Intent
 import android.content.res.AssetManager
@@ -64,6 +66,12 @@ class DefaultMeetingSessionTest {
         every { context.assets } returns assetManager
         every { context.registerReceiver(any(), any()) } returns mockkClass(Intent::class)
         val audioManager = mockkClass(AudioManager::class)
+        val btManager = mockkClass(BluetoothManager::class)
+        val btAdapter = mockkClass(BluetoothAdapter::class)
+        every { btAdapter.getProfileProxy(any(), any(), any()) } returns true
+        every { btAdapter.closeProfileProxy(any(), any()) } returns Unit
+        every { btManager.adapter } returns btAdapter
+        every { audioManager.mode = any() } returns Unit
         every { audioManager.mode } returns AudioManager.MODE_NORMAL
         every { audioManager.isSpeakerphoneOn } returns true
         val cameraManager = mockkClass(CameraManager::class)

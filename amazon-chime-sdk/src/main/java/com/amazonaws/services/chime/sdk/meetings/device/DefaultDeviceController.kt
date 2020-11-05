@@ -15,8 +15,11 @@ import android.media.AudioDeviceCallback
 import android.media.AudioDeviceInfo
 import android.media.AudioManager
 import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.annotation.VisibleForTesting
 import com.amazonaws.services.chime.sdk.meetings.internal.audio.AudioClientController
+import com.amazonaws.services.chime.sdk.meetings.internal.audio.AudioClientState
+import com.amazonaws.services.chime.sdk.meetings.internal.audio.DefaultAudioClientController
 import com.amazonaws.services.chime.sdk.meetings.internal.utils.ObserverUtils
 import com.amazonaws.services.chime.sdk.meetings.internal.video.VideoClientController
 import com.xodee.client.audio.audioclient.AudioClient
@@ -33,20 +36,26 @@ class DefaultDeviceController(
     // TODO: remove code blocks for lower API level after the minimum SDK version becomes 23
     private val AUDIO_MANAGER_API_LEVEL = 23
 
+    private var receiver: BroadcastReceiver? = null
+
+    private var audioDeviceCallback: AudioDeviceCallback? = null
+
     init {
         @SuppressLint("NewApi")
         if (buildVersion >= AUDIO_MANAGER_API_LEVEL) {
-            audioManager.registerAudioDeviceCallback(object : AudioDeviceCallback() {
+            audioDeviceCallback = object : AudioDeviceCallback() {
                 override fun onAudioDevicesAdded(addedDevices: Array<out AudioDeviceInfo>?) {
                     notifyAudioDeviceChange()
                 }
 
                 override fun onAudioDevicesRemoved(removedDevices: Array<out AudioDeviceInfo>?) {
+                    audioManager.mode = AudioManager.MODE_IN_COMMUNICATION
                     notifyAudioDeviceChange()
                 }
-            }, null)
+            }
+            audioManager.registerAudioDeviceCallback(audioDeviceCallback, null)
         } else {
-            val receiver = object : BroadcastReceiver() {
+            receiver = object : BroadcastReceiver() {
                 override fun onReceive(context: Context?, intent: Intent?) {
                     // There is gap between notification and audioManager recognizing bluetooth devices
                     if (intent?.action == BluetoothDevice.ACTION_ACL_CONNECTED) {
@@ -61,6 +70,7 @@ class DefaultDeviceController(
                 receiver, IntentFilter(BluetoothDevice.ACTION_ACL_DISCONNECTED)
             )
         }
+        audioManager.mode = AudioManager.MODE_IN_COMMUNICATION
     }
 
     override fun listAudioDevices(): List<MediaDevice> {
@@ -90,6 +100,8 @@ class DefaultDeviceController(
                         isHandsetAvailable = true
                     }
                 }
+
+                if (device.type == AudioDeviceInfo.TYPE_BLUETOOTH_A2DP) continue
 
                 audioDevices.add(
                     MediaDevice(
@@ -124,7 +136,7 @@ class DefaultDeviceController(
                     )
                 )
             }
-            if (audioManager.isBluetoothScoOn || audioManager.isBluetoothA2dpOn) {
+            if (audioManager.isBluetoothScoOn) {
                 res.add(
                     MediaDevice(
                         getReadableType(AudioDeviceInfo.TYPE_BLUETOOTH_SCO),
@@ -137,8 +149,10 @@ class DefaultDeviceController(
     }
 
     override fun chooseAudioDevice(mediaDevice: MediaDevice) {
+        if (DefaultAudioClientController.audioClientState != AudioClientState.STARTED) {
+            return
+        }
         setupAudioDevice(mediaDevice.type)
-
         val route = when (mediaDevice.type) {
             MediaDeviceType.AUDIO_BUILTIN_SPEAKER -> AudioClient.SPK_STREAM_ROUTE_SPEAKER
             MediaDeviceType.AUDIO_BLUETOOTH -> AudioClient.SPK_STREAM_ROUTE_BT_AUDIO
@@ -148,27 +162,61 @@ class DefaultDeviceController(
         audioClientController.setRoute(route)
     }
 
+    @RequiresApi(Build.VERSION_CODES.N)
+    override fun getActiveAudioDevice(): MediaDevice? {
+        if (buildVersion >= Build.VERSION_CODES.N) {
+            if (audioManager.activeRecordingConfigurations.isNotEmpty()) {
+                val device =
+                    audioManager.activeRecordingConfigurations.firstOrNull { config -> config.audioDevice != null }?.audioDevice
+                if (device != null) {
+                    val type = device.type
+                    var mediaDeviceType: MediaDeviceType = MediaDeviceType.fromAudioDeviceInfo(type)
+                    if (type == AudioDeviceInfo.TYPE_BUILTIN_MIC) {
+                        // Built-in mic has two case speaker, built-in receiver
+                        mediaDeviceType = if (audioManager.isSpeakerphoneOn) {
+                            MediaDeviceType.fromAudioDeviceInfo(AudioDeviceInfo.TYPE_BUILTIN_SPEAKER)
+                        } else {
+                            MediaDeviceType.fromAudioDeviceInfo(AudioDeviceInfo.TYPE_BUILTIN_EARPIECE)
+                        }
+                    }
+                    return listAudioDevices().firstOrNull {
+                        it.type == mediaDeviceType
+                    }
+                }
+
+                // Some android devices doesn't have audio device for speaker
+                if (audioManager.isSpeakerphoneOn) return listAudioDevices().firstOrNull {
+                    it.type == MediaDeviceType.AUDIO_BUILTIN_SPEAKER
+                }
+            }
+        }
+        return null
+    }
+
     private fun setupAudioDevice(type: MediaDeviceType) {
         when (type) {
             MediaDeviceType.AUDIO_BUILTIN_SPEAKER ->
                 audioManager.apply {
-                    mode = AudioManager.MODE_IN_COMMUNICATION
-                    isSpeakerphoneOn = true
-                    isBluetoothScoOn = false
+                    // Sometimes stopBluetoothSco makes isSpeakerphoneOn to be false
+                    // calling it before isSpeakerphoneOn
                     stopBluetoothSco()
+                    mode = AudioManager.MODE_IN_COMMUNICATION
+                    isBluetoothScoOn = false
+                    isSpeakerphoneOn = true
                 }
             MediaDeviceType.AUDIO_BLUETOOTH ->
                 audioManager.apply {
                     mode = AudioManager.MODE_IN_COMMUNICATION
                     isSpeakerphoneOn = false
                     startBluetoothSco()
+                    isBluetoothScoOn = true
                 }
             else ->
                 audioManager.apply {
+                    stopBluetoothSco()
+                    isBluetoothScoOn = false
                     mode = AudioManager.MODE_IN_COMMUNICATION
                     isSpeakerphoneOn = false
-                    isBluetoothScoOn = false
-                    stopBluetoothSco()
                 }
         }
     }

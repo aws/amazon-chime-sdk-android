@@ -14,6 +14,7 @@ import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.capture.Camera
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.capture.DefaultCameraCaptureSource
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.capture.DefaultSurfaceTextureCaptureSourceFactory
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.gl.EglCoreFactory
+import com.amazonaws.services.chime.sdk.meetings.device.MediaDevice
 import com.amazonaws.services.chime.sdk.meetings.session.CreateAttendeeResponse
 import com.amazonaws.services.chime.sdk.meetings.session.CreateMeetingResponse
 import com.amazonaws.services.chime.sdk.meetings.session.DefaultMeetingSession
@@ -41,6 +42,7 @@ class MeetingActivity : AppCompatActivity(),
     private val meetingModel: MeetingModel by lazy { ViewModelProvider(this)[MeetingModel::class.java] }
     private lateinit var meetingId: String
     private lateinit var name: String
+    private var cachedDevice: MediaDevice? = null
 
     private val TAG = "InMeetingActivity"
 
@@ -101,6 +103,10 @@ class MeetingActivity : AppCompatActivity(),
             .commit()
     }
 
+    override fun onCachedDeviceSelected(mediaDevice: MediaDevice) {
+        cachedDevice = mediaDevice
+    }
+
     override fun onLeaveMeeting() {
         onBackPressed()
     }
@@ -117,6 +123,10 @@ class MeetingActivity : AppCompatActivity(),
 
     fun getMeetingSessionCredentials(): MeetingSessionCredentials = meetingSessionModel.credentials
 
+    fun getCachedDevice(): MediaDevice? = cachedDevice
+    fun resetCachedDevice() {
+        cachedDevice = null
+    }
     fun getEglCoreFactory(): EglCoreFactory = meetingSessionModel.eglCoreFactory
 
     fun getCameraCaptureSource(): CameraCaptureSource = meetingSessionModel.cameraCaptureSource

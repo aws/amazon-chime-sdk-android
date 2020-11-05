@@ -68,7 +68,6 @@ class DefaultAudioClientController(
             TAG,
             "spkMinBufSizeInSamples $spkMinBufSizeInSamples micMinBufSizeInSamples $micMinBufSizeInSamples"
         )
-
         audioClient.sendMessage(AudioClient.MESS_SET_MIC_FRAMES_PER_BUFFER, micMinBufSizeInSamples)
         audioClient.sendMessage(AudioClient.MESS_SET_SPK_FRAMES_PER_BUFFER, spkMinBufSizeInSamples)
         audioClient.sendMessage(AudioClient.MESS_SET_SPEAKERPHONE_MIC, AudioClient.OPENSL_MIC_DEFAULT)
@@ -193,11 +192,7 @@ class DefaultAudioClientController(
     }
 
     override fun setMute(isMuted: Boolean): Boolean {
-        if (audioClientState == AudioClientState.STARTED) {
-            return AudioClient.AUDIO_CLIENT_OK == audioClient.setMicMute(isMuted)
-        } else {
-            return false
-        }
+        return audioClientState == AudioClientState.STARTED && AudioClient.AUDIO_CLIENT_OK == audioClient.setMicMute(isMuted)
     }
 
     override fun setVoiceFocusEnabled(enabled: Boolean): Boolean {
