@@ -81,12 +81,14 @@ class DefaultVideoTileController(
                 frame?.run { tile.onVideoFrameReceived(frame) }
             }
         } else {
-            frame?.run {
-                logger.info(
-                    TAG,
-                    "Adding video tile with videoId = $videoId & attendeeId = $attendeeId"
-                )
-                onAddVideoTile(videoId, attendeeId, videoStreamContentWidth, videoStreamContentHeight)
+            if (frame != null || pauseState != VideoPauseState.Unpaused) {
+                run {
+                    logger.info(
+                        TAG,
+                        "Adding video tile with videoId = $videoId & attendeeId = $attendeeId"
+                    )
+                    onAddVideoTile(videoId, attendeeId, pauseState, videoStreamContentWidth, videoStreamContentHeight)
+                }
             }
         }
     }
@@ -188,7 +190,7 @@ class DefaultVideoTileController(
         }
     }
 
-    private fun onAddVideoTile(tileId: Int, attendeeId: String?, videoStreamContentWidth: Int, videoStreamContentHeight: Int) {
+    private fun onAddVideoTile(tileId: Int, attendeeId: String?, pauseState: VideoPauseState, videoStreamContentWidth: Int, videoStreamContentHeight: Int) {
         var isLocalTile: Boolean
         var thisAttendeeId: String
 
@@ -201,6 +203,7 @@ class DefaultVideoTileController(
         }
         val tile = videoTileFactory.makeTile(tileId, thisAttendeeId, videoStreamContentWidth, videoStreamContentHeight, isLocalTile)
         videoTileMap[tileId] = tile
+        tile.setPauseState(pauseState)
         forEachObserver { observer -> observer.onVideoTileAdded(tile.state) }
     }
 
