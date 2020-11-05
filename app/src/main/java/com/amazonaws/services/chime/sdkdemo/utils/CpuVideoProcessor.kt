@@ -129,9 +129,10 @@ class CpuVideoProcessor(private val logger: Logger, eglCoreFactory: EglCoreFacto
             convertToBlackAndWhite(rgbaBuffer)
 
             val processedFrame = VideoFrame(frame.timestampNs, rgbaBuffer)
+            frame.release()
 
             sinks.forEach { it.onVideoFrameReceived(processedFrame) }
-            frame.release()
+            processedFrame.release()
         }
     }
 
