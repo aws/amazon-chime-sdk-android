@@ -8,6 +8,8 @@ package com.amazonaws.services.chime.sdk.meetings.audiovideo
 import android.Manifest
 import android.content.Context
 import android.content.pm.PackageManager
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.core.content.ContextCompat
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.audio.activespeakerdetector.ActiveSpeakerDetectorFacade
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.audio.activespeakerdetector.ActiveSpeakerObserver
@@ -138,6 +140,11 @@ class DefaultAudioVideoFacade(
 
     override fun chooseAudioDevice(mediaDevice: MediaDevice) {
         deviceController.chooseAudioDevice(mediaDevice)
+    }
+
+    @RequiresApi(Build.VERSION_CODES.N)
+    override fun getActiveAudioDevice(): MediaDevice? {
+        return deviceController.getActiveAudioDevice()
     }
 
     override fun getActiveCamera(): MediaDevice? {

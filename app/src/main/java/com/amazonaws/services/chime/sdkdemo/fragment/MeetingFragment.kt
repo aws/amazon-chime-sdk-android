@@ -58,6 +58,7 @@ import com.amazonaws.services.chime.sdkdemo.data.Message
 import com.amazonaws.services.chime.sdkdemo.data.MetricData
 import com.amazonaws.services.chime.sdkdemo.data.RosterAttendee
 import com.amazonaws.services.chime.sdkdemo.data.VideoCollectionTile
+import com.amazonaws.services.chime.sdkdemo.device.AudioDeviceManager
 import com.amazonaws.services.chime.sdkdemo.model.MeetingModel
 import com.amazonaws.services.chime.sdkdemo.utils.CpuVideoProcessor
 import com.amazonaws.services.chime.sdkdemo.utils.GpuVideoProcessor
@@ -77,6 +78,8 @@ class MeetingFragment : Fragment(),
     private val mutex = Mutex()
     private val uiScope = CoroutineScope(Dispatchers.Main)
     private val meetingModel: MeetingModel by lazy { ViewModelProvider(this)[MeetingModel::class.java] }
+
+    private var deviceDialog: AlertDialog? = null
 
     private lateinit var credentials: MeetingSessionCredentials
     private lateinit var audioVideo: AudioVideoFacade
@@ -127,6 +130,7 @@ class MeetingFragment : Fragment(),
     private lateinit var screenTileAdapter: VideoAdapter
     private lateinit var messageAdapter: MessageAdapter
     private lateinit var tabLayout: TabLayout
+    private lateinit var audioDeviceManager: AudioDeviceManager
 
     companion object {
         fun newInstance(meetingId: String): MeetingFragment {
@@ -166,6 +170,7 @@ class MeetingFragment : Fragment(),
         cameraCaptureSource = activity.getCameraCaptureSource()
         gpuVideoProcessor = activity.getGpuVideoProcessor()
         cpuVideoProcessor = activity.getCpuVideoProcessor()
+        audioDeviceManager = AudioDeviceManager(audioVideo)
 
         view.findViewById<TextView>(R.id.textViewMeetingId)?.text = arguments?.getString(
             HomeActivity.MEETING_ID_KEY
@@ -341,8 +346,9 @@ class MeetingFragment : Fragment(),
         deviceListAdapter = DeviceAdapter(
             requireContext(),
             android.R.layout.simple_list_item_1,
-            meetingModel.currentMediaDevices
-        )
+            meetingModel.currentMediaDevices,
+            audioVideo,
+            audioDeviceManager)
         deviceAlertDialogBuilder = AlertDialog.Builder(activity)
         deviceAlertDialogBuilder.setTitle(R.string.alert_title_choose_audio)
         deviceAlertDialogBuilder.setNegativeButton(R.string.cancel) { dialog, _ ->
@@ -352,13 +358,17 @@ class MeetingFragment : Fragment(),
         deviceAlertDialogBuilder.setAdapter(deviceListAdapter) { _, which ->
             run {
                 audioVideo.chooseAudioDevice(meetingModel.currentMediaDevices[which])
+                audioDeviceManager.setActiveAudioDevice(meetingModel.currentMediaDevices[which])
+                meetingModel.isDeviceListDialogOn = false
             }
         }
-        deviceAlertDialogBuilder.setOnDismissListener {
+
+        deviceAlertDialogBuilder.setOnCancelListener {
             meetingModel.isDeviceListDialogOn = false
         }
         if (meetingModel.isDeviceListDialogOn) {
-            deviceAlertDialogBuilder.create().show()
+            deviceDialog = deviceAlertDialogBuilder.create()
+            deviceDialog?.show()
         }
     }
 
@@ -404,6 +414,7 @@ class MeetingFragment : Fragment(),
     override fun onAudioDeviceChanged(freshAudioDeviceList: List<MediaDevice>) {
         meetingModel.currentMediaDevices = freshAudioDeviceList
             .filter { device -> device.type != MediaDeviceType.OTHER }
+        audioDeviceManager.reconfigureActiveAudioDevice()
         deviceListAdapter.clear()
         deviceListAdapter.addAll(meetingModel.currentMediaDevices)
         deviceListAdapter.notifyDataSetChanged()
@@ -587,8 +598,12 @@ class MeetingFragment : Fragment(),
     }
 
     private fun toggleSpeaker() {
-        deviceAlertDialogBuilder.create()
-        deviceAlertDialogBuilder.show()
+        meetingModel.currentMediaDevices = audioVideo.listAudioDevices().filter { it.type != MediaDeviceType.OTHER }
+        deviceListAdapter.clear()
+        deviceListAdapter.addAll(meetingModel.currentMediaDevices)
+        deviceListAdapter.notifyDataSetChanged()
+        deviceDialog = deviceAlertDialogBuilder.create()
+        deviceDialog?.show()
         meetingModel.isDeviceListDialogOn = true
     }
 
@@ -849,6 +864,13 @@ class MeetingFragment : Fragment(),
             object {}.javaClass.enclosingMethod?.name,
             "reconnecting: $reconnecting"
         )
+
+        val cachedDevice = (activity as MeetingActivity).getCachedDevice()
+        cachedDevice?.let {
+            audioVideo.chooseAudioDevice(it)
+            audioDeviceManager.setActiveAudioDevice(it)
+            (activity as MeetingActivity).resetCachedDevice()
+        }
     }
 
     override fun onAudioSessionDropped() {
@@ -1112,6 +1134,7 @@ class MeetingFragment : Fragment(),
 
     override fun onDestroy() {
         super.onDestroy()
+        deviceDialog?.dismiss()
         unsubscribeFromAttendeeChangeHandlers()
         meetingModel.currentVideoTiles.forEach { (tileId, _) ->
             audioVideo.unbindVideoView(tileId)
