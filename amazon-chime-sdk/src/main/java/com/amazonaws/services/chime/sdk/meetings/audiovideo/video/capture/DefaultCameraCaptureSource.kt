@@ -353,9 +353,29 @@ class DefaultCameraCaptureSource(
                 cameraDevice.createCaptureRequest(CameraDevice.TEMPLATE_RECORD)
 
             // Set target FPS
+            val fpsRanges: Array<Range<Int>> = cameraCharacteristics?.get(CameraCharacteristics.CONTROL_AE_AVAILABLE_TARGET_FPS_RANGES)
+                    ?: run {
+                        logger.error(TAG, "Could not retrieve camera FPS ranges")
+                        ObserverUtils.notifyObserverOnMainThread(observers) {
+                            it.onCaptureFailed(CaptureSourceError.ConfigurationFailure)
+                        }
+                        return
+                    }
+            // Pick range with max closest to but not exceeding the set max framerate
+            val bestFpsRange = fpsRanges
+                    .filter { it.upper <= this.format.maxFps }
+                    .minBy { this.format.maxFps - it.upper }
+                    ?: run {
+                        logger.error(TAG, "No FPS ranges below set max FPS")
+                        ObserverUtils.notifyObserverOnMainThread(observers) {
+                            it.onCaptureFailed(CaptureSourceError.ConfigurationFailure)
+                        }
+                        return
+                    }
+            logger.info(TAG, "Setting target FPS range to $bestFpsRange")
             captureRequestBuilder.set(
                 CaptureRequest.CONTROL_AE_TARGET_FPS_RANGE,
-                Range(0, this.format.maxFps)
+                Range(bestFpsRange.lower, bestFpsRange.upper)
             )
 
             // Set target auto exposure mode
