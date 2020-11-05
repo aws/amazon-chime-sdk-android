@@ -43,6 +43,7 @@ This release includes support for custom video sources, and therefore includes a
 * **Breaking** Changed behavior to no longer call `onVideoTileSizeChanged` when a video is paused to fix a bug where pausing triggered this callback with width=0 and height=0.
 * Fix audio issue when using Bluetooth device by changing the sample rate to 16kHz.
 * **Breaking** Fixed `listAudioDevices` to stop returning A2DP bluetooth devices, which are one way communication devices such as Bluetooth Speaker
+* Fixed `videoTileDidAdd` not being called for paused tiles.
 
 ## [0.7.6] - 2020-11-13
 
