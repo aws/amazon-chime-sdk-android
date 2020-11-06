@@ -45,7 +45,7 @@ class DefaultVideoClientController(
     private val gson = Gson()
 
     private val cameraCaptureSource: CameraCaptureSource
-    private var videoSourceAdapter: VideoSourceAdapter? = null
+    private var videoSourceAdapter = VideoSourceAdapter()
     private var isUsingInternalCaptureSource = false
 
     init {
@@ -85,10 +85,7 @@ class DefaultVideoClientController(
     override fun startLocalVideo() {
         if (!videoClientStateController.canAct(VideoClientState.INITIALIZED)) return
 
-        videoSourceAdapter =
-            VideoSourceAdapter(
-                cameraCaptureSource
-            )
+        videoSourceAdapter.source = cameraCaptureSource
         logger.info(TAG, "Setting external video source in media client to internal camera source")
         videoClient?.setExternalVideoSource(videoSourceAdapter, eglCore?.eglContext)
         videoClient?.setSending(true)
@@ -100,10 +97,7 @@ class DefaultVideoClientController(
     override fun startLocalVideo(source: VideoSource) {
         if (!videoClientStateController.canAct(VideoClientState.INITIALIZED)) return
 
-        videoSourceAdapter =
-            VideoSourceAdapter(
-                source
-            )
+        videoSourceAdapter.source = source
         logger.info(TAG, "Setting external video source in media client to custom source")
         videoClient?.setExternalVideoSource(videoSourceAdapter, eglCore?.eglContext)
         videoClient?.setSending(true)

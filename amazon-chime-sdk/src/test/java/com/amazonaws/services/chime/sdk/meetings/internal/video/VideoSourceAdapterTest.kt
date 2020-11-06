@@ -61,19 +61,16 @@ class VideoSourceAdapterTest {
 
     @Test
     fun `Content hint is passed through`() {
-        val adapter =
-            VideoSourceAdapter(
-                mockSdkVideoSource
-            )
+        val adapter = VideoSourceAdapter()
+        adapter.source = mockSdkVideoSource
+
         assertEquals(adapter.contentHint, testMediaContentHint)
     }
 
     @Test
     fun `Timestamp and rotation is passed through`() {
-        val adapter =
-            VideoSourceAdapter(
-                mockSdkVideoSource
-            )
+        val adapter = VideoSourceAdapter()
+        adapter.source = mockSdkVideoSource
         adapter.addSink(mockMediaVideoSink)
 
         adapter.onVideoFrameReceived(VideoFrame(testTimestamp, mockSdkVideoFrameTextureBuffer, testRotation))
@@ -86,10 +83,8 @@ class VideoSourceAdapterTest {
 
     @Test
     fun `Passing a generic SDK buffer results in an exception`() {
-        val adapter =
-            VideoSourceAdapter(
-                mockSdkVideoSource
-            )
+        val adapter = VideoSourceAdapter()
+        adapter.source = mockSdkVideoSource
         adapter.addSink(mockMediaVideoSink)
 
         var exceptionThrown = false
@@ -103,10 +98,8 @@ class VideoSourceAdapterTest {
 
     @Test
     fun `Passing an I420 SDK buffer results in an I420 Media buffer`() {
-        val adapter =
-            VideoSourceAdapter(
-                mockSdkVideoSource
-            )
+        val adapter = VideoSourceAdapter()
+        adapter.source = mockSdkVideoSource
         adapter.addSink(mockMediaVideoSink)
 
         adapter.onVideoFrameReceived(VideoFrame(testTimestamp, mockSdkVideoFrameI420Buffer, testRotation))
@@ -118,10 +111,8 @@ class VideoSourceAdapterTest {
 
     @Test
     fun `Passing an RGBA SDK buffer results in an RGBA Media buffer`() {
-        val adapter =
-            VideoSourceAdapter(
-                mockSdkVideoSource
-            )
+        val adapter = VideoSourceAdapter()
+        adapter.source = mockSdkVideoSource
         adapter.addSink(mockMediaVideoSink)
 
         adapter.onVideoFrameReceived(VideoFrame(testTimestamp, mockSdkVideoFrameRGBABuffer, testRotation))
@@ -133,10 +124,8 @@ class VideoSourceAdapterTest {
 
     @Test
     fun `Passing a texture SDK buffer results in a texture Media buffer`() {
-        val adapter =
-            VideoSourceAdapter(
-                mockSdkVideoSource
-            )
+        val adapter = VideoSourceAdapter()
+        adapter.source = mockSdkVideoSource
         adapter.addSink(mockMediaVideoSink)
 
         adapter.onVideoFrameReceived(VideoFrame(testTimestamp, mockSdkVideoFrameTextureBuffer, testRotation))

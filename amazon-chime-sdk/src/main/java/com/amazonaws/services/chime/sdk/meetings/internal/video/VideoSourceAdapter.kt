@@ -19,7 +19,7 @@ import java.security.InvalidParameterException
 /**
  * [VideoSourceAdapter] provides two classes to adapt [VideoSource] to [com.xodee.client.video.VideoSource].
  */
-class VideoSourceAdapter(private val source: VideoSource) : VideoSink,
+class VideoSourceAdapter : VideoSink,
     com.xodee.client.video.VideoSource {
 
     class VideoFrameTextureBufferAdapter(
@@ -65,11 +65,14 @@ class VideoSourceAdapter(private val source: VideoSource) : VideoSink,
         override fun release() = i420Buffer.release()
     }
 
-    private var sinks = mutableSetOf<com.xodee.client.video.VideoSink>()
+    var source: VideoSource? = null
+        set(value) {
+            source?.removeVideoSink(this)
+            field = value
+            source?.addVideoSink(this)
+        }
 
-    init {
-        source.addVideoSink(this)
-    }
+    private var sinks = mutableSetOf<com.xodee.client.video.VideoSink>()
 
     override fun addSink(sink: com.xodee.client.video.VideoSink) {
         sinks.add(sink)
@@ -80,11 +83,12 @@ class VideoSourceAdapter(private val source: VideoSource) : VideoSink,
     }
 
     override fun getContentHint(): com.xodee.client.video.ContentHint {
-        return when (source.contentHint) {
+        return when (source?.contentHint) {
             VideoContentHint.None -> com.xodee.client.video.ContentHint.NONE
             VideoContentHint.Motion -> com.xodee.client.video.ContentHint.MOTION
             VideoContentHint.Detail -> com.xodee.client.video.ContentHint.DETAIL
             VideoContentHint.Text -> com.xodee.client.video.ContentHint.TEXT
+            else -> com.xodee.client.video.ContentHint.NONE
         }
     }
 
