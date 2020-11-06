@@ -688,7 +688,6 @@ class MeetingFragment : Fragment(),
         )
         meetingModel.isUsingCpuVideoProcessor = !meetingModel.isUsingCpuVideoProcessor
         if (meetingModel.isLocalVideoStarted) {
-            stopLocalVideo()
             startLocalVideo()
         }
     }
@@ -718,7 +717,6 @@ class MeetingFragment : Fragment(),
         )
         meetingModel.isUsingGpuVideoProcessor = !meetingModel.isUsingGpuVideoProcessor
         if (meetingModel.isLocalVideoStarted) {
-            stopLocalVideo()
             startLocalVideo()
         }
     }
@@ -734,7 +732,6 @@ class MeetingFragment : Fragment(),
             if (wasUsingCameraCaptureSource) {
                 cameraCaptureSource.stop()
             }
-            stopLocalVideo()
             startLocalVideo()
         }
     }
