@@ -14,6 +14,9 @@ import androidx.core.content.ContextCompat
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.audio.activespeakerdetector.ActiveSpeakerDetectorFacade
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.audio.activespeakerdetector.ActiveSpeakerObserver
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.audio.activespeakerpolicy.ActiveSpeakerPolicy
+import com.amazonaws.services.chime.sdk.meetings.audiovideo.contentshare.ContentShareController
+import com.amazonaws.services.chime.sdk.meetings.audiovideo.contentshare.ContentShareObserver
+import com.amazonaws.services.chime.sdk.meetings.audiovideo.contentshare.ContentShareSource
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.metric.MetricsObserver
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoRenderView
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoSource
@@ -32,7 +35,8 @@ class DefaultAudioVideoFacade(
     private val realtimeController: RealtimeControllerFacade,
     private val deviceController: DeviceController,
     private val videoTileController: VideoTileController,
-    private val activeSpeakerDetector: ActiveSpeakerDetectorFacade
+    private val activeSpeakerDetector: ActiveSpeakerDetectorFacade,
+    private val contentShareController: ContentShareController
 ) : AudioVideoFacade {
 
     private val permissions = arrayOf(
@@ -196,5 +200,21 @@ class DefaultAudioVideoFacade(
 
     override fun removeActiveSpeakerObserver(observer: ActiveSpeakerObserver) {
         activeSpeakerDetector.removeActiveSpeakerObserver(observer)
+    }
+
+    override fun startContentShare(source: ContentShareSource) {
+        contentShareController.startContentShare(source)
+    }
+
+    override fun stopContentShare() {
+        contentShareController.stopContentShare()
+    }
+
+    override fun addContentShareObserver(observer: ContentShareObserver) {
+        contentShareController.addContentShareObserver(observer)
+    }
+
+    override fun removeContentShareObserver(observer: ContentShareObserver) {
+        contentShareController.removeContentShareObserver(observer)
     }
 }

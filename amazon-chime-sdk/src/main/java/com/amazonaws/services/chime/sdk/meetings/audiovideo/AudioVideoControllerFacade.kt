@@ -70,6 +70,8 @@ interface AudioVideoControllerFacade {
      * transmitted. It will also stop and replace the internal capture source if [startLocalVideo]
      * was called with no arguments.
      *
+     * Read [custom video guide](https://github.com/aws/amazon-chime-sdk-android/blob/master/guides/custom_video.md) for details.
+     *
      * @param source: [VideoSource] - The source of video frames to be sent to other clients
      */
     fun startLocalVideo(source: VideoSource)

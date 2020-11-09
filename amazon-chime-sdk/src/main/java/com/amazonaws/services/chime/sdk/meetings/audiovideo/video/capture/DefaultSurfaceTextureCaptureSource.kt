@@ -69,6 +69,16 @@ class DefaultSurfaceTextureCaptureSource(
     // non-GC-able resources
     private var releasePending = false
 
+    // We will maintain close to the min FPS by simply posting a request to resend
+    // a previously sent frame delayed by (1f/minFps)
+    override var minFps = 0
+    // Buffer the delay so it doesn't trigger on small framerate variations (will cause
+    // min FPS to be slightly inaccurate but shouldn't have a huge impact given its purpose)
+    private val RESEND_DELAY_BUFFER_MS = 10
+    // Use this to check from the delayed request whether we have recently
+    // enough sent a new frame
+    private var lastAlignedTimestamp: Long? = null
+
     private var sinks = mutableSetOf<VideoSink>()
 
     private val TAG = "SurfaceTextureCaptureSource"
@@ -158,11 +168,12 @@ class DefaultSurfaceTextureCaptureSource(
     private fun tryCapturingFrame() {
         // Check to see if we are in valid state for capturing a new frame
         //  * Don't capture a new frame if we are in the process of releasing
-        //  * Don't capture a new frame if it will be the same as previous
+        //  * Don't capture a new frame if we don't have one pending
         //  * Don't capture a new frame if there is a buffer in flight as to not invalidate it
         if (releasePending || !pendingAvailableFrame || textureBufferInFlight) {
             return
         }
+
         textureBufferInFlight = true
         pendingAvailableFrame = false
 
@@ -180,12 +191,23 @@ class DefaultSurfaceTextureCaptureSource(
                 GlUtil.convertToMatrix(transformMatrix),
                 VideoFrameTextureBuffer.Type.TEXTURE_OES,
                 Runnable { onFrameReleased() })
-        val timestamp = timestampAligner.translateTimestamp(surfaceTexture.timestamp)
-
-        val frame = VideoFrame(timestamp, buffer)
+        val alignedTimestamp = timestampAligner.translateTimestamp(surfaceTexture.timestamp)
+        val frame = VideoFrame(alignedTimestamp, buffer)
 
         sinks.forEach { it.onVideoFrameReceived(frame) }
         frame.release()
+
+        // If we have min FPS set, check in a while if we should resend the previous frame
+        if (minFps != 0) {
+            lastAlignedTimestamp = alignedTimestamp
+            val resendDelayMs = RESEND_DELAY_BUFFER_MS + (1f / minFps) * 1000
+            handler.postDelayed({
+                if (alignedTimestamp == lastAlignedTimestamp) {
+                    pendingAvailableFrame = true
+                    tryCapturingFrame()
+                }
+            }, resendDelayMs.toLong())
+        }
     }
 
     private fun onFrameReleased() {

@@ -25,6 +25,17 @@ interface SurfaceTextureCaptureSource : VideoCaptureSource {
     val surface: Surface
 
     /**
+     * Setting this to a non-null value will lead the source to resend previously captured frames
+     * as necessary to approximately maintain the set value.
+     *
+     * This is useful for applications like screen capture where the system does not capture when
+     * there is no motion on screen.  Continuing to send frames helps the encoder improve the quality
+     * on the receive end, and also helps mitigate possible issues with downstream frame throttling
+     * dropping frames before the end of an animation.
+     */
+    var minFps: Int
+
+    /**
      * Deallocate any state or resources held by this object. Not possible to reuse after call. Surface
      * will have been released.
      */

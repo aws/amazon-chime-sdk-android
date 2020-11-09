@@ -5,6 +5,9 @@
 
 package com.amazonaws.services.chime.sdk.meetings.session
 
+import com.amazonaws.services.chime.sdk.meetings.utils.DefaultModality
+import com.amazonaws.services.chime.sdk.meetings.utils.ModalityType
+
 /**
  * [MeetingSessionConfiguration] includes information needed to start the meeting session such as
  * attendee credentials and URLs for audio and video
@@ -37,4 +40,17 @@ data class MeetingSessionConfiguration(
             urlRewriter
         )
     )
+
+    fun createContentShareMeetingSessionConfiguration(): MeetingSessionConfiguration {
+        val contentModality: String = DefaultModality.MODALITY_SEPARATOR + ModalityType.Content.value
+        return MeetingSessionConfiguration(
+            meetingId,
+            MeetingSessionCredentials(
+                credentials.attendeeId + contentModality,
+                credentials.externalUserId,
+                credentials.joinToken + contentModality
+            ),
+            urls
+        )
+    }
 }

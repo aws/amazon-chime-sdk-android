@@ -34,16 +34,19 @@ import org.junit.Test
 
 class DefaultMeetingSessionTest {
     @MockK
-    lateinit var configuration: MeetingSessionConfiguration
+    private lateinit var configuration: MeetingSessionConfiguration
 
     @MockK
-    lateinit var logger: Logger
+    private lateinit var contentConfiguration: MeetingSessionConfiguration
 
     @MockK
-    lateinit var context: Context
+    private lateinit var logger: Logger
 
     @MockK
-    lateinit var mockAudioClient: AudioClient
+    private lateinit var context: Context
+
+    @MockK
+    private lateinit var mockAudioClient: AudioClient
 
     @MockK
     private lateinit var assetManager: AssetManager
@@ -54,7 +57,7 @@ class DefaultMeetingSessionTest {
     @MockK
     private lateinit var mockLooper: Looper
 
-    lateinit var meetingSession: DefaultMeetingSession
+    private lateinit var meetingSession: DefaultMeetingSession
 
     @Before
     fun setup() {
@@ -62,7 +65,7 @@ class DefaultMeetingSessionTest {
         mockkStatic(System::class, Log::class)
         every { System.loadLibrary(any()) } just runs
         every { Log.d(any(), any()) } returns 0
-        MockKAnnotations.init(this)
+        MockKAnnotations.init(this, relaxed = true)
         every { context.assets } returns assetManager
         every { context.registerReceiver(any(), any()) } returns mockkClass(Intent::class)
         val audioManager = mockkClass(AudioManager::class)
@@ -80,13 +83,8 @@ class DefaultMeetingSessionTest {
         every { context.getSystemService(Context.CAMERA_SERVICE) } returns cameraManager
         mockkObject(AudioClientFactory.Companion)
         every { AudioClientFactory.getAudioClient(any(), any()) } returns mockAudioClient
-        every { configuration.meetingId } returns "meetingId"
-        every { configuration.urls.signalingURL } returns "signalingUrl"
-        every { configuration.urls.turnControlURL } returns "turnControlUrl"
-        every { configuration.credentials.joinToken } returns "joinToken"
-        every { configuration.credentials.attendeeId } returns "attendeeId"
-        every { configuration.urls.urlRewriter } returns ::defaultUrlRewriter
         every { logger.info(any(), any()) } just runs
+        every { configuration.createContentShareMeetingSessionConfiguration() } returns contentConfiguration
 
         mockkConstructor(HandlerThread::class)
         every { anyConstructed<HandlerThread>().looper } returns mockLooper

@@ -150,7 +150,7 @@ class DeviceManagementFragment : Fragment(), DeviceChangeObserver {
         view.findViewById<DefaultVideoRenderView>(R.id.videoPreview)?.let {
             val displayMetrics = context.resources.displayMetrics
             val width =
-                    if (isLandscapeMode(context) == true) displayMetrics.widthPixels / 2 else displayMetrics.widthPixels
+                    if (isLandscapeMode(context)) displayMetrics.widthPixels / 2 else displayMetrics.widthPixels
             val height = (width * VIDEO_ASPECT_RATIO_16_9).toInt()
             it.layoutParams.width = width
             it.layoutParams.height = height
