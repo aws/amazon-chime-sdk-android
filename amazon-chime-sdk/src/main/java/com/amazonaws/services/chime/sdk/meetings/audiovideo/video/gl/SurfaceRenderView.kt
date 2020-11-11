@@ -44,8 +44,9 @@ open class SurfaceRenderView @JvmOverloads constructor(
     // (Required for View implementations) which determines the actual size of the view
     private val videoLayoutMeasure: VideoLayoutMeasure = VideoLayoutMeasure()
 
+    // Lazy so we can allow builders to set their own loggers using self.logger
+    // If no logger is passed in we will fallback on ConsoleLogger
     private val renderer by lazy {
-        // Lazy so we can allow builders to set their own loggers
         DefaultEglRenderer(logger)
     }
 
@@ -159,7 +160,8 @@ open class SurfaceRenderView @JvmOverloads constructor(
             val width = min(width, drawnFrameWidth)
             val height = min(height, drawnFrameHeight)
 
-            logger.debug(TAG, "Updating surface size frame size: ${rotatedFrameWidth}x$rotatedFrameHeight, requested surface size: ${width}x$height, old surface size: ${surfaceWidth}x$surfaceHeight")
+            logger.debug(TAG, "Updating surface size frame size: ${rotatedFrameWidth}x$rotatedFrameHeight, " +
+                    "requested surface size: ${width}x$height, old surface size: ${surfaceWidth}x$surfaceHeight")
             if (width != surfaceWidth || height != surfaceHeight) {
                 surfaceWidth = width
                 surfaceHeight = height

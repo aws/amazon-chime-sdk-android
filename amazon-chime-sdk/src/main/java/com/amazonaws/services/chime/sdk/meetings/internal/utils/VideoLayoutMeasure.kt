@@ -43,7 +43,7 @@ class VideoLayoutMeasure {
         val frameAspect = frameWidth / frameHeight.toFloat()
         val layoutSize: Point =
                 getDisplaySize(
-                        convertScalingTypeToVisibleFraction(scalingType),
+                        scalingType.visibleFraction,
                         frameAspect,
                         maxWidth,
                         maxHeight
@@ -58,17 +58,6 @@ class VideoLayoutMeasure {
             layoutSize.y = maxHeight
         }
         return layoutSize
-    }
-
-    /**
-     * Each scaling type has a one-to-one correspondence to a numeric minimum fraction of the video
-     * that must remain visible.
-     */
-    private fun convertScalingTypeToVisibleFraction(scalingType: VideoScalingType): Float {
-        return when (scalingType) {
-            VideoScalingType.AspectFit -> 1.0f
-            VideoScalingType.AspectFill -> 0.0f
-        }
     }
 
     /**
