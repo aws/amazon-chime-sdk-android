@@ -12,6 +12,7 @@ import android.util.AttributeSet
 import android.view.TextureView
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoFrame
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoRotation
+import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoScalingType
 import com.amazonaws.services.chime.sdk.meetings.internal.utils.VideoLayoutMeasure
 import com.amazonaws.services.chime.sdk.meetings.internal.video.gl.DefaultEglRenderer
 import kotlinx.coroutines.CoroutineScope
@@ -42,6 +43,12 @@ open class TextureRenderView @JvmOverloads constructor(
     var mirror: Boolean = false
         set(value) {
             renderer.mirror = value
+            field = value
+        }
+
+    var scalingType: VideoScalingType = VideoScalingType.AspectFill
+        set(value) {
+            videoLayoutMeasure.scalingType = value
             field = value
         }
 
