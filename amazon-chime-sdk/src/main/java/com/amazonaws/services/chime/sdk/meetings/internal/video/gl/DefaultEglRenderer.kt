@@ -15,6 +15,7 @@ import android.view.Surface
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoFrame
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.gl.EglCore
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.gl.EglCoreFactory
+import com.amazonaws.services.chime.sdk.meetings.utils.logger.Logger
 import kotlinx.coroutines.android.asCoroutineDispatcher
 import kotlinx.coroutines.runBlocking
 
@@ -22,7 +23,7 @@ import kotlinx.coroutines.runBlocking
  * [DefaultEglRenderer] uses EGL14 to support all functions in [EglRenderer]. It uses a single frame queue to render
  * [VideoFrame] objects passed to it.
  */
-class DefaultEglRenderer : EglRenderer {
+class DefaultEglRenderer(private val logger: Logger) : EglRenderer {
     // EGL and GL resources for drawing YUV/OES textures. After initialization, these are only
     // accessed from the render thread. These are reused within init/release cycles.
     private var eglCore: EglCore? = null
@@ -47,13 +48,17 @@ class DefaultEglRenderer : EglRenderer {
     override var aspectRatio = 0f
         set(value) {
             synchronized(aspectRatio) {
+                logger.info(TAG, "Setting aspect ratio from $field to $value")
                 field = value
             }
         }
 
     private var frameDrawer = DefaultGlVideoFrameDrawer()
 
+    private val TAG = "DefaultEglRenderer"
+
     override fun init(eglCoreFactory: EglCoreFactory) {
+        logger.info(TAG, "Initializing EGL renderer")
         val thread = HandlerThread("EglRenderer")
         thread.start()
         this.renderHandler = Handler(thread.looper)
@@ -66,6 +71,7 @@ class DefaultEglRenderer : EglRenderer {
     }
 
     override fun release() {
+        logger.info(TAG, "Releasing EGL renderer")
         val validRenderHandler = renderHandler ?: return // Already released
         runBlocking(validRenderHandler.asCoroutineDispatcher().immediate) {
             eglCore?.release()
@@ -86,6 +92,7 @@ class DefaultEglRenderer : EglRenderer {
     override fun createEglSurface(inputSurface: Any) {
         check(inputSurface is SurfaceTexture || inputSurface is Surface) { "Surface must be SurfaceTexture or Surface" }
         renderHandler?.post {
+            logger.info(TAG, "Creating EGL surface from input surface")
             if (eglCore != null && eglCore?.eglSurface == EGL14.EGL_NO_SURFACE) {
                 val surfaceAttributess = intArrayOf(EGL14.EGL_NONE)
                 eglCore?.eglSurface = EGL14.eglCreateWindowSurface(
@@ -114,6 +121,7 @@ class DefaultEglRenderer : EglRenderer {
     override fun releaseEglSurface() {
         val validRenderHandler = this.renderHandler ?: return
         runBlocking(validRenderHandler.asCoroutineDispatcher().immediate) {
+            logger.info(TAG, "Releasing EGL surface")
             // Release frame drawer while we have a valid current context
             frameDrawer.release()
 

@@ -14,6 +14,7 @@ import com.amazonaws.services.chime.sdk.meetings.audiovideo.AudioVideoFacade
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoPauseState
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.capture.CameraCaptureSource
 import com.amazonaws.services.chime.sdk.meetings.device.MediaDeviceType
+import com.amazonaws.services.chime.sdk.meetings.utils.logger.Logger
 import com.amazonaws.services.chime.sdkdemo.R
 import com.amazonaws.services.chime.sdkdemo.data.VideoCollectionTile
 import com.amazonaws.services.chime.sdkdemo.utils.inflate
@@ -26,14 +27,14 @@ class VideoAdapter(
     private val videoCollectionTiles: Collection<VideoCollectionTile>,
     private val audioVideoFacade: AudioVideoFacade,
     private val cameraCaptureSource: CameraCaptureSource?,
-    private val context: Context?
-) :
-    RecyclerView.Adapter<VideoHolder>() {
+    private val context: Context?,
+    private val logger: Logger
+) : RecyclerView.Adapter<VideoHolder>() {
     private val VIDEO_ASPECT_RATIO_16_9 = 0.5625
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): VideoHolder {
         val inflatedView = parent.inflate(R.layout.item_video, false)
-        return VideoHolder(inflatedView, audioVideoFacade, cameraCaptureSource)
+        return VideoHolder(inflatedView, audioVideoFacade, logger, cameraCaptureSource)
     }
 
     override fun getItemCount(): Int {
@@ -57,10 +58,15 @@ class VideoAdapter(
 class VideoHolder(
     private val view: View,
     private val audioVideo: AudioVideoFacade,
+    private val logger: Logger,
     private val cameraCaptureSource: CameraCaptureSource?
 ) : RecyclerView.ViewHolder(view) {
 
     val tileContainer: RelativeLayout = view.findViewById(R.id.tile_container)
+
+    init {
+        view.video_surface.logger = logger
+    }
 
     fun bindVideoTile(videoCollectionTile: VideoCollectionTile) {
         audioVideo.bindVideoView(view.video_surface, videoCollectionTile.videoTileState.tileId)
