@@ -127,18 +127,17 @@ open class SurfaceRenderView @JvmOverloads constructor(
                 rotatedFrameHeight != frame.getRotatedHeight() ||
                 frameRotation != frame.rotation
         ) {
-            logger.info(TAG, "Video frame rotated size changed to ${rotatedFrameWidth}x$rotatedFrameHeight")
-
             rotatedFrameWidth = frame.getRotatedWidth()
             rotatedFrameHeight = frame.getRotatedHeight()
             frameRotation = frame.rotation
+
+            logger.info(TAG, "Video frame rotated size changed to ${rotatedFrameWidth}x$rotatedFrameHeight with rotation $frameRotation")
 
             CoroutineScope(Dispatchers.Main).launch {
                 updateSurfaceSize()
                 requestLayout()
             }
         }
-
         renderer.onVideoFrameReceived(frame)
     }
 
@@ -160,7 +159,7 @@ open class SurfaceRenderView @JvmOverloads constructor(
             val width = min(width, drawnFrameWidth)
             val height = min(height, drawnFrameHeight)
 
-            logger.debug(TAG, "Updating surface size frame size: ${rotatedFrameWidth}x$rotatedFrameHeight, " +
+            logger.info(TAG, "Updating surface size frame size: ${rotatedFrameWidth}x$rotatedFrameHeight, " +
                     "requested surface size: ${width}x$height, old surface size: ${surfaceWidth}x$surfaceHeight")
             if (width != surfaceWidth || height != surfaceHeight) {
                 surfaceWidth = width
