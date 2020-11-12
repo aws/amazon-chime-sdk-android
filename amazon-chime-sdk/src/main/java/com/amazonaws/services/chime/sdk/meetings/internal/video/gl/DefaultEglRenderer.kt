@@ -27,7 +27,7 @@ class DefaultEglRenderer(private val logger: Logger) : EglRenderer {
     // EGL and GL resources for drawing YUV/OES textures. After initialization, these are only
     // accessed from the render thread. These are reused within init/release cycles.
     private var eglCore: EglCore? = null
-    private val surface: Any? = null
+    private var surface: Any? = null
 
     // This handler is protected from onVideoFrameReceived calls during init and release cycles
     // by being synchronized on pendingFrameLock
@@ -66,7 +66,10 @@ class DefaultEglRenderer(private val logger: Logger) : EglRenderer {
         val validRenderHandler = renderHandler ?: throw UnknownError("No handler in init")
         runBlocking(validRenderHandler.asCoroutineDispatcher().immediate) {
             eglCore = eglCoreFactory.createEglCore()
-            surface?.let { createEglSurface(it) }
+            surface?.let {
+                logger.info(TAG, "View already has surface, triggering EGL surface creation")
+                createEglSurface(it)
+            }
         }
     }
 
@@ -105,6 +108,7 @@ class DefaultEglRenderer(private val logger: Logger) : EglRenderer {
                         eglCore?.eglSurface,
                         eglCore?.eglContext
                 )
+                surface = inputSurface
 
                 // Necessary for YUV frames with odd width.
                 GLES20.glPixelStorei(GLES20.GL_UNPACK_ALIGNMENT, 1)
@@ -131,6 +135,7 @@ class DefaultEglRenderer(private val logger: Logger) : EglRenderer {
             )
             EGL14.eglDestroySurface(eglCore?.eglDisplay, eglCore?.eglSurface)
             eglCore?.eglSurface = EGL14.EGL_NO_SURFACE
+            surface = null
         }
     }
 
@@ -169,7 +174,7 @@ class DefaultEglRenderer(private val logger: Logger) : EglRenderer {
         var frame: VideoFrame
         synchronized(pendingFrameLock) {
             if (pendingFrame == null) {
-                logger.info(TAG, "Skipping frame render, no pending frame to render")
+                logger.verbose(TAG, "Skipping frame render, no pending frame to render")
                 return
             }
             frame = pendingFrame as VideoFrame
