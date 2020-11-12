@@ -146,13 +146,20 @@ class DefaultEglRenderer(private val logger: Logger) : EglRenderer {
                 pendingFrame = frame
                 pendingFrame?.retain()
                 renderHandler?.post(::renderPendingFrame)
+            } else {
+                logger.warn(TAG, "Skipping frame render request, no render handler thread")
             }
         }
     }
 
     private fun renderPendingFrame() {
         // View could be updating and surface may not be valid
+        if (eglCore == null) {
+            logger.warn(TAG, "Skipping frame render, no EGL core")
+        }
+
         if (eglCore?.eglSurface == EGL14.EGL_NO_SURFACE) {
+            logger.warn(TAG, "Skipping frame render, no EGL surface")
             return
         }
 
@@ -160,6 +167,7 @@ class DefaultEglRenderer(private val logger: Logger) : EglRenderer {
         var frame: VideoFrame
         synchronized(pendingFrameLock) {
             if (pendingFrame == null) {
+                logger.info(TAG, "Skipping frame render, no pending frame to render")
                 return
             }
             frame = pendingFrame as VideoFrame
