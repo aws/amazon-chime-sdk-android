@@ -59,6 +59,10 @@ class DefaultEglRenderer(private val logger: Logger) : EglRenderer {
 
     override fun init(eglCoreFactory: EglCoreFactory) {
         logger.info(TAG, "Initializing EGL renderer")
+        if (renderHandler != null) {
+            logger.warn(TAG, "Already initialized")
+            return
+        }
         val thread = HandlerThread("EglRenderer")
         thread.start()
         this.renderHandler = Handler(thread.looper)
@@ -75,7 +79,10 @@ class DefaultEglRenderer(private val logger: Logger) : EglRenderer {
 
     override fun release() {
         logger.info(TAG, "Releasing EGL renderer")
-        val validRenderHandler = renderHandler ?: return // Already released
+        val validRenderHandler = renderHandler ?: run {
+            logger.warn(TAG, "Already released")
+            return
+        }
         runBlocking(validRenderHandler.asCoroutineDispatcher().immediate) {
             eglCore?.release()
             eglCore = null
@@ -94,12 +101,13 @@ class DefaultEglRenderer(private val logger: Logger) : EglRenderer {
 
     override fun createEglSurface(inputSurface: Any) {
         check(inputSurface is SurfaceTexture || inputSurface is Surface) { "Surface must be SurfaceTexture or Surface" }
+        surface = inputSurface
         renderHandler?.post {
-            logger.info(TAG, "Creating EGL surface from input surface")
-            if (eglCore != null && eglCore?.eglSurface == EGL14.EGL_NO_SURFACE) {
+            logger.info(TAG, "Request on handler thread to create EGL surface from input surface $surface")
+            if (eglCore != null && eglCore?.eglSurface == EGL14.EGL_NO_SURFACE && surface != null) {
                 val surfaceAttributess = intArrayOf(EGL14.EGL_NONE)
                 eglCore?.eglSurface = EGL14.eglCreateWindowSurface(
-                        eglCore?.eglDisplay, eglCore?.eglConfig, inputSurface,
+                        eglCore?.eglDisplay, eglCore?.eglConfig, surface,
                         surfaceAttributess, 0
                 )
                 EGL14.eglMakeCurrent(
@@ -108,7 +116,6 @@ class DefaultEglRenderer(private val logger: Logger) : EglRenderer {
                         eglCore?.eglSurface,
                         eglCore?.eglContext
                 )
-                surface = inputSurface
 
                 // Necessary for YUV frames with odd width.
                 GLES20.glPixelStorei(GLES20.GL_UNPACK_ALIGNMENT, 1)
