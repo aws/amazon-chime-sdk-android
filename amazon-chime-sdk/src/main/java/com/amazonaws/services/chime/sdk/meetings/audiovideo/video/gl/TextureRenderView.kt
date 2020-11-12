@@ -24,6 +24,9 @@ import kotlinx.coroutines.launch
 /**
  * [TextureRenderView] is an implementation of [EglVideoRenderView] which uses EGL14 and OpenGLES2
  * to draw any incoming video buffer types to the surface provided by the inherited [TextureView]
+ *
+ * Note that since most [TextureRenderView] objects will not be constructed in code, builders must
+ * pass in the [Logger] directly before initialization by setting [logger]
  */
 open class TextureRenderView @JvmOverloads constructor(
     context: Context,

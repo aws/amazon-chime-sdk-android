@@ -24,7 +24,10 @@ import kotlinx.coroutines.launch
 
 /**
  * [SurfaceRenderView] is an implementation of [EglVideoRenderView] which uses EGL14 and OpenGLES2
- * to draw any incoming video buffer types to the surface provided by the inherited [SurfaceView]
+ * to draw any incoming video buffer types to the surface provided by the inherited [SurfaceView].
+ *
+ * Note that since most [SurfaceRenderView] objects will not be constructed in code, builders must
+ * pass in the [Logger] directly before initialization by setting [logger]
  */
 open class SurfaceRenderView @JvmOverloads constructor(
     context: Context,
