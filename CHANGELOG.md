@@ -34,6 +34,7 @@ This release includes support for custom video sources, and therefore includes a
     * Builders with a custom `VideoTile` will have to update APIs correspondingly.
     * Currently the buffer type of all frames coming from the MediaSDK should be `VideoFrameI420Buffer` which should have the same API as the legacy, closed source buffer used.
   * **Breaking** `VideoRenderView.initialize` and `VideoRenderView.finalize` have been abstracted away to `EglVideoRenderView` and are now named `init` and `release` respectively.
+  * **Breaking** `DefaultVideoRenderView.setMirror` is now a class variable `mirror`.  `DefaultVideoRenderView.setScalingType` is now a class variable `scalingType`, and takes `VideoScalingType`
   * `DefaultVideoRenderView` now inherits from `SurfaceTextureView`.
 * If no custom source is provided, the SDK level video client will use a `DefaultCameraCaptureSource` instead of relying on capture implementations within the MediaSDK; though behavior should be identical, please open an issue if any differences are noticed..
 * Added additional, optional `id` (unique ID) parameter to `MediaDevice` for video capture devices.

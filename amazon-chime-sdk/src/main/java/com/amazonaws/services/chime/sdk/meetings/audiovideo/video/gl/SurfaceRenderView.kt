@@ -12,8 +12,11 @@ import android.view.SurfaceHolder
 import android.view.SurfaceView
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoFrame
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoRotation
+import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoScalingType
 import com.amazonaws.services.chime.sdk.meetings.internal.utils.VideoLayoutMeasure
 import com.amazonaws.services.chime.sdk.meetings.internal.video.gl.DefaultEglRenderer
+import com.amazonaws.services.chime.sdk.meetings.utils.logger.ConsoleLogger
+import com.amazonaws.services.chime.sdk.meetings.utils.logger.Logger
 import kotlin.math.min
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -21,7 +24,10 @@ import kotlinx.coroutines.launch
 
 /**
  * [SurfaceRenderView] is an implementation of [EglVideoRenderView] which uses EGL14 and OpenGLES2
- * to draw any incoming video buffer types to the surface provided by the inherited [SurfaceView]
+ * to draw any incoming video buffer types to the surface provided by the inherited [SurfaceView].
+ *
+ * Note that since most [SurfaceRenderView] objects will not be constructed in code, builders must
+ * pass in the [Logger] directly before initialization by setting [logger]
  */
 open class SurfaceRenderView @JvmOverloads constructor(
     context: Context,
@@ -41,13 +47,30 @@ open class SurfaceRenderView @JvmOverloads constructor(
     // (Required for View implementations) which determines the actual size of the view
     private val videoLayoutMeasure: VideoLayoutMeasure = VideoLayoutMeasure()
 
-    private val renderer = DefaultEglRenderer()
+    // Lazy so we can allow builders to set their own loggers using self.logger
+    // If no logger is passed in we will fallback on ConsoleLogger
+    private val renderer by lazy {
+        DefaultEglRenderer(logger)
+    }
 
     var mirror: Boolean = false
         set(value) {
+            logger.debug(TAG, "Setting mirror from $field to $value")
             renderer.mirror = value
             field = value
         }
+
+    var scalingType: VideoScalingType = VideoScalingType.AspectFill
+        set(value) {
+            logger.debug(TAG, "Setting scaling type from $field to $value")
+            videoLayoutMeasure.scalingType = value
+            field = value
+        }
+
+    // Public so it can be set, since most users will not be using constructor directly
+    var logger: Logger = ConsoleLogger()
+
+    private val TAG = "SurfaceRenderView"
 
     init {
         holder?.addCallback(this)
@@ -57,16 +80,19 @@ open class SurfaceRenderView @JvmOverloads constructor(
         rotatedFrameWidth = 0
         rotatedFrameHeight = 0
 
+        logger.info(TAG, "Initializing render view")
         renderer.init(eglCoreFactory)
     }
 
     override fun release() {
+        logger.info(TAG, "Releasing render view")
         renderer.release()
     }
 
     override fun surfaceChanged(holder: SurfaceHolder?, format: Int, width: Int, height: Int) {}
 
     override fun surfaceDestroyed(holder: SurfaceHolder?) {
+        logger.info(TAG, "Surface destroyed, releasing EGL surface")
         renderer.releaseEglSurface()
     }
 
@@ -75,6 +101,7 @@ open class SurfaceRenderView @JvmOverloads constructor(
 
         // Create the EGL surface and set it as current
         holder?.let {
+            logger.info(TAG, "Surface created, creating EGL surface with resource")
             renderer.createEglSurface(it.surface)
         }
     }
@@ -82,6 +109,7 @@ open class SurfaceRenderView @JvmOverloads constructor(
     override fun onMeasure(widthSpec: Int, heightSpec: Int) {
         val size: Point =
                 videoLayoutMeasure.measure(widthSpec, heightSpec, rotatedFrameWidth, rotatedFrameHeight)
+        logger.debug(TAG, "Setting measured dimensions ${size.x}x${size.y}")
         setMeasuredDimension(size.x, size.y)
     }
 
@@ -106,12 +134,13 @@ open class SurfaceRenderView @JvmOverloads constructor(
             rotatedFrameHeight = frame.getRotatedHeight()
             frameRotation = frame.rotation
 
+            logger.info(TAG, "Video frame rotated size changed to ${rotatedFrameWidth}x$rotatedFrameHeight with rotation $frameRotation")
+
             CoroutineScope(Dispatchers.Main).launch {
                 updateSurfaceSize()
                 requestLayout()
             }
         }
-
         renderer.onVideoFrameReceived(frame)
     }
 
@@ -133,6 +162,8 @@ open class SurfaceRenderView @JvmOverloads constructor(
             val width = min(width, drawnFrameWidth)
             val height = min(height, drawnFrameHeight)
 
+            logger.info(TAG, "Updating surface size frame size: ${rotatedFrameWidth}x$rotatedFrameHeight, " +
+                    "requested surface size: ${width}x$height, old surface size: ${surfaceWidth}x$surfaceHeight")
             if (width != surfaceWidth || height != surfaceHeight) {
                 surfaceWidth = width
                 surfaceHeight = height

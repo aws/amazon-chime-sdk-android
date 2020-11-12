@@ -7,6 +7,7 @@ package com.amazonaws.services.chime.sdk.meetings.internal.utils
 
 import android.graphics.Point
 import android.view.View
+import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoScalingType
 import kotlin.math.roundToInt
 
 /**
@@ -14,10 +15,7 @@ import kotlin.math.roundToInt
  * layout requirements, scaling type, and video aspect ratio.
  */
 class VideoLayoutMeasure {
-    enum class ScalingType { SCALE_ASPECT_FIT, SCALE_ASPECT_FILL }
-
-    // Default value, currently not exposed
-    val scalingType = ScalingType.SCALE_ASPECT_FILL
+    var scalingType = VideoScalingType.AspectFill
 
     /**
      * Measure desired layout size based off provided parameters
@@ -45,7 +43,7 @@ class VideoLayoutMeasure {
         val frameAspect = frameWidth / frameHeight.toFloat()
         val layoutSize: Point =
                 getDisplaySize(
-                        convertScalingTypeToVisibleFraction(scalingType),
+                        scalingType.visibleFraction,
                         frameAspect,
                         maxWidth,
                         maxHeight
@@ -60,17 +58,6 @@ class VideoLayoutMeasure {
             layoutSize.y = maxHeight
         }
         return layoutSize
-    }
-
-    /**
-     * Each scaling type has a one-to-one correspondence to a numeric minimum fraction of the video
-     * that must remain visible.
-     */
-    private fun convertScalingTypeToVisibleFraction(scalingType: ScalingType): Float {
-        return when (scalingType) {
-            ScalingType.SCALE_ASPECT_FIT -> 1.0f
-            ScalingType.SCALE_ASPECT_FILL -> 0.0f
-        }
     }
 
     /**

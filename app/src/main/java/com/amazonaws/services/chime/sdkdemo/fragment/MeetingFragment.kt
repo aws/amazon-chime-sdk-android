@@ -226,7 +226,8 @@ class MeetingFragment : Fragment(),
             meetingModel.currentVideoTiles.values,
             audioVideo,
             cameraCaptureSource,
-            context
+            context,
+            logger
         )
         recyclerViewVideoCollection.adapter = videoTileAdapter
         recyclerViewVideoCollection.visibility = View.GONE
@@ -239,7 +240,8 @@ class MeetingFragment : Fragment(),
                 meetingModel.currentScreenTiles.values,
                 audioVideo,
                 null,
-                context
+                context,
+                logger
             )
         recyclerViewScreenShareCollection.adapter = screenTileAdapter
         recyclerViewScreenShareCollection.visibility = View.GONE

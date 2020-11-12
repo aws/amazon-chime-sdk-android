@@ -155,6 +155,7 @@ class DeviceManagementFragment : Fragment(), DeviceChangeObserver {
             it.layoutParams.width = width
             it.layoutParams.height = height
 
+            it.logger = logger
             it.init((activity as MeetingActivity).getEglCoreFactory())
             cameraCaptureSource.addVideoSink(it)
             videoPreview = it
