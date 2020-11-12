@@ -153,13 +153,14 @@ class DefaultEglRenderer(private val logger: Logger) : EglRenderer {
     }
 
     private fun renderPendingFrame() {
-        // View could be updating and surface may not be valid
         if (eglCore == null) {
+            // May have been called after release
             logger.warn(TAG, "Skipping frame render, no EGL core")
         }
 
         if (eglCore?.eglSurface == EGL14.EGL_NO_SURFACE) {
-            logger.warn(TAG, "Skipping frame render, no EGL surface")
+            // Verbose since this happens normally when running in background or when view is updating
+            logger.verbose(TAG, "Skipping frame render, no EGL surface")
             return
         }
 
