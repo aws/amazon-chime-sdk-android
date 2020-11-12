@@ -156,6 +156,7 @@ class DefaultEglRenderer(private val logger: Logger) : EglRenderer {
         if (eglCore == null) {
             // May have been called after release
             logger.warn(TAG, "Skipping frame render, no EGL core")
+            return
         }
 
         if (eglCore?.eglSurface == EGL14.EGL_NO_SURFACE) {
