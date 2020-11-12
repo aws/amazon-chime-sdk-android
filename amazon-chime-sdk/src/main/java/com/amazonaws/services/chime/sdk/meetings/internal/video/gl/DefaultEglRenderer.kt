@@ -87,8 +87,8 @@ class DefaultEglRenderer(private val logger: Logger) : EglRenderer {
 
             // Protect this within lock since onVideoFrameReceived can
             // occur from any frame
-            this.renderHandler?.looper?.quitSafely()
-            this.renderHandler = null
+            validRenderHandler.looper.quitSafely()
+            renderHandler = null
         }
     }
 
@@ -123,6 +123,7 @@ class DefaultEglRenderer(private val logger: Logger) : EglRenderer {
     }
 
     override fun releaseEglSurface() {
+        surface = null // Can occur outside of init/release cycle
         val validRenderHandler = this.renderHandler ?: return
         runBlocking(validRenderHandler.asCoroutineDispatcher().immediate) {
             logger.info(TAG, "Releasing EGL surface")
@@ -135,7 +136,6 @@ class DefaultEglRenderer(private val logger: Logger) : EglRenderer {
             )
             EGL14.eglDestroySurface(eglCore?.eglDisplay, eglCore?.eglSurface)
             eglCore?.eglSurface = EGL14.EGL_NO_SURFACE
-            surface = null
         }
     }
 
