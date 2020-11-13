@@ -27,7 +27,7 @@ class DefaultEglRenderer(private val logger: Logger) : EglRenderer {
     // EGL and GL resources for drawing YUV/OES textures. After initialization, these are only
     // accessed from the render thread. These are reused within init/release cycles.
     private var eglCore: EglCore? = null
-    private val surface: Any? = null
+    private var surface: Any? = null
 
     // This handler is protected from onVideoFrameReceived calls during init and release cycles
     // by being synchronized on pendingFrameLock
@@ -59,6 +59,10 @@ class DefaultEglRenderer(private val logger: Logger) : EglRenderer {
 
     override fun init(eglCoreFactory: EglCoreFactory) {
         logger.info(TAG, "Initializing EGL renderer")
+        if (renderHandler != null) {
+            logger.warn(TAG, "Already initialized")
+            return
+        }
         val thread = HandlerThread("EglRenderer")
         thread.start()
         this.renderHandler = Handler(thread.looper)
@@ -66,13 +70,19 @@ class DefaultEglRenderer(private val logger: Logger) : EglRenderer {
         val validRenderHandler = renderHandler ?: throw UnknownError("No handler in init")
         runBlocking(validRenderHandler.asCoroutineDispatcher().immediate) {
             eglCore = eglCoreFactory.createEglCore()
-            surface?.let { createEglSurface(it) }
+            surface?.let {
+                logger.info(TAG, "View already has surface, triggering EGL surface creation")
+                createEglSurface(it)
+            }
         }
     }
 
     override fun release() {
         logger.info(TAG, "Releasing EGL renderer")
-        val validRenderHandler = renderHandler ?: return // Already released
+        val validRenderHandler = renderHandler ?: run {
+            logger.warn(TAG, "Already released")
+            return
+        }
         runBlocking(validRenderHandler.asCoroutineDispatcher().immediate) {
             eglCore?.release()
             eglCore = null
@@ -84,19 +94,20 @@ class DefaultEglRenderer(private val logger: Logger) : EglRenderer {
 
             // Protect this within lock since onVideoFrameReceived can
             // occur from any frame
-            this.renderHandler?.looper?.quitSafely()
-            this.renderHandler = null
+            validRenderHandler.looper.quitSafely()
+            renderHandler = null
         }
     }
 
     override fun createEglSurface(inputSurface: Any) {
         check(inputSurface is SurfaceTexture || inputSurface is Surface) { "Surface must be SurfaceTexture or Surface" }
+        surface = inputSurface
         renderHandler?.post {
-            logger.info(TAG, "Creating EGL surface from input surface")
-            if (eglCore != null && eglCore?.eglSurface == EGL14.EGL_NO_SURFACE) {
+            logger.info(TAG, "Request on handler thread to create EGL surface from input surface $surface")
+            if (eglCore != null && eglCore?.eglSurface == EGL14.EGL_NO_SURFACE && surface != null) {
                 val surfaceAttributess = intArrayOf(EGL14.EGL_NONE)
                 eglCore?.eglSurface = EGL14.eglCreateWindowSurface(
-                        eglCore?.eglDisplay, eglCore?.eglConfig, inputSurface,
+                        eglCore?.eglDisplay, eglCore?.eglConfig, surface,
                         surfaceAttributess, 0
                 )
                 EGL14.eglMakeCurrent(
@@ -119,6 +130,7 @@ class DefaultEglRenderer(private val logger: Logger) : EglRenderer {
     }
 
     override fun releaseEglSurface() {
+        surface = null // Can occur outside of init/release cycle
         val validRenderHandler = this.renderHandler ?: return
         runBlocking(validRenderHandler.asCoroutineDispatcher().immediate) {
             logger.info(TAG, "Releasing EGL surface")
@@ -146,13 +158,22 @@ class DefaultEglRenderer(private val logger: Logger) : EglRenderer {
                 pendingFrame = frame
                 pendingFrame?.retain()
                 renderHandler?.post(::renderPendingFrame)
+            } else {
+                logger.warn(TAG, "Skipping frame render request, no render handler thread")
             }
         }
     }
 
     private fun renderPendingFrame() {
-        // View could be updating and surface may not be valid
+        if (eglCore == null) {
+            // May have been called after release
+            logger.warn(TAG, "Skipping frame render, no EGL core")
+            return
+        }
+
         if (eglCore?.eglSurface == EGL14.EGL_NO_SURFACE) {
+            // Verbose since this happens normally when running in background or when view is updating
+            logger.verbose(TAG, "Skipping frame render, no EGL surface")
             return
         }
 
@@ -160,6 +181,7 @@ class DefaultEglRenderer(private val logger: Logger) : EglRenderer {
         var frame: VideoFrame
         synchronized(pendingFrameLock) {
             if (pendingFrame == null) {
+                logger.verbose(TAG, "Skipping frame render, no pending frame to render")
                 return
             }
             frame = pendingFrame as VideoFrame
