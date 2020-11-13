@@ -208,13 +208,6 @@ class DefaultSurfaceTextureCaptureSource(
         surfaceTexture.release()
         surface.release()
 
-        EGL14.eglMakeCurrent(
-            eglCore.eglDisplay,
-            EGL14.EGL_NO_SURFACE,
-            EGL14.EGL_NO_SURFACE,
-            EGL14.EGL_NO_CONTEXT
-        )
-        EGL14.eglDestroySurface(eglCore.eglDisplay, eglCore.eglSurface)
         eglCore.release()
 
         timestampAligner.dispose()

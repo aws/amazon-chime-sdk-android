@@ -79,13 +79,15 @@ class DefaultVideoTileController(
             // Ignore any frames which come to an already paused tile
             if (tile.state.pauseState == VideoPauseState.Unpaused) {
                 frame?.run { tile.onVideoFrameReceived(frame) }
+            } else {
+                logger.verbose(TAG, "Ignoring video frame received on paused tile")
             }
         } else {
             if (frame != null || pauseState != VideoPauseState.Unpaused) {
                 run {
                     logger.info(
                         TAG,
-                        "Adding video tile with videoId = $videoId & attendeeId = $attendeeId"
+                        "Adding video tile with videoId = $videoId, attendeeId = $attendeeId, pauseState = $pauseState"
                     )
                     onAddVideoTile(videoId, attendeeId, pauseState, videoStreamContentWidth, videoStreamContentHeight)
                 }

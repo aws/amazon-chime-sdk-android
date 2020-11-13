@@ -57,6 +57,11 @@ class DefaultEglCore(
     }
 
     override fun release() {
+        if (eglSurface != EGL14.EGL_NO_SURFACE) {
+            EGL14.eglDestroySurface(eglDisplay, eglSurface)
+            eglSurface = EGL14.EGL_NO_SURFACE
+        }
+
         if (eglDisplay != EGL14.EGL_NO_DISPLAY) {
             // Android is unusual in that it uses a reference-counted EGLDisplay. So for
             // every eglInitialize() we need an eglTerminate().
