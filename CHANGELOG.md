@@ -46,6 +46,8 @@ This release includes support for custom video sources, and therefore includes a
 * **Breaking** Fixed `listAudioDevices` to stop returning A2DP bluetooth devices, which are one way communication devices such as Bluetooth Speaker
 * Fixed `videoTileDidAdd` not being called for paused tiles.
 
+## [0.7.6] - 2020-11-13
+
 ## [0.7.5] - 2020-10-23
 
 ### Fixed
