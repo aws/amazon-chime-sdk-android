@@ -53,6 +53,9 @@ open class TextureRenderView @JvmOverloads constructor(
 
     private val TAG = "TextureRenderView"
 
+    /**
+     * If true, rendered frames will be mirrored across the vertical axis
+     */
     var mirror: Boolean = false
         set(value) {
             logger.debug(TAG, "Setting mirror from $field to $value")
@@ -60,6 +63,9 @@ open class TextureRenderView @JvmOverloads constructor(
             field = value
         }
 
+    /**
+     * [VideoScalingType] used to render on this view.  May impact cropping.
+     */
     var scalingType: VideoScalingType = VideoScalingType.AspectFill
         set(value) {
             logger.debug(TAG, "Setting scaling type from $field to $value")

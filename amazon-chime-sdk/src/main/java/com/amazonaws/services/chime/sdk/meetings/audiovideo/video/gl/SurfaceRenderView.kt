@@ -7,6 +7,7 @@ package com.amazonaws.services.chime.sdk.meetings.audiovideo.video.gl
 
 import android.content.Context
 import android.graphics.Point
+import android.opengl.EGL14
 import android.util.AttributeSet
 import android.view.SurfaceHolder
 import android.view.SurfaceView
@@ -53,6 +54,9 @@ open class SurfaceRenderView @JvmOverloads constructor(
         DefaultEglRenderer(logger)
     }
 
+    /**
+     * If true, rendered frames will be mirrored across the vertical axis
+     */
     var mirror: Boolean = false
         set(value) {
             logger.debug(TAG, "Setting mirror from $field to $value")
@@ -60,10 +64,25 @@ open class SurfaceRenderView @JvmOverloads constructor(
             field = value
         }
 
+    /**
+     * [VideoScalingType] used to render on this view.  May impact cropping.
+     */
     var scalingType: VideoScalingType = VideoScalingType.AspectFill
         set(value) {
             logger.debug(TAG, "Setting scaling type from $field to $value")
             videoLayoutMeasure.scalingType = value
+            field = value
+        }
+
+    /**
+     * Enables fixed size for the surface. This provides better performance but might be buggy on some
+     * devices, for example on Galaxy S9, [EGL14.eglQuerySurface] will not return update values until
+     * after the first [EGL14.eglSwapBuffers] call, and will lead to cropping or black boxing on resolution
+     * changes. By default this is turned off.
+     */
+    var hardwareScaling: Boolean = false
+        set(value) {
+            logger.debug(TAG, "Setting hardware scaling from $field to $value")
             field = value
         }
 
@@ -145,7 +164,7 @@ open class SurfaceRenderView @JvmOverloads constructor(
     }
 
     private fun updateSurfaceSize() {
-        if (rotatedFrameWidth != 0 && rotatedFrameHeight != 0 && width != 0 && height != 0) {
+        if (hardwareScaling && rotatedFrameWidth != 0 && rotatedFrameHeight != 0 && width != 0 && height != 0) {
             val layoutAspectRatio = width / height.toFloat()
             val frameAspectRatio: Float =
                     rotatedFrameWidth.toFloat() / rotatedFrameHeight
