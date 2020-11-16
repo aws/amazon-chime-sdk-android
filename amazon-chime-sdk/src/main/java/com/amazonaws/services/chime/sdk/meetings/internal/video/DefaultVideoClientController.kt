@@ -97,11 +97,15 @@ class DefaultVideoClientController(
     override fun startLocalVideo(source: VideoSource) {
         if (!videoClientStateController.canAct(VideoClientState.INITIALIZED)) return
 
+        if (isUsingInternalCaptureSource) {
+            cameraCaptureSource.stop()
+            isUsingInternalCaptureSource = false
+        }
+
         videoSourceAdapter.source = source
         logger.info(TAG, "Setting external video source in media client to custom source")
         videoClient?.setExternalVideoSource(videoSourceAdapter, eglCore?.eglContext)
         videoClient?.setSending(true)
-        isUsingInternalCaptureSource = false
     }
 
     override fun stopLocalVideo() {
