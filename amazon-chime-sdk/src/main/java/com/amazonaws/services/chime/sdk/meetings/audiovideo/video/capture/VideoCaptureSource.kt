@@ -5,6 +5,8 @@
 
 package com.amazonaws.services.chime.sdk.meetings.audiovideo.video.capture
 
+import com.amazonaws.services.chime.sdk.meetings.audiovideo.AudioVideoFacade
+import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoFrame
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoSource
 
 /**

@@ -5,10 +5,12 @@
 
 package com.amazonaws.services.chime.sdk.meetings.audiovideo.video
 
+import com.amazonaws.services.chime.sdk.meetings.audiovideo.AudioVideoFacade
+
 /**
  * [VideoSource] is an interface for sources which produce video frames, and can send to a [VideoSink].
  * Implementations can be passed to the [AudioVideoFacade] to be used as the video source sent to remote
- * participlants
+ * participants
  */
 interface VideoSource {
     /**
