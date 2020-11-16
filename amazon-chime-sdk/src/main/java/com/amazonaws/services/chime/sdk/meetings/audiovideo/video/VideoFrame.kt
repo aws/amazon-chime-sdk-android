@@ -15,10 +15,10 @@ import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.capture.Defaul
 class VideoFrame(
     /**
      * Timestamp in nanoseconds at which the video frame was captured from some system monotonic clock.
-     * Will be aligned and converted to NTP (Network Time Protocol) within MediaSDK, which will then
-     * be converted to a system monotonic clock on remote end. May be different on frames emanated from MediaSDK.
+     * Will be aligned and converted to NTP (Network Time Protocol) within AmazonChimeSDKMedia library, which will then
+     * be converted to a system monotonic clock on remote end. May be different on frames emanated from AmazonChimeSDKMedia library.
      *
-     * See [DefaultSurfaceTextureCaptureSource] for usage of a MediaSDK class which can convert to the clock used by MediaSDK
+     * See [DefaultSurfaceTextureCaptureSource] for usage of a AmazonChimeSDKMedia library class which can convert to the clock used by the library
      */
     val timestampNs: Long,
 
