@@ -4,9 +4,6 @@ Builders using the Amazon Chime SDK for video can produce, modify, and consume r
 
 ## Prerequisites
 
-* You have read this [blog post](https://aws.amazon.com/blogs/business-productivity/building-a-meeting-application-using-the-amazon-chime-sdk/) to understand the basic architecture of Amazon Chime SDK and have deployed a serverless/browser demo meeting application.
-* You have a basic to intermediate understanding of [Kotlin](https://kotlinlang.org/) and Android development.
-* You have installed [Android Studio](https://developer.android.com/studio) and have an Android application project.
 * You have read the [API overview](https://github.com/aws/amazon-chime-sdk-android/blob/master/guides/api_overview.md) and have a basic understanding of the components covered in that document.
 * You have completed [Getting Started](https://github.com/aws/amazon-chime-sdk-android/blob/master/guides/getting_started.md) and have running application which uses the Amazon Chime SDK.
 
