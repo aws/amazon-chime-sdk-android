@@ -126,23 +126,23 @@ open class TextureRenderView @JvmOverloads constructor(
         renderer.onVideoFrameReceived(frame)
     }
 
-    override fun onSurfaceTextureSizeChanged(surface: SurfaceTexture?, width: Int, height: Int) {
+    override fun onSurfaceTextureSizeChanged(surface: SurfaceTexture, width: Int, height: Int) {
         return
     }
 
-    override fun onSurfaceTextureUpdated(surface: SurfaceTexture?) {
+    override fun onSurfaceTextureUpdated(surface: SurfaceTexture) {
         return
     }
 
-    override fun onSurfaceTextureDestroyed(surface: SurfaceTexture?): Boolean {
+    override fun onSurfaceTextureDestroyed(surface: SurfaceTexture): Boolean {
         logger.info(TAG, "Surface destroyed, releasing EGL surface")
         renderer.releaseEglSurface()
         return true
     }
 
-    override fun onSurfaceTextureAvailable(surface: SurfaceTexture?, width: Int, height: Int) {
+    override fun onSurfaceTextureAvailable(surface: SurfaceTexture, width: Int, height: Int) {
         // Create the EGL surface and set it as current
-        surface?.let {
+        surface.let {
             logger.info(TAG, "Surface created, creating EGL surface with resource")
             renderer.createEglSurface(it)
         }

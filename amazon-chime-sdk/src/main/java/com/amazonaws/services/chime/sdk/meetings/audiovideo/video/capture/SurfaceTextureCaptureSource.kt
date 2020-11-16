@@ -6,6 +6,9 @@
 package com.amazonaws.services.chime.sdk.meetings.audiovideo.video.capture
 
 import android.view.Surface
+import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoFrame
+import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoSink
+import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoSource
 
 /**
  * [SurfaceTextureCaptureSource] provides a [Surface] which can be passed to system sources like the camera.

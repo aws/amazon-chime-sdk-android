@@ -26,7 +26,7 @@ class VideoFrameTextureBuffer(
 
     /**
      * The transform matrix associated with the frame. This transform matrix maps 2D
-     * homogeneous coordinates of the form (s, t, 1) with s and t in the inclusive range [0, 1] to
+     * homogeneous coordinates of the form (s, t, 1) with s and t in the inclusive range `[0, 1]` to
      * the coordinate that should be used to sample that location from the buffer.
      */
     val transformMatrix: Matrix?,

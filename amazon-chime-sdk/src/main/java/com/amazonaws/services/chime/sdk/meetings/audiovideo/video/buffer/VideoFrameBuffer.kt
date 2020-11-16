@@ -5,6 +5,8 @@
 
 package com.amazonaws.services.chime.sdk.meetings.audiovideo.video.buffer
 
+import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoFrame
+
 /**
  * [VideoFrameBuffer] is a buffer which contains a single video buffer's raw data.
  * Typically owned by a [VideoFrame] which includes additional metadata.

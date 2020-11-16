@@ -6,7 +6,9 @@
 package com.amazonaws.services.chime.sdk.meetings.audiovideo
 
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.metric.MetricsObserver
+import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoFrame
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoSource
+import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.capture.DefaultCameraCaptureSource
 
 /**
  * [AudioVideoControllerFacade] manages the signaling and peer connections.
@@ -62,7 +64,7 @@ interface AudioVideoControllerFacade {
 
     /**
      * Start local video with a provided custom [VideoSource] which can be used to provide custom
-     * [VideoFrame]s to be transmitted to remote clients
+     * [VideoFrame] objects to be transmitted to remote clients
      *
      * Calling this function repeatedly will replace the previous [VideoSource] as the one being
      * transmitted. It will also stop and replace the internal capture source if [startLocalVideo]
