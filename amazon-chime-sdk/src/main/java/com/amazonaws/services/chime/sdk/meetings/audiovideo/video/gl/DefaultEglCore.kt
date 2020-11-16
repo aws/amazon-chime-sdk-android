@@ -11,7 +11,7 @@ import android.opengl.EGLContext
 
 /**
  * [DefaultEglCore] is an implementation of [EglCore] which uses EGL14 and OpenGLES2.
- * OpenGLES3 has incompatibilities with MediaSDK.
+ * OpenGLES3 has incompatibilities with AmazonChimeSDKMedia library.
  */
 class DefaultEglCore(
     private val releaseCallback: Runnable? = null,
@@ -35,7 +35,7 @@ class DefaultEglCore(
 
         eglConfig = getConfig()
 
-        // Use version 2 for compatibility with MediaSDK
+        // Use version 2 for compatibility with AmazonChimeSDKMedia library
         val attributeList = intArrayOf(
             EGL14.EGL_CONTEXT_CLIENT_VERSION, 2,
             EGL14.EGL_NONE
@@ -85,7 +85,7 @@ class DefaultEglCore(
             EGL14.EGL_GREEN_SIZE, 8,
             EGL14.EGL_BLUE_SIZE, 8,
             EGL14.EGL_ALPHA_SIZE, 8,
-            EGL14.EGL_RENDERABLE_TYPE, EGL14.EGL_OPENGL_ES2_BIT, // ES2 for compatability with MediaSDK
+            EGL14.EGL_RENDERABLE_TYPE, EGL14.EGL_OPENGL_ES2_BIT, // ES2 for compatability with AmazonChimeSDKMedia library
             EGL14.EGL_SURFACE_TYPE, EGL14.EGL_PBUFFER_BIT, // On by default
             EGL14.EGL_NONE, 0,
             EGL14.EGL_NONE

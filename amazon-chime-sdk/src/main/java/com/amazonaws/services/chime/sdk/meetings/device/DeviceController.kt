@@ -7,6 +7,7 @@ package com.amazonaws.services.chime.sdk.meetings.device
 
 import android.os.Build
 import androidx.annotation.RequiresApi
+import com.amazonaws.services.chime.sdk.meetings.audiovideo.AudioVideoControllerFacade
 
 /**
  * [DeviceController] keeps track of the devices being used for audio device
@@ -66,7 +67,7 @@ interface DeviceController {
 
     /**
      * Switches the currently active camera. This will no-op if using a custom source,
-     * e.g. one passed in via [startLocalVideo]
+     * e.g. one passed in via [AudioVideoControllerFacade.startLocalVideo]
      */
     fun switchCamera()
 }

@@ -21,22 +21,22 @@ This release includes support for custom video sources, and therefore includes a
 * The render path has been changed to use `VideoFrame`s for consistency with the send side, this includes:
   * **Breaking** `VideoTileController.onReceiveFrame` now takes `VideoFrame?` instead of `Any?`.
     * Builders with a custom `VideoTileController` will have to update APIs correspondingly.
-    * Currently the buffer type of all frames coming from the MediaSDK should be `VideoFrameI420Buffer` which should have the same API as the legacy, closed source buffer used.
+    * Currently the buffer type of all frames coming from the AmazonChimeSDKMedia library should be `VideoFrameI420Buffer` which should have the same API as the legacy, closed source buffer used.
   * **Breaking** `VideoTileController.initialize` and `VideoTileContoller.destroy` have been removed due to not being used.
     * Builders with a custom `VideoTileController` will have to remove APIs.
     * Previously these functions were called by internal `VideoClientController`, but now they no longer share state; if custom implementations need initialization, it must be done externally.
   * **Breaking** `VideoTile.renderFrame` now takes `VideoFrame` instead of `Any` and has been replaced by extending `VideoSink` and using `onReceivedVideoFrame`.
     * Builders with a custom `VideoTile` will have to update APIs correspondingly.
-    * Currently the buffer type of all frames coming from the MediaSDK should be `VideoFrameI420Buffer` which should have the same API as the legacy, closed source buffer used.
+    * Currently the buffer type of all frames coming from the AmazonChimeSDKMedia library should be `VideoFrameI420Buffer` which should have the same API as the legacy, closed source buffer used.
   * **Breaking** `VideoTile.bind` no longer takes `bindParams: Any?` which was being used to inject `EGLContext` from internal classes.
     * Builders with a custom `VideoTile` will have to update APIs correspondingly, and add bind parameters outside of interface functions if necessary.
   * **Breaking** `VideoRenderView` is now just a `VideoSink` (i.e. it now accepts `VideoFrame` object via `VideoSink.onReceivedVideoFrame` rather then `Any?` via `render`).
     * Builders with a custom `VideoTile` will have to update APIs correspondingly.
-    * Currently the buffer type of all frames coming from the MediaSDK should be `VideoFrameI420Buffer` which should have the same API as the legacy, closed source buffer used.
+    * Currently the buffer type of all frames coming from the AmazonChimeSDKMedia library should be `VideoFrameI420Buffer` which should have the same API as the legacy, closed source buffer used.
   * **Breaking** `VideoRenderView.initialize` and `VideoRenderView.finalize` have been abstracted away to `EglVideoRenderView` and are now named `init` and `release` respectively.
   * **Breaking** `DefaultVideoRenderView.setMirror` is now a class variable `mirror`.  `DefaultVideoRenderView.setScalingType` is now a class variable `scalingType`, and takes `VideoScalingType`
   * `DefaultVideoRenderView` now inherits from `SurfaceTextureView`.
-* If no custom source is provided, the SDK level video client will use a `DefaultCameraCaptureSource` instead of relying on capture implementations within the MediaSDK; though behavior should be identical, please open an issue if any differences are noticed..
+* If no custom source is provided, the SDK level video client will use a `DefaultCameraCaptureSource` instead of relying on capture implementations within the AmazonChimeSDKMedia library; though behavior should be identical, please open an issue if any differences are noticed..
 * Added additional, optional `id` (unique ID) parameter to `MediaDevice` for video capture devices.
 * **Breaking** Changed the default log level of `ConsoleLogger` to `INFO` level from `WARN`.
 

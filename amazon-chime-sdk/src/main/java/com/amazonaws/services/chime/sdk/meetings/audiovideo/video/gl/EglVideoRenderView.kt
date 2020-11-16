@@ -6,6 +6,8 @@
 package com.amazonaws.services.chime.sdk.meetings.audiovideo.video.gl
 
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoRenderView
+import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoTileController
+import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.buffer.VideoFrameTextureBuffer
 
 /**
  * [EglVideoRenderView] is a [VideoRenderView] which requires EGL initialization to render [VideoFrameTextureBuffer] buffers.

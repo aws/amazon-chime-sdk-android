@@ -264,7 +264,7 @@ class DeviceManagementFragment : Fragment(), DeviceChangeObserver {
         val filteredFormats = freshVideoCaptureFormatList.filter { it.height <= MAX_VIDEO_FORMAT_HEIGHT }
 
         for (format in filteredFormats) {
-            // MediaSDK doesn't yet support 30FPS so anything above will lead to frame drops
+            // AmazonChimeSDKMedia library doesn't yet support 30FPS so anything above will lead to frame drops
             videoFormats.add(VideoCaptureFormat(format.width, format.height, MAX_VIDEO_FORMAT_FPS))
         }
         videoFormatArrayAdapter.notifyDataSetChanged()
