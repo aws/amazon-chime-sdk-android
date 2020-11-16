@@ -85,7 +85,7 @@ class DefaultEglCore(
             EGL14.EGL_GREEN_SIZE, 8,
             EGL14.EGL_BLUE_SIZE, 8,
             EGL14.EGL_ALPHA_SIZE, 8,
-            EGL14.EGL_RENDERABLE_TYPE, EGL14.EGL_OPENGL_ES2_BIT, // ES2 for compatability with MediaSDK
+            EGL14.EGL_RENDERABLE_TYPE, EGL14.EGL_OPENGL_ES2_BIT, // ES2 for compatability with AmazonChimeSDKMedia library
             EGL14.EGL_SURFACE_TYPE, EGL14.EGL_PBUFFER_BIT, // On by default
             EGL14.EGL_NONE, 0,
             EGL14.EGL_NONE

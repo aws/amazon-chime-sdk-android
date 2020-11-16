@@ -20,7 +20,7 @@ While the Amazon Chime SDK internally uses a implementation of camera capture, t
 * Configuration, starting, stopping, and video renderering before joining the call.
 * Torch/flashlight control.
 
-The camera capture implementation is found in [DefaultCameraCaptureSource](https://aws.github.io/amazon-chime-sdk-android/amazon-chime-sdk/com.amazonaws.services.chime.sdk.meetings.audiovideo.video.capture/-default-camera-capture-source/index.html). To use the capturer in tandem with the facade, system graphics state (see official [Android OpenGL ES documentation](https://source.android.com/devices/graphics/arch-egl-opengl) for more information) must be shared between the implementation and the [AudioVideoFacade](https://aws.github.io/amazon-chime-sdk-android/amazon-chime-sdk/com.amazonaws.services.chime.sdk.meetings.audiovideo/-audio-video-facade.html). This state can be instantiated and shared through usage of a [DefaultEglCoreFactory](amazon-chime-sdk/com.amazonaws.services.chime.sdk.meetings.audiovideo.video.gl/-default-egl-core/index.html). To create and use the camera capture source complete the following steps:
+The camera capture implementation is found in [DefaultCameraCaptureSource](https://aws.github.io/amazon-chime-sdk-android/amazon-chime-sdk/com.amazonaws.services.chime.sdk.meetings.audiovideo.video.capture/-default-camera-capture-source/index.html). To use the capturer in tandem with the facade, system graphics state (see official [Android OpenGL ES documentation](https://source.android.com/devices/graphics/arch-egl-opengl) for more information) must be shared between the implementation and the [AudioVideoFacade](https://aws.github.io/amazon-chime-sdk-android/amazon-chime-sdk/com.amazonaws.services.chime.sdk.meetings.audiovideo/-audio-video-facade.html). This state can be instantiated and shared through usage of a [DefaultEglCoreFactory](amazon-chime-sdk/com.amazonaws.services.chime.sdk.meetings.audiovideo.video.gl/-default-egl-core/index.html). To create and use the camera capture source, complete the following steps:
 
 1. Create a [DefaultEglCoreFactory](amazon-chime-sdk/com.amazonaws.services.chime.sdk.meetings.audiovideo.video.gl/-default-egl-core/index.html) to share between the capturer and facade.
 
@@ -28,14 +28,14 @@ The camera capture implementation is found in [DefaultCameraCaptureSource](https
     val eglCoreFactory = DefaultEglCoreFactory()
 ```
 
-2. Create a [DefaultCameraCaptureSource](https://aws.github.io/amazon-chime-sdk-android/amazon-chime-sdk/com.amazonaws.services.chime.sdk.meetings.audiovideo.video.capture/-default-camera-capture-source/index.html). This requires a [SurfaceTextureCaptureSourceFactory](https://aws.github.io/amazon-chime-sdk-android/amazon-chime-sdk/com.amazonaws.services.chime.sdk.meetings.audiovideo.video.capture/-default-surface-texture-capture-source-factory/index.html) as dependency. Both require a [Logger](https://aws.github.io/amazon-chime-sdk-android/amazon-chime-sdk/com.amazonaws.services.chime.sdk.meetings.utils.logger/-logger/index.html) and the camera capture source requires an application context to reach system camera APIs.
+2. Create a [DefaultCameraCaptureSource](https://aws.github.io/amazon-chime-sdk-android/amazon-chime-sdk/com.amazonaws.services.chime.sdk.meetings.audiovideo.video.capture/-default-camera-capture-source/index.html). This requires a [SurfaceTextureCaptureSourceFactory](https://aws.github.io/amazon-chime-sdk-android/amazon-chime-sdk/com.amazonaws.services.chime.sdk.meetings.audiovideo.video.capture/-default-surface-texture-capture-source-factory/index.html) as a dependency. Both require a [Logger](https://aws.github.io/amazon-chime-sdk-android/amazon-chime-sdk/com.amazonaws.services.chime.sdk.meetings.utils.logger/-logger/index.html) and the camera capture source requires an application context to reach system camera APIs.
 
 ```
     val surfaceTextureCaptureSourceFactory = DefaultSurfaceTextureCaptureSourceFactory(logger, eglCoreFactory)
     val cameraCaptureSource = DefaultCameraCaptureSource(applicationContext, logger, surfaceTextureCaptureSourceFactory)
 ```
 
-3. Call [DefaultCameraCaptureSource.start](https://aws.github.io/amazon-chime-sdk-android/amazon-chime-sdk/com.amazonaws.services.chime.sdk.meetings.audiovideo.video.capture/-default-camera-capture-source/start.html) and [DefaultCameraCaptureSource.stop](https://aws.github.io/amazon-chime-sdk-android/amazon-chime-sdk/com.amazonaws.services.chime.sdk.meetings.audiovideo.video.capture/-default-camera-capture-source/stop.html) to start and stop the capture respectively. Note if no [VideoSink](https://aws.github.io/amazon-chime-sdk-android/amazon-chime-sdk/com.amazonaws.services.chime.sdk.meetings.audiovideo.video/-video-sink/index.html) have been attached (see later sections) that captured frames will be immediately dropped.
+3. Call [DefaultCameraCaptureSource.start](https://aws.github.io/amazon-chime-sdk-android/amazon-chime-sdk/com.amazonaws.services.chime.sdk.meetings.audiovideo.video.capture/-default-camera-capture-source/start.html) and [DefaultCameraCaptureSource.stop](https://aws.github.io/amazon-chime-sdk-android/amazon-chime-sdk/com.amazonaws.services.chime.sdk.meetings.audiovideo.video.capture/-default-camera-capture-source/stop.html) to start and stop the capture respectively. Note that if no [VideoSink](https://aws.github.io/amazon-chime-sdk-android/amazon-chime-sdk/com.amazonaws.services.chime.sdk.meetings.audiovideo.video/-video-sink/index.html) has been attached (see later sections) that captured frames will be immediately dropped.
 
 ```
     // Start the capture
@@ -86,7 +86,7 @@ The camera capture implementation is found in [DefaultCameraCaptureSource](https
     cameraCaptureSource.addSink(view.video_surface)
 
     // If not reused in call (i.e. wired up to tile in `onVideoTileAdded`) remember to explicitly release the render view
-    view.video_surface.init.release()
+    view.video_surface.release()
 ```
 
 To use the capture source in a call, do the following:
@@ -97,7 +97,7 @@ To use the capture source in a call, do the following:
     val meetingSession = DefaultMeetingSession(configuration, logger, applicationContext, eglCoreFactory)
 ```
 
-2. When enabling local video, call [AudioVideoControllerFacade.startLocalVideo](https://aws.github.io/amazon-chime-sdk-android/amazon-chime-sdk/com.amazonaws.services.chime.sdk.meetings.audiovideo/-audio-video-controller-facade/start-local-video.html) with the camera capture source as the parameter. Ensure that the capture source is started to start transmitting frames.
+2. When enabling local video, call [AudioVideoControllerFacade.startLocalVideo](https://aws.github.io/amazon-chime-sdk-android/amazon-chime-sdk/com.amazonaws.services.chime.sdk.meetings.audiovideo/-audio-video-controller-facade/start-local-video.html) with the camera capture source as the parameter. Ensure that the capture source is started before calling `startLocalVideo` to start transmitting frames.
 
 ```
     // Start the camera capture source is started if not already
@@ -146,7 +146,7 @@ class MyVideoSource: VideoSource {
 }
 ```
 
-When enabling local video, call [AudioVideoControllerFacade.startLocalVideo](https://aws.github.io/amazon-chime-sdk-android/amazon-chime-sdk/com.amazonaws.services.chime.sdk.meetings.audiovideo/-audio-video-controller-facade/start-local-video.html) with the custom source as the parameter. Ensure that the capture source is started to start transmitting frames.
+When enabling local video, call [AudioVideoControllerFacade.startLocalVideo](https://aws.github.io/amazon-chime-sdk-android/amazon-chime-sdk/com.amazonaws.services.chime.sdk.meetings.audiovideo/-audio-video-controller-facade/start-local-video.html) with the custom source as the parameter. Ensure that the capture source is started before calling `startLocalVideo` to start transmitting frames.
 
 ```
     // Create and start the processor
