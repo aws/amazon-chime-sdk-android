@@ -1,0 +1,126 @@
+<HTML>
+<HEAD>
+<meta charset="UTF-8">
+<title>VideoFrameI420Buffer - amazon-chime-sdk</title>
+<link rel="stylesheet" href="../../../style.css">
+</HEAD>
+<BODY>
+<a href="../../index.html">amazon-chime-sdk</a>&nbsp;/&nbsp;<a href="../index.html">com.amazonaws.services.chime.sdk.meetings.audiovideo.video.buffer</a>&nbsp;/&nbsp;<a href="./index.html">VideoFrameI420Buffer</a><br/>
+<br/>
+<h1>VideoFrameI420Buffer</h1>
+<code><span class="keyword">class </span><span class="identifier">VideoFrameI420Buffer</span>&nbsp;<span class="symbol">:</span>&nbsp;<a href="../-video-frame-buffer/index.html"><span class="identifier">VideoFrameBuffer</span></a></code>
+<p><a href="./index.html">VideoFrameI420Buffer</a> provides an reference counted wrapper of
+a YUV where planes are natively (i.e. in JNI) allocated direct byte buffers.</p>
+<h3>Constructors</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<h4><a href="-init-.html">&lt;init&gt;</a></h4>
+</td>
+<td>
+<p><a href="./index.html">VideoFrameI420Buffer</a> provides an reference counted wrapper of
+a YUV where planes are natively (i.e. in JNI) allocated direct byte buffers.</p>
+<code><span class="identifier">VideoFrameI420Buffer</span><span class="symbol">(</span><span class="identifier" id="com.amazonaws.services.chime.sdk.meetings.audiovideo.video.buffer.VideoFrameI420Buffer$<init>(kotlin.Int, kotlin.Int, java.nio.ByteBuffer, java.nio.ByteBuffer, java.nio.ByteBuffer, kotlin.Int, kotlin.Int, kotlin.Int, java.lang.Runnable)/width">width</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html"><span class="identifier">Int</span></a><span class="symbol">, </span><span class="identifier" id="com.amazonaws.services.chime.sdk.meetings.audiovideo.video.buffer.VideoFrameI420Buffer$<init>(kotlin.Int, kotlin.Int, java.nio.ByteBuffer, java.nio.ByteBuffer, java.nio.ByteBuffer, kotlin.Int, kotlin.Int, kotlin.Int, java.lang.Runnable)/height">height</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html"><span class="identifier">Int</span></a><span class="symbol">, </span><span class="identifier" id="com.amazonaws.services.chime.sdk.meetings.audiovideo.video.buffer.VideoFrameI420Buffer$<init>(kotlin.Int, kotlin.Int, java.nio.ByteBuffer, java.nio.ByteBuffer, java.nio.ByteBuffer, kotlin.Int, kotlin.Int, kotlin.Int, java.lang.Runnable)/dataY">dataY</span><span class="symbol">:</span>&nbsp;<a href="https://docs.oracle.com/javase/6/docs/api/java/nio/ByteBuffer.html"><span class="identifier">ByteBuffer</span></a><span class="symbol">, </span><span class="identifier" id="com.amazonaws.services.chime.sdk.meetings.audiovideo.video.buffer.VideoFrameI420Buffer$<init>(kotlin.Int, kotlin.Int, java.nio.ByteBuffer, java.nio.ByteBuffer, java.nio.ByteBuffer, kotlin.Int, kotlin.Int, kotlin.Int, java.lang.Runnable)/dataU">dataU</span><span class="symbol">:</span>&nbsp;<a href="https://docs.oracle.com/javase/6/docs/api/java/nio/ByteBuffer.html"><span class="identifier">ByteBuffer</span></a><span class="symbol">, </span><span class="identifier" id="com.amazonaws.services.chime.sdk.meetings.audiovideo.video.buffer.VideoFrameI420Buffer$<init>(kotlin.Int, kotlin.Int, java.nio.ByteBuffer, java.nio.ByteBuffer, java.nio.ByteBuffer, kotlin.Int, kotlin.Int, kotlin.Int, java.lang.Runnable)/dataV">dataV</span><span class="symbol">:</span>&nbsp;<a href="https://docs.oracle.com/javase/6/docs/api/java/nio/ByteBuffer.html"><span class="identifier">ByteBuffer</span></a><span class="symbol">, </span><span class="identifier" id="com.amazonaws.services.chime.sdk.meetings.audiovideo.video.buffer.VideoFrameI420Buffer$<init>(kotlin.Int, kotlin.Int, java.nio.ByteBuffer, java.nio.ByteBuffer, java.nio.ByteBuffer, kotlin.Int, kotlin.Int, kotlin.Int, java.lang.Runnable)/strideY">strideY</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html"><span class="identifier">Int</span></a><span class="symbol">, </span><span class="identifier" id="com.amazonaws.services.chime.sdk.meetings.audiovideo.video.buffer.VideoFrameI420Buffer$<init>(kotlin.Int, kotlin.Int, java.nio.ByteBuffer, java.nio.ByteBuffer, java.nio.ByteBuffer, kotlin.Int, kotlin.Int, kotlin.Int, java.lang.Runnable)/strideU">strideU</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html"><span class="identifier">Int</span></a><span class="symbol">, </span><span class="identifier" id="com.amazonaws.services.chime.sdk.meetings.audiovideo.video.buffer.VideoFrameI420Buffer$<init>(kotlin.Int, kotlin.Int, java.nio.ByteBuffer, java.nio.ByteBuffer, java.nio.ByteBuffer, kotlin.Int, kotlin.Int, kotlin.Int, java.lang.Runnable)/strideV">strideV</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html"><span class="identifier">Int</span></a><span class="symbol">, </span><span class="identifier" id="com.amazonaws.services.chime.sdk.meetings.audiovideo.video.buffer.VideoFrameI420Buffer$<init>(kotlin.Int, kotlin.Int, java.nio.ByteBuffer, java.nio.ByteBuffer, java.nio.ByteBuffer, kotlin.Int, kotlin.Int, kotlin.Int, java.lang.Runnable)/releaseCallback">releaseCallback</span><span class="symbol">:</span>&nbsp;<a href="https://docs.oracle.com/javase/6/docs/api/java/lang/Runnable.html"><span class="identifier">Runnable</span></a><span class="symbol">)</span></code></td>
+</tr>
+</tbody>
+</table>
+<h3>Properties</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<h4><a href="data-u.html">dataU</a></h4>
+</td>
+<td>
+<p>U plane data of video frame in memory. This must be a natively allocated direct byte
+buffer so that it can be passed to native code</p>
+<code><span class="keyword">val </span><span class="identifier">dataU</span><span class="symbol">: </span><a href="https://docs.oracle.com/javase/6/docs/api/java/nio/ByteBuffer.html"><span class="identifier">ByteBuffer</span></a></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="data-v.html">dataV</a></h4>
+</td>
+<td>
+<p>V plane data of video frame in memory. This must be a natively allocated direct byte
+buffer so that it can be passed to native code</p>
+<code><span class="keyword">val </span><span class="identifier">dataV</span><span class="symbol">: </span><a href="https://docs.oracle.com/javase/6/docs/api/java/nio/ByteBuffer.html"><span class="identifier">ByteBuffer</span></a></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="data-y.html">dataY</a></h4>
+</td>
+<td>
+<p>Y plane data of video frame in memory. This must be a natively allocated direct byte
+buffer that it can be passed to native code</p>
+<code><span class="keyword">val </span><span class="identifier">dataY</span><span class="symbol">: </span><a href="https://docs.oracle.com/javase/6/docs/api/java/nio/ByteBuffer.html"><span class="identifier">ByteBuffer</span></a></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="height.html">height</a></h4>
+</td>
+<td>
+<p>Height of the video frame buffer</p>
+<code><span class="keyword">val </span><span class="identifier">height</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html"><span class="identifier">Int</span></a></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="stride-u.html">strideU</a></h4>
+</td>
+<td>
+<p>Stride of U plane of video frame</p>
+<code><span class="keyword">val </span><span class="identifier">strideU</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html"><span class="identifier">Int</span></a></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="stride-v.html">strideV</a></h4>
+</td>
+<td>
+<p>Stride of V plane of video frame</p>
+<code><span class="keyword">val </span><span class="identifier">strideV</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html"><span class="identifier">Int</span></a></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="stride-y.html">strideY</a></h4>
+</td>
+<td>
+<p>Stride of Y plane of video frame</p>
+<code><span class="keyword">val </span><span class="identifier">strideY</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html"><span class="identifier">Int</span></a></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="width.html">width</a></h4>
+</td>
+<td>
+<p>Width of the video frame buffer</p>
+<code><span class="keyword">val </span><span class="identifier">width</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html"><span class="identifier">Int</span></a></code></td>
+</tr>
+</tbody>
+</table>
+<h3>Functions</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<h4><a href="release.html">release</a></h4>
+</td>
+<td>
+<p>Release the video frame buffer. Use after frame construction or <a href="../-video-frame-buffer/release.html">release</a>
+after the frame is no longer needed. Will trigger appropriate release of
+any internally allocated resources. Not using may result in leaks.</p>
+<code><span class="keyword">fun </span><span class="identifier">release</span><span class="symbol">(</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="retain.html">retain</a></h4>
+</td>
+<td>
+<p>Retain the video frame buffer. Use when shared ownership of the buffer
+is desired (e.g. when passing to separate thread), otherwise the frame
+may be spuriously released</p>
+<code><span class="keyword">fun </span><span class="identifier">retain</span><span class="symbol">(</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code></td>
+</tr>
+</tbody>
+</table>
+</BODY>
+</HTML>

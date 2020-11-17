@@ -1,0 +1,53 @@
+<HTML>
+<HEAD>
+<meta charset="UTF-8">
+<title>VideoContentHint - amazon-chime-sdk</title>
+<link rel="stylesheet" href="../../../style.css">
+</HEAD>
+<BODY>
+<a href="../../index.html">amazon-chime-sdk</a>&nbsp;/&nbsp;<a href="../index.html">com.amazonaws.services.chime.sdk.meetings.audiovideo.video</a>&nbsp;/&nbsp;<a href="./index.html">VideoContentHint</a><br/>
+<br/>
+<h1>VideoContentHint</h1>
+<code><span class="keyword">enum</span> <span class="keyword">class </span><span class="identifier">VideoContentHint</span></code>
+<p><a href="./index.html">VideoContentHint</a> describes the content type of a video source so that downstream encoders, etc. can properly
+decide on what parameters will work best. These options mirror https://www.w3.org/TR/mst-content-hint/ .</p>
+<h3>Enum Values</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<h4><a href="-none.html">None</a></h4>
+</td>
+<td>
+<p>No hint has been provided.</p>
+</td>
+</tr>
+<tr>
+<td>
+<h4><a href="-motion.html">Motion</a></h4>
+</td>
+<td>
+<p>The track should be treated as if it contains video where motion is important.</p>
+</td>
+</tr>
+<tr>
+<td>
+<h4><a href="-detail.html">Detail</a></h4>
+</td>
+<td>
+<p>The track should be treated as if video details are extra important.</p>
+</td>
+</tr>
+<tr>
+<td>
+<h4><a href="-text.html">Text</a></h4>
+</td>
+<td>
+<p>The track should be treated as if video details are extra important, and that
+significant sharp edges and areas of consistent color can occur frequently.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</BODY>
+</HTML>

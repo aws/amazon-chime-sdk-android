@@ -1,0 +1,82 @@
+<HTML>
+<HEAD>
+<meta charset="UTF-8">
+<title>DefaultEglCore - amazon-chime-sdk</title>
+<link rel="stylesheet" href="../../../style.css">
+</HEAD>
+<BODY>
+<a href="../../index.html">amazon-chime-sdk</a>&nbsp;/&nbsp;<a href="../index.html">com.amazonaws.services.chime.sdk.meetings.audiovideo.video.gl</a>&nbsp;/&nbsp;<a href="./index.html">DefaultEglCore</a><br/>
+<br/>
+<h1>DefaultEglCore</h1>
+<code><span class="keyword">class </span><span class="identifier">DefaultEglCore</span>&nbsp;<span class="symbol">:</span>&nbsp;<a href="../-egl-core/index.html"><span class="identifier">EglCore</span></a></code>
+<p><a href="./index.html">DefaultEglCore</a> is an implementation of <a href="../-egl-core/index.html">EglCore</a> which uses EGL14 and OpenGLES2.
+OpenGLES3 has incompatibilities with AmazonChimeSDKMedia library.</p>
+<h3>Constructors</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<h4><a href="-init-.html">&lt;init&gt;</a></h4>
+</td>
+<td>
+<p><a href="./index.html">DefaultEglCore</a> is an implementation of <a href="../-egl-core/index.html">EglCore</a> which uses EGL14 and OpenGLES2.
+OpenGLES3 has incompatibilities with AmazonChimeSDKMedia library.</p>
+<code><span class="identifier">DefaultEglCore</span><span class="symbol">(</span><span class="identifier" id="com.amazonaws.services.chime.sdk.meetings.audiovideo.video.gl.DefaultEglCore$<init>(java.lang.Runnable, android.opengl.EGLContext)/releaseCallback">releaseCallback</span><span class="symbol">:</span>&nbsp;<a href="https://docs.oracle.com/javase/6/docs/api/java/lang/Runnable.html"><span class="identifier">Runnable</span></a><span class="symbol">?</span>&nbsp;<span class="symbol">=</span>&nbsp;null<span class="symbol">, </span><span class="identifier" id="com.amazonaws.services.chime.sdk.meetings.audiovideo.video.gl.DefaultEglCore$<init>(java.lang.Runnable, android.opengl.EGLContext)/sharedContext">sharedContext</span><span class="symbol">:</span>&nbsp;<a href="https://developer.android.com/reference/android/opengl/EGLContext.html"><span class="identifier">EGLContext</span></a>&nbsp;<span class="symbol">=</span>&nbsp;EGL14.EGL_NO_CONTEXT<span class="symbol">)</span></code></td>
+</tr>
+</tbody>
+</table>
+<h3>Properties</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<h4><a href="egl-config.html">eglConfig</a></h4>
+</td>
+<td>
+<p>Current used <a href="https://developer.android.com/reference/android/opengl/EGLConfig.html">EGLConfig</a></p>
+<code><span class="keyword">lateinit</span> <span class="keyword">var </span><span class="identifier">eglConfig</span><span class="symbol">: </span><a href="https://developer.android.com/reference/android/opengl/EGLConfig.html"><span class="identifier">EGLConfig</span></a></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="egl-context.html">eglContext</a></h4>
+</td>
+<td>
+<p>A <a href="https://developer.android.com/reference/android/opengl/EGLContext.html">EGLContext</a> which was created with <a href="../-egl-core/egl-display.html">eglDisplay</a> and <a href="../-egl-core/egl-config.html">eglConfig</a>, may or may not be the current context on the thread, users
+must call <a href="https://developer.android.com/reference/android/opengl/EGL14.html#eglMakeCurrent(android.opengl.EGLDisplay, android.opengl.EGLSurface, android.opengl.EGLSurface, android.opengl.EGLContext)">EGL14.eglMakeCurrent</a> after creating a valid current surface. This may be passed to other components to share the context.</p>
+<code><span class="keyword">var </span><span class="identifier">eglContext</span><span class="symbol">: </span><a href="https://developer.android.com/reference/android/opengl/EGLContext.html"><span class="identifier">EGLContext</span></a><span class="symbol">!</span></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="egl-display.html">eglDisplay</a></h4>
+</td>
+<td>
+<p>Current initialized <a href="https://developer.android.com/reference/android/opengl/EGLDisplay.html">EGLDisplay</a></p>
+<code><span class="keyword">var </span><span class="identifier">eglDisplay</span><span class="symbol">: </span><a href="https://developer.android.com/reference/android/opengl/EGLDisplay.html"><span class="identifier">EGLDisplay</span></a><span class="symbol">!</span></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="egl-surface.html">eglSurface</a></h4>
+</td>
+<td>
+<p>Current <a href="https://developer.android.com/reference/android/opengl/EGLSurface.html">EGLSurface</a>. Will likely be <a href="https://developer.android.com/reference/android/opengl/EGL14.html#EGL_NO_SURFACE">EGL14.EGL_NO_SURFACE</a> on init. As <a href="../-egl-core/index.html">EglCore</a> does not include helper functions
+users must create this value themselves, which is why it is defined as <code>var</code></p>
+<code><span class="keyword">var </span><span class="identifier">eglSurface</span><span class="symbol">: </span><a href="https://developer.android.com/reference/android/opengl/EGLSurface.html"><span class="identifier">EGLSurface</span></a><span class="symbol">!</span></code></td>
+</tr>
+</tbody>
+</table>
+<h3>Functions</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<h4><a href="release.html">release</a></h4>
+</td>
+<td>
+<p>Discards all resources held by this class, notably the EGL context. This must be
+called from the thread where the context was created.</p>
+<code><span class="keyword">fun </span><span class="identifier">release</span><span class="symbol">(</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code></td>
+</tr>
+</tbody>
+</table>
+</BODY>
+</HTML>

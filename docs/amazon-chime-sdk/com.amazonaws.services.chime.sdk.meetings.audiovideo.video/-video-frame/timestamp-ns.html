@@ -1,0 +1,18 @@
+<HTML>
+<HEAD>
+<meta charset="UTF-8">
+<title>VideoFrame.timestampNs - amazon-chime-sdk</title>
+<link rel="stylesheet" href="../../../style.css">
+</HEAD>
+<BODY>
+<a href="../../index.html">amazon-chime-sdk</a>&nbsp;/&nbsp;<a href="../index.html">com.amazonaws.services.chime.sdk.meetings.audiovideo.video</a>&nbsp;/&nbsp;<a href="index.html">VideoFrame</a>&nbsp;/&nbsp;<a href="./timestamp-ns.html">timestampNs</a><br/>
+<br/>
+<h1>timestampNs</h1>
+<a name="com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoFrame$timestampNs"></a>
+<code><span class="keyword">val </span><span class="identifier">timestampNs</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html"><span class="identifier">Long</span></a></code>
+<p>Timestamp in nanoseconds at which the video frame was captured from some system monotonic clock.
+Will be aligned and converted to NTP (Network Time Protocol) within AmazonChimeSDKMedia library, which will then
+be converted to a system monotonic clock on remote end. May be different on frames emanated from AmazonChimeSDKMedia library.</p>
+<p>See <a href="../../com.amazonaws.services.chime.sdk.meetings.audiovideo.video.capture/-default-surface-texture-capture-source/index.html">DefaultSurfaceTextureCaptureSource</a> for usage of a AmazonChimeSDKMedia library class which can convert to the clock used by the library</p>
+</BODY>
+</HTML>

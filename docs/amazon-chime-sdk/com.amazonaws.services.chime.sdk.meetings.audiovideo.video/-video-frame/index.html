@@ -1,0 +1,118 @@
+<HTML>
+<HEAD>
+<meta charset="UTF-8">
+<title>VideoFrame - amazon-chime-sdk</title>
+<link rel="stylesheet" href="../../../style.css">
+</HEAD>
+<BODY>
+<a href="../../index.html">amazon-chime-sdk</a>&nbsp;/&nbsp;<a href="../index.html">com.amazonaws.services.chime.sdk.meetings.audiovideo.video</a>&nbsp;/&nbsp;<a href="./index.html">VideoFrame</a><br/>
+<br/>
+<h1>VideoFrame</h1>
+<code><span class="keyword">class </span><span class="identifier">VideoFrame</span></code>
+<p><a href="./index.html">VideoFrame</a> is a class which contains a <a href="../../com.amazonaws.services.chime.sdk.meetings.audiovideo.video.buffer/-video-frame-buffer/index.html">VideoFrameBuffer</a> and metadata necessary for transmission
+Typically produced via a <a href="../-video-source/index.html">VideoSource</a> and consumed via a <a href="../-video-sink/index.html">VideoSink</a></p>
+<h3>Constructors</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<h4><a href="-init-.html">&lt;init&gt;</a></h4>
+</td>
+<td>
+<p><a href="./index.html">VideoFrame</a> is a class which contains a <a href="../../com.amazonaws.services.chime.sdk.meetings.audiovideo.video.buffer/-video-frame-buffer/index.html">VideoFrameBuffer</a> and metadata necessary for transmission
+Typically produced via a <a href="../-video-source/index.html">VideoSource</a> and consumed via a <a href="../-video-sink/index.html">VideoSink</a></p>
+<code><span class="identifier">VideoFrame</span><span class="symbol">(</span><span class="identifier" id="com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoFrame$<init>(kotlin.Long, com.amazonaws.services.chime.sdk.meetings.audiovideo.video.buffer.VideoFrameBuffer, com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoRotation)/timestampNs">timestampNs</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html"><span class="identifier">Long</span></a><span class="symbol">, </span><span class="identifier" id="com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoFrame$<init>(kotlin.Long, com.amazonaws.services.chime.sdk.meetings.audiovideo.video.buffer.VideoFrameBuffer, com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoRotation)/buffer">buffer</span><span class="symbol">:</span>&nbsp;<a href="../../com.amazonaws.services.chime.sdk.meetings.audiovideo.video.buffer/-video-frame-buffer/index.html"><span class="identifier">VideoFrameBuffer</span></a><span class="symbol">, </span><span class="identifier" id="com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoFrame$<init>(kotlin.Long, com.amazonaws.services.chime.sdk.meetings.audiovideo.video.buffer.VideoFrameBuffer, com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoRotation)/rotation">rotation</span><span class="symbol">:</span>&nbsp;<a href="../-video-rotation/index.html"><span class="identifier">VideoRotation</span></a>&nbsp;<span class="symbol">=</span>&nbsp;VideoRotation.Rotation0<span class="symbol">)</span></code></td>
+</tr>
+</tbody>
+</table>
+<h3>Properties</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<h4><a href="buffer.html">buffer</a></h4>
+</td>
+<td>
+<p>Object containing actual video frame data in some form</p>
+<code><span class="keyword">val </span><span class="identifier">buffer</span><span class="symbol">: </span><a href="../../com.amazonaws.services.chime.sdk.meetings.audiovideo.video.buffer/-video-frame-buffer/index.html"><span class="identifier">VideoFrameBuffer</span></a></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="height.html">height</a></h4>
+</td>
+<td>
+<p>Height of the video frame</p>
+<code><span class="keyword">val </span><span class="identifier">height</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html"><span class="identifier">Int</span></a></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="rotation.html">rotation</a></h4>
+</td>
+<td>
+<p>Rotation of the video frame buffer in degrees clockwise
+from intended viewing horizon.</p>
+<code><span class="keyword">val </span><span class="identifier">rotation</span><span class="symbol">: </span><a href="../-video-rotation/index.html"><span class="identifier">VideoRotation</span></a></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="timestamp-ns.html">timestampNs</a></h4>
+</td>
+<td>
+<p>Timestamp in nanoseconds at which the video frame was captured from some system monotonic clock.
+Will be aligned and converted to NTP (Network Time Protocol) within AmazonChimeSDKMedia library, which will then
+be converted to a system monotonic clock on remote end. May be different on frames emanated from AmazonChimeSDKMedia library.</p>
+<code><span class="keyword">val </span><span class="identifier">timestampNs</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html"><span class="identifier">Long</span></a></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="width.html">width</a></h4>
+</td>
+<td>
+<p>Width of the video frame</p>
+<code><span class="keyword">val </span><span class="identifier">width</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html"><span class="identifier">Int</span></a></code></td>
+</tr>
+</tbody>
+</table>
+<h3>Functions</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<h4><a href="get-rotated-height.html">getRotatedHeight</a></h4>
+</td>
+<td>
+<p>Height of frame when the reverse of <a href="rotation.html">rotation</a> is applied to the buffer
+e.g. a frame with width = 1 and height = 2 with 90 degrees
+rotation will have rotated width = 2 and height = 1</p>
+<code><span class="keyword">fun </span><span class="identifier">getRotatedHeight</span><span class="symbol">(</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html"><span class="identifier">Int</span></a></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="get-rotated-width.html">getRotatedWidth</a></h4>
+</td>
+<td>
+<p>Width of frame when the reverse of <a href="rotation.html">rotation</a> is applied to the buffer
+e.g. a frame with width = 1 and height = 2 with 90 degrees
+rotation will have rotated width = 2 and height = 1</p>
+<code><span class="keyword">fun </span><span class="identifier">getRotatedWidth</span><span class="symbol">(</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html"><span class="identifier">Int</span></a></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="release.html">release</a></h4>
+</td>
+<td>
+<p>Helper function to call <a href="../../com.amazonaws.services.chime.sdk.meetings.audiovideo.video.buffer/-video-frame-buffer/release.html">VideoFrameBuffer.release</a> on the owned buffer</p>
+<code><span class="keyword">fun </span><span class="identifier">release</span><span class="symbol">(</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="retain.html">retain</a></h4>
+</td>
+<td>
+<p>Helper function to call <a href="../../com.amazonaws.services.chime.sdk.meetings.audiovideo.video.buffer/-video-frame-buffer/retain.html">VideoFrameBuffer.retain</a> on the owned buffer</p>
+<code><span class="keyword">fun </span><span class="identifier">retain</span><span class="symbol">(</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code></td>
+</tr>
+</tbody>
+</table>
+</BODY>
+</HTML>

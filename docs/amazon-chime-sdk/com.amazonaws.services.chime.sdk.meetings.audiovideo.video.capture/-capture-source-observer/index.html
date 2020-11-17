@@ -1,0 +1,46 @@
+<HTML>
+<HEAD>
+<meta charset="UTF-8">
+<title>CaptureSourceObserver - amazon-chime-sdk</title>
+<link rel="stylesheet" href="../../../style.css">
+</HEAD>
+<BODY>
+<a href="../../index.html">amazon-chime-sdk</a>&nbsp;/&nbsp;<a href="../index.html">com.amazonaws.services.chime.sdk.meetings.audiovideo.video.capture</a>&nbsp;/&nbsp;<a href="./index.html">CaptureSourceObserver</a><br/>
+<br/>
+<h1>CaptureSourceObserver</h1>
+<code><span class="keyword">interface </span><span class="identifier">CaptureSourceObserver</span></code>
+<p><a href="./index.html">CaptureSourceObserver</a> observes events resulting from different types of capture devices. Builders
+may desire this input to decide when to show certain UI elements, or to notify users of failure.</p>
+<h3>Functions</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<h4><a href="on-capture-failed.html">onCaptureFailed</a></h4>
+</td>
+<td>
+<p>Called when the capture source failed unexpectedly. This may be due to misconfiguration
+or Android system error, and the capture source may be in an unknown state.</p>
+<code><span class="keyword">abstract</span> <span class="keyword">fun </span><span class="identifier">onCaptureFailed</span><span class="symbol">(</span><span class="identifier" id="com.amazonaws.services.chime.sdk.meetings.audiovideo.video.capture.CaptureSourceObserver$onCaptureFailed(com.amazonaws.services.chime.sdk.meetings.audiovideo.video.capture.CaptureSourceError)/error">error</span><span class="symbol">:</span>&nbsp;<a href="../-capture-source-error/index.html"><span class="identifier">CaptureSourceError</span></a><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="on-capture-started.html">onCaptureStarted</a></h4>
+</td>
+<td>
+<p>Called when the capture source has started successfully and has started emitting frames</p>
+<code><span class="keyword">abstract</span> <span class="keyword">fun </span><span class="identifier">onCaptureStarted</span><span class="symbol">(</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="on-capture-stopped.html">onCaptureStopped</a></h4>
+</td>
+<td>
+<p>Called when the capture source has stopped when expected. The capture may be in the processed of restarting,
+e.g. this may occur when switching cameras.</p>
+<code><span class="keyword">abstract</span> <span class="keyword">fun </span><span class="identifier">onCaptureStopped</span><span class="symbol">(</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code></td>
+</tr>
+</tbody>
+</table>
+</BODY>
+</HTML>

@@ -35,10 +35,19 @@ Changes in device availability are broadcast to any registered
 </tr>
 <tr>
 <td>
+<h4><a href="get-active-audio-device.html">getActiveAudioDevice</a></h4>
+</td>
+<td>
+<p>Get the active input/output audio device in the meeting, return null if there isn't any.</p>
+<code><span class="keyword">abstract</span> <span class="keyword">fun </span><span class="identifier">getActiveAudioDevice</span><span class="symbol">(</span><span class="symbol">)</span><span class="symbol">: </span><a href="../-media-device/index.html"><span class="identifier">MediaDevice</span></a><span class="symbol">?</span></code></td>
+</tr>
+<tr>
+<td>
 <h4><a href="get-active-camera.html">getActiveCamera</a></h4>
 </td>
 <td>
-<p>Get the active local camera in the meeting, return null if there isn't any.</p>
+<p>Get the currently active camera, if any. This will return null if using a custom source,
+e.g. one passed in via <a href="../../com.amazonaws.services.chime.sdk.meetings.audiovideo/-audio-video-controller-facade/start-local-video.html">AudioVideoControllerFacade.startLocalVideo</a></p>
 <code><span class="keyword">abstract</span> <span class="keyword">fun </span><span class="identifier">getActiveCamera</span><span class="symbol">(</span><span class="symbol">)</span><span class="symbol">: </span><a href="../-media-device/index.html"><span class="identifier">MediaDevice</span></a><span class="symbol">?</span></code></td>
 </tr>
 <tr>
@@ -62,7 +71,8 @@ Changes in device availability are broadcast to any registered
 <h4><a href="switch-camera.html">switchCamera</a></h4>
 </td>
 <td>
-<p>Switch between front and back camera in the meeting.</p>
+<p>Switches the currently active camera. This will no-op if using a custom source,
+e.g. one passed in via <a href="../../com.amazonaws.services.chime.sdk.meetings.audiovideo/-audio-video-controller-facade/start-local-video.html">AudioVideoControllerFacade.startLocalVideo</a></p>
 <code><span class="keyword">abstract</span> <span class="keyword">fun </span><span class="identifier">switchCamera</span><span class="symbol">(</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code></td>
 </tr>
 </tbody>

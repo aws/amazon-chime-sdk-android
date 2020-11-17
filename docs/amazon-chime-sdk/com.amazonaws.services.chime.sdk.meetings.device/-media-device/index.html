@@ -19,13 +19,21 @@
 </td>
 <td>
 <p>Media device with its info.</p>
-<code><span class="identifier">MediaDevice</span><span class="symbol">(</span><span class="identifier" id="com.amazonaws.services.chime.sdk.meetings.device.MediaDevice$<init>(kotlin.String, com.amazonaws.services.chime.sdk.meetings.device.MediaDeviceType)/label">label</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">, </span><span class="identifier" id="com.amazonaws.services.chime.sdk.meetings.device.MediaDevice$<init>(kotlin.String, com.amazonaws.services.chime.sdk.meetings.device.MediaDeviceType)/type">type</span><span class="symbol">:</span>&nbsp;<a href="../-media-device-type/index.html"><span class="identifier">MediaDeviceType</span></a><span class="symbol">)</span></code></td>
+<code><span class="identifier">MediaDevice</span><span class="symbol">(</span><span class="identifier" id="com.amazonaws.services.chime.sdk.meetings.device.MediaDevice$<init>(kotlin.String, com.amazonaws.services.chime.sdk.meetings.device.MediaDeviceType, kotlin.String)/label">label</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">, </span><span class="identifier" id="com.amazonaws.services.chime.sdk.meetings.device.MediaDevice$<init>(kotlin.String, com.amazonaws.services.chime.sdk.meetings.device.MediaDeviceType, kotlin.String)/type">type</span><span class="symbol">:</span>&nbsp;<a href="../-media-device-type/index.html"><span class="identifier">MediaDeviceType</span></a><span class="symbol">, </span><span class="identifier" id="com.amazonaws.services.chime.sdk.meetings.device.MediaDevice$<init>(kotlin.String, com.amazonaws.services.chime.sdk.meetings.device.MediaDeviceType, kotlin.String)/id">id</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">?</span>&nbsp;<span class="symbol">=</span>&nbsp;null<span class="symbol">)</span></code></td>
 </tr>
 </tbody>
 </table>
 <h3>Properties</h3>
 <table>
 <tbody>
+<tr>
+<td>
+<h4><a href="id.html">id</a></h4>
+</td>
+<td>
+<p>: String - Unique ID, if applicable</p>
+<code><span class="keyword">val </span><span class="identifier">id</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">?</span></code></td>
+</tr>
 <tr>
 <td>
 <h4><a href="label.html">label</a></h4>
@@ -60,6 +68,27 @@
 </td>
 <td>
 <code><span class="keyword">fun </span><span class="identifier">toString</span><span class="symbol">(</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a></code></td>
+</tr>
+</tbody>
+</table>
+<h3>Companion Object Functions</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<h4><a href="list-supported-video-capture-formats.html">listSupportedVideoCaptureFormats</a></h4>
+</td>
+<td>
+<p>Lists currently available video devices.</p>
+<code><span class="keyword">fun </span><span class="identifier">listSupportedVideoCaptureFormats</span><span class="symbol">(</span><span class="identifier" id="com.amazonaws.services.chime.sdk.meetings.device.MediaDevice.Companion$listSupportedVideoCaptureFormats(android.hardware.camera2.CameraManager, com.amazonaws.services.chime.sdk.meetings.device.MediaDevice)/cameraManager">cameraManager</span><span class="symbol">:</span>&nbsp;<a href="https://developer.android.com/reference/android/hardware/camera2/CameraManager.html"><span class="identifier">CameraManager</span></a><span class="symbol">, </span><span class="identifier" id="com.amazonaws.services.chime.sdk.meetings.device.MediaDevice.Companion$listSupportedVideoCaptureFormats(android.hardware.camera2.CameraManager, com.amazonaws.services.chime.sdk.meetings.device.MediaDevice)/mediaDevice">mediaDevice</span><span class="symbol">:</span>&nbsp;<a href="./index.html"><span class="identifier">MediaDevice</span></a><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/index.html"><span class="identifier">List</span></a><span class="symbol">&lt;</span><a href="../../com.amazonaws.services.chime.sdk.meetings.audiovideo.video.capture/-video-capture-format/index.html"><span class="identifier">VideoCaptureFormat</span></a><span class="symbol">&gt;</span></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="list-video-devices.html">listVideoDevices</a></h4>
+</td>
+<td>
+<p>Lists currently available video devices.</p>
+<code><span class="keyword">fun </span><span class="identifier">listVideoDevices</span><span class="symbol">(</span><span class="identifier" id="com.amazonaws.services.chime.sdk.meetings.device.MediaDevice.Companion$listVideoDevices(android.hardware.camera2.CameraManager)/cameraManager">cameraManager</span><span class="symbol">:</span>&nbsp;<a href="https://developer.android.com/reference/android/hardware/camera2/CameraManager.html"><span class="identifier">CameraManager</span></a><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/index.html"><span class="identifier">List</span></a><span class="symbol">&lt;</span><a href="./index.html"><span class="identifier">MediaDevice</span></a><span class="symbol">&gt;</span></code></td>
 </tr>
 </tbody>
 </table>

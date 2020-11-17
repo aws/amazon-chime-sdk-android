@@ -16,7 +16,7 @@
 <h4><a href="-default-video-render-view/index.html">DefaultVideoRenderView</a></h4>
 </td>
 <td>
-<code><span class="keyword">class </span><span class="identifier">DefaultVideoRenderView</span>&nbsp;<span class="symbol">:</span>&nbsp;<span class="identifier">SurfaceViewRenderer</span><span class="symbol">, </span><a href="-video-render-view/index.html"><span class="identifier">VideoRenderView</span></a></code></td>
+<code><span class="keyword">class </span><span class="identifier">DefaultVideoRenderView</span>&nbsp;<span class="symbol">:</span>&nbsp;<a href="../com.amazonaws.services.chime.sdk.meetings.audiovideo.video.gl/-surface-render-view/index.html"><span class="identifier">SurfaceRenderView</span></a></code></td>
 </tr>
 <tr>
 <td>
@@ -41,6 +41,24 @@
 </tr>
 <tr>
 <td>
+<h4><a href="-video-content-hint/index.html">VideoContentHint</a></h4>
+</td>
+<td>
+<p><a href="-video-content-hint/index.html">VideoContentHint</a> describes the content type of a video source so that downstream encoders, etc. can properly
+decide on what parameters will work best. These options mirror https://www.w3.org/TR/mst-content-hint/ .</p>
+<code><span class="keyword">enum</span> <span class="keyword">class </span><span class="identifier">VideoContentHint</span></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="-video-frame/index.html">VideoFrame</a></h4>
+</td>
+<td>
+<p><a href="-video-frame/index.html">VideoFrame</a> is a class which contains a <a href="../com.amazonaws.services.chime.sdk.meetings.audiovideo.video.buffer/-video-frame-buffer/index.html">VideoFrameBuffer</a> and metadata necessary for transmission
+Typically produced via a <a href="-video-source/index.html">VideoSource</a> and consumed via a <a href="-video-sink/index.html">VideoSink</a></p>
+<code><span class="keyword">class </span><span class="identifier">VideoFrame</span></code></td>
+</tr>
+<tr>
+<td>
 <h4><a href="-video-pause-state/index.html">VideoPauseState</a></h4>
 </td>
 <td>
@@ -49,10 +67,50 @@
 </tr>
 <tr>
 <td>
-<h4><a href="-video-render-view/index.html">VideoRenderView</a></h4>
+<h4><a href="-video-render-view.html">VideoRenderView</a></h4>
 </td>
 <td>
-<code><span class="keyword">interface </span><span class="identifier">VideoRenderView</span></code></td>
+<p><a href="-video-render-view.html">VideoRenderView</a> is the type of VideoSink used by the <a href="-video-tile-controller/index.html">VideoTileController</a></p>
+<code><span class="keyword">interface </span><span class="identifier">VideoRenderView</span>&nbsp;<span class="symbol">:</span>&nbsp;<a href="-video-sink/index.html"><span class="identifier">VideoSink</span></a></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="-video-rotation/index.html">VideoRotation</a></h4>
+</td>
+<td>
+<p><a href="-video-rotation/index.html">VideoRotation</a> describes the rotation of the video frame buffer in degrees clockwise
+from intended viewing horizon.</p>
+<code><span class="keyword">enum</span> <span class="keyword">class </span><span class="identifier">VideoRotation</span></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="-video-scaling-type/index.html">VideoScalingType</a></h4>
+</td>
+<td>
+<p><a href="-video-scaling-type/index.html">VideoScalingType</a> describes the scaling type of how video is rendered.  Certain types
+may effect how much of a video is cropped. <a href="-video-scaling-type/visible-fraction.html">visibleFraction</a> refers to the minimum amount
+of a video frame required to be shown per scaling type (e.g. <a href="-video-scaling-type/-aspect-fit.html">AspectFit</a> indicates showing
+the whole frame, no cropping).</p>
+<code><span class="keyword">enum</span> <span class="keyword">class </span><span class="identifier">VideoScalingType</span></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="-video-sink/index.html">VideoSink</a></h4>
+</td>
+<td>
+<p>A <a href="-video-sink/index.html">VideoSink</a> consumes video frames, typically from a <a href="-video-source/index.html">VideoSource</a>. It may process, fork, or render these frames.
+Typically connected via <a href="-video-source/add-video-sink.html">VideoSource.addVideoSink</a> and disconnected via <a href="-video-source/remove-video-sink.html">VideoSource.removeVideoSink</a></p>
+<code><span class="keyword">interface </span><span class="identifier">VideoSink</span></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="-video-source/index.html">VideoSource</a></h4>
+</td>
+<td>
+<p><a href="-video-source/index.html">VideoSource</a> is an interface for sources which produce video frames, and can send to a <a href="-video-sink/index.html">VideoSink</a>.
+Implementations can be passed to the <a href="../com.amazonaws.services.chime.sdk.meetings.audiovideo/-audio-video-facade.html">AudioVideoFacade</a> to be used as the video source sent to remote
+participants</p>
+<code><span class="keyword">interface </span><span class="identifier">VideoSource</span></code></td>
 </tr>
 <tr>
 <td>
@@ -60,7 +118,7 @@
 </td>
 <td>
 <p><a href="-video-tile/index.html">VideoTile</a> is a tile that binds video render view to display the frame into the view.</p>
-<code><span class="keyword">interface </span><span class="identifier">VideoTile</span></code></td>
+<code><span class="keyword">interface </span><span class="identifier">VideoTile</span>&nbsp;<span class="symbol">:</span>&nbsp;<a href="-video-sink/index.html"><span class="identifier">VideoSink</span></a></code></td>
 </tr>
 <tr>
 <td>

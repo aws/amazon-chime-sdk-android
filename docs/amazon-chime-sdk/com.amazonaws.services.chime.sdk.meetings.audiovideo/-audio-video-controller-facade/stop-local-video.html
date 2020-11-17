@@ -10,6 +10,7 @@
 <h1>stopLocalVideo</h1>
 <a name="com.amazonaws.services.chime.sdk.meetings.audiovideo.AudioVideoControllerFacade$stopLocalVideo()"></a>
 <code><span class="keyword">abstract</span> <span class="keyword">fun </span><span class="identifier">stopLocalVideo</span><span class="symbol">(</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code>
-<p>Stop local video.</p>
+<p>Stops sending video for local attendee. This will additionally stop the internal capture source if being used.
+If using a custom video source, this will call <a href="../../com.amazonaws.services.chime.sdk.meetings.audiovideo.video/-video-source/remove-video-sink.html">VideoSource.removeVideoSink</a> on the previously provided source.</p>
 </BODY>
 </HTML>

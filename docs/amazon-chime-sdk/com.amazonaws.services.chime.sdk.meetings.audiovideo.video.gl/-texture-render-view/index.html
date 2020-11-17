@@ -1,0 +1,131 @@
+<HTML>
+<HEAD>
+<meta charset="UTF-8">
+<title>TextureRenderView - amazon-chime-sdk</title>
+<link rel="stylesheet" href="../../../style.css">
+</HEAD>
+<BODY>
+<a href="../../index.html">amazon-chime-sdk</a>&nbsp;/&nbsp;<a href="../index.html">com.amazonaws.services.chime.sdk.meetings.audiovideo.video.gl</a>&nbsp;/&nbsp;<a href="./index.html">TextureRenderView</a><br/>
+<br/>
+<h1>TextureRenderView</h1>
+<code><span class="keyword">open</span> <span class="keyword">class </span><span class="identifier">TextureRenderView</span>&nbsp;<span class="symbol">:</span>&nbsp;<a href="https://developer.android.com/reference/android/view/TextureView.html"><span class="identifier">TextureView</span></a><span class="symbol">, </span><a href="https://developer.android.com/reference/android/view/TextureView/SurfaceTextureListener.html"><span class="identifier">SurfaceTextureListener</span></a><span class="symbol">, </span><a href="../-egl-video-render-view/index.html"><span class="identifier">EglVideoRenderView</span></a></code>
+<p><a href="./index.html">TextureRenderView</a> is an implementation of <a href="../-egl-video-render-view/index.html">EglVideoRenderView</a> which uses EGL14 and OpenGLES2
+to draw any incoming video buffer types to the surface provided by the inherited <a href="https://developer.android.com/reference/android/view/TextureView.html">TextureView</a></p>
+<p>Note that since most <a href="./index.html">TextureRenderView</a> objects will not be constructed in code, builders must
+pass in the <a href="../../com.amazonaws.services.chime.sdk.meetings.utils.logger/-logger/index.html">Logger</a> directly before initialization by setting <a href="logger.html">logger</a></p>
+<h3>Constructors</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<h4><a href="-init-.html">&lt;init&gt;</a></h4>
+</td>
+<td>
+<p><a href="./index.html">TextureRenderView</a> is an implementation of <a href="../-egl-video-render-view/index.html">EglVideoRenderView</a> which uses EGL14 and OpenGLES2
+to draw any incoming video buffer types to the surface provided by the inherited <a href="https://developer.android.com/reference/android/view/TextureView.html">TextureView</a></p>
+<code><span class="identifier">TextureRenderView</span><span class="symbol">(</span><span class="identifier" id="com.amazonaws.services.chime.sdk.meetings.audiovideo.video.gl.TextureRenderView$<init>(android.content.Context, android.util.AttributeSet, kotlin.Int)/context">context</span><span class="symbol">:</span>&nbsp;<a href="https://developer.android.com/reference/android/content/Context.html"><span class="identifier">Context</span></a><span class="symbol">, </span><span class="identifier" id="com.amazonaws.services.chime.sdk.meetings.audiovideo.video.gl.TextureRenderView$<init>(android.content.Context, android.util.AttributeSet, kotlin.Int)/attrs">attrs</span><span class="symbol">:</span>&nbsp;<a href="https://developer.android.com/reference/android/util/AttributeSet.html"><span class="identifier">AttributeSet</span></a><span class="symbol">?</span>&nbsp;<span class="symbol">=</span>&nbsp;null<span class="symbol">, </span><span class="identifier" id="com.amazonaws.services.chime.sdk.meetings.audiovideo.video.gl.TextureRenderView$<init>(android.content.Context, android.util.AttributeSet, kotlin.Int)/defStyle">defStyle</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html"><span class="identifier">Int</span></a>&nbsp;<span class="symbol">=</span>&nbsp;0<span class="symbol">)</span></code></td>
+</tr>
+</tbody>
+</table>
+<h3>Properties</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<h4><a href="logger.html">logger</a></h4>
+</td>
+<td>
+<code><span class="keyword">var </span><span class="identifier">logger</span><span class="symbol">: </span><a href="../../com.amazonaws.services.chime.sdk.meetings.utils.logger/-logger/index.html"><span class="identifier">Logger</span></a></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="mirror.html">mirror</a></h4>
+</td>
+<td>
+<p>If true, rendered frames will be mirrored across the vertical axis</p>
+<code><span class="keyword">var </span><span class="identifier">mirror</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html"><span class="identifier">Boolean</span></a></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="scaling-type.html">scalingType</a></h4>
+</td>
+<td>
+<p><a href="../../com.amazonaws.services.chime.sdk.meetings.audiovideo.video/-video-scaling-type/index.html">VideoScalingType</a> used to render on this view.  May impact cropping.</p>
+<code><span class="keyword">var </span><span class="identifier">scalingType</span><span class="symbol">: </span><a href="../../com.amazonaws.services.chime.sdk.meetings.audiovideo.video/-video-scaling-type/index.html"><span class="identifier">VideoScalingType</span></a></code></td>
+</tr>
+</tbody>
+</table>
+<h3>Functions</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<h4><a href="init.html">init</a></h4>
+</td>
+<td>
+<p>Initialize view with factory to create <a href="../-egl-core/index.html">EglCore</a> objects to hold/share EGL state</p>
+<code><span class="keyword">open</span> <span class="keyword">fun </span><span class="identifier">init</span><span class="symbol">(</span><span class="identifier" id="com.amazonaws.services.chime.sdk.meetings.audiovideo.video.gl.TextureRenderView$init(com.amazonaws.services.chime.sdk.meetings.audiovideo.video.gl.EglCoreFactory)/eglCoreFactory">eglCoreFactory</span><span class="symbol">:</span>&nbsp;<a href="../-egl-core-factory/index.html"><span class="identifier">EglCoreFactory</span></a><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="on-layout.html">onLayout</a></h4>
+</td>
+<td>
+<code><span class="keyword">open</span> <span class="keyword">fun </span><span class="identifier">onLayout</span><span class="symbol">(</span><span class="identifier" id="com.amazonaws.services.chime.sdk.meetings.audiovideo.video.gl.TextureRenderView$onLayout(kotlin.Boolean, kotlin.Int, kotlin.Int, kotlin.Int, kotlin.Int)/changed">changed</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html"><span class="identifier">Boolean</span></a><span class="symbol">, </span><span class="identifier" id="com.amazonaws.services.chime.sdk.meetings.audiovideo.video.gl.TextureRenderView$onLayout(kotlin.Boolean, kotlin.Int, kotlin.Int, kotlin.Int, kotlin.Int)/left">left</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html"><span class="identifier">Int</span></a><span class="symbol">, </span><span class="identifier" id="com.amazonaws.services.chime.sdk.meetings.audiovideo.video.gl.TextureRenderView$onLayout(kotlin.Boolean, kotlin.Int, kotlin.Int, kotlin.Int, kotlin.Int)/top">top</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html"><span class="identifier">Int</span></a><span class="symbol">, </span><span class="identifier" id="com.amazonaws.services.chime.sdk.meetings.audiovideo.video.gl.TextureRenderView$onLayout(kotlin.Boolean, kotlin.Int, kotlin.Int, kotlin.Int, kotlin.Int)/right">right</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html"><span class="identifier">Int</span></a><span class="symbol">, </span><span class="identifier" id="com.amazonaws.services.chime.sdk.meetings.audiovideo.video.gl.TextureRenderView$onLayout(kotlin.Boolean, kotlin.Int, kotlin.Int, kotlin.Int, kotlin.Int)/bottom">bottom</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html"><span class="identifier">Int</span></a><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="on-measure.html">onMeasure</a></h4>
+</td>
+<td>
+<code><span class="keyword">open</span> <span class="keyword">fun </span><span class="identifier">onMeasure</span><span class="symbol">(</span><span class="identifier" id="com.amazonaws.services.chime.sdk.meetings.audiovideo.video.gl.TextureRenderView$onMeasure(kotlin.Int, kotlin.Int)/widthSpec">widthSpec</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html"><span class="identifier">Int</span></a><span class="symbol">, </span><span class="identifier" id="com.amazonaws.services.chime.sdk.meetings.audiovideo.video.gl.TextureRenderView$onMeasure(kotlin.Int, kotlin.Int)/heightSpec">heightSpec</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html"><span class="identifier">Int</span></a><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="on-surface-texture-available.html">onSurfaceTextureAvailable</a></h4>
+</td>
+<td>
+<code><span class="keyword">open</span> <span class="keyword">fun </span><span class="identifier">onSurfaceTextureAvailable</span><span class="symbol">(</span><span class="identifier" id="com.amazonaws.services.chime.sdk.meetings.audiovideo.video.gl.TextureRenderView$onSurfaceTextureAvailable(android.graphics.SurfaceTexture, kotlin.Int, kotlin.Int)/surface">surface</span><span class="symbol">:</span>&nbsp;<a href="https://developer.android.com/reference/android/graphics/SurfaceTexture.html"><span class="identifier">SurfaceTexture</span></a><span class="symbol">, </span><span class="identifier" id="com.amazonaws.services.chime.sdk.meetings.audiovideo.video.gl.TextureRenderView$onSurfaceTextureAvailable(android.graphics.SurfaceTexture, kotlin.Int, kotlin.Int)/width">width</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html"><span class="identifier">Int</span></a><span class="symbol">, </span><span class="identifier" id="com.amazonaws.services.chime.sdk.meetings.audiovideo.video.gl.TextureRenderView$onSurfaceTextureAvailable(android.graphics.SurfaceTexture, kotlin.Int, kotlin.Int)/height">height</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html"><span class="identifier">Int</span></a><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="on-surface-texture-destroyed.html">onSurfaceTextureDestroyed</a></h4>
+</td>
+<td>
+<code><span class="keyword">open</span> <span class="keyword">fun </span><span class="identifier">onSurfaceTextureDestroyed</span><span class="symbol">(</span><span class="identifier" id="com.amazonaws.services.chime.sdk.meetings.audiovideo.video.gl.TextureRenderView$onSurfaceTextureDestroyed(android.graphics.SurfaceTexture)/surface">surface</span><span class="symbol">:</span>&nbsp;<a href="https://developer.android.com/reference/android/graphics/SurfaceTexture.html"><span class="identifier">SurfaceTexture</span></a><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html"><span class="identifier">Boolean</span></a></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="on-surface-texture-size-changed.html">onSurfaceTextureSizeChanged</a></h4>
+</td>
+<td>
+<code><span class="keyword">open</span> <span class="keyword">fun </span><span class="identifier">onSurfaceTextureSizeChanged</span><span class="symbol">(</span><span class="identifier" id="com.amazonaws.services.chime.sdk.meetings.audiovideo.video.gl.TextureRenderView$onSurfaceTextureSizeChanged(android.graphics.SurfaceTexture, kotlin.Int, kotlin.Int)/surface">surface</span><span class="symbol">:</span>&nbsp;<a href="https://developer.android.com/reference/android/graphics/SurfaceTexture.html"><span class="identifier">SurfaceTexture</span></a><span class="symbol">, </span><span class="identifier" id="com.amazonaws.services.chime.sdk.meetings.audiovideo.video.gl.TextureRenderView$onSurfaceTextureSizeChanged(android.graphics.SurfaceTexture, kotlin.Int, kotlin.Int)/width">width</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html"><span class="identifier">Int</span></a><span class="symbol">, </span><span class="identifier" id="com.amazonaws.services.chime.sdk.meetings.audiovideo.video.gl.TextureRenderView$onSurfaceTextureSizeChanged(android.graphics.SurfaceTexture, kotlin.Int, kotlin.Int)/height">height</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html"><span class="identifier">Int</span></a><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="on-surface-texture-updated.html">onSurfaceTextureUpdated</a></h4>
+</td>
+<td>
+<code><span class="keyword">open</span> <span class="keyword">fun </span><span class="identifier">onSurfaceTextureUpdated</span><span class="symbol">(</span><span class="identifier" id="com.amazonaws.services.chime.sdk.meetings.audiovideo.video.gl.TextureRenderView$onSurfaceTextureUpdated(android.graphics.SurfaceTexture)/surface">surface</span><span class="symbol">:</span>&nbsp;<a href="https://developer.android.com/reference/android/graphics/SurfaceTexture.html"><span class="identifier">SurfaceTexture</span></a><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="on-video-frame-received.html">onVideoFrameReceived</a></h4>
+</td>
+<td>
+<p>Receive a video frame from some upstream source.
+The <a href="../../com.amazonaws.services.chime.sdk.meetings.audiovideo.video/-video-sink/index.html">VideoSink</a> may render, store, process, and forward the frame, among other applications.</p>
+<code><span class="keyword">open</span> <span class="keyword">fun </span><span class="identifier">onVideoFrameReceived</span><span class="symbol">(</span><span class="identifier" id="com.amazonaws.services.chime.sdk.meetings.audiovideo.video.gl.TextureRenderView$onVideoFrameReceived(com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoFrame)/frame">frame</span><span class="symbol">:</span>&nbsp;<a href="../../com.amazonaws.services.chime.sdk.meetings.audiovideo.video/-video-frame/index.html"><span class="identifier">VideoFrame</span></a><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="release.html">release</a></h4>
+</td>
+<td>
+<p>Deallocate any state or resources held by this object</p>
+<code><span class="keyword">open</span> <span class="keyword">fun </span><span class="identifier">release</span><span class="symbol">(</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code></td>
+</tr>
+</tbody>
+</table>
+</BODY>
+</HTML>

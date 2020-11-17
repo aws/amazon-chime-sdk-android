@@ -1,0 +1,30 @@
+<HTML>
+<HEAD>
+<meta charset="UTF-8">
+<title>VideoRenderView - amazon-chime-sdk</title>
+<link rel="stylesheet" href="../../style.css">
+</HEAD>
+<BODY>
+<a href="../index.html">amazon-chime-sdk</a>&nbsp;/&nbsp;<a href="index.html">com.amazonaws.services.chime.sdk.meetings.audiovideo.video</a>&nbsp;/&nbsp;<a href="./-video-render-view.html">VideoRenderView</a><br/>
+<br/>
+<h1>VideoRenderView</h1>
+<code><span class="keyword">interface </span><span class="identifier">VideoRenderView</span>&nbsp;<span class="symbol">:</span>&nbsp;<a href="-video-sink/index.html"><span class="identifier">VideoSink</span></a></code>
+<p><a href="./-video-render-view.html">VideoRenderView</a> is the type of VideoSink used by the <a href="-video-tile-controller/index.html">VideoTileController</a></p>
+<h3>Inheritors</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<h4><a href="../com.amazonaws.services.chime.sdk.meetings.audiovideo.video.gl/-egl-video-render-view/index.html">EglVideoRenderView</a></h4>
+</td>
+<td>
+<p><a href="../com.amazonaws.services.chime.sdk.meetings.audiovideo.video.gl/-egl-video-render-view/index.html">EglVideoRenderView</a> is a <a href="./-video-render-view.html">VideoRenderView</a> which requires EGL initialization to render <a href="../com.amazonaws.services.chime.sdk.meetings.audiovideo.video.buffer/-video-frame-texture-buffer/index.html">VideoFrameTextureBuffer</a> buffers.
+The <a href="-video-tile-controller/index.html">VideoTileController</a> should automatically manage (<a href="../com.amazonaws.services.chime.sdk.meetings.audiovideo.video.gl/-egl-video-render-view/init.html">init</a> and <a href="../com.amazonaws.services.chime.sdk.meetings.audiovideo.video.gl/-egl-video-render-view/release.html">release</a>) any bound tiles, but if it
+is desired to use a view outside of the controller (e.g. in pre-meeting device selection), users will
+need to call <a href="../com.amazonaws.services.chime.sdk.meetings.audiovideo.video.gl/-egl-video-render-view/init.html">init</a> and <a href="../com.amazonaws.services.chime.sdk.meetings.audiovideo.video.gl/-egl-video-render-view/release.html">release</a> themselves</p>
+<code><span class="keyword">interface </span><span class="identifier">EglVideoRenderView</span>&nbsp;<span class="symbol">:</span>&nbsp;<a href="./-video-render-view.html"><span class="identifier">VideoRenderView</span></a></code></td>
+</tr>
+</tbody>
+</table>
+</BODY>
+</HTML>

@@ -1,0 +1,42 @@
+<HTML>
+<HEAD>
+<meta charset="UTF-8">
+<title>SurfaceTextureCaptureSourceFactory - amazon-chime-sdk</title>
+<link rel="stylesheet" href="../../../style.css">
+</HEAD>
+<BODY>
+<a href="../../index.html">amazon-chime-sdk</a>&nbsp;/&nbsp;<a href="../index.html">com.amazonaws.services.chime.sdk.meetings.audiovideo.video.capture</a>&nbsp;/&nbsp;<a href="./index.html">SurfaceTextureCaptureSourceFactory</a><br/>
+<br/>
+<h1>SurfaceTextureCaptureSourceFactory</h1>
+<code><span class="keyword">interface </span><span class="identifier">SurfaceTextureCaptureSourceFactory</span></code>
+<p><a href="./index.html">SurfaceTextureCaptureSourceFactory</a> is an factory interface for creating new <a href="../-surface-texture-capture-source/index.html">SurfaceTextureCaptureSource</a> objects,
+possible using shared state. This provides flexibility over use of <a href="../-surface-texture-capture-source/index.html">SurfaceTextureCaptureSource</a> objects since
+they may not allow reuse, or may have a delay before possible reuse.</p>
+<h3>Functions</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<h4><a href="create-surface-texture-capture-source.html">createSurfaceTextureCaptureSource</a></h4>
+</td>
+<td>
+<p>Create a new <a href="../-surface-texture-capture-source/index.html">SurfaceTextureCaptureSource</a> object</p>
+<code><span class="keyword">abstract</span> <span class="keyword">fun </span><span class="identifier">createSurfaceTextureCaptureSource</span><span class="symbol">(</span><span class="identifier" id="com.amazonaws.services.chime.sdk.meetings.audiovideo.video.capture.SurfaceTextureCaptureSourceFactory$createSurfaceTextureCaptureSource(kotlin.Int, kotlin.Int, com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoContentHint)/width">width</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html"><span class="identifier">Int</span></a><span class="symbol">, </span><span class="identifier" id="com.amazonaws.services.chime.sdk.meetings.audiovideo.video.capture.SurfaceTextureCaptureSourceFactory$createSurfaceTextureCaptureSource(kotlin.Int, kotlin.Int, com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoContentHint)/height">height</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html"><span class="identifier">Int</span></a><span class="symbol">, </span><span class="identifier" id="com.amazonaws.services.chime.sdk.meetings.audiovideo.video.capture.SurfaceTextureCaptureSourceFactory$createSurfaceTextureCaptureSource(kotlin.Int, kotlin.Int, com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoContentHint)/contentHint">contentHint</span><span class="symbol">:</span>&nbsp;<a href="../../com.amazonaws.services.chime.sdk.meetings.audiovideo.video/-video-content-hint/index.html"><span class="identifier">VideoContentHint</span></a><span class="symbol">)</span><span class="symbol">: </span><a href="../-surface-texture-capture-source/index.html"><span class="identifier">SurfaceTextureCaptureSource</span></a></code></td>
+</tr>
+</tbody>
+</table>
+<h3>Inheritors</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<h4><a href="../-default-surface-texture-capture-source-factory/index.html">DefaultSurfaceTextureCaptureSourceFactory</a></h4>
+</td>
+<td>
+<p><a href="../-default-surface-texture-capture-source-factory/index.html">DefaultSurfaceTextureCaptureSourceFactory</a> creates <a href="../-default-surface-texture-capture-source/index.html">DefaultSurfaceTextureCaptureSource</a> objects</p>
+<code><span class="keyword">class </span><span class="identifier">DefaultSurfaceTextureCaptureSourceFactory</span>&nbsp;<span class="symbol">:</span>&nbsp;<a href="./index.html"><span class="identifier">SurfaceTextureCaptureSourceFactory</span></a></code></td>
+</tr>
+</tbody>
+</table>
+</BODY>
+</HTML>

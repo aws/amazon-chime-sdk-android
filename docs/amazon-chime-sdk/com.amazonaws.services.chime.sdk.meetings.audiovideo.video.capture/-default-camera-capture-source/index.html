@@ -1,0 +1,149 @@
+<HTML>
+<HEAD>
+<meta charset="UTF-8">
+<title>DefaultCameraCaptureSource - amazon-chime-sdk</title>
+<link rel="stylesheet" href="../../../style.css">
+</HEAD>
+<BODY>
+<a href="../../index.html">amazon-chime-sdk</a>&nbsp;/&nbsp;<a href="../index.html">com.amazonaws.services.chime.sdk.meetings.audiovideo.video.capture</a>&nbsp;/&nbsp;<a href="./index.html">DefaultCameraCaptureSource</a><br/>
+<br/>
+<h1>DefaultCameraCaptureSource</h1>
+<code><span class="keyword">class </span><span class="identifier">DefaultCameraCaptureSource</span>&nbsp;<span class="symbol">:</span>&nbsp;<a href="../-camera-capture-source/index.html"><span class="identifier">CameraCaptureSource</span></a><span class="symbol">, </span><a href="../../com.amazonaws.services.chime.sdk.meetings.audiovideo.video/-video-sink/index.html"><span class="identifier">VideoSink</span></a></code>
+<p><a href="./index.html">DefaultCameraCaptureSource</a> will configure a reasonably standard capture stream which will
+use the <a href="https://developer.android.com/reference/android/view/Surface.html">Surface</a> provided by the capture source provided by a <a href="../-surface-texture-capture-source-factory/index.html">SurfaceTextureCaptureSourceFactory</a></p>
+<h3>Constructors</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<h4><a href="-init-.html">&lt;init&gt;</a></h4>
+</td>
+<td>
+<p><a href="./index.html">DefaultCameraCaptureSource</a> will configure a reasonably standard capture stream which will
+use the <a href="https://developer.android.com/reference/android/view/Surface.html">Surface</a> provided by the capture source provided by a <a href="../-surface-texture-capture-source-factory/index.html">SurfaceTextureCaptureSourceFactory</a></p>
+<code><span class="identifier">DefaultCameraCaptureSource</span><span class="symbol">(</span><span class="identifier" id="com.amazonaws.services.chime.sdk.meetings.audiovideo.video.capture.DefaultCameraCaptureSource$<init>(android.content.Context, com.amazonaws.services.chime.sdk.meetings.utils.logger.Logger, com.amazonaws.services.chime.sdk.meetings.audiovideo.video.capture.SurfaceTextureCaptureSourceFactory, android.hardware.camera2.CameraManager)/context">context</span><span class="symbol">:</span>&nbsp;<a href="https://developer.android.com/reference/android/content/Context.html"><span class="identifier">Context</span></a><span class="symbol">, </span><span class="identifier" id="com.amazonaws.services.chime.sdk.meetings.audiovideo.video.capture.DefaultCameraCaptureSource$<init>(android.content.Context, com.amazonaws.services.chime.sdk.meetings.utils.logger.Logger, com.amazonaws.services.chime.sdk.meetings.audiovideo.video.capture.SurfaceTextureCaptureSourceFactory, android.hardware.camera2.CameraManager)/logger">logger</span><span class="symbol">:</span>&nbsp;<a href="../../com.amazonaws.services.chime.sdk.meetings.utils.logger/-logger/index.html"><span class="identifier">Logger</span></a><span class="symbol">, </span><span class="identifier" id="com.amazonaws.services.chime.sdk.meetings.audiovideo.video.capture.DefaultCameraCaptureSource$<init>(android.content.Context, com.amazonaws.services.chime.sdk.meetings.utils.logger.Logger, com.amazonaws.services.chime.sdk.meetings.audiovideo.video.capture.SurfaceTextureCaptureSourceFactory, android.hardware.camera2.CameraManager)/surfaceTextureCaptureSourceFactory">surfaceTextureCaptureSourceFactory</span><span class="symbol">:</span>&nbsp;<a href="../-surface-texture-capture-source-factory/index.html"><span class="identifier">SurfaceTextureCaptureSourceFactory</span></a><span class="symbol">, </span><span class="identifier" id="com.amazonaws.services.chime.sdk.meetings.audiovideo.video.capture.DefaultCameraCaptureSource$<init>(android.content.Context, com.amazonaws.services.chime.sdk.meetings.utils.logger.Logger, com.amazonaws.services.chime.sdk.meetings.audiovideo.video.capture.SurfaceTextureCaptureSourceFactory, android.hardware.camera2.CameraManager)/cameraManager">cameraManager</span><span class="symbol">:</span>&nbsp;<a href="https://developer.android.com/reference/android/hardware/camera2/CameraManager.html"><span class="identifier">CameraManager</span></a>&nbsp;<span class="symbol">=</span>&nbsp;context.getSystemService(Context.CAMERA_SERVICE) as CameraManager<span class="symbol">)</span></code></td>
+</tr>
+</tbody>
+</table>
+<h3>Properties</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<h4><a href="content-hint.html">contentHint</a></h4>
+</td>
+<td>
+<p>Content hint for downstream processing</p>
+<code><span class="keyword">val </span><span class="identifier">contentHint</span><span class="symbol">: </span><a href="../../com.amazonaws.services.chime.sdk.meetings.audiovideo.video/-video-content-hint/index.html"><span class="identifier">VideoContentHint</span></a></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="device.html">device</a></h4>
+</td>
+<td>
+<p>Current camera device. This is only null if the phone/device doesn't have any cameras
+May be called regardless of whether <a href="../-video-capture-source/start.html">start</a> or <a href="../-video-capture-source/stop.html">stop</a> has been called.</p>
+<code><span class="keyword">var </span><span class="identifier">device</span><span class="symbol">: </span><a href="../../com.amazonaws.services.chime.sdk.meetings.device/-media-device/index.html"><span class="identifier">MediaDevice</span></a><span class="symbol">?</span></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="format.html">format</a></h4>
+</td>
+<td>
+<p>Current camera capture format. Actual format may be adjusted to use supported camera formats.
+May be called regardless of whether <a href="../-video-capture-source/start.html">start</a> or <a href="../-video-capture-source/stop.html">stop</a> has been called.</p>
+<code><span class="keyword">var </span><span class="identifier">format</span><span class="symbol">: </span><a href="../-video-capture-format/index.html"><span class="identifier">VideoCaptureFormat</span></a></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="torch-enabled.html">torchEnabled</a></h4>
+</td>
+<td>
+<p>Toggle for torch on the current device. Will succeed if current device has access to
+flashlight, otherwise will stay false. May be called regardless of whether <a href="../-video-capture-source/start.html">start</a> or <a href="../-video-capture-source/stop.html">stop</a>
+has been called.</p>
+<code><span class="keyword">var </span><span class="identifier">torchEnabled</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html"><span class="identifier">Boolean</span></a></code></td>
+</tr>
+</tbody>
+</table>
+<h3>Functions</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<h4><a href="add-capture-source-observer.html">addCaptureSourceObserver</a></h4>
+</td>
+<td>
+<p>Add a capture source observer to receive callbacks from the source on lifecycle events
+which can be used to trigger UI. This observer is entirely optional.</p>
+<code><span class="keyword">fun </span><span class="identifier">addCaptureSourceObserver</span><span class="symbol">(</span><span class="identifier" id="com.amazonaws.services.chime.sdk.meetings.audiovideo.video.capture.DefaultCameraCaptureSource$addCaptureSourceObserver(com.amazonaws.services.chime.sdk.meetings.audiovideo.video.capture.CaptureSourceObserver)/observer">observer</span><span class="symbol">:</span>&nbsp;<a href="../-capture-source-observer/index.html"><span class="identifier">CaptureSourceObserver</span></a><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="add-video-sink.html">addVideoSink</a></h4>
+</td>
+<td>
+<p>Add a video sink which will immediately begin to receive new frames.</p>
+<code><span class="keyword">fun </span><span class="identifier">addVideoSink</span><span class="symbol">(</span><span class="identifier" id="com.amazonaws.services.chime.sdk.meetings.audiovideo.video.capture.DefaultCameraCaptureSource$addVideoSink(com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoSink)/sink">sink</span><span class="symbol">:</span>&nbsp;<a href="../../com.amazonaws.services.chime.sdk.meetings.audiovideo.video/-video-sink/index.html"><span class="identifier">VideoSink</span></a><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="on-video-frame-received.html">onVideoFrameReceived</a></h4>
+</td>
+<td>
+<p>Receive a video frame from some upstream source.
+The <a href="../../com.amazonaws.services.chime.sdk.meetings.audiovideo.video/-video-sink/index.html">VideoSink</a> may render, store, process, and forward the frame, among other applications.</p>
+<code><span class="keyword">fun </span><span class="identifier">onVideoFrameReceived</span><span class="symbol">(</span><span class="identifier" id="com.amazonaws.services.chime.sdk.meetings.audiovideo.video.capture.DefaultCameraCaptureSource$onVideoFrameReceived(com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoFrame)/frame">frame</span><span class="symbol">:</span>&nbsp;<a href="../../com.amazonaws.services.chime.sdk.meetings.audiovideo.video/-video-frame/index.html"><span class="identifier">VideoFrame</span></a><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="release.html">release</a></h4>
+</td>
+<td>
+<code><span class="keyword">fun </span><span class="identifier">release</span><span class="symbol">(</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="remove-capture-source-observer.html">removeCaptureSourceObserver</a></h4>
+</td>
+<td>
+<p>Remove a capture source observer</p>
+<code><span class="keyword">fun </span><span class="identifier">removeCaptureSourceObserver</span><span class="symbol">(</span><span class="identifier" id="com.amazonaws.services.chime.sdk.meetings.audiovideo.video.capture.DefaultCameraCaptureSource$removeCaptureSourceObserver(com.amazonaws.services.chime.sdk.meetings.audiovideo.video.capture.CaptureSourceObserver)/observer">observer</span><span class="symbol">:</span>&nbsp;<a href="../-capture-source-observer/index.html"><span class="identifier">CaptureSourceObserver</span></a><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="remove-video-sink.html">removeVideoSink</a></h4>
+</td>
+<td>
+<p>Remove a video sink which will no longer receive new frames on return</p>
+<code><span class="keyword">fun </span><span class="identifier">removeVideoSink</span><span class="symbol">(</span><span class="identifier" id="com.amazonaws.services.chime.sdk.meetings.audiovideo.video.capture.DefaultCameraCaptureSource$removeVideoSink(com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoSink)/sink">sink</span><span class="symbol">:</span>&nbsp;<a href="../../com.amazonaws.services.chime.sdk.meetings.audiovideo.video/-video-sink/index.html"><span class="identifier">VideoSink</span></a><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="start.html">start</a></h4>
+</td>
+<td>
+<p>Start capturing on this source and emitting video frames</p>
+<code><span class="keyword">fun </span><span class="identifier">start</span><span class="symbol">(</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="stop.html">stop</a></h4>
+</td>
+<td>
+<p>Stop capturing on this source and cease emitting video frames</p>
+<code><span class="keyword">fun </span><span class="identifier">stop</span><span class="symbol">(</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="switch-camera.html">switchCamera</a></h4>
+</td>
+<td>
+<p>Helper function to switch from front to back cameras or reverse. This also switches from
+any external cameras to the front camera.</p>
+<code><span class="keyword">fun </span><span class="identifier">switchCamera</span><span class="symbol">(</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code></td>
+</tr>
+</tbody>
+</table>
+</BODY>
+</HTML>

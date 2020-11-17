@@ -1,0 +1,59 @@
+<HTML>
+<HEAD>
+<meta charset="UTF-8">
+<title>VideoScalingType - amazon-chime-sdk</title>
+<link rel="stylesheet" href="../../../style.css">
+</HEAD>
+<BODY>
+<a href="../../index.html">amazon-chime-sdk</a>&nbsp;/&nbsp;<a href="../index.html">com.amazonaws.services.chime.sdk.meetings.audiovideo.video</a>&nbsp;/&nbsp;<a href="./index.html">VideoScalingType</a><br/>
+<br/>
+<h1>VideoScalingType</h1>
+<code><span class="keyword">enum</span> <span class="keyword">class </span><span class="identifier">VideoScalingType</span></code>
+<p><a href="./index.html">VideoScalingType</a> describes the scaling type of how video is rendered.  Certain types
+may effect how much of a video is cropped. <a href="visible-fraction.html">visibleFraction</a> refers to the minimum amount
+of a video frame required to be shown per scaling type (e.g. <a href="-aspect-fit.html">AspectFit</a> indicates showing
+the whole frame, no cropping).</p>
+<h3>Enum Values</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<h4><a href="-aspect-fit.html">AspectFit</a></h4>
+</td>
+<td>
+<p>Fit the frame to the surrounding view to avoid any cropping.</p>
+</td>
+</tr>
+<tr>
+<td>
+<h4><a href="-aspect-balanced.html">AspectBalanced</a></h4>
+</td>
+<td>
+<p>Attempt to avoid cropping seen using <a href="-aspect-fill.html">AspectFill</a> while showing more
+of the image then <a href="-aspect-fit.html">AspectFit</a>; this may crop if the aspect ratios do not match.</p>
+</td>
+</tr>
+<tr>
+<td>
+<h4><a href="-aspect-fill.html">AspectFill</a></h4>
+</td>
+<td>
+<p>Fill the surrounding view; this may crop if the aspect ratios do not match.</p>
+</td>
+</tr>
+</tbody>
+</table>
+<h3>Properties</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<h4><a href="visible-fraction.html">visibleFraction</a></h4>
+</td>
+<td>
+<code><span class="keyword">val </span><span class="identifier">visibleFraction</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-float/index.html"><span class="identifier">Float</span></a></code></td>
+</tr>
+</tbody>
+</table>
+</BODY>
+</HTML>

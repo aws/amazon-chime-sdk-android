@@ -1,4 +1,4 @@
-## Unreleased
+## [0.8.0] - 2020-11-17
 
 ### Custom Video Source
 This release includes support for custom video sources, and therefore includes a lot of additional APIs.  Though most builders who have not been making modifications to internal render path should not need to make any changes and will not hit any compile time issues, there are some small breaking changes to certain render path APIs to ensure consistency within data flow across the SDK.  Recommendations are below, and all breaking changes should result in compile time errors (if you implemented the class yourself), if you continue to have difficulty resolving issues please cut an issue.

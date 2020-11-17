@@ -1,0 +1,20 @@
+<HTML>
+<HEAD>
+<meta charset="UTF-8">
+<title>CaptureSourceObserver.onCaptureFailed - amazon-chime-sdk</title>
+<link rel="stylesheet" href="../../../style.css">
+</HEAD>
+<BODY>
+<a href="../../index.html">amazon-chime-sdk</a>&nbsp;/&nbsp;<a href="../index.html">com.amazonaws.services.chime.sdk.meetings.audiovideo.video.capture</a>&nbsp;/&nbsp;<a href="index.html">CaptureSourceObserver</a>&nbsp;/&nbsp;<a href="./on-capture-failed.html">onCaptureFailed</a><br/>
+<br/>
+<h1>onCaptureFailed</h1>
+<a name="com.amazonaws.services.chime.sdk.meetings.audiovideo.video.capture.CaptureSourceObserver$onCaptureFailed(com.amazonaws.services.chime.sdk.meetings.audiovideo.video.capture.CaptureSourceError)"></a>
+<code><span class="keyword">abstract</span> <span class="keyword">fun </span><span class="identifier">onCaptureFailed</span><span class="symbol">(</span><span class="identifier" id="com.amazonaws.services.chime.sdk.meetings.audiovideo.video.capture.CaptureSourceObserver$onCaptureFailed(com.amazonaws.services.chime.sdk.meetings.audiovideo.video.capture.CaptureSourceError)/error">error</span><span class="symbol">:</span>&nbsp;<a href="../-capture-source-error/index.html"><span class="identifier">CaptureSourceError</span></a><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code>
+<p>Called when the capture source failed unexpectedly. This may be due to misconfiguration
+or Android system error, and the capture source may be in an unknown state.</p>
+<p>This does not necessarily indicate that calling <a href="../-video-capture-source/start.html">VideoCaptureSource.start</a> again will fail.</p>
+<h3>Parameters</h3>
+<p><a name="error"></a>
+<code>error</code> - : <a href="../-capture-source-error/index.html">CaptureSourceError</a> - The reason why the source has stopped.</p>
+</BODY>
+</HTML>

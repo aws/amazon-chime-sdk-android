@@ -40,6 +40,21 @@ of <a href="../com.amazonaws.services.chime.sdk.meetings.audiovideo.audio.active
 <p><a href="../com.amazonaws.services.chime.sdk.meetings.audiovideo/-audio-video-observer/index.html">AudioVideoObserver</a> handles audio / video session events.</p>
 </tr>
 <tr>
+<h5><a href="../com.amazonaws.services.chime.sdk.meetings.audiovideo.video.capture/-camera-capture-source/index.html">com.amazonaws.services.chime.sdk.meetings.audiovideo.video.capture.CameraCaptureSource</a></h5>
+<p><a href="../com.amazonaws.services.chime.sdk.meetings.audiovideo.video.capture/-camera-capture-source/index.html">CameraCaptureSource</a> is an interface for camera capture sources with additional features
+not covered by <a href="../com.amazonaws.services.chime.sdk.meetings.audiovideo.video.capture/-video-capture-source/index.html">VideoCaptureSource</a>.</p>
+</tr>
+<tr>
+<h5><a href="../com.amazonaws.services.chime.sdk.meetings.audiovideo.video.capture/-capture-source-error/index.html">com.amazonaws.services.chime.sdk.meetings.audiovideo.video.capture.CaptureSourceError</a></h5>
+<p><a href="../com.amazonaws.services.chime.sdk.meetings.audiovideo.video.capture/-capture-source-error/index.html">CaptureSourceError</a> describes an error resulting from a capture source failure
+These can be used to trigger UI, or attempt to restart the capture source.</p>
+</tr>
+<tr>
+<h5><a href="../com.amazonaws.services.chime.sdk.meetings.audiovideo.video.capture/-capture-source-observer/index.html">com.amazonaws.services.chime.sdk.meetings.audiovideo.video.capture.CaptureSourceObserver</a></h5>
+<p><a href="../com.amazonaws.services.chime.sdk.meetings.audiovideo.video.capture/-capture-source-observer/index.html">CaptureSourceObserver</a> observes events resulting from different types of capture devices. Builders
+may desire this input to decide when to show certain UI elements, or to notify users of failure.</p>
+</tr>
+<tr>
 <h5><a href="../com.amazonaws.services.chime.sdk.meetings.utils.logger/-console-logger/index.html">com.amazonaws.services.chime.sdk.meetings.utils.logger.ConsoleLogger</a></h5>
 <p><a href="../com.amazonaws.services.chime.sdk.meetings.utils.logger/-console-logger/index.html">ConsoleLogger</a> writes logs with console</p>
 </tr>
@@ -74,13 +89,37 @@ to receive and process the message that sent to the topics.</p>
 <h5><a href="../com.amazonaws.services.chime.sdk.meetings.audiovideo/-default-audio-video-facade/index.html">com.amazonaws.services.chime.sdk.meetings.audiovideo.DefaultAudioVideoFacade</a></h5>
 </tr>
 <tr>
+<h5><a href="../com.amazonaws.services.chime.sdk.meetings.audiovideo.video.capture/-default-camera-capture-source/index.html">com.amazonaws.services.chime.sdk.meetings.audiovideo.video.capture.DefaultCameraCaptureSource</a></h5>
+<p><a href="../com.amazonaws.services.chime.sdk.meetings.audiovideo.video.capture/-default-camera-capture-source/index.html">DefaultCameraCaptureSource</a> will configure a reasonably standard capture stream which will
+use the <a href="https://developer.android.com/reference/android/view/Surface.html">Surface</a> provided by the capture source provided by a <a href="../com.amazonaws.services.chime.sdk.meetings.audiovideo.video.capture/-surface-texture-capture-source-factory/index.html">SurfaceTextureCaptureSourceFactory</a></p>
+</tr>
+<tr>
 <h5><a href="../com.amazonaws.services.chime.sdk.meetings.device/-default-device-controller/index.html">com.amazonaws.services.chime.sdk.meetings.device.DefaultDeviceController</a></h5>
+</tr>
+<tr>
+<h5><a href="../com.amazonaws.services.chime.sdk.meetings.audiovideo.video.gl/-default-egl-core/index.html">com.amazonaws.services.chime.sdk.meetings.audiovideo.video.gl.DefaultEglCore</a></h5>
+<p><a href="../com.amazonaws.services.chime.sdk.meetings.audiovideo.video.gl/-default-egl-core/index.html">DefaultEglCore</a> is an implementation of <a href="../com.amazonaws.services.chime.sdk.meetings.audiovideo.video.gl/-egl-core/index.html">EglCore</a> which uses EGL14 and OpenGLES2.
+OpenGLES3 has incompatibilities with AmazonChimeSDKMedia library.</p>
+</tr>
+<tr>
+<h5><a href="../com.amazonaws.services.chime.sdk.meetings.audiovideo.video.gl/-default-egl-core-factory/index.html">com.amazonaws.services.chime.sdk.meetings.audiovideo.video.gl.DefaultEglCoreFactory</a></h5>
+<p><a href="../com.amazonaws.services.chime.sdk.meetings.audiovideo.video.gl/-default-egl-core-factory/index.html">DefaultEglCoreFactory</a> will create a root <a href="../com.amazonaws.services.chime.sdk.meetings.audiovideo.video.gl/-egl-core/index.html">EglCore</a> lazily if no shared context is provided.
+It will track all child <a href="../com.amazonaws.services.chime.sdk.meetings.audiovideo.video.gl/-egl-core/index.html">EglCore</a> objects and release the root core if all child cores are released.</p>
 </tr>
 <tr>
 <h5><a href="../com.amazonaws.services.chime.sdk.meetings.session/-default-meeting-session/index.html">com.amazonaws.services.chime.sdk.meetings.session.DefaultMeetingSession</a></h5>
 </tr>
 <tr>
 <h5><a href="../com.amazonaws.services.chime.sdk.meetings.realtime/-default-realtime-controller/index.html">com.amazonaws.services.chime.sdk.meetings.realtime.DefaultRealtimeController</a></h5>
+</tr>
+<tr>
+<h5><a href="../com.amazonaws.services.chime.sdk.meetings.audiovideo.video.capture/-default-surface-texture-capture-source/index.html">com.amazonaws.services.chime.sdk.meetings.audiovideo.video.capture.DefaultSurfaceTextureCaptureSource</a></h5>
+<p><a href="../com.amazonaws.services.chime.sdk.meetings.audiovideo.video.capture/-default-surface-texture-capture-source/index.html">DefaultSurfaceTextureCaptureSource</a> will provide a <a href="https://developer.android.com/reference/android/view/Surface.html">Surface</a> which it will listen to
+and convert to <a href="../com.amazonaws.services.chime.sdk.meetings.audiovideo.video.buffer/-video-frame-texture-buffer/index.html">VideoFrameTextureBuffer</a> objects</p>
+</tr>
+<tr>
+<h5><a href="../com.amazonaws.services.chime.sdk.meetings.audiovideo.video.capture/-default-surface-texture-capture-source-factory/index.html">com.amazonaws.services.chime.sdk.meetings.audiovideo.video.capture.DefaultSurfaceTextureCaptureSourceFactory</a></h5>
+<p><a href="../com.amazonaws.services.chime.sdk.meetings.audiovideo.video.capture/-default-surface-texture-capture-source-factory/index.html">DefaultSurfaceTextureCaptureSourceFactory</a> creates <a href="../com.amazonaws.services.chime.sdk.meetings.audiovideo.video.capture/-default-surface-texture-capture-source/index.html">DefaultSurfaceTextureCaptureSource</a> objects</p>
 </tr>
 <tr>
 <h5><a href="../com.amazonaws.services.chime.sdk.meetings.audiovideo.video/-default-video-render-view/index.html">com.amazonaws.services.chime.sdk.meetings.audiovideo.video.DefaultVideoRenderView</a></h5>
@@ -105,6 +144,21 @@ to receive and process the message that sent to the topics.</p>
 The list functions return <a href="../com.amazonaws.services.chime.sdk.meetings.device/-media-device/index.html">MediaDevice</a> objects.
 Changes in device availability are broadcast to any registered
 <a href="../com.amazonaws.services.chime.sdk.meetings.device/-device-change-observer/index.html">DeviceChangeObserver</a>.</p>
+</tr>
+<tr>
+<h5><a href="../com.amazonaws.services.chime.sdk.meetings.audiovideo.video.gl/-egl-core/index.html">com.amazonaws.services.chime.sdk.meetings.audiovideo.video.gl.EglCore</a></h5>
+<p><a href="../com.amazonaws.services.chime.sdk.meetings.audiovideo.video.gl/-egl-core/index.html">EglCore</a> is an interface for containing all EGL state in one component. In the future it may contain additional helper methods.</p>
+</tr>
+<tr>
+<h5><a href="../com.amazonaws.services.chime.sdk.meetings.audiovideo.video.gl/-egl-core-factory/index.html">com.amazonaws.services.chime.sdk.meetings.audiovideo.video.gl.EglCoreFactory</a></h5>
+<p><a href="../com.amazonaws.services.chime.sdk.meetings.audiovideo.video.gl/-egl-core-factory/index.html">EglCoreFactory</a> is an factory interface for creating new <a href="../com.amazonaws.services.chime.sdk.meetings.audiovideo.video.gl/-egl-core/index.html">EglCore</a> objects, possible using shared state</p>
+</tr>
+<tr>
+<h5><a href="../com.amazonaws.services.chime.sdk.meetings.audiovideo.video.gl/-egl-video-render-view/index.html">com.amazonaws.services.chime.sdk.meetings.audiovideo.video.gl.EglVideoRenderView</a></h5>
+<p><a href="../com.amazonaws.services.chime.sdk.meetings.audiovideo.video.gl/-egl-video-render-view/index.html">EglVideoRenderView</a> is a <a href="../com.amazonaws.services.chime.sdk.meetings.audiovideo.video/-video-render-view.html">VideoRenderView</a> which requires EGL initialization to render <a href="../com.amazonaws.services.chime.sdk.meetings.audiovideo.video.buffer/-video-frame-texture-buffer/index.html">VideoFrameTextureBuffer</a> buffers.
+The <a href="../com.amazonaws.services.chime.sdk.meetings.audiovideo.video/-video-tile-controller/index.html">VideoTileController</a> should automatically manage (<a href="../com.amazonaws.services.chime.sdk.meetings.audiovideo.video.gl/-egl-video-render-view/init.html">init</a> and <a href="../com.amazonaws.services.chime.sdk.meetings.audiovideo.video.gl/-egl-video-render-view/release.html">release</a>) any bound tiles, but if it
+is desired to use a view outside of the controller (e.g. in pre-meeting device selection), users will
+need to call <a href="../com.amazonaws.services.chime.sdk.meetings.audiovideo.video.gl/-egl-video-render-view/init.html">init</a> and <a href="../com.amazonaws.services.chime.sdk.meetings.audiovideo.video.gl/-egl-video-render-view/release.html">release</a> themselves</p>
 </tr>
 <tr>
 <h5><a href="../com.amazonaws.services.chime.sdk.meetings.utils.logger/-logger/index.html">com.amazonaws.services.chime.sdk.meetings.utils.logger.Logger</a></h5>
@@ -179,11 +233,38 @@ where possible.</p>
 attendee changes.</p>
 </tr>
 <tr>
+<h5><a href="../com.amazonaws.services.chime.sdk.meetings.utils/-ref-count-delegate/index.html">com.amazonaws.services.chime.sdk.meetings.utils.RefCountDelegate</a></h5>
+</tr>
+<tr>
 <h5><a href="../com.amazonaws.services.chime.sdk.meetings.audiovideo/-signal-strength/index.html">com.amazonaws.services.chime.sdk.meetings.audiovideo.SignalStrength</a></h5>
 <p><a href="../com.amazonaws.services.chime.sdk.meetings.audiovideo/-signal-strength/index.html">SignalStrength</a> describes the signal strength of an attendee for audio</p>
 </tr>
 <tr>
 <h5><a href="../com.amazonaws.services.chime.sdk.meetings.audiovideo/-signal-update/index.html">com.amazonaws.services.chime.sdk.meetings.audiovideo.SignalUpdate</a></h5>
+</tr>
+<tr>
+<h5><a href="../com.amazonaws.services.chime.sdk.meetings.audiovideo.video.gl/-surface-render-view/index.html">com.amazonaws.services.chime.sdk.meetings.audiovideo.video.gl.SurfaceRenderView</a></h5>
+<p><a href="../com.amazonaws.services.chime.sdk.meetings.audiovideo.video.gl/-surface-render-view/index.html">SurfaceRenderView</a> is an implementation of <a href="../com.amazonaws.services.chime.sdk.meetings.audiovideo.video.gl/-egl-video-render-view/index.html">EglVideoRenderView</a> which uses EGL14 and OpenGLES2
+to draw any incoming video buffer types to the surface provided by the inherited <a href="https://developer.android.com/reference/android/view/SurfaceView.html">SurfaceView</a>.</p>
+</tr>
+<tr>
+<h5><a href="../com.amazonaws.services.chime.sdk.meetings.audiovideo.video.capture/-surface-texture-capture-source/index.html">com.amazonaws.services.chime.sdk.meetings.audiovideo.video.capture.SurfaceTextureCaptureSource</a></h5>
+<p><a href="../com.amazonaws.services.chime.sdk.meetings.audiovideo.video.capture/-surface-texture-capture-source/index.html">SurfaceTextureCaptureSource</a> provides a <a href="https://developer.android.com/reference/android/view/Surface.html">Surface</a> which can be passed to system sources like the camera.
+Upon <a href="../com.amazonaws.services.chime.sdk.meetings.audiovideo.video.capture/-video-capture-source/start.html">start</a> call, the source will listen to the surface and emit any new images as <a href="../com.amazonaws.services.chime.sdk.meetings.audiovideo.video/-video-frame/index.html">VideoFrame</a> objects to any
+downstream <a href="../com.amazonaws.services.chime.sdk.meetings.audiovideo.video/-video-sink/index.html">VideoSink</a> interfaces. This class is mostly intended for composition within <a href="../com.amazonaws.services.chime.sdk.meetings.audiovideo.video/-video-source/index.html">VideoSource</a> implementations which will
+pass the created <a href="https://developer.android.com/reference/android/view/Surface.html">Surface</a> to a system source, then call <a href="#">addVideoSink</a> to receive the frames before transforming and
+passing downstream.</p>
+</tr>
+<tr>
+<h5><a href="../com.amazonaws.services.chime.sdk.meetings.audiovideo.video.capture/-surface-texture-capture-source-factory/index.html">com.amazonaws.services.chime.sdk.meetings.audiovideo.video.capture.SurfaceTextureCaptureSourceFactory</a></h5>
+<p><a href="../com.amazonaws.services.chime.sdk.meetings.audiovideo.video.capture/-surface-texture-capture-source-factory/index.html">SurfaceTextureCaptureSourceFactory</a> is an factory interface for creating new <a href="../com.amazonaws.services.chime.sdk.meetings.audiovideo.video.capture/-surface-texture-capture-source/index.html">SurfaceTextureCaptureSource</a> objects,
+possible using shared state. This provides flexibility over use of <a href="../com.amazonaws.services.chime.sdk.meetings.audiovideo.video.capture/-surface-texture-capture-source/index.html">SurfaceTextureCaptureSource</a> objects since
+they may not allow reuse, or may have a delay before possible reuse.</p>
+</tr>
+<tr>
+<h5><a href="../com.amazonaws.services.chime.sdk.meetings.audiovideo.video.gl/-texture-render-view/index.html">com.amazonaws.services.chime.sdk.meetings.audiovideo.video.gl.TextureRenderView</a></h5>
+<p><a href="../com.amazonaws.services.chime.sdk.meetings.audiovideo.video.gl/-texture-render-view/index.html">TextureRenderView</a> is an implementation of <a href="../com.amazonaws.services.chime.sdk.meetings.audiovideo.video.gl/-egl-video-render-view/index.html">EglVideoRenderView</a> which uses EGL14 and OpenGLES2
+to draw any incoming video buffer types to the surface provided by the inherited <a href="https://developer.android.com/reference/android/view/TextureView.html">TextureView</a></p>
 </tr>
 <tr>
 <h5><a href="../com.amazonaws.services.chime.sdk.meetings.session/-u-r-l-rewriter.html">com.amazonaws.services.chime.sdk.meetings.session.URLRewriter</a></h5>
@@ -195,11 +276,75 @@ Use this to rewrite URLs to traverse proxies.</p>
 <p><a href="../com.amazonaws.services.chime.sdk.meetings.utils/-versioning/index.html">Versioning</a> provides API to retrieve SDK version</p>
 </tr>
 <tr>
+<h5><a href="../com.amazonaws.services.chime.sdk.meetings.audiovideo.video.capture/-video-capture-format/index.html">com.amazonaws.services.chime.sdk.meetings.audiovideo.video.capture.VideoCaptureFormat</a></h5>
+<p><a href="../com.amazonaws.services.chime.sdk.meetings.audiovideo.video.capture/-video-capture-format/index.html">VideoCaptureFormat</a> describes a given capture format that can be set to a <a href="../com.amazonaws.services.chime.sdk.meetings.audiovideo.video.capture/-video-capture-source/index.html">VideoCaptureSource</a>.
+Note that <a href="../com.amazonaws.services.chime.sdk.meetings.audiovideo.video.capture/-video-capture-source/index.html">VideoCaptureSource</a> implementations may ignore or adjust unsupported values.</p>
+</tr>
+<tr>
+<h5><a href="../com.amazonaws.services.chime.sdk.meetings.audiovideo.video.capture/-video-capture-source/index.html">com.amazonaws.services.chime.sdk.meetings.audiovideo.video.capture.VideoCaptureSource</a></h5>
+<p><a href="../com.amazonaws.services.chime.sdk.meetings.audiovideo.video.capture/-video-capture-source/index.html">VideoCaptureSource</a> is an interface for various video capture sources (i.e. screen, camera, file) which can emit <a href="../com.amazonaws.services.chime.sdk.meetings.audiovideo.video/-video-frame/index.html">VideoFrame</a> objects
+All the APIs here can be called regardless of whether the <a href="../com.amazonaws.services.chime.sdk.meetings.audiovideo/-audio-video-facade.html">AudioVideoFacade</a> is started or not.</p>
+</tr>
+<tr>
+<h5><a href="../com.amazonaws.services.chime.sdk.meetings.audiovideo.video/-video-content-hint/index.html">com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoContentHint</a></h5>
+<p><a href="../com.amazonaws.services.chime.sdk.meetings.audiovideo.video/-video-content-hint/index.html">VideoContentHint</a> describes the content type of a video source so that downstream encoders, etc. can properly
+decide on what parameters will work best. These options mirror https://www.w3.org/TR/mst-content-hint/ .</p>
+</tr>
+<tr>
+<h5><a href="../com.amazonaws.services.chime.sdk.meetings.audiovideo.video/-video-frame/index.html">com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoFrame</a></h5>
+<p><a href="../com.amazonaws.services.chime.sdk.meetings.audiovideo.video/-video-frame/index.html">VideoFrame</a> is a class which contains a <a href="../com.amazonaws.services.chime.sdk.meetings.audiovideo.video.buffer/-video-frame-buffer/index.html">VideoFrameBuffer</a> and metadata necessary for transmission
+Typically produced via a <a href="../com.amazonaws.services.chime.sdk.meetings.audiovideo.video/-video-source/index.html">VideoSource</a> and consumed via a <a href="../com.amazonaws.services.chime.sdk.meetings.audiovideo.video/-video-sink/index.html">VideoSink</a></p>
+</tr>
+<tr>
+<h5><a href="../com.amazonaws.services.chime.sdk.meetings.audiovideo.video.buffer/-video-frame-buffer/index.html">com.amazonaws.services.chime.sdk.meetings.audiovideo.video.buffer.VideoFrameBuffer</a></h5>
+<p><a href="../com.amazonaws.services.chime.sdk.meetings.audiovideo.video.buffer/-video-frame-buffer/index.html">VideoFrameBuffer</a> is a buffer which contains a single video buffer's raw data.
+Typically owned by a <a href="../com.amazonaws.services.chime.sdk.meetings.audiovideo.video/-video-frame/index.html">VideoFrame</a> which includes additional metadata.</p>
+</tr>
+<tr>
+<h5><a href="../com.amazonaws.services.chime.sdk.meetings.audiovideo.video.buffer/-video-frame-i420-buffer/index.html">com.amazonaws.services.chime.sdk.meetings.audiovideo.video.buffer.VideoFrameI420Buffer</a></h5>
+<p><a href="../com.amazonaws.services.chime.sdk.meetings.audiovideo.video.buffer/-video-frame-i420-buffer/index.html">VideoFrameI420Buffer</a> provides an reference counted wrapper of
+a YUV where planes are natively (i.e. in JNI) allocated direct byte buffers.</p>
+</tr>
+<tr>
+<h5><a href="../com.amazonaws.services.chime.sdk.meetings.audiovideo.video.buffer/-video-frame-r-g-b-a-buffer/index.html">com.amazonaws.services.chime.sdk.meetings.audiovideo.video.buffer.VideoFrameRGBABuffer</a></h5>
+<p><a href="../com.amazonaws.services.chime.sdk.meetings.audiovideo.video.buffer/-video-frame-r-g-b-a-buffer/index.html">VideoFrameRGBABuffer</a> provides an reference counted wrapper of
+an RGBA natively (i.e. in JNI) allocated direct byte buffer.</p>
+</tr>
+<tr>
+<h5><a href="../com.amazonaws.services.chime.sdk.meetings.audiovideo.video.buffer/-video-frame-texture-buffer/index.html">com.amazonaws.services.chime.sdk.meetings.audiovideo.video.buffer.VideoFrameTextureBuffer</a></h5>
+<p><a href="../com.amazonaws.services.chime.sdk.meetings.audiovideo.video.buffer/-video-frame-texture-buffer/index.html">VideoFrameTextureBuffer</a> provides an reference counted wrapper of
+an OpenGLES texture and related metadata</p>
+</tr>
+<tr>
 <h5><a href="../com.amazonaws.services.chime.sdk.meetings.audiovideo.video/-video-pause-state/index.html">com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoPauseState</a></h5>
 <p><a href="../com.amazonaws.services.chime.sdk.meetings.audiovideo.video/-video-pause-state/index.html">VideoPauseState</a> describes the pause status of a video tile.</p>
 </tr>
 <tr>
-<h5><a href="../com.amazonaws.services.chime.sdk.meetings.audiovideo.video/-video-render-view/index.html">com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoRenderView</a></h5>
+<h5><a href="../com.amazonaws.services.chime.sdk.meetings.audiovideo.video/-video-render-view.html">com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoRenderView</a></h5>
+<p><a href="../com.amazonaws.services.chime.sdk.meetings.audiovideo.video/-video-render-view.html">VideoRenderView</a> is the type of VideoSink used by the <a href="../com.amazonaws.services.chime.sdk.meetings.audiovideo.video/-video-tile-controller/index.html">VideoTileController</a></p>
+</tr>
+<tr>
+<h5><a href="../com.amazonaws.services.chime.sdk.meetings.audiovideo.video/-video-rotation/index.html">com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoRotation</a></h5>
+<p><a href="../com.amazonaws.services.chime.sdk.meetings.audiovideo.video/-video-rotation/index.html">VideoRotation</a> describes the rotation of the video frame buffer in degrees clockwise
+from intended viewing horizon.</p>
+</tr>
+<tr>
+<h5><a href="../com.amazonaws.services.chime.sdk.meetings.audiovideo.video/-video-scaling-type/index.html">com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoScalingType</a></h5>
+<p><a href="../com.amazonaws.services.chime.sdk.meetings.audiovideo.video/-video-scaling-type/index.html">VideoScalingType</a> describes the scaling type of how video is rendered.  Certain types
+may effect how much of a video is cropped. <a href="../com.amazonaws.services.chime.sdk.meetings.audiovideo.video/-video-scaling-type/visible-fraction.html">visibleFraction</a> refers to the minimum amount
+of a video frame required to be shown per scaling type (e.g. <a href="../com.amazonaws.services.chime.sdk.meetings.audiovideo.video/-video-scaling-type/-aspect-fit.html">AspectFit</a> indicates showing
+the whole frame, no cropping).</p>
+</tr>
+<tr>
+<h5><a href="../com.amazonaws.services.chime.sdk.meetings.audiovideo.video/-video-sink/index.html">com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoSink</a></h5>
+<p>A <a href="../com.amazonaws.services.chime.sdk.meetings.audiovideo.video/-video-sink/index.html">VideoSink</a> consumes video frames, typically from a <a href="../com.amazonaws.services.chime.sdk.meetings.audiovideo.video/-video-source/index.html">VideoSource</a>. It may process, fork, or render these frames.
+Typically connected via <a href="../com.amazonaws.services.chime.sdk.meetings.audiovideo.video/-video-source/add-video-sink.html">VideoSource.addVideoSink</a> and disconnected via <a href="../com.amazonaws.services.chime.sdk.meetings.audiovideo.video/-video-source/remove-video-sink.html">VideoSource.removeVideoSink</a></p>
+</tr>
+<tr>
+<h5><a href="../com.amazonaws.services.chime.sdk.meetings.audiovideo.video/-video-source/index.html">com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoSource</a></h5>
+<p><a href="../com.amazonaws.services.chime.sdk.meetings.audiovideo.video/-video-source/index.html">VideoSource</a> is an interface for sources which produce video frames, and can send to a <a href="../com.amazonaws.services.chime.sdk.meetings.audiovideo.video/-video-sink/index.html">VideoSink</a>.
+Implementations can be passed to the <a href="../com.amazonaws.services.chime.sdk.meetings.audiovideo/-audio-video-facade.html">AudioVideoFacade</a> to be used as the video source sent to remote
+participants</p>
 </tr>
 <tr>
 <h5><a href="../com.amazonaws.services.chime.sdk.meetings.audiovideo.video/-video-tile/index.html">com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoTile</a></h5>
