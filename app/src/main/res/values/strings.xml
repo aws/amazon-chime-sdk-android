@@ -29,9 +29,13 @@
     <string name="device_management_title">Select devices</string>
     <string name="device_selection_layout">Device Selection Layout</string>
     <string name="audio_device_title">Audio Device</string>
+    <string name="audio_device_spinner">Audio Device Spinner</string>
     <string name="video_device_title">Video Device</string>
+    <string name="video_device_spinner">Video Device Spinner</string>
     <string name="video_format_title">Video Format</string>
+    <string name="video_format_spinner">Video Format Spinner</string>
     <string name="video_preview_title">Video Preview</string>
+    <string name="video_preview_view">Video Preview View</string>
     <string name="meeting_join">Join</string>
     <string name="preview_meeting_info">Ready to join meeting %1$s as %2$s.</string>
 

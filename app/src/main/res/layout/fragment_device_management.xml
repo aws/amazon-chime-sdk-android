@@ -43,6 +43,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="16dp"
+                android:contentDescription="@string/audio_device_spinner"
                 android:paddingLeft="32dp"
                 android:paddingRight="32dp" />
 
@@ -60,6 +61,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="16dp"
+                android:contentDescription="@string/video_device_spinner"
                 android:paddingLeft="32dp"
                 android:paddingRight="32dp" />
 
@@ -77,6 +79,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="16dp"
+                android:contentDescription="@string/video_format_spinner"
                 android:paddingLeft="32dp"
                 android:paddingRight="32dp" />
 
@@ -93,6 +96,7 @@
                 android:id="@+id/videoPreview"
                 android:layout_width="match_parent"
                 android:layout_height="10dp"
+                android:contentDescription="@string/video_preview_view"
                 android:visibility="visible" />
 
             <Button
