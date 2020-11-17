@@ -87,7 +87,7 @@ To run the demo application, follow these steps.
 
 ### 1. Deploy serverless demo
 
-Deploy the serverless demo from [amazon-chime-sdk-js](https://github.com/aws/amazon-chime-sdk-js), which returns two urls `https://xxxxx.xxxxx.xxx.com/Prod/` and `https://xxxxx.xxxxx.xxx.com/Prod/v2/` 
+Deploy the serverless demo from [amazon-chime-sdk-js](https://github.com/aws/amazon-chime-sdk-js), which returns `https://xxxxx.xxxxx.xxx.com/Prod/
 
 Provide `https://xxxxx.xxxxx.xxx.com/Prod/` for mobile demo app.
 
@@ -104,7 +104,7 @@ Unzip and copy the aar files to `amazon-chime-sdk-android/amazon-chime-sdk/libs`
 Update `test_url` in `strings.xml` at the path `amazon-chime-sdk-android/app/src/main/res/values` 
 with the URL of the serverless demo deployed in Step 1.
 
-> NOTE: use `https://xxxxx.xxxxx.xxx.com/Prod/` instead of v2 url
+> NOTE: use `https://xxxxx.xxxxx.xxx.com/Prod/`
 
 ## Reporting a suspected vulnerability
 
