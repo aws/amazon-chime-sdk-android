@@ -54,7 +54,7 @@ You are now ready to integrate with the Amazon Chime SDK for Android. Next we wi
 To start a meeting, you must complete the following steps to create a meeting session.
 
 1. Make a POST request to `meetingUrl` to create a meeting and an attendee. The `meetingUrl` is the URL of the serverless demo meeting application you deployed (see Prerequisites section). Don’t forget to escape the inputs appropriately as shown in the following code.
-Note: use https://xxxxx.xxxxx.xxx.com/Prod/ instead of v2 url
+Note: use https://xxxxx.xxxxx.xxx.com/Prod/
 
 ```
 val attendeeName = java.net.URLEncoder.encode(attendee, "utf-8");
