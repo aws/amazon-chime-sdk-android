@@ -1,6 +1,8 @@
 ## [Unreleased]
+
 ### Added
 * Added `initializeAudioClientAppInfo` to `AppInfoUtil` for use with audio client.
+* Added `TYPE_USB_HEADSET` to `DefaultDeviceController` for cases like headphone jack wired with USB.
 
 ### Fixed
 * Fixed `DefaultCameraCaptureSource`, `DefaultSurfaceTextureCaptureSource` concurrency issue (Issue #221).
@@ -117,9 +119,6 @@ This release includes support for custom video sources, and therefore includes a
 * If no custom source is provided, the SDK level video client will use a `DefaultCameraCaptureSource` instead of relying on capture implementations within the AmazonChimeSDKMedia library; though behavior should be identical, please open an issue if any differences are noticed..
 * Added additional, optional `id` (unique ID) parameter to `MediaDevice` for video capture devices.
 * **Breaking** Changed the default log level of `ConsoleLogger` to `INFO` level from `WARN`.
-
-### Added
-* Added `TYPE_USB_HEADSET` to `DefaultDeviceController` for cases like headphone jack wired with USB.
 
 ### Fixed
 * **Breaking** Changed behavior to no longer call `onVideoTileSizeChanged` when a video is paused to fix a bug where pausing triggered this callback with width=0 and height=0.
