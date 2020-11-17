@@ -1,0 +1,114 @@
+<HTML>
+<HEAD>
+<meta charset="UTF-8">
+<title>DefaultSurfaceTextureCaptureSource - amazon-chime-sdk</title>
+<link rel="stylesheet" href="../../../style.css">
+</HEAD>
+<BODY>
+<a href="../../index.html">amazon-chime-sdk</a>&nbsp;/&nbsp;<a href="../index.html">com.amazonaws.services.chime.sdk.meetings.audiovideo.video.capture</a>&nbsp;/&nbsp;<a href="./index.html">DefaultSurfaceTextureCaptureSource</a><br/>
+<br/>
+<h1>DefaultSurfaceTextureCaptureSource</h1>
+<code><span class="keyword">class </span><span class="identifier">DefaultSurfaceTextureCaptureSource</span>&nbsp;<span class="symbol">:</span>&nbsp;<a href="../-surface-texture-capture-source/index.html"><span class="identifier">SurfaceTextureCaptureSource</span></a></code>
+<p><a href="./index.html">DefaultSurfaceTextureCaptureSource</a> will provide a <a href="https://developer.android.com/reference/android/view/Surface.html">Surface</a> which it will listen to
+and convert to <a href="../../com.amazonaws.services.chime.sdk.meetings.audiovideo.video.buffer/-video-frame-texture-buffer/index.html">VideoFrameTextureBuffer</a> objects</p>
+<h3>Constructors</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<h4><a href="-init-.html">&lt;init&gt;</a></h4>
+</td>
+<td>
+<p><a href="./index.html">DefaultSurfaceTextureCaptureSource</a> will provide a <a href="https://developer.android.com/reference/android/view/Surface.html">Surface</a> which it will listen to
+and convert to <a href="../../com.amazonaws.services.chime.sdk.meetings.audiovideo.video.buffer/-video-frame-texture-buffer/index.html">VideoFrameTextureBuffer</a> objects</p>
+<code><span class="identifier">DefaultSurfaceTextureCaptureSource</span><span class="symbol">(</span><span class="identifier" id="com.amazonaws.services.chime.sdk.meetings.audiovideo.video.capture.DefaultSurfaceTextureCaptureSource$<init>(com.amazonaws.services.chime.sdk.meetings.utils.logger.Logger, kotlin.Int, kotlin.Int, com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoContentHint, com.amazonaws.services.chime.sdk.meetings.audiovideo.video.gl.EglCoreFactory)/logger">logger</span><span class="symbol">:</span>&nbsp;<a href="../../com.amazonaws.services.chime.sdk.meetings.utils.logger/-logger/index.html"><span class="identifier">Logger</span></a><span class="symbol">, </span><span class="identifier" id="com.amazonaws.services.chime.sdk.meetings.audiovideo.video.capture.DefaultSurfaceTextureCaptureSource$<init>(com.amazonaws.services.chime.sdk.meetings.utils.logger.Logger, kotlin.Int, kotlin.Int, com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoContentHint, com.amazonaws.services.chime.sdk.meetings.audiovideo.video.gl.EglCoreFactory)/width">width</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html"><span class="identifier">Int</span></a><span class="symbol">, </span><span class="identifier" id="com.amazonaws.services.chime.sdk.meetings.audiovideo.video.capture.DefaultSurfaceTextureCaptureSource$<init>(com.amazonaws.services.chime.sdk.meetings.utils.logger.Logger, kotlin.Int, kotlin.Int, com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoContentHint, com.amazonaws.services.chime.sdk.meetings.audiovideo.video.gl.EglCoreFactory)/height">height</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html"><span class="identifier">Int</span></a><span class="symbol">, </span><span class="identifier" id="com.amazonaws.services.chime.sdk.meetings.audiovideo.video.capture.DefaultSurfaceTextureCaptureSource$<init>(com.amazonaws.services.chime.sdk.meetings.utils.logger.Logger, kotlin.Int, kotlin.Int, com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoContentHint, com.amazonaws.services.chime.sdk.meetings.audiovideo.video.gl.EglCoreFactory)/contentHint">contentHint</span><span class="symbol">:</span>&nbsp;<a href="../../com.amazonaws.services.chime.sdk.meetings.audiovideo.video/-video-content-hint/index.html"><span class="identifier">VideoContentHint</span></a>&nbsp;<span class="symbol">=</span>&nbsp;VideoContentHint.None<span class="symbol">, </span><span class="identifier" id="com.amazonaws.services.chime.sdk.meetings.audiovideo.video.capture.DefaultSurfaceTextureCaptureSource$<init>(com.amazonaws.services.chime.sdk.meetings.utils.logger.Logger, kotlin.Int, kotlin.Int, com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoContentHint, com.amazonaws.services.chime.sdk.meetings.audiovideo.video.gl.EglCoreFactory)/eglCoreFactory">eglCoreFactory</span><span class="symbol">:</span>&nbsp;<a href="../../com.amazonaws.services.chime.sdk.meetings.audiovideo.video.gl/-egl-core-factory/index.html"><span class="identifier">EglCoreFactory</span></a><span class="symbol">)</span></code></td>
+</tr>
+</tbody>
+</table>
+<h3>Properties</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<h4><a href="content-hint.html">contentHint</a></h4>
+</td>
+<td>
+<p>Content hint for downstream processing</p>
+<code><span class="keyword">val </span><span class="identifier">contentHint</span><span class="symbol">: </span><a href="../../com.amazonaws.services.chime.sdk.meetings.audiovideo.video/-video-content-hint/index.html"><span class="identifier">VideoContentHint</span></a></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="surface.html">surface</a></h4>
+</td>
+<td>
+<p><a href="https://developer.android.com/reference/android/view/Surface.html">Surface</a> from which any buffers submitted to will be emitted as a <a href="../../com.amazonaws.services.chime.sdk.meetings.audiovideo.video/-video-frame/index.html">VideoFrame</a>.
+User must call <a href="../-video-capture-source/start.html">start</a> to start listening, and <a href="../-video-capture-source/stop.html">stop</a> will likewise stop listening.</p>
+<code><span class="keyword">lateinit</span> <span class="keyword">var </span><span class="identifier">surface</span><span class="symbol">: </span><a href="https://developer.android.com/reference/android/view/Surface.html"><span class="identifier">Surface</span></a></code></td>
+</tr>
+</tbody>
+</table>
+<h3>Functions</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<h4><a href="add-capture-source-observer.html">addCaptureSourceObserver</a></h4>
+</td>
+<td>
+<p>Add a capture source observer to receive callbacks from the source on lifecycle events
+which can be used to trigger UI. This observer is entirely optional.</p>
+<code><span class="keyword">fun </span><span class="identifier">addCaptureSourceObserver</span><span class="symbol">(</span><span class="identifier" id="com.amazonaws.services.chime.sdk.meetings.audiovideo.video.capture.DefaultSurfaceTextureCaptureSource$addCaptureSourceObserver(com.amazonaws.services.chime.sdk.meetings.audiovideo.video.capture.CaptureSourceObserver)/observer">observer</span><span class="symbol">:</span>&nbsp;<a href="../-capture-source-observer/index.html"><span class="identifier">CaptureSourceObserver</span></a><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="add-video-sink.html">addVideoSink</a></h4>
+</td>
+<td>
+<p>Add a video sink which will immediately begin to receive new frames.</p>
+<code><span class="keyword">fun </span><span class="identifier">addVideoSink</span><span class="symbol">(</span><span class="identifier" id="com.amazonaws.services.chime.sdk.meetings.audiovideo.video.capture.DefaultSurfaceTextureCaptureSource$addVideoSink(com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoSink)/sink">sink</span><span class="symbol">:</span>&nbsp;<a href="../../com.amazonaws.services.chime.sdk.meetings.audiovideo.video/-video-sink/index.html"><span class="identifier">VideoSink</span></a><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="release.html">release</a></h4>
+</td>
+<td>
+<p>Deallocate any state or resources held by this object. Not possible to reuse after call. Surface
+will have been released.</p>
+<code><span class="keyword">fun </span><span class="identifier">release</span><span class="symbol">(</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="remove-capture-source-observer.html">removeCaptureSourceObserver</a></h4>
+</td>
+<td>
+<p>Remove a capture source observer</p>
+<code><span class="keyword">fun </span><span class="identifier">removeCaptureSourceObserver</span><span class="symbol">(</span><span class="identifier" id="com.amazonaws.services.chime.sdk.meetings.audiovideo.video.capture.DefaultSurfaceTextureCaptureSource$removeCaptureSourceObserver(com.amazonaws.services.chime.sdk.meetings.audiovideo.video.capture.CaptureSourceObserver)/observer">observer</span><span class="symbol">:</span>&nbsp;<a href="../-capture-source-observer/index.html"><span class="identifier">CaptureSourceObserver</span></a><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="remove-video-sink.html">removeVideoSink</a></h4>
+</td>
+<td>
+<p>Remove a video sink which will no longer receive new frames on return</p>
+<code><span class="keyword">fun </span><span class="identifier">removeVideoSink</span><span class="symbol">(</span><span class="identifier" id="com.amazonaws.services.chime.sdk.meetings.audiovideo.video.capture.DefaultSurfaceTextureCaptureSource$removeVideoSink(com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoSink)/sink">sink</span><span class="symbol">:</span>&nbsp;<a href="../../com.amazonaws.services.chime.sdk.meetings.audiovideo.video/-video-sink/index.html"><span class="identifier">VideoSink</span></a><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="start.html">start</a></h4>
+</td>
+<td>
+<p>Start capturing on this source and emitting video frames</p>
+<code><span class="keyword">fun </span><span class="identifier">start</span><span class="symbol">(</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="stop.html">stop</a></h4>
+</td>
+<td>
+<p>Stop capturing on this source and cease emitting video frames</p>
+<code><span class="keyword">fun </span><span class="identifier">stop</span><span class="symbol">(</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code></td>
+</tr>
+</tbody>
+</table>
+</BODY>
+</HTML>

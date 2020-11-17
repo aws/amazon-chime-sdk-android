@@ -88,7 +88,7 @@ observers per topic</p>
 <td>
 <p>Binds the video rendering view to Video Tile. The view will start displaying the video frame
 after the completion of this API.</p>
-<code><span class="keyword">fun </span><span class="identifier">bindVideoView</span><span class="symbol">(</span><span class="identifier" id="com.amazonaws.services.chime.sdk.meetings.audiovideo.DefaultAudioVideoFacade$bindVideoView(com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoRenderView, kotlin.Int)/videoView">videoView</span><span class="symbol">:</span>&nbsp;<a href="../../com.amazonaws.services.chime.sdk.meetings.audiovideo.video/-video-render-view/index.html"><span class="identifier">VideoRenderView</span></a><span class="symbol">, </span><span class="identifier" id="com.amazonaws.services.chime.sdk.meetings.audiovideo.DefaultAudioVideoFacade$bindVideoView(com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoRenderView, kotlin.Int)/tileId">tileId</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html"><span class="identifier">Int</span></a><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code></td>
+<code><span class="keyword">fun </span><span class="identifier">bindVideoView</span><span class="symbol">(</span><span class="identifier" id="com.amazonaws.services.chime.sdk.meetings.audiovideo.DefaultAudioVideoFacade$bindVideoView(com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoRenderView, kotlin.Int)/videoView">videoView</span><span class="symbol">:</span>&nbsp;<a href="../../com.amazonaws.services.chime.sdk.meetings.audiovideo.video/-video-render-view.html"><span class="identifier">VideoRenderView</span></a><span class="symbol">, </span><span class="identifier" id="com.amazonaws.services.chime.sdk.meetings.audiovideo.DefaultAudioVideoFacade$bindVideoView(com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoRenderView, kotlin.Int)/tileId">tileId</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html"><span class="identifier">Int</span></a><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code></td>
 </tr>
 <tr>
 <td>
@@ -100,10 +100,19 @@ after the completion of this API.</p>
 </tr>
 <tr>
 <td>
+<h4><a href="get-active-audio-device.html">getActiveAudioDevice</a></h4>
+</td>
+<td>
+<p>Get the active input/output audio device in the meeting, return null if there isn't any.</p>
+<code><span class="keyword">fun </span><span class="identifier">getActiveAudioDevice</span><span class="symbol">(</span><span class="symbol">)</span><span class="symbol">: </span><a href="../../com.amazonaws.services.chime.sdk.meetings.device/-media-device/index.html"><span class="identifier">MediaDevice</span></a><span class="symbol">?</span></code></td>
+</tr>
+<tr>
+<td>
 <h4><a href="get-active-camera.html">getActiveCamera</a></h4>
 </td>
 <td>
-<p>Get the active local camera in the meeting, return null if there isn't any.</p>
+<p>Get the currently active camera, if any. This will return null if using a custom source,
+e.g. one passed in via <a href="../-audio-video-controller-facade/start-local-video.html">AudioVideoControllerFacade.startLocalVideo</a></p>
 <code><span class="keyword">fun </span><span class="identifier">getActiveCamera</span><span class="symbol">(</span><span class="symbol">)</span><span class="symbol">: </span><a href="../../com.amazonaws.services.chime.sdk.meetings.device/-media-device/index.html"><span class="identifier">MediaDevice</span></a><span class="symbol">?</span></code></td>
 </tr>
 <tr>
@@ -121,6 +130,14 @@ after the completion of this API.</p>
 <td>
 <p>Pauses the specified remote video tile. Ignores the tileId if it belongs to the local video tile.</p>
 <code><span class="keyword">fun </span><span class="identifier">pauseRemoteVideoTile</span><span class="symbol">(</span><span class="identifier" id="com.amazonaws.services.chime.sdk.meetings.audiovideo.DefaultAudioVideoFacade$pauseRemoteVideoTile(kotlin.Int)/tileId">tileId</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html"><span class="identifier">Int</span></a><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="realtime-is-voice-focus-enabled.html">realtimeIsVoiceFocusEnabled</a></h4>
+</td>
+<td>
+<p>Checks if Voice Focus is enabled.</p>
+<code><span class="keyword">fun </span><span class="identifier">realtimeIsVoiceFocusEnabled</span><span class="symbol">(</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html"><span class="identifier">Boolean</span></a></code></td>
 </tr>
 <tr>
 <td>
@@ -151,6 +168,14 @@ by calling <a href="../../com.amazonaws.services.chime.sdk.meetings.realtime/-re
 LifetimeMs specifies milliseconds for the given message can be stored in server side.
 Up to 1024 messages may be stored for a maximum of 5 minutes.</p>
 <code><span class="keyword">fun </span><span class="identifier">realtimeSendDataMessage</span><span class="symbol">(</span><span class="identifier" id="com.amazonaws.services.chime.sdk.meetings.audiovideo.DefaultAudioVideoFacade$realtimeSendDataMessage(kotlin.String, kotlin.Any, kotlin.Int)/topic">topic</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">, </span><span class="identifier" id="com.amazonaws.services.chime.sdk.meetings.audiovideo.DefaultAudioVideoFacade$realtimeSendDataMessage(kotlin.String, kotlin.Any, kotlin.Int)/data">data</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-any/index.html"><span class="identifier">Any</span></a><span class="symbol">, </span><span class="identifier" id="com.amazonaws.services.chime.sdk.meetings.audiovideo.DefaultAudioVideoFacade$realtimeSendDataMessage(kotlin.String, kotlin.Any, kotlin.Int)/lifetimeMs">lifetimeMs</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html"><span class="identifier">Int</span></a><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="realtime-set-voice-focus-enabled.html">realtimeSetVoiceFocusEnabled</a></h4>
+</td>
+<td>
+<p>Enable or disable Voice Focus (ML-based noise suppression) on the audio input.</p>
+<code><span class="keyword">fun </span><span class="identifier">realtimeSetVoiceFocusEnabled</span><span class="symbol">(</span><span class="identifier" id="com.amazonaws.services.chime.sdk.meetings.audiovideo.DefaultAudioVideoFacade$realtimeSetVoiceFocusEnabled(kotlin.Boolean)/enabled">enabled</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html"><span class="identifier">Boolean</span></a><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html"><span class="identifier">Boolean</span></a></code></td>
 </tr>
 <tr>
 <td>
@@ -229,8 +254,12 @@ Up to 1024 messages may be stored for a maximum of 5 minutes.</p>
 <h4><a href="start-local-video.html">startLocalVideo</a></h4>
 </td>
 <td>
-<p>Start local video.</p>
-<code><span class="keyword">fun </span><span class="identifier">startLocalVideo</span><span class="symbol">(</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code></td>
+<p>Start local video and begin transmitting frames from an internally held <a href="../../com.amazonaws.services.chime.sdk.meetings.audiovideo.video.capture/-default-camera-capture-source/index.html">DefaultCameraCaptureSource</a>.
+<a href="../-audio-video-controller-facade/stop-local-video.html">stopLocalVideo</a> will stop the internal capture source if being used.</p>
+<code><span class="keyword">fun </span><span class="identifier">startLocalVideo</span><span class="symbol">(</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code>
+<p>Start local video with a provided custom <a href="../../com.amazonaws.services.chime.sdk.meetings.audiovideo.video/-video-source/index.html">VideoSource</a> which can be used to provide custom
+<a href="../../com.amazonaws.services.chime.sdk.meetings.audiovideo.video/-video-frame/index.html">VideoFrame</a> objects to be transmitted to remote clients</p>
+<code><span class="keyword">fun </span><span class="identifier">startLocalVideo</span><span class="symbol">(</span><span class="identifier" id="com.amazonaws.services.chime.sdk.meetings.audiovideo.DefaultAudioVideoFacade$startLocalVideo(com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoSource)/source">source</span><span class="symbol">:</span>&nbsp;<a href="../../com.amazonaws.services.chime.sdk.meetings.audiovideo.video/-video-source/index.html"><span class="identifier">VideoSource</span></a><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code></td>
 </tr>
 <tr>
 <td>
@@ -253,7 +282,8 @@ Up to 1024 messages may be stored for a maximum of 5 minutes.</p>
 <h4><a href="stop-local-video.html">stopLocalVideo</a></h4>
 </td>
 <td>
-<p>Stop local video.</p>
+<p>Stops sending video for local attendee. This will additionally stop the internal capture source if being used.
+If using a custom video source, this will call <a href="../../com.amazonaws.services.chime.sdk.meetings.audiovideo.video/-video-source/remove-video-sink.html">VideoSource.removeVideoSink</a> on the previously provided source.</p>
 <code><span class="keyword">fun </span><span class="identifier">stopLocalVideo</span><span class="symbol">(</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code></td>
 </tr>
 <tr>
@@ -269,7 +299,8 @@ Up to 1024 messages may be stored for a maximum of 5 minutes.</p>
 <h4><a href="switch-camera.html">switchCamera</a></h4>
 </td>
 <td>
-<p>Switch between front and back camera in the meeting.</p>
+<p>Switches the currently active camera. This will no-op if using a custom source,
+e.g. one passed in via <a href="../-audio-video-controller-facade/start-local-video.html">AudioVideoControllerFacade.startLocalVideo</a></p>
 <code><span class="keyword">fun </span><span class="identifier">switchCamera</span><span class="symbol">(</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code></td>
 </tr>
 <tr>

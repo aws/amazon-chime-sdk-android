@@ -1,0 +1,18 @@
+<HTML>
+<HEAD>
+<meta charset="UTF-8">
+<title>SurfaceRenderView.hardwareScaling - amazon-chime-sdk</title>
+<link rel="stylesheet" href="../../../style.css">
+</HEAD>
+<BODY>
+<a href="../../index.html">amazon-chime-sdk</a>&nbsp;/&nbsp;<a href="../index.html">com.amazonaws.services.chime.sdk.meetings.audiovideo.video.gl</a>&nbsp;/&nbsp;<a href="index.html">SurfaceRenderView</a>&nbsp;/&nbsp;<a href="./hardware-scaling.html">hardwareScaling</a><br/>
+<br/>
+<h1>hardwareScaling</h1>
+<a name="com.amazonaws.services.chime.sdk.meetings.audiovideo.video.gl.SurfaceRenderView$hardwareScaling"></a>
+<code><span class="keyword">var </span><span class="identifier">hardwareScaling</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html"><span class="identifier">Boolean</span></a></code>
+<p>Enables fixed size for the surface. This provides better performance but might be buggy on some
+devices, for example on Galaxy S9, <a href="https://developer.android.com/reference/android/opengl/EGL14.html#eglQuerySurface(android.opengl.EGLDisplay, android.opengl.EGLSurface, int, int[], int)">EGL14.eglQuerySurface</a> will not return update values until
+after the first <a href="https://developer.android.com/reference/android/opengl/EGL14.html#eglSwapBuffers(android.opengl.EGLDisplay, android.opengl.EGLSurface)">EGL14.eglSwapBuffers</a> call, and will lead to cropping or black boxing on resolution
+changes. By default this is turned off.</p>
+</BODY>
+</HTML>

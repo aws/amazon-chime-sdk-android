@@ -1,0 +1,41 @@
+<HTML>
+<HEAD>
+<meta charset="UTF-8">
+<title>EglCoreFactory - amazon-chime-sdk</title>
+<link rel="stylesheet" href="../../../style.css">
+</HEAD>
+<BODY>
+<a href="../../index.html">amazon-chime-sdk</a>&nbsp;/&nbsp;<a href="../index.html">com.amazonaws.services.chime.sdk.meetings.audiovideo.video.gl</a>&nbsp;/&nbsp;<a href="./index.html">EglCoreFactory</a><br/>
+<br/>
+<h1>EglCoreFactory</h1>
+<code><span class="keyword">interface </span><span class="identifier">EglCoreFactory</span></code>
+<p><a href="./index.html">EglCoreFactory</a> is an factory interface for creating new <a href="../-egl-core/index.html">EglCore</a> objects, possible using shared state</p>
+<h3>Functions</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<h4><a href="create-egl-core.html">createEglCore</a></h4>
+</td>
+<td>
+<p>Create a new <a href="../-egl-core/index.html">EglCore</a> object</p>
+<code><span class="keyword">abstract</span> <span class="keyword">fun </span><span class="identifier">createEglCore</span><span class="symbol">(</span><span class="symbol">)</span><span class="symbol">: </span><a href="../-egl-core/index.html"><span class="identifier">EglCore</span></a></code></td>
+</tr>
+</tbody>
+</table>
+<h3>Inheritors</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<h4><a href="../-default-egl-core-factory/index.html">DefaultEglCoreFactory</a></h4>
+</td>
+<td>
+<p><a href="../-default-egl-core-factory/index.html">DefaultEglCoreFactory</a> will create a root <a href="../-egl-core/index.html">EglCore</a> lazily if no shared context is provided.
+It will track all child <a href="../-egl-core/index.html">EglCore</a> objects and release the root core if all child cores are released.</p>
+<code><span class="keyword">class </span><span class="identifier">DefaultEglCoreFactory</span>&nbsp;<span class="symbol">:</span>&nbsp;<a href="./index.html"><span class="identifier">EglCoreFactory</span></a></code></td>
+</tr>
+</tbody>
+</table>
+</BODY>
+</HTML>

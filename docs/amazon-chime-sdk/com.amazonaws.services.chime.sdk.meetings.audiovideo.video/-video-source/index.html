@@ -1,0 +1,64 @@
+<HTML>
+<HEAD>
+<meta charset="UTF-8">
+<title>VideoSource - amazon-chime-sdk</title>
+<link rel="stylesheet" href="../../../style.css">
+</HEAD>
+<BODY>
+<a href="../../index.html">amazon-chime-sdk</a>&nbsp;/&nbsp;<a href="../index.html">com.amazonaws.services.chime.sdk.meetings.audiovideo.video</a>&nbsp;/&nbsp;<a href="./index.html">VideoSource</a><br/>
+<br/>
+<h1>VideoSource</h1>
+<code><span class="keyword">interface </span><span class="identifier">VideoSource</span></code>
+<p><a href="./index.html">VideoSource</a> is an interface for sources which produce video frames, and can send to a <a href="../-video-sink/index.html">VideoSink</a>.
+Implementations can be passed to the <a href="../../com.amazonaws.services.chime.sdk.meetings.audiovideo/-audio-video-facade.html">AudioVideoFacade</a> to be used as the video source sent to remote
+participants</p>
+<h3>Properties</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<h4><a href="content-hint.html">contentHint</a></h4>
+</td>
+<td>
+<p>Content hint for downstream processing</p>
+<code><span class="keyword">abstract</span> <span class="keyword">val </span><span class="identifier">contentHint</span><span class="symbol">: </span><a href="../-video-content-hint/index.html"><span class="identifier">VideoContentHint</span></a></code></td>
+</tr>
+</tbody>
+</table>
+<h3>Functions</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<h4><a href="add-video-sink.html">addVideoSink</a></h4>
+</td>
+<td>
+<p>Add a video sink which will immediately begin to receive new frames.</p>
+<code><span class="keyword">abstract</span> <span class="keyword">fun </span><span class="identifier">addVideoSink</span><span class="symbol">(</span><span class="identifier" id="com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoSource$addVideoSink(com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoSink)/sink">sink</span><span class="symbol">:</span>&nbsp;<a href="../-video-sink/index.html"><span class="identifier">VideoSink</span></a><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="remove-video-sink.html">removeVideoSink</a></h4>
+</td>
+<td>
+<p>Remove a video sink which will no longer receive new frames on return</p>
+<code><span class="keyword">abstract</span> <span class="keyword">fun </span><span class="identifier">removeVideoSink</span><span class="symbol">(</span><span class="identifier" id="com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoSource$removeVideoSink(com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoSink)/sink">sink</span><span class="symbol">:</span>&nbsp;<a href="../-video-sink/index.html"><span class="identifier">VideoSink</span></a><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code></td>
+</tr>
+</tbody>
+</table>
+<h3>Inheritors</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<h4><a href="../../com.amazonaws.services.chime.sdk.meetings.audiovideo.video.capture/-video-capture-source/index.html">VideoCaptureSource</a></h4>
+</td>
+<td>
+<p><a href="../../com.amazonaws.services.chime.sdk.meetings.audiovideo.video.capture/-video-capture-source/index.html">VideoCaptureSource</a> is an interface for various video capture sources (i.e. screen, camera, file) which can emit <a href="../-video-frame/index.html">VideoFrame</a> objects
+All the APIs here can be called regardless of whether the <a href="../../com.amazonaws.services.chime.sdk.meetings.audiovideo/-audio-video-facade.html">AudioVideoFacade</a> is started or not.</p>
+<code><span class="keyword">interface </span><span class="identifier">VideoCaptureSource</span>&nbsp;<span class="symbol">:</span>&nbsp;<a href="./index.html"><span class="identifier">VideoSource</span></a></code></td>
+</tr>
+</tbody>
+</table>
+</BODY>
+</HTML>

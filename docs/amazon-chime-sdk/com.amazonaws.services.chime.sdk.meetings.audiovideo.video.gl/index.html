@@ -1,0 +1,80 @@
+<HTML>
+<HEAD>
+<meta charset="UTF-8">
+<title>com.amazonaws.services.chime.sdk.meetings.audiovideo.video.gl - amazon-chime-sdk</title>
+<link rel="stylesheet" href="../../style.css">
+</HEAD>
+<BODY>
+<a href="../index.html">amazon-chime-sdk</a>&nbsp;/&nbsp;<a href="./index.html">com.amazonaws.services.chime.sdk.meetings.audiovideo.video.gl</a><br/>
+<br/>
+<h2>Package com.amazonaws.services.chime.sdk.meetings.audiovideo.video.gl</h2>
+<h3>Types</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<h4><a href="-default-egl-core/index.html">DefaultEglCore</a></h4>
+</td>
+<td>
+<p><a href="-default-egl-core/index.html">DefaultEglCore</a> is an implementation of <a href="-egl-core/index.html">EglCore</a> which uses EGL14 and OpenGLES2.
+OpenGLES3 has incompatibilities with AmazonChimeSDKMedia library.</p>
+<code><span class="keyword">class </span><span class="identifier">DefaultEglCore</span>&nbsp;<span class="symbol">:</span>&nbsp;<a href="-egl-core/index.html"><span class="identifier">EglCore</span></a></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="-default-egl-core-factory/index.html">DefaultEglCoreFactory</a></h4>
+</td>
+<td>
+<p><a href="-default-egl-core-factory/index.html">DefaultEglCoreFactory</a> will create a root <a href="-egl-core/index.html">EglCore</a> lazily if no shared context is provided.
+It will track all child <a href="-egl-core/index.html">EglCore</a> objects and release the root core if all child cores are released.</p>
+<code><span class="keyword">class </span><span class="identifier">DefaultEglCoreFactory</span>&nbsp;<span class="symbol">:</span>&nbsp;<a href="-egl-core-factory/index.html"><span class="identifier">EglCoreFactory</span></a></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="-egl-core/index.html">EglCore</a></h4>
+</td>
+<td>
+<p><a href="-egl-core/index.html">EglCore</a> is an interface for containing all EGL state in one component. In the future it may contain additional helper methods.</p>
+<code><span class="keyword">interface </span><span class="identifier">EglCore</span></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="-egl-core-factory/index.html">EglCoreFactory</a></h4>
+</td>
+<td>
+<p><a href="-egl-core-factory/index.html">EglCoreFactory</a> is an factory interface for creating new <a href="-egl-core/index.html">EglCore</a> objects, possible using shared state</p>
+<code><span class="keyword">interface </span><span class="identifier">EglCoreFactory</span></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="-egl-video-render-view/index.html">EglVideoRenderView</a></h4>
+</td>
+<td>
+<p><a href="-egl-video-render-view/index.html">EglVideoRenderView</a> is a <a href="../com.amazonaws.services.chime.sdk.meetings.audiovideo.video/-video-render-view.html">VideoRenderView</a> which requires EGL initialization to render <a href="../com.amazonaws.services.chime.sdk.meetings.audiovideo.video.buffer/-video-frame-texture-buffer/index.html">VideoFrameTextureBuffer</a> buffers.
+The <a href="../com.amazonaws.services.chime.sdk.meetings.audiovideo.video/-video-tile-controller/index.html">VideoTileController</a> should automatically manage (<a href="-egl-video-render-view/init.html">init</a> and <a href="-egl-video-render-view/release.html">release</a>) any bound tiles, but if it
+is desired to use a view outside of the controller (e.g. in pre-meeting device selection), users will
+need to call <a href="-egl-video-render-view/init.html">init</a> and <a href="-egl-video-render-view/release.html">release</a> themselves</p>
+<code><span class="keyword">interface </span><span class="identifier">EglVideoRenderView</span>&nbsp;<span class="symbol">:</span>&nbsp;<a href="../com.amazonaws.services.chime.sdk.meetings.audiovideo.video/-video-render-view.html"><span class="identifier">VideoRenderView</span></a></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="-surface-render-view/index.html">SurfaceRenderView</a></h4>
+</td>
+<td>
+<p><a href="-surface-render-view/index.html">SurfaceRenderView</a> is an implementation of <a href="-egl-video-render-view/index.html">EglVideoRenderView</a> which uses EGL14 and OpenGLES2
+to draw any incoming video buffer types to the surface provided by the inherited <a href="https://developer.android.com/reference/android/view/SurfaceView.html">SurfaceView</a>.</p>
+<code><span class="keyword">open</span> <span class="keyword">class </span><span class="identifier">SurfaceRenderView</span>&nbsp;<span class="symbol">:</span>&nbsp;<a href="https://developer.android.com/reference/android/view/SurfaceView.html"><span class="identifier">SurfaceView</span></a><span class="symbol">, </span><a href="https://developer.android.com/reference/android/view/SurfaceHolder/Callback.html"><span class="identifier">Callback</span></a><span class="symbol">, </span><a href="-egl-video-render-view/index.html"><span class="identifier">EglVideoRenderView</span></a></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="-texture-render-view/index.html">TextureRenderView</a></h4>
+</td>
+<td>
+<p><a href="-texture-render-view/index.html">TextureRenderView</a> is an implementation of <a href="-egl-video-render-view/index.html">EglVideoRenderView</a> which uses EGL14 and OpenGLES2
+to draw any incoming video buffer types to the surface provided by the inherited <a href="https://developer.android.com/reference/android/view/TextureView.html">TextureView</a></p>
+<code><span class="keyword">open</span> <span class="keyword">class </span><span class="identifier">TextureRenderView</span>&nbsp;<span class="symbol">:</span>&nbsp;<a href="https://developer.android.com/reference/android/view/TextureView.html"><span class="identifier">TextureView</span></a><span class="symbol">, </span><a href="https://developer.android.com/reference/android/view/TextureView/SurfaceTextureListener.html"><span class="identifier">SurfaceTextureListener</span></a><span class="symbol">, </span><a href="-egl-video-render-view/index.html"><span class="identifier">EglVideoRenderView</span></a></code></td>
+</tr>
+</tbody>
+</table>
+</BODY>
+</HTML>

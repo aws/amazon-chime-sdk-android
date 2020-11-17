@@ -1,0 +1,93 @@
+<HTML>
+<HEAD>
+<meta charset="UTF-8">
+<title>VideoFrameBuffer - amazon-chime-sdk</title>
+<link rel="stylesheet" href="../../../style.css">
+</HEAD>
+<BODY>
+<a href="../../index.html">amazon-chime-sdk</a>&nbsp;/&nbsp;<a href="../index.html">com.amazonaws.services.chime.sdk.meetings.audiovideo.video.buffer</a>&nbsp;/&nbsp;<a href="./index.html">VideoFrameBuffer</a><br/>
+<br/>
+<h1>VideoFrameBuffer</h1>
+<code><span class="keyword">interface </span><span class="identifier">VideoFrameBuffer</span></code>
+<p><a href="./index.html">VideoFrameBuffer</a> is a buffer which contains a single video buffer's raw data.
+Typically owned by a <a href="../../com.amazonaws.services.chime.sdk.meetings.audiovideo.video/-video-frame/index.html">VideoFrame</a> which includes additional metadata.</p>
+<h3>Properties</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<h4><a href="height.html">height</a></h4>
+</td>
+<td>
+<p>Height of the video frame buffer</p>
+<code><span class="keyword">abstract</span> <span class="keyword">val </span><span class="identifier">height</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html"><span class="identifier">Int</span></a></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="width.html">width</a></h4>
+</td>
+<td>
+<p>Width of the video frame buffer</p>
+<code><span class="keyword">abstract</span> <span class="keyword">val </span><span class="identifier">width</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html"><span class="identifier">Int</span></a></code></td>
+</tr>
+</tbody>
+</table>
+<h3>Functions</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<h4><a href="release.html">release</a></h4>
+</td>
+<td>
+<p>Release the video frame buffer. Use after frame construction or <a href="release.html">release</a>
+after the frame is no longer needed. Will trigger appropriate release of
+any internally allocated resources. Not using may result in leaks.</p>
+<code><span class="keyword">abstract</span> <span class="keyword">fun </span><span class="identifier">release</span><span class="symbol">(</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="retain.html">retain</a></h4>
+</td>
+<td>
+<p>Retain the video frame buffer. Use when shared ownership of the buffer
+is desired (e.g. when passing to separate thread), otherwise the frame
+may be spuriously released</p>
+<code><span class="keyword">abstract</span> <span class="keyword">fun </span><span class="identifier">retain</span><span class="symbol">(</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code></td>
+</tr>
+</tbody>
+</table>
+<h3>Inheritors</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<h4><a href="../-video-frame-i420-buffer/index.html">VideoFrameI420Buffer</a></h4>
+</td>
+<td>
+<p><a href="../-video-frame-i420-buffer/index.html">VideoFrameI420Buffer</a> provides an reference counted wrapper of
+a YUV where planes are natively (i.e. in JNI) allocated direct byte buffers.</p>
+<code><span class="keyword">class </span><span class="identifier">VideoFrameI420Buffer</span>&nbsp;<span class="symbol">:</span>&nbsp;<a href="./index.html"><span class="identifier">VideoFrameBuffer</span></a></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="../-video-frame-r-g-b-a-buffer/index.html">VideoFrameRGBABuffer</a></h4>
+</td>
+<td>
+<p><a href="../-video-frame-r-g-b-a-buffer/index.html">VideoFrameRGBABuffer</a> provides an reference counted wrapper of
+an RGBA natively (i.e. in JNI) allocated direct byte buffer.</p>
+<code><span class="keyword">class </span><span class="identifier">VideoFrameRGBABuffer</span>&nbsp;<span class="symbol">:</span>&nbsp;<a href="./index.html"><span class="identifier">VideoFrameBuffer</span></a></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="../-video-frame-texture-buffer/index.html">VideoFrameTextureBuffer</a></h4>
+</td>
+<td>
+<p><a href="../-video-frame-texture-buffer/index.html">VideoFrameTextureBuffer</a> provides an reference counted wrapper of
+an OpenGLES texture and related metadata</p>
+<code><span class="keyword">class </span><span class="identifier">VideoFrameTextureBuffer</span>&nbsp;<span class="symbol">:</span>&nbsp;<a href="./index.html"><span class="identifier">VideoFrameBuffer</span></a></code></td>
+</tr>
+</tbody>
+</table>
+</BODY>
+</HTML>

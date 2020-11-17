@@ -1,0 +1,114 @@
+<HTML>
+<HEAD>
+<meta charset="UTF-8">
+<title>VideoFrameTextureBuffer - amazon-chime-sdk</title>
+<link rel="stylesheet" href="../../../style.css">
+</HEAD>
+<BODY>
+<a href="../../index.html">amazon-chime-sdk</a>&nbsp;/&nbsp;<a href="../index.html">com.amazonaws.services.chime.sdk.meetings.audiovideo.video.buffer</a>&nbsp;/&nbsp;<a href="./index.html">VideoFrameTextureBuffer</a><br/>
+<br/>
+<h1>VideoFrameTextureBuffer</h1>
+<code><span class="keyword">class </span><span class="identifier">VideoFrameTextureBuffer</span>&nbsp;<span class="symbol">:</span>&nbsp;<a href="../-video-frame-buffer/index.html"><span class="identifier">VideoFrameBuffer</span></a></code>
+<p><a href="./index.html">VideoFrameTextureBuffer</a> provides an reference counted wrapper of
+an OpenGLES texture and related metadata</p>
+<h3>Types</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<h4><a href="-type/index.html">Type</a></h4>
+</td>
+<td>
+<p>Wrapper enum of underlying supported GL texture types</p>
+<code><span class="keyword">enum</span> <span class="keyword">class </span><span class="identifier">Type</span></code></td>
+</tr>
+</tbody>
+</table>
+<h3>Constructors</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<h4><a href="-init-.html">&lt;init&gt;</a></h4>
+</td>
+<td>
+<p><a href="./index.html">VideoFrameTextureBuffer</a> provides an reference counted wrapper of
+an OpenGLES texture and related metadata</p>
+<code><span class="identifier">VideoFrameTextureBuffer</span><span class="symbol">(</span><span class="identifier" id="com.amazonaws.services.chime.sdk.meetings.audiovideo.video.buffer.VideoFrameTextureBuffer$<init>(kotlin.Int, kotlin.Int, kotlin.Int, android.graphics.Matrix, com.amazonaws.services.chime.sdk.meetings.audiovideo.video.buffer.VideoFrameTextureBuffer.Type, java.lang.Runnable)/width">width</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html"><span class="identifier">Int</span></a><span class="symbol">, </span><span class="identifier" id="com.amazonaws.services.chime.sdk.meetings.audiovideo.video.buffer.VideoFrameTextureBuffer$<init>(kotlin.Int, kotlin.Int, kotlin.Int, android.graphics.Matrix, com.amazonaws.services.chime.sdk.meetings.audiovideo.video.buffer.VideoFrameTextureBuffer.Type, java.lang.Runnable)/height">height</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html"><span class="identifier">Int</span></a><span class="symbol">, </span><span class="identifier" id="com.amazonaws.services.chime.sdk.meetings.audiovideo.video.buffer.VideoFrameTextureBuffer$<init>(kotlin.Int, kotlin.Int, kotlin.Int, android.graphics.Matrix, com.amazonaws.services.chime.sdk.meetings.audiovideo.video.buffer.VideoFrameTextureBuffer.Type, java.lang.Runnable)/textureId">textureId</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html"><span class="identifier">Int</span></a><span class="symbol">, </span><span class="identifier" id="com.amazonaws.services.chime.sdk.meetings.audiovideo.video.buffer.VideoFrameTextureBuffer$<init>(kotlin.Int, kotlin.Int, kotlin.Int, android.graphics.Matrix, com.amazonaws.services.chime.sdk.meetings.audiovideo.video.buffer.VideoFrameTextureBuffer.Type, java.lang.Runnable)/transformMatrix">transformMatrix</span><span class="symbol">:</span>&nbsp;<a href="https://developer.android.com/reference/android/graphics/Matrix.html"><span class="identifier">Matrix</span></a><span class="symbol">?</span><span class="symbol">, </span><span class="identifier" id="com.amazonaws.services.chime.sdk.meetings.audiovideo.video.buffer.VideoFrameTextureBuffer$<init>(kotlin.Int, kotlin.Int, kotlin.Int, android.graphics.Matrix, com.amazonaws.services.chime.sdk.meetings.audiovideo.video.buffer.VideoFrameTextureBuffer.Type, java.lang.Runnable)/type">type</span><span class="symbol">:</span>&nbsp;<span class="identifier">Type</span><span class="symbol">, </span><span class="identifier" id="com.amazonaws.services.chime.sdk.meetings.audiovideo.video.buffer.VideoFrameTextureBuffer$<init>(kotlin.Int, kotlin.Int, kotlin.Int, android.graphics.Matrix, com.amazonaws.services.chime.sdk.meetings.audiovideo.video.buffer.VideoFrameTextureBuffer.Type, java.lang.Runnable)/releaseCallback">releaseCallback</span><span class="symbol">:</span>&nbsp;<span class="identifier">Runnable</span><span class="symbol">)</span></code></td>
+</tr>
+</tbody>
+</table>
+<h3>Properties</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<h4><a href="height.html">height</a></h4>
+</td>
+<td>
+<p>Height of the video frame buffer</p>
+<code><span class="keyword">val </span><span class="identifier">height</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html"><span class="identifier">Int</span></a></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="texture-id.html">textureId</a></h4>
+</td>
+<td>
+<p>ID of underlying GL texture</p>
+<code><span class="keyword">val </span><span class="identifier">textureId</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html"><span class="identifier">Int</span></a></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="transform-matrix.html">transformMatrix</a></h4>
+</td>
+<td>
+<p>The transform matrix associated with the frame. This transform matrix maps 2D
+homogeneous coordinates of the form (s, t, 1) with s and t in the inclusive range <code>[0, 1]</code> to
+the coordinate that should be used to sample that location from the buffer.</p>
+<code><span class="keyword">val </span><span class="identifier">transformMatrix</span><span class="symbol">: </span><a href="https://developer.android.com/reference/android/graphics/Matrix.html"><span class="identifier">Matrix</span></a><span class="symbol">?</span></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="type.html">type</a></h4>
+</td>
+<td>
+<p>GL type of underlying GL texture</p>
+<code><span class="keyword">val </span><span class="identifier">type</span><span class="symbol">: </span><span class="identifier">Type</span></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="width.html">width</a></h4>
+</td>
+<td>
+<p>Width of the video frame buffer</p>
+<code><span class="keyword">val </span><span class="identifier">width</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html"><span class="identifier">Int</span></a></code></td>
+</tr>
+</tbody>
+</table>
+<h3>Functions</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<h4><a href="release.html">release</a></h4>
+</td>
+<td>
+<p>Release the video frame buffer. Use after frame construction or <a href="../-video-frame-buffer/release.html">release</a>
+after the frame is no longer needed. Will trigger appropriate release of
+any internally allocated resources. Not using may result in leaks.</p>
+<code><span class="keyword">fun </span><span class="identifier">release</span><span class="symbol">(</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="retain.html">retain</a></h4>
+</td>
+<td>
+<p>Retain the video frame buffer. Use when shared ownership of the buffer
+is desired (e.g. when passing to separate thread), otherwise the frame
+may be spuriously released</p>
+<code><span class="keyword">fun </span><span class="identifier">retain</span><span class="symbol">(</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code></td>
+</tr>
+</tbody>
+</table>
+</BODY>
+</HTML>

@@ -1,0 +1,77 @@
+<HTML>
+<HEAD>
+<meta charset="UTF-8">
+<title>CameraCaptureSource - amazon-chime-sdk</title>
+<link rel="stylesheet" href="../../../style.css">
+</HEAD>
+<BODY>
+<a href="../../index.html">amazon-chime-sdk</a>&nbsp;/&nbsp;<a href="../index.html">com.amazonaws.services.chime.sdk.meetings.audiovideo.video.capture</a>&nbsp;/&nbsp;<a href="./index.html">CameraCaptureSource</a><br/>
+<br/>
+<h1>CameraCaptureSource</h1>
+<code><span class="keyword">interface </span><span class="identifier">CameraCaptureSource</span>&nbsp;<span class="symbol">:</span>&nbsp;<a href="../-video-capture-source/index.html"><span class="identifier">VideoCaptureSource</span></a></code>
+<p><a href="./index.html">CameraCaptureSource</a> is an interface for camera capture sources with additional features
+not covered by <a href="../-video-capture-source/index.html">VideoCaptureSource</a>.</p>
+<p>All the APIs here can be called regardless of whether the <a href="../../com.amazonaws.services.chime.sdk.meetings.audiovideo/-audio-video-facade.html">AudioVideoFacade</a> is started or not.</p>
+<h3>Properties</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<h4><a href="device.html">device</a></h4>
+</td>
+<td>
+<p>Current camera device. This is only null if the phone/device doesn't have any cameras
+May be called regardless of whether <a href="../-video-capture-source/start.html">start</a> or <a href="../-video-capture-source/stop.html">stop</a> has been called.</p>
+<code><span class="keyword">abstract</span> <span class="keyword">var </span><span class="identifier">device</span><span class="symbol">: </span><a href="../../com.amazonaws.services.chime.sdk.meetings.device/-media-device/index.html"><span class="identifier">MediaDevice</span></a><span class="symbol">?</span></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="format.html">format</a></h4>
+</td>
+<td>
+<p>Current camera capture format. Actual format may be adjusted to use supported camera formats.
+May be called regardless of whether <a href="../-video-capture-source/start.html">start</a> or <a href="../-video-capture-source/stop.html">stop</a> has been called.</p>
+<code><span class="keyword">abstract</span> <span class="keyword">var </span><span class="identifier">format</span><span class="symbol">: </span><a href="../-video-capture-format/index.html"><span class="identifier">VideoCaptureFormat</span></a></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="torch-enabled.html">torchEnabled</a></h4>
+</td>
+<td>
+<p>Toggle for torch on the current device. Will succeed if current device has access to
+flashlight, otherwise will stay false. May be called regardless of whether <a href="../-video-capture-source/start.html">start</a> or <a href="../-video-capture-source/stop.html">stop</a>
+has been called.</p>
+<code><span class="keyword">abstract</span> <span class="keyword">var </span><span class="identifier">torchEnabled</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html"><span class="identifier">Boolean</span></a></code></td>
+</tr>
+</tbody>
+</table>
+<h3>Functions</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<h4><a href="switch-camera.html">switchCamera</a></h4>
+</td>
+<td>
+<p>Helper function to switch from front to back cameras or reverse. This also switches from
+any external cameras to the front camera.</p>
+<code><span class="keyword">abstract</span> <span class="keyword">fun </span><span class="identifier">switchCamera</span><span class="symbol">(</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code></td>
+</tr>
+</tbody>
+</table>
+<h3>Inheritors</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<h4><a href="../-default-camera-capture-source/index.html">DefaultCameraCaptureSource</a></h4>
+</td>
+<td>
+<p><a href="../-default-camera-capture-source/index.html">DefaultCameraCaptureSource</a> will configure a reasonably standard capture stream which will
+use the <a href="https://developer.android.com/reference/android/view/Surface.html">Surface</a> provided by the capture source provided by a <a href="../-surface-texture-capture-source-factory/index.html">SurfaceTextureCaptureSourceFactory</a></p>
+<code><span class="keyword">class </span><span class="identifier">DefaultCameraCaptureSource</span>&nbsp;<span class="symbol">:</span>&nbsp;<a href="./index.html"><span class="identifier">CameraCaptureSource</span></a><span class="symbol">, </span><a href="../../com.amazonaws.services.chime.sdk.meetings.audiovideo.video/-video-sink/index.html"><span class="identifier">VideoSink</span></a></code></td>
+</tr>
+</tbody>
+</table>
+</BODY>
+</HTML>
