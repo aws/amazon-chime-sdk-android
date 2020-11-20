@@ -8,14 +8,17 @@ package com.amazonaws.services.chime.sdkdemo.adapter
 import android.content.Context
 import android.view.View
 import android.view.ViewGroup
-import android.widget.RelativeLayout
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.RecyclerView
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.AudioVideoFacade
+import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.DefaultVideoRenderView
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoPauseState
+import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoScalingType
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.capture.CameraCaptureSource
 import com.amazonaws.services.chime.sdk.meetings.device.MediaDeviceType
 import com.amazonaws.services.chime.sdk.meetings.utils.logger.Logger
 import com.amazonaws.services.chime.sdkdemo.R
+import com.amazonaws.services.chime.sdkdemo.activity.MeetingActivity
 import com.amazonaws.services.chime.sdkdemo.data.VideoCollectionTile
 import com.amazonaws.services.chime.sdkdemo.utils.inflate
 import com.amazonaws.services.chime.sdkdemo.utils.isLandscapeMode
@@ -30,9 +33,11 @@ class VideoAdapter(
     private val context: Context?,
     private val logger: Logger
 ) : RecyclerView.Adapter<VideoHolder>() {
+    private lateinit var tabContentLayout: ConstraintLayout
     private val VIDEO_ASPECT_RATIO_16_9 = 0.5625
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): VideoHolder {
+        tabContentLayout = (context as MeetingActivity).findViewById<ConstraintLayout>(R.id.constraintLayout)
         val inflatedView = parent.inflate(R.layout.item_video, false)
         return VideoHolder(inflatedView, audioVideoFacade, logger, cameraCaptureSource)
     }
@@ -45,12 +50,20 @@ class VideoAdapter(
         val videoCollectionTile = videoCollectionTiles.elementAt(position)
         holder.bindVideoTile(videoCollectionTile)
         context?.let {
-            val displayMetrics = context.resources.displayMetrics
-            val width =
-                if (isLandscapeMode(context) == true) displayMetrics.widthPixels / 2 else displayMetrics.widthPixels
-            val height = (width * VIDEO_ASPECT_RATIO_16_9).toInt()
-            holder.tileContainer.layoutParams.height = height
-            holder.tileContainer.layoutParams.width = width
+            val videoRenderView = holder.tileContainer.getViewById(R.id.video_surface) as DefaultVideoRenderView
+            if (!videoCollectionTile.videoTileState.isContent) {
+                val viewportWidth = tabContentLayout.width
+                if (isLandscapeMode(context) == true) {
+                    val containerWidth = viewportWidth / 2
+                    holder.tileContainer.layoutParams.width = containerWidth
+                } else {
+                    val containerHeight = (VIDEO_ASPECT_RATIO_16_9 * viewportWidth).toInt()
+                    holder.tileContainer.layoutParams.height = containerHeight
+                }
+            }
+
+            videoRenderView.scalingType = VideoScalingType.AspectFit
+            videoRenderView.hardwareScaling = false
         }
     }
 }
@@ -62,7 +75,7 @@ class VideoHolder(
     private val cameraCaptureSource: CameraCaptureSource?
 ) : RecyclerView.ViewHolder(view) {
 
-    val tileContainer: RelativeLayout = view.findViewById(R.id.tile_container)
+    val tileContainer: ConstraintLayout = view.findViewById(R.id.tile_container)
 
     init {
         view.video_surface.logger = logger
