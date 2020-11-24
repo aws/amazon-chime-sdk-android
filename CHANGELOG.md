@@ -3,6 +3,7 @@
 ### Added
 * Added video pagination feature in the Android demo app. Remote videos will be paginated into several pages. Each page contains at most 4 videos, and user can switch between different pages. Videos that are not being displayed will not consume any network bandwidth or computation resource.
 * Added active speaker-based video tile feature in the Android demo app. Video tiles of active speakers will be promoted to the top of the list automatically.
+* Added logic to `stopRemoteVideo`/`startRemoteVideo` when application is background/foregrounded to save network bandwidth
 
 ### Fixed
 * Fixed a demo app issue that `SurfaceView` was not cleared up correctly when switching between Screen tab and Video tab.
