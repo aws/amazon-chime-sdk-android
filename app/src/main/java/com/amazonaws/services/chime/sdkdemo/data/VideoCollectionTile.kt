@@ -4,9 +4,11 @@
  */
 package com.amazonaws.services.chime.sdkdemo.data
 
+import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.DefaultVideoRenderView
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoTileState
 
 data class VideoCollectionTile(
     val attendeeName: String,
-    val videoTileState: VideoTileState
+    val videoTileState: VideoTileState,
+    var videoRenderView: DefaultVideoRenderView?
 )

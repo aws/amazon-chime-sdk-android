@@ -43,6 +43,53 @@
         android:layout_height="0dp"
         android:layout_weight="1">
 
+        <LinearLayout
+            android:id="@+id/subViewVideo"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerViewVideoCollection"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:contentDescription="@string/video_view"
+                android:visibility="visible"
+                android:layout_weight="1"/>
+
+            <LinearLayout
+                android:id="@+id/videoPaginationControlView"
+                style="?android:attr/buttonBarStyle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:weightSum="1.0">
+
+                <Button
+                    android:id="@+id/prevVideoPageButton"
+                    style="?android:attr/buttonBarButtonStyle"
+                    android:enabled="false"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.5"
+                    android:insetLeft="10dp"
+                    android:insetRight="10dp"
+                    android:text="@string/prev_video_page" />
+
+                <Button
+                    android:id="@+id/nextVideoPageButton"
+                    style="?android:attr/buttonBarButtonStyle"
+                    android:enabled="false"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.5"
+                    android:insetLeft="10dp"
+                    android:insetRight="10dp"
+                    android:text="@string/next_video_page" />
+            </LinearLayout>
+
+        </LinearLayout>
+
         <TextView
             android:id="@+id/noVideoOrScreenShareAvailable"
             android:layout_width="0dp"
@@ -59,17 +106,6 @@
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:visibility="visible"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recyclerViewVideoCollection"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:contentDescription="@string/video_view"
-            android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
