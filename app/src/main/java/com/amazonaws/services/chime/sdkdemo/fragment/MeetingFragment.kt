@@ -207,7 +207,7 @@ class MeetingFragment : Fragment(),
             ?.setOnClickListener { toggleSpeaker() }
 
         view.findViewById<ImageButton>(R.id.buttonLeave)
-            ?.setOnClickListener { listener.onLeaveMeeting() }
+            ?.setOnClickListener { endMeeting() }
     }
 
     private fun setupSubViews(view: View) {
@@ -886,7 +886,7 @@ class MeetingFragment : Fragment(),
             "${sessionStatus.statusCode}"
         )
         if (sessionStatus.statusCode != MeetingSessionStatusCode.OK) {
-            listener.onLeaveMeeting()
+            endMeeting()
         }
     }
 
@@ -1131,12 +1131,16 @@ class MeetingFragment : Fragment(),
         audioVideo.removeActiveSpeakerObserver(this)
     }
 
+    private fun endMeeting() {
+        meetingModel.currentVideoTiles.forEach { (tileId, tileData) ->
+            audioVideo.unbindVideoView(tileId)
+        }
+        listener.onLeaveMeeting()
+    }
+
     override fun onDestroy() {
         super.onDestroy()
         deviceDialog?.dismiss()
         unsubscribeFromAttendeeChangeHandlers()
-        meetingModel.currentVideoTiles.forEach { (tileId, _) ->
-            audioVideo.unbindVideoView(tileId)
-        }
     }
 }
