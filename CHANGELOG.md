@@ -1,3 +1,11 @@
+## Unreleased
+
+### Fixed
+* Fixed rotation issue in demo app.
+
+### Changed
+* Refactored video view to resemble iOS UI so that video doesn't get cropped.
+
 ## [0.8.1] - 2020-11-20
 
 ## [0.8.0] - 2020-11-17
