@@ -91,6 +91,7 @@ class VideoHolder(
             view.video_surface.contentDescription = "${videoCollectionTile.attendeeName} VideoTile"
         }
         if (videoCollectionTile.videoTileState.isLocalTile) {
+            view.on_tile_button.setImageResource(R.drawable.ic_switch_camera)
             view.attendee_name.visibility = View.GONE
             view.on_tile_button.visibility = View.VISIBLE
 
