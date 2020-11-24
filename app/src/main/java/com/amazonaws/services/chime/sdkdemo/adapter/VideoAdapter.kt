@@ -11,7 +11,6 @@ import android.view.ViewGroup
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.RecyclerView
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.AudioVideoFacade
-import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.DefaultVideoRenderView
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoPauseState
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoScalingType
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.capture.CameraCaptureSource
@@ -37,7 +36,7 @@ class VideoAdapter(
     private val VIDEO_ASPECT_RATIO_16_9 = 0.5625
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): VideoHolder {
-        tabContentLayout = (context as MeetingActivity).findViewById<ConstraintLayout>(R.id.constraintLayout)
+        tabContentLayout = (context as MeetingActivity).findViewById(R.id.constraintLayout)
         val inflatedView = parent.inflate(R.layout.item_video, false)
         return VideoHolder(inflatedView, audioVideoFacade, logger, cameraCaptureSource)
     }
@@ -50,18 +49,15 @@ class VideoAdapter(
         val videoCollectionTile = videoCollectionTiles.elementAt(position)
         holder.bindVideoTile(videoCollectionTile)
         context?.let {
-            val videoRenderView = holder.tileContainer.getViewById(R.id.video_surface) as DefaultVideoRenderView
             if (!videoCollectionTile.videoTileState.isContent) {
                 val viewportWidth = tabContentLayout.width
                 if (isLandscapeMode(context) == true) {
-                    val containerWidth = viewportWidth / 2
-                    holder.tileContainer.layoutParams.width = containerWidth
+                    holder.tileContainer.layoutParams.width = viewportWidth / 2
                 } else {
-                    val containerHeight = (VIDEO_ASPECT_RATIO_16_9 * viewportWidth).toInt()
-                    holder.tileContainer.layoutParams.height = containerHeight
+                    holder.tileContainer.layoutParams.height = (VIDEO_ASPECT_RATIO_16_9 * viewportWidth).toInt()
                 }
             }
-
+            val videoRenderView = holder.itemView.video_surface
             videoRenderView.scalingType = VideoScalingType.AspectFit
             videoRenderView.hardwareScaling = false
         }

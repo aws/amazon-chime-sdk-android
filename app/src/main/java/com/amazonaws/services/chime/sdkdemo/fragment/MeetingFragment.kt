@@ -18,7 +18,6 @@ import android.widget.ImageButton
 import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
-import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -132,7 +131,6 @@ class MeetingFragment : Fragment(),
     private lateinit var messageAdapter: MessageAdapter
     private lateinit var tabLayout: TabLayout
     private lateinit var audioDeviceManager: AudioDeviceManager
-    private lateinit var tabContentLayout: ConstraintLayout
 
     companion object {
         fun newInstance(meetingId: String): MeetingFragment {
@@ -221,7 +219,6 @@ class MeetingFragment : Fragment(),
         recyclerViewRoster.visibility = View.VISIBLE
 
         // Video (camera & content)
-        tabContentLayout = view.findViewById(R.id.constraintLayout)
         recyclerViewVideoCollection =
             view.findViewById(R.id.recyclerViewVideoCollection)
         recyclerViewVideoCollection.layoutManager = createLinearLayoutManagerForOrientation()
