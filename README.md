@@ -28,6 +28,8 @@ And review the following guides:
 
 * [API Overview](guides/api_overview.md)
 * [Getting Started](guides/getting_started.md)
+* [Custom Video Sources, Processors, and Sinks](guides/custom_video.md)
+* [Video Pagination with Active Speaker-Based Policy](guides/video_pagination.md)
 
 ## Setup
 
@@ -87,7 +89,7 @@ To run the demo application, follow these steps.
 
 ### 1. Deploy serverless demo
 
-Deploy the serverless demo from [amazon-chime-sdk-js](https://github.com/aws/amazon-chime-sdk-js), which returns `https://xxxxx.xxxxx.xxx.com/Prod/
+Deploy the serverless demo from [amazon-chime-sdk-js](https://github.com/aws/amazon-chime-sdk-js), which returns `https://xxxxx.xxxxx.xxx.com/Prod/`
 
 Provide `https://xxxxx.xxxxx.xxx.com/Prod/` for mobile demo app.
 
