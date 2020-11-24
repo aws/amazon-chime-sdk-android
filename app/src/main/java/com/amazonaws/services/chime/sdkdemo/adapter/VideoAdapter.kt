@@ -25,7 +25,7 @@ import kotlinx.android.synthetic.main.item_video.view.video_surface
 
 class VideoAdapter(
     private val videoCollectionTiles: Collection<VideoCollectionTile>,
-    private val userPausedVideoTileIds: MutableSet<Int>?,
+    private val userPausedVideoTileIds: MutableSet<Int>,
     private val audioVideoFacade: AudioVideoFacade,
     private val cameraCaptureSource: CameraCaptureSource?,
     private val context: Context?,
@@ -59,7 +59,7 @@ class VideoAdapter(
 class VideoHolder(
     private val view: View,
     private val audioVideo: AudioVideoFacade,
-    private val userPausedVideoTileIds: MutableSet<Int>?,
+    private val userPausedVideoTileIds: MutableSet<Int>,
     private val logger: Logger,
     private val cameraCaptureSource: CameraCaptureSource?
 ) : RecyclerView.ViewHolder(view) {
@@ -112,11 +112,11 @@ class VideoHolder(
                 val tileId = videoCollectionTile.videoTileState.tileId
                 if (videoCollectionTile.videoTileState.pauseState == VideoPauseState.Unpaused) {
                     audioVideo.pauseRemoteVideoTile(tileId)
-                    userPausedVideoTileIds?.add(tileId)
+                    userPausedVideoTileIds.add(tileId)
                     view.on_tile_button.setImageResource(R.drawable.ic_resume_video)
                 } else {
                     audioVideo.resumeRemoteVideoTile(tileId)
-                    userPausedVideoTileIds?.remove(tileId)
+                    userPausedVideoTileIds.remove(tileId)
                     view.on_tile_button.setImageResource(R.drawable.ic_pause_video)
                 }
             }

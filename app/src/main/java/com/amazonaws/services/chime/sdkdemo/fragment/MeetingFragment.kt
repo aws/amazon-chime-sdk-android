@@ -225,17 +225,19 @@ class MeetingFragment : Fragment(),
         viewVideo.visibility = View.GONE
 
         prevVideoPageButton = view.findViewById(R.id.prevVideoPageButton)
-        prevVideoPageButton.isEnabled = false
         prevVideoPageButton.setOnClickListener {
-            getPreviousVideoPage()
-            resumeAllRemoteVideosInCurrentPageExceptUserPausedVideos()
+            if (meetingModel.canGoToPrevVideoPage()) {
+                meetingModel.currentVideoPageIndex -= 1
+                onVideoPageUpdated()
+            }
         }
 
         nextVideoPageButton = view.findViewById(R.id.nextVideoPageButton)
-        nextVideoPageButton.isEnabled = false
         nextVideoPageButton.setOnClickListener {
-            getNextVideoPage()
-            resumeAllRemoteVideosInCurrentPageExceptUserPausedVideos()
+            if (meetingModel.canGoToNextVideoPage()) {
+                meetingModel.currentVideoPageIndex += 1
+                onVideoPageUpdated()
+            }
         }
 
         recyclerViewVideoCollection =
@@ -257,7 +259,7 @@ class MeetingFragment : Fragment(),
         screenTileAdapter =
             VideoAdapter(
                 meetingModel.currentScreenTiles,
-                null,
+                meetingModel.userPausedVideoTileIds,
                 audioVideo,
                 null,
                 context,
@@ -314,13 +316,22 @@ class MeetingFragment : Fragment(),
             override fun onTabUnselected(tab: TabLayout.Tab?) {
                 if (tab?.position == SubTab.Video.position) {
                     pauseAllRemoteVideos()
-                    meetingModel.localVideoTileState?.videoRenderView?.visibility = View.GONE
-                    meetingModel.remoteVideoTileStates.forEach { it.videoRenderView?.visibility = View.GONE }
+                    setVideoSurfaceViewsVisibility(View.GONE)
                 } else if (tab?.position == SubTab.Screen.position) {
-                    meetingModel.currentScreenTiles.forEach { it.videoRenderView?.visibility = View.GONE }
+                    pauseAllContentShares()
+                    setScreenSurfaceViewsVisibility(View.GONE)
                 }
             }
         })
+    }
+
+    private fun setVideoSurfaceViewsVisibility(visibility: Int) {
+        meetingModel.localVideoTileState?.videoRenderView?.visibility = visibility
+        meetingModel.remoteVideoTileStates.forEach { it.videoRenderView?.visibility = visibility }
+    }
+
+    private fun setScreenSurfaceViewsVisibility(visibility: Int) {
+        meetingModel.currentScreenTiles.forEach { it.videoRenderView?.visibility = visibility }
     }
 
     private fun showViewAt(index: Int) {
@@ -330,6 +341,7 @@ class MeetingFragment : Fragment(),
         recyclerViewScreenShareCollection.visibility = View.GONE
         recyclerViewMetrics.visibility = View.GONE
 
+        meetingModel.tabIndex = index
         when (index) {
             SubTab.Attendees.position -> {
                 recyclerViewRoster.visibility = View.VISIBLE
@@ -340,20 +352,19 @@ class MeetingFragment : Fragment(),
             }
             SubTab.Video.position -> {
                 viewVideo.visibility = View.VISIBLE
-                meetingModel.localVideoTileState?.videoRenderView?.visibility = View.VISIBLE
-                meetingModel.remoteVideoTileStates.forEach { it.videoRenderView?.visibility = View.VISIBLE }
-                resumeAllRemoteVideosInCurrentPageExceptUserPausedVideos()
+                setVideoSurfaceViewsVisibility(View.VISIBLE)
+                onVideoPageUpdated()
             }
             SubTab.Screen.position -> {
                 recyclerViewScreenShareCollection.visibility = View.VISIBLE
-                meetingModel.currentScreenTiles.forEach { it.videoRenderView?.visibility = View.VISIBLE }
+                setScreenSurfaceViewsVisibility(View.VISIBLE)
+                resumeAllContentSharesExceptUserPausedVideos()
             }
             SubTab.Metrics.position -> {
                 recyclerViewMetrics.visibility = View.VISIBLE
             }
             else -> return
         }
-        meetingModel.tabIndex = index
         refreshNoVideosOrScreenShareAvailableText()
     }
 
@@ -591,9 +602,6 @@ class MeetingFragment : Fragment(),
                 if (needUpdate) {
                     meetingModel.updateRemoteVideoStatesBasedOnActiveSpeakers(attendeeInfo)
                     onVideoPageUpdated()
-                    if (meetingModel.tabIndex == SubTab.Video.position) {
-                        resumeAllRemoteVideosInCurrentPageExceptUserPausedVideos()
-                    }
 
                     rosterAdapter.notifyDataSetChanged()
                 }
@@ -822,20 +830,15 @@ class MeetingFragment : Fragment(),
     }
 
     private fun onVideoPageUpdated() {
+        // Recalculate videos in the current page and notify videoTileAdapter
         meetingModel.updateVideoStatesInCurrentPage()
         revalidateVideoPageIndex()
-        updateVideoPaginationControlButtons()
         videoTileAdapter.notifyDataSetChanged()
-    }
 
-    private fun updateVideoPaginationControlButtons() {
-        prevVideoPageButton.isEnabled = meetingModel.canGoToPrevVideoPage()
-        nextVideoPageButton.isEnabled = meetingModel.canGoToNextVideoPage()
-    }
-
-    private fun resumeAllRemoteVideosInCurrentPageExceptUserPausedVideos() {
+        // Pause/Resume remote videos accordingly based on videoTileState and the tab that user is on
         meetingModel.remoteVideoTileStates.forEach {
-            if (meetingModel.videoStatesInCurrentPage.contains(it) && !meetingModel.userPausedVideoTileIds.contains(it.videoTileState.tileId)) {
+            // Resume paused videos in the current page if user is on Video tab and it was not manually paused by user
+            if (meetingModel.tabIndex == SubTab.Video.position && meetingModel.videoStatesInCurrentPage.contains(it) && !meetingModel.userPausedVideoTileIds.contains(it.videoTileState.tileId)) {
                 if (it.videoTileState.pauseState == VideoPauseState.PausedByUserRequest) {
                     audioVideo.resumeRemoteVideoTile(it.videoTileState.tileId)
                 }
@@ -843,6 +846,18 @@ class MeetingFragment : Fragment(),
                 if (it.videoTileState.pauseState != VideoPauseState.PausedByUserRequest) {
                     audioVideo.pauseRemoteVideoTile(it.videoTileState.tileId)
                 }
+            }
+        }
+
+        // update video pagination control buttons states
+        prevVideoPageButton.isEnabled = meetingModel.canGoToPrevVideoPage()
+        nextVideoPageButton.isEnabled = meetingModel.canGoToNextVideoPage()
+    }
+
+    private fun resumeAllContentSharesExceptUserPausedVideos() {
+        meetingModel.currentScreenTiles.forEach {
+            if (!meetingModel.userPausedVideoTileIds.contains(it.videoTileState.tileId) && it.videoTileState.pauseState == VideoPauseState.PausedByUserRequest) {
+                audioVideo.resumeRemoteVideoTile(it.videoTileState.tileId)
             }
         }
     }
@@ -853,20 +868,17 @@ class MeetingFragment : Fragment(),
         }
     }
 
-    private fun revalidateVideoPageIndex() {
-        while (meetingModel.canGoToPrevVideoPage() && meetingModel.remoteVideoCountInCurrentPage() == 0) {
-            getPreviousVideoPage()
+    private fun pauseAllContentShares() {
+        meetingModel.currentScreenTiles.forEach {
+            audioVideo.pauseRemoteVideoTile(it.videoTileState.tileId)
         }
     }
 
-    private fun getPreviousVideoPage() {
-        meetingModel.currentVideoPageIndex -= 1
-        onVideoPageUpdated()
-    }
-
-    private fun getNextVideoPage() {
-        meetingModel.currentVideoPageIndex += 1
-        onVideoPageUpdated()
+    private fun revalidateVideoPageIndex() {
+        while (meetingModel.canGoToPrevVideoPage() && meetingModel.remoteVideoCountInCurrentPage() == 0) {
+            meetingModel.currentVideoPageIndex -= 1
+            onVideoPageUpdated()
+        }
     }
 
     override fun onRequestPermissionsResult(
@@ -899,6 +911,11 @@ class MeetingFragment : Fragment(),
         if (tileState.isContent) {
             meetingModel.currentScreenTiles.add(videoCollectionTile)
             screenTileAdapter.notifyDataSetChanged()
+
+            // Currently not in the Screen tab, no need to render the video tile
+            if (meetingModel.tabIndex != SubTab.Screen.position) {
+                audioVideo.pauseRemoteVideoTile(tileState.tileId)
+            }
         } else {
             if (tileState.isLocalTile) {
                 meetingModel.localVideoTileState = videoCollectionTile
@@ -907,13 +924,8 @@ class MeetingFragment : Fragment(),
                 meetingModel.remoteVideoTileStates.add(videoCollectionTile)
                 onVideoPageUpdated()
 
-                if (meetingModel.tabIndex == SubTab.Video.position) {
-                    // If the video is not currently being displayed, pause it
-                    if (!meetingModel.videoStatesInCurrentPage.contains(videoCollectionTile)) {
-                        audioVideo.pauseRemoteVideoTile(tileState.tileId)
-                    }
-                } else {
-                    // Currently not in the video view, no need to render the video tile
+                // Currently not in the Video tab, no need to render the video tile
+                if (meetingModel.tabIndex != SubTab.Video.position) {
                     audioVideo.pauseRemoteVideoTile(tileState.tileId)
                 }
             }
@@ -1068,7 +1080,6 @@ class MeetingFragment : Fragment(),
                     meetingModel.remoteVideoTileStates.removeAll { it.videoTileState.tileId == tileId }
                 }
                 onVideoPageUpdated()
-                resumeAllRemoteVideosInCurrentPageExceptUserPausedVideos()
             }
             refreshNoVideosOrScreenShareAvailableText()
         }

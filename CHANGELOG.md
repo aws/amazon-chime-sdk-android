@@ -4,6 +4,10 @@
 * Added video pagination feature in the Android demo app. Remote videos will be paginated into several pages. Each page contains at most 4 videos, and user can switch between different pages. Videos that are not being displayed will not consume any network bandwidth or computation resource.
 * Added active speaker-based video tile feature in the Android demo app. Video tiles of active speakers will be promoted to the top of the list automatically.
 
+### Fixed
+* Fixed a demo app issue that `SurfaceView` was not cleared up correctly when switching between Screen tab and Video tab.
+* Fixed a demo app issue that `mirror` property was not reset when `VideoHolder` is recycled.
+
 ## [0.8.1] - 2020-11-20
 
 ## [0.8.0] - 2020-11-17
