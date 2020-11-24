@@ -1,27 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/tile_container"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:gravity="center_horizontal"
-    android:padding="8dp">
+    android:layout_height="match_parent"
+    android:background="@color/colorBlack"
+    android:gravity="center_horizontal">
 
     <com.amazonaws.services.chime.sdk.meetings.audiovideo.video.DefaultVideoRenderView
         android:id="@+id/video_surface"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:gravity="center" />
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <ImageButton
         android:id="@+id/on_tile_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
         android:layout_alignParentEnd="true"
         android:layout_alignParentBottom="true"
         android:background="@null"
         android:contentDescription="@string/switch_camera"
         android:src="@drawable/button_switch_camera"
-        android:visibility="invisible" />
+        android:tint="@color/colorWhite"
+        android:visibility="invisible"
+        android:scaleType="fitCenter"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintRight_toRightOf="parent" />
 
     <TextView
         android:id="@+id/attendee_name"
@@ -32,8 +42,10 @@
         android:layout_alignParentBottom="true"
         android:maxLines="1"
         android:ellipsize="end"
-        android:textColor="@color/colorAttendeeName"
+        android:textColor="@color/colorWhite"
         android:textSize="12sp"
-        android:visibility="invisible" />
+        android:visibility="invisible"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent" />
 
-</RelativeLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

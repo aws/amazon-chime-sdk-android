@@ -1115,6 +1115,7 @@ class MeetingFragment : Fragment(),
             TAG,
             "Video stream content size changed to ${tileState.videoStreamContentWidth}*${tileState.videoStreamContentHeight} for tileId: ${tileState.tileId}"
         )
+        videoTileAdapter.notifyDataSetChanged()
     }
 
     override fun onMetricsReceived(metrics: Map<ObservableMetric, Any>) {

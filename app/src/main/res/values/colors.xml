@@ -10,9 +10,9 @@
     <color name="colorPrimaryDark">#00574B</color>
     <color name="colorAccent">#D81B60</color>
     <color name="colorText">#3f4149</color>
-    <color name="colorMessageText">#000000</color>
+    <color name="colorWhite">#FFFFFF</color>
+    <color name="colorBlack">#000000</color>
 
     <!-- For roster view -->
     <color name="colorBackground">#E9E9E9</color>
-    <color name="colorAttendeeName">#FFFFFFFF</color>
 </resources>
