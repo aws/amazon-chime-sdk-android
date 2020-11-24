@@ -27,6 +27,7 @@ import kotlinx.android.synthetic.main.item_video.view.video_surface
 
 class VideoAdapter(
     private val videoCollectionTiles: Collection<VideoCollectionTile>,
+    private val userPausedVideoTileIds: MutableSet<Int>,
     private val audioVideoFacade: AudioVideoFacade,
     private val cameraCaptureSource: CameraCaptureSource?,
     private val context: Context?,
@@ -38,7 +39,7 @@ class VideoAdapter(
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): VideoHolder {
         tabContentLayout = (context as MeetingActivity).findViewById(R.id.constraintLayout)
         val inflatedView = parent.inflate(R.layout.item_video, false)
-        return VideoHolder(inflatedView, audioVideoFacade, logger, cameraCaptureSource)
+        return VideoHolder(inflatedView, audioVideoFacade, userPausedVideoTileIds, logger, cameraCaptureSource)
     }
 
     override fun getItemCount(): Int {
@@ -67,6 +68,7 @@ class VideoAdapter(
 class VideoHolder(
     private val view: View,
     private val audioVideo: AudioVideoFacade,
+    private val userPausedVideoTileIds: MutableSet<Int>,
     private val logger: Logger,
     private val cameraCaptureSource: CameraCaptureSource?
 ) : RecyclerView.ViewHolder(view) {
@@ -79,6 +81,10 @@ class VideoHolder(
 
     fun bindVideoTile(videoCollectionTile: VideoCollectionTile) {
         audioVideo.bindVideoView(view.video_surface, videoCollectionTile.videoTileState.tileId)
+        // Save the bound VideoRenderView in order to explicitly control the visibility of SurfaceView.
+        // This is to bypass the issue where we cannot hide a SurfaceView that overlaps with another one.
+        videoCollectionTile.videoRenderView = view.video_surface
+
         if (videoCollectionTile.videoTileState.isContent) {
             view.video_surface.contentDescription = "ScreenTile"
         } else {
@@ -101,6 +107,7 @@ class VideoHolder(
                 updateLocalVideoMirror()
             }
         } else {
+            view.video_surface.mirror = false
             view.attendee_name.text = videoCollectionTile.attendeeName
             view.attendee_name.visibility = View.VISIBLE
             view.on_tile_button.visibility = View.VISIBLE
@@ -111,11 +118,14 @@ class VideoHolder(
             }
 
             view.on_tile_button.setOnClickListener {
+                val tileId = videoCollectionTile.videoTileState.tileId
                 if (videoCollectionTile.videoTileState.pauseState == VideoPauseState.Unpaused) {
-                    audioVideo.pauseRemoteVideoTile(videoCollectionTile.videoTileState.tileId)
+                    audioVideo.pauseRemoteVideoTile(tileId)
+                    userPausedVideoTileIds.add(tileId)
                     view.on_tile_button.setImageResource(R.drawable.ic_resume_video)
                 } else {
-                    audioVideo.resumeRemoteVideoTile(videoCollectionTile.videoTileState.tileId)
+                    audioVideo.resumeRemoteVideoTile(tileId)
+                    userPausedVideoTileIds.remove(tileId)
                     view.on_tile_button.setImageResource(R.drawable.ic_pause_video)
                 }
             }
