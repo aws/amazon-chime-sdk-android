@@ -8,6 +8,7 @@
 * Fixed a demo app issue that `SurfaceView` was not cleared up correctly when switching between Screen tab and Video tab.
 * Fixed a demo app issue that `mirror` property was not reset when `VideoHolder` is recycled.
 * Fixed rotation issue in demo app.
+
 ### Changed
 * Refactored video view to resemble iOS UI so that video doesn't get cropped.
 
