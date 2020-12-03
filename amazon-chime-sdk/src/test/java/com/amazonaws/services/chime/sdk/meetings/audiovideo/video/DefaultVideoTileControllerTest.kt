@@ -556,7 +556,7 @@ class DefaultVideoTileControllerTest {
         videoTileController.bindVideoView(mockVideoRenderView, tileId)
         videoTileController.bindVideoView(mockVideoRenderView2, tileId2)
 
-        verify(exactly = 1) { mockVideoTile.unbind() }
+        verify(exactly = 0) { mockVideoTile.unbind() }
         verify(exactly = 0) { mockVideoTile2.unbind() }
         verify(exactly = 1) { mockVideoTile.bind(any()) }
         verify(exactly = 1) { mockVideoTile2.bind(any()) }
@@ -683,6 +683,56 @@ class DefaultVideoTileControllerTest {
                     testHeight,
                     VideoPauseState.Unpaused,
                     localTile
+                )
+            )
+        }
+    }
+
+    @Test
+    fun `Video tile mapping entry should be removed when unbound video is removed`() {
+        val mockObserver = spyk(tileObserver)
+
+        videoTileController.addVideoTileObserver(mockObserver)
+        runBlockingTest {
+            // Add video but do not bind it
+            videoTileController.onReceiveFrame(
+                mockVideoFrame,
+                tileId,
+                attendeeId,
+                VideoPauseState.Unpaused
+            )
+            // Remove video
+            videoTileController.onReceiveFrame(null, tileId, attendeeId, VideoPauseState.Unpaused)
+            // Add video again
+            videoTileController.onReceiveFrame(
+                mockVideoFrame,
+                tileId,
+                attendeeId,
+                VideoPauseState.Unpaused
+            )
+        }
+
+        verify(exactly = 1) {
+            mockObserver.onVideoTileRemoved(
+                VideoTileState(
+                    tileId,
+                    attendeeId,
+                    testWidth,
+                    testHeight,
+                    VideoPauseState.Unpaused,
+                    remoteTile
+                )
+            )
+        }
+        verify(exactly = 2) {
+            mockObserver.onVideoTileAdded(
+                VideoTileState(
+                    tileId,
+                    attendeeId,
+                    testWidth,
+                    testHeight,
+                    VideoPauseState.Unpaused,
+                    remoteTile
                 )
             )
         }

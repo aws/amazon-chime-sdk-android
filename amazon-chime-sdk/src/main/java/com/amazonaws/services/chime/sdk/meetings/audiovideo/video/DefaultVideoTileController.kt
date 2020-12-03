@@ -19,8 +19,8 @@ class DefaultVideoTileController(
 ) : VideoTileController {
     // A map of tile id to VideoTile to determine if VideoTileController is adding, removing, pausing, or rendering
     private val videoTileMap = mutableMapOf<Int, VideoTile>()
-    // A map of VideoRenderView to tile id to determine if users are adding same video render view
-    private val boundVideoViewMap = mutableMapOf<VideoRenderView, Int>()
+    // A map of VideoRenderView to VideoTile to determine if users are adding same video render view
+    private val boundVideoViewMap = mutableMapOf<VideoRenderView, VideoTile>()
     private val TAG = "DefaultVideoTileController"
 
     private var videoTileObservers = mutableSetOf<VideoTileObserver>()
@@ -149,8 +149,8 @@ class DefaultVideoTileController(
         logger.info(TAG, "Binding VideoView to Tile with tileId = $tileId")
 
         boundVideoViewMap[videoView]?.let {
-            logger.warn(TAG, "Override the binding from $it to $tileId")
-            removeVideoViewFromMap(it)
+            logger.warn(TAG, "Override the binding from ${it.state.tileId} to $tileId")
+            removeVideoViewFromMap(it.state.tileId)
         }
 
         videoTileMap[tileId]?.let {
@@ -163,19 +163,19 @@ class DefaultVideoTileController(
                 videoView.init(eglCoreFactory)
             }
             it.bind(videoView)
-            boundVideoViewMap[videoView] = tileId
+            boundVideoViewMap[videoView] = it
         }
     }
 
     private fun removeVideoViewFromMap(tileId: Int) {
-        videoTileMap[tileId]?.let {
-            val renderView = it.videoRenderView
-            it.unbind()
+        boundVideoViewMap.filterValues { it.state.tileId == tileId }.entries.forEach {
+            val renderView = it.key
+            val videoTile = it.value
+            videoTile.unbind()
             if (renderView is EglVideoRenderView) {
                 logger.info(TAG, "Releasing EGL state on EGL render view")
                 renderView.release()
             }
-
             boundVideoViewMap.remove(renderView)
         }
     }
@@ -183,12 +183,12 @@ class DefaultVideoTileController(
     override fun unbindVideoView(tileId: Int) {
         logger.info(TAG, "Unbinding Tile with tileId = $tileId")
         removeVideoViewFromMap(tileId)
-        videoTileMap.remove(tileId)
     }
 
     private fun onRemoveVideoTile(tileId: Int) {
         videoTileMap[tileId]?.let {
             forEachObserver { observer -> observer.onVideoTileRemoved(it.state) }
+            videoTileMap.remove(tileId)
         }
     }
 

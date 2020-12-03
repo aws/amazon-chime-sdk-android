@@ -11,6 +11,7 @@
 
 ### Changed
 * Refactored video view to resemble iOS UI so that video doesn't get cropped.
+* **Breaking** Changed SDK behavior to remove the internal video tile mapping entry when video is removed, instead of when video is unbound. This provides better API symmetry so that the video metadata will be added in `onVideoTileAdded(tileState)` callback and removed in `onVideoTileRemoved(tileState)` callback.
 
 ## [0.8.1] - 2020-11-20
 
