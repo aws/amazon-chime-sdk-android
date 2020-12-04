@@ -168,7 +168,7 @@ class DefaultVideoTileController(
     }
 
     private fun removeVideoViewFromMap(tileId: Int) {
-        boundVideoViewMap.filterValues { it.state.tileId == tileId }.entries.forEach {
+        boundVideoViewMap.entries.firstOrNull { it.value.state.tileId == tileId }?.let {
             val renderView = it.key
             val videoTile = it.value
             videoTile.unbind()
