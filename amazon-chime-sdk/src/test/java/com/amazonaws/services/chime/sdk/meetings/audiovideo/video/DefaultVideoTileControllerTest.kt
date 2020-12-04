@@ -689,7 +689,7 @@ class DefaultVideoTileControllerTest {
     }
 
     @Test
-    fun `Video tile mapping entry should be removed when unbound video is removed`() {
+    fun `onReceiveFrame should notify observer about video tile add when the video is unbound and previously removed`() {
         val mockObserver = spyk(tileObserver)
 
         videoTileController.addVideoTileObserver(mockObserver)
@@ -704,6 +704,121 @@ class DefaultVideoTileControllerTest {
             // Remove video
             videoTileController.onReceiveFrame(null, tileId, attendeeId, VideoPauseState.Unpaused)
             // Add video again
+            videoTileController.onReceiveFrame(
+                mockVideoFrame,
+                tileId,
+                attendeeId,
+                VideoPauseState.Unpaused
+            )
+        }
+
+        verify(exactly = 1) {
+            mockObserver.onVideoTileRemoved(
+                VideoTileState(
+                    tileId,
+                    attendeeId,
+                    testWidth,
+                    testHeight,
+                    VideoPauseState.Unpaused,
+                    remoteTile
+                )
+            )
+        }
+        verify(exactly = 2) {
+            mockObserver.onVideoTileAdded(
+                VideoTileState(
+                    tileId,
+                    attendeeId,
+                    testWidth,
+                    testHeight,
+                    VideoPauseState.Unpaused,
+                    remoteTile
+                )
+            )
+        }
+    }
+
+    @Test
+    fun `onReceiveFrame should notify observer about video tile add when the video is bound and previously removed`() {
+        val mockObserver = spyk(tileObserver)
+
+        videoTileController.addVideoTileObserver(mockObserver)
+        runBlockingTest {
+            // Add video and bind it
+            videoTileController.onReceiveFrame(
+                mockVideoFrame,
+                tileId,
+                attendeeId,
+                VideoPauseState.Unpaused
+            )
+            videoTileController.bindVideoView(mockVideoRenderView, tileId)
+            // Remove video
+            videoTileController.onReceiveFrame(null, tileId, attendeeId, VideoPauseState.Unpaused)
+            // Add video again
+            videoTileController.onReceiveFrame(
+                mockVideoFrame,
+                tileId,
+                attendeeId,
+                VideoPauseState.Unpaused
+            )
+        }
+
+        verify(exactly = 1) {
+            mockObserver.onVideoTileRemoved(
+                VideoTileState(
+                    tileId,
+                    attendeeId,
+                    testWidth,
+                    testHeight,
+                    VideoPauseState.Unpaused,
+                    remoteTile
+                )
+            )
+        }
+        verify(exactly = 2) {
+            mockObserver.onVideoTileAdded(
+                VideoTileState(
+                    tileId,
+                    attendeeId,
+                    testWidth,
+                    testHeight,
+                    VideoPauseState.Unpaused,
+                    remoteTile
+                )
+            )
+        }
+    }
+
+    @Test
+    fun `onReceiveFrame should notify observer about video tile add when the paused video was previously removed then added and resumed`() {
+        val mockObserver = spyk(tileObserver)
+
+        videoTileController.addVideoTileObserver(mockObserver)
+        runBlockingTest {
+            // Add video but do not bind it
+            videoTileController.onReceiveFrame(
+                mockVideoFrame,
+                tileId,
+                attendeeId,
+                VideoPauseState.Unpaused
+            )
+            // Pause video
+            videoTileController.onReceiveFrame(
+                mockVideoFrame,
+                tileId,
+                attendeeId,
+                VideoPauseState.PausedByUserRequest
+            )
+            // Remove video
+            videoTileController.onReceiveFrame(null, tileId, attendeeId, VideoPauseState.Unpaused)
+            // Add video again
+            videoTileController.onReceiveFrame(
+                null,
+                tileId,
+                attendeeId,
+                VideoPauseState.PausedByUserRequest
+            )
+            // Resume video
             videoTileController.onReceiveFrame(
                 mockVideoFrame,
                 tileId,

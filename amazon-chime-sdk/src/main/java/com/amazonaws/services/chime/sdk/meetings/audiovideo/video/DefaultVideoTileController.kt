@@ -20,7 +20,7 @@ class DefaultVideoTileController(
     // A map of tile id to VideoTile to determine if VideoTileController is adding, removing, pausing, or rendering
     private val videoTileMap = mutableMapOf<Int, VideoTile>()
     // A map of VideoRenderView to VideoTile to determine if users are adding same video render view
-    private val boundVideoViewMap = mutableMapOf<VideoRenderView, VideoTile>()
+    private val renderViewToBoundVideoTileMap = mutableMapOf<VideoRenderView, VideoTile>()
     private val TAG = "DefaultVideoTileController"
 
     private var videoTileObservers = mutableSetOf<VideoTileObserver>()
@@ -148,7 +148,7 @@ class DefaultVideoTileController(
     override fun bindVideoView(videoView: VideoRenderView, tileId: Int) {
         logger.info(TAG, "Binding VideoView to Tile with tileId = $tileId")
 
-        boundVideoViewMap[videoView]?.let {
+        renderViewToBoundVideoTileMap[videoView]?.let {
             logger.warn(TAG, "Override the binding from ${it.state.tileId} to $tileId")
             removeVideoViewFromMap(it.state.tileId)
         }
@@ -163,12 +163,12 @@ class DefaultVideoTileController(
                 videoView.init(eglCoreFactory)
             }
             it.bind(videoView)
-            boundVideoViewMap[videoView] = it
+            renderViewToBoundVideoTileMap[videoView] = it
         }
     }
 
     private fun removeVideoViewFromMap(tileId: Int) {
-        boundVideoViewMap.entries.firstOrNull { it.value.state.tileId == tileId }?.let {
+        renderViewToBoundVideoTileMap.entries.firstOrNull { it.value.state.tileId == tileId }?.let {
             val renderView = it.key
             val videoTile = it.value
             videoTile.unbind()
@@ -176,7 +176,7 @@ class DefaultVideoTileController(
                 logger.info(TAG, "Releasing EGL state on EGL render view")
                 renderView.release()
             }
-            boundVideoViewMap.remove(renderView)
+            renderViewToBoundVideoTileMap.remove(renderView)
         }
     }
 
