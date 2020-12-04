@@ -150,13 +150,13 @@ class DefaultVideoTileController(
 
         renderViewToBoundVideoTileMap[videoView]?.let {
             logger.warn(TAG, "Override the binding from ${it.state.tileId} to $tileId")
-            removeVideoViewFromMap(it.state.tileId)
+            removeRenderViewFromBoundVideoTileMap(it.state.tileId)
         }
 
         videoTileMap[tileId]?.let {
             it.videoRenderView?.let {
                 logger.info(TAG, "tileId = $tileId already had a different video view. Unbinding the old one and associating the new one")
-                removeVideoViewFromMap(tileId)
+                removeRenderViewFromBoundVideoTileMap(tileId)
             }
             if (videoView is EglVideoRenderView) {
                 logger.info(TAG, "Initializing EGL state on EGL render view")
@@ -167,7 +167,7 @@ class DefaultVideoTileController(
         }
     }
 
-    private fun removeVideoViewFromMap(tileId: Int) {
+    private fun removeRenderViewFromBoundVideoTileMap(tileId: Int) {
         renderViewToBoundVideoTileMap.entries.firstOrNull { it.value.state.tileId == tileId }?.let {
             val renderView = it.key
             val videoTile = it.value
@@ -182,7 +182,7 @@ class DefaultVideoTileController(
 
     override fun unbindVideoView(tileId: Int) {
         logger.info(TAG, "Unbinding Tile with tileId = $tileId")
-        removeVideoViewFromMap(tileId)
+        removeRenderViewFromBoundVideoTileMap(tileId)
     }
 
     private fun onRemoveVideoTile(tileId: Int) {
