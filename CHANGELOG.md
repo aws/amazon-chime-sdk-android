@@ -11,6 +11,7 @@
 
 ### Changed
 * Refactored video view to resemble iOS UI so that video doesn't get cropped.
+* **Breaking** Changed SDK behavior to remove the internal video tile mapping entry when video is *removed*, instead of when video is *unbound*. This fixes [`onVideoTileAdded(tileState)` is sometimes not called issue](https://github.com/aws/amazon-chime-sdk-android/issues/186), and provides better API symmetry so that builders no longer need to call `unbindVideoView(tileId)` if they did not call `bindVideoView(videoView, tileId)`.
 
 ## [0.8.2] - 2020-12-11
 ## [0.8.1] - 2020-11-20
