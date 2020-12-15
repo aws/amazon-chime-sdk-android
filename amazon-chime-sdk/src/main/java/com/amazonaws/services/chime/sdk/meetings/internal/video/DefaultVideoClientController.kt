@@ -44,6 +44,7 @@ class DefaultVideoClientController(
     private val VIDEO_CLIENT_FLAG_ENABLE_TWO_SIMULCAST_STREAMS = 1 shl 12
     private val VIDEO_CLIENT_FLAG_DISABLE_CAPTURER = 1 shl 20
     private val VIDEO_CLIENT_FLAG_EXCLUDE_SELF_CONTENT_IN_INDEX = 1 shl 24
+    private val VIDEO_CLIENT_FLAG_ENABLE_INBAND_TURN_CREDS = 1 shl 26
 
     private val gson = Gson()
 
@@ -197,11 +198,13 @@ class DefaultVideoClientController(
         flag = flag or VIDEO_CLIENT_FLAG_ENABLE_TWO_SIMULCAST_STREAMS
         flag = flag or VIDEO_CLIENT_FLAG_DISABLE_CAPTURER
         flag = flag or VIDEO_CLIENT_FLAG_EXCLUDE_SELF_CONTENT_IN_INDEX
+        flag = flag or VIDEO_CLIENT_FLAG_ENABLE_INBAND_TURN_CREDS
         val videoClientConfig: VideoClientConfig = VideoClientConfigBuilder()
                 .setMeetingId(configuration.meetingId)
                 .setToken(configuration.credentials.joinToken)
                 .setFlags(flag)
                 .setSharedEglContext(eglCore?.eglContext)
+                .setSignalingUrl(configuration.urls.signalingURL)
                 .createVideoClientConfig()
         videoClient?.start(videoClientConfig)
 

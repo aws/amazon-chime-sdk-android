@@ -159,4 +159,8 @@ class DefaultContentShareVideoClientObserver(
             logger.verbose(TAG, message)
         }
     }
+
+    override fun onTurnURIsReceived(uris: List<String>): List<String> {
+        return uris.map(urlRewriter)
+    }
 }
