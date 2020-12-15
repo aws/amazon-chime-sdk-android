@@ -42,6 +42,7 @@ class DefaultContentShareVideoClientController(
     private val VIDEO_CLIENT_FLAG_ENABLE_TWO_SIMULCAST_STREAMS = 1 shl 12
     private val VIDEO_CLIENT_FLAG_DISABLE_CAPTURER = 1 shl 20
     private val VIDEO_CLIENT_FLAG_IS_CONTENT = 1 shl 23
+    private val VIDEO_CLIENT_FLAG_ENABLE_INBAND_TURN_CREDS = 1 shl 26
 
     override fun startVideoShare(videoSource: VideoSource) {
         // Start the given content share source
@@ -93,6 +94,7 @@ class DefaultContentShareVideoClientController(
         flag = flag or VIDEO_CLIENT_FLAG_ENABLE_TWO_SIMULCAST_STREAMS
         flag = flag or VIDEO_CLIENT_FLAG_DISABLE_CAPTURER
         flag = flag or VIDEO_CLIENT_FLAG_IS_CONTENT
+        flag = flag or VIDEO_CLIENT_FLAG_ENABLE_INBAND_TURN_CREDS
 
         val videoClientConfig: VideoClientConfig = VideoClientConfigBuilder()
             .setMeetingId(configuration.meetingId)
@@ -100,6 +102,7 @@ class DefaultContentShareVideoClientController(
             .setAudioHostUrl(configuration.urls.audioHostURL)
             .setFlags(flag)
             .setSharedEglContext(eglCore?.eglContext)
+            .setSignalingUrl(configuration.urls.signalingURL)
             .createVideoClientConfig()
         val result = videoClient?.start(videoClientConfig) ?: false
         logger.info(TAG, "Content share video client start result: $result")

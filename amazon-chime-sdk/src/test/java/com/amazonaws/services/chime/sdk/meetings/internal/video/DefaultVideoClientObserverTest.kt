@@ -15,7 +15,7 @@ import com.amazonaws.services.chime.sdk.meetings.internal.metric.ClientMetricsCo
 import com.amazonaws.services.chime.sdk.meetings.realtime.datamessage.DataMessageObserver
 import com.amazonaws.services.chime.sdk.meetings.session.MeetingSessionStatus
 import com.amazonaws.services.chime.sdk.meetings.session.MeetingSessionStatusCode
-import com.amazonaws.services.chime.sdk.meetings.session.defaultUrlRewriter
+import com.amazonaws.services.chime.sdk.meetings.session.URLRewriter
 import com.amazonaws.services.chime.sdk.meetings.utils.logger.Logger
 import com.xodee.client.audio.audioclient.AudioClient
 import com.xodee.client.video.DataMessage
@@ -59,6 +59,9 @@ class DefaultVideoClientObserverTest {
 
     @MockK
     private lateinit var mockVideoClientStateController: VideoClientStateController
+
+    @MockK
+    private lateinit var mockDefaultUrlRewriter: URLRewriter
 
     @MockK
     private lateinit var mockVideoClient: VideoClient
@@ -114,6 +117,10 @@ class DefaultVideoClientObserverTest {
         "externalId",
         false
     )
+    private val uri1 = "one"
+    private val uri2 = "two"
+    private val uri3 = "three"
+    private val turnUris = listOf<String>(uri1, uri2, uri3)
 
     @Before
     fun setUp() {
@@ -127,7 +134,7 @@ class DefaultVideoClientObserverTest {
                 turnRequestParams,
                 mockMetricsCollector,
                 mockVideoClientStateController,
-                ::defaultUrlRewriter
+                mockDefaultUrlRewriter
             )
         testVideoClientObserver.subscribeToVideoClientStateChange(mockAudioVideoObserver)
         testVideoClientObserver.subscribeToVideoTileChange(mockVideoTileController)
@@ -340,5 +347,16 @@ class DefaultVideoClientObserverTest {
         testVideoClientObserver.onDataMessageReceived(arrayOf(dataMessageWithAnotherTopic, dataMessageWithTopic))
 
         verify(exactly = 1) { mockDataMessageObserver.onDataMessageReceived(any()) }
+    }
+
+    @Test
+    fun `onTurnURIsReceived should call urlRewriter for each uri passed in`() {
+        every { mockDefaultUrlRewriter(uri1) } returns uri1
+        every { mockDefaultUrlRewriter(uri2) } returns uri2
+        every { mockDefaultUrlRewriter(uri3) } returns uri3
+        val outUris = testVideoClientObserver.onTurnURIsReceived(turnUris)
+
+        verify(exactly = 3) { mockDefaultUrlRewriter(any()) }
+        assert(outUris.equals(turnUris))
     }
 }

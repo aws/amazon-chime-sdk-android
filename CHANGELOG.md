@@ -8,12 +8,14 @@
 * Added screen share feature in demo app.
 * Added message for video tiles paused by poor network in demo app.
 * Added logic to `stopRemoteVideo`/`startRemoteVideo` when application is background/foregrounded to save network bandwidth in demo app.
+* Added TURN uris received callback.
 
 ### Changed
 * **Breaking** `AudioVideoFacade` now also implements `ContentShareController`.
 * **Breaking** Changed to take `ContentShareController` as an additional parameter of `DefaultAudioVideoFacade` constructor.
 * Changed AudioManager mode to be `MODE_IN_COMMUNICATION` only after builders call `audioVideo.start()`.
 * Update text of additional options on demo app.
+* Changes that support a speed up of video client initialization. `requestTurnCreds` callback will only be invoked as a backup for media layer logic. The signaling url is now passed into video client start. A new callback `onTurnURIsReceived` will be invoked when TURN uris are received by the client. This allows urls to be modified with urlRewriter or custom builder logic.
 
 ### Fixed
 * Fixed potential concurrency issue on `VideoSourceAdapter`.
