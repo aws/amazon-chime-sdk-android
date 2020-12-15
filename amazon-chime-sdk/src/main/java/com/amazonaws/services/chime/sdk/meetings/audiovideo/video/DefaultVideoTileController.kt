@@ -182,6 +182,8 @@ class DefaultVideoTileController(
 
     override fun unbindVideoView(tileId: Int) {
         logger.info(TAG, "Unbinding Tile with tileId = $tileId")
+        // Remove the video from both mappings when unbind, in order to keep the old SDK behavior
+        videoTileMap.remove(tileId)
         removeRenderViewFromBoundVideoTileMap(tileId)
     }
 
