@@ -126,4 +126,19 @@ class DefaultContentShareVideoClientObserverTest {
 
         verify { mockClientMetricsCollector.processContentShareVideoClientMetrics(any()) }
     }
+
+    @Test
+    fun `onTurnURIsReceived should call urlRewriter for each uri passed in`() {
+        val uri1 = "one"
+        val uri2 = "two"
+        val uri3 = "three"
+        every { mockURLRewriter(uri1) } returns uri1
+        every { mockURLRewriter(uri2) } returns uri2
+        every { mockURLRewriter(uri3) } returns uri3
+        val turnUris = listOf<String>(uri1, uri2, uri3)
+        val outUris = testContentShareVideoClientObserver.onTurnURIsReceived(turnUris)
+
+        verify(exactly = 3) { mockURLRewriter(any()) }
+        assert(outUris.equals(turnUris))
+    }
 }

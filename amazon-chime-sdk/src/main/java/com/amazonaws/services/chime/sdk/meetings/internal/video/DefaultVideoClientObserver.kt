@@ -241,6 +241,10 @@ class DefaultVideoClientObserver(
         }
     }
 
+    override fun onTurnURIsReceived(uris: List<String>): List<String> {
+        return uris.map(urlRewriter)
+    }
+
     override fun subscribeToVideoClientStateChange(observer: AudioVideoObserver) {
         videoClientStateObservers.add(observer)
     }
