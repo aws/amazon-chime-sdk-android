@@ -318,6 +318,16 @@ class DefaultVideoClientObserver(
         }
     }
 
+    override fun onTurnURIsReceived(uris: MutableList<String>?): MutableList<String>? {
+        if (uris == null) return null
+
+        var newUris: MutableList<String> = mutableListOf()
+        for (uri in uris) {
+            newUris.add(uri)
+        }
+        return newUris
+    }
+
     override fun subscribeToVideoClientStateChange(observer: AudioVideoObserver) {
         videoClientStateObservers.add(observer)
     }

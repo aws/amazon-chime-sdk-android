@@ -201,7 +201,8 @@ class DefaultVideoClientController(
             false,
             0,
             flag,
-            eglCore?.eglContext
+            eglCore?.eglContext,
+            configuration.urls.signalingURL
         )
 
         videoSourceAdapter?.let { videoClient?.setExternalVideoSource(it, eglCore?.eglContext) }
