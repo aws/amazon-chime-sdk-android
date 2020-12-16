@@ -1239,16 +1239,17 @@ class MeetingFragment : Fragment(),
     // Handle backgrounded app
     override fun onStart() {
         super.onStart()
-        if (meetingModel.isLocalVideoStarted) {
-            audioVideo.startLocalVideo()
+        if (meetingModel.wasLocalVideoStarted) {
+            startLocalVideo()
         }
         audioVideo.startRemoteVideo()
     }
 
     override fun onStop() {
         super.onStop()
-        if (meetingModel.isLocalVideoStarted) {
-            audioVideo.stopLocalVideo()
+        meetingModel.wasLocalVideoStarted = meetingModel.isLocalVideoStarted
+        if (meetingModel.wasLocalVideoStarted) {
+            stopLocalVideo()
         }
         audioVideo.stopRemoteVideo()
     }
