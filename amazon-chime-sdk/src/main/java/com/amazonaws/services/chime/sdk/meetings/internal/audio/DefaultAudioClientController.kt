@@ -121,14 +121,13 @@ class DefaultAudioClientController(
             )
             DEFAULT_PORT
         }
-
         setUpAudioConfiguration()
         audioClientObserver.notifyAudioClientObserver { observer ->
             observer.onAudioSessionStartedConnecting(
                 false
             )
         }
-
+        initAudioManager()
         uiScope.launch {
             val res = audioClient.startSession(
                 AudioClient.XTL_DEFAULT_TRANSPORT,
@@ -180,6 +179,10 @@ class DefaultAudioClientController(
                 }
             }
         }
+    }
+
+    private fun initAudioManager() {
+        audioManager.mode = AudioManager.MODE_IN_COMMUNICATION
     }
 
     private fun resetAudioManager() {
