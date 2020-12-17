@@ -1,4 +1,4 @@
-## Unreleased
+## 0.9.0 - 2020-12-17
 
 ### Added
 * Added video pagination feature in the Android demo app. Remote videos will be paginated into several pages. Each page contains at most 4 videos, and user can switch between different pages. Videos that are not being displayed will not consume any network bandwidth or computation resource.
