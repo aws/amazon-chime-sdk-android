@@ -1234,4 +1234,22 @@ class MeetingFragment : Fragment(),
         deviceDialog?.dismiss()
         unsubscribeFromAttendeeChangeHandlers()
     }
+
+    // Handle backgrounded app
+    override fun onStart() {
+        super.onStart()
+        if (meetingModel.wasLocalVideoStarted) {
+            startLocalVideo()
+        }
+        audioVideo.startRemoteVideo()
+    }
+
+    override fun onStop() {
+        super.onStop()
+        meetingModel.wasLocalVideoStarted = meetingModel.isLocalVideoStarted
+        if (meetingModel.wasLocalVideoStarted) {
+            stopLocalVideo()
+        }
+        audioVideo.stopRemoteVideo()
+    }
 }
