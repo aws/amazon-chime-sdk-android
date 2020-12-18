@@ -39,6 +39,7 @@ class MeetingModel : ViewModel() {
     var tabIndex = 0
     var isUsingCameraCaptureSource = true
     var isLocalVideoStarted = false
+    var wasLocalVideoStarted = false
     var isUsingGpuVideoProcessor = false
     var isUsingCpuVideoProcessor = false
 
