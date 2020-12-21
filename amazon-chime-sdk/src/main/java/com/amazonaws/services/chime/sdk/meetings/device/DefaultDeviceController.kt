@@ -49,7 +49,6 @@ class DefaultDeviceController(
                 }
 
                 override fun onAudioDevicesRemoved(removedDevices: Array<out AudioDeviceInfo>?) {
-                    audioManager.mode = AudioManager.MODE_IN_COMMUNICATION
                     notifyAudioDeviceChange()
                 }
             }
