@@ -1,7 +1,7 @@
 ## Unreleased
 
 ### Changed
-* Changed AudioManager mode in `DefaultAudioClientController` so that it doesn't change when builder didn't start the meeting.
+* Changed AudioManager mode to be `MODE_IN_COMMUNICATION` only after builders call `audioVideo.start()`
 
 ## 0.9.0 - 2020-12-17
 
