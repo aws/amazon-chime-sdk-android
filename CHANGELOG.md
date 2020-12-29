@@ -1,3 +1,8 @@
+## Unreleased
+
+### Changed
+* Changed AudioManager mode to be `MODE_IN_COMMUNICATION` only after builders call `audioVideo.start()`
+
 ## 0.9.0 - 2020-12-17
 
 ### Added
@@ -16,6 +21,7 @@
   * After this fix, the internal video tile mapping entry will be removed before `onVideoTileRemoved(tileState)` callback is called. Please check your `VideoTileObserver`s and make sure your `onVideoTileRemoved(tileState)` handlers do not call any SDK APIs that depend on the existance of video tiles (e.g. `bindVideoView(videoView, tileId)`).
 
 ## [0.8.2] - 2020-12-11
+
 ## [0.8.1] - 2020-11-20
 
 ## [0.8.0] - 2020-11-17

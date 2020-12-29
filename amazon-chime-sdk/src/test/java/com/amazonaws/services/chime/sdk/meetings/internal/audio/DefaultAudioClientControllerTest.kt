@@ -287,6 +287,23 @@ class DefaultAudioClientControllerTest {
     }
 
     @Test
+    fun `start should call AudioManger setMode`() {
+        setupStartTests()
+
+        audioClientController.start(
+                testAudioFallbackUrl,
+                testAudioHostUrl,
+                testMeetingId,
+                testAttendeeId,
+                testJoinToken
+        )
+
+        verify {
+            audioManager.mode = AudioManager.MODE_IN_COMMUNICATION
+        }
+    }
+
+    @Test
     fun `start should notify audioClientObserver about audio client connection events`() {
         setupStartTests()
 
