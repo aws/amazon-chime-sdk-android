@@ -19,6 +19,8 @@ import com.amazonaws.services.chime.sdk.meetings.utils.logger.Logger
 import com.google.gson.Gson
 import com.xodee.client.video.VideoClient
 import com.xodee.client.video.VideoClientCapturer
+import com.xodee.client.video.VideoClientConfig
+import com.xodee.client.video.VideoClientConfigBuilder
 import java.security.InvalidParameterException
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -195,16 +197,13 @@ class DefaultVideoClientController(
         flag = flag or VIDEO_CLIENT_FLAG_ENABLE_TWO_SIMULCAST_STREAMS
         flag = flag or VIDEO_CLIENT_FLAG_DISABLE_CAPTURER
         flag = flag or VIDEO_CLIENT_FLAG_EXCLUDE_SELF_CONTENT_IN_INDEX
-        videoClient?.javaStartServiceV3(
-            "",
-            "",
-            configuration.meetingId,
-            configuration.credentials.joinToken,
-            false,
-            0,
-            flag,
-            eglCore?.eglContext
-        )
+        val videoClientConfig: VideoClientConfig = VideoClientConfigBuilder()
+                .setMeetingId(configuration.meetingId)
+                .setToken(configuration.credentials.joinToken)
+                .setFlags(flag)
+                .setSharedEglContext(eglCore?.eglContext)
+                .createVideoClientConfig()
+        videoClient?.start(videoClientConfig)
 
         videoSourceAdapter.let { videoClient?.setExternalVideoSource(it, eglCore?.eglContext) }
     }

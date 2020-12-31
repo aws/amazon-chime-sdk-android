@@ -92,7 +92,7 @@ class DefaultContentShareVideoClientControllerTest {
 
     @Test
     fun `startVideoShare should call VideoClientStateController setExternalVideoSource`() {
-        every { mockVideoClient.javaStartServiceV3(any(), any(), any(), any(), any(), any(), any(), any()) } returns true
+        every { mockVideoClient.start(any()) } returns true
         testContentShareVideoClientController.startVideoShare(mockVideoSource)
 
         verify(exactly = 1) { mockVideoClient.setExternalVideoSource(any(), any()) }
@@ -107,18 +107,18 @@ class DefaultContentShareVideoClientControllerTest {
 
     @Test
     fun `startVideoShare should call VideoClientStateController stopService first when is sharing`() {
-        every { mockVideoClient.javaStartServiceV3(any(), any(), any(), any(), any(), any(), any(), any()) } returns true
+        every { mockVideoClient.start(any()) } returns true
         testContentShareVideoClientController.startVideoShare(mockVideoSource)
 
         testContentShareVideoClientController.startVideoShare(mockVideoSource)
 
-        verify(exactly = 2) { mockVideoClient.javaStartServiceV3(any(), any(), any(), any(), any(), any(), any(), any()) }
+        verify(exactly = 2) { mockVideoClient.start(any()) }
         verify(exactly = 1) { mockVideoClient.javaStopService() }
     }
 
     @Test
     fun `startVideoShare should notify subscribed observer of onContentShareStopped event when failed`() {
-        every { mockVideoClient.javaStartServiceV3(any(), any(), any(), any(), any(), any(), any(), any()) } returns false
+        every { mockVideoClient.start(any()) } returns false
         testContentShareVideoClientController.subscribeToVideoClientStateChange(mockContentShareObserver)
 
         testContentShareVideoClientController.startVideoShare(mockVideoSource)

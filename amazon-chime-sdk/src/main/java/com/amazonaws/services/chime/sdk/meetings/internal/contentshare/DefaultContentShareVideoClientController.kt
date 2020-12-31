@@ -19,6 +19,8 @@ import com.amazonaws.services.chime.sdk.meetings.internal.video.VideoSourceAdapt
 import com.amazonaws.services.chime.sdk.meetings.session.MeetingSessionConfiguration
 import com.amazonaws.services.chime.sdk.meetings.utils.logger.Logger
 import com.xodee.client.video.VideoClient
+import com.xodee.client.video.VideoClientConfig
+import com.xodee.client.video.VideoClientConfigBuilder
 
 class DefaultContentShareVideoClientController(
     private val context: Context,
@@ -93,16 +95,15 @@ class DefaultContentShareVideoClientController(
         flag = flag or VIDEO_CLIENT_FLAG_ENABLE_TWO_SIMULCAST_STREAMS
         flag = flag or VIDEO_CLIENT_FLAG_DISABLE_CAPTURER
         flag = flag or VIDEO_CLIENT_FLAG_IS_CONTENT
-        val result = videoClient?.javaStartServiceV3(
-            "",
-            "",
-            configuration.meetingId,
-            configuration.credentials.joinToken,
-            false,
-            0,
-            flag,
-            eglCore?.eglContext
-        ) ?: false
+
+        val videoClientConfig: VideoClientConfig = VideoClientConfigBuilder()
+            .setMeetingId(configuration.meetingId)
+            .setToken(configuration.credentials.joinToken)
+            .setAudioHostUrl(configuration.urls.audioHostURL)
+            .setFlags(flag)
+            .setSharedEglContext(eglCore?.eglContext)
+            .createVideoClientConfig()
+        val result = videoClient?.start(videoClientConfig) as Boolean
         logger.info(TAG, "Content share video client start result: $result")
         return result
     }
