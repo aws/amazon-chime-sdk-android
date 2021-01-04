@@ -103,7 +103,7 @@ class DefaultContentShareVideoClientController(
             .setFlags(flag)
             .setSharedEglContext(eglCore?.eglContext)
             .createVideoClientConfig()
-        val result = videoClient?.start(videoClientConfig) as Boolean
+        val result = videoClient?.start(videoClientConfig) ?: false
         logger.info(TAG, "Content share video client start result: $result")
         return result
     }
