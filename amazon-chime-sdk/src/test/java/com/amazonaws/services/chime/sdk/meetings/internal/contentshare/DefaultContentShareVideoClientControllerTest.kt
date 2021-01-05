@@ -106,14 +106,13 @@ class DefaultContentShareVideoClientControllerTest {
     }
 
     @Test
-    fun `startVideoShare should call VideoClientStateController stopService first when is sharing`() {
+    fun `startVideoShare should not call VideoClientStateController startService again when is sharing`() {
         every { mockVideoClient.start(any()) } returns true
         testContentShareVideoClientController.startVideoShare(mockVideoSource)
 
         testContentShareVideoClientController.startVideoShare(mockVideoSource)
 
-        verify(exactly = 2) { mockVideoClient.start(any()) }
-        verify(exactly = 1) { mockVideoClient.javaStopService() }
+        verify(exactly = 1) { mockVideoClient.start(any()) }
     }
 
     @Test
