@@ -42,30 +42,28 @@ class DefaultContentShareVideoClientController(
     private val VIDEO_CLIENT_FLAG_IS_CONTENT = 1 shl 23
 
     override fun startVideoShare(videoSource: VideoSource) {
-        // Stop sharing the current source
-        if (isSharing) {
-            stopVideoShare()
-        }
-
         // Start the given content share source
         if (eglCore == null) {
             logger.debug(TAG, "Creating EGL core")
             eglCore = eglCoreFactory.createEglCore()
         }
 
-        if (videoClient == null) {
-            initializeVideoClient()
-        }
-
-        if (!startVideoClient()) {
-            ObserverUtils.notifyObserverOnMainThread(observers) {
-                it.onContentShareStopped(
-                    ContentShareStatus(
-                        ContentShareStatusCode.VideoServiceFailed
-                    )
-                )
+        // Start video client only when not currently sharing
+        if (!isSharing) {
+            if (videoClient == null) {
+                initializeVideoClient()
             }
-            return
+
+            if (!startVideoClient()) {
+                ObserverUtils.notifyObserverOnMainThread(observers) {
+                    it.onContentShareStopped(
+                        ContentShareStatus(
+                            ContentShareStatusCode.VideoServiceFailed
+                        )
+                    )
+                }
+                return
+            }
         }
 
         logger.debug(TAG, "Setting external video source to content share source")

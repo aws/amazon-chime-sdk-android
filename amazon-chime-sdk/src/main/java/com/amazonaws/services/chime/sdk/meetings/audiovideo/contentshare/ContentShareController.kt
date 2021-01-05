@@ -21,6 +21,9 @@ interface ContentShareController {
      * be invoked. If sharing fails or stops, [ContentShareObserver.onContentShareStopped]
      * will be invoked with [ContentShareStatus] as the cause.
      *
+     * This will call [VideoSource.addVideoSink] on the provided source
+     * and [VideoSource.removeVideoSink] on the previously provided source.
+     *
      * Calling this function repeatedly will replace the previous [ContentShareSource] as the one being
      * transmitted.
      *
@@ -34,7 +37,6 @@ interface ContentShareController {
      * Once the sharing stops successfully, [ContentShareObserver.onContentShareStopped]
      * will be invoked with status code [ContentShareStatusCode.OK].
      *
-     * This will call [VideoSource.removeVideoSink] on any previously provided video source.
      */
     fun stopContentShare()
 

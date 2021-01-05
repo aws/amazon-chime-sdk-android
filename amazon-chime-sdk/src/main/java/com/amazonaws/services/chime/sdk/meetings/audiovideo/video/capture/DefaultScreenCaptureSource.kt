@@ -30,10 +30,10 @@ import kotlinx.coroutines.android.asCoroutineDispatcher
 import kotlinx.coroutines.runBlocking
 
 /**
- * [DefaultScreenCaptureSource] uses [MediaProjection] to create a [virtualDisplay] to capture the
+ * [DefaultScreenCaptureSource] uses [MediaProjection] to create a [VirtualDisplay] to capture the
  * device screen. It will render the captured frames to a [Surface] provided by a [SurfaceTextureCaptureSourceFactory].
  *
- * Builders will need to get permission from users to obtain the [activityResultCode] and [activityData] arguments ,
+ * Builders will need to get permission from users to obtain the [activityResultCode] and [activityData] arguments,
  * required to create an internal [MediaProjection] object.
  * Read [content share guide](https://github.com/aws/amazon-chime-sdk-android/blob/master/guides/content_share.md) for more information.
  */
@@ -103,7 +103,7 @@ class DefaultScreenCaptureSource(
             // Set this to no-op any future restart requests on the handler
             isRestartingForOrientationChange = false
 
-            // Notify here so restarts do not
+            // Notify here so restarts do not trigger the callback
             ObserverUtils.notifyObserverOnMainThread(observers) {
                 it.onCaptureStarted()
             }
@@ -178,7 +178,7 @@ class DefaultScreenCaptureSource(
             // Set this to no-op any future restart requests on the handler
             isRestartingForOrientationChange = false
 
-            // Notify here so restarts do not
+            // Notify here so restarts do not trigger the callback
             ObserverUtils.notifyObserverOnMainThread(observers) {
                 it.onCaptureStopped()
             }

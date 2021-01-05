@@ -1,15 +1,16 @@
 ## Unreleased
 
 ### Added
-* **Breaking** Added `ContentShareController` as an additional parameter of `DefaultAudioVideoFacade` constructor.
 * **Breaking** Added content share metrics as new enums in `ObservableMetric`.
-* Added content share feature, read [content share guide](https://github.com/aws/amazon-chime-sdk-android/blob/master/guides/content_share.md) for details.
+* Added content share APIs that supports a 2nd video sending stream such as screen capture, read [content share guide](https://github.com/aws/amazon-chime-sdk-android/blob/master/guides/content_share.md) for details.
 * Added `minFps` to `SurfaceTextureCaptureSource` as a property to help encoder improve the quality.
 * Added `createContentShareMeetingSessionConfiguration` as helper function in `MeetingSessionConfiguration` to generate content configuration based on the existing session.
 * Added screen share feature in demo app.
 * Added message for video tiles paused by poor network in demo app.
 
 ### Changed
+* **Breaking** `AudioVideoFacade` now also implements `ContentShareController`.
+* **Breaking** Changed to take `ContentShareController` as an additional parameter of `DefaultAudioVideoFacade` constructor.
 * Changed AudioManager mode to be `MODE_IN_COMMUNICATION` only after builders call `audioVideo.start()`.
 * Update text of additional options on demo app.
 

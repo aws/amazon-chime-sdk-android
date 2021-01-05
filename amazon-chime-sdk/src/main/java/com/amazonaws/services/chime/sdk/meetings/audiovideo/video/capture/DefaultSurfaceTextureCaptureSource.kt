@@ -198,7 +198,7 @@ class DefaultSurfaceTextureCaptureSource(
         frame.release()
 
         // If we have min FPS set, check in a while if we should resend the previous frame
-        if (minFps != 0) {
+        if (minFps > 0) {
             lastAlignedTimestamp = alignedTimestamp
             val resendDelayMs = RESEND_DELAY_BUFFER_MS + (1f / minFps) * 1000
             handler.postDelayed({

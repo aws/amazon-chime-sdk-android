@@ -17,7 +17,7 @@ interface ContentShareVideoClientController {
     /**
      * Start to share video with a provided custom [VideoSource] which can be used to provide custom
      * [VideoFrame]s to be transmitted to remote clients. This will call [VideoSource.addVideoSink]
-     * on the provided source.
+     * on the provided source and [VideoSource.removeVideoSink] on the previously provided source.
      *
      * Calling this function repeatedly will replace the previous [VideoSource] as the one being
      * transmitted.
@@ -27,8 +27,7 @@ interface ContentShareVideoClientController {
     fun startVideoShare(videoSource: VideoSource)
 
     /**
-     * Stop sending video to remote clients, this will call [VideoSource.removeVideoSink]
-     * on the previously provided source.
+     * Stop sending video to remote clients.
      */
     fun stopVideoShare()
 
