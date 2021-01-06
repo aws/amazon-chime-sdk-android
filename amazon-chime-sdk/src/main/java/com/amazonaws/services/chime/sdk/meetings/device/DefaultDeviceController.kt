@@ -49,7 +49,6 @@ class DefaultDeviceController(
                 }
 
                 override fun onAudioDevicesRemoved(removedDevices: Array<out AudioDeviceInfo>?) {
-                    audioManager.mode = AudioManager.MODE_IN_COMMUNICATION
                     notifyAudioDeviceChange()
                 }
             }
@@ -70,7 +69,6 @@ class DefaultDeviceController(
                 receiver, IntentFilter(BluetoothDevice.ACTION_ACL_DISCONNECTED)
             )
         }
-        audioManager.mode = AudioManager.MODE_IN_COMMUNICATION
     }
 
     override fun listAudioDevices(): List<MediaDevice> {

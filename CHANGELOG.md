@@ -1,7 +1,23 @@
 ## Unreleased
 
 ### Added
-* Added logic to `stopRemoteVideo`/`startRemoteVideo` when application is background/foregrounded to save network bandwidth
+
+* **Breaking** Added content share metrics as new enums in `ObservableMetric`.
+* Added content share APIs that supports a 2nd video sending stream such as screen capture, read [content share guide](https://github.com/aws/amazon-chime-sdk-android/blob/master/guides/content_share.md) for details.
+* Added `minFps` to `SurfaceTextureCaptureSource` as a property to help encoder improve the quality.
+* Added `createContentShareMeetingSessionConfiguration` as helper function in `MeetingSessionConfiguration` to generate content configuration based on the existing session.
+* Added screen share feature in demo app.
+* Added message for video tiles paused by poor network in demo app.
+* Added logic to `stopRemoteVideo`/`startRemoteVideo` when application is background/foregrounded to save network bandwidth in demo app.
+
+### Changed
+* **Breaking** `AudioVideoFacade` now also implements `ContentShareController`.
+* **Breaking** Changed to take `ContentShareController` as an additional parameter of `DefaultAudioVideoFacade` constructor.
+* Changed AudioManager mode to be `MODE_IN_COMMUNICATION` only after builders call `audioVideo.start()`.
+* Update text of additional options on demo app.
+
+### Fixed
+* Fixed potential concurrency issue on `VideoSourceAdapter`.
 
 ## 0.9.0 - 2020-12-17
 
@@ -20,6 +36,7 @@
   * After this fix, the internal video tile mapping entry will be removed before `onVideoTileRemoved(tileState)` callback is called. Please check your `VideoTileObserver`s and make sure your `onVideoTileRemoved(tileState)` handlers do not call any SDK APIs that depend on the existance of video tiles (e.g. `bindVideoView(videoView, tileId)`).
 
 ## [0.8.2] - 2020-12-11
+
 ## [0.8.1] - 2020-11-20
 
 ## [0.8.0] - 2020-11-17

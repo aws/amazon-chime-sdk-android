@@ -89,6 +89,18 @@ class DefaultClientMetricsCollectorTest {
     }
 
     @Test
+    fun `onMetrics for content share should call observer after interval has passed and observer should not receive any null metrics`() {
+        clientMetricsCollector.subscribeToMetrics(mockMetricsObserver)
+        val rawMetrics = mutableMapOf(VideoClient.VIDEO_SEND_FPS to 10.0)
+        val observableMetrics =
+            mutableMapOf(ObservableMetric.contentShareVideoSendFps to 10.0)
+
+        clientMetricsCollector.processContentShareVideoClientMetrics(rawMetrics)
+
+        verify(exactly = 1) { mockMetricsObserver.onMetricsReceived(observableMetrics) }
+    }
+
+    @Test
     fun `onMetrics should not emit non-observable metrics`() {
         clientMetricsCollector.subscribeToMetrics(mockMetricsObserver)
         val rawMetrics =

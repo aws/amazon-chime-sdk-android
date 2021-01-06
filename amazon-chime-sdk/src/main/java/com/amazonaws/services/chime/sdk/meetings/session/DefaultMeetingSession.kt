@@ -10,6 +10,7 @@ import com.amazonaws.services.chime.sdk.meetings.audiovideo.AudioVideoFacade
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.DefaultAudioVideoController
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.DefaultAudioVideoFacade
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.audio.activespeakerdetector.DefaultActiveSpeakerDetector
+import com.amazonaws.services.chime.sdk.meetings.audiovideo.contentshare.DefaultContentShareController
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.DefaultVideoTileController
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.DefaultVideoTileFactory
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.gl.DefaultEglCoreFactory
@@ -18,6 +19,8 @@ import com.amazonaws.services.chime.sdk.meetings.device.DefaultDeviceController
 import com.amazonaws.services.chime.sdk.meetings.internal.audio.AudioClientFactory
 import com.amazonaws.services.chime.sdk.meetings.internal.audio.DefaultAudioClientController
 import com.amazonaws.services.chime.sdk.meetings.internal.audio.DefaultAudioClientObserver
+import com.amazonaws.services.chime.sdk.meetings.internal.contentshare.DefaultContentShareVideoClientController
+import com.amazonaws.services.chime.sdk.meetings.internal.contentshare.DefaultContentShareVideoClientObserver
 import com.amazonaws.services.chime.sdk.meetings.internal.metric.DefaultClientMetricsCollector
 import com.amazonaws.services.chime.sdk.meetings.internal.video.DefaultVideoClientController
 import com.amazonaws.services.chime.sdk.meetings.internal.video.DefaultVideoClientFactory
@@ -80,6 +83,8 @@ class DefaultMeetingSession(
                 configuration.urls.urlRewriter
             )
 
+        val videoClientFactory = DefaultVideoClientFactory()
+
         val videoClientController =
             DefaultVideoClientController(
                 context,
@@ -87,7 +92,7 @@ class DefaultMeetingSession(
                 videoClientStateController,
                 videoClientObserver,
                 configuration,
-                DefaultVideoClientFactory(),
+                videoClientFactory,
                 eglCoreFactory
             )
 
@@ -129,13 +134,49 @@ class DefaultMeetingSession(
                 videoClientObserver
             )
 
+        val contentShareConfiguration =
+            configuration.createContentShareMeetingSessionConfiguration()
+
+        val contentShareTurnRequestParams =
+            TURNRequestParams(
+                contentShareConfiguration.meetingId,
+                contentShareConfiguration.urls.signalingURL,
+                contentShareConfiguration.urls.turnControlURL,
+                contentShareConfiguration.credentials.joinToken
+            )
+
+        val contentShareObserver =
+            DefaultContentShareVideoClientObserver(
+                logger,
+                contentShareTurnRequestParams,
+                metricsCollector,
+                contentShareConfiguration.urls.urlRewriter
+            )
+
+        val contentShareVideoClientController =
+            DefaultContentShareVideoClientController(
+                context,
+                logger,
+                contentShareObserver,
+                contentShareConfiguration,
+                videoClientFactory,
+                eglCoreFactory
+            )
+
+        val contentShareController =
+            DefaultContentShareController(
+                logger,
+                contentShareVideoClientController
+            )
+
         audioVideo = DefaultAudioVideoFacade(
             context,
             audioVideoController,
             realtimeController,
             deviceController,
             videoTileController,
-            activeSpeakerDetector
+            activeSpeakerDetector,
+            contentShareController
         )
     }
 }

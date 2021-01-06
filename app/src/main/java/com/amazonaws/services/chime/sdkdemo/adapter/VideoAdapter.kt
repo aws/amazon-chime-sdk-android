@@ -23,6 +23,7 @@ import com.amazonaws.services.chime.sdkdemo.utils.inflate
 import com.amazonaws.services.chime.sdkdemo.utils.isLandscapeMode
 import kotlinx.android.synthetic.main.item_video.view.attendee_name
 import kotlinx.android.synthetic.main.item_video.view.on_tile_button
+import kotlinx.android.synthetic.main.item_video.view.poor_connection_message
 import kotlinx.android.synthetic.main.item_video.view.video_surface
 
 class VideoAdapter(
@@ -52,7 +53,7 @@ class VideoAdapter(
         context?.let {
             if (!videoCollectionTile.videoTileState.isContent) {
                 val viewportWidth = tabContentLayout.width
-                if (isLandscapeMode(context) == true) {
+                if (isLandscapeMode(context)) {
                     holder.tileContainer.layoutParams.width = viewportWidth / 2
                 } else {
                     holder.tileContainer.layoutParams.height = (VIDEO_ASPECT_RATIO_16_9 * viewportWidth).toInt()
@@ -84,6 +85,7 @@ class VideoHolder(
         // Save the bound VideoRenderView in order to explicitly control the visibility of SurfaceView.
         // This is to bypass the issue where we cannot hide a SurfaceView that overlaps with another one.
         videoCollectionTile.videoRenderView = view.video_surface
+        videoCollectionTile.pauseMessageView = view.poor_connection_message
 
         if (videoCollectionTile.videoTileState.isContent) {
             view.video_surface.contentDescription = "ScreenTile"
@@ -112,10 +114,13 @@ class VideoHolder(
             view.attendee_name.text = videoCollectionTile.attendeeName
             view.attendee_name.visibility = View.VISIBLE
             view.on_tile_button.visibility = View.VISIBLE
-            if (videoCollectionTile.videoTileState.pauseState == VideoPauseState.Unpaused) {
-                view.on_tile_button.setImageResource(R.drawable.ic_pause_video)
-            } else {
-                view.on_tile_button.setImageResource(R.drawable.ic_resume_video)
+            when (videoCollectionTile.videoTileState.pauseState) {
+                VideoPauseState.Unpaused ->
+                    view.on_tile_button.setImageResource(R.drawable.ic_pause_video)
+                VideoPauseState.PausedByUserRequest ->
+                    view.on_tile_button.setImageResource(R.drawable.ic_resume_video)
+                VideoPauseState.PausedForPoorConnection ->
+                    view.poor_connection_message.visibility = View.VISIBLE
             }
 
             view.on_tile_button.setOnClickListener {

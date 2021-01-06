@@ -1,0 +1,15 @@
+<!--
+  ~ Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+  ~ SPDX-License-Identifier: Apache-2.0
+  -->
+
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="72dp"
+    android:height="72dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+  <path
+      android:pathData="M6.113,13.03h3.5c0.496,0 0.898,0.403 0.898,0.898v4.91l6.398,-7.808h-3.5c-0.495,0 -0.898,-0.402 -0.898,-0.897L12.511,5.19l-6.398,7.84zM10.408,20.025c-0.108,0 -0.215,-0.02 -0.32,-0.06 -0.35,-0.133 -0.577,-0.462 -0.577,-0.837L9.511,14.03L5.9,14.03c-0.358,0 -0.673,-0.204 -0.82,-0.532 -0.147,-0.327 -0.09,-0.698 0.149,-0.966l6.7,-8.213c0.265,-0.296 0.65,-0.395 1.004,-0.258 0.35,0.133 0.577,0.462 0.577,0.837v5.132h3.604c0.36,0 0.676,0.205 0.823,0.533 0.148,0.328 0.09,0.7 -0.148,0.969l-6.7,8.176c-0.184,0.208 -0.43,0.317 -0.682,0.317z"
+      android:fillColor="#FFFFFF"
+      android:fillType="evenOdd"/>
+</vector>

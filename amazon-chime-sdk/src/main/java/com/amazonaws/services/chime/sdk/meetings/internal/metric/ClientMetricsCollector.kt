@@ -29,6 +29,14 @@ interface ClientMetricsCollector {
     fun processVideoClientMetrics(metrics: Map<Int, Double>)
 
     /**
+     * Collect the raw content share video client metrics and filter observable metrics for eventual
+     * callback to the observer
+     *
+     * @param metrics: Map<Int, Double> - Map of raw content share video client metric to value
+     */
+    fun processContentShareVideoClientMetrics(metrics: Map<Int, Double>)
+
+    /**
      * Subscribe to metric events with an [MetricsObserver].
      *
      * @param observer: [MetricsObserver] - The observer to subscribe to metrics with.
