@@ -51,6 +51,19 @@ class DefaultClientMetricsCollector :
         maybeEmitMetrics()
     }
 
+    override fun processContentShareVideoClientMetrics(metrics: Map<Int, Double>) {
+        // Currently, content share is send-only
+        cachedObservableMetrics[ObservableMetric.contentShareVideoSendBitrate] =
+            metrics[VideoClient.VIDEO_SEND_BITRATE]
+        cachedObservableMetrics[ObservableMetric.contentShareVideoSendPacketLossPercent] =
+            metrics[VideoClient.VIDEO_SEND_PACKET_LOSS_PERCENT]
+        cachedObservableMetrics[ObservableMetric.contentShareVideoSendFps] =
+            metrics[VideoClient.VIDEO_SEND_FPS]
+        cachedObservableMetrics[ObservableMetric.contentShareVideoSendRttMs] =
+            metrics[VideoClient.VIDEO_SEND_RTT]
+        maybeEmitMetrics()
+    }
+
     private fun maybeEmitMetrics() {
         val now = Calendar.getInstance().timeInMillis
         if (cachedObservableMetrics.isNotEmpty() && now - lastEmittedMetricsTime > METRICS_EMISSION_INTERVAL_MS) {

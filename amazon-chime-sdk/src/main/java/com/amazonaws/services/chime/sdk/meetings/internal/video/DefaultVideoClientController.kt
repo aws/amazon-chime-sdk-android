@@ -6,7 +6,6 @@
 package com.amazonaws.services.chime.sdk.meetings.internal.video
 
 import android.content.Context
-import com.amazonaws.services.chime.sdk.BuildConfig
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoSource
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.capture.CameraCaptureSource
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.capture.DefaultCameraCaptureSource
@@ -14,11 +13,14 @@ import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.capture.Defaul
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.gl.EglCore
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.gl.EglCoreFactory
 import com.amazonaws.services.chime.sdk.meetings.device.MediaDevice
+import com.amazonaws.services.chime.sdk.meetings.internal.utils.AppInfoUtil
 import com.amazonaws.services.chime.sdk.meetings.session.MeetingSessionConfiguration
 import com.amazonaws.services.chime.sdk.meetings.utils.logger.Logger
 import com.google.gson.Gson
 import com.xodee.client.video.VideoClient
 import com.xodee.client.video.VideoClientCapturer
+import com.xodee.client.video.VideoClientConfig
+import com.xodee.client.video.VideoClientConfigBuilder
 import java.security.InvalidParameterException
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -41,6 +43,7 @@ class DefaultVideoClientController(
     private val VIDEO_CLIENT_FLAG_ENABLE_USE_HW_DECODE_AND_RENDER = 1 shl 6
     private val VIDEO_CLIENT_FLAG_ENABLE_TWO_SIMULCAST_STREAMS = 1 shl 12
     private val VIDEO_CLIENT_FLAG_DISABLE_CAPTURER = 1 shl 20
+    private val VIDEO_CLIENT_FLAG_EXCLUDE_SELF_CONTENT_IN_INDEX = 1 shl 24
 
     private val gson = Gson()
 
@@ -174,8 +177,8 @@ class DefaultVideoClientController(
 
     override fun initializeVideoClient() {
         logger.info(TAG, "Initializing video client")
-        initializeAppDetailedInfo()
-        VideoClient.initializeGlobals(context)
+        AppInfoUtil.initializeVideoClientAppDetailedInfo(context)
+        VideoClient.javaInitializeGlobals(context)
         VideoClientCapturer.getInstance(context)
         videoClient = videoClientFactory.getVideoClient(videoClientObserver)
     }
@@ -187,23 +190,21 @@ class DefaultVideoClientController(
         flag = flag or VIDEO_CLIENT_FLAG_ENABLE_USE_HW_DECODE_AND_RENDER
         flag = flag or VIDEO_CLIENT_FLAG_ENABLE_TWO_SIMULCAST_STREAMS
         flag = flag or VIDEO_CLIENT_FLAG_DISABLE_CAPTURER
-        videoClient?.startServiceV3(
-            "",
-            "",
-            configuration.meetingId,
-            configuration.credentials.joinToken,
-            false,
-            0,
-            flag,
-            eglCore?.eglContext
-        )
+        flag = flag or VIDEO_CLIENT_FLAG_EXCLUDE_SELF_CONTENT_IN_INDEX
+        val videoClientConfig: VideoClientConfig = VideoClientConfigBuilder()
+                .setMeetingId(configuration.meetingId)
+                .setToken(configuration.credentials.joinToken)
+                .setFlags(flag)
+                .setSharedEglContext(eglCore?.eglContext)
+                .createVideoClientConfig()
+        videoClient?.start(videoClientConfig)
 
-        videoSourceAdapter?.let { videoClient?.setExternalVideoSource(it, eglCore?.eglContext) }
+        videoSourceAdapter.let { videoClient?.setExternalVideoSource(it, eglCore?.eglContext) }
     }
 
     override fun stopVideoClient() {
         logger.info(TAG, "Stopping video client")
-        videoClient?.stopService()
+        videoClient?.javaStopService()
         // SDK owns the lifecycle of the internal capture source
         stopInternalCaptureSourceIfRunning()
     }
@@ -213,28 +214,6 @@ class DefaultVideoClientController(
         videoClient?.destroy()
         videoClient = null
         VideoClient.finalizeGlobals()
-    }
-
-    private fun initializeAppDetailedInfo() {
-        val manufacturer = android.os.Build.MANUFACTURER
-        val model = android.os.Build.MODEL
-        val osVersion = android.os.Build.VERSION.RELEASE
-        val packageName = context.packageName
-        val packageInfo = context.packageManager.getPackageInfo(packageName, 0)
-        val appVer = packageInfo.versionName
-        val appCode = packageInfo.versionCode.toString()
-        val clientSource = "amazon-chime-sdk"
-        val sdkVersion = BuildConfig.VERSION_NAME
-
-        VideoClient.AppDetailedInfo.initialize(
-            String.format("Android %s", appVer),
-            appCode,
-            model,
-            manufacturer,
-            osVersion,
-            clientSource,
-            sdkVersion
-        )
     }
 
     private fun stopInternalCaptureSourceIfRunning() {

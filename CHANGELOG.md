@@ -1,7 +1,21 @@
 ## Unreleased
 
+### Added
+* **Breaking** Added content share metrics as new enums in `ObservableMetric`.
+* Added content share APIs that supports a 2nd video sending stream such as screen capture, read [content share guide](https://github.com/aws/amazon-chime-sdk-android/blob/master/guides/content_share.md) for details.
+* Added `minFps` to `SurfaceTextureCaptureSource` as a property to help encoder improve the quality.
+* Added `createContentShareMeetingSessionConfiguration` as helper function in `MeetingSessionConfiguration` to generate content configuration based on the existing session.
+* Added screen share feature in demo app.
+* Added message for video tiles paused by poor network in demo app.
+
 ### Changed
-* Changed AudioManager mode to be `MODE_IN_COMMUNICATION` only after builders call `audioVideo.start()`
+* **Breaking** `AudioVideoFacade` now also implements `ContentShareController`.
+* **Breaking** Changed to take `ContentShareController` as an additional parameter of `DefaultAudioVideoFacade` constructor.
+* Changed AudioManager mode to be `MODE_IN_COMMUNICATION` only after builders call `audioVideo.start()`.
+* Update text of additional options on demo app.
+
+### Fixed
+* Fixed potential concurrency issue on `VideoSourceAdapter`.
 
 ## [0.13.1] - 2021-01-08
 
@@ -14,7 +28,6 @@
 ### Added
 * Added video pagination feature in the Android demo app. Remote videos will be paginated into several pages. Each page contains at most 4 videos, and user can switch between different pages. Videos that are not being displayed will not consume any network bandwidth or computation resource.
 * Added active speaker-based video tile feature in the Android demo app. Video tiles of active speakers will be promoted to the top of the list automatically.
-* Added logic to `stopRemoteVideo`/`startRemoteVideo` when application is background/foregrounded to save network bandwidth
 
 ### Fixed
 * Fixed a demo app issue that `SurfaceView` was not cleared up correctly when switching between Screen tab and Video tab.

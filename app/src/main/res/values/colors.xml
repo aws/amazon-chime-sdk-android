@@ -15,4 +15,5 @@
 
     <!-- For roster view -->
     <color name="colorBackground">#E9E9E9</color>
+    <color name="colorTranslucentBackground">#64000000</color>
 </resources>
