@@ -1,7 +1,6 @@
 ## Unreleased
 
 ### Added
-
 * **Breaking** Added content share metrics as new enums in `ObservableMetric`.
 * Added content share APIs that supports a 2nd video sending stream such as screen capture, read [content share guide](https://github.com/aws/amazon-chime-sdk-android/blob/master/guides/content_share.md) for details.
 * Added `minFps` to `SurfaceTextureCaptureSource` as a property to help encoder improve the quality.
