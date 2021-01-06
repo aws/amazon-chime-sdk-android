@@ -18,6 +18,7 @@ import com.xodee.client.video.VideoClientLogListener
  */
 interface VideoClientObserver : VideoClientDelegate, VideoClientLogListener,
     VideoClientDataMessageListener {
+
     /**
      * Subscribe to audio, video, and connection events with an [AudioVideoObserver].
      *

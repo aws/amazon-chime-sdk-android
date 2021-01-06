@@ -15,6 +15,7 @@ import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.buffer.VideoFr
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.buffer.VideoFrameTextureBuffer
 import com.amazonaws.services.chime.sdk.meetings.internal.metric.ClientMetricsCollector
 import com.amazonaws.services.chime.sdk.meetings.internal.utils.ObserverUtils
+import com.amazonaws.services.chime.sdk.meetings.internal.utils.TURNRequestUtils
 import com.amazonaws.services.chime.sdk.meetings.realtime.datamessage.DataMessage
 import com.amazonaws.services.chime.sdk.meetings.realtime.datamessage.DataMessageObserver
 import com.amazonaws.services.chime.sdk.meetings.session.MeetingSessionStatus
@@ -27,19 +28,10 @@ import com.xodee.client.video.VideoClient
 import com.xodee.client.video.VideoClient.VIDEO_CLIENT_NO_PAUSE
 import com.xodee.client.video.VideoClient.VIDEO_CLIENT_REMOTE_PAUSED_BY_LOCAL_BAD_NETWORK
 import com.xodee.client.video.VideoClient.VIDEO_CLIENT_REMOTE_PAUSED_BY_USER
-import java.io.BufferedReader
-import java.io.BufferedWriter
-import java.io.InputStreamReader
-import java.io.OutputStreamWriter
-import java.net.HttpURLConnection
-import java.net.URL
 import java.security.InvalidParameterException
-import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
-import org.json.JSONObject
 
 class DefaultVideoClientObserver(
     private val logger: Logger,
@@ -49,20 +41,12 @@ class DefaultVideoClientObserver(
     private val urlRewriter: URLRewriter
 ) : VideoClientObserver {
     private val TAG = "DefaultVideoClientObserver"
-    private val TOKEN_HEADER = "X-Chime-Auth-Token"
-    private val SYSPROP_USER_AGENT = "http.agent"
-    private val USER_AGENT_HEADER = "User-Agent"
-    private val CONTENT_TYPE_HEADER = "Content-Type"
-    private val CONTENT_TYPE = "application/json"
-    private val MEETING_ID_KEY = "meetingId"
-    private val TOKEN_KEY = "_aws_wt_session"
 
     private var videoClientStateObservers = mutableSetOf<AudioVideoObserver>()
     private var videoClientTileObservers = mutableSetOf<VideoTileController>()
     private var dataMessageObserversByTopic = mutableMapOf<String, MutableSet<DataMessageObserver>>()
 
     private val uiScope = CoroutineScope(Dispatchers.Main)
-    private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO
 
     override fun isConnecting(client: VideoClient?) {
         logger.info(TAG, "isConnecting")
@@ -202,7 +186,7 @@ class DefaultVideoClientObserver(
     override fun requestTurnCreds(client: VideoClient?) {
         logger.info(TAG, "requestTurnCreds")
         uiScope.launch {
-            val turnResponse: TURNCredentials? = doTurnRequest()
+            val turnResponse: TURNCredentials? = TURNRequestUtils.doTurnRequest(turnRequestParams, logger)
             with(turnResponse) {
                 val isActive = client?.isActive ?: false
                 if (this != null && isActive) {
@@ -233,67 +217,6 @@ class DefaultVideoClientObserver(
 
     override fun getAvailableDnsServers(): Array<String> {
         return emptyArray()
-    }
-
-    private suspend fun doTurnRequest(): TURNCredentials? {
-        return withContext(ioDispatcher) {
-            try {
-                val response = StringBuffer()
-                logger.info(TAG, "Making TURN Request")
-                with(URL(turnRequestParams.turnControlUrl).openConnection() as HttpURLConnection) {
-                    requestMethod = "POST"
-                    doInput = true
-                    doOutput = true
-                    addRequestProperty(TOKEN_HEADER, "$TOKEN_KEY=${turnRequestParams.joinToken}")
-                    setRequestProperty(CONTENT_TYPE_HEADER, CONTENT_TYPE)
-                    val user_agent = System.getProperty(SYSPROP_USER_AGENT)
-                    logger.info(TAG, "User Agent while doing TURN request is $user_agent")
-                    setRequestProperty(USER_AGENT_HEADER, user_agent)
-                    val out = BufferedWriter(OutputStreamWriter(outputStream))
-                    out.write(
-                        JSONObject().put(
-                            MEETING_ID_KEY,
-                            turnRequestParams.meetingId
-                        ).toString()
-                    )
-                    out.flush()
-                    out.close()
-                    BufferedReader(InputStreamReader(inputStream)).use {
-                        var inputLine = it.readLine()
-                        while (inputLine != null) {
-                            response.append(inputLine)
-                            inputLine = it.readLine()
-                        }
-                        it.close()
-                    }
-                    if (responseCode == 200) {
-                        logger.info(TAG, "TURN Request Success")
-                        var responseObject = JSONObject(response.toString())
-                        val jsonArray =
-                            responseObject.getJSONArray(TURNCredentials.TURN_CREDENTIALS_RESULT_URIS)
-                        val uris = arrayOfNulls<String>(jsonArray.length())
-                        for (i in 0 until jsonArray.length()) {
-                            uris[i] = jsonArray.getString(i)
-                        }
-                        TURNCredentials(
-                            responseObject.getString(TURNCredentials.TURN_CREDENTIALS_RESULT_USERNAME),
-                            responseObject.getString(TURNCredentials.TURN_CREDENTIALS_RESULT_PASSWORD),
-                            responseObject.getString(TURNCredentials.TURN_CREDENTIALS_RESULT_TTL),
-                            uris
-                        )
-                    } else {
-                        logger.error(
-                            TAG,
-                            "TURN Request got error with Response code: $responseCode"
-                        )
-                        null
-                    }
-                }
-            } catch (exception: Exception) {
-                logger.error(TAG, "Exception while doing TURN Request: $exception")
-                null
-            }
-        }
     }
 
     override fun onDataMessageReceived(dataMessages: Array<mediaDataMessage>?) {

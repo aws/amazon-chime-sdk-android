@@ -8,6 +8,9 @@ package com.amazonaws.services.chime.sdk.meetings.audiovideo
 import android.content.Context
 import androidx.core.content.ContextCompat
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.audio.activespeakerdetector.ActiveSpeakerDetectorFacade
+import com.amazonaws.services.chime.sdk.meetings.audiovideo.contentshare.ContentShareController
+import com.amazonaws.services.chime.sdk.meetings.audiovideo.contentshare.ContentShareObserver
+import com.amazonaws.services.chime.sdk.meetings.audiovideo.contentshare.ContentShareSource
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.metric.MetricsObserver
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoTileController
 import com.amazonaws.services.chime.sdk.meetings.device.DeviceChangeObserver
@@ -21,6 +24,7 @@ import io.mockk.MockKAnnotations
 import io.mockk.every
 import io.mockk.impl.annotations.InjectMockKs
 import io.mockk.impl.annotations.MockK
+import io.mockk.mockkClass
 import io.mockk.mockkStatic
 import io.mockk.verify
 import org.junit.Assert.assertEquals
@@ -57,6 +61,9 @@ class DefaultAudioVideoFacadeTest {
     private lateinit var mockMetricsObserver: MetricsObserver
 
     @MockK
+    private lateinit var mockContentShareObserver: ContentShareObserver
+
+    @MockK
     private lateinit var context: Context
 
     @MockK
@@ -73,6 +80,9 @@ class DefaultAudioVideoFacadeTest {
 
     @MockK
     private lateinit var activeSpeakerDetector: ActiveSpeakerDetectorFacade
+
+    @MockK
+    private lateinit var contentShareController: ContentShareController
 
     @InjectMockKs
     private lateinit var audioVideoFacade: DefaultAudioVideoFacade
@@ -250,5 +260,35 @@ class DefaultAudioVideoFacadeTest {
         audioVideoFacade.switchCamera()
 
         verify { deviceController.switchCamera() }
+    }
+
+    @Test
+    fun `startContentShare should call contentShareController startContentShare`() {
+        val source = mockkClass(ContentShareSource::class)
+
+        audioVideoFacade.startContentShare(source)
+
+        verify { contentShareController.startContentShare(source) }
+    }
+
+    @Test
+    fun `stopContentShare should call contentShareController stopContentShare`() {
+        audioVideoFacade.stopContentShare()
+
+        verify { contentShareController.stopContentShare() }
+    }
+
+    @Test
+    fun `addContentShareObserver should call deviceController addContentShareObserver with given observer`() {
+        audioVideoFacade.addContentShareObserver(mockContentShareObserver)
+
+        verify { contentShareController.addContentShareObserver(mockContentShareObserver) }
+    }
+
+    @Test
+    fun `removeContentShareObserver should call deviceController removeContentShareObserver with given observer`() {
+        audioVideoFacade.removeContentShareObserver(mockContentShareObserver)
+
+        verify { contentShareController.removeContentShareObserver(mockContentShareObserver) }
     }
 }

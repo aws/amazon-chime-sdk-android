@@ -195,8 +195,8 @@ class DefaultVideoTileController(
     }
 
     private fun onAddVideoTile(tileId: Int, attendeeId: String?, pauseState: VideoPauseState, videoStreamContentWidth: Int, videoStreamContentHeight: Int) {
-        var isLocalTile: Boolean
-        var thisAttendeeId: String
+        val isLocalTile: Boolean
+        val thisAttendeeId: String
 
         if (attendeeId != null) {
             thisAttendeeId = attendeeId

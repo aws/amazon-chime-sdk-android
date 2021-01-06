@@ -9,7 +9,7 @@ package com.amazonaws.services.chime.sdk.meetings.audiovideo.metric
  * [ObservableMetric] represents filtered metrics that are intended to propagate to the
  * top level observers. All metrics are measured over the past second.
  */
-enum class ObservableMetric() {
+enum class ObservableMetric {
     /**
      * Percentage of audio packets lost from server to client
      */
@@ -59,4 +59,31 @@ enum class ObservableMetric() {
      * Percentage of video packets lost from server to client across all receive streams
      */
     videoReceivePacketLossPercent,
+
+    /* Below are metrics for content share stream */
+
+    /**
+     * Sum of total bitrate across all send streams
+     */
+    contentShareVideoSendBitrate,
+
+    /**
+     * Percentage of video packets lost from client to server across all send streams
+     */
+    contentShareVideoSendPacketLossPercent,
+
+    /**
+     * Average send FPS across all send streams
+     */
+    contentShareVideoSendFps,
+
+    /**
+     * Round trip time of packets sent from client to server
+     */
+    contentShareVideoSendRttMs;
+
+    /**
+     * Determine if the metric is for content share stream
+     */
+    fun isContentShareMetric() = this.name.startsWith("contentShare")
 }

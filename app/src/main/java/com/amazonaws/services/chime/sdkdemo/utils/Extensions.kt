@@ -21,6 +21,6 @@ fun encodeURLParam(string: String?): String {
     return URLEncoder.encode(string, "utf-8")
 }
 
-fun isLandscapeMode(context: Context?): Boolean? {
-    return context?.let { it.resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE }
+fun isLandscapeMode(context: Context?): Boolean {
+    return context?.let { it.resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE } ?: false
 }
