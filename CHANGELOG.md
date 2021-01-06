@@ -7,6 +7,7 @@
 * Added `createContentShareMeetingSessionConfiguration` as helper function in `MeetingSessionConfiguration` to generate content configuration based on the existing session.
 * Added screen share feature in demo app.
 * Added message for video tiles paused by poor network in demo app.
+* Added logic to `stopRemoteVideo`/`startRemoteVideo` when application is background/foregrounded to save network bandwidth in demo app.
 
 ### Changed
 * **Breaking** `AudioVideoFacade` now also implements `ContentShareController`.
