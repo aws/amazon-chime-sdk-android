@@ -39,7 +39,7 @@ class HomeActivity : AppCompatActivity() {
     private val uiScope = CoroutineScope(Dispatchers.Main)
     private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO
 
-    private val MEETING_REGION = "us-east-1"
+    private val MEETING_REGION = "us-east-2"
     private val TAG = "MeetingHomeActivity"
     private val WEBRTC_PERMISSION_REQUEST_CODE = 1
 
