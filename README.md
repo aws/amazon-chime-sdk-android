@@ -131,13 +131,13 @@ If you discover a potential security issue in this project we ask that you notif
 
 To start sending/receiving audio, you’ll just need to start the session.
 
-```
+```kotlin
 audioVideo.start()
 ```
 
 #### Use case 2. Add an observer to receive audio and video session life cycle events. 
 
-```
+```kotlin
 class MainActivity: AudioVideoObserver {
     override fun onAudioSessionStartedConnecting(reconnecting: Boolean) {}
     override fun onAudioSessionStarted(reconnecting: Boolean) {
@@ -169,7 +169,7 @@ class MainActivity: AudioVideoObserver {
 
 List available devices that can be used for the meeting.
 
-```
+```kotlin
 // You will receieve something similar to [Pixel 3 XL (Handset), Pixel 3 XL (Speaker), Galaxy Buds+ (F4C1) (Bluetooth)]
 val devices = audioVideo.listAudioDevices()
 ```
@@ -182,7 +182,7 @@ val devices = audioVideo.listAudioDevices()
 
 > NOTE: You should call chooseAudioDevice with one of devices returned from listAudioDevices()
 
-```
+```kotlin
 val devices = audioVideo.listAudioDevices().filter {
     it.type != MediaDeviceType.OTHER)
 }.sortedBy { it.order } // get devices by its priority. You can use your own logic
@@ -199,7 +199,7 @@ if (devices.isNotEmpty()) {
 
 `switchCamera` will switch currently active camera. In order to get active camera, you can call [get-active-camera](https://aws.github.io/amazon-chime-sdk-android/amazon-chime-sdk/com.amazonaws.services.chime.sdk.meetings.device/-device-controller/get-active-camera.html)
 
-```
+```kotlin
 audioVideo.switchCamera() // front will switch to back and back will switch to front camera
 ```
 
@@ -207,7 +207,7 @@ audioVideo.switchCamera() // front will switch to back and back will switch to f
 
 Add `DeviceChangeObserver` to receive callback when new audio device is connected or audio device has been disconnected. For instance, if a bluetooth audio device is connected, `onAudioDeviceChanged` is called with the device list including the headphone.
 
-```
+```kotlin
 class MainActivity: DeviceChangeObserver {
     override fun onAudioDeviceChanged(freshAudioDeviceList: List<MediaDevice>) {
         // handle audio device selection or use your custom logic
@@ -229,7 +229,7 @@ class MainActivity: DeviceChangeObserver {
 
 > NOTE: `getActiveAudioDevice` API is supported from API Android 24 >= (Android 7.0) or higher.
 
-```
+```kotlin
 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
     val activeAudioDevice = audioVideo.getActiveAudioDevice()
 }
@@ -238,7 +238,7 @@ if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
 For versions, lower than Android 7.0, builders can achieve the same by manually implementing the following logic.
 Whenever you call `audioVideo.chooseAudioDevice` , you’ll have to manually update your `currentAudioDevice`.
 
-```
+```kotlin
 var activeAudioDevice: MediaDevice? = null
 override fun onAudioDeviceChanged(freshAudioDeviceList: List<MediaDevice>) {
     val device = // an element in the list of current available audio devices
@@ -253,7 +253,7 @@ override fun onAudioDeviceChanged(freshAudioDeviceList: List<MediaDevice>) {
 
 #### Use case 8. Mute and unmute an audio input
 
-```
+```kotlin
 val muted = audioVideo.realtimeLocalMute() // returns true if muted, false if failed
 
 val unmuted = audioVideo.realtimeLocalUnmute() // returns true if unmuted, false if failed
@@ -263,7 +263,7 @@ val unmuted = audioVideo.realtimeLocalUnmute() // returns true if unmuted, false
 
 You can use this to build real-time indicator UI on specific attendee
 
-```
+```kotlin
 class MainActivity: RealtimeObserver {
     override fun onVolumeChanged(volumeUpdates: Array<VolumeUpdate>) {
         // Update UI to show some volume level of attendees
@@ -301,7 +301,7 @@ class MainActivity: RealtimeObserver {
 
 > NOTE: You need to set `scoreCallbackIntervalMs` to receive callback for `onActiveSpeakerScoreChanged`. If this value is not set, you will only get `onActiveSpeakerDetected` callback. For basic use case, you can just use `onActiveSpeakerDetected.`
 
-```
+```kotlin
 class MainActivity: ActiveSpeakerObserver {
     override val scoreCallbackIntervalMs: Int? get() = 1000
     
@@ -330,13 +330,13 @@ You can find more details on adding/removing/viewing video from [building-a-meet
 
 #### Use case 11. Start receiving remote videos.
 
-```
+```kotlin
 audioVideo.startRemoteVideo()
 ```
 
 #### Use case 12. Start viewing remote video tiles.
 
-```
+```kotlin
 class MainActivity: VideoTileObserver {
     override fun onVideoTileAdded(tileState: VideoTileState) {
        if (!tileState.isLocalTile) {
@@ -355,13 +355,13 @@ class MainActivity: VideoTileObserver {
 
 #### Use case 13. Stop receiving remote videos.
 
-```
+```kotlin
 audioVideo.stopRemoteVideo()
 ```
 
 #### Use case 14. Stop viewing remote videos.
 
-```
+```kotlin
 class MainActivity: VideoTileObserver {
     override onVideoTileRemoved(tileState: VideoTileState) {
         // unbind video view to stop viewing the tile
@@ -376,7 +376,7 @@ class MainActivity: VideoTileObserver {
 
 > NOTE: From `onVideoTileAdded` callback, tileState should have property of `isLocalTile` true
 
-```
+```kotlin
 // start sharing local video
 // startLocalVideo will invoke onVideoTileAdded callback
  audioVideo.startLocalVideo()
@@ -384,7 +384,7 @@ class MainActivity: VideoTileObserver {
 
 #### Use case 16. Start viewing local video tile.
 
-```
+```kotlin
 class MainActivity : VideoTileObserver {
     // NOTE: Details on creating adapter is omitted.
     override fun onVideoTileAdded(tileState: VideoTileState) {
@@ -404,7 +404,7 @@ class MainActivity : VideoTileObserver {
 
 #### Use case 17. Stop sharing your video.
 
-```
+```kotlin
 // stop sharing local video
 // stopLocalVideo will invoke onVideoTileRemoved callback
 audioVideo.stopLocalVideo()
@@ -412,7 +412,7 @@ audioVideo.stopLocalVideo()
 
 #### Use case 18. Stop viewing local video tile.
 
-```
+```kotlin
 class MainActivity : VideoTileObserver {
     override onVideoTileRemoved(tileState: VideoTileState) {
         // unbind video view to stop viewing the tile
@@ -429,7 +429,7 @@ If you want more advanced video management, take a look at [video_pagination](ht
 
 #### Use case 19. Start viewing remote screen share.
 
-```
+```kotlin
 class MainActivity : VideoTileObserver {
     // NOTE: Details on creating adapter is omitted.
     
@@ -456,7 +456,7 @@ class MainActivity : VideoTileObserver {
 
 #### Use case 20. Start receiving metrics
 
-```
+```kotlin
 class MainActivity: MetricsObserver {
     override fun onMetricsReceived(metrics: Map<ObservableMetric, Any>) {
         // log any metrics
@@ -474,7 +474,7 @@ You can receive real-time message from subscribed topic.
 
 > NOTE: topic needs to be alpha-numeric and it can include hyphen and underscores.
 
-```
+```kotlin
 const val DATA_MESSAGE_TOPIC = "chat"
 class MainActivity : DataMessageObserver {
     override fun onDataMessageReceived(dataMessage: DataMessage) {
@@ -492,7 +492,7 @@ You can send real time message to any subscribed topic.
 
 > NOTE: topic needs to be alpha-numeric and it can include hyphen and underscores. Data cannot exceed 2kb and lifetime should be positive integer 
 
-```
+```kotlin
 const val DATA_MESSAGE_TOPIC = "chat"
 const val DATA_MESSAGE_LIFETIME_MS = 1000
 
@@ -510,7 +510,7 @@ audioVideo.realtimeSendDataMessage(
 
 #### Use case 23. Stop a session
 
-```
+```kotlin
 class MainActivity : AudioVideoObserver, ... {
    
     override fun onAudioSessionStopped(sessionStatus: MeetingSessionStatus) {
@@ -545,7 +545,7 @@ Voice focus reduces the background noise in the meeting for better meeting exper
 
 #### Use case 24. Enable/Disable voice focus
 
-```
+```kotlin
 val success = audioVideo.realtimeSetVoiceFocusEnabled(true) // success = enabling voice focus successful
 
 val success = audioVideo.realtimeSetVoiceFocusEnabled(false) // success = enabling voice focus successful
@@ -554,6 +554,7 @@ val success = audioVideo.realtimeSetVoiceFocusEnabled(false) // success = enabli
 ### Custom Video Source
 
 Custom video source allows you to inject your own source to control the video such as applying filter to the video. Detailed guides can be found in [custom_video.md](https://github.com/aws/amazon-chime-sdk-android/blob/master/guides/custom_video.md)
+
 
 ---
 
