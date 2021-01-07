@@ -97,10 +97,7 @@ class DefaultVideoClientController(
     override fun startLocalVideo(source: VideoSource) {
         if (!videoClientStateController.canAct(VideoClientState.INITIALIZED)) return
 
-        if (isUsingInternalCaptureSource) {
-            cameraCaptureSource.stop()
-            isUsingInternalCaptureSource = false
-        }
+        stopInternalCaptureSourceIfRunning()
 
         videoSourceAdapter.source = source
         logger.info(TAG, "Setting external video source in media client to custom source")
@@ -113,10 +110,7 @@ class DefaultVideoClientController(
 
         logger.info(TAG, "Stopping local video")
         videoClient?.setSending(false)
-        if (isUsingInternalCaptureSource) {
-            cameraCaptureSource.stop()
-            isUsingInternalCaptureSource = false
-        }
+        stopInternalCaptureSourceIfRunning()
     }
 
     override fun startRemoteVideo() {
@@ -210,6 +204,8 @@ class DefaultVideoClientController(
     override fun stopVideoClient() {
         logger.info(TAG, "Stopping video client")
         videoClient?.stopService()
+        // SDK owns the lifecycle of the internal capture source
+        stopInternalCaptureSourceIfRunning()
     }
 
     override fun destroyVideoClient() {
@@ -239,5 +235,12 @@ class DefaultVideoClientController(
             clientSource,
             sdkVersion
         )
+    }
+
+    private fun stopInternalCaptureSourceIfRunning() {
+        if (isUsingInternalCaptureSource) {
+            cameraCaptureSource.stop()
+            isUsingInternalCaptureSource = false
+        }
     }
 }
