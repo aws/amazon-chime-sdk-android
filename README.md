@@ -212,7 +212,7 @@ class MyDeviceChangeObserver: DeviceChangeObserver {
     override fun onAudioDeviceChanged(freshAudioDeviceList: List<MediaDevice>) {
         // handle audio device selection or use your custom logic
         // You will receieve something similar to [Pixel 3 XL (Handset), Pixel 3 XL (Speaker), Galaxy Buds+ (F4C1) (Bluetooth)]
-        val devices = freshAudioDeviceList.*filter *{ it.type != MediaDeviceType.OTHER}.*sortedBy *{ it.order }
+        val devices = freshAudioDeviceList.filter { it.type != MediaDeviceType.OTHER}.sortedBy{ it.order }
         if (devices.isNotEmpty()) {
             audioVideo.chooseAudioDevice(device[0])
         }
