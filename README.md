@@ -138,7 +138,7 @@ audioVideo.start()
 #### Use case 2. Add an observer to receive audio and video session life cycle events. 
 
 ```
-class MyAudioVideoObserver: AudioVideoObserver {
+class MainActivity: AudioVideoObserver {
     override fun onAudioSessionStartedConnecting(reconnecting: Boolean) {}
     override fun onAudioSessionStarted(reconnecting: Boolean) {
         // It is recommeded to handle device selection such as listAudioDevice and chooseAudioDevice
@@ -158,9 +158,9 @@ class MyAudioVideoObserver: AudioVideoObserver {
         // Handle logic of receiving video/starting local video
     }
     override fun onVideoSessionStopped(sessionStatus: MeetingSessionStatus) {}
-}
 
-audioVideo.addAudioVideoObserver(MyAudioVideoObserver())
+    audioVideo.addAudioVideoObserver(this)
+}
 ```
 
 ### Device
@@ -208,18 +208,20 @@ audioVideo.switchCamera() // front will switch to back and back will switch to f
 Add `DeviceChangeObserver` to receive callback when new audio device is connected or audio device has been disconnected. For instance, if a bluetooth audio device is connected, `onAudioDeviceChanged` is called with the device list including the headphone.
 
 ```
-class MyDeviceChangeObserver: DeviceChangeObserver {
+class MainActivity: DeviceChangeObserver {
     override fun onAudioDeviceChanged(freshAudioDeviceList: List<MediaDevice>) {
         // handle audio device selection or use your custom logic
         // You will receieve something similar to [Pixel 3 XL (Handset), Pixel 3 XL (Speaker), Galaxy Buds+ (F4C1) (Bluetooth)]
-        val devices = freshAudioDeviceList.filter { it.type != MediaDeviceType.OTHER}.sortedBy{ it.order }
+        val devices = freshAudioDeviceList.filter{ it.type != MediaDeviceType.OTHER}.sortedBy{ it.order }
         if (devices.isNotEmpty()) {
             audioVideo.chooseAudioDevice(device[0])
         }
-    }    
+    }
+     
+    audioVideo.addDeviceChangeObserver(this) 
 }
 
-audioVideo.addDeviceChangeObserver(MyDeviceChangeObserver())
+
 
 ```
 
@@ -262,7 +264,7 @@ val unmuted = audioVideo.realtimeLocalUnmute() // returns true if unmuted, false
 You can use this to build real-time indicator UI on specific attendee
 
 ```
-class MyRealTimeObserver: RealtimeObserver {
+class MainActivity: RealtimeObserver {
     override fun onVolumeChanged(volumeUpdates: Array<VolumeUpdate>) {
         // Update UI to show some volume level of attendees
     }
@@ -289,10 +291,10 @@ class MyRealTimeObserver: RealtimeObserver {
     
     override fun onAttendeesUnmuted(attendeeInfo: Array<AttendeeInfo>) {
         // Update UI to show unmuted status of attendees
-    }   
+    }
+    
+    audioVideo.addRealtimeObserver(this)
 }
-
-audioVideo.addRealtimeObserver(MyRealTimeObserver())
 ```
 
 #### Use case 10. Detect active speakers. 
@@ -300,7 +302,7 @@ audioVideo.addRealtimeObserver(MyRealTimeObserver())
 > NOTE: You need to set `scoreCallbackIntervalMs` to receive callback for `onActiveSpeakerScoreChanged`. If this value is not set, you will only get `onActiveSpeakerDetected` callback. For basic use case, you can just use `onActiveSpeakerDetected.`
 
 ```
-class MyActiveSpeakerObserver: ActiveSpeakerObserver {
+class MainActivity: ActiveSpeakerObserver {
     override val scoreCallbackIntervalMs: Int? get() = 1000
     
     override fun onActiveSpeakerDetected(attendeeInfo: Array<AttendeeInfo>) {
@@ -313,11 +315,11 @@ class MyActiveSpeakerObserver: ActiveSpeakerObserver {
        // handle logic based on active speaker score changed.
        // You can compare them to get most active speaker
     }
+    
+    // Use default policy for active speaker. 
+    // If you want custom logic, implement your own ActiveSpeakerPolicy
+    audioVideo.addActiveSpeakerObserver(DefaultActiveSpeakerPolicy(), this)
 }
-
-// Use default policy for active speaker. 
-// If you want custom logic, implement your own ActiveSpeakerPolicy
-audioVideo.addActiveSpeakerObserver(DefaultActiveSpeakerPolicy(), MyActiveSpeakerObserver())
 ```
 
 ### Video
@@ -335,7 +337,7 @@ audioVideo.startRemoteVideo()
 #### Use case 12. Start viewing remote video tiles.
 
 ```
-class MyVideoTileObserver: VideoTileObserver {
+class MainActivity: VideoTileObserver {
     override fun onVideoTileAdded(tileState: VideoTileState) {
        if (!tileState.isLocalTile) {
             // In order to use binding, you can read more about
@@ -346,9 +348,9 @@ class MyVideoTileObserver: VideoTileObserver {
             audioVideo.bindVideoView(binding.remoteVideoView, tileState.tileId)
        }
     }
+    
+    audioVideo.addVideoTileObserver(this)
 }
-
-audioVideo.addVideoTileObserver(MyVideoTileObserver())
 ```
 
 #### Use case 13. Stop receiving remote videos.
@@ -360,14 +362,14 @@ audioVideo.stopRemoteVideo()
 #### Use case 14. Stop viewing remote videos.
 
 ```
-class MyVideoTileObserver: VideoTileObserver {
+class MainActivity: VideoTileObserver {
     override onVideoTileRemoved(tileState: VideoTileState) {
         // unbind video view to stop viewing the tile
         audioVideo.unbindVideoView(tileId)
     }
+    
+    audioVideo.addVideoTileObserver(this)
 }
-
-audioVideo.addVideoTileObserver(MyVideoTileObserver())
 ```
 
 #### Use case 15. Start sharing your video. 
@@ -383,7 +385,7 @@ audioVideo.addVideoTileObserver(MyVideoTileObserver())
 #### Use case 16. Start viewing local video tile.
 
 ```
-class MyVideoTileObserver : VideoTileObserver {
+class MainActivity : VideoTileObserver {
     // NOTE: Details on creating adapter is omitted.
     override fun onVideoTileAdded(tileState: VideoTileState) {
         if (tileState.isLocalTile) {
@@ -395,9 +397,9 @@ class MyVideoTileObserver : VideoTileObserver {
             audioVideo.bindVideoView(binding.localVideoView, tileState.tileId)
         }
     }
+    
+    audioVideo.addVideoTileObserver(this)
 }
-
-audioVideo.addVideoTileObserver(MyVideoTileObserver())
 ```
 
 #### Use case 17. Stop sharing your video.
@@ -411,14 +413,14 @@ audioVideo.stopLocalVideo()
 #### Use case 18. Stop viewing local video tile.
 
 ```
-class MyVideoTileObserver : VideoTileObserver {
+class MainActivity : VideoTileObserver {
     override onVideoTileRemoved(tileState: VideoTileState) {
         // unbind video view to stop viewing the tile
         audioVideo.unbindVideoView(tileId)
     }
+    
+    audioVideo.addVideoTileObserver(this)
 }
-
-audioVideo.addVideoTileObserver(MyVideoTileObserver())
 ```
 
 If you want more advanced video management, take a look at [video_pagination](https://github.com/aws/amazon-chime-sdk-android/blob/master/guides/video_pagination.md)
@@ -428,7 +430,7 @@ If you want more advanced video management, take a look at [video_pagination](ht
 #### Use case 19. Start viewing remote screen share.
 
 ```
-class MyVideoTileObserver : VideoTileObserver {
+class MainActivity : VideoTileObserver {
     // NOTE: Details on creating adapter is omitted.
     
     override fun onVideoTileAdded(tileState: VideoTileState) {
@@ -445,9 +447,9 @@ class MyVideoTileObserver : VideoTileObserver {
     override onVideoTileRemoved(tileState: VideoTileState) {
         audioVideo.unbindVideoView(tileId)
     }
+    
+    audioVideo.addVideoTileObserver(this)
 }
-
-audioVideo.addVideoTileObserver(MyVideoTileObserver())
 ```
 
 ### Metrics
@@ -455,13 +457,13 @@ audioVideo.addVideoTileObserver(MyVideoTileObserver())
 #### Use case 20. Start receiving metrics
 
 ```
-class MyMetricsObserver: MetricsObserver {
+class MainActivity: MetricsObserver {
     override fun onMetricsReceived(metrics: Map<ObservableMetric, Any>) {
         // log any metrics
-    }    
+    }
+    
+    audioVideo.addMetricsObserver(this) 
 }
-
-audioVideo.addMetricsObserver(MyMetricsObserver())
 ```
 
 ### Data Message
@@ -474,14 +476,14 @@ You can receive real-time message from subscribed topic.
 
 ```
 const val DATA_MESSAGE_TOPIC = "chat"
-class MyDataMessageObserver: DataMessageObserver {
+class MainActivity : DataMessageObserver {
     override fun onDataMessageReceived(dataMessage: DataMessage) {
         // handle data message
     }
+    
+    // You can also subscribe to different topic
+    audioVideo.addRealtimeDataMessageObserver(DATA_MESSAGE_TOPIC, this)
 }
-
-// You can also subscribe to different topic
-audioVideo.addRealtimeDataMessageObserver(DATA_MESSAGE_TOPIC, MyDataMessageObserver())
 ```
 
 #### Use case 22. Start sending data message
@@ -509,7 +511,7 @@ audioVideo.realtimeSendDataMessage(
 #### Use case 23. Stop a session
 
 ```
-class MeetingFragment : AudioVideoObserver, ... {
+class MainActivity : AudioVideoObserver, ... {
    
     override fun onAudioSessionStopped(sessionStatus: MeetingSessionStatus) {
         // This is where meeting ended.
@@ -552,7 +554,6 @@ val success = audioVideo.realtimeSetVoiceFocusEnabled(false) // success = enabli
 ### Custom Video Source
 
 Custom video source allows you to inject your own source to control the video such as applying filter to the video. Detailed guides can be found in [custom_video.md](https://github.com/aws/amazon-chime-sdk-android/blob/master/guides/custom_video.md)
-
 
 ---
 
