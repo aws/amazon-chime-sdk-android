@@ -15,6 +15,7 @@ import android.hardware.camera2.CameraMetadata
 import android.os.Handler
 import android.os.HandlerThread
 import android.os.Looper
+import android.util.Range
 import android.view.WindowManager
 import androidx.core.content.ContextCompat
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoContentHint
@@ -87,6 +88,9 @@ class DefaultCameraCaptureSourceTest {
     @MockK(relaxed = true)
     private lateinit var mockCameraSession: CameraCaptureSession
 
+    @MockK
+    private lateinit var mockObserver: CaptureSourceObserver
+
     private val testDispatcher = TestCoroutineDispatcher()
 
     @Before
@@ -132,9 +136,11 @@ class DefaultCameraCaptureSourceTest {
         every { mockCameraManager.getCameraCharacteristics("1") } returns mockBackCameraCharacteristics
         every { mockCameraManager.openCamera(any(), any<CameraDevice.StateCallback>(), any()) } just runs
         every { mockSurfaceTextureCaptureSourceFactory.createSurfaceTextureCaptureSource(any(), any(), any()) } returns mockSurfaceTextureCaptureSource
+        every { mockFrontCameraCharacteristics.get(CameraCharacteristics.CONTROL_AE_AVAILABLE_TARGET_FPS_RANGES) } returns arrayOf(Range(15, 15))
         every { mockFrontCameraCharacteristics.get(CameraCharacteristics.SENSOR_ORIENTATION) } returns 270
         every { mockFrontCameraCharacteristics.get(CameraCharacteristics.LENS_FACING) } returns CameraMetadata.LENS_FACING_FRONT
         every { mockFrontCameraCharacteristics.get(CameraCharacteristics.LENS_INFO_AVAILABLE_OPTICAL_STABILIZATION) } returns null
+        every { mockBackCameraCharacteristics.get(CameraCharacteristics.CONTROL_AE_AVAILABLE_TARGET_FPS_RANGES) } returns arrayOf(Range(15, 15))
         every { mockBackCameraCharacteristics.get(CameraCharacteristics.SENSOR_ORIENTATION) } returns 180
         every { mockBackCameraCharacteristics.get(CameraCharacteristics.LENS_FACING) } returns CameraMetadata.LENS_FACING_BACK
         every { mockContext.getSystemService(Context.WINDOW_SERVICE) } returns mockWindowManager
@@ -146,7 +152,7 @@ class DefaultCameraCaptureSourceTest {
         testDispatcher.cleanupTestCoroutines()
     }
 
-    @Ignore("Broken on jenkins")
+    @Ignore("Broken on build server, possible Mockk issue")
     fun `start creates and starts surface source, and calls CameraManager openCamera`() {
         testCameraCaptureSource.start()
 
@@ -156,7 +162,7 @@ class DefaultCameraCaptureSourceTest {
         verify { mockCameraManager.openCamera("0", any<CameraDevice.StateCallback>(), any()) }
     }
 
-    @Ignore("Broken on jenkins")
+    @Ignore("Broken on build server, possible Mockk issue")
     fun `stop stops and releases surface texture capture source`() {
         testCameraCaptureSource.start()
         testCameraCaptureSource.stop()
@@ -166,7 +172,7 @@ class DefaultCameraCaptureSourceTest {
         verify { mockSurfaceTextureCaptureSource.release() }
     }
 
-    @Ignore("Broken on jenkins")
+    @Ignore("Broken on build server, possible Mockk issue")
     fun `setting device will restart source`() {
         testCameraCaptureSource.start()
         testCameraCaptureSource.device = MediaDevice("back", MediaDeviceType.VIDEO_BACK_CAMERA, "1")
@@ -175,7 +181,7 @@ class DefaultCameraCaptureSourceTest {
         verify(exactly = 1) { mockCameraManager.openCamera("1", any<CameraDevice.StateCallback>(), any()) }
     }
 
-    @Ignore("Broken on jenkins")
+    @Ignore("Broken on build server, possible Mockk issue")
     fun `switchCamera will switch to back camera`() {
         testCameraCaptureSource.start()
         testCameraCaptureSource.switchCamera()
@@ -184,7 +190,7 @@ class DefaultCameraCaptureSourceTest {
         verify(exactly = 1) { mockCameraManager.openCamera("1", any<CameraDevice.StateCallback>(), any()) }
     }
 
-    @Ignore("Broken on jenkins")
+    @Ignore("Broken on build server, possible Mockk issue")
     fun `capturer will pass through frames`() {
         testCameraCaptureSource.addVideoSink(mockVideoSink)
         testCameraCaptureSource.start()
@@ -202,7 +208,7 @@ class DefaultCameraCaptureSourceTest {
         verify(exactly = 1) { mockVideoSink.onVideoFrameReceived(any()) }
     }
 
-    @Ignore("Broken on jenkins")
+    @Ignore("Broken on build server, possible Mockk issue")
     fun `onOpened triggers camera device createCaptureSession`() {
         val slot = slot<CameraDevice.StateCallback>()
         every { mockCameraManager.openCamera(any(), capture(slot), any()) } just runs
@@ -214,7 +220,7 @@ class DefaultCameraCaptureSourceTest {
         verify { mockCameraDevice.createCaptureSession(any(), any(), any()) }
     }
 
-    @Ignore("Broken on jenkins")
+    @Ignore("Broken on build server, possible Mockk issue")
     fun `onConfigured triggers setRepeatingRequest`() {
         val stateCallbackSlot = slot<CameraDevice.StateCallback>()
         every { mockCameraManager.openCamera(any(), capture(stateCallbackSlot), any()) } just runs
@@ -227,5 +233,41 @@ class DefaultCameraCaptureSourceTest {
         sessionCallbackSlot.captured.onConfigured(mockCameraSession)
 
         verify { mockCameraSession.setRepeatingRequest(any(), any(), any()) }
+    }
+
+    @Ignore("Broken on build server, possible Mockk issue")
+    fun `No FPS ranges trigger configuration error`() {
+        val stateCallbackSlot = slot<CameraDevice.StateCallback>()
+        every { mockCameraManager.openCamera(any(), capture(stateCallbackSlot), any()) } just runs
+        val sessionCallbackSlot = slot<CameraCaptureSession.StateCallback>()
+        every { mockCameraDevice.createCaptureSession(any(), capture(sessionCallbackSlot), any()) } just runs
+
+        every { mockFrontCameraCharacteristics.get(CameraCharacteristics.CONTROL_AE_AVAILABLE_TARGET_FPS_RANGES) } returns null
+
+        testCameraCaptureSource.addCaptureSourceObserver(mockObserver)
+        testCameraCaptureSource.start()
+
+        stateCallbackSlot.captured.onOpened(mockCameraDevice)
+        sessionCallbackSlot.captured.onConfigured(mockCameraSession)
+
+        verify { mockObserver.onCaptureFailed(CaptureSourceError.ConfigurationFailure) }
+    }
+
+    @Ignore("Broken on build server, possible Mockk issue")
+    fun `FPS range above max value still is selected`() {
+        val stateCallbackSlot = slot<CameraDevice.StateCallback>()
+        every { mockCameraManager.openCamera(any(), capture(stateCallbackSlot), any()) } just runs
+        val sessionCallbackSlot = slot<CameraCaptureSession.StateCallback>()
+        every { mockCameraDevice.createCaptureSession(any(), capture(sessionCallbackSlot), any()) } just runs
+
+        every { mockFrontCameraCharacteristics.get(CameraCharacteristics.CONTROL_AE_AVAILABLE_TARGET_FPS_RANGES) } returns arrayOf(Range(30, 30))
+
+        testCameraCaptureSource.addCaptureSourceObserver(mockObserver)
+        testCameraCaptureSource.start()
+
+        stateCallbackSlot.captured.onOpened(mockCameraDevice)
+        sessionCallbackSlot.captured.onConfigured(mockCameraSession)
+
+        verify { mockObserver.onCaptureFailed(CaptureSourceError.ConfigurationFailure) }
     }
 }
