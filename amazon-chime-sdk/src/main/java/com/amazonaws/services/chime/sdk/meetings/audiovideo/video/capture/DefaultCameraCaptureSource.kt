@@ -366,12 +366,17 @@ class DefaultCameraCaptureSource(
                     .filter { it.upper <= this.format.maxFps }
                     .minBy { this.format.maxFps - it.upper }
                     ?: run {
-                        logger.error(TAG, "No FPS ranges below set max FPS")
+                        logger.warn(TAG, "No FPS ranges below set max FPS")
+                        // Just fall back to the closest
+                        return@run fpsRanges.minBy { abs(this.format.maxFps - it.upper) }
+                    } ?: run {
+                        logger.error(TAG, "No valid FPS ranges")
                         ObserverUtils.notifyObserverOnMainThread(observers) {
                             it.onCaptureFailed(CaptureSourceError.ConfigurationFailure)
                         }
                         return
                     }
+
             logger.info(TAG, "Setting target FPS range to $bestFpsRange")
             captureRequestBuilder.set(
                 CaptureRequest.CONTROL_AE_TARGET_FPS_RANGE,
