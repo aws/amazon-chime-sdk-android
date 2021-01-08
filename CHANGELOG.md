@@ -1,7 +1,8 @@
-## Unreleased
+## [0.13.1] - 2021-01-08
 
 ### Fixed
 * Fix a bug that internal capture source was not stopped properly when the video client was being stopped.
+* Fix camera capture start failure on certain Android devices when there are no FPS ranges at or below desired FPS max.
 
 ## 0.9.0 - 2020-12-17
 
