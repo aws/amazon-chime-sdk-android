@@ -1,3 +1,8 @@
+## Unreleased
+
+### Fixed
+* Fix a bug that internal capture source was not stopped properly when the video client was being stopped.
+
 ## 0.9.0 - 2020-12-17
 
 ### Added
