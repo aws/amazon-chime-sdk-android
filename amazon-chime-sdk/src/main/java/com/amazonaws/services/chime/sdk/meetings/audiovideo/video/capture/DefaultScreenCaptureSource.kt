@@ -139,8 +139,8 @@ class DefaultScreenCaptureSource(
         // so we try to account for it with a manual adjustment to the surface size to avoid letterboxes
         surfaceTextureSource =
             surfaceTextureCaptureSourceFactory.createSurfaceTextureCaptureSource(
-                displayMetrics.widthPixels - (if (isOrientationInPortrait) 0 else getStatusBarHeight()),
-                displayMetrics.heightPixels,
+                (displayMetrics.widthPixels - (if (isOrientationInPortrait) 0 else getStatusBarHeight()) + 15) and 0XFFF0,
+                (displayMetrics.heightPixels + 15) and 0XFFF0,
                 contentHint
             )
         surfaceTextureSource?.minFps = MIN_FPS
