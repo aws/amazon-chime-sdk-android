@@ -52,10 +52,6 @@ class DefaultContentShareVideoClientObserver(
         }
     }
 
-    override fun onTurnURIsReceived(uris: List<String?>?): List<String?>? {
-        return uris
-    }
-
     override fun didFail(client: VideoClient?, status: Int, controlStatus: Int) {
         logger.info(TAG, "content share video client is failed with $controlStatus")
         resetContentShareVideoClientMetrics()
