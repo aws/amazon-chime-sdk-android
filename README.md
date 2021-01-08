@@ -6,7 +6,7 @@
 
 The Amazon Chime SDK for Android makes it easy to add collaborative audio calling,
 video calling, and screen share viewing features to Android applications by 
-using the same infrastructure services that power meetings on the Amazon 
+using the same infrastructure services that power meetings on the Amazon.
 Chime service.
 
 This Amazon Chime SDK for Android works by connecting to meeting session
