@@ -2,7 +2,7 @@
 
 > Note: If building with the SDK source code, the `development` branch contains bleeding-edge changes that may not build with the publically available Chime media library or may not be as stable as [public releases](https://github.com/aws/amazon-chime-sdk-android/releases).
 
-## Build video calling, audio calling, and screen sharing applications powered by Amazon Chime.
+## Build video calling, audio calling, and screen sharing applications powered by Amazon Chime
 
 The Amazon Chime SDK for Android makes it easy to add collaborative audio calling,
 video calling, and screen share viewing features to Android applications by 
