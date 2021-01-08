@@ -111,7 +111,7 @@ class DefaultScreenCaptureSource(
     }
 
     // Make an integer 16's multiples using bitwise and
-    private fun alignNumberBy16(number: Int):Int {
+    private fun alignNumberBy16(number: Int): Int {
         val maxIntAlignedBy16 = 0x7FFFFFF0
         return number and maxIntAlignedBy16
     }
