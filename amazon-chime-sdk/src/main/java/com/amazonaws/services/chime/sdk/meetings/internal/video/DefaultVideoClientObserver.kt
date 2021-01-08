@@ -164,6 +164,10 @@ class DefaultVideoClientObserver(
         sdkFrame?.release()
     }
 
+    override fun onTurnURIsReceived(uris: List<String?>?): List<String?>? {
+        return uris
+    }
+
     override fun onMetrics(metrics: IntArray?, values: DoubleArray?) {
         if (metrics == null || values == null) return
 
