@@ -110,6 +110,12 @@ class DefaultScreenCaptureSource(
         }
     }
 
+    // Make an integer 16's multiples using bitwise and
+    private fun alignNumberBy16(number: Int): Int {
+        val maxIntAlignedBy16 = 0x7FFFFFF0
+        return number and maxIntAlignedBy16
+    }
+
     // Separate internal function since only some logic is shared between external calls
     // and internal restarts; must be called on handler
     private fun startInternal() {
@@ -137,10 +143,12 @@ class DefaultScreenCaptureSource(
 
         // Note that in landscape, for some reason `getRealMetrics` doesn't account for the status bar correctly
         // so we try to account for it with a manual adjustment to the surface size to avoid letterboxes
+        // Some android device H.264 encoder is not able to handle size that is not multiples of 16 (such as Pixel3),
+        // so screenCapture surface size is aligned manually to avoid the issue
         surfaceTextureSource =
             surfaceTextureCaptureSourceFactory.createSurfaceTextureCaptureSource(
-                displayMetrics.widthPixels - (if (isOrientationInPortrait) 0 else getStatusBarHeight()),
-                displayMetrics.heightPixels,
+                alignNumberBy16(displayMetrics.widthPixels - (if (isOrientationInPortrait) 0 else getStatusBarHeight())),
+                alignNumberBy16(displayMetrics.heightPixels),
                 contentHint
             )
         surfaceTextureSource?.minFps = MIN_FPS
