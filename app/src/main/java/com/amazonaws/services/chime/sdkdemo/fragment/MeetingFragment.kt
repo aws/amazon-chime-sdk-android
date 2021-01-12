@@ -12,6 +12,7 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.media.projection.MediaProjectionManager
 import android.os.Bundle
+import android.os.PowerManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -99,6 +100,7 @@ class MeetingFragment : Fragment(),
     private var screenShareManager: ScreenShareManager? = null
 
     private lateinit var mediaProjectionManager: MediaProjectionManager
+    private lateinit var powerManager: PowerManager
     private lateinit var credentials: MeetingSessionCredentials
     private lateinit var audioVideo: AudioVideoFacade
     private lateinit var cameraCaptureSource: CameraCaptureSource
@@ -193,6 +195,7 @@ class MeetingFragment : Fragment(),
         audioDeviceManager = AudioDeviceManager(audioVideo)
 
         mediaProjectionManager = activity.getSystemService(Context.MEDIA_PROJECTION_SERVICE) as MediaProjectionManager
+        powerManager = activity.getSystemService(Context.POWER_SERVICE) as PowerManager
 
         view.findViewById<TextView>(R.id.textViewMeetingId)?.text = arguments?.getString(
             HomeActivity.MEETING_ID_KEY
@@ -1366,5 +1369,11 @@ class MeetingFragment : Fragment(),
             stopLocalVideo()
         }
         audioVideo.stopRemoteVideo()
+
+        // Turn off screen share when screen locked
+        if (meetingModel.isSharingContent && !powerManager.isInteractive) {
+            audioVideo.stopContentShare()
+            screenShareManager?.stop()
+        }
     }
 }
