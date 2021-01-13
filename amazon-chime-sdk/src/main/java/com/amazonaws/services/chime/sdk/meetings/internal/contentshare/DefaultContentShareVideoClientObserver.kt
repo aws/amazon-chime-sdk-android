@@ -5,10 +5,12 @@
 
 package com.amazonaws.services.chime.sdk.meetings.internal.contentshare
 
+import android.content.Context
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.contentshare.ContentShareObserver
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.contentshare.ContentShareStatus
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.contentshare.ContentShareStatusCode
 import com.amazonaws.services.chime.sdk.meetings.internal.metric.ClientMetricsCollector
+import com.amazonaws.services.chime.sdk.meetings.internal.utils.DNSServerUtils
 import com.amazonaws.services.chime.sdk.meetings.internal.utils.ObserverUtils
 import com.amazonaws.services.chime.sdk.meetings.internal.utils.TURNRequestUtils
 import com.amazonaws.services.chime.sdk.meetings.internal.video.TURNCredentials
@@ -22,6 +24,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 class DefaultContentShareVideoClientObserver(
+    private val context: Context,
     private val logger: Logger,
     private val turnRequestParams: TURNRequestParams,
     private val clientMetricsCollector: ClientMetricsCollector,
@@ -111,7 +114,7 @@ class DefaultContentShareVideoClientObserver(
     }
 
     override fun getAvailableDnsServers(): Array<String> {
-        return emptyArray()
+        return DNSServerUtils.getAvailableDnsServers(context, logger)
     }
 
     override fun onCameraChanged() {

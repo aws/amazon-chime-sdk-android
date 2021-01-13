@@ -20,14 +20,15 @@
 
 ### Fixed
 * Fixed potential concurrency issue on `VideoSourceAdapter`.
+* Fixed a video connection issue on network where DNS 8.8.8.8 is blocked. `ACCESS_NETWORK_STATE` permission is required to discover available DNS on the network.
 
-## [0.13.1] - 2021-01-08
+## [0.9.1] - 2021-01-08
 
 ### Fixed
 * Fix a bug that internal capture source was not stopped properly when the video client was being stopped.
 * Fix camera capture start failure on certain Android devices when there are no FPS ranges at or below desired FPS max.
 
-## 0.9.0 - 2020-12-17
+## [0.9.0] - 2020-12-17
 
 ### Added
 * Added video pagination feature in the Android demo app. Remote videos will be paginated into several pages. Each page contains at most 4 videos, and user can switch between different pages. Videos that are not being displayed will not consume any network bandwidth or computation resource.

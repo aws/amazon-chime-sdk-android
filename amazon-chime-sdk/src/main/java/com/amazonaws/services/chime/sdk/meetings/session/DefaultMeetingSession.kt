@@ -76,6 +76,7 @@ class DefaultMeetingSession(
             )
         val videoClientObserver =
             DefaultVideoClientObserver(
+                context,
                 logger,
                 turnRequestParams,
                 metricsCollector,
@@ -147,6 +148,7 @@ class DefaultMeetingSession(
 
         val contentShareObserver =
             DefaultContentShareVideoClientObserver(
+                context,
                 logger,
                 contentShareTurnRequestParams,
                 metricsCollector,

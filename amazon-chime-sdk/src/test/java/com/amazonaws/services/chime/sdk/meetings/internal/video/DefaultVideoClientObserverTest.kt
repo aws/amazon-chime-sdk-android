@@ -5,6 +5,7 @@
 
 package com.amazonaws.services.chime.sdk.meetings.internal.video
 
+import android.content.Context
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.AudioVideoObserver
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoFrame
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoRotation
@@ -50,6 +51,9 @@ class DefaultVideoClientObserverTest {
 
     @MockK
     private lateinit var mockAnotherDataMessageObserver: DataMessageObserver
+
+    @MockK
+    private lateinit var mockContext: Context
 
     @MockK
     private lateinit var mockLogger: Logger
@@ -130,6 +134,7 @@ class DefaultVideoClientObserverTest {
         MockKAnnotations.init(this, relaxUnitFun = true)
         testVideoClientObserver =
             DefaultVideoClientObserver(
+                mockContext,
                 mockLogger,
                 turnRequestParams,
                 mockMetricsCollector,
