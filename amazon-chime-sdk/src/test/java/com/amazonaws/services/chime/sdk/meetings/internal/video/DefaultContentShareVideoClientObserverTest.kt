@@ -5,6 +5,7 @@
 
 package com.amazonaws.services.chime.sdk.meetings.internal.video
 
+import android.content.Context
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.contentshare.ContentShareObserver
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.contentshare.ContentShareStatus
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.contentshare.ContentShareStatusCode
@@ -30,6 +31,9 @@ import org.junit.Before
 import org.junit.Test
 
 class DefaultContentShareVideoClientObserverTest {
+    @MockK
+    private lateinit var mockContext: Context
+
     @MockK
     private lateinit var mockLogger: Logger
 

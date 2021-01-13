@@ -5,6 +5,7 @@
 
 package com.amazonaws.services.chime.sdk.meetings.internal.video
 
+import android.content.Context
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.AudioVideoObserver
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoFrame
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoPauseState
@@ -14,6 +15,7 @@ import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.buffer.VideoFr
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.buffer.VideoFrameI420Buffer
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.buffer.VideoFrameTextureBuffer
 import com.amazonaws.services.chime.sdk.meetings.internal.metric.ClientMetricsCollector
+import com.amazonaws.services.chime.sdk.meetings.internal.utils.DNSServerUtils
 import com.amazonaws.services.chime.sdk.meetings.internal.utils.ObserverUtils
 import com.amazonaws.services.chime.sdk.meetings.internal.utils.TURNRequestUtils
 import com.amazonaws.services.chime.sdk.meetings.realtime.datamessage.DataMessage
@@ -34,6 +36,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 class DefaultVideoClientObserver(
+    private val context: Context,
     private val logger: Logger,
     private val turnRequestParams: TURNRequestParams,
     private val clientMetricsCollector: ClientMetricsCollector,
@@ -216,7 +219,7 @@ class DefaultVideoClientObserver(
     }
 
     override fun getAvailableDnsServers(): Array<String> {
-        return emptyArray()
+        return DNSServerUtils.getAvailableDnsServers(context, logger)
     }
 
     override fun onDataMessageReceived(dataMessages: Array<mediaDataMessage>?) {
