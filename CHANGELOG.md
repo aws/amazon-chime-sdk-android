@@ -16,6 +16,7 @@
 * Changed AudioManager mode to be `MODE_IN_COMMUNICATION` only after builders call `audioVideo.start()`.
 * Update text of additional options on demo app.
 * Changes that support a speed up of video client initialization. `requestTurnCreds` callback will only be invoked as a backup for media layer logic. The signaling url is now passed into video client start. A new callback `onTurnURIsReceived` will be invoked when TURN uris are received by the client. This allows urls to be modified with urlRewriter or custom builder logic.
+* Changed the demo app behavior so that when user starts/stops local video, the app does not switch to the Video tab automatically.
 
 ### Fixed
 * Fixed potential concurrency issue on `VideoSourceAdapter`.

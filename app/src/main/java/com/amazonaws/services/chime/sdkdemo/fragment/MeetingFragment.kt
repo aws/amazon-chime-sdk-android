@@ -860,7 +860,6 @@ class MeetingFragment : Fragment(),
             audioVideo.startLocalVideo()
         }
         buttonCamera.setImageResource(R.drawable.button_camera_on)
-        selectTab(SubTab.Video.position)
     }
 
     private fun stopLocalVideo() {
@@ -870,7 +869,6 @@ class MeetingFragment : Fragment(),
         }
         audioVideo.stopLocalVideo()
         buttonCamera.setImageResource(R.drawable.button_camera)
-        selectTab(SubTab.Video.position)
     }
 
     private fun onVideoPageUpdated() {
