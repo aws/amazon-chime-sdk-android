@@ -118,386 +118,422 @@ If you discover a potential security issue in this project we ask that you notif
   - [Device](#device)
   - [Audio](#audio)
   - [Video](#video)
-  - [Screen share](#screen-share)
+  - [Screen and content share](#screen-and-content-share)
   - [Metrics](#metrics)
   - [Data Message](#data-message)
   - [Stopping a session](#stopping-a-session)
   - [Voice Focus](#voice-focus)
   - [Custom Video Source](#custom-video-source)
-
 ### Starting a session
 
 #### Use case 1. Start a session. 
 
-To start sending/receiving audio, you’ll just need to start the session.
+To start sending/receiving audio, you need to start the session. Once the session has started, you can talk and listen to attendees. Make sure audio permission is granted from the user.
 
 ```kotlin
-audioVideo.start()
+meetingSession.audioVideo.start()
 ```
 
 #### Use case 2. Add an observer to receive audio and video session life cycle events. 
 
+> Note: to avoid missing any events, add an observer before session starts. You can remove the observer by calling meetingSession.audioVideo.removeAudioVideoObserver(observer).
+
 ```kotlin
-class MainActivity: AudioVideoObserver {
-    override fun onAudioSessionStartedConnecting(reconnecting: Boolean) {}
+val observer = object : AudioVideoObserver {
+    override fun onAudioSessionStartedConnecting(reconnecting: Boolean) {
+        if (reconnecting) {
+            // e.g. the network connection is dropped
+        }
+    }
     override fun onAudioSessionStarted(reconnecting: Boolean) {
-        // It is recommeded to handle device selection such as listAudioDevice and chooseAudioDevice
-        // and handle mute of self attendee.
-        // This is due to [choose-audio-device](https://aws.github.io/amazon-chime-sdk-android/amazon-chime-sdk/com.amazonaws.services.chime.sdk.meetings.audiovideo/-default-audio-video-facade/choose-audio-device.html)/mute/unmute needs the session to be started
+        // Meeting session starts.
+        // Can use realtime, devices APIs.
     }
     override fun onAudioSessionDropped(reconnecting: Boolean) {}
     override fun onAudioSessionStopped(sessionStatus: MeetingSessionStatus) {
-        // You can handle some clean up logics
-        // One example might be showing user the meeting ended
+        // See the "Stopping a session" section for details.
     }
     override fun onAudioSessionCancelledReconnect() {}
     override fun onConnectionRecovered() {}
     override fun onConnectionBecamePoor() {}
     override fun onVideoSessionStartedConnecting() {}
     override fun onVideoSessionStarted(sessionStatus: MeetingSessionStatus) {
-        // Handle logic of receiving video/starting local video
+        // Video session starts.
+        // Can use video APIs.
     }
     override fun onVideoSessionStopped(sessionStatus: MeetingSessionStatus) {}
-
-    audioVideo.addAudioVideoObserver(this)
 }
+
+meetingSession.audioVideo.addAudioVideoObserver(observer)
 ```
 
 ### Device
 
-#### Use case 3. List audio devices
+#### Use case 3. List audio devices.
 
-List available devices that can be used for the meeting.
+List available audio devices that can be used for the meeting.
 
 ```kotlin
-// You will receieve something similar to [Pixel 3 XL (Handset), Pixel 3 XL (Speaker), Galaxy Buds+ (F4C1) (Bluetooth)]
-val devices = audioVideo.listAudioDevices()
+val audioDevices = meetingSession.audioVideo.listAudioDevices()
+
+// An list of MediaDevice objects
+audioDevices.forEach {
+    logger.info(TAG, "Device type: ${it.type}, label: ${it.label}")
+}
 ```
 
-#### Use case 4. Choose audio device by passing `MediaDevice` object
+#### Use case 4. Choose audio device by passing `MediaDevice` object.
 
-> NOTE: chooseAudioDevice is no-op if it is called before audioVideo.start(). You should call this after session started. 
-
-
-
-> NOTE: You should call chooseAudioDevice with one of devices returned from listAudioDevices()
+> Note: You should call this after session started or it’ll be no-op. You should call chooseAudioDevice with one of devices returned from listAudioDevices().
 
 ```kotlin
-val devices = audioVideo.listAudioDevices().filter {
+// Filter out OTHER type which is currently not supported for selection
+val audioDevices = meetingSession.audioVideo.listAudioDevices().filter {
     it.type != MediaDeviceType.OTHER)
-}.sortedBy { it.order } // get devices by its priority. You can use your own logic
-// For instance, current order is in bluetooth -> earphone -> speaker -> built-in earpiece
-if (devices.isNotEmpty()) {
-    audioVideo.chooseAudioDevice(devices[0]) 
-}            
+}
+val device = /* An item from audioDevices */
+meetingSession.audioVideo.chooseAudioDevice(device)
 ```
 
-#### Use case 5. Switch between camera
+#### Use case 5. Switch between camera.
 
-> NOTE: switchCamera() is no-op if you are using custom camera capture source. Please refer [custom_video](https://github.com/aws/amazon-chime-sdk-android/blob/master/guides/custom_video.md#implementing-a-custom-video-source-and-transmitting) for more details.
+> Note: switchCamera() is no-op if you are using custom camera capture source. Please refer to [custom video guide](https://github.com/aws/amazon-chime-sdk-android/blob/master/guides/custom_video.md#implementing-a-custom-video-source-and-transmitting) for more details.
 
 
-`switchCamera` will switch currently active camera. In order to get active camera, you can call [get-active-camera](https://aws.github.io/amazon-chime-sdk-android/amazon-chime-sdk/com.amazonaws.services.chime.sdk.meetings.device/-device-controller/get-active-camera.html)
+Switch to use front or back camera on the device, if available.
 
 ```kotlin
-audioVideo.switchCamera() // front will switch to back and back will switch to front camera
+meetingSession.audioVideo.switchCamera()
 ```
 
-#### Use case 6. Subscribe to get updated device list
+#### Use case 6. Add an observer to receive the updated device list.
 
 Add `DeviceChangeObserver` to receive callback when new audio device is connected or audio device has been disconnected. For instance, if a bluetooth audio device is connected, `onAudioDeviceChanged` is called with the device list including the headphone.
 
 ```kotlin
-class MainActivity: DeviceChangeObserver {
+val observer = object: DeviceChangeObserver {
     override fun onAudioDeviceChanged(freshAudioDeviceList: List<MediaDevice>) {
-        // handle audio device selection or use your custom logic
-        // You will receieve something similar to [Pixel 3 XL (Handset), Pixel 3 XL (Speaker), Galaxy Buds+ (F4C1) (Bluetooth)]
-        val devices = freshAudioDeviceList.filter{ it.type != MediaDeviceType.OTHER}.sortedBy{ it.order }
-        if (devices.isNotEmpty()) {
-            audioVideo.chooseAudioDevice(device[0])
-        }
+    // A list of updated MediaDevice objects
+    freshAudioDeviceList.forEach {
+        logger.info(TAG, "Device type: ${it.type}, label: ${it.label}")
     }
-     
-    audioVideo.addDeviceChangeObserver(this) 
 }
 
-
-
+meetingSession.audioVideo.addDeviceChangeObserver(observer) 
 ```
 
-#### Use case 7. Get currently selected audio device
+#### Use case 7. Get currently selected audio device.
 
-> NOTE: `getActiveAudioDevice` API is supported from API Android 24 >= (Android 7.0) or higher.
+> Note: `getActiveAudioDevice` API requires Android 7.0 or higher.
 
 ```kotlin
 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-    val activeAudioDevice = audioVideo.getActiveAudioDevice()
+    val activeAudioDevice = meetingSession.audioVideo.getActiveAudioDevice()
 }
 ```
 
-For versions, lower than Android 7.0, builders can achieve the same by manually implementing the following logic.
-Whenever you call `audioVideo.chooseAudioDevice` , you’ll have to manually update your `currentAudioDevice`.
+For lower API versions, builders can achieve the same by tracking the selected device by implementing the following logic.
 
 ```kotlin
 var activeAudioDevice: MediaDevice? = null
 override fun onAudioDeviceChanged(freshAudioDeviceList: List<MediaDevice>) {
-    val device = // an element in the list of current available audio devices
-    if (devices.isNotEmpty()) {
-        audioVideo.chooseAudioDevice(device)
-        activeAudioDevice = device // Update current device 
-    }
+    val device = /* An item from freshAudioDeviceList */
+    meetingSession.audioVideo.chooseAudioDevice(device)
+    activeAudioDevice = device // Update current device 
 }
 ```
 
 ### Audio
 
-#### Use case 8. Mute and unmute an audio input
+> Note: So far, you've added observers to receive device and session lifecycle events. In the following use cases, you'll use the real-time API methods to send and receive volume indicators and control mute state.
+
+#### Use case 8. Mute and unmute an audio input.
 
 ```kotlin
-val muted = audioVideo.realtimeLocalMute() // returns true if muted, false if failed
+val muted = meetingSession.audioVideo.realtimeLocalMute() // returns true if muted, false if failed
 
-val unmuted = audioVideo.realtimeLocalUnmute() // returns true if unmuted, false if failed
+val unmuted = meetingSession.audioVideo.realtimeLocalUnmute() // returns true if unmuted, false if failed
 ```
 
-#### Use case 9. Add an observer to observe realtime events such as volume changes/signal change/muted status attendees. 
+#### Use case 9. Add an observer to receive realtime events such as volume changes/signal change/muted status attendees. 
 
-You can use this to build real-time indicator UI on specific attendee
+You can use this to build real-time indicators UI and get them updated for changes delivered by the array. 
+
+
+> Note: Only delta will be notified.
 
 ```kotlin
-class MainActivity: RealtimeObserver {
+val observer = object : RealtimeObserver {
     override fun onVolumeChanged(volumeUpdates: Array<VolumeUpdate>) {
-        // Update UI to show some volume level of attendees
+        volumeUpdates.forEach { (attendeeInfo, volumeLevel) ->
+            logger.info(TAG,"${attendeeInfo.attendeeId}'s volume changed: " +
+                $volumeLevel // Muted, NotSpeaking, Low, Medium, High
+            )
+        }
     }
     
     override fun onSignalStrengthChanged(signalUpdates: Array<SignalUpdate>) {
-        // Update UI to show some signal stregth (network condition) of attendees
+        signalUpdates.forEach { (attendeeInfo, signalStrength) ->
+            logger.info(TAG, "${attendeeInfo.attendeeId}'s signal strength changed: " +
+                $signalStrength // None, Low, High
+            )
+        }
     }
     
     override fun onAttendeesJoined(attendeeInfo: Array<AttendeeInfo>) {
-        // Update UI to show attendees
+        attendeeInfo.forEach { logger.info(TAG, "${attendeeInfo.attendeeId} joined the meeting") }
     }
     
     override fun onAttendeesLeft(attendeeInfo: Array<AttendeeInfo>) {
-        // Update UI to remove attendees
+        attendeeInfo.forEach { logger.info(TAG, "${attendeeInfo.attendeeId} left the meeting") }
     }
     
     override fun onAttendeesDropped(attendeeInfo: Array<AttendeeInfo>) {
-        // Update UI to remove attendees
+        attendeeInfo.forEach { logger.info(TAG, "${attendeeInfo.attendeeId} dropped from the meeting") }
     }
     
     override fun fun onAttendeesMuted(attendeeInfo: Array<AttendeeInfo>) }
-        // Update UI to show muted status of attendees
+        attendeeInfo.forEach { logger.info(TAG, "${attendeeInfo.attendeeId} muted") }
     }
     
     override fun onAttendeesUnmuted(attendeeInfo: Array<AttendeeInfo>) {
-        // Update UI to show unmuted status of attendees
+        attendeeInfo.forEach { logger.info(TAG, "${attendeeInfo.attendeeId} unmuted") }
     }
-    
-    audioVideo.addRealtimeObserver(this)
 }
+
+meetingSession.audioVideo.addRealtimeObserver(observer)
 ```
 
-#### Use case 10. Detect active speakers. 
+#### Use case 10. Detect active speakers and active scores of speakers.
 
-> NOTE: You need to set `scoreCallbackIntervalMs` to receive callback for `onActiveSpeakerScoreChanged`. If this value is not set, you will only get `onActiveSpeakerDetected` callback. For basic use case, you can just use `onActiveSpeakerDetected.`
+You can use the `onActiveSpeakerDetected` event to enlarge or emphasize the most active speaker’s video tile if available. By setting the `scoreCallbackIntervalMs` and implementing `onActiveSpeakerScoreChanged`, you can receive scores of the active speakers periodically.
 
 ```kotlin
-class MainActivity: ActiveSpeakerObserver {
+val observer = object : ActiveSpeakerObserver {
+    override fun onActiveSpeakerDetected(attendeeInfo: Array<AttendeeInfo>) {
+        if (attendeeInfo.isNotEmpty()) {
+            logger.info(TAG, "${attendeeInfo[0].attendeeId} is the most active speaker")
+        }
+    }
+    
+    // Set to receive onActiveSpeakerScoreChanged event at interval of 1s
     override val scoreCallbackIntervalMs: Int? get() = 1000
     
-    override fun onActiveSpeakerDetected(attendeeInfo: Array<AttendeeInfo>) {
-        // Just handle logic of active speakers. 
-        // Most use case should be handled by this callack
-        // This will be sorted from most active to least active
-    }
-    
     override fun onActiveSpeakerScoreChanged(scores: Map<AttendeeInfo, Double>) {
-       // handle logic based on active speaker score changed.
-       // You can compare them to get most active speaker
+        val scoreString = scores.map { entry -> "${entry.key.attendeeId}: ${entry.value}" }.joinToString(",")
+        logger.info(TAG, "Scores of active speakers are: $scoreString")
     }
-    
-    // Use default policy for active speaker. 
-    // If you want custom logic, implement your own ActiveSpeakerPolicy
-    audioVideo.addActiveSpeakerObserver(DefaultActiveSpeakerPolicy(), this)
 }
+
+// Calculating the active speaker base on the SDK provided policy, you can provide any custom algorithm
+meetingSession.audioVideo.addActiveSpeakerObserver(DefaultActiveSpeakerPolicy(), observer)
 ```
 
 ### Video
 
-> NOTE: You will need to bind the video to `DefaultVideoRenderView` or your customer render view (`VideoRenderView`) in order to display the video. There are also few things to note.
+> Note: You will need to bind the video to `VideoRenderView` in order to display the video. 
+> * A local video tile can be identified using `isLocalTile` property.
+> * A content video tile can be identified using `isContent` property. See Screen and content share.
+> * A tile is created with a new tile ID when the same remote attendee restarts the video.
 
-You can find more details on adding/removing/viewing video from [building-a-meeting-application-on-android-using-the-amazon-chime-sdk/](https://aws.amazon.com/blogs/business-productivity/building-a-meeting-application-on-android-using-the-amazon-chime-sdk/)
+
+You can find more details on adding/removing/viewing video from [building-a-meeting-application-on-android-using-the-amazon-chime-sdk](https://aws.amazon.com/blogs/business-productivity/building-a-meeting-application-on-android-using-the-amazon-chime-sdk/).
 
 #### Use case 11. Start receiving remote videos.
 
+By default, you’ll not receive remote videos after session started. You can call `startRemoteVideo` to start receiving.
+
 ```kotlin
-audioVideo.startRemoteVideo()
+meetingSession.audioVideo.startRemoteVideo()
 ```
 
-#### Use case 12. Start viewing remote video tiles.
+#### Use case 12. Stop receiving remote videos.
+
+`stopRemoteVideo` stops receiving remote videos and also triggers `onVideoTileRemoved` for existing remote videos.
 
 ```kotlin
-class MainActivity: VideoTileObserver {
+meetingSession.audioVideo.stopRemoteVideo()
+```
+
+#### Use case 13. View remote videos.
+
+```kotlin
+val observer = object : VideoTileObserver {
     override fun onVideoTileAdded(tileState: VideoTileState) {
-       if (!tileState.isLocalTile) {
-            // In order to use binding, you can read more about
-            // https://developer.android.com/topic/libraries/data-binding
-            
-            // binding.remoteVideoView is DefaultRenderView defined in the layout
-            // You can also use val remoteVideoView = findViewById(...)
-            audioVideo.bindVideoView(binding.remoteVideoView, tileState.tileId)
-       }
+        // Ignore local video (see View local video), content video (seeScreen and content share)
+        if(tileState.isLocalTile || tileState.isContent) return
+        
+        val videoRenderView = /* a VideoRenderView object in your application to show the video */
+        meetingSession.audioVideo.bindVideoView(videoRenderView, tileState.tileId)
     }
     
-    audioVideo.addVideoTileObserver(this)
-}
-```
-
-#### Use case 13. Stop receiving remote videos.
-
-```kotlin
-audioVideo.stopRemoteVideo()
-```
-
-#### Use case 14. Stop viewing remote videos.
-
-```kotlin
-class MainActivity: VideoTileObserver {
     override onVideoTileRemoved(tileState: VideoTileState) {
         // unbind video view to stop viewing the tile
-        audioVideo.unbindVideoView(tileId)
+        audioVideo.unbindVideoView(tileState.tileId)
     }
-    
-    audioVideo.addVideoTileObserver(this)
 }
+
+meetingSession.audioVideo.addVideoTileObserver(observer)
 ```
 
-#### Use case 15. Start sharing your video. 
+For more advanced video tile management, take a look at [video_pagination](https://github.com/aws/amazon-chime-sdk-android/blob/master/guides/video_pagination.md).
 
-> NOTE: From `onVideoTileAdded` callback, tileState should have property of `isLocalTile` true
+#### Use case 14. Start sharing your video. 
 
 ```kotlin
-// start sharing local video
-// startLocalVideo will invoke onVideoTileAdded callback
- audioVideo.startLocalVideo()
+// Use internal camera capture for the local video
+ meetingSession.audioVideo.startLocalVideo()
+ 
+// You can switch camera to change the video input device
+meetingSession.audioVideo.switchCamera()
+
+// Or you can inject custom video source for local video, see custom video guide
 ```
 
-#### Use case 16. Start viewing local video tile.
+#### Use case 15. Stop sharing your video.
 
 ```kotlin
-class MainActivity : VideoTileObserver {
-    // NOTE: Details on creating adapter is omitted.
+meetingSession.audioVideo.stopLocalVideo()
+```
+
+#### Use case 16. View local video.
+
+```kotlin
+val observer = object : VideoTileObserver {
     override fun onVideoTileAdded(tileState: VideoTileState) {
+        // onVideoTileAdded is called after startLocalVideo
+        val localVideoRenderView = /* a VideoRenderView object to show local video */
+        
         if (tileState.isLocalTile) {
-            // In order to use binding, you can read more about
-            // https://developer.android.com/topic/libraries/data-binding
-            
-            // binding.remoteVideoView is DefaultRenderView defined in the layout
-            // You can also use val localVideoView = findViewById(...) and pass it
-            audioVideo.bindVideoView(binding.localVideoView, tileState.tileId)
+            audioVideo.bindVideoView(localVideoRenderView, tileState.tileId)
         }
     }
     
-    audioVideo.addVideoTileObserver(this)
-}
-```
-
-#### Use case 17. Stop sharing your video.
-
-```kotlin
-// stop sharing local video
-// stopLocalVideo will invoke onVideoTileRemoved callback
-audioVideo.stopLocalVideo()
-```
-
-#### Use case 18. Stop viewing local video tile.
-
-```kotlin
-class MainActivity : VideoTileObserver {
     override onVideoTileRemoved(tileState: VideoTileState) {
-        // unbind video view to stop viewing the tile
-        audioVideo.unbindVideoView(tileId)
+        // onVideoTileRemoved is called after stopLocalVideo
+        if (tileState.isLocalTile) {
+            logger.info(TAG, "Local video is removed")
+            audioVideo.unbindVideoView(tileState.tileId)
+        }
     }
-    
-    audioVideo.addVideoTileObserver(this)
 }
+
+meetingSession.audioVideo.addVideoTileObserver(observer)
 ```
 
-If you want more advanced video management, take a look at [video_pagination](https://github.com/aws/amazon-chime-sdk-android/blob/master/guides/video_pagination.md)
+### Screen and content share
 
-### Screen share
+> Note: When you or other attendees share content (a screen capture, or any other VideoSource object), the content attendee (attendee-id#content) joins the session and shares content as if a regular attendee shares a video.
 
-#### Use case 19. Start viewing remote screen share.
+> For example, your attendee ID is "my-id". When you call `meetingSession.audioVideo.startContentShare`, the content attendee "my-id#content" will join the session and share your content.
+
+#### Use case 17. Start sharing your screen or content.
 
 ```kotlin
-class MainActivity : VideoTileObserver {
-    // NOTE: Details on creating adapter is omitted.
-    
+val observer = object : ContentShareObserver {
+    override fun onContentShareStarted() {
+        logger.info(TAG, "Content share started")
+    }
+
+    override fun onContentShareStopped(status: ContentShareStatus) {
+        logger.info(TAG, "Content share stopped with status ${status.statusCode}")
+    }
+}
+
+meetingSession.audioVideo.addContentShareObserver(observer)
+val contentShareSource = /* a ContentShareSource object, can use DefaultScreenCaptureSource for screen share or any subclass with custom video source */
+// ContentShareSource object is not managed by SDK, builders need to start, stop, release accordingly
+meetingSession.audioVideo.startContentShare(contentShareSource)
+```
+
+See [content share guide](https://github.com/aws/amazon-chime-sdk-android/blob/master/guides/content_share.md) for more details.
+
+#### Use case 18. Stop sharing your screen or content.
+
+```kotlin
+meetingSession.audioVideo.stopContentShare()
+```
+
+#### Use case 19. View attendee content or screens. 
+
+Chime SDK allows 2 simultaneous content shares per meeting. Remote content shares will trigger `onVideoTileAdded`, while local share will not. To render the video for preview, add `VideoSink` to the `VideoSource` in the `ContentShareSource`.
+
+```kotlin
+val observer = object : VideoTileObserver {
     override fun onVideoTileAdded(tileState: VideoTileState) {
         if (tileState.isContent) {
-            // In order to use binding, you can read more about
-            // https://developer.android.com/topic/libraries/data-binding
+            // tileState.attendeeId is formatted as "attendee-id#content"
+            val attendeeId = tileState.attendeeId
+            // Get the attendee ID from "attendee-id#content"
+            val baseAttendeeId = DefaultModality(attendeeId).base()
+            logger.info(TAG, "$baseAttendeeId is sharing screen")
             
-            // binding.remoteVideoView is DefaultRenderView defined in the layout
-            // You can also use val localVideoView = findViewById(...) and pass it
-            audioVideo.bindVideoView(binding.screenVideoView, tileState.tileId)
+            val contentVideoRenderView = /* a VideoRenderView object in your application to show the content video */
+            meetingSession.audioVideo.bindVideoView(contentVideoRenderView, tileState.tileId)
         }
     }
     
     override onVideoTileRemoved(tileState: VideoTileState) {
-        audioVideo.unbindVideoView(tileId)
+        // unbind video view to stop viewing the tile
+        meetingSession.audioVideo.unbindVideoView(tileId)
     }
-    
-    audioVideo.addVideoTileObserver(this)
 }
+
+meetingSession.audioVideo.addVideoTileObserver(observer)
 ```
 
 ### Metrics
 
-#### Use case 20. Start receiving metrics
+#### Use case 20. Add an observer to receive the meeting metrics.
+
+See `ObservableMetric` for more available metrics, to monitor audio, video and content share quality.
 
 ```kotlin
-class MainActivity: MetricsObserver {
+val observer = object: MetricsObserver {
     override fun onMetricsReceived(metrics: Map<ObservableMetric, Any>) {
-        // log any metrics
+        metrics.forEach { (metricsName, metricsValue) ->
+            logger.info(TAG, "$metricsName : $metricsValue")
+        }
     }
-    
-    audioVideo.addMetricsObserver(this) 
 }
+
+meetingSession.audioVideo.addMetricsObserver(observer) 
 ```
 
 ### Data Message
 
-#### Use case 21. Start receiving data message
+#### Use case 21. Add  an observer to receive data message.
 
-You can receive real-time message from subscribed topic. 
-
-> NOTE: topic needs to be alpha-numeric and it can include hyphen and underscores.
+You can receive real-time message from multiple topics after meeting session started.
 
 ```kotlin
-const val DATA_MESSAGE_TOPIC = "chat"
-class MainActivity : DataMessageObserver {
+val YOUR_ATTENDEE_ID = meetingSession.configuration.credentials.attendeeId
+
+val observer = object: DataMessageObserver {
     override fun onDataMessageReceived(dataMessage: DataMessage) {
-        // handle data message
+        // A throttled message is returned by backend from local sender
+        if (!dataMessage.throttled && dataMessage.senderAttendeeId != YOUR_ATTENDEE_ID) {
+            logger.info(TAG, "[${dataMessage.timestampMs}][{$dataMessage.senderAttendeeId}] : ${dataMessage.text()}")
     }
-    
-    // You can also subscribe to different topic
-    audioVideo.addRealtimeDataMessageObserver(DATA_MESSAGE_TOPIC, this)
 }
+
+// You can subscribe to multiple topics.
+const val DATA_MESSAGE_TOPIC = "chat"
+meetingSession.audioVideo.addRealtimeDataMessageObserver(DATA_MESSAGE_TOPIC, observer)
 ```
 
-#### Use case 22. Start sending data message
+#### Use case 22. Send data message.
 
-You can send real time message to any subscribed topic. 
+You can send real time message to any topic, to which the observers that have subscribed will be notified.
 
-> NOTE: topic needs to be alpha-numeric and it can include hyphen and underscores. Data cannot exceed 2kb and lifetime should be positive integer 
+> Note: Topic needs to be alpha-numeric and it can include hyphen and underscores. Data cannot exceed 2kb and lifetime is optional but positive integer.
 
 ```kotlin
 const val DATA_MESSAGE_TOPIC = "chat"
 const val DATA_MESSAGE_LIFETIME_MS = 1000
 
 // Send "Hello Chime" to any subscribers who are listening to "chat" topic with 1 seconds of lifetime
-audioVideo.realtimeSendDataMessage(
+meetingSession.audioVideo.realtimeSendDataMessage(
     DATA_MESSAGE_TOPIC,
     "Hello Chime",
     DATA_MESSAGE_LIFETIME_MS
@@ -506,54 +542,41 @@ audioVideo.realtimeSendDataMessage(
 
 ### Stopping a session
 
-> NOTE: Make sure to remove all the observers you have added to avoid any memory leaks.
+> Note: Make sure to remove all the observers and release resources you have added to avoid any memory leaks.
 
-#### Use case 23. Stop a session
+#### Use case 23. Stop a session.
 
 ```kotlin
-class MainActivity : AudioVideoObserver, ... {
-   
+val observer = object: AudioVideoObserver {  
     override fun onAudioSessionStopped(sessionStatus: MeetingSessionStatus) {
         // This is where meeting ended.
         // You can do some clean up work here.
     }
     
     override fun onVideoSessionStopped(sessionStatus: MeetingSessionStatus) {
-        // This will be invoked   
+        // This will be invoked as well.
     }
-    
-    override fun onDestroy() {
-        // Remove all the observers if you have add them. 
-        // You do not have to remove them all if you haven't added.
-        audioVideo.removeAudioVideoObserver(this)
-        audioVideo.removeDeviceChangeObserver(this)
-        audioVideo.removeMetricsObserver(this)
-        audioVideo.removeRealtimeObserver(this)
-        audioVideo.removeRealtimeDataMessageObserverFromTopic(DATA_MESSAGE_TOPIC)
-        audioVideo.removeVideoTileObserver(this)
-        audioVideo.removeActiveSpeakerObserver(this)
-    }
-    
-    audioVideo.addAudioVideoObserver(this)
-    audioVideo.stop()
 }
+
+meetingSession.audioVideo.addAudioVideoObserver(observer)
+meetingSession.audioVideo.stop()
 ```
 
 ### Voice Focus
 
-Voice focus reduces the background noise in the meeting for better meeting experience. For more details, see [api_overview.md#11-using-amazon-voice-focus-optional](https://github.com/aws/amazon-chime-sdk-android/blob/master/guides/api_overview.md#11-using-amazon-voice-focus-optional)
+Voice focus reduces the background noise in the meeting for better meeting experience. For more details, see [using-amazon-voice-focus-optional](https://github.com/aws/amazon-chime-sdk-android/blob/master/guides/api_overview.md#11-using-amazon-voice-focus-optional).
 
-#### Use case 24. Enable/Disable voice focus
+#### Use case 24. Enable/Disable voice focus.
 
 ```kotlin
-val success = audioVideo.realtimeSetVoiceFocusEnabled(true) // success = enabling voice focus successful
+val enbabled = meetingSession.audioVideo.realtimeSetVoiceFocusEnabled(true) // enabling voice focus successful
 
-val success = audioVideo.realtimeSetVoiceFocusEnabled(false) // success = enabling voice focus successful
+val disabled = meetingSession.audioVideo.realtimeSetVoiceFocusEnabled(false) // disabling voice focus successful
 ```
 
 ### Custom Video Source
 
-Custom video source allows you to inject your own source to control the video such as applying filter to the video. Detailed guides can be found in [custom_video.md](https://github.com/aws/amazon-chime-sdk-android/blob/master/guides/custom_video.md)
+Custom video source allows you to inject your own source to control the video such as applying filter to the video. Detailed guides can be found in [custom video guide](https://github.com/aws/amazon-chime-sdk-android/blob/master/guides/custom_video.md).
 
 
 ---
