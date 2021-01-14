@@ -214,10 +214,10 @@ Add a `DeviceChangeObserver` to receive a callback when a new audio device conne
 ```kotlin
 val observer = object: DeviceChangeObserver {
     override fun onAudioDeviceChanged(freshAudioDeviceList: List<MediaDevice>) {
-    // A list of updated MediaDevice objects
-    freshAudioDeviceList.forEach {
-        logger.info(TAG, "Device type: ${it.type}, label: ${it.label}")
-    }
+        // A list of updated MediaDevice objects
+        freshAudioDeviceList.forEach {
+            logger.info(TAG, "Device type: ${it.type}, label: ${it.label}")
+        }
 }
 
 meetingSession.audioVideo.addDeviceChangeObserver(observer) 
@@ -333,8 +333,11 @@ meetingSession.audioVideo.addActiveSpeakerObserver(DefaultActiveSpeakerPolicy(),
 ### Video
 
 > Note: You'll need to bind the video to a `VideoRenderView` to render it.
+> 
 > A local video tile can be identified using the `isLocalTile` property.
+> 
 > A content video tile can be identified using the `isContent` property. See [Screen and content share](#screen-and-content-share).
+> 
 > A tile is created with a new tile ID when the same remote attendee restarts the video.
 
 
@@ -425,6 +428,7 @@ meetingSession.audioVideo.addVideoTileObserver(observer)
 ### Screen and content share
 
 > Note: When you or other attendees share content (e.g., screen capture or any other VideoSource object), the content attendee (attendee-id#content) joins the session and shares content as if a regular attendee shares a video.
+> 
 > For example, your attendee ID is "my-id". When you call `meetingSession.audioVideo.startContentShare`, the content attendee "my-id#content" will join the session and share your content.
 
 #### Use case 17. Start sharing your screen or content.
