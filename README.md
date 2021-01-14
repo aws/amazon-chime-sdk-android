@@ -334,7 +334,7 @@ meetingSession.audioVideo.addActiveSpeakerObserver(DefaultActiveSpeakerPolicy(),
 
 > Note: You'll need to bind the video to a VideoRenderView to render it.
 > A local video tile can be identified using the isLocalTile property.
-> A content video tile can be identified using the isContent property. See Screen and content share.
+> A content video tile can be identified using the isContent property. See [Screen and content share](#screen-and-content-share).
 > A tile is created with a new tile ID when the same remote attendee restarts the video.
 
 
