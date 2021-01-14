@@ -198,7 +198,7 @@ meetingSession.audioVideo.chooseAudioDevice(device)
 
 #### Use case 5. Switch cameras.
 
-> Note: switchCamera() is a no-op if you are using a custom camera capture source. Please refer to the [custom video guide](https://github.com/aws/amazon-chime-sdk-android/blob/master/guides/custom_video.md#implementing-a-custom-video-source-and-transmitting) for more details.
+> Note: switchCamera() is a no-op if you are using a custom camera capture source. Please refer to the [Custom Video](https://github.com/aws/amazon-chime-sdk-android/blob/master/guides/custom_video.md#implementing-a-custom-video-source-and-transmitting) for more details.
 
 
 Switch between the front or back camera on the device, if available.
@@ -338,7 +338,7 @@ meetingSession.audioVideo.addActiveSpeakerObserver(DefaultActiveSpeakerPolicy(),
 > A tile is created with a new tile ID when the same remote attendee restarts the video.
 
 
-You can find more details on adding/removing/viewing video from [building-a-meeting-application-on-android-using-the-amazon-chime-sdk](https://aws.amazon.com/blogs/business-productivity/building-a-meeting-application-on-android-using-the-amazon-chime-sdk/).
+You can find more details on adding/removing/viewing video from [Building a meeting application on android using the Amazon Chime SDK](https://aws.amazon.com/blogs/business-productivity/building-a-meeting-application-on-android-using-the-amazon-chime-sdk/).
 
 #### Use case 11. Start receiving remote videos.
 
@@ -446,7 +446,7 @@ val contentShareSource = /* a ContentShareSource object, can use DefaultScreenCa
 meetingSession.audioVideo.startContentShare(contentShareSource)
 ```
 
-See [content share guide](https://github.com/aws/amazon-chime-sdk-android/blob/master/guides/content_share.md) for more details.
+See [Content Share](https://github.com/aws/amazon-chime-sdk-android/blob/master/guides/content_share.md) for more details.
 
 #### Use case 18. Stop sharing your screen or content.
 
@@ -564,7 +564,7 @@ meetingSession.audioVideo.stop()
 
 ### Voice Focus
 
-Voice focus reduces the background noise in the meeting for better meeting experience. For more details, see [using-amazon-voice-focus-optional](https://github.com/aws/amazon-chime-sdk-android/blob/master/guides/api_overview.md#11-using-amazon-voice-focus-optional).
+Voice focus reduces the background noise in the meeting for better meeting experience. For more details, see [Amazon Voice Focus](https://github.com/aws/amazon-chime-sdk-android/blob/master/guides/api_overview.md#11-using-amazon-voice-focus-optional).
 
 #### Use case 24. Enable/Disable voice focus.
 
@@ -576,7 +576,7 @@ val disabled = meetingSession.audioVideo.realtimeSetVoiceFocusEnabled(false) // 
 
 ### Custom Video Source
 
-Custom video source allows you to control the video, such as applying a video filter. For more details, see [custom video](https://github.com/aws/amazon-chime-sdk-android/blob/master/guides/custom_video.md).
+Custom video source allows you to control the video, such as applying a video filter. For more details, see [Custom Video](https://github.com/aws/amazon-chime-sdk-android/blob/master/guides/custom_video.md).
 
 ---
 
