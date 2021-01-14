@@ -183,7 +183,7 @@ audioDevices.forEach {
 }
 ```
 
-#### Use case 4. Choose an audio device by passing a MediaDevice object.
+#### Use case 4. Choose an audio device by passing a `MediaDevice` object.
 
 > Note: You should call chooseAudioDevice after the session started, or it'll be a no-op. You should also call chooseAudioDevice with one of the devices returned from listAudioDevices.
 
@@ -225,7 +225,7 @@ meetingSession.audioVideo.addDeviceChangeObserver(observer)
 
 #### Use case 7. Get currently selected audio device.
 
-> Note: getActiveAudioDevice API requires API level 24 or higher.
+> Note: `getActiveAudioDevice` API requires API level 24 or higher.
 
 ```kotlin
 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
@@ -307,7 +307,7 @@ meetingSession.audioVideo.addRealtimeObserver(observer)
 
 #### Use case 10. Detect active speakers and active scores of speakers.
 
-You can use the onActiveSpeakerDetected event to enlarge or emphasize the most active speaker’s video tile if available. By setting the scoreCallbackIntervalMs and implementing onActiveSpeakerScoreChanged, you can receive scores of the active speakers periodically.
+You can use the `onActiveSpeakerDetected` event to enlarge or emphasize the most active speaker’s video tile if available. By setting the `scoreCallbackIntervalMs` and implementing `onActiveSpeakerScoreChanged`, you can receive scores of the active speakers periodically.
 
 ```kotlin
 val observer = object : ActiveSpeakerObserver {
@@ -332,9 +332,12 @@ meetingSession.audioVideo.addActiveSpeakerObserver(DefaultActiveSpeakerPolicy(),
 
 ### Video
 
-> Note: You'll need to bind the video to a VideoRenderView to render it.
-> A local video tile can be identified using the isLocalTile property.
-> A content video tile can be identified using the isContent property. See [Screen and content share](#screen-and-content-share).
+> Note: You'll need to bind the video to a `VideoRenderView` to render it.
+
+> A local video tile can be identified using the `isLocalTile` property.
+
+> A content video tile can be identified using the `isContent` property. See [Screen and content share](#screen-and-content-share).
+
 > A tile is created with a new tile ID when the same remote attendee restarts the video.
 
 
@@ -342,7 +345,7 @@ You can find more details on adding/removing/viewing video from [building-a-meet
 
 #### Use case 11. Start receiving remote videos.
 
-You can call startRemoteVideo to start receiving remote videos, as this doesn’t happen by default.
+You can call `startRemoteVideo` to start receiving remote videos, as this doesn’t happen by default.
 
 ```kotlin
 meetingSession.audioVideo.startRemoteVideo()
@@ -350,7 +353,7 @@ meetingSession.audioVideo.startRemoteVideo()
 
 #### Use case 12. Stop receiving remote videos.
 
-stopRemoteVideo stops receiving remote videos and triggers onVideoTileRemoved for existing remote videos.
+`stopRemoteVideo` stops receiving remote videos and triggers `onVideoTileRemoved` for existing remote videos.
 
 ```kotlin
 meetingSession.audioVideo.stopRemoteVideo()
@@ -426,7 +429,7 @@ meetingSession.audioVideo.addVideoTileObserver(observer)
 
 > Note: When you or other attendees share content (e.g., screen capture or any other VideoSource object), the content attendee (attendee-id#content) joins the session and shares content as if a regular attendee shares a video.
 
-> For example, your attendee ID is "my-id". When you call meetingSession.audioVideo.startContentShare, the content attendee "my-id#content" will join the session and share your content.
+> For example, your attendee ID is "my-id". When you call `meetingSession.audioVideo.startContentShare`, the content attendee "my-id#content" will join the session and share your content.
 
 #### Use case 17. Start sharing your screen or content.
 
@@ -457,7 +460,7 @@ meetingSession.audioVideo.stopContentShare()
 
 #### Use case 19. View attendee content or screens. 
 
-Chime SDK allows two simultaneous content shares per meeting. Remote content shares will trigger onVideoTileAdded, while local share will not. To render the video for preview, add a VideoSink to the VideoSource in the ContentShareSource.
+Chime SDK allows two simultaneous content shares per meeting. Remote content shares will trigger `onVideoTileAdded`, while local share will not. To render the video for preview, add a `VideoSink` to the `VideoSource` in the `ContentShareSource`.
 
 ```kotlin
 val observer = object : VideoTileObserver {
@@ -487,7 +490,7 @@ meetingSession.audioVideo.addVideoTileObserver(observer)
 
 #### Use case 20. Add an observer to receive the meeting metrics.
 
-See ObservableMetric for more available metrics and to monitor audio, video, and content share quality.
+See `ObservableMetric` for more available metrics and to monitor audio, video, and content share quality.
 
 ```kotlin
 val observer = object: MetricsObserver {
@@ -578,7 +581,6 @@ val disabled = meetingSession.audioVideo.realtimeSetVoiceFocusEnabled(false) // 
 ### Custom Video Source
 
 Custom video source allows you to control the video, such as applying a video filter. For more details, see [custom video](https://github.com/aws/amazon-chime-sdk-android/blob/master/guides/custom_video.md).
-
 
 ---
 
