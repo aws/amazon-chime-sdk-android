@@ -9,6 +9,7 @@
 * Added message for video tiles paused by poor network in demo app.
 * Added logic to `stopRemoteVideo`/`startRemoteVideo` when application is background/foregrounded to save network bandwidth in demo app.
 * Added TURN uris received callback.
+* [Documentation] Added usage documentation.
 
 ### Changed
 * **Breaking** `AudioVideoFacade` now also implements `ContentShareController`.
