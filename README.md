@@ -333,11 +333,8 @@ meetingSession.audioVideo.addActiveSpeakerObserver(DefaultActiveSpeakerPolicy(),
 ### Video
 
 > Note: You'll need to bind the video to a `VideoRenderView` to render it.
-
 > A local video tile can be identified using the `isLocalTile` property.
-
 > A content video tile can be identified using the `isContent` property. See [Screen and content share](#screen-and-content-share).
-
 > A tile is created with a new tile ID when the same remote attendee restarts the video.
 
 
@@ -380,7 +377,7 @@ val observer = object : VideoTileObserver {
 meetingSession.audioVideo.addVideoTileObserver(observer)
 ```
 
-For more advanced video tile management, take a look at [video_pagination](https://github.com/aws/amazon-chime-sdk-android/blob/master/guides/video_pagination.md).
+For more advanced video tile management, take a look at [Video Pagination](https://github.com/aws/amazon-chime-sdk-android/blob/master/guides/video_pagination.md).
 
 #### Use case 14. Start sharing your video. 
 
@@ -428,7 +425,6 @@ meetingSession.audioVideo.addVideoTileObserver(observer)
 ### Screen and content share
 
 > Note: When you or other attendees share content (e.g., screen capture or any other VideoSource object), the content attendee (attendee-id#content) joins the session and shares content as if a regular attendee shares a video.
-
 > For example, your attendee ID is "my-id". When you call `meetingSession.audioVideo.startContentShare`, the content attendee "my-id#content" will join the session and share your content.
 
 #### Use case 17. Start sharing your screen or content.
