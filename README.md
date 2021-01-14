@@ -218,6 +218,7 @@ val observer = object: DeviceChangeObserver {
         freshAudioDeviceList.forEach {
             logger.info(TAG, "Device type: ${it.type}, label: ${it.label}")
         }
+    }
 }
 
 meetingSession.audioVideo.addDeviceChangeObserver(observer) 
