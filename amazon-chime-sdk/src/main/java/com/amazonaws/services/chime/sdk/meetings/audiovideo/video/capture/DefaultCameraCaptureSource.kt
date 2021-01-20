@@ -88,7 +88,8 @@ class DefaultCameraCaptureSource(
     }
 
     override var device: MediaDevice? = MediaDevice.listVideoDevices(cameraManager)
-        .firstOrNull { it.type == MediaDeviceType.VIDEO_FRONT_CAMERA }
+        .firstOrNull { it.type == MediaDeviceType.VIDEO_FRONT_CAMERA } ?: MediaDevice.listVideoDevices(cameraManager)
+        .firstOrNull { it.type == MediaDeviceType.VIDEO_BACK_CAMERA }
         set(value) {
             logger.info(TAG, "Setting capture device: $value")
             if (field == value) {
@@ -112,7 +113,8 @@ class DefaultCameraCaptureSource(
             MediaDeviceType.VIDEO_FRONT_CAMERA
         }
         device =
-            MediaDevice.listVideoDevices(cameraManager).firstOrNull { it.type == desiredDeviceType }
+            MediaDevice.listVideoDevices(cameraManager).firstOrNull { it.type == desiredDeviceType } ?: MediaDevice.listVideoDevices(cameraManager)
+                .firstOrNull { it.type == MediaDeviceType.VIDEO_BACK_CAMERA }
     }
 
     override var torchEnabled: Boolean = false

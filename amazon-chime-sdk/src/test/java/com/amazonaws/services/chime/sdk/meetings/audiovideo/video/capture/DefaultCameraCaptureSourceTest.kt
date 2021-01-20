@@ -42,6 +42,7 @@ import kotlinx.coroutines.test.TestCoroutineDispatcher
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.setMain
 import org.junit.After
+import org.junit.Assert
 import org.junit.Before
 import org.junit.Ignore
 
@@ -161,6 +162,23 @@ class DefaultCameraCaptureSourceTest {
         verify { mockSurfaceTextureCaptureSource.addVideoSink(any()) }
         verify { mockCameraManager.openCamera("0", any<CameraDevice.StateCallback>(), any()) }
     }
+
+    @Ignore("Broken on build server, possible Mockk issue")
+    fun `switch should default to back if front camera is missing`() {
+        testCameraCaptureSource.start()
+        testCameraCaptureSource.switchCamera()
+        every { MediaDevice.listVideoDevices(any()) } returns listOf(
+            MediaDevice("back", MediaDeviceType.VIDEO_BACK_CAMERA, "1")
+        ) andThen listOf(
+            MediaDevice("back", MediaDeviceType.VIDEO_BACK_CAMERA, "1")
+        )
+
+        Assert.assertEquals(MediaDeviceType.VIDEO_BACK_CAMERA, testCameraCaptureSource.device?.type)
+
+        testCameraCaptureSource.switchCamera()
+
+        Assert.assertEquals(MediaDeviceType.VIDEO_BACK_CAMERA, testCameraCaptureSource.device?.type)
+}
 
     @Ignore("Broken on build server, possible Mockk issue")
     fun `stop stops and releases surface texture capture source`() {
