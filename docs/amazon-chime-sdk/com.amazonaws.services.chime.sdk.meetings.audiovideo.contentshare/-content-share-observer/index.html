@@ -1,0 +1,39 @@
+<HTML>
+<HEAD>
+<meta charset="UTF-8">
+<title>ContentShareObserver - amazon-chime-sdk</title>
+<link rel="stylesheet" href="../../../style.css">
+</HEAD>
+<BODY>
+<a href="../../index.html">amazon-chime-sdk</a>&nbsp;/&nbsp;<a href="../index.html">com.amazonaws.services.chime.sdk.meetings.audiovideo.contentshare</a>&nbsp;/&nbsp;<a href="./index.html">ContentShareObserver</a><br/>
+<br/>
+<h1>ContentShareObserver</h1>
+<code><span class="keyword">interface </span><span class="identifier">ContentShareObserver</span></code>
+<p><a href="./index.html">ContentShareObserver</a> handles all callbacks related to the content share.
+By implementing the callback functions and registering with <a href="../-content-share-controller/add-content-share-observer.html">ContentShareController.addContentShareObserver</a>,
+one can get notified with content share status events.</p>
+<h3>Functions</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<h4><a href="on-content-share-started.html">onContentShareStarted</a></h4>
+</td>
+<td>
+<p>Called when the content share has started.
+This callback will be on the main thread.</p>
+<code><span class="keyword">abstract</span> <span class="keyword">fun </span><span class="identifier">onContentShareStarted</span><span class="symbol">(</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="on-content-share-stopped.html">onContentShareStopped</a></h4>
+</td>
+<td>
+<p>Called when the content is no longer shared with other attendees
+with the reason provided in the status.</p>
+<code><span class="keyword">abstract</span> <span class="keyword">fun </span><span class="identifier">onContentShareStopped</span><span class="symbol">(</span><span class="identifier" id="com.amazonaws.services.chime.sdk.meetings.audiovideo.contentshare.ContentShareObserver$onContentShareStopped(com.amazonaws.services.chime.sdk.meetings.audiovideo.contentshare.ContentShareStatus)/status">status</span><span class="symbol">:</span>&nbsp;<a href="../-content-share-status/index.html"><span class="identifier">ContentShareStatus</span></a><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code></td>
+</tr>
+</tbody>
+</table>
+</BODY>
+</HTML>

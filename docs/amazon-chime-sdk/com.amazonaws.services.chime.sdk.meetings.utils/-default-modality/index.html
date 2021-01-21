@@ -1,0 +1,88 @@
+<HTML>
+<HEAD>
+<meta charset="UTF-8">
+<title>DefaultModality - amazon-chime-sdk</title>
+<link rel="stylesheet" href="../../../style.css">
+</HEAD>
+<BODY>
+<a href="../../index.html">amazon-chime-sdk</a>&nbsp;/&nbsp;<a href="../index.html">com.amazonaws.services.chime.sdk.meetings.utils</a>&nbsp;/&nbsp;<a href="./index.html">DefaultModality</a><br/>
+<br/>
+<h1>DefaultModality</h1>
+<code><span class="keyword">class </span><span class="identifier">DefaultModality</span></code>
+<p><a href="./index.html">DefaultModality</a> is a backwards compatible extension of the
+attendee id (UUID string) and session token schemas (base 64 string).
+It appends # to either strings, which indicates the modality
+of the participant.</p>
+<p>For example,
+attendeeId: "abcdefg"
+contentAttendeeId: "abcdefg#content"
+base(contentAttendeeId): "abcdefg"
+modality(contentAttendeeId): "content"
+hasModality(contentAttendeeId): true</p>
+<h3>Constructors</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<h4><a href="-init-.html">&lt;init&gt;</a></h4>
+</td>
+<td>
+<p><a href="./index.html">DefaultModality</a> is a backwards compatible extension of the
+attendee id (UUID string) and session token schemas (base 64 string).
+It appends # to either strings, which indicates the modality
+of the participant.</p>
+<code><span class="identifier">DefaultModality</span><span class="symbol">(</span><span class="identifier" id="com.amazonaws.services.chime.sdk.meetings.utils.DefaultModality$<init>(kotlin.String)/id">id</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">)</span></code></td>
+</tr>
+</tbody>
+</table>
+<h3>Functions</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<h4><a href="base.html">base</a></h4>
+</td>
+<td>
+<p>The base of the Id</p>
+<code><span class="keyword">fun </span><span class="identifier">base</span><span class="symbol">(</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="has-modality.html">hasModality</a></h4>
+</td>
+<td>
+<p>Check whether the current Id contains the input modality</p>
+<code><span class="keyword">fun </span><span class="identifier">hasModality</span><span class="symbol">(</span><span class="identifier" id="com.amazonaws.services.chime.sdk.meetings.utils.DefaultModality$hasModality(com.amazonaws.services.chime.sdk.meetings.utils.ModalityType)/modality">modality</span><span class="symbol">:</span>&nbsp;<a href="../-modality-type/index.html"><span class="identifier">ModalityType</span></a><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html"><span class="identifier">Boolean</span></a></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="id.html">id</a></h4>
+</td>
+<td>
+<p>The Id</p>
+<code><span class="keyword">fun </span><span class="identifier">id</span><span class="symbol">(</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="modality.html">modality</a></h4>
+</td>
+<td>
+<p>The modality of the Id</p>
+<code><span class="keyword">fun </span><span class="identifier">modality</span><span class="symbol">(</span><span class="symbol">)</span><span class="symbol">: </span><a href="../-modality-type/index.html"><span class="identifier">ModalityType</span></a><span class="symbol">?</span></code></td>
+</tr>
+</tbody>
+</table>
+<h3>Companion Object Properties</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<h4><a href="-m-o-d-a-l-i-t-y_-s-e-p-a-r-a-t-o-r.html">MODALITY_SEPARATOR</a></h4>
+</td>
+<td>
+<code><span class="keyword">const</span> <span class="keyword">val </span><span class="identifier">MODALITY_SEPARATOR</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a></code></td>
+</tr>
+</tbody>
+</table>
+</BODY>
+</HTML>

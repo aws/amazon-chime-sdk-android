@@ -1,0 +1,69 @@
+<HTML>
+<HEAD>
+<meta charset="UTF-8">
+<title>com.amazonaws.services.chime.sdk.meetings.audiovideo.contentshare - amazon-chime-sdk</title>
+<link rel="stylesheet" href="../../style.css">
+</HEAD>
+<BODY>
+<a href="../index.html">amazon-chime-sdk</a>&nbsp;/&nbsp;<a href="./index.html">com.amazonaws.services.chime.sdk.meetings.audiovideo.contentshare</a><br/>
+<br/>
+<h2>Package com.amazonaws.services.chime.sdk.meetings.audiovideo.contentshare</h2>
+<h3>Types</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<h4><a href="-content-share-controller/index.html">ContentShareController</a></h4>
+</td>
+<td>
+<p><a href="-content-share-controller/index.html">ContentShareController</a> exposes methods for starting and stopping content share with a <a href="-content-share-source/index.html">ContentShareSource</a>.
+The content represents a media steam to be shared in the meeting, such as screen capture or
+media files.
+Read <a href="https://github.com/aws/amazon-chime-sdk-android/blob/master/guides/content_share.md">content share guide</a> for details.</p>
+<code><span class="keyword">interface </span><span class="identifier">ContentShareController</span></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="-content-share-observer/index.html">ContentShareObserver</a></h4>
+</td>
+<td>
+<p><a href="-content-share-observer/index.html">ContentShareObserver</a> handles all callbacks related to the content share.
+By implementing the callback functions and registering with <a href="-content-share-controller/add-content-share-observer.html">ContentShareController.addContentShareObserver</a>,
+one can get notified with content share status events.</p>
+<code><span class="keyword">interface </span><span class="identifier">ContentShareObserver</span></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="-content-share-source/index.html">ContentShareSource</a></h4>
+</td>
+<td>
+<p><a href="-content-share-source/index.html">ContentShareSource</a> contains the media sources to attach to the content share</p>
+<code><span class="keyword">open</span> <span class="keyword">class </span><span class="identifier">ContentShareSource</span></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="-content-share-status/index.html">ContentShareStatus</a></h4>
+</td>
+<td>
+<p><a href="-content-share-status/index.html">ContentShareStatus</a> indicates a status received regarding the content share.</p>
+<code><span class="keyword">data</span> <span class="keyword">class </span><span class="identifier">ContentShareStatus</span></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="-content-share-status-code/index.html">ContentShareStatusCode</a></h4>
+</td>
+<td>
+<p><a href="-content-share-status-code/index.html">ContentShareStatusCode</a> indicates the reason the content share event occurred.</p>
+<code><span class="keyword">enum</span> <span class="keyword">class </span><span class="identifier">ContentShareStatusCode</span></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="-default-content-share-controller/index.html">DefaultContentShareController</a></h4>
+</td>
+<td>
+<code><span class="keyword">class </span><span class="identifier">DefaultContentShareController</span>&nbsp;<span class="symbol">:</span>&nbsp;<a href="-content-share-controller/index.html"><span class="identifier">ContentShareController</span></a></code></td>
+</tr>
+</tbody>
+</table>
+</BODY>
+</HTML>
