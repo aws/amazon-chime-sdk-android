@@ -94,6 +94,51 @@ top level observers. All metrics are measured over the past second.</p>
 <p>Percentage of video packets lost from server to client across all receive streams</p>
 </td>
 </tr>
+<tr>
+<td>
+<h4><a href="content-share-video-send-bitrate.html">contentShareVideoSendBitrate</a></h4>
+</td>
+<td>
+<p>Sum of total bitrate across all send streams</p>
+</td>
+</tr>
+<tr>
+<td>
+<h4><a href="content-share-video-send-packet-loss-percent.html">contentShareVideoSendPacketLossPercent</a></h4>
+</td>
+<td>
+<p>Percentage of video packets lost from client to server across all send streams</p>
+</td>
+</tr>
+<tr>
+<td>
+<h4><a href="content-share-video-send-fps.html">contentShareVideoSendFps</a></h4>
+</td>
+<td>
+<p>Average send FPS across all send streams</p>
+</td>
+</tr>
+<tr>
+<td>
+<h4><a href="content-share-video-send-rtt-ms.html">contentShareVideoSendRttMs</a></h4>
+</td>
+<td>
+<p>Round trip time of packets sent from client to server</p>
+</td>
+</tr>
+</tbody>
+</table>
+<h3>Functions</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<h4><a href="is-content-share-metric.html">isContentShareMetric</a></h4>
+</td>
+<td>
+<p>Determine if the metric is for content share stream</p>
+<code><span class="keyword">fun </span><span class="identifier">isContentShareMetric</span><span class="symbol">(</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html"><span class="identifier">Boolean</span></a></code></td>
+</tr>
 </tbody>
 </table>
 </BODY>

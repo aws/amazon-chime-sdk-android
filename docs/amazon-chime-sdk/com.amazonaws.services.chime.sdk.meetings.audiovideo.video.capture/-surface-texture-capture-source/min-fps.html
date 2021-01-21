@@ -1,0 +1,20 @@
+<HTML>
+<HEAD>
+<meta charset="UTF-8">
+<title>SurfaceTextureCaptureSource.minFps - amazon-chime-sdk</title>
+<link rel="stylesheet" href="../../../style.css">
+</HEAD>
+<BODY>
+<a href="../../index.html">amazon-chime-sdk</a>&nbsp;/&nbsp;<a href="../index.html">com.amazonaws.services.chime.sdk.meetings.audiovideo.video.capture</a>&nbsp;/&nbsp;<a href="index.html">SurfaceTextureCaptureSource</a>&nbsp;/&nbsp;<a href="./min-fps.html">minFps</a><br/>
+<br/>
+<h1>minFps</h1>
+<a name="com.amazonaws.services.chime.sdk.meetings.audiovideo.video.capture.SurfaceTextureCaptureSource$minFps"></a>
+<code><span class="keyword">abstract</span> <span class="keyword">var </span><span class="identifier">minFps</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html"><span class="identifier">Int</span></a></code>
+<p>Setting this to a positive value will lead the source to resend previously captured frames
+as necessary to approximately maintain the set value.</p>
+<p>This is useful for applications like screen capture where the system does not capture when
+there is no motion on screen. Continuing to send frames helps the encoder improve the quality
+on the receiving end, and also helps mitigate possible issues with downstream frame throttling
+dropping frames before the end of an animation.</p>
+</BODY>
+</HTML>

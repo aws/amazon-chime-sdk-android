@@ -1,0 +1,25 @@
+<HTML>
+<HEAD>
+<meta charset="UTF-8">
+<title>DefaultAudioVideoFacade.startContentShare - amazon-chime-sdk</title>
+<link rel="stylesheet" href="../../../style.css">
+</HEAD>
+<BODY>
+<a href="../../index.html">amazon-chime-sdk</a>&nbsp;/&nbsp;<a href="../index.html">com.amazonaws.services.chime.sdk.meetings.audiovideo</a>&nbsp;/&nbsp;<a href="index.html">DefaultAudioVideoFacade</a>&nbsp;/&nbsp;<a href="./start-content-share.html">startContentShare</a><br/>
+<br/>
+<h1>startContentShare</h1>
+<a name="com.amazonaws.services.chime.sdk.meetings.audiovideo.DefaultAudioVideoFacade$startContentShare(com.amazonaws.services.chime.sdk.meetings.audiovideo.contentshare.ContentShareSource)"></a>
+<code><span class="keyword">fun </span><span class="identifier">startContentShare</span><span class="symbol">(</span><span class="identifier" id="com.amazonaws.services.chime.sdk.meetings.audiovideo.DefaultAudioVideoFacade$startContentShare(com.amazonaws.services.chime.sdk.meetings.audiovideo.contentshare.ContentShareSource)/source">source</span><span class="symbol">:</span>&nbsp;<a href="../../com.amazonaws.services.chime.sdk.meetings.audiovideo.contentshare/-content-share-source/index.html"><span class="identifier">ContentShareSource</span></a><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code>
+<p>Start sharing the content of a given <a href="../../com.amazonaws.services.chime.sdk.meetings.audiovideo.contentshare/-content-share-source/index.html">ContentShareSource</a>.</p>
+<p>Once sharing has started successfully, <a href="../../com.amazonaws.services.chime.sdk.meetings.audiovideo.contentshare/-content-share-observer/on-content-share-started.html">ContentShareObserver.onContentShareStarted</a> will
+be invoked. If sharing fails or stops, <a href="../../com.amazonaws.services.chime.sdk.meetings.audiovideo.contentshare/-content-share-observer/on-content-share-stopped.html">ContentShareObserver.onContentShareStopped</a>
+will be invoked with <a href="../../com.amazonaws.services.chime.sdk.meetings.audiovideo.contentshare/-content-share-status/index.html">ContentShareStatus</a> as the cause.</p>
+<p>This will call <a href="../../com.amazonaws.services.chime.sdk.meetings.audiovideo.video/-video-source/add-video-sink.html">VideoSource.addVideoSink</a> on the provided source
+and <a href="../../com.amazonaws.services.chime.sdk.meetings.audiovideo.video/-video-source/remove-video-sink.html">VideoSource.removeVideoSink</a> on the previously provided source.</p>
+<p>Calling this function repeatedly will replace the previous <a href="../../com.amazonaws.services.chime.sdk.meetings.audiovideo.contentshare/-content-share-source/index.html">ContentShareSource</a> as the one being
+transmitted.</p>
+<h3>Parameters</h3>
+<p><a name="source"></a>
+<code>source</code> - : <a href="../../com.amazonaws.services.chime.sdk.meetings.audiovideo.contentshare/-content-share-source/index.html">ContentShareSource</a> - The source of content to be shared.</p>
+</BODY>
+</HTML>

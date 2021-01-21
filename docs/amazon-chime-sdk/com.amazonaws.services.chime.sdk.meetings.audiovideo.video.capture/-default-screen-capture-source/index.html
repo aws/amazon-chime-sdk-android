@@ -1,0 +1,115 @@
+<HTML>
+<HEAD>
+<meta charset="UTF-8">
+<title>DefaultScreenCaptureSource - amazon-chime-sdk</title>
+<link rel="stylesheet" href="../../../style.css">
+</HEAD>
+<BODY>
+<a href="../../index.html">amazon-chime-sdk</a>&nbsp;/&nbsp;<a href="../index.html">com.amazonaws.services.chime.sdk.meetings.audiovideo.video.capture</a>&nbsp;/&nbsp;<a href="./index.html">DefaultScreenCaptureSource</a><br/>
+<br/>
+<h1>DefaultScreenCaptureSource</h1>
+<code><span class="keyword">class </span><span class="identifier">DefaultScreenCaptureSource</span>&nbsp;<span class="symbol">:</span>&nbsp;<a href="../-video-capture-source/index.html"><span class="identifier">VideoCaptureSource</span></a><span class="symbol">, </span><a href="../../com.amazonaws.services.chime.sdk.meetings.audiovideo.video/-video-sink/index.html"><span class="identifier">VideoSink</span></a></code>
+<p><a href="./index.html">DefaultScreenCaptureSource</a> uses <a href="https://developer.android.com/reference/android/media/projection/MediaProjection.html">MediaProjection</a> to create a <a href="https://developer.android.com/reference/android/hardware/display/VirtualDisplay.html">VirtualDisplay</a> to capture the
+device screen. It will render the captured frames to a <a href="https://developer.android.com/reference/android/view/Surface.html">Surface</a> provided by a <a href="../-surface-texture-capture-source-factory/index.html">SurfaceTextureCaptureSourceFactory</a>.</p>
+<p>Builders will need to get permission from users to obtain the <a href="#">activityResultCode</a> and <a href="#">activityData</a> arguments,
+required to create an internal <a href="https://developer.android.com/reference/android/media/projection/MediaProjection.html">MediaProjection</a> object.
+Read <a href="https://github.com/aws/amazon-chime-sdk-android/blob/master/guides/content_share.md">content share guide</a> for more information.</p>
+<h3>Constructors</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<h4><a href="-init-.html">&lt;init&gt;</a></h4>
+</td>
+<td>
+<p><a href="./index.html">DefaultScreenCaptureSource</a> uses <a href="https://developer.android.com/reference/android/media/projection/MediaProjection.html">MediaProjection</a> to create a <a href="https://developer.android.com/reference/android/hardware/display/VirtualDisplay.html">VirtualDisplay</a> to capture the
+device screen. It will render the captured frames to a <a href="https://developer.android.com/reference/android/view/Surface.html">Surface</a> provided by a <a href="../-surface-texture-capture-source-factory/index.html">SurfaceTextureCaptureSourceFactory</a>.</p>
+<code><span class="identifier">DefaultScreenCaptureSource</span><span class="symbol">(</span><span class="identifier" id="com.amazonaws.services.chime.sdk.meetings.audiovideo.video.capture.DefaultScreenCaptureSource$<init>(android.content.Context, com.amazonaws.services.chime.sdk.meetings.utils.logger.Logger, com.amazonaws.services.chime.sdk.meetings.audiovideo.video.capture.SurfaceTextureCaptureSourceFactory, kotlin.Int, android.content.Intent, android.hardware.display.DisplayManager, android.media.projection.MediaProjectionManager)/context">context</span><span class="symbol">:</span>&nbsp;<a href="https://developer.android.com/reference/android/content/Context.html"><span class="identifier">Context</span></a><span class="symbol">, </span><span class="identifier" id="com.amazonaws.services.chime.sdk.meetings.audiovideo.video.capture.DefaultScreenCaptureSource$<init>(android.content.Context, com.amazonaws.services.chime.sdk.meetings.utils.logger.Logger, com.amazonaws.services.chime.sdk.meetings.audiovideo.video.capture.SurfaceTextureCaptureSourceFactory, kotlin.Int, android.content.Intent, android.hardware.display.DisplayManager, android.media.projection.MediaProjectionManager)/logger">logger</span><span class="symbol">:</span>&nbsp;<a href="../../com.amazonaws.services.chime.sdk.meetings.utils.logger/-logger/index.html"><span class="identifier">Logger</span></a><span class="symbol">, </span><span class="identifier" id="com.amazonaws.services.chime.sdk.meetings.audiovideo.video.capture.DefaultScreenCaptureSource$<init>(android.content.Context, com.amazonaws.services.chime.sdk.meetings.utils.logger.Logger, com.amazonaws.services.chime.sdk.meetings.audiovideo.video.capture.SurfaceTextureCaptureSourceFactory, kotlin.Int, android.content.Intent, android.hardware.display.DisplayManager, android.media.projection.MediaProjectionManager)/surfaceTextureCaptureSourceFactory">surfaceTextureCaptureSourceFactory</span><span class="symbol">:</span>&nbsp;<a href="../-surface-texture-capture-source-factory/index.html"><span class="identifier">SurfaceTextureCaptureSourceFactory</span></a><span class="symbol">, </span><span class="identifier" id="com.amazonaws.services.chime.sdk.meetings.audiovideo.video.capture.DefaultScreenCaptureSource$<init>(android.content.Context, com.amazonaws.services.chime.sdk.meetings.utils.logger.Logger, com.amazonaws.services.chime.sdk.meetings.audiovideo.video.capture.SurfaceTextureCaptureSourceFactory, kotlin.Int, android.content.Intent, android.hardware.display.DisplayManager, android.media.projection.MediaProjectionManager)/activityResultCode">activityResultCode</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html"><span class="identifier">Int</span></a><span class="symbol">, </span><span class="identifier" id="com.amazonaws.services.chime.sdk.meetings.audiovideo.video.capture.DefaultScreenCaptureSource$<init>(android.content.Context, com.amazonaws.services.chime.sdk.meetings.utils.logger.Logger, com.amazonaws.services.chime.sdk.meetings.audiovideo.video.capture.SurfaceTextureCaptureSourceFactory, kotlin.Int, android.content.Intent, android.hardware.display.DisplayManager, android.media.projection.MediaProjectionManager)/activityData">activityData</span><span class="symbol">:</span>&nbsp;<a href="https://developer.android.com/reference/android/content/Intent.html"><span class="identifier">Intent</span></a><span class="symbol">, </span><span class="identifier" id="com.amazonaws.services.chime.sdk.meetings.audiovideo.video.capture.DefaultScreenCaptureSource$<init>(android.content.Context, com.amazonaws.services.chime.sdk.meetings.utils.logger.Logger, com.amazonaws.services.chime.sdk.meetings.audiovideo.video.capture.SurfaceTextureCaptureSourceFactory, kotlin.Int, android.content.Intent, android.hardware.display.DisplayManager, android.media.projection.MediaProjectionManager)/displayManager">displayManager</span><span class="symbol">:</span>&nbsp;<a href="https://developer.android.com/reference/android/hardware/display/DisplayManager.html"><span class="identifier">DisplayManager</span></a>&nbsp;<span class="symbol">=</span>&nbsp;context.getSystemService(Context.DISPLAY_SERVICE) as DisplayManager<span class="symbol">, </span><span class="identifier" id="com.amazonaws.services.chime.sdk.meetings.audiovideo.video.capture.DefaultScreenCaptureSource$<init>(android.content.Context, com.amazonaws.services.chime.sdk.meetings.utils.logger.Logger, com.amazonaws.services.chime.sdk.meetings.audiovideo.video.capture.SurfaceTextureCaptureSourceFactory, kotlin.Int, android.content.Intent, android.hardware.display.DisplayManager, android.media.projection.MediaProjectionManager)/mediaProjectionManager">mediaProjectionManager</span><span class="symbol">:</span>&nbsp;<a href="https://developer.android.com/reference/android/media/projection/MediaProjectionManager.html"><span class="identifier">MediaProjectionManager</span></a>&nbsp;<span class="symbol">=</span>&nbsp;context.getSystemService(MEDIA_PROJECTION_SERVICE) as MediaProjectionManager<span class="symbol">)</span></code></td>
+</tr>
+</tbody>
+</table>
+<h3>Properties</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<h4><a href="content-hint.html">contentHint</a></h4>
+</td>
+<td>
+<p>Content hint for downstream processing</p>
+<code><span class="keyword">val </span><span class="identifier">contentHint</span><span class="symbol">: </span><a href="../../com.amazonaws.services.chime.sdk.meetings.audiovideo.video/-video-content-hint/index.html"><span class="identifier">VideoContentHint</span></a></code></td>
+</tr>
+</tbody>
+</table>
+<h3>Functions</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<h4><a href="add-capture-source-observer.html">addCaptureSourceObserver</a></h4>
+</td>
+<td>
+<p>Add a capture source observer to receive callbacks from the source on lifecycle events
+which can be used to trigger UI. This observer is entirely optional.</p>
+<code><span class="keyword">fun </span><span class="identifier">addCaptureSourceObserver</span><span class="symbol">(</span><span class="identifier" id="com.amazonaws.services.chime.sdk.meetings.audiovideo.video.capture.DefaultScreenCaptureSource$addCaptureSourceObserver(com.amazonaws.services.chime.sdk.meetings.audiovideo.video.capture.CaptureSourceObserver)/observer">observer</span><span class="symbol">:</span>&nbsp;<a href="../-capture-source-observer/index.html"><span class="identifier">CaptureSourceObserver</span></a><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="add-video-sink.html">addVideoSink</a></h4>
+</td>
+<td>
+<p>Add a video sink which will immediately begin to receive new frames.</p>
+<code><span class="keyword">fun </span><span class="identifier">addVideoSink</span><span class="symbol">(</span><span class="identifier" id="com.amazonaws.services.chime.sdk.meetings.audiovideo.video.capture.DefaultScreenCaptureSource$addVideoSink(com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoSink)/sink">sink</span><span class="symbol">:</span>&nbsp;<a href="../../com.amazonaws.services.chime.sdk.meetings.audiovideo.video/-video-sink/index.html"><span class="identifier">VideoSink</span></a><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="on-video-frame-received.html">onVideoFrameReceived</a></h4>
+</td>
+<td>
+<p>Receive a video frame from some upstream source.
+The <a href="../../com.amazonaws.services.chime.sdk.meetings.audiovideo.video/-video-sink/index.html">VideoSink</a> may render, store, process, and forward the frame, among other applications.</p>
+<code><span class="keyword">fun </span><span class="identifier">onVideoFrameReceived</span><span class="symbol">(</span><span class="identifier" id="com.amazonaws.services.chime.sdk.meetings.audiovideo.video.capture.DefaultScreenCaptureSource$onVideoFrameReceived(com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoFrame)/frame">frame</span><span class="symbol">:</span>&nbsp;<a href="../../com.amazonaws.services.chime.sdk.meetings.audiovideo.video/-video-frame/index.html"><span class="identifier">VideoFrame</span></a><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="release.html">release</a></h4>
+</td>
+<td>
+<code><span class="keyword">fun </span><span class="identifier">release</span><span class="symbol">(</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="remove-capture-source-observer.html">removeCaptureSourceObserver</a></h4>
+</td>
+<td>
+<p>Remove a capture source observer</p>
+<code><span class="keyword">fun </span><span class="identifier">removeCaptureSourceObserver</span><span class="symbol">(</span><span class="identifier" id="com.amazonaws.services.chime.sdk.meetings.audiovideo.video.capture.DefaultScreenCaptureSource$removeCaptureSourceObserver(com.amazonaws.services.chime.sdk.meetings.audiovideo.video.capture.CaptureSourceObserver)/observer">observer</span><span class="symbol">:</span>&nbsp;<a href="../-capture-source-observer/index.html"><span class="identifier">CaptureSourceObserver</span></a><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="remove-video-sink.html">removeVideoSink</a></h4>
+</td>
+<td>
+<p>Remove a video sink which will no longer receive new frames on return</p>
+<code><span class="keyword">fun </span><span class="identifier">removeVideoSink</span><span class="symbol">(</span><span class="identifier" id="com.amazonaws.services.chime.sdk.meetings.audiovideo.video.capture.DefaultScreenCaptureSource$removeVideoSink(com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoSink)/sink">sink</span><span class="symbol">:</span>&nbsp;<a href="../../com.amazonaws.services.chime.sdk.meetings.audiovideo.video/-video-sink/index.html"><span class="identifier">VideoSink</span></a><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="start.html">start</a></h4>
+</td>
+<td>
+<p>Start capturing on this source and emitting video frames</p>
+<code><span class="keyword">fun </span><span class="identifier">start</span><span class="symbol">(</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="stop.html">stop</a></h4>
+</td>
+<td>
+<p>Stop capturing on this source and cease emitting video frames</p>
+<code><span class="keyword">fun </span><span class="identifier">stop</span><span class="symbol">(</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code></td>
+</tr>
+</tbody>
+</table>
+</BODY>
+</HTML>

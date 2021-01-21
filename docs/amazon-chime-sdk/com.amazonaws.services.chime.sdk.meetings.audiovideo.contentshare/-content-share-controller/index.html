@@ -1,0 +1,73 @@
+<HTML>
+<HEAD>
+<meta charset="UTF-8">
+<title>ContentShareController - amazon-chime-sdk</title>
+<link rel="stylesheet" href="../../../style.css">
+</HEAD>
+<BODY>
+<a href="../../index.html">amazon-chime-sdk</a>&nbsp;/&nbsp;<a href="../index.html">com.amazonaws.services.chime.sdk.meetings.audiovideo.contentshare</a>&nbsp;/&nbsp;<a href="./index.html">ContentShareController</a><br/>
+<br/>
+<h1>ContentShareController</h1>
+<code><span class="keyword">interface </span><span class="identifier">ContentShareController</span></code>
+<p><a href="./index.html">ContentShareController</a> exposes methods for starting and stopping content share with a <a href="../-content-share-source/index.html">ContentShareSource</a>.
+The content represents a media steam to be shared in the meeting, such as screen capture or
+media files.
+Read <a href="https://github.com/aws/amazon-chime-sdk-android/blob/master/guides/content_share.md">content share guide</a> for details.</p>
+<h3>Functions</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<h4><a href="add-content-share-observer.html">addContentShareObserver</a></h4>
+</td>
+<td>
+<p>Subscribe the given observer to content share events (sharing started and stopped).</p>
+<code><span class="keyword">abstract</span> <span class="keyword">fun </span><span class="identifier">addContentShareObserver</span><span class="symbol">(</span><span class="identifier" id="com.amazonaws.services.chime.sdk.meetings.audiovideo.contentshare.ContentShareController$addContentShareObserver(com.amazonaws.services.chime.sdk.meetings.audiovideo.contentshare.ContentShareObserver)/observer">observer</span><span class="symbol">:</span>&nbsp;<a href="../-content-share-observer/index.html"><span class="identifier">ContentShareObserver</span></a><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="remove-content-share-observer.html">removeContentShareObserver</a></h4>
+</td>
+<td>
+<p>Unsubscribe the given observer from content share events.</p>
+<code><span class="keyword">abstract</span> <span class="keyword">fun </span><span class="identifier">removeContentShareObserver</span><span class="symbol">(</span><span class="identifier" id="com.amazonaws.services.chime.sdk.meetings.audiovideo.contentshare.ContentShareController$removeContentShareObserver(com.amazonaws.services.chime.sdk.meetings.audiovideo.contentshare.ContentShareObserver)/observer">observer</span><span class="symbol">:</span>&nbsp;<a href="../-content-share-observer/index.html"><span class="identifier">ContentShareObserver</span></a><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="start-content-share.html">startContentShare</a></h4>
+</td>
+<td>
+<p>Start sharing the content of a given <a href="../-content-share-source/index.html">ContentShareSource</a>.</p>
+<code><span class="keyword">abstract</span> <span class="keyword">fun </span><span class="identifier">startContentShare</span><span class="symbol">(</span><span class="identifier" id="com.amazonaws.services.chime.sdk.meetings.audiovideo.contentshare.ContentShareController$startContentShare(com.amazonaws.services.chime.sdk.meetings.audiovideo.contentshare.ContentShareSource)/source">source</span><span class="symbol">:</span>&nbsp;<a href="../-content-share-source/index.html"><span class="identifier">ContentShareSource</span></a><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="stop-content-share.html">stopContentShare</a></h4>
+</td>
+<td>
+<p>Stop sharing the content of a <a href="../-content-share-source/index.html">ContentShareSource</a> that previously started.</p>
+<code><span class="keyword">abstract</span> <span class="keyword">fun </span><span class="identifier">stopContentShare</span><span class="symbol">(</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code></td>
+</tr>
+</tbody>
+</table>
+<h3>Inheritors</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<h4><a href="../../com.amazonaws.services.chime.sdk.meetings.audiovideo/-audio-video-facade.html">AudioVideoFacade</a></h4>
+</td>
+<td>
+<code><span class="keyword">interface </span><span class="identifier">AudioVideoFacade</span>&nbsp;<span class="symbol">:</span>&nbsp;<a href="../../com.amazonaws.services.chime.sdk.meetings.audiovideo/-audio-video-controller-facade/index.html"><span class="identifier">AudioVideoControllerFacade</span></a><span class="symbol">, </span><a href="../../com.amazonaws.services.chime.sdk.meetings.realtime/-realtime-controller-facade/index.html"><span class="identifier">RealtimeControllerFacade</span></a><span class="symbol">, </span><a href="../../com.amazonaws.services.chime.sdk.meetings.device/-device-controller/index.html"><span class="identifier">DeviceController</span></a><span class="symbol">, </span><a href="../../com.amazonaws.services.chime.sdk.meetings.audiovideo.video/-video-tile-controller-facade/index.html"><span class="identifier">VideoTileControllerFacade</span></a><span class="symbol">, </span><a href="../../com.amazonaws.services.chime.sdk.meetings.audiovideo.audio.activespeakerdetector/-active-speaker-detector-facade/index.html"><span class="identifier">ActiveSpeakerDetectorFacade</span></a><span class="symbol">, </span><a href="./index.html"><span class="identifier">ContentShareController</span></a></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="../-default-content-share-controller/index.html">DefaultContentShareController</a></h4>
+</td>
+<td>
+<code><span class="keyword">class </span><span class="identifier">DefaultContentShareController</span>&nbsp;<span class="symbol">:</span>&nbsp;<a href="./index.html"><span class="identifier">ContentShareController</span></a></code></td>
+</tr>
+</tbody>
+</table>
+</BODY>
+</HTML>

@@ -59,6 +59,31 @@ may desire this input to decide when to show certain UI elements, or to notify u
 <p><a href="../com.amazonaws.services.chime.sdk.meetings.utils.logger/-console-logger/index.html">ConsoleLogger</a> writes logs with console</p>
 </tr>
 <tr>
+<h5><a href="../com.amazonaws.services.chime.sdk.meetings.audiovideo.contentshare/-content-share-controller/index.html">com.amazonaws.services.chime.sdk.meetings.audiovideo.contentshare.ContentShareController</a></h5>
+<p><a href="../com.amazonaws.services.chime.sdk.meetings.audiovideo.contentshare/-content-share-controller/index.html">ContentShareController</a> exposes methods for starting and stopping content share with a <a href="../com.amazonaws.services.chime.sdk.meetings.audiovideo.contentshare/-content-share-source/index.html">ContentShareSource</a>.
+The content represents a media steam to be shared in the meeting, such as screen capture or
+media files.
+Read <a href="https://github.com/aws/amazon-chime-sdk-android/blob/master/guides/content_share.md">content share guide</a> for details.</p>
+</tr>
+<tr>
+<h5><a href="../com.amazonaws.services.chime.sdk.meetings.audiovideo.contentshare/-content-share-observer/index.html">com.amazonaws.services.chime.sdk.meetings.audiovideo.contentshare.ContentShareObserver</a></h5>
+<p><a href="../com.amazonaws.services.chime.sdk.meetings.audiovideo.contentshare/-content-share-observer/index.html">ContentShareObserver</a> handles all callbacks related to the content share.
+By implementing the callback functions and registering with <a href="../com.amazonaws.services.chime.sdk.meetings.audiovideo.contentshare/-content-share-controller/add-content-share-observer.html">ContentShareController.addContentShareObserver</a>,
+one can get notified with content share status events.</p>
+</tr>
+<tr>
+<h5><a href="../com.amazonaws.services.chime.sdk.meetings.audiovideo.contentshare/-content-share-source/index.html">com.amazonaws.services.chime.sdk.meetings.audiovideo.contentshare.ContentShareSource</a></h5>
+<p><a href="../com.amazonaws.services.chime.sdk.meetings.audiovideo.contentshare/-content-share-source/index.html">ContentShareSource</a> contains the media sources to attach to the content share</p>
+</tr>
+<tr>
+<h5><a href="../com.amazonaws.services.chime.sdk.meetings.audiovideo.contentshare/-content-share-status/index.html">com.amazonaws.services.chime.sdk.meetings.audiovideo.contentshare.ContentShareStatus</a></h5>
+<p><a href="../com.amazonaws.services.chime.sdk.meetings.audiovideo.contentshare/-content-share-status/index.html">ContentShareStatus</a> indicates a status received regarding the content share.</p>
+</tr>
+<tr>
+<h5><a href="../com.amazonaws.services.chime.sdk.meetings.audiovideo.contentshare/-content-share-status-code/index.html">com.amazonaws.services.chime.sdk.meetings.audiovideo.contentshare.ContentShareStatusCode</a></h5>
+<p><a href="../com.amazonaws.services.chime.sdk.meetings.audiovideo.contentshare/-content-share-status-code/index.html">ContentShareStatusCode</a> indicates the reason the content share event occurred.</p>
+</tr>
+<tr>
 <h5><a href="../com.amazonaws.services.chime.sdk.meetings.session/-create-attendee-response/index.html">com.amazonaws.services.chime.sdk.meetings.session.CreateAttendeeResponse</a></h5>
 </tr>
 <tr>
@@ -94,6 +119,9 @@ to receive and process the message that sent to the topics.</p>
 use the <a href="https://developer.android.com/reference/android/view/Surface.html">Surface</a> provided by the capture source provided by a <a href="../com.amazonaws.services.chime.sdk.meetings.audiovideo.video.capture/-surface-texture-capture-source-factory/index.html">SurfaceTextureCaptureSourceFactory</a></p>
 </tr>
 <tr>
+<h5><a href="../com.amazonaws.services.chime.sdk.meetings.audiovideo.contentshare/-default-content-share-controller/index.html">com.amazonaws.services.chime.sdk.meetings.audiovideo.contentshare.DefaultContentShareController</a></h5>
+</tr>
+<tr>
 <h5><a href="../com.amazonaws.services.chime.sdk.meetings.device/-default-device-controller/index.html">com.amazonaws.services.chime.sdk.meetings.device.DefaultDeviceController</a></h5>
 </tr>
 <tr>
@@ -110,7 +138,19 @@ It will track all child <a href="../com.amazonaws.services.chime.sdk.meetings.au
 <h5><a href="../com.amazonaws.services.chime.sdk.meetings.session/-default-meeting-session/index.html">com.amazonaws.services.chime.sdk.meetings.session.DefaultMeetingSession</a></h5>
 </tr>
 <tr>
+<h5><a href="../com.amazonaws.services.chime.sdk.meetings.utils/-default-modality/index.html">com.amazonaws.services.chime.sdk.meetings.utils.DefaultModality</a></h5>
+<p><a href="../com.amazonaws.services.chime.sdk.meetings.utils/-default-modality/index.html">DefaultModality</a> is a backwards compatible extension of the
+attendee id (UUID string) and session token schemas (base 64 string).
+It appends # to either strings, which indicates the modality
+of the participant.</p>
+</tr>
+<tr>
 <h5><a href="../com.amazonaws.services.chime.sdk.meetings.realtime/-default-realtime-controller/index.html">com.amazonaws.services.chime.sdk.meetings.realtime.DefaultRealtimeController</a></h5>
+</tr>
+<tr>
+<h5><a href="../com.amazonaws.services.chime.sdk.meetings.audiovideo.video.capture/-default-screen-capture-source/index.html">com.amazonaws.services.chime.sdk.meetings.audiovideo.video.capture.DefaultScreenCaptureSource</a></h5>
+<p><a href="../com.amazonaws.services.chime.sdk.meetings.audiovideo.video.capture/-default-screen-capture-source/index.html">DefaultScreenCaptureSource</a> uses <a href="https://developer.android.com/reference/android/media/projection/MediaProjection.html">MediaProjection</a> to create a <a href="https://developer.android.com/reference/android/hardware/display/VirtualDisplay.html">VirtualDisplay</a> to capture the
+device screen. It will render the captured frames to a <a href="https://developer.android.com/reference/android/view/Surface.html">Surface</a> provided by a <a href="../com.amazonaws.services.chime.sdk.meetings.audiovideo.video.capture/-surface-texture-capture-source-factory/index.html">SurfaceTextureCaptureSourceFactory</a>.</p>
 </tr>
 <tr>
 <h5><a href="../com.amazonaws.services.chime.sdk.meetings.audiovideo.video.capture/-default-surface-texture-capture-source/index.html">com.amazonaws.services.chime.sdk.meetings.audiovideo.video.capture.DefaultSurfaceTextureCaptureSource</a></h5>
@@ -213,6 +253,9 @@ meeting service.</p>
 <tr>
 <h5><a href="../com.amazonaws.services.chime.sdk.meetings.audiovideo.metric/-metrics-observer/index.html">com.amazonaws.services.chime.sdk.meetings.audiovideo.metric.MetricsObserver</a></h5>
 <p><a href="../com.amazonaws.services.chime.sdk.meetings.audiovideo.metric/-metrics-observer/index.html">MetricsObserver</a> handles events related to audio/video metrics.</p>
+</tr>
+<tr>
+<h5><a href="../com.amazonaws.services.chime.sdk.meetings.utils/-modality-type/index.html">com.amazonaws.services.chime.sdk.meetings.utils.ModalityType</a></h5>
 </tr>
 <tr>
 <h5><a href="../com.amazonaws.services.chime.sdk.meetings.audiovideo.metric/-observable-metric/index.html">com.amazonaws.services.chime.sdk.meetings.audiovideo.metric.ObservableMetric</a></h5>
