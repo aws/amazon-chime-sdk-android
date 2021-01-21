@@ -67,7 +67,7 @@ override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) 
 }
 ```
 
-See [Custom Video Sources, Processors, and Sinks](http://custom%20video%20sources%2C%20processors%2C%20and%20sinks/) for more information on the usage of [EglCoreFactory](https://aws.github.io/amazon-chime-sdk-android/amazon-chime-sdk/com.amazonaws.services.chime.sdk.meetings.audiovideo.video.gl/-egl-core-factory/index.html). The capture source will not work if the factory is not shared between the capture and the meeting session due to use of GPU based video frames.
+See [Custom Video Sources, Processors, and Sinks](https://github.com/aws/amazon-chime-sdk-android/blob/master/guides/custom_video.md) for more information on the usage of [EglCoreFactory](https://aws.github.io/amazon-chime-sdk-android/amazon-chime-sdk/com.amazonaws.services.chime.sdk.meetings.audiovideo.video.gl/-egl-core-factory/index.html). The capture source will not work if the factory is not shared between the capture and the meeting session due to use of GPU based video frames.
 
 ### Using a custom video source
 
