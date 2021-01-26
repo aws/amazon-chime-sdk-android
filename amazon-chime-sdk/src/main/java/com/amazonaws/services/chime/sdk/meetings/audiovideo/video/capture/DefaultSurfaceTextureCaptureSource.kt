@@ -19,6 +19,7 @@ import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoSink
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.buffer.VideoFrameTextureBuffer
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.gl.EglCore
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.gl.EglCoreFactory
+import com.amazonaws.services.chime.sdk.meetings.internal.utils.ConcurrentSet
 import com.amazonaws.services.chime.sdk.meetings.internal.video.gl.GlUtil
 import com.amazonaws.services.chime.sdk.meetings.utils.logger.Logger
 import com.xodee.client.video.TimestampAligner
@@ -79,7 +80,10 @@ class DefaultSurfaceTextureCaptureSource(
     // enough sent a new frame
     private var lastAlignedTimestamp: Long? = null
 
-    private var sinks = mutableSetOf<VideoSink>()
+    // Concurrency modification could happen when source gets
+    // removed from media server (media thread) while sending frames (app thread).
+    // Use the ConcurrentSet
+    private var sinks = ConcurrentSet.createConcurrentSet<VideoSink>()
 
     private val TAG = "SurfaceTextureCaptureSource"
 

@@ -37,6 +37,7 @@ import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.buffer.VideoFr
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.buffer.VideoFrameTextureBuffer
 import com.amazonaws.services.chime.sdk.meetings.device.MediaDevice
 import com.amazonaws.services.chime.sdk.meetings.device.MediaDeviceType
+import com.amazonaws.services.chime.sdk.meetings.internal.utils.ConcurrentSet
 import com.amazonaws.services.chime.sdk.meetings.internal.utils.ObserverUtils
 import com.amazonaws.services.chime.sdk.meetings.utils.logger.Logger
 import kotlin.math.abs
@@ -79,7 +80,11 @@ class DefaultCameraCaptureSource @JvmOverloads constructor(
     private var surfaceTextureSource: SurfaceTextureCaptureSource? = null
 
     private val observers = mutableSetOf<CaptureSourceObserver>()
-    private val sinks = mutableSetOf<VideoSink>()
+
+    // Concurrency modification could happen when source gets
+    // removed from media server (media thread) while sending frames (app thread).
+    // Use the ConcurrentSet
+    private val sinks = ConcurrentSet.createConcurrentSet<VideoSink>()
 
     override val contentHint = VideoContentHint.Motion
 
