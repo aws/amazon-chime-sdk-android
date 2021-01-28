@@ -1,7 +1,7 @@
 ## Unreleased
 
 ### Fixed
-* Fixed a case when front camera is missing in the phone.
+* Fixed a case when front camera is missing in the phone. (Issue #218)
 
 ## [0.10.0] - 2021-01-21
 
