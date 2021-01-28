@@ -1,3 +1,8 @@
+## Unreleased
+
+### Fixed
+* Fixed a case when front camera is missing in the phone.
+
 ## [0.10.0] - 2021-01-21
 
 ### Added
@@ -22,7 +27,6 @@
 ### Fixed
 * Fixed potential concurrency issue on `VideoSourceAdapter`.
 * Fixed a video connection issue on network where DNS 8.8.8.8 is blocked. `ACCESS_NETWORK_STATE` permission is required to discover available DNS on the network.
-* Fixed a case when front camera is missing in the phone.
 
 ## [0.9.1] - 2021-01-08
 
