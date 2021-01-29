@@ -25,6 +25,10 @@ import android.view.Surface
 import android.view.WindowManager
 import androidx.annotation.RequiresApi
 import androidx.core.app.ActivityCompat
+import com.amazonaws.services.chime.sdk.meetings.analytics.EventAnalyticsController
+import com.amazonaws.services.chime.sdk.meetings.analytics.EventAttributeName
+import com.amazonaws.services.chime.sdk.meetings.analytics.EventName
+import com.amazonaws.services.chime.sdk.meetings.analytics.MeetingHistoryEventName
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoContentHint
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoFrame
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoRotation
@@ -45,11 +49,13 @@ import kotlinx.coroutines.runBlocking
  * [DefaultCameraCaptureSource] will configure a reasonably standard capture stream which will
  * use the [Surface] provided by the capture source provided by a [SurfaceTextureCaptureSourceFactory]
  */
-class DefaultCameraCaptureSource(
+class DefaultCameraCaptureSource @JvmOverloads constructor(
     private val context: Context,
     private val logger: Logger,
     private val surfaceTextureCaptureSourceFactory: SurfaceTextureCaptureSourceFactory,
-    private val cameraManager: CameraManager = context.getSystemService(Context.CAMERA_SERVICE) as CameraManager
+    private val cameraManager: CameraManager = context.getSystemService(
+        Context.CAMERA_SERVICE
+    ) as CameraManager
 ) : CameraCaptureSource, VideoSink {
     private val handler: Handler
 
@@ -57,9 +63,11 @@ class DefaultCameraCaptureSource(
     private var cameraCaptureSession: CameraCaptureSession? = null
     private var cameraDevice: CameraDevice? = null
     private var cameraCharacteristics: CameraCharacteristics? = null
+
     // The following are stored from cameraCharacteristics for reuse without additional query
     // From CameraCharacteristics.SENSOR_ORIENTATION, degrees clockwise rotation
     private var sensorOrientation = 0
+
     // From CameraCharacteristics.LENS_FACING
     private var isCameraFrontFacing = false
 
@@ -80,6 +88,11 @@ class DefaultCameraCaptureSource(
     private val ROTATION_360_DEGREES = 360
 
     private val TAG = "DefaultCameraCaptureSource"
+
+    var eventAnalyticsController: EventAnalyticsController? = null
+        set(value) {
+            field = value
+        }
 
     init {
         val thread = HandlerThread("DefaultCameraCaptureSource")
@@ -115,6 +128,10 @@ class DefaultCameraCaptureSource(
         device =
             MediaDevice.listVideoDevices(cameraManager).firstOrNull { it.type == desiredDeviceType } ?: MediaDevice.listVideoDevices(cameraManager)
                 .firstOrNull { it.type == MediaDeviceType.VIDEO_BACK_CAMERA }
+
+        if (device != null) {
+            eventAnalyticsController?.pushHistory(MeetingHistoryEventName.videoInputSelected)
+        }
     }
 
     override var torchEnabled: Boolean = false
@@ -149,9 +166,12 @@ class DefaultCameraCaptureSource(
             if (value.maxFps > MAX_INTERNAL_SUPPORTED_FPS) {
                 logger.info(TAG, "Limiting capture to 15 FPS to avoid frame drops")
             }
-            field = VideoCaptureFormat(value.width, value.height, min(value.maxFps,
-                MAX_INTERNAL_SUPPORTED_FPS
-            ))
+            field = VideoCaptureFormat(
+                value.width, value.height, min(
+                    value.maxFps,
+                    MAX_INTERNAL_SUPPORTED_FPS
+                )
+            )
 
             // Restart capture if already running (i.e. we have a valid surface texture source)
             surfaceTextureSource?.let {
@@ -166,6 +186,7 @@ class DefaultCameraCaptureSource(
                 Manifest.permission.CAMERA
             ) != PackageManager.PERMISSION_GRANTED
         ) {
+            handleCameraCaptureFail(CaptureSourceError.PermissionError)
             throw SecurityException("Missing necessary camera permissions")
         }
 
@@ -183,25 +204,23 @@ class DefaultCameraCaptureSource(
             // Store these immediately for convenience
             sensorOrientation = it.get(CameraCharacteristics.SENSOR_ORIENTATION) ?: 0
             isCameraFrontFacing =
-                    it.get(CameraCharacteristics.LENS_FACING) == CameraMetadata.LENS_FACING_FRONT
+                it.get(CameraCharacteristics.LENS_FACING) == CameraMetadata.LENS_FACING_FRONT
         }
 
         val chosenCaptureFormat: VideoCaptureFormat? =
-                MediaDevice.listSupportedVideoCaptureFormats(cameraManager, device).minBy { format ->
-                    abs(format.width - this.format.width) + abs(format.height - this.format.height)
-                }
-        val surfaceTextureFormat: VideoCaptureFormat = chosenCaptureFormat ?: run {
-            ObserverUtils.notifyObserverOnMainThread(observers) {
-                it.onCaptureFailed(CaptureSourceError.ConfigurationFailure)
+            MediaDevice.listSupportedVideoCaptureFormats(cameraManager, device).minBy { format ->
+                abs(format.width - this.format.width) + abs(format.height - this.format.height)
             }
+        val surfaceTextureFormat: VideoCaptureFormat = chosenCaptureFormat ?: run {
+            handleCameraCaptureFail(CaptureSourceError.ConfigurationFailure)
             return
         }
         surfaceTextureSource =
-                surfaceTextureCaptureSourceFactory.createSurfaceTextureCaptureSource(
-                        surfaceTextureFormat.width,
-                        surfaceTextureFormat.height,
-                        contentHint
-                )
+            surfaceTextureCaptureSourceFactory.createSurfaceTextureCaptureSource(
+                surfaceTextureFormat.width,
+                surfaceTextureFormat.height,
+                contentHint
+            )
         surfaceTextureSource?.addVideoSink(this)
         surfaceTextureSource?.start()
 
@@ -275,17 +294,16 @@ class DefaultCameraCaptureSource(
             cameraDevice = device
             try {
                 cameraDevice?.createCaptureSession(
-                        listOf(surfaceTextureSource?.surface),
-                        cameraCaptureSessionStateCallback,
-                        handler
+                    listOf(surfaceTextureSource?.surface),
+                    cameraCaptureSessionStateCallback,
+                    handler
                 )
             } catch (exception: CameraAccessException) {
-                logger.info(TAG, "Exception encountered creating capture session: ${exception.reason}")
-                ObserverUtils.notifyObserverOnMainThread(observers) {
-                    it.onCaptureFailed(
-                            CaptureSourceError.SystemFailure
-                    )
-                }
+                logger.info(
+                    TAG,
+                    "Exception encountered creating capture session: ${exception.reason}"
+                )
+                handleCameraCaptureFail(CaptureSourceError.SystemFailure)
                 return
             }
         }
@@ -302,9 +320,7 @@ class DefaultCameraCaptureSource(
 
         override fun onError(device: CameraDevice, error: Int) {
             logger.info(TAG, "Camera device encountered error: $error for ID ${device.id}")
-            ObserverUtils.notifyObserverOnMainThread(observers) {
-                it.onCaptureFailed(CaptureSourceError.SystemFailure)
-            }
+            handleCameraCaptureFail(CaptureSourceError.SystemFailure)
         }
     }
 
@@ -322,26 +338,32 @@ class DefaultCameraCaptureSource(
             logger.error(
                 TAG, "Camera session configuration failed with device ID: ${session.device.id}"
             )
-            ObserverUtils.notifyObserverOnMainThread(observers) {
-                it.onCaptureFailed(CaptureSourceError.ConfigurationFailure)
-            }
+            handleCameraCaptureFail(CaptureSourceError.ConfigurationFailure)
             session.close()
         }
     }
 
+    private fun handleCameraCaptureFail(error: CaptureSourceError) {
+        val attributes = mutableMapOf<EventAttributeName, Any>(
+            EventAttributeName.videoInputError to error
+        )
+        eventAnalyticsController?.publishEvent(EventName.videoInputFailed, attributes)
+        ObserverUtils.notifyObserverOnMainThread(observers) {
+            it.onCaptureFailed(error)
+        }
+    }
+
     private val cameraCaptureSessionCaptureCallback =
-            object : CameraCaptureSession.CaptureCallback() {
-                override fun onCaptureFailed(
-                    session: CameraCaptureSession,
-                    request: CaptureRequest,
-                    failure: CaptureFailure
-                ) {
-                    logger.error(TAG, "Camera capture session failed: $failure")
-                    ObserverUtils.notifyObserverOnMainThread(observers) {
-                        it.onCaptureFailed(CaptureSourceError.SystemFailure)
-                    }
-                }
+        object : CameraCaptureSession.CaptureCallback() {
+            override fun onCaptureFailed(
+                session: CameraCaptureSession,
+                request: CaptureRequest,
+                failure: CaptureFailure
+            ) {
+                logger.error(TAG, "Camera capture session failed: $failure")
+                handleCameraCaptureFail(CaptureSourceError.SystemFailure)
             }
+        }
 
     private fun createCaptureRequest() {
         val cameraDevice = cameraDevice ?: run {
@@ -355,12 +377,11 @@ class DefaultCameraCaptureSource(
                 cameraDevice.createCaptureRequest(CameraDevice.TEMPLATE_RECORD)
 
             // Set target FPS
-            val fpsRanges: Array<Range<Int>> = cameraCharacteristics?.get(CameraCharacteristics.CONTROL_AE_AVAILABLE_TARGET_FPS_RANGES)
+            val fpsRanges: Array<Range<Int>> =
+                cameraCharacteristics?.get(CameraCharacteristics.CONTROL_AE_AVAILABLE_TARGET_FPS_RANGES)
                     ?: run {
                         logger.error(TAG, "Could not retrieve camera FPS ranges")
-                        ObserverUtils.notifyObserverOnMainThread(observers) {
-                            it.onCaptureFailed(CaptureSourceError.ConfigurationFailure)
-                        }
+                        handleCameraCaptureFail(CaptureSourceError.ConfigurationFailure)
                         return
                     }
             // Pick range with max closest to but not exceeding the set max framerate
@@ -373,9 +394,7 @@ class DefaultCameraCaptureSource(
                         return@run fpsRanges.minBy { abs(this.format.maxFps - it.upper) }
                     } ?: run {
                         logger.error(TAG, "No valid FPS ranges")
-                        ObserverUtils.notifyObserverOnMainThread(observers) {
-                            it.onCaptureFailed(CaptureSourceError.ConfigurationFailure)
-                        }
+                        handleCameraCaptureFail(CaptureSourceError.ConfigurationFailure)
                         return
                     }
 
@@ -404,7 +423,10 @@ class DefaultCameraCaptureSource(
             setStabilizationMode(captureRequestBuilder)
             setFocusMode(captureRequestBuilder)
 
-            captureRequestBuilder.addTarget(surfaceTextureSource?.surface ?: throw UnknownError("Surface texture source should not be null"))
+            captureRequestBuilder.addTarget(
+                surfaceTextureSource?.surface
+                    ?: throw UnknownError("Surface texture source should not be null")
+            )
             cameraCaptureSession?.setRepeatingRequest(
                 captureRequestBuilder.build(), cameraCaptureSessionCaptureCallback, handler
             )
@@ -420,9 +442,7 @@ class DefaultCameraCaptureSource(
                 TAG,
                 "Failed to start capture request with device ID: ${cameraCaptureSession?.device?.id}, exception:$exception"
             )
-            ObserverUtils.notifyObserverOnMainThread(observers) {
-                it.onCaptureFailed(CaptureSourceError.SystemFailure)
-            }
+            handleCameraCaptureFail(CaptureSourceError.SystemFailure)
             return
         }
     }

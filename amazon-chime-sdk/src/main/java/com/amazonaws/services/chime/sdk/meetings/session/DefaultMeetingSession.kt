@@ -6,6 +6,9 @@
 package com.amazonaws.services.chime.sdk.meetings.session
 
 import android.content.Context
+import com.amazonaws.services.chime.sdk.meetings.analytics.DefaultEventAnalyticsController
+import com.amazonaws.services.chime.sdk.meetings.analytics.DefaultMeetingStatsCollector
+import com.amazonaws.services.chime.sdk.meetings.analytics.EventAnalyticsController
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.AudioVideoFacade
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.DefaultAudioVideoController
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.DefaultAudioVideoFacade
@@ -30,7 +33,7 @@ import com.amazonaws.services.chime.sdk.meetings.internal.video.TURNRequestParam
 import com.amazonaws.services.chime.sdk.meetings.realtime.DefaultRealtimeController
 import com.amazonaws.services.chime.sdk.meetings.utils.logger.Logger
 
-class DefaultMeetingSession(
+class DefaultMeetingSession @JvmOverloads constructor(
     override val configuration: MeetingSessionConfiguration,
     override val logger: Logger,
     context: Context,
@@ -39,14 +42,25 @@ class DefaultMeetingSession(
 
     override val audioVideo: AudioVideoFacade
 
+    override val eventAnalyticsController: EventAnalyticsController
+
     init {
+        val meetingStatsCollector = DefaultMeetingStatsCollector(logger)
+
+        eventAnalyticsController = DefaultEventAnalyticsController(
+            logger,
+            configuration,
+            meetingStatsCollector)
+
         val metricsCollector =
             DefaultClientMetricsCollector()
         val audioClientObserver =
             DefaultAudioClientObserver(
                 logger,
                 metricsCollector,
-                configuration
+                configuration,
+                meetingStatsCollector,
+                eventAnalyticsController
             )
 
         val audioClient =
@@ -59,7 +73,9 @@ class DefaultMeetingSession(
                 context,
                 logger,
                 audioClientObserver,
-                audioClient
+                audioClient,
+                meetingStatsCollector,
+                eventAnalyticsController
             )
 
         val turnRequestParams =
@@ -74,6 +90,7 @@ class DefaultMeetingSession(
             DefaultVideoClientStateController(
                 logger
             )
+
         val videoClientObserver =
             DefaultVideoClientObserver(
                 context,
@@ -94,7 +111,8 @@ class DefaultMeetingSession(
                 videoClientObserver,
                 configuration,
                 videoClientFactory,
-                eglCoreFactory
+                eglCoreFactory,
+                eventAnalyticsController
             )
 
         val videoTileFactory = DefaultVideoTileFactory(logger)
@@ -104,7 +122,8 @@ class DefaultMeetingSession(
                 logger,
                 videoClientController,
                 videoTileFactory,
-                eglCoreFactory
+                eglCoreFactory,
+                meetingStatsCollector
             )
         videoClientObserver.subscribeToVideoTileChange(videoTileController)
 
@@ -112,7 +131,8 @@ class DefaultMeetingSession(
             DefaultDeviceController(
                 context,
                 audioClientController,
-                videoClientController
+                videoClientController,
+                eventAnalyticsController
             )
 
         val realtimeController =
@@ -178,7 +198,8 @@ class DefaultMeetingSession(
             deviceController,
             videoTileController,
             activeSpeakerDetector,
-            contentShareController
+            contentShareController,
+            eventAnalyticsController
         )
     }
 }

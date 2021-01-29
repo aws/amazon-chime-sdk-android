@@ -10,6 +10,10 @@ import android.media.AudioFormat
 import android.media.AudioManager
 import android.media.AudioRecord
 import android.media.AudioTrack
+import com.amazonaws.services.chime.sdk.meetings.analytics.EventAnalyticsController
+import com.amazonaws.services.chime.sdk.meetings.analytics.EventAttributeName
+import com.amazonaws.services.chime.sdk.meetings.analytics.EventName
+import com.amazonaws.services.chime.sdk.meetings.analytics.MeetingStatsCollector
 import com.amazonaws.services.chime.sdk.meetings.session.MeetingSessionStatus
 import com.amazonaws.services.chime.sdk.meetings.session.MeetingSessionStatusCode
 import com.amazonaws.services.chime.sdk.meetings.utils.logger.Logger
@@ -23,7 +27,9 @@ class DefaultAudioClientController(
     private val context: Context,
     private val logger: Logger,
     private val audioClientObserver: AudioClientObserver,
-    private val audioClient: AudioClient
+    private val audioClient: AudioClient,
+    private val meetingStatsCollector: MeetingStatsCollector,
+    private val eventAnalyticsController: EventAnalyticsController
 ) : AudioClientController {
     private val TAG = "DefaultAudioClientController"
     private val DEFAULT_PORT = 0 // In case the URL does not have port
@@ -33,7 +39,8 @@ class DefaultAudioClientController(
     private val AUDIO_CLIENT_RESULT_SUCCESS = AudioClient.AUDIO_CLIENT_OK
 
     private val uiScope = CoroutineScope(Dispatchers.Main)
-    private val audioManager: AudioManager = context.getSystemService(Context.AUDIO_SERVICE) as AudioManager
+    private val audioManager: AudioManager =
+        context.getSystemService(Context.AUDIO_SERVICE) as AudioManager
     private var audioModePreCall: Int = audioManager.mode
     private var speakerphoneStatePreCall: Boolean = audioManager.isSpeakerphoneOn
 
@@ -49,7 +56,10 @@ class DefaultAudioClientController(
         audioClient.sendMessage(AudioClient.MESS_SET_HARDWARE_SAMPLE_RATE, nativeSR)
 
         // This IO_SAMPLE_RATE is used to create OpenSLES:
-        audioClient.sendMessage(AudioClient.MESS_SET_IO_SAMPLE_RATE, AudioClient.AUDIO_CLIENT_SAMPLE_RATE)
+        audioClient.sendMessage(
+            AudioClient.MESS_SET_IO_SAMPLE_RATE,
+            AudioClient.AUDIO_CLIENT_SAMPLE_RATE
+        )
 
         // Result is in bytes, so we divide by 2 (16-bit samples)
         val spkMinBufSizeInSamples = AudioTrack.getMinBufferSize(
@@ -70,7 +80,10 @@ class DefaultAudioClientController(
         )
         audioClient.sendMessage(AudioClient.MESS_SET_MIC_FRAMES_PER_BUFFER, micMinBufSizeInSamples)
         audioClient.sendMessage(AudioClient.MESS_SET_SPK_FRAMES_PER_BUFFER, spkMinBufSizeInSamples)
-        audioClient.sendMessage(AudioClient.MESS_SET_SPEAKERPHONE_MIC, AudioClient.OPENSL_MIC_DEFAULT)
+        audioClient.sendMessage(
+            AudioClient.MESS_SET_SPEAKERPHONE_MIC,
+            AudioClient.OPENSL_MIC_DEFAULT
+        )
         audioClient.sendMessage(AudioClient.MESS_SET_CVP_MODULE_FLAG, AudioClient.CVP_MODULE_NONE)
         audioClient.sendMessage(AudioClient.MESS_SET_CVP_PREF_FLAG, AudioClient.CVP_PREF_NONE)
     }
@@ -95,7 +108,8 @@ class DefaultAudioClientController(
     ) {
         // Validate audio client state
         if (audioClientState != AudioClientState.INITIALIZED &&
-            audioClientState != AudioClientState.STOPPED) {
+            audioClientState != AudioClientState.STOPPED
+        ) {
             logger.warn(
                 TAG,
                 "Current audio client state $audioClientState is invalid to start audio, ignoring"
@@ -122,6 +136,7 @@ class DefaultAudioClientController(
             DEFAULT_PORT
         }
         setUpAudioConfiguration()
+        eventAnalyticsController.publishEvent(EventName.meetingStartRequested)
         audioClientObserver.notifyAudioClientObserver { observer ->
             observer.onAudioSessionStartedConnecting(
                 false
@@ -147,6 +162,10 @@ class DefaultAudioClientController(
 
             if (res != AUDIO_CLIENT_RESULT_SUCCESS) {
                 logger.error(TAG, "Failed to start audio session. Response code: $res")
+
+                eventAnalyticsController.publishEvent(
+                    EventName.meetingStartFailed
+                )
             } else {
                 logger.info(TAG, "Started audio session.")
                 audioClientState = AudioClientState.STARTED
@@ -172,6 +191,7 @@ class DefaultAudioClientController(
                 logger.info(TAG, "Stopped audio session.")
                 audioClientState = AudioClientState.STOPPED
                 resetAudioManager()
+                notifyStop()
                 audioClientObserver.notifyAudioClientObserver { observer ->
                     observer.onAudioSessionStopped(
                         MeetingSessionStatus(MeetingSessionStatusCode.OK)
@@ -179,6 +199,14 @@ class DefaultAudioClientController(
                 }
             }
         }
+    }
+
+    private fun notifyStop() {
+        eventAnalyticsController.publishEvent(
+            EventName.meetingEnded,
+            mutableMapOf(EventAttributeName.meetingStatus to MeetingSessionStatusCode.OK)
+        )
+        meetingStatsCollector.resetMeetingStats()
     }
 
     private fun resetAudioManager() {
@@ -191,14 +219,19 @@ class DefaultAudioClientController(
     }
 
     override fun setMute(isMuted: Boolean): Boolean {
-        return audioClientState == AudioClientState.STARTED && AudioClient.AUDIO_CLIENT_OK == audioClient.setMicMute(isMuted)
+        return audioClientState == AudioClientState.STARTED && AudioClient.AUDIO_CLIENT_OK == audioClient.setMicMute(
+            isMuted
+        )
     }
 
     override fun setVoiceFocusEnabled(enabled: Boolean): Boolean {
         if (audioClientState == AudioClientState.STARTED) {
             return AudioClient.AUDIO_CLIENT_OK == audioClient.setVoiceFocusNoiseSuppression(enabled)
         } else {
-            logger.error(TAG, "Failed to set VoiceFocus to $enabled; audio client state is $audioClientState")
+            logger.error(
+                TAG,
+                "Failed to set VoiceFocus to $enabled; audio client state is $audioClientState"
+            )
             return false
         }
     }
@@ -207,7 +240,10 @@ class DefaultAudioClientController(
         if (audioClientState == AudioClientState.STARTED) {
             return audioClient.getVoiceFocusNoiseSuppression()
         } else {
-            logger.error(TAG, "Failed to get VoiceFocus enabled state; audio client state is $audioClientState")
+            logger.error(
+                TAG,
+                "Failed to get VoiceFocus enabled state; audio client state is $audioClientState"
+            )
             return false
         }
     }

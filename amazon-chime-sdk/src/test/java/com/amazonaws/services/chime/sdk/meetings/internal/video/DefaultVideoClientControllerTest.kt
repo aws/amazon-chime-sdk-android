@@ -13,6 +13,7 @@ import android.os.HandlerThread
 import android.os.Looper
 import android.util.Log
 import com.amazonaws.services.chime.sdk.meetings.TestConstant
+import com.amazonaws.services.chime.sdk.meetings.analytics.EventAnalyticsController
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoSource
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.capture.DefaultCameraCaptureSource
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.gl.EglCore
@@ -67,6 +68,9 @@ class DefaultVideoClientControllerTest {
 
     @MockK
     private lateinit var mockEglCoreFactory: EglCoreFactory
+
+    @MockK
+    private lateinit var eventAnalyticsController: EventAnalyticsController
 
     @MockK(relaxed = true)
     private lateinit var mockEglCore: EglCore

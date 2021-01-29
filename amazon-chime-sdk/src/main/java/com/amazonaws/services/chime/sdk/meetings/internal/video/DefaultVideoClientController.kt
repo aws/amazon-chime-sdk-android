@@ -6,8 +6,8 @@
 package com.amazonaws.services.chime.sdk.meetings.internal.video
 
 import android.content.Context
+import com.amazonaws.services.chime.sdk.meetings.analytics.EventAnalyticsController
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoSource
-import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.capture.CameraCaptureSource
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.capture.DefaultCameraCaptureSource
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.capture.DefaultSurfaceTextureCaptureSourceFactory
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.gl.EglCore
@@ -32,7 +32,8 @@ class DefaultVideoClientController(
     private val videoClientObserver: VideoClientObserver,
     private val configuration: MeetingSessionConfiguration,
     private val videoClientFactory: VideoClientFactory,
-    private val eglCoreFactory: EglCoreFactory
+    private val eglCoreFactory: EglCoreFactory,
+    private val eventAnalyticsController: EventAnalyticsController
 ) : VideoClientController,
     VideoClientLifecycleHandler {
 
@@ -48,7 +49,7 @@ class DefaultVideoClientController(
 
     private val gson = Gson()
 
-    private val cameraCaptureSource: CameraCaptureSource
+    private val cameraCaptureSource: DefaultCameraCaptureSource
     private var videoSourceAdapter = VideoSourceAdapter()
     private var isUsingInternalCaptureSource = false
 
@@ -62,7 +63,9 @@ class DefaultVideoClientController(
                 context,
                 logger,
                 surfaceTextureCaptureSourceFactory
-            )
+            ).apply {
+                eventAnalyticsController = this@DefaultVideoClientController.eventAnalyticsController
+            }
     }
 
     private var videoClient: VideoClient? = null
@@ -194,12 +197,12 @@ class DefaultVideoClientController(
         flag = flag or VIDEO_CLIENT_FLAG_EXCLUDE_SELF_CONTENT_IN_INDEX
         flag = flag or VIDEO_CLIENT_FLAG_ENABLE_INBAND_TURN_CREDS
         val videoClientConfig: VideoClientConfig = VideoClientConfigBuilder()
-                .setMeetingId(configuration.meetingId)
-                .setToken(configuration.credentials.joinToken)
-                .setFlags(flag)
-                .setSharedEglContext(eglCore?.eglContext)
-                .setSignalingUrl(configuration.urls.signalingURL)
-                .createVideoClientConfig()
+            .setMeetingId(configuration.meetingId)
+            .setToken(configuration.credentials.joinToken)
+            .setFlags(flag)
+            .setSharedEglContext(eglCore?.eglContext)
+            .setSignalingUrl(configuration.urls.signalingURL)
+            .createVideoClientConfig()
         videoClient?.start(videoClientConfig)
 
         videoSourceAdapter.let { videoClient?.setExternalVideoSource(it, eglCore?.eglContext) }

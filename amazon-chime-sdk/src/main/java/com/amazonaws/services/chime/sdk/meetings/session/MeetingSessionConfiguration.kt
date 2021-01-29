@@ -18,6 +18,7 @@ import com.amazonaws.services.chime.sdk.meetings.utils.ModalityType
  */
 data class MeetingSessionConfiguration(
     val meetingId: String,
+    val externalMeetingId: String,
     val credentials: MeetingSessionCredentials,
     val urls: MeetingSessionURLs
 ) {
@@ -27,6 +28,7 @@ data class MeetingSessionConfiguration(
         urlRewriter: URLRewriter = ::defaultUrlRewriter
     ) : this(
         createMeetingResponse.Meeting.MeetingId,
+        createMeetingResponse.Meeting.ExternalMeetingId,
         MeetingSessionCredentials(
             createAttendeeResponse.Attendee.AttendeeId,
             createAttendeeResponse.Attendee.ExternalUserId,
@@ -45,6 +47,7 @@ data class MeetingSessionConfiguration(
         val contentModality: String = DefaultModality.MODALITY_SEPARATOR + ModalityType.Content.value
         return MeetingSessionConfiguration(
             meetingId,
+            externalMeetingId,
             MeetingSessionCredentials(
                 credentials.attendeeId + contentModality,
                 credentials.externalUserId,

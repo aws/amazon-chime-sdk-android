@@ -17,6 +17,8 @@ import android.media.AudioManager
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.annotation.VisibleForTesting
+import com.amazonaws.services.chime.sdk.meetings.analytics.EventAnalyticsController
+import com.amazonaws.services.chime.sdk.meetings.analytics.MeetingHistoryEventName
 import com.amazonaws.services.chime.sdk.meetings.internal.audio.AudioClientController
 import com.amazonaws.services.chime.sdk.meetings.internal.audio.AudioClientState
 import com.amazonaws.services.chime.sdk.meetings.internal.audio.DefaultAudioClientController
@@ -28,6 +30,7 @@ class DefaultDeviceController(
     private val context: Context,
     private val audioClientController: AudioClientController,
     private val videoClientController: VideoClientController,
+    private val eventAnalyticsController: EventAnalyticsController,
     private val audioManager: AudioManager = context.getSystemService(Context.AUDIO_SERVICE) as AudioManager,
     private val buildVersion: Int = Build.VERSION.SDK_INT
 ) : DeviceController {
@@ -157,7 +160,11 @@ class DefaultDeviceController(
             MediaDeviceType.AUDIO_WIRED_HEADSET -> AudioClient.SPK_STREAM_ROUTE_HEADSET
             else -> AudioClient.SPK_STREAM_ROUTE_RECEIVER
         }
-        audioClientController.setRoute(route)
+
+        val selected = audioClientController.setRoute(route)
+        if (selected) {
+            eventAnalyticsController.pushHistory(MeetingHistoryEventName.audioInputSelected)
+        }
     }
 
     @RequiresApi(Build.VERSION_CODES.N)

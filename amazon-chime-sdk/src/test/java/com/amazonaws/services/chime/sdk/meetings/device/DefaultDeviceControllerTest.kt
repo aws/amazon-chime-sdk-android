@@ -5,12 +5,13 @@
 
 package com.amazonaws.services.chime.sdk.meetings.device
 
-import android.bluetooth.BluetoothAdapter
 import android.content.Context
 import android.content.Intent
 import android.media.AudioDeviceInfo
 import android.media.AudioManager
 import android.media.AudioRecordingConfiguration
+import com.amazonaws.services.chime.sdk.meetings.analytics.EventAnalyticsController
+import com.amazonaws.services.chime.sdk.meetings.analytics.MeetingHistoryEventName
 import com.amazonaws.services.chime.sdk.meetings.internal.audio.AudioClientController
 import com.amazonaws.services.chime.sdk.meetings.internal.audio.AudioClientState
 import com.amazonaws.services.chime.sdk.meetings.internal.audio.DefaultAudioClientController
@@ -23,6 +24,7 @@ import io.mockk.mockkClass
 import io.mockk.mockkStatic
 import io.mockk.verify
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.TestCoroutineDispatcher
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.setMain
@@ -33,6 +35,7 @@ import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
 
+@ExperimentalCoroutinesApi
 class DefaultDeviceControllerTest {
     @MockK
     private lateinit var activeConfiguration: AudioRecordingConfiguration
@@ -65,6 +68,9 @@ class DefaultDeviceControllerTest {
     private lateinit var videoClientController: VideoClientController
 
     @MockK
+    private lateinit var eventAnalyticsController: EventAnalyticsController
+
+    @MockK
     private lateinit var audioManager: AudioManager
 
     @MockK
@@ -74,15 +80,13 @@ class DefaultDeviceControllerTest {
 
     private val testDispatcher = TestCoroutineDispatcher()
 
-    @MockK
-    private lateinit var btAdapter: BluetoothAdapter
-
     private fun setupForNewAPILevel() {
         MockKAnnotations.init(this, relaxUnitFun = true)
         deviceController = DefaultDeviceController(
             context,
             audioClientController,
             videoClientController,
+            eventAnalyticsController,
             audioManager,
             24
         )
@@ -96,6 +100,7 @@ class DefaultDeviceControllerTest {
             context,
             audioClientController,
             videoClientController,
+            eventAnalyticsController,
             audioManager,
             21
         )
@@ -128,6 +133,22 @@ class DefaultDeviceControllerTest {
     fun tearDown() {
         Dispatchers.resetMain()
         testDispatcher.cleanupTestCoroutines()
+    }
+
+    @Test
+    fun `deviceController should call addMeetingHistoryEvent when audio device is selected`() {
+        setupForNewAPILevel()
+        every { audioClientController.setRoute(any()) } returns true
+        mockkStatic(DefaultAudioClientController::class)
+        DefaultAudioClientController.audioClientState = AudioClientState.STARTED
+        deviceController.chooseAudioDevice(MediaDevice(
+            "speaker",
+            MediaDeviceType.AUDIO_BUILTIN_SPEAKER
+        ))
+
+        verify(exactly = 1) {
+            eventAnalyticsController.pushHistory(MeetingHistoryEventName.audioInputSelected)
+        }
     }
 
     @Test

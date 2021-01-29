@@ -1,5 +1,20 @@
 ## Unreleased
 
+### Added
+* Added Analytics
+    * `EventAnalyticsController`, `EventAnalyticsFacade`, `EventAnalyticsObserver` to handle analytics.
+    * Added `EventAttributes`, `EventName`, `MeetingHistoryEventName` for meeting event information.
+    * Added `externalMeetingId` to property of `MeetingSessionConfiguration`.
+    * Added `PermissionError` to `CaptureSourceError`.
+    * **Breaking** Added `eventAnalyticsController` to property of `AudioVideoFacade`.
+    * [Demo] Added `PostLogger` to demo application to showcase sending events to backend.
+    * [Documentation] Added analytics API usage documentation.
+
+### Changed
+* Analytics
+  * **Breaking** Changed to take `EventAnalyticsController` as an additional parameter of `DefaultAudioVideoFacade` constructor.
+  * Changed to take `EventAnalyticsController` as an additional parameter of `DefaultAudioClientObserver`, `DefaultAudioClientController` constructor.
+
 ### Fixed
 * Fixed a case when front camera is missing in the phone. (Issue #218)
 

@@ -7,6 +7,10 @@ package com.amazonaws.services.chime.sdk.meetings.internal.audio
 
 import android.util.Log
 import com.amazonaws.services.chime.sdk.meetings.TestConstant
+import com.amazonaws.services.chime.sdk.meetings.analytics.EventAnalyticsController
+import com.amazonaws.services.chime.sdk.meetings.analytics.EventName
+import com.amazonaws.services.chime.sdk.meetings.analytics.MeetingHistoryEventName
+import com.amazonaws.services.chime.sdk.meetings.analytics.MeetingStatsCollector
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.AttendeeInfo
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.AudioVideoObserver
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.SignalStrength
@@ -59,6 +63,12 @@ class DefaultAudioClientObserverTest {
     @MockK
     private lateinit var mockAudioClient: AudioClient
 
+    @MockK
+    private lateinit var mockMeetingStatsCollector: MeetingStatsCollector
+
+    @MockK
+    private lateinit var mockEventAnalyticsController: EventAnalyticsController
+
     private lateinit var audioClientObserver: DefaultAudioClientObserver
 
     private val testObserverFun = { observer: AudioVideoObserver ->
@@ -110,13 +120,16 @@ class DefaultAudioClientObserverTest {
             DefaultAudioClientObserver(
                 mockLogger,
                 mockClientMetricsCollector,
-                mockConfiguration
+                mockConfiguration,
+                mockMeetingStatsCollector,
+                mockEventAnalyticsController
             )
         audioClientObserver.subscribeToAudioClientStateChange(mockAudioVideoObserver)
         audioClientObserver.subscribeToRealTimeEvents(mockRealtimeObserver)
         audioClientObserver.audioClient = mockAudioClient
         every { mockConfiguration.credentials.attendeeId } returns testIdLocal
         every { mockConfiguration.credentials.externalUserId } returns testIdLocal
+
         Dispatchers.setMain(testDispatcher)
     }
 
@@ -574,6 +587,44 @@ class DefaultAudioClientObserverTest {
     }
 
     @Test
+    fun `onAudioClientStateChange should publish meeting start event when finished connecting`() {
+        runBlockingTest {
+            audioClientObserver.onAudioClientStateChange(
+                AudioClient.AUDIO_CLIENT_STATE_CONNECTING,
+                AudioClient.AUDIO_CLIENT_OK
+            )
+
+            audioClientObserver.onAudioClientStateChange(
+                AudioClient.AUDIO_CLIENT_STATE_CONNECTED,
+                AudioClient.AUDIO_CLIENT_OK
+            )
+        }
+
+        verify(exactly = 1) { mockMeetingStatsCollector.updateMeetingStartTimeMs() }
+        verify(exactly = 1) { mockEventAnalyticsController.publishEvent(EventName.meetingStartSucceeded) }
+    }
+
+    @Test
+    fun `onAudioClientStateChange should should publish meeting start event when finished reconnecting`() {
+        runBlockingTest {
+            audioClientObserver.onAudioClientStateChange(
+                AudioClient.AUDIO_CLIENT_STATE_RECONNECTING,
+                AudioClient.AUDIO_CLIENT_OK
+            )
+
+            audioClientObserver.onAudioClientStateChange(
+                AudioClient.AUDIO_CLIENT_STATE_CONNECTED,
+                AudioClient.AUDIO_CLIENT_OK
+            )
+        }
+
+        verify(exactly = 1) { mockMeetingStatsCollector.incrementRetryCount() }
+        verify(exactly = 1) { mockMeetingStatsCollector.updateMeetingStartTimeMs() }
+        verify(exactly = 1) { mockEventAnalyticsController.pushHistory(MeetingHistoryEventName.meetingReconnected) }
+        verify(exactly = 1) { mockEventAnalyticsController.publishEvent(EventName.meetingStartSucceeded) }
+    }
+
+    @Test
     fun `onAudioClientStateChange should notify of session reconnected event when finished reconnecting`() {
         runBlockingTest {
             audioClientObserver.onAudioClientStateChange(
@@ -605,6 +656,23 @@ class DefaultAudioClientObserverTest {
         }
 
         verify(exactly = 1) { mockAudioVideoObserver.onAudioSessionDropped() }
+    }
+
+    @Test
+    fun `onAudioClientStateChange should increment poor connection count`() {
+        runBlockingTest {
+            audioClientObserver.onAudioClientStateChange(
+                AudioClient.AUDIO_CLIENT_STATE_CONNECTED,
+                AudioClient.AUDIO_CLIENT_OK
+            )
+
+            audioClientObserver.onAudioClientStateChange(
+                AudioClient.AUDIO_CLIENT_STATE_CONNECTED,
+                AudioClient.AUDIO_CLIENT_STATUS_NETWORK_IS_NOT_GOOD_ENOUGH_FOR_VOIP
+            )
+        }
+
+        verify(exactly = 1) { mockMeetingStatsCollector.incrementPoorConnectionCount() }
     }
 
     @Test
@@ -692,6 +760,27 @@ class DefaultAudioClientObserverTest {
 
         verify(exactly = 1, timeout = TestConstant.globalScopeTimeoutMs) { mockAudioVideoObserver.onAudioSessionStopped(any()) }
         verify(exactly = 1, timeout = TestConstant.globalScopeTimeoutMs) { mockAudioClient.stopSession() }
+    }
+
+    @Test
+    fun `onAudioClientStateChange should notify of session fail event to EventAnalyticsController when failed to connect`() {
+        every { mockAudioClient.stopSession() } returns 0
+
+        runBlockingTest {
+            audioClientObserver.onAudioClientStateChange(
+                AudioClient.AUDIO_CLIENT_STATE_CONNECTING,
+                AudioClient.AUDIO_CLIENT_OK
+            )
+
+            audioClientObserver.onAudioClientStateChange(
+                AudioClient.AUDIO_CLIENT_STATE_FAILED_TO_CONNECT,
+                AudioClient.AUDIO_CLIENT_ERR_CALL_AT_CAPACITY
+            )
+        }
+
+        verify(exactly = 1, timeout = TestConstant.globalScopeTimeoutMs) {
+            mockEventAnalyticsController.publishEvent(EventName.meetingFailed, any())
+        }
     }
 
     @Test

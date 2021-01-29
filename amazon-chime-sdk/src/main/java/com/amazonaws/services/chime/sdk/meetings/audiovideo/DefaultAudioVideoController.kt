@@ -22,7 +22,6 @@ class DefaultAudioVideoController(
     private val videoClientController: VideoClientController,
     private val videoClientObserver: VideoClientObserver
 ) : AudioVideoControllerFacade {
-
     override fun start() {
         audioClientController.start(
             configuration.urls.audioFallbackURL,

@@ -7,6 +7,8 @@ package com.amazonaws.services.chime.sdk.meetings.audiovideo
 
 import android.content.Context
 import androidx.core.content.ContextCompat
+import com.amazonaws.services.chime.sdk.meetings.analytics.EventAnalyticsController
+import com.amazonaws.services.chime.sdk.meetings.analytics.EventAnalyticsObserver
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.audio.activespeakerdetector.ActiveSpeakerDetectorFacade
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.contentshare.ContentShareController
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.contentshare.ContentShareObserver
@@ -52,6 +54,9 @@ class DefaultAudioVideoFacadeTest {
     private lateinit var mockRealtimeObserver: RealtimeObserver
 
     @MockK
+    private lateinit var mockEventAnalyticsObserver: EventAnalyticsObserver
+
+    @MockK
     private lateinit var mockDataMessageObserver: DataMessageObserver
 
     @MockK
@@ -68,6 +73,9 @@ class DefaultAudioVideoFacadeTest {
 
     @MockK
     private lateinit var audioVideoController: AudioVideoControllerFacade
+
+    @MockK
+    private lateinit var eventAnalyticsController: EventAnalyticsController
 
     @MockK
     private lateinit var realtimeController: RealtimeControllerFacade
@@ -98,6 +106,13 @@ class DefaultAudioVideoFacadeTest {
     }
 
     @Test
+    fun `addEventAnalyticsObserver should call EvenController addEventAnalyticsObserver with given observer`() {
+        audioVideoFacade.addEventAnalyticsObserver(mockEventAnalyticsObserver)
+
+        verify { eventAnalyticsController.addEventAnalyticsObserver(mockEventAnalyticsObserver) }
+    }
+
+    @Test
     fun `addAudioVideoObserver should call audioVideoController addObserver with given observer`() {
         audioVideoFacade.addAudioVideoObserver(mockAudioVideoObserver)
         verify { audioVideoController.addAudioVideoObserver(mockAudioVideoObserver) }
@@ -113,6 +128,13 @@ class DefaultAudioVideoFacadeTest {
     fun `addMetricsObserver should call audioVideoController addMetricsObserver with given observer`() {
         audioVideoFacade.addMetricsObserver(mockMetricsObserver)
         verify { audioVideoController.addMetricsObserver(mockMetricsObserver) }
+    }
+
+    @Test
+    fun `removeEventAnalyticsObserver should call EvenAnalyticsController removeEventAnalyticsObserver with given observer`() {
+        audioVideoFacade.removeEventAnalyticsObserver(mockEventAnalyticsObserver)
+
+        verify { eventAnalyticsController.removeEventAnalyticsObserver(mockEventAnalyticsObserver) }
     }
 
     @Test
