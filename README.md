@@ -42,10 +42,7 @@ For the purpose of setup, your project's root folder will be referred to as `roo
 
 ### 1. Download binaries
 
-Download the following zips:
-
-* [amazon-chime-sdk-0.10.0.tar.gz](https://amazon-chime-sdk-android.s3.amazonaws.com/sdk/0.10.0/amazon-chime-sdk-0.10.0.tar.gz)
-* [amazon-chime-sdk-media-0.10.0.tar.gz](https://amazon-chime-sdk-android.s3.amazonaws.com/media/0.10.0/amazon-chime-sdk-media-0.10.0.tar.gz)
+Download `amazon-chime-sdk` and `amazon-chime-sdk-media` binaries from the latest [release](https://github.com/aws/amazon-chime-sdk-android/releases/latest).
 
 Unzip them and copy the aar files to `root/app/libs`
 
@@ -96,9 +93,7 @@ Provide `https://xxxxx.xxxxx.xxx.com/Prod/` for mobile demo app.
 
 ### 2. Download binary
 
-Download the following zip:
-
-* [amazon-chime-sdk-media-0.10.0.tar.gz](https://amazon-chime-sdk-android.s3.amazonaws.com/media/0.10.0/amazon-chime-sdk-media-0.10.0.tar.gz)
+Download `amazon-chime-sdk-media` binary from the latest [release](https://github.com/aws/amazon-chime-sdk-android/releases/latest).
 
 Unzip and copy the aar files to `amazon-chime-sdk-android/amazon-chime-sdk/libs`
 
