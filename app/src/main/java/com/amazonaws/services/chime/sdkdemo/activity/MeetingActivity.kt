@@ -39,8 +39,10 @@ class MeetingActivity : AppCompatActivity(),
     private val logger = ConsoleLogger(LogLevel.DEBUG)
     private val gson = Gson()
     private val meetingSessionModel: MeetingSessionModel by lazy { ViewModelProvider(this)[MeetingSessionModel::class.java] }
+
     private lateinit var meetingId: String
     private lateinit var name: String
+
     private var cachedDevice: MediaDevice? = null
 
     private val TAG = "InMeetingActivity"
@@ -57,6 +59,7 @@ class MeetingActivity : AppCompatActivity(),
             val sessionConfig = createSessionConfiguration(meetingResponseJson)
             val meetingSession = sessionConfig?.let {
                 logger.info(TAG, "Creating meeting session for meeting Id: $meetingId")
+
                 DefaultMeetingSession(
                     it,
                     logger,
@@ -82,7 +85,9 @@ class MeetingActivity : AppCompatActivity(),
             }
 
             val surfaceTextureCaptureSourceFactory = DefaultSurfaceTextureCaptureSourceFactory(logger, meetingSessionModel.eglCoreFactory)
-            meetingSessionModel.cameraCaptureSource = DefaultCameraCaptureSource(applicationContext, logger, surfaceTextureCaptureSourceFactory)
+            meetingSessionModel.cameraCaptureSource = DefaultCameraCaptureSource(applicationContext, logger, surfaceTextureCaptureSourceFactory).apply {
+                eventAnalyticsController = meetingSession?.eventAnalyticsController
+            }
             meetingSessionModel.cpuVideoProcessor = CpuVideoProcessor(logger, meetingSessionModel.eglCoreFactory)
             meetingSessionModel.gpuVideoProcessor = GpuVideoProcessor(logger, meetingSessionModel.eglCoreFactory)
 
@@ -130,6 +135,8 @@ class MeetingActivity : AppCompatActivity(),
     }
 
     fun getAudioVideo(): AudioVideoFacade = meetingSessionModel.audioVideo
+
+    fun getMeetingSessionConfiguration(): MeetingSessionConfiguration = meetingSessionModel.configuration
 
     fun getMeetingSessionCredentials(): MeetingSessionCredentials = meetingSessionModel.credentials
 

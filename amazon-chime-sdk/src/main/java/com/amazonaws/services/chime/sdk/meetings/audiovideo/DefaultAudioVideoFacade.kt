@@ -11,6 +11,10 @@ import android.content.pm.PackageManager
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.core.content.ContextCompat
+import com.amazonaws.services.chime.sdk.meetings.analytics.EventAnalyticsController
+import com.amazonaws.services.chime.sdk.meetings.analytics.EventAnalyticsObserver
+import com.amazonaws.services.chime.sdk.meetings.analytics.EventAttributes
+import com.amazonaws.services.chime.sdk.meetings.analytics.MeetingHistoryEvent
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.audio.activespeakerdetector.ActiveSpeakerDetectorFacade
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.audio.activespeakerdetector.ActiveSpeakerObserver
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.audio.activespeakerpolicy.ActiveSpeakerPolicy
@@ -36,7 +40,8 @@ class DefaultAudioVideoFacade(
     private val deviceController: DeviceController,
     private val videoTileController: VideoTileController,
     private val activeSpeakerDetector: ActiveSpeakerDetectorFacade,
-    private val contentShareController: ContentShareController
+    private val contentShareController: ContentShareController,
+    private val eventAnalyticsController: EventAnalyticsController
 ) : AudioVideoFacade {
 
     private val permissions = arrayOf(
@@ -216,5 +221,21 @@ class DefaultAudioVideoFacade(
 
     override fun removeContentShareObserver(observer: ContentShareObserver) {
         contentShareController.removeContentShareObserver(observer)
+    }
+
+    override fun addEventAnalyticsObserver(observer: EventAnalyticsObserver) {
+        eventAnalyticsController.addEventAnalyticsObserver(observer)
+    }
+
+    override fun removeEventAnalyticsObserver(observer: EventAnalyticsObserver) {
+        eventAnalyticsController.removeEventAnalyticsObserver(observer)
+    }
+
+    override fun getMeetingHistory(): List<MeetingHistoryEvent> {
+        return eventAnalyticsController.getMeetingHistory()
+    }
+
+    override fun getCommonEventAttributes(): EventAttributes {
+        return eventAnalyticsController.getCommonEventAttributes()
     }
 }

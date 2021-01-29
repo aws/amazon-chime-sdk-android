@@ -27,6 +27,10 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.amazonaws.services.chime.sdk.meetings.analytics.EventAnalyticsObserver
+import com.amazonaws.services.chime.sdk.meetings.analytics.EventAttributes
+import com.amazonaws.services.chime.sdk.meetings.analytics.EventName
+import com.amazonaws.services.chime.sdk.meetings.analytics.toJsonString
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.AttendeeInfo
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.AudioVideoFacade
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.AudioVideoObserver
@@ -78,8 +82,10 @@ import com.amazonaws.services.chime.sdkdemo.model.MeetingModel
 import com.amazonaws.services.chime.sdkdemo.service.ScreenCaptureService
 import com.amazonaws.services.chime.sdkdemo.utils.CpuVideoProcessor
 import com.amazonaws.services.chime.sdkdemo.utils.GpuVideoProcessor
+import com.amazonaws.services.chime.sdkdemo.utils.PostLogger
 import com.amazonaws.services.chime.sdkdemo.utils.isLandscapeMode
 import com.google.android.material.tabs.TabLayout
+import com.google.gson.Gson
 import java.util.Calendar
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -89,15 +95,15 @@ import kotlinx.coroutines.sync.withLock
 
 class MeetingFragment : Fragment(),
     RealtimeObserver, AudioVideoObserver, VideoTileObserver,
-    MetricsObserver, ActiveSpeakerObserver, DeviceChangeObserver,
-    DataMessageObserver, ContentShareObserver {
+    MetricsObserver, ActiveSpeakerObserver, DeviceChangeObserver, DataMessageObserver, ContentShareObserver, EventAnalyticsObserver {
     private val logger = ConsoleLogger(LogLevel.DEBUG)
     private val mutex = Mutex()
     private val uiScope = CoroutineScope(Dispatchers.Main)
     private val meetingModel: MeetingModel by lazy { ViewModelProvider(this)[MeetingModel::class.java] }
-
     private var deviceDialog: AlertDialog? = null
     private var screenShareManager: ScreenShareManager? = null
+    private val gson = Gson()
+    private val appName = "SDKEvent"
 
     private lateinit var mediaProjectionManager: MediaProjectionManager
     private lateinit var powerManager: PowerManager
@@ -108,6 +114,8 @@ class MeetingFragment : Fragment(),
     private lateinit var cpuVideoProcessor: CpuVideoProcessor
     private lateinit var eglCoreFactory: EglCoreFactory
     private lateinit var listener: RosterViewEventListener
+    private lateinit var postLogger: PostLogger
+
     override val scoreCallbackIntervalMs: Int? get() = 1000
 
     private val WEBRTC_PERMISSION_REQUEST_CODE = 1
@@ -193,6 +201,13 @@ class MeetingFragment : Fragment(),
         cpuVideoProcessor = activity.getCpuVideoProcessor()
         screenShareManager = activity.getScreenShareManager()
         audioDeviceManager = AudioDeviceManager(audioVideo)
+        val url = if (getString(R.string.test_url).endsWith("/")) getString(R.string.test_url) else "${getString(R.string.test_url)}/"
+        postLogger = PostLogger(
+            appName,
+            activity.getMeetingSessionConfiguration(),
+            "${url}log_meeting_event",
+            LogLevel.INFO
+        )
 
         mediaProjectionManager = activity.getSystemService(Context.MEDIA_PROJECTION_SERVICE) as MediaProjectionManager
         powerManager = activity.getSystemService(Context.POWER_SERVICE) as PowerManager
@@ -1094,6 +1109,7 @@ class MeetingFragment : Fragment(),
         if (sessionStatus.statusCode != MeetingSessionStatusCode.OK) {
             endMeeting()
         }
+        listener.onLeaveMeeting()
     }
 
     override fun onAudioSessionCancelledReconnect() {
@@ -1319,6 +1335,7 @@ class MeetingFragment : Fragment(),
         audioVideo.addVideoTileObserver(this)
         audioVideo.addActiveSpeakerObserver(DefaultActiveSpeakerPolicy(), this)
         audioVideo.addContentShareObserver(this)
+        audioVideo.addEventAnalyticsObserver(this)
     }
 
     private fun unsubscribeFromAttendeeChangeHandlers() {
@@ -1342,7 +1359,10 @@ class MeetingFragment : Fragment(),
         meetingModel.currentScreenTiles.forEach {
             audioVideo.unbindVideoView(it.videoTileState.tileId)
         }
-        listener.onLeaveMeeting()
+        audioVideo.stopLocalVideo()
+        audioVideo.stopRemoteVideo()
+        audioVideo.stopRemoteVideo()
+        audioVideo.stop()
     }
 
     override fun onDestroy() {
@@ -1372,6 +1392,26 @@ class MeetingFragment : Fragment(),
         if (meetingModel.isSharingContent && !powerManager.isInteractive) {
             audioVideo.stopContentShare()
             screenShareManager?.stop()
+        }
+    }
+
+    override fun onEventReceived(name: EventName, attributes: EventAttributes) {
+        // Store the logs
+        attributes.putAll(audioVideo.getCommonEventAttributes())
+        postLogger.info(TAG, gson.toJson(mutableMapOf(
+            "name" to name,
+            "attributes" to attributes
+        )))
+
+        logger.info(TAG, "$name ${attributes.toJsonString()}")
+        when (name) {
+            EventName.meetingStartSucceeded ->
+                logger.info(TAG, "Meeting started on : ${audioVideo.getCommonEventAttributes().toJsonString()}")
+            EventName.meetingEnded, EventName.meetingFailed -> {
+                logger.info(TAG, "Meeting history: ${gson.toJson(audioVideo.getMeetingHistory())}")
+                postLogger.publishLog(TAG)
+            }
+            else -> Unit
         }
     }
 }

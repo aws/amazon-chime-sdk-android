@@ -11,6 +11,7 @@ import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.capture.Camera
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.gl.DefaultEglCoreFactory
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.gl.EglCoreFactory
 import com.amazonaws.services.chime.sdk.meetings.session.MeetingSession
+import com.amazonaws.services.chime.sdk.meetings.session.MeetingSessionConfiguration
 import com.amazonaws.services.chime.sdk.meetings.session.MeetingSessionCredentials
 import com.amazonaws.services.chime.sdkdemo.device.ScreenShareManager
 import com.amazonaws.services.chime.sdkdemo.utils.CpuVideoProcessor
@@ -25,6 +26,9 @@ class MeetingSessionModel : ViewModel() {
 
     val credentials: MeetingSessionCredentials
         get() = meetingSession.configuration.credentials
+
+    val configuration: MeetingSessionConfiguration
+        get() = meetingSession.configuration
 
     val audioVideo: AudioVideoFacade
         get() = meetingSession.audioVideo

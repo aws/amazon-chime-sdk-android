@@ -5,6 +5,7 @@
 
 package com.amazonaws.services.chime.sdk.meetings.audiovideo.video
 
+import com.amazonaws.services.chime.sdk.meetings.analytics.MeetingStatsCollector
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.gl.EglCoreFactory
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.gl.EglVideoRenderView
 import com.amazonaws.services.chime.sdk.meetings.internal.utils.ObserverUtils
@@ -15,7 +16,8 @@ class DefaultVideoTileController(
     private val logger: Logger,
     private val videoClientController: VideoClientController,
     private val videoTileFactory: VideoTileFactory,
-    private val eglCoreFactory: EglCoreFactory
+    private val eglCoreFactory: EglCoreFactory,
+    private val meetingStatsCollector: MeetingStatsCollector
 ) : VideoTileController {
     // A map of tile id to VideoTile to determine if VideoTileController is adding, removing, pausing, or rendering
     private val videoTileMap = mutableMapOf<Int, VideoTile>()
@@ -207,6 +209,7 @@ class DefaultVideoTileController(
         }
         val tile = videoTileFactory.makeTile(tileId, thisAttendeeId, videoStreamContentWidth, videoStreamContentHeight, isLocalTile)
         videoTileMap[tileId] = tile
+        meetingStatsCollector.updateMaxVideoTile(videoTileMap.size)
         tile.setPauseState(pauseState)
         forEachObserver { observer -> observer.onVideoTileAdded(tile.state) }
     }

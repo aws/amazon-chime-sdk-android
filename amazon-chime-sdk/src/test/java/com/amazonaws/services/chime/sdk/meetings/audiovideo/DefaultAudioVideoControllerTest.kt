@@ -28,6 +28,7 @@ class DefaultAudioVideoControllerTest {
     private lateinit var metricsObserver: MetricsObserver
 
     private val meetingId = "meetingId"
+    private val externalMeetingId = "externalMeetingId"
     private val attendeeId = "attendeeId"
     private val externalUserId = "externalUserId"
     private val joinToken = "joinToken"
@@ -38,6 +39,7 @@ class DefaultAudioVideoControllerTest {
 
     private val meetingSessionConfiguration = MeetingSessionConfiguration(
         meetingId,
+        externalMeetingId,
         MeetingSessionCredentials(attendeeId, externalUserId, joinToken),
         MeetingSessionURLs(audioFallbackURL, audioHostURL, turnControlURL, signalingURL, ::defaultUrlRewriter)
     )

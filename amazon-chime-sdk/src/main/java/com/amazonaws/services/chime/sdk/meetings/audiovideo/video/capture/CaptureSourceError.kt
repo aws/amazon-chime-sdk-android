@@ -16,6 +16,11 @@ enum class CaptureSourceError {
     Unknown,
 
     /**
+     * A failure to obtain necessary permission to start video
+     */
+    PermissionError,
+
+    /**
      * A failure observed from a system API used for capturing
      * e.g. In response to a `CameraDevice.StateCallback().onError` call
      */

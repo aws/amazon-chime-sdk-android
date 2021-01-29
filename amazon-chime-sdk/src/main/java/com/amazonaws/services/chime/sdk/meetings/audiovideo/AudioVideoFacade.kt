@@ -5,6 +5,7 @@
 
 package com.amazonaws.services.chime.sdk.meetings.audiovideo
 
+import com.amazonaws.services.chime.sdk.meetings.analytics.EventAnalyticsFacade
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.audio.activespeakerdetector.ActiveSpeakerDetectorFacade
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.contentshare.ContentShareController
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoTileControllerFacade
@@ -16,4 +17,5 @@ interface AudioVideoFacade : AudioVideoControllerFacade,
     DeviceController,
     VideoTileControllerFacade,
     ActiveSpeakerDetectorFacade,
-    ContentShareController
+    ContentShareController,
+    EventAnalyticsFacade

@@ -5,6 +5,11 @@
 
 package com.amazonaws.services.chime.sdk.meetings.internal.audio
 
+import com.amazonaws.services.chime.sdk.meetings.analytics.EventAnalyticsController
+import com.amazonaws.services.chime.sdk.meetings.analytics.EventAttributeName
+import com.amazonaws.services.chime.sdk.meetings.analytics.EventName
+import com.amazonaws.services.chime.sdk.meetings.analytics.MeetingHistoryEventName
+import com.amazonaws.services.chime.sdk.meetings.analytics.MeetingStatsCollector
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.AttendeeInfo
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.AudioVideoObserver
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.SignalStrength
@@ -29,6 +34,8 @@ class DefaultAudioClientObserver(
     private val logger: Logger,
     private val clientMetricsCollector: ClientMetricsCollector,
     private val configuration: MeetingSessionConfiguration,
+    private val meetingStatsCollector: MeetingStatsCollector,
+    private val eventAnalyticsController: EventAnalyticsController,
     var audioClient: AudioClient? = null
 ) : AudioClientObserver {
     private val TAG = "DefaultAudioClientObserver"
@@ -61,7 +68,10 @@ class DefaultAudioClientObserver(
         val newAudioStatus: MeetingSessionStatusCode? = toAudioStatus(newInternalAudioStatus)
 
         if (newAudioStatus == null) {
-            logger.warn(TAG, "AudioClient State raw value: $newInternalAudioState Unknown Status raw value: $newInternalAudioStatus")
+            logger.warn(
+                TAG,
+                "AudioClient State raw value: $newInternalAudioState Unknown Status raw value: $newInternalAudioStatus"
+            )
         } else {
             logger.info(TAG, "AudioClient State: $newAudioState Status: $newAudioStatus")
         }
@@ -72,10 +82,18 @@ class DefaultAudioClientObserver(
         when (newAudioState) {
             SessionStateControllerAction.FinishConnecting -> {
                 when (currentAudioState) {
-                    SessionStateControllerAction.Connecting ->
+                    SessionStateControllerAction.Connecting -> {
+                        notifyStartSucceeded()
                         notifyAudioClientObserver { observer -> observer.onAudioSessionStarted(false) }
-                    SessionStateControllerAction.Reconnecting ->
+                    }
+                    SessionStateControllerAction.Reconnecting -> {
+                        meetingStatsCollector.incrementRetryCount()
+                        eventAnalyticsController.pushHistory(
+                            MeetingHistoryEventName.meetingReconnected
+                        )
+                        notifyStartSucceeded()
                         notifyAudioClientObserver { observer -> observer.onAudioSessionStarted(true) }
+                    }
                     SessionStateControllerAction.FinishConnecting ->
                         when (newAudioStatus) {
                             MeetingSessionStatusCode.OK ->
@@ -84,6 +102,7 @@ class DefaultAudioClientObserver(
                                 }
                             MeetingSessionStatusCode.NetworkBecamePoor ->
                                 if (currentAudioStatus == MeetingSessionStatusCode.OK) {
+                                    meetingStatsCollector.incrementPoorConnectionCount()
                                     notifyAudioClientObserver { observer -> observer.onConnectionBecamePoor() }
                                 }
                         }
@@ -102,8 +121,9 @@ class DefaultAudioClientObserver(
             SessionStateControllerAction.Fail -> {
                 when (currentAudioState) {
                     SessionStateControllerAction.Connecting,
-                    SessionStateControllerAction.FinishConnecting ->
+                    SessionStateControllerAction.FinishConnecting -> {
                         handleOnAudioSessionFailed(newAudioStatus)
+                    }
                     SessionStateControllerAction.Reconnecting -> {
                         notifyAudioClientObserver { observer ->
                             observer.onAudioSessionCancelledReconnect()
@@ -115,6 +135,13 @@ class DefaultAudioClientObserver(
         }
         currentAudioState = newAudioState
         currentAudioStatus = newAudioStatus
+    }
+
+    private fun notifyStartSucceeded() {
+        meetingStatsCollector.updateMeetingStartTimeMs()
+        eventAnalyticsController.publishEvent(
+            EventName.meetingStartSucceeded
+        )
     }
 
     override fun onVolumeStateChange(attendeeUpdates: Array<out AttendeeUpdate>?) {
@@ -268,7 +295,8 @@ class DefaultAudioClientObserver(
     private fun createAttendeeInfo(attendeeUpdate: AttendeeUpdate): AttendeeInfo {
         val externalUserId =
             if (attendeeUpdate.externalUserId.isEmpty() &&
-                (attendeeUpdate.profileId == configuration.credentials.attendeeId)) {
+                (attendeeUpdate.profileId == configuration.credentials.attendeeId)
+            ) {
                 configuration.credentials.externalUserId
             } else {
                 attendeeUpdate.externalUserId
@@ -363,6 +391,7 @@ class DefaultAudioClientObserver(
 
     private fun handleOnAudioSessionFailed(statusCode: MeetingSessionStatusCode?) {
         if (audioClient != null) {
+            notifyFailed(statusCode)
             GlobalScope.launch {
                 audioClient?.stopSession()
                 DefaultAudioClientController.audioClientState = AudioClientState.STOPPED
@@ -373,5 +402,16 @@ class DefaultAudioClientObserver(
         } else {
             logger.error(TAG, "Failed to stop audio session since audioClient is null")
         }
+    }
+
+    private fun notifyFailed(statusCode: MeetingSessionStatusCode?) {
+        val attributes = statusCode?.let {
+            mutableMapOf(
+                EventAttributeName.meetingStatus to statusCode,
+                EventAttributeName.meetingErrorMessage to statusCode.toString()
+            )
+        }
+        eventAnalyticsController.publishEvent(EventName.meetingFailed, attributes)
+        meetingStatsCollector.resetMeetingStats()
     }
 }

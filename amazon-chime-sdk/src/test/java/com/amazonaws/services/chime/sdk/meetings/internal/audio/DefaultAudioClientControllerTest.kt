@@ -12,6 +12,9 @@ import android.media.AudioRecord
 import android.media.AudioTrack
 import android.util.Log
 import com.amazonaws.services.chime.sdk.meetings.TestConstant
+import com.amazonaws.services.chime.sdk.meetings.analytics.EventAnalyticsController
+import com.amazonaws.services.chime.sdk.meetings.analytics.EventName
+import com.amazonaws.services.chime.sdk.meetings.analytics.MeetingStatsCollector
 import com.amazonaws.services.chime.sdk.meetings.utils.logger.Logger
 import com.xodee.client.audio.audioclient.AudioClient
 import io.mockk.MockKAnnotations
@@ -43,6 +46,12 @@ class DefaultAudioClientControllerTest {
 
     @MockK
     private lateinit var mockAudioClient: AudioClient
+
+    @MockK
+    private lateinit var mockEventAnlyticsStateController: MeetingStatsCollector
+
+    @MockK
+    private lateinit var mockEventAnalyticsController: EventAnalyticsController
 
     @MockK
     private lateinit var mockAudioClientObserver: AudioClientObserver
@@ -80,7 +89,9 @@ class DefaultAudioClientControllerTest {
             context,
             mockLogger,
             mockAudioClientObserver,
-            mockAudioClient
+            mockAudioClient,
+            mockEventAnlyticsStateController,
+            mockEventAnalyticsController
         )
         Dispatchers.setMain(testDispatcher)
     }
@@ -319,6 +330,20 @@ class DefaultAudioClientControllerTest {
     }
 
     @Test
+    fun `start should notify EventAnalyticsController about meeting start requested event`() {
+        setupStartTests()
+        audioClientController.start(
+            testAudioFallbackUrl,
+            testAudioHostUrl,
+            testMeetingId,
+            testAttendeeId,
+            testJoinToken
+        )
+
+        verify(exactly = 1) { mockEventAnalyticsController.publishEvent(EventName.meetingStartRequested, any()) }
+    }
+
+    @Test
     fun `stop should not call AudioClient stopSession when audio client status is not started`() {
         setupStartTests()
         every { mockAudioClient.stopSession() } returns testAudioClientSuccessCode
@@ -326,6 +351,23 @@ class DefaultAudioClientControllerTest {
         audioClientController.stop()
 
         verify(exactly = 0) { mockAudioClient.stopSession() }
+    }
+
+    @Test
+    fun `stop should notify EventAnalyticsController about meeting end event`() {
+        setupStartTests()
+        audioClientController.start(
+            testAudioFallbackUrl,
+            testAudioHostUrl,
+            testMeetingId,
+            testAttendeeId,
+            testJoinToken
+        )
+        every { mockAudioClient.stopSession() } returns testAudioClientSuccessCode
+
+        audioClientController.stop()
+
+        verify(exactly = 1, timeout = TestConstant.globalScopeTimeoutMs) { mockEventAnalyticsController.publishEvent(EventName.meetingEnded, any()) }
     }
 
     @Test

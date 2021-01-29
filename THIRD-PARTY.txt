@@ -142,7 +142,7 @@ The Amazon Chime SDK for Android includes the following third-party software/lic
 https://github.com/Kotlin/kotlinx.coroutines
 ** Material Components; version 1.1.0 --
 https://github.com/material-components/material-components-android
-** MockK; version 1.9.3 -- https://mockk.io/
+** MockK; version 1.10.0 -- https://mockk.io/
 ** shadow; version 4.0.2 -- https://github.com/johnrengelman/shadow
 ** shadow; version 4.0.2 -- https://github.com/johnrengelman/shadow
 

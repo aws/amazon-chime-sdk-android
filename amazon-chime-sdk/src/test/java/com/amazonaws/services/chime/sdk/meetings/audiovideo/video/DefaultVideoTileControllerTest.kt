@@ -4,6 +4,7 @@
  */
 package com.amazonaws.services.chime.sdk.meetings.audiovideo.video
 
+import com.amazonaws.services.chime.sdk.meetings.analytics.MeetingStatsCollector
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.buffer.VideoFrameBuffer
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.gl.EglCoreFactory
 import com.amazonaws.services.chime.sdk.meetings.internal.video.VideoClientController
@@ -53,6 +54,9 @@ class DefaultVideoTileControllerTest {
 
     @MockK
     private lateinit var mockVideoFrameBuffer: VideoFrameBuffer
+
+    @MockK
+    private lateinit var meetingStatsCollector: MeetingStatsCollector
 
     @InjectMockKs
     private lateinit var videoTileController: DefaultVideoTileController
