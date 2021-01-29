@@ -13,7 +13,7 @@ interface EventAnalyticsController {
      * Publish an event with updated [EventAttributes].
      *
      * @param name: [EventName] - Name of event to publish
-     * @param attributes: [EventAttributes] - Attributes of event to pass to builders. It will always add default attributes
+     * @param attributes: [EventAttributes] - Attributes of event to pass to builders.
      */
     fun publishEvent(name: EventName, attributes: EventAttributes? = null)
 
