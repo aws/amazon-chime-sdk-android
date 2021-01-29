@@ -13,7 +13,7 @@
 ### Changed
 * Analytics
   * **Breaking** Changed to take `EventAnalyticsController` as an additional parameter of `DefaultAudioVideoFacade` constructor.
-  * Changed to take `EventAnalyticsController` as an additional parameter of  `DefaultAudioClientObserver`, `DefaultAudioClientController` constructor.
+  * Changed to take `EventAnalyticsController` as an additional parameter of `DefaultAudioClientObserver`, `DefaultAudioClientController` constructor.
 
 ### Fixed
 * Fixed a case when front camera is missing in the phone. (Issue #218)
