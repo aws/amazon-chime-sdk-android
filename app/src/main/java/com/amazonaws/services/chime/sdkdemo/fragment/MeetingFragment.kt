@@ -103,7 +103,7 @@ class MeetingFragment : Fragment(),
     private var deviceDialog: AlertDialog? = null
     private var screenShareManager: ScreenShareManager? = null
     private val gson = Gson()
-    private val appName = "SDKEvent"
+    private val appName = "SDKEvents"
 
     private lateinit var mediaProjectionManager: MediaProjectionManager
     private lateinit var powerManager: PowerManager
