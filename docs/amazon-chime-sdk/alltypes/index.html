@@ -135,7 +135,13 @@ OpenGLES3 has incompatibilities with AmazonChimeSDKMedia library.</p>
 It will track all child <a href="../com.amazonaws.services.chime.sdk.meetings.audiovideo.video.gl/-egl-core/index.html">EglCore</a> objects and release the root core if all child cores are released.</p>
 </tr>
 <tr>
+<h5><a href="../com.amazonaws.services.chime.sdk.meetings.analytics/-default-event-analytics-controller/index.html">com.amazonaws.services.chime.sdk.meetings.analytics.DefaultEventAnalyticsController</a></h5>
+</tr>
+<tr>
 <h5><a href="../com.amazonaws.services.chime.sdk.meetings.session/-default-meeting-session/index.html">com.amazonaws.services.chime.sdk.meetings.session.DefaultMeetingSession</a></h5>
+</tr>
+<tr>
+<h5><a href="../com.amazonaws.services.chime.sdk.meetings.analytics/-default-meeting-stats-collector/index.html">com.amazonaws.services.chime.sdk.meetings.analytics.DefaultMeetingStatsCollector</a></h5>
 </tr>
 <tr>
 <h5><a href="../com.amazonaws.services.chime.sdk.meetings.utils/-default-modality/index.html">com.amazonaws.services.chime.sdk.meetings.utils.DefaultModality</a></h5>
@@ -201,6 +207,31 @@ is desired to use a view outside of the controller (e.g. in pre-meeting device s
 need to call <a href="../com.amazonaws.services.chime.sdk.meetings.audiovideo.video.gl/-egl-video-render-view/init.html">init</a> and <a href="../com.amazonaws.services.chime.sdk.meetings.audiovideo.video.gl/-egl-video-render-view/release.html">release</a> themselves</p>
 </tr>
 <tr>
+<h5><a href="../com.amazonaws.services.chime.sdk.meetings.analytics/-event-analytics-controller/index.html">com.amazonaws.services.chime.sdk.meetings.analytics.EventAnalyticsController</a></h5>
+<p><a href="../com.amazonaws.services.chime.sdk.meetings.analytics/-event-analytics-controller/index.html">EventAnalyticsController</a> keeps track of events and notifies <a href="../com.amazonaws.services.chime.sdk.meetings.analytics/-event-analytics-observer/index.html">EventAnalyticsObserver</a>.
+An event describes the success and failure conditions for the meeting session.</p>
+</tr>
+<tr>
+<h5><a href="../com.amazonaws.services.chime.sdk.meetings.analytics/-event-analytics-facade/index.html">com.amazonaws.services.chime.sdk.meetings.analytics.EventAnalyticsFacade</a></h5>
+<p><a href="../com.amazonaws.services.chime.sdk.meetings.analytics/-event-analytics-facade/index.html">EventAnalyticsFacade</a> allows builders to listen to meeting analytics events
+through adding/removing <a href="../com.amazonaws.services.chime.sdk.meetings.analytics/-event-analytics-observer/index.html">EventAnalyticsObserver</a>.</p>
+</tr>
+<tr>
+<h5><a href="../com.amazonaws.services.chime.sdk.meetings.analytics/-event-analytics-observer/index.html">com.amazonaws.services.chime.sdk.meetings.analytics.EventAnalyticsObserver</a></h5>
+<p><a href="../com.amazonaws.services.chime.sdk.meetings.analytics/-event-analytics-observer/index.html">EventAnalyticsObserver</a> handles events regarding to analytics.</p>
+</tr>
+<tr>
+<h5><a href="../com.amazonaws.services.chime.sdk.meetings.analytics/-event-attribute-name/index.html">com.amazonaws.services.chime.sdk.meetings.analytics.EventAttributeName</a></h5>
+</tr>
+<tr>
+<h5><a href="../com.amazonaws.services.chime.sdk.meetings.analytics/-event-attributes.html">com.amazonaws.services.chime.sdk.meetings.analytics.EventAttributes</a></h5>
+<p><a href="../com.amazonaws.services.chime.sdk.meetings.analytics/-event-attributes.html">EventAttributes</a> describes meeting event.</p>
+</tr>
+<tr>
+<h5><a href="../com.amazonaws.services.chime.sdk.meetings.analytics/-event-name/index.html">com.amazonaws.services.chime.sdk.meetings.analytics.EventName</a></h5>
+<p><a href="../com.amazonaws.services.chime.sdk.meetings.analytics/-event-name/index.html">EventName</a> represent some major event that could help builders to analyze the data.</p>
+</tr>
+<tr>
 <h5><a href="../com.amazonaws.services.chime.sdk.meetings.utils.logger/-logger/index.html">com.amazonaws.services.chime.sdk.meetings.utils.logger.Logger</a></h5>
 <p><a href="../com.amazonaws.services.chime.sdk.meetings.utils.logger/-logger/index.html">Logger</a> defines how to write logs for different logging level.</p>
 </tr>
@@ -220,6 +251,14 @@ need to call <a href="../com.amazonaws.services.chime.sdk.meetings.audiovideo.vi
 </tr>
 <tr>
 <h5><a href="../com.amazonaws.services.chime.sdk.meetings.session/-meeting/index.html">com.amazonaws.services.chime.sdk.meetings.session.Meeting</a></h5>
+</tr>
+<tr>
+<h5><a href="../com.amazonaws.services.chime.sdk.meetings.analytics/-meeting-history-event/index.html">com.amazonaws.services.chime.sdk.meetings.analytics.MeetingHistoryEvent</a></h5>
+</tr>
+<tr>
+<h5><a href="../com.amazonaws.services.chime.sdk.meetings.analytics/-meeting-history-event-name/index.html">com.amazonaws.services.chime.sdk.meetings.analytics.MeetingHistoryEventName</a></h5>
+<p><a href="../com.amazonaws.services.chime.sdk.meetings.analytics/-meeting-history-event-name/index.html">MeetingHistoryEventName</a> is a notable event (such as MeetingStartSucceeded) that occur during meeting.
+Thus, this also includes events in <a href="../com.amazonaws.services.chime.sdk.meetings.analytics/-event-name/index.html">EventName</a>.</p>
 </tr>
 <tr>
 <h5><a href="../com.amazonaws.services.chime.sdk.meetings.session/-meeting-session/index.html">com.amazonaws.services.chime.sdk.meetings.session.MeetingSession</a></h5>
@@ -251,11 +290,18 @@ received for a session.</p>
 meeting service.</p>
 </tr>
 <tr>
+<h5><a href="../com.amazonaws.services.chime.sdk.meetings.analytics/-meeting-stats-collector/index.html">com.amazonaws.services.chime.sdk.meetings.analytics.MeetingStatsCollector</a></h5>
+</tr>
+<tr>
 <h5><a href="../com.amazonaws.services.chime.sdk.meetings.audiovideo.metric/-metrics-observer/index.html">com.amazonaws.services.chime.sdk.meetings.audiovideo.metric.MetricsObserver</a></h5>
 <p><a href="../com.amazonaws.services.chime.sdk.meetings.audiovideo.metric/-metrics-observer/index.html">MetricsObserver</a> handles events related to audio/video metrics.</p>
 </tr>
 <tr>
 <h5><a href="../com.amazonaws.services.chime.sdk.meetings.utils/-modality-type/index.html">com.amazonaws.services.chime.sdk.meetings.utils.ModalityType</a></h5>
+</tr>
+<tr>
+ (extensions in package com.amazonaws.services.chime.sdk.meetings.analytics)
+<h5><a href="../com.amazonaws.services.chime.sdk.meetings.analytics/kotlin.collections.-mutable-map/index.html">kotlin.collections.MutableMap</a></h5>
 </tr>
 <tr>
 <h5><a href="../com.amazonaws.services.chime.sdk.meetings.audiovideo.metric/-observable-metric/index.html">com.amazonaws.services.chime.sdk.meetings.audiovideo.metric.ObservableMetric</a></h5>

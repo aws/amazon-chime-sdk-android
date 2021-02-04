@@ -1,4 +1,4 @@
-## Unreleased
+## [0.11.0] - 2021-02-04
 
 ### Added
 * Added Analytics

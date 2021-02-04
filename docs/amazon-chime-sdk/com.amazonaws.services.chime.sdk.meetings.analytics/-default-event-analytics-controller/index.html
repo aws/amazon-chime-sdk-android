@@ -1,0 +1,78 @@
+<HTML>
+<HEAD>
+<meta charset="UTF-8">
+<title>DefaultEventAnalyticsController - amazon-chime-sdk</title>
+<link rel="stylesheet" href="../../../style.css">
+</HEAD>
+<BODY>
+<a href="../../index.html">amazon-chime-sdk</a>&nbsp;/&nbsp;<a href="../index.html">com.amazonaws.services.chime.sdk.meetings.analytics</a>&nbsp;/&nbsp;<a href="./index.html">DefaultEventAnalyticsController</a><br/>
+<br/>
+<h1>DefaultEventAnalyticsController</h1>
+<code><span class="keyword">class </span><span class="identifier">DefaultEventAnalyticsController</span>&nbsp;<span class="symbol">:</span>&nbsp;<a href="../-event-analytics-controller/index.html"><span class="identifier">EventAnalyticsController</span></a></code>
+<h3>Constructors</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<h4><a href="-init-.html">&lt;init&gt;</a></h4>
+</td>
+<td>
+<code><span class="identifier">DefaultEventAnalyticsController</span><span class="symbol">(</span><span class="identifier" id="com.amazonaws.services.chime.sdk.meetings.analytics.DefaultEventAnalyticsController$<init>(com.amazonaws.services.chime.sdk.meetings.utils.logger.Logger, com.amazonaws.services.chime.sdk.meetings.session.MeetingSessionConfiguration, com.amazonaws.services.chime.sdk.meetings.analytics.MeetingStatsCollector)/logger">logger</span><span class="symbol">:</span>&nbsp;<a href="../../com.amazonaws.services.chime.sdk.meetings.utils.logger/-logger/index.html"><span class="identifier">Logger</span></a><span class="symbol">, </span><span class="identifier" id="com.amazonaws.services.chime.sdk.meetings.analytics.DefaultEventAnalyticsController$<init>(com.amazonaws.services.chime.sdk.meetings.utils.logger.Logger, com.amazonaws.services.chime.sdk.meetings.session.MeetingSessionConfiguration, com.amazonaws.services.chime.sdk.meetings.analytics.MeetingStatsCollector)/meetingSessionConfiguration">meetingSessionConfiguration</span><span class="symbol">:</span>&nbsp;<a href="../../com.amazonaws.services.chime.sdk.meetings.session/-meeting-session-configuration/index.html"><span class="identifier">MeetingSessionConfiguration</span></a><span class="symbol">, </span><span class="identifier" id="com.amazonaws.services.chime.sdk.meetings.analytics.DefaultEventAnalyticsController$<init>(com.amazonaws.services.chime.sdk.meetings.utils.logger.Logger, com.amazonaws.services.chime.sdk.meetings.session.MeetingSessionConfiguration, com.amazonaws.services.chime.sdk.meetings.analytics.MeetingStatsCollector)/meetingStatsCollector">meetingStatsCollector</span><span class="symbol">:</span>&nbsp;<a href="../-meeting-stats-collector/index.html"><span class="identifier">MeetingStatsCollector</span></a><span class="symbol">)</span></code></td>
+</tr>
+</tbody>
+</table>
+<h3>Functions</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<h4><a href="add-event-analytics-observer.html">addEventAnalyticsObserver</a></h4>
+</td>
+<td>
+<p>Add specified <a href="../-event-analytics-observer/index.html">EventAnalyticsObserver</a>.</p>
+<code><span class="keyword">fun </span><span class="identifier">addEventAnalyticsObserver</span><span class="symbol">(</span><span class="identifier" id="com.amazonaws.services.chime.sdk.meetings.analytics.DefaultEventAnalyticsController$addEventAnalyticsObserver(com.amazonaws.services.chime.sdk.meetings.analytics.EventAnalyticsObserver)/observer">observer</span><span class="symbol">:</span>&nbsp;<a href="../-event-analytics-observer/index.html"><span class="identifier">EventAnalyticsObserver</span></a><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="get-common-event-attributes.html">getCommonEventAttributes</a></h4>
+</td>
+<td>
+<p>Retrieve common attributes, including deviceName, osName, and more.</p>
+<code><span class="keyword">fun </span><span class="identifier">getCommonEventAttributes</span><span class="symbol">(</span><span class="symbol">)</span><span class="symbol">: </span><a href="../-event-attributes.html"><span class="identifier">EventAttributes</span></a></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="get-meeting-history.html">getMeetingHistory</a></h4>
+</td>
+<td>
+<p>Retrieve meeting history.</p>
+<code><span class="keyword">fun </span><span class="identifier">getMeetingHistory</span><span class="symbol">(</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/index.html"><span class="identifier">List</span></a><span class="symbol">&lt;</span><a href="../-meeting-history-event/index.html"><span class="identifier">MeetingHistoryEvent</span></a><span class="symbol">&gt;</span></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="publish-event.html">publishEvent</a></h4>
+</td>
+<td>
+<p>Publish an event with updated <a href="../-event-attributes.html">EventAttributes</a>.</p>
+<code><span class="keyword">fun </span><span class="identifier">publishEvent</span><span class="symbol">(</span><span class="identifier" id="com.amazonaws.services.chime.sdk.meetings.analytics.DefaultEventAnalyticsController$publishEvent(com.amazonaws.services.chime.sdk.meetings.analytics.EventName, kotlin.collections.MutableMap((com.amazonaws.services.chime.sdk.meetings.analytics.EventAttributeName, kotlin.Any)))/name">name</span><span class="symbol">:</span>&nbsp;<a href="../-event-name/index.html"><span class="identifier">EventName</span></a><span class="symbol">, </span><span class="identifier" id="com.amazonaws.services.chime.sdk.meetings.analytics.DefaultEventAnalyticsController$publishEvent(com.amazonaws.services.chime.sdk.meetings.analytics.EventName, kotlin.collections.MutableMap((com.amazonaws.services.chime.sdk.meetings.analytics.EventAttributeName, kotlin.Any)))/attributes">attributes</span><span class="symbol">:</span>&nbsp;<a href="../-event-attributes.html"><span class="identifier">EventAttributes</span></a><span class="symbol">?</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="push-history.html">pushHistory</a></h4>
+</td>
+<td>
+<p>Push <a href="../-meeting-history-event-name/index.html">MeetingHistoryEventName</a> to internal <a href="../-meeting-stats-collector/index.html">MeetingStatsCollector</a>.</p>
+<code><span class="keyword">fun </span><span class="identifier">pushHistory</span><span class="symbol">(</span><span class="identifier" id="com.amazonaws.services.chime.sdk.meetings.analytics.DefaultEventAnalyticsController$pushHistory(com.amazonaws.services.chime.sdk.meetings.analytics.MeetingHistoryEventName)/historyEventName">historyEventName</span><span class="symbol">:</span>&nbsp;<a href="../-meeting-history-event-name/index.html"><span class="identifier">MeetingHistoryEventName</span></a><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="remove-event-analytics-observer.html">removeEventAnalyticsObserver</a></h4>
+</td>
+<td>
+<p>Remove specified <a href="../-event-analytics-observer/index.html">EventAnalyticsObserver</a>.</p>
+<code><span class="keyword">fun </span><span class="identifier">removeEventAnalyticsObserver</span><span class="symbol">(</span><span class="identifier" id="com.amazonaws.services.chime.sdk.meetings.analytics.DefaultEventAnalyticsController$removeEventAnalyticsObserver(com.amazonaws.services.chime.sdk.meetings.analytics.EventAnalyticsObserver)/observer">observer</span><span class="symbol">:</span>&nbsp;<a href="../-event-analytics-observer/index.html"><span class="identifier">EventAnalyticsObserver</span></a><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code></td>
+</tr>
+</tbody>
+</table>
+</BODY>
+</HTML>
