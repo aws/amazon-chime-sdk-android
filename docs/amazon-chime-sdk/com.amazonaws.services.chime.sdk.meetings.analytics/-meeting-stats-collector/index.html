@@ -1,0 +1,94 @@
+<HTML>
+<HEAD>
+<meta charset="UTF-8">
+<title>MeetingStatsCollector - amazon-chime-sdk</title>
+<link rel="stylesheet" href="../../../style.css">
+</HEAD>
+<BODY>
+<a href="../../index.html">amazon-chime-sdk</a>&nbsp;/&nbsp;<a href="../index.html">com.amazonaws.services.chime.sdk.meetings.analytics</a>&nbsp;/&nbsp;<a href="./index.html">MeetingStatsCollector</a><br/>
+<br/>
+<h1>MeetingStatsCollector</h1>
+<code><span class="keyword">interface </span><span class="identifier">MeetingStatsCollector</span></code>
+<h3>Functions</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<h4><a href="add-meeting-history-event.html">addMeetingHistoryEvent</a></h4>
+</td>
+<td>
+<p>Add a history meeting event.</p>
+<code><span class="keyword">abstract</span> <span class="keyword">fun </span><span class="identifier">addMeetingHistoryEvent</span><span class="symbol">(</span><span class="identifier" id="com.amazonaws.services.chime.sdk.meetings.analytics.MeetingStatsCollector$addMeetingHistoryEvent(com.amazonaws.services.chime.sdk.meetings.analytics.MeetingHistoryEventName, kotlin.Long)/historyEventName">historyEventName</span><span class="symbol">:</span>&nbsp;<a href="../-meeting-history-event-name/index.html"><span class="identifier">MeetingHistoryEventName</span></a><span class="symbol">, </span><span class="identifier" id="com.amazonaws.services.chime.sdk.meetings.analytics.MeetingStatsCollector$addMeetingHistoryEvent(com.amazonaws.services.chime.sdk.meetings.analytics.MeetingHistoryEventName, kotlin.Long)/timestampMs">timestampMs</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html"><span class="identifier">Long</span></a><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="get-meeting-history.html">getMeetingHistory</a></h4>
+</td>
+<td>
+<p>Get a list of meeting history events.</p>
+<code><span class="keyword">abstract</span> <span class="keyword">fun </span><span class="identifier">getMeetingHistory</span><span class="symbol">(</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/index.html"><span class="identifier">List</span></a><span class="symbol">&lt;</span><a href="../-meeting-history-event/index.html"><span class="identifier">MeetingHistoryEvent</span></a><span class="symbol">&gt;</span></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="get-meeting-stats-event-attributes.html">getMeetingStatsEventAttributes</a></h4>
+</td>
+<td>
+<p>Get the meeting stats attributes.</p>
+<code><span class="keyword">abstract</span> <span class="keyword">fun </span><span class="identifier">getMeetingStatsEventAttributes</span><span class="symbol">(</span><span class="symbol">)</span><span class="symbol">: </span><a href="../-event-attributes.html"><span class="identifier">EventAttributes</span></a></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="increment-poor-connection-count.html">incrementPoorConnectionCount</a></h4>
+</td>
+<td>
+<p>Increment poor connection count during the session.</p>
+<code><span class="keyword">abstract</span> <span class="keyword">fun </span><span class="identifier">incrementPoorConnectionCount</span><span class="symbol">(</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="increment-retry-count.html">incrementRetryCount</a></h4>
+</td>
+<td>
+<p>Increment meeting session retry count.</p>
+<code><span class="keyword">abstract</span> <span class="keyword">fun </span><span class="identifier">incrementRetryCount</span><span class="symbol">(</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="reset-meeting-stats.html">resetMeetingStats</a></h4>
+</td>
+<td>
+<p>Clear meeting stats.</p>
+<code><span class="keyword">abstract</span> <span class="keyword">fun </span><span class="identifier">resetMeetingStats</span><span class="symbol">(</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="update-max-video-tile.html">updateMaxVideoTile</a></h4>
+</td>
+<td>
+<p>Update max video tile count during the meeting.</p>
+<code><span class="keyword">abstract</span> <span class="keyword">fun </span><span class="identifier">updateMaxVideoTile</span><span class="symbol">(</span><span class="identifier" id="com.amazonaws.services.chime.sdk.meetings.analytics.MeetingStatsCollector$updateMaxVideoTile(kotlin.Int)/videoTileCount">videoTileCount</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html"><span class="identifier">Int</span></a><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="update-meeting-start-time-ms.html">updateMeetingStartTimeMs</a></h4>
+</td>
+<td>
+<p>Update meeting start time.</p>
+<code><span class="keyword">abstract</span> <span class="keyword">fun </span><span class="identifier">updateMeetingStartTimeMs</span><span class="symbol">(</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code></td>
+</tr>
+</tbody>
+</table>
+<h3>Inheritors</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<h4><a href="../-default-meeting-stats-collector/index.html">DefaultMeetingStatsCollector</a></h4>
+</td>
+<td>
+<code><span class="keyword">class </span><span class="identifier">DefaultMeetingStatsCollector</span>&nbsp;<span class="symbol">:</span>&nbsp;<a href="./index.html"><span class="identifier">MeetingStatsCollector</span></a></code></td>
+</tr>
+</tbody>
+</table>
+</BODY>
+</HTML>

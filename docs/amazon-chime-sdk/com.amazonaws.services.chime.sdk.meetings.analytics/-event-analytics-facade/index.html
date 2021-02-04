@@ -1,0 +1,69 @@
+<HTML>
+<HEAD>
+<meta charset="UTF-8">
+<title>EventAnalyticsFacade - amazon-chime-sdk</title>
+<link rel="stylesheet" href="../../../style.css">
+</HEAD>
+<BODY>
+<a href="../../index.html">amazon-chime-sdk</a>&nbsp;/&nbsp;<a href="../index.html">com.amazonaws.services.chime.sdk.meetings.analytics</a>&nbsp;/&nbsp;<a href="./index.html">EventAnalyticsFacade</a><br/>
+<br/>
+<h1>EventAnalyticsFacade</h1>
+<code><span class="keyword">interface </span><span class="identifier">EventAnalyticsFacade</span></code>
+<p><a href="./index.html">EventAnalyticsFacade</a> allows builders to listen to meeting analytics events
+through adding/removing <a href="../-event-analytics-observer/index.html">EventAnalyticsObserver</a>.</p>
+<p>For instance, if meeting start succeeded, you'll receive data
+<a href="../-event-analytics-observer/on-event-received.html">EventAnalyticsObserver.onEventReceived</a> with name as <a href="../-event-name/index.html">EventName</a> and attributes as <a href="../-event-attributes.html">EventAttributes</a>,
+which is just <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-map/index.html">Map</a>. This will include attributes specific to the event.</p>
+<p>For more information about the attributes, please refer to <a href="../-event-attribute-name/index.html">EventAttributeName</a>.</p>
+<p>It can have additional attributes based on the event.</p>
+<h3>Functions</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<h4><a href="add-event-analytics-observer.html">addEventAnalyticsObserver</a></h4>
+</td>
+<td>
+<p>Subscribe to meeting event related data with an observer.</p>
+<code><span class="keyword">abstract</span> <span class="keyword">fun </span><span class="identifier">addEventAnalyticsObserver</span><span class="symbol">(</span><span class="identifier" id="com.amazonaws.services.chime.sdk.meetings.analytics.EventAnalyticsFacade$addEventAnalyticsObserver(com.amazonaws.services.chime.sdk.meetings.analytics.EventAnalyticsObserver)/observer">observer</span><span class="symbol">:</span>&nbsp;<a href="../-event-analytics-observer/index.html"><span class="identifier">EventAnalyticsObserver</span></a><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="get-common-event-attributes.html">getCommonEventAttributes</a></h4>
+</td>
+<td>
+<p>Retrieve common attributes, including deviceName, osName, and more.</p>
+<code><span class="keyword">abstract</span> <span class="keyword">fun </span><span class="identifier">getCommonEventAttributes</span><span class="symbol">(</span><span class="symbol">)</span><span class="symbol">: </span><a href="../-event-attributes.html"><span class="identifier">EventAttributes</span></a></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="get-meeting-history.html">getMeetingHistory</a></h4>
+</td>
+<td>
+<p>Retrieve meeting history.</p>
+<code><span class="keyword">abstract</span> <span class="keyword">fun </span><span class="identifier">getMeetingHistory</span><span class="symbol">(</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/index.html"><span class="identifier">List</span></a><span class="symbol">&lt;</span><a href="../-meeting-history-event/index.html"><span class="identifier">MeetingHistoryEvent</span></a><span class="symbol">&gt;</span></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="remove-event-analytics-observer.html">removeEventAnalyticsObserver</a></h4>
+</td>
+<td>
+<p>Unsubscribe from meeting event by removing the specified observer.</p>
+<code><span class="keyword">abstract</span> <span class="keyword">fun </span><span class="identifier">removeEventAnalyticsObserver</span><span class="symbol">(</span><span class="identifier" id="com.amazonaws.services.chime.sdk.meetings.analytics.EventAnalyticsFacade$removeEventAnalyticsObserver(com.amazonaws.services.chime.sdk.meetings.analytics.EventAnalyticsObserver)/observer">observer</span><span class="symbol">:</span>&nbsp;<a href="../-event-analytics-observer/index.html"><span class="identifier">EventAnalyticsObserver</span></a><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code></td>
+</tr>
+</tbody>
+</table>
+<h3>Inheritors</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<h4><a href="../../com.amazonaws.services.chime.sdk.meetings.audiovideo/-audio-video-facade.html">AudioVideoFacade</a></h4>
+</td>
+<td>
+<code><span class="keyword">interface </span><span class="identifier">AudioVideoFacade</span>&nbsp;<span class="symbol">:</span>&nbsp;<a href="../../com.amazonaws.services.chime.sdk.meetings.audiovideo/-audio-video-controller-facade/index.html"><span class="identifier">AudioVideoControllerFacade</span></a><span class="symbol">, </span><a href="../../com.amazonaws.services.chime.sdk.meetings.realtime/-realtime-controller-facade/index.html"><span class="identifier">RealtimeControllerFacade</span></a><span class="symbol">, </span><a href="../../com.amazonaws.services.chime.sdk.meetings.device/-device-controller/index.html"><span class="identifier">DeviceController</span></a><span class="symbol">, </span><a href="../../com.amazonaws.services.chime.sdk.meetings.audiovideo.video/-video-tile-controller-facade/index.html"><span class="identifier">VideoTileControllerFacade</span></a><span class="symbol">, </span><a href="../../com.amazonaws.services.chime.sdk.meetings.audiovideo.audio.activespeakerdetector/-active-speaker-detector-facade/index.html"><span class="identifier">ActiveSpeakerDetectorFacade</span></a><span class="symbol">, </span><a href="../../com.amazonaws.services.chime.sdk.meetings.audiovideo.contentshare/-content-share-controller/index.html"><span class="identifier">ContentShareController</span></a><span class="symbol">, </span><a href="./index.html"><span class="identifier">EventAnalyticsFacade</span></a></code></td>
+</tr>
+</tbody>
+</table>
+</BODY>
+</HTML>

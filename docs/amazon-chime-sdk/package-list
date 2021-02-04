@@ -1,6 +1,7 @@
 $dokka.format:html
 $dokka.linkExtension:html
-
+$dokka.location:com.amazonaws.services.chime.sdk.meetings.analytics$toJsonString(kotlin.collections.MutableMap((com.amazonaws.services.chime.sdk.meetings.analytics.EventAttributeName, kotlin.Any)))com.amazonaws.services.chime.sdk.meetings.analytics/kotlin.collections.-mutable-map/to-json-string.html
+com.amazonaws.services.chime.sdk.meetings.analytics
 com.amazonaws.services.chime.sdk.meetings.audiovideo
 com.amazonaws.services.chime.sdk.meetings.audiovideo.audio.activespeakerdetector
 com.amazonaws.services.chime.sdk.meetings.audiovideo.audio.activespeakerpolicy

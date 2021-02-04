@@ -1,0 +1,28 @@
+<HTML>
+<HEAD>
+<meta charset="UTF-8">
+<title>EventAnalyticsObserver.onEventReceived - amazon-chime-sdk</title>
+<link rel="stylesheet" href="../../../style.css">
+</HEAD>
+<BODY>
+<a href="../../index.html">amazon-chime-sdk</a>&nbsp;/&nbsp;<a href="../index.html">com.amazonaws.services.chime.sdk.meetings.analytics</a>&nbsp;/&nbsp;<a href="index.html">EventAnalyticsObserver</a>&nbsp;/&nbsp;<a href="./on-event-received.html">onEventReceived</a><br/>
+<br/>
+<h1>onEventReceived</h1>
+<a name="com.amazonaws.services.chime.sdk.meetings.analytics.EventAnalyticsObserver$onEventReceived(com.amazonaws.services.chime.sdk.meetings.analytics.EventName, kotlin.collections.MutableMap((com.amazonaws.services.chime.sdk.meetings.analytics.EventAttributeName, kotlin.Any)))"></a>
+<code><span class="keyword">abstract</span> <span class="keyword">fun </span><span class="identifier">onEventReceived</span><span class="symbol">(</span><span class="identifier" id="com.amazonaws.services.chime.sdk.meetings.analytics.EventAnalyticsObserver$onEventReceived(com.amazonaws.services.chime.sdk.meetings.analytics.EventName, kotlin.collections.MutableMap((com.amazonaws.services.chime.sdk.meetings.analytics.EventAttributeName, kotlin.Any)))/name">name</span><span class="symbol">:</span>&nbsp;<a href="../-event-name/index.html"><span class="identifier">EventName</span></a><span class="symbol">, </span><span class="identifier" id="com.amazonaws.services.chime.sdk.meetings.analytics.EventAnalyticsObserver$onEventReceived(com.amazonaws.services.chime.sdk.meetings.analytics.EventName, kotlin.collections.MutableMap((com.amazonaws.services.chime.sdk.meetings.analytics.EventAttributeName, kotlin.Any)))/attributes">attributes</span><span class="symbol">:</span>&nbsp;<a href="../-event-attributes.html"><span class="identifier">EventAttributes</span></a><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code>
+<p>Called when specific events occur during the meeting. Each event includes attributes of the event.</p>
+<p>For more information about the attributes, please refer to <a href="../-event-attribute-name/index.html">EventAttributeName</a>.</p>
+<p>One example could be <a href="../-event-name/index.html">EventName</a> as <a href="../-event-name/meeting-start-succeeded.html">EventName.meetingStartSucceeded</a> and
+attributes would be <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-mutable-map/index.html">MutableMap</a> of <a href="../-event-attribute-name/index.html">EventAttributeName</a> and it's value.</p>
+<h3>Parameters</h3>
+<p><a name="name"></a>
+<code>name</code> - : <a href="../-event-name/index.html">EventName</a> - name of meeting event</p>
+<p><a name="attributes"></a>
+<code>attributes</code> - 
+<p>: <a href="../-event-attributes.html">EventAttributes</a> - attributes of meeting event</p>
+
+
+<p>NOTE: all callbacks will be called on main thread.</p>
+</p>
+</BODY>
+</HTML>

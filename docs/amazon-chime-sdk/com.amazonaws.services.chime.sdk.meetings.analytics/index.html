@@ -1,0 +1,115 @@
+<HTML>
+<HEAD>
+<meta charset="UTF-8">
+<title>com.amazonaws.services.chime.sdk.meetings.analytics - amazon-chime-sdk</title>
+<link rel="stylesheet" href="../../style.css">
+</HEAD>
+<BODY>
+<a href="../index.html">amazon-chime-sdk</a>&nbsp;/&nbsp;<a href="./index.html">com.amazonaws.services.chime.sdk.meetings.analytics</a><br/>
+<br/>
+<h2>Package com.amazonaws.services.chime.sdk.meetings.analytics</h2>
+<h3>Types</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<h4><a href="-default-event-analytics-controller/index.html">DefaultEventAnalyticsController</a></h4>
+</td>
+<td>
+<code><span class="keyword">class </span><span class="identifier">DefaultEventAnalyticsController</span>&nbsp;<span class="symbol">:</span>&nbsp;<a href="-event-analytics-controller/index.html"><span class="identifier">EventAnalyticsController</span></a></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="-default-meeting-stats-collector/index.html">DefaultMeetingStatsCollector</a></h4>
+</td>
+<td>
+<code><span class="keyword">class </span><span class="identifier">DefaultMeetingStatsCollector</span>&nbsp;<span class="symbol">:</span>&nbsp;<a href="-meeting-stats-collector/index.html"><span class="identifier">MeetingStatsCollector</span></a></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="-event-analytics-controller/index.html">EventAnalyticsController</a></h4>
+</td>
+<td>
+<p><a href="-event-analytics-controller/index.html">EventAnalyticsController</a> keeps track of events and notifies <a href="-event-analytics-observer/index.html">EventAnalyticsObserver</a>.
+An event describes the success and failure conditions for the meeting session.</p>
+<code><span class="keyword">interface </span><span class="identifier">EventAnalyticsController</span></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="-event-analytics-facade/index.html">EventAnalyticsFacade</a></h4>
+</td>
+<td>
+<p><a href="-event-analytics-facade/index.html">EventAnalyticsFacade</a> allows builders to listen to meeting analytics events
+through adding/removing <a href="-event-analytics-observer/index.html">EventAnalyticsObserver</a>.</p>
+<code><span class="keyword">interface </span><span class="identifier">EventAnalyticsFacade</span></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="-event-analytics-observer/index.html">EventAnalyticsObserver</a></h4>
+</td>
+<td>
+<p><a href="-event-analytics-observer/index.html">EventAnalyticsObserver</a> handles events regarding to analytics.</p>
+<code><span class="keyword">interface </span><span class="identifier">EventAnalyticsObserver</span></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="-event-attribute-name/index.html">EventAttributeName</a></h4>
+</td>
+<td>
+<code><span class="keyword">enum</span> <span class="keyword">class </span><span class="identifier">EventAttributeName</span></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="-event-attributes.html">EventAttributes</a></h4>
+</td>
+<td>
+<p><a href="-event-attributes.html">EventAttributes</a> describes meeting event.</p>
+<code><span class="keyword">typealias </span><span class="identifier">EventAttributes</span>&nbsp;<span class="symbol">=</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-mutable-map/index.html"><span class="identifier">MutableMap</span></a><span class="symbol">&lt;</span><a href="-event-attribute-name/index.html"><span class="identifier">EventAttributeName</span></a><span class="symbol">,</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-any/index.html"><span class="identifier">Any</span></a><span class="symbol">&gt;</span></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="-event-name/index.html">EventName</a></h4>
+</td>
+<td>
+<p><a href="-event-name/index.html">EventName</a> represent some major event that could help builders to analyze the data.</p>
+<code><span class="keyword">enum</span> <span class="keyword">class </span><span class="identifier">EventName</span></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="-meeting-history-event/index.html">MeetingHistoryEvent</a></h4>
+</td>
+<td>
+<code><span class="keyword">data</span> <span class="keyword">class </span><span class="identifier">MeetingHistoryEvent</span></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="-meeting-history-event-name/index.html">MeetingHistoryEventName</a></h4>
+</td>
+<td>
+<p><a href="-meeting-history-event-name/index.html">MeetingHistoryEventName</a> is a notable event (such as MeetingStartSucceeded) that occur during meeting.
+Thus, this also includes events in <a href="-event-name/index.html">EventName</a>.</p>
+<code><span class="keyword">enum</span> <span class="keyword">class </span><span class="identifier">MeetingHistoryEventName</span></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="-meeting-stats-collector/index.html">MeetingStatsCollector</a></h4>
+</td>
+<td>
+<code><span class="keyword">interface </span><span class="identifier">MeetingStatsCollector</span></code></td>
+</tr>
+</tbody>
+</table>
+<h3>Extensions for External Classes</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<h4><a href="kotlin.collections.-mutable-map/index.html">kotlin.collections.MutableMap</a></h4>
+</td>
+<td>
+</td>
+</tr>
+</tbody>
+</table>
+</BODY>
+</HTML>
