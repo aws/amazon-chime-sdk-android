@@ -100,7 +100,7 @@ Unzip and copy the aar files to `amazon-chime-sdk-android/amazon-chime-sdk/libs`
 
 ### 3. Update demo app
 
-Update `test_url` in `strings.xml` at the path `amazon-chime-sdk-android/app/src/main/res/values` 
+Update `test_url` in `strings.xml` at the path .`amazon-chime-sdk-android/app/src/main/res/values` 
 with the URL of the serverless demo deployed in Step 1.
 
 > NOTE: use `https://xxxxx.xxxxx.xxx.com/Prod/`
