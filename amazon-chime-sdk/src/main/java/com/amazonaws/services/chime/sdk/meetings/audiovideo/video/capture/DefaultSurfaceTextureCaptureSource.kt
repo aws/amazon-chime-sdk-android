@@ -80,9 +80,8 @@ class DefaultSurfaceTextureCaptureSource(
     // enough sent a new frame
     private var lastAlignedTimestamp: Long? = null
 
-    // Concurrency modification could happen when source gets
-    // removed from media server (media thread) while sending frames (app thread).
-    // Use the ConcurrentSet
+    // Concurrency modification could happen when sink gets
+    // added/removed from another thread while sending frames
     private var sinks = ConcurrentSet.createConcurrentSet<VideoSink>()
 
     private val TAG = "SurfaceTextureCaptureSource"
@@ -147,13 +146,11 @@ class DefaultSurfaceTextureCaptureSource(
     override fun removeCaptureSourceObserver(observer: CaptureSourceObserver) {}
 
     override fun addVideoSink(sink: VideoSink) {
-        handler.post { sinks.add(sink) }
+        sinks.add(sink)
     }
 
     override fun removeVideoSink(sink: VideoSink) {
-        runBlocking(handler.asCoroutineDispatcher().immediate) {
-            sinks.remove(sink)
-        }
+        sinks.remove(sink)
     }
 
     override fun release() {

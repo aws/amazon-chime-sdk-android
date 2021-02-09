@@ -13,9 +13,9 @@ import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoSource
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.buffer.VideoFrameI420Buffer
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.buffer.VideoFrameRGBABuffer
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.buffer.VideoFrameTextureBuffer
+import com.amazonaws.services.chime.sdk.meetings.internal.utils.ConcurrentSet
 import java.nio.ByteBuffer
 import java.security.InvalidParameterException
-import java.util.concurrent.CopyOnWriteArrayList
 
 /**
  * [VideoSourceAdapter] provides two classes to adapt [VideoSource] to [com.xodee.client.video.VideoSource].
@@ -75,9 +75,7 @@ class VideoSourceAdapter : VideoSink,
 
     // Concurrency modification could happen when source gets
     // removed from media server (media thread) while sending frames (app thread).
-    // Use the CopyOnWriteArrayList as its thread-safe and suits reading more than
-    // updating scenario.
-    private var sinks = CopyOnWriteArrayList<com.xodee.client.video.VideoSink>()
+    private var sinks = ConcurrentSet.createConcurrentSet<com.xodee.client.video.VideoSink>()
 
     override fun addSink(sink: com.xodee.client.video.VideoSink) {
         if (sinks.contains(sink)) return
