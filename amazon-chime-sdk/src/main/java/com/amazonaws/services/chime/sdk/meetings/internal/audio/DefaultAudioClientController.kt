@@ -14,6 +14,7 @@ import com.amazonaws.services.chime.sdk.meetings.analytics.EventAnalyticsControl
 import com.amazonaws.services.chime.sdk.meetings.analytics.EventAttributeName
 import com.amazonaws.services.chime.sdk.meetings.analytics.EventName
 import com.amazonaws.services.chime.sdk.meetings.analytics.MeetingStatsCollector
+import com.amazonaws.services.chime.sdk.meetings.internal.utils.AppInfoUtil
 import com.amazonaws.services.chime.sdk.meetings.session.MeetingSessionStatus
 import com.amazonaws.services.chime.sdk.meetings.session.MeetingSessionStatusCode
 import com.amazonaws.services.chime.sdk.meetings.utils.logger.Logger
@@ -143,8 +144,11 @@ class DefaultAudioClientController(
             )
         }
         audioManager.mode = AudioManager.MODE_IN_COMMUNICATION
+
+        val appInfo = AppInfoUtil.initializeAudioClientAppInfo(context)
+
         uiScope.launch {
-            val res = audioClient.startSession(
+            val res = audioClient.startSessionV2(
                 AudioClient.XTL_DEFAULT_TRANSPORT,
                 host,
                 port,
@@ -157,7 +161,8 @@ class DefaultAudioClientController(
                 DEFAULT_MIC_AND_SPEAKER,
                 DEFAULT_PRESENTER,
                 audioFallbackUrl,
-                null
+                null,
+                appInfo
             )
 
             if (res != AUDIO_CLIENT_RESULT_SUCCESS) {
