@@ -3,6 +3,7 @@
 ### Added
 * Added `initializeAudioClientAppInfo` to `AppInfoUtil` for use with audio client.
 * Added `TYPE_USB_HEADSET` to `DefaultDeviceController` for cases like headphone jack wired with USB.
+* Added `AUDIO_USB_HEADSET` for `USB_HEADSET`.
 
 ### Fixed
 * Fixed `DefaultCameraCaptureSource`, `DefaultSurfaceTextureCaptureSource` concurrency issue (Issue #221).

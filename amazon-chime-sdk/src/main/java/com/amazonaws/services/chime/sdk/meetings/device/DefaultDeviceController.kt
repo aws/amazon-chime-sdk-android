@@ -85,6 +85,7 @@ class DefaultDeviceController(
             )
 
             val audioDevices = mutableListOf<MediaDevice>()
+            var wiredDeviceCount = 0
             for (device in audioManager.getDevices(AudioManager.GET_DEVICES_OUTPUTS)) {
                 // System will select wired headset over receiver
                 // so we want to filter receiver out when wired headset is connected
@@ -93,6 +94,7 @@ class DefaultDeviceController(
                     device.type == AudioDeviceInfo.TYPE_USB_HEADSET
                 ) {
                     isWiredHeadsetOn = true
+                    wiredDeviceCount++
                 }
 
                 // Return only one handset device to avoid confusion
@@ -114,6 +116,7 @@ class DefaultDeviceController(
                     )
                 )
             }
+            if (wiredDeviceCount > 1) audioDevices.removeIf { it.type == MediaDeviceType.AUDIO_USB_HEADSET }
             return if (isWiredHeadsetOn) audioDevices.filter { it.type != MediaDeviceType.AUDIO_HANDSET } else audioDevices
         } else {
             val res = mutableListOf<MediaDevice>()

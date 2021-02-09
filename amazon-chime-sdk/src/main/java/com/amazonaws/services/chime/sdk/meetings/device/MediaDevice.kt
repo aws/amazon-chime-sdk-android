@@ -29,6 +29,7 @@ data class MediaDevice(
     val order: Int = when (type) {
         MediaDeviceType.AUDIO_BLUETOOTH -> 0
         MediaDeviceType.AUDIO_WIRED_HEADSET -> 1
+        MediaDeviceType.AUDIO_USB_HEADSET -> 1
         MediaDeviceType.AUDIO_BUILTIN_SPEAKER -> 2
         MediaDeviceType.AUDIO_HANDSET -> 3
         MediaDeviceType.VIDEO_FRONT_CAMERA -> 4
@@ -101,6 +102,7 @@ data class MediaDevice(
 enum class MediaDeviceType {
     AUDIO_BLUETOOTH,
     AUDIO_WIRED_HEADSET,
+    AUDIO_USB_HEADSET,
     AUDIO_BUILTIN_SPEAKER,
     AUDIO_HANDSET,
     VIDEO_FRONT_CAMERA,
@@ -112,6 +114,7 @@ enum class MediaDeviceType {
         return when (this) {
             AUDIO_BLUETOOTH -> "Bluetooth"
             AUDIO_WIRED_HEADSET -> "Wired Headset"
+            AUDIO_USB_HEADSET -> "USB Headset"
             AUDIO_BUILTIN_SPEAKER -> "Builtin Speaker"
             AUDIO_HANDSET -> "Handset"
             VIDEO_FRONT_CAMERA -> "Front Camera"
@@ -127,8 +130,8 @@ enum class MediaDeviceType {
                 AudioDeviceInfo.TYPE_BLUETOOTH_SCO,
                 AudioDeviceInfo.TYPE_BLUETOOTH_A2DP -> AUDIO_BLUETOOTH
                 AudioDeviceInfo.TYPE_WIRED_HEADSET,
-                AudioDeviceInfo.TYPE_USB_HEADSET,
                 AudioDeviceInfo.TYPE_WIRED_HEADPHONES -> AUDIO_WIRED_HEADSET
+                AudioDeviceInfo.TYPE_USB_HEADSET -> AUDIO_USB_HEADSET
                 AudioDeviceInfo.TYPE_BUILTIN_SPEAKER -> AUDIO_BUILTIN_SPEAKER
                 AudioDeviceInfo.TYPE_BUILTIN_EARPIECE,
                 AudioDeviceInfo.TYPE_TELEPHONY -> AUDIO_HANDSET
