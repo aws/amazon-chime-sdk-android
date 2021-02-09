@@ -15,13 +15,16 @@ import com.amazonaws.services.chime.sdk.meetings.TestConstant
 import com.amazonaws.services.chime.sdk.meetings.analytics.EventAnalyticsController
 import com.amazonaws.services.chime.sdk.meetings.analytics.EventName
 import com.amazonaws.services.chime.sdk.meetings.analytics.MeetingStatsCollector
+import com.amazonaws.services.chime.sdk.meetings.internal.utils.AppInfoUtil
 import com.amazonaws.services.chime.sdk.meetings.utils.logger.Logger
+import com.xodee.client.audio.audioclient.AppInfo
 import com.xodee.client.audio.audioclient.AudioClient
 import io.mockk.MockKAnnotations
 import io.mockk.every
 import io.mockk.impl.annotations.MockK
 import io.mockk.just
 import io.mockk.mockkClass
+import io.mockk.mockkObject
 import io.mockk.mockkStatic
 import io.mockk.runs
 import io.mockk.verify
@@ -121,7 +124,8 @@ class DefaultAudioClientControllerTest {
     private fun setupStartTests() {
         every { mockAudioClient.sendMessage(any(), any()) } returns testAudioClientSuccessCode
         every {
-            mockAudioClient.startSession(
+            mockAudioClient.startSessionV2(
+                any(),
                 any(),
                 any(),
                 any(),
@@ -145,6 +149,19 @@ class DefaultAudioClientControllerTest {
         every { AudioTrack.getMinBufferSize(any(), any(), any()) } returns testSampleBuffer
         every { AudioRecord.getMinBufferSize(any(), any(), any()) } returns testSampleBuffer
         DefaultAudioClientController.audioClientState = AudioClientState.INITIALIZED
+
+        val testAppInfo = AppInfo(
+            "name",
+            "versionCode",
+            "make",
+            "model",
+            "version",
+            "amazon-chime-sdk",
+            "sdkVersion"
+        )
+
+        mockkObject(AppInfoUtil)
+        every { AppInfoUtil.initializeAudioClientAppInfo(any()) } returns testAppInfo
     }
 
     @Test
@@ -267,7 +284,7 @@ class DefaultAudioClientControllerTest {
     }
 
     @Test
-    fun `start should call AudioClient startSession`() {
+    fun `start should call AudioClient startSessionV2`() {
         setupStartTests()
 
         audioClientController.start(
@@ -279,7 +296,8 @@ class DefaultAudioClientControllerTest {
         )
 
         verify {
-            mockAudioClient.startSession(
+            mockAudioClient.startSessionV2(
+                any(),
                 any(),
                 any(),
                 any(),
