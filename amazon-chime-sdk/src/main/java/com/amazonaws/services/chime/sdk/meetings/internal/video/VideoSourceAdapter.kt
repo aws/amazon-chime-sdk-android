@@ -78,7 +78,6 @@ class VideoSourceAdapter : VideoSink,
     private var sinks = ConcurrentSet.createConcurrentSet<com.xodee.client.video.VideoSink>()
 
     override fun addSink(sink: com.xodee.client.video.VideoSink) {
-        if (sinks.contains(sink)) return
         sinks.add(sink)
     }
 

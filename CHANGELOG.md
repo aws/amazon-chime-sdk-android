@@ -1,6 +1,9 @@
 ## [Unreleased]
 ### Added
-* Added `initializeAudioClientAppInfo` to `AppInfoUtil` for use with audio client
+* Added `initializeAudioClientAppInfo` to `AppInfoUtil` for use with audio client.
+
+### Fixed
+* Fixed `DefaultCameraCaptureSource`, `DefaultSurfaceTextureCaptureSource` concurrency issue (Issue #221).
 
 ## [0.11.0] - 2021-02-04
 
