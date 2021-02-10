@@ -1,8 +1,8 @@
 ## [Unreleased]
 
 ### Added
-* Added `initializeAudioClientAppInfo` to `AppInfoUtil` for use with audio client.
-* Added `TYPE_USB_HEADSET` to `DefaultDeviceController` for cases like headphone jack wired with USB.
+* Added `initializeAudioClientAppInfo` to `AppInfoUtil` for use with audio client
+* Added `TYPE_USB_HEADSET` to `DefaultDeviceController` for cases like USB-C headphone.
 * Added `AUDIO_USB_HEADSET` for `USB_HEADSET`.
 
 ### Fixed
