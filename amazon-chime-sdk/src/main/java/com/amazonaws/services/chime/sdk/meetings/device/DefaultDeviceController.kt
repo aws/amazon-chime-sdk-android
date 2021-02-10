@@ -116,6 +116,9 @@ class DefaultDeviceController(
                     )
                 )
             }
+
+            // It doesn't look like Android can switch between two wired connection, so we'll assume WIRED_HEADSET
+            // is where audio is routed.
             if (wiredDeviceCount > 1) audioDevices.removeIf { it.type == MediaDeviceType.AUDIO_USB_HEADSET }
             return if (isWiredHeadsetOn) audioDevices.filter { it.type != MediaDeviceType.AUDIO_HANDSET } else audioDevices
         } else {
