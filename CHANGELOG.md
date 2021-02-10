@@ -1,9 +1,9 @@
 ## [Unreleased]
 
 ### Added
-* Added `initializeAudioClientAppInfo` to `AppInfoUtil` for use with audio client
-* Added `TYPE_USB_HEADSET` to `DefaultDeviceController` for cases like USB-C headphone.
-* Added `AUDIO_USB_HEADSET` for `USB_HEADSET`.
+* Added `initializeAudioClientAppInfo` to `AppInfoUtil` for use with audio client.
+* Added support for `TYPE_USB_HEADSET` in `DefaultDeviceController` for cases like USB-C headphone.
+* Added `AUDIO_USB_HEADSET` as a new enum in `MediaDeviceType`.
 
 ### Fixed
 * Fixed `DefaultCameraCaptureSource`, `DefaultSurfaceTextureCaptureSource` concurrency issue (Issue #221).
