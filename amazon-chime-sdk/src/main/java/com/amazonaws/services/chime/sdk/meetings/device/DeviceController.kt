@@ -20,6 +20,8 @@ interface DeviceController {
     /**
      * Lists currently available audio devices.
      *
+     * Note: If there are both USB and earphone jack connected. The device will only show earphone.
+     *
      * @return a list of currently available audio devices.
      */
     fun listAudioDevices(): List<MediaDevice>

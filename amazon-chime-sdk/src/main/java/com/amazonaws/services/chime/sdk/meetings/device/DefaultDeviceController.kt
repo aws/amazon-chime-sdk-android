@@ -85,13 +85,16 @@ class DefaultDeviceController(
             )
 
             val audioDevices = mutableListOf<MediaDevice>()
+            var wiredDeviceCount = 0
             for (device in audioManager.getDevices(AudioManager.GET_DEVICES_OUTPUTS)) {
                 // System will select wired headset over receiver
                 // so we want to filter receiver out when wired headset is connected
                 if (device.type == AudioDeviceInfo.TYPE_WIRED_HEADSET ||
-                    device.type == AudioDeviceInfo.TYPE_WIRED_HEADPHONES
+                    device.type == AudioDeviceInfo.TYPE_WIRED_HEADPHONES ||
+                    device.type == AudioDeviceInfo.TYPE_USB_HEADSET
                 ) {
                     isWiredHeadsetOn = true
+                    wiredDeviceCount++
                 }
 
                 // Return only one handset device to avoid confusion
@@ -113,6 +116,10 @@ class DefaultDeviceController(
                     )
                 )
             }
+
+            // It doesn't look like Android can switch between two wired connection, so we'll assume WIRED_HEADSET
+            // is where audio is routed.
+            if (wiredDeviceCount > 1) audioDevices.removeIf { it.type == MediaDeviceType.AUDIO_USB_HEADSET }
             return if (isWiredHeadsetOn) audioDevices.filter { it.type != MediaDeviceType.AUDIO_HANDSET } else audioDevices
         } else {
             val res = mutableListOf<MediaDevice>()
@@ -231,6 +238,7 @@ class DefaultDeviceController(
             AudioDeviceInfo.TYPE_WIRED_HEADSET -> "Wired Headset"
             AudioDeviceInfo.TYPE_BUILTIN_SPEAKER -> "Speaker"
             AudioDeviceInfo.TYPE_WIRED_HEADPHONES -> "Wired Headphone"
+            AudioDeviceInfo.TYPE_USB_HEADSET -> "USB Headset"
             AudioDeviceInfo.TYPE_BUILTIN_EARPIECE,
             AudioDeviceInfo.TYPE_TELEPHONY -> "Handset"
             AudioDeviceInfo.TYPE_BLUETOOTH_A2DP,
