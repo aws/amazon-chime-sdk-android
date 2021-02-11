@@ -23,6 +23,7 @@ import android.view.Surface
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoContentHint
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoFrame
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoSink
+import com.amazonaws.services.chime.sdk.meetings.internal.utils.ConcurrentSet
 import com.amazonaws.services.chime.sdk.meetings.internal.utils.ObserverUtils
 import com.amazonaws.services.chime.sdk.meetings.utils.logger.Logger
 import kotlin.math.ceil
@@ -70,7 +71,10 @@ class DefaultScreenCaptureSource(
     private val handler: Handler
 
     private val observers = mutableSetOf<CaptureSourceObserver>()
-    private val sinks = mutableSetOf<VideoSink>()
+
+    // Concurrency modification could happen when sink gets
+    // added/removed from another thread while sending frames
+    private val sinks = ConcurrentSet.createConcurrentSet<VideoSink>()
 
     // This will prioritize resolution over framerate
     override val contentHint = VideoContentHint.Text
@@ -219,13 +223,11 @@ class DefaultScreenCaptureSource(
     }
 
     override fun addVideoSink(sink: VideoSink) {
-        handler.post { sinks.add(sink) }
+        sinks.add(sink)
     }
 
     override fun removeVideoSink(sink: VideoSink) {
-        runBlocking(handler.asCoroutineDispatcher().immediate) {
-            sinks.remove(sink)
-        }
+        sinks.remove(sink)
     }
 
     override fun onVideoFrameReceived(frame: VideoFrame) {
