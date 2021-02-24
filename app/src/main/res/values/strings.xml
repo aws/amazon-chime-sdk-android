@@ -9,9 +9,14 @@
     <string name="edit_name">Your Name</string>
     <string name="main_title">Join a meeting</string>
     <string name="main_continue">Continue</string>
+    <string name="main_debug_settings">Debug Settings</string>
     <string name="additional_options">Additional Options</string>
     <string name="meeting_leave">Leave Meeting</string>
     <string name="meeting_mute">Toggle Mute</string>
+    <string name="debug_settings_title">Debug Settings</string>
+    <string name="debug_settings_label_endpoint_url">Override Meeting Endpoint</string>
+    <string name="debug_settings_placeholder_endpoint_url">Meeting Endpoint URL</string>
+    <string name="debug_settings_button">Save</string>
     <string name="test_url"></string>
     <string name="volume_indicator">Volume Indicator</string>
     <string name="active_speaker_indicator">Active Speaker Indicator</string>

@@ -71,5 +71,15 @@
         android:text="@string/version_prefix"
         android:textSize="12sp" />
 
+    <Button
+        android:id="@+id/buttonDebugSettings"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="60dp"
+        android:backgroundTint="@color/design_default_color_surface"
+        android:text="@string/main_debug_settings"
+        android:textColor="@color/colorText"
+        android:textSize="12sp" />
+
 
 </LinearLayout>

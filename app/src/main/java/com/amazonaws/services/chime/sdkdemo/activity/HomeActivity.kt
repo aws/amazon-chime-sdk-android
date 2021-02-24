@@ -11,6 +11,7 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.view.View
+import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageButton
 import android.widget.ProgressBar
@@ -19,10 +20,13 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.ViewModelProvider
 import com.amazonaws.services.chime.sdk.meetings.utils.Versioning
 import com.amazonaws.services.chime.sdk.meetings.utils.logger.ConsoleLogger
 import com.amazonaws.services.chime.sdk.meetings.utils.logger.LogLevel
 import com.amazonaws.services.chime.sdkdemo.R
+import com.amazonaws.services.chime.sdkdemo.fragment.DebugSettingsFragment
+import com.amazonaws.services.chime.sdkdemo.model.DebugSettingsViewModel
 import com.amazonaws.services.chime.sdkdemo.utils.encodeURLParam
 import java.io.BufferedReader
 import java.io.InputStreamReader
@@ -54,6 +58,8 @@ class HomeActivity : AppCompatActivity() {
     private var authenticationProgressBar: ProgressBar? = null
     private var meetingID: String? = null
     private var yourName: String? = null
+    private var testUrl: String = ""
+    private lateinit var debugSettingsViewModel: DebugSettingsViewModel
 
     companion object {
         const val MEETING_RESPONSE_KEY = "MEETING_RESPONSE"
@@ -68,8 +74,10 @@ class HomeActivity : AppCompatActivity() {
         meetingEditText = findViewById(R.id.editMeetingId)
         nameEditText = findViewById(R.id.editName)
         authenticationProgressBar = findViewById(R.id.progressAuthentication)
+        debugSettingsViewModel = ViewModelProvider(this).get(DebugSettingsViewModel::class.java)
 
         findViewById<ImageButton>(R.id.buttonContinue)?.setOnClickListener { joinMeeting() }
+        findViewById<Button>(R.id.buttonDebugSettings)?.setOnClickListener { showDebugSettings() }
 
         val versionText: TextView = findViewById(R.id.versionText) as TextView
         versionText.text = "${getString(R.string.version_prefix)}${Versioning.sdkVersion()}"
@@ -83,9 +91,15 @@ class HomeActivity : AppCompatActivity() {
         ).show()
     }
 
+    private fun showDebugSettings() {
+        var debugSettingsFragment = DebugSettingsFragment()
+        debugSettingsFragment.show(supportFragmentManager, TAG)
+    }
+
     private fun joinMeeting() {
         meetingID = meetingEditText?.text.toString().trim().replace("\\s+".toRegex(), "+")
         yourName = nameEditText?.text.toString().trim().replace("\\s+".toRegex(), "+")
+        testUrl = getTestUrl()
 
         if (meetingID.isNullOrBlank()) {
             showToast(this, getString(R.string.user_notification_meeting_id_invalid))
@@ -93,11 +107,16 @@ class HomeActivity : AppCompatActivity() {
             showToast(this, getString(R.string.user_notification_attendee_name_invalid))
         } else {
             if (hasPermissionsAlready()) {
-                authenticate(getString(R.string.test_url), meetingID, yourName)
+                authenticate(testUrl, meetingID, yourName)
             } else {
                 ActivityCompat.requestPermissions(this, WEBRTC_PERM, WEBRTC_PERMISSION_REQUEST_CODE)
             }
         }
+    }
+
+    private fun getTestUrl(): String {
+        val endpointUrl = debugSettingsViewModel.endpointUrl.value
+        return if (endpointUrl.isNullOrEmpty()) getString(R.string.test_url) else endpointUrl
     }
 
     private fun hasPermissionsAlready(): Boolean {
@@ -120,7 +139,7 @@ class HomeActivity : AppCompatActivity() {
                     showToast(this, getString(R.string.user_notification_permission_error))
                     return
                 }
-                authenticate(getString(R.string.test_url), meetingID, yourName)
+                authenticate(testUrl, meetingID, yourName)
             }
         }
     }
