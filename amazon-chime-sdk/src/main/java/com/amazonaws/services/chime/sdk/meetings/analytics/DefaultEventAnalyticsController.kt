@@ -69,7 +69,7 @@ class DefaultEventAnalyticsController(
                     meetingSessionConfiguration.credentials.attendeeId,
             EventAttributeName.externalUserId to
                     meetingSessionConfiguration.credentials.externalUserId
-        )
+        ) as EventAttributes
     }
 
     override fun addEventAnalyticsObserver(observer: EventAnalyticsObserver) {

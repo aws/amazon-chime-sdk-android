@@ -18,7 +18,7 @@ import com.amazonaws.services.chime.sdk.meetings.utils.ModalityType
  */
 data class MeetingSessionConfiguration(
     val meetingId: String,
-    val externalMeetingId: String,
+    val externalMeetingId: String?,
     val credentials: MeetingSessionCredentials,
     val urls: MeetingSessionURLs
 ) {

@@ -4,6 +4,9 @@
 
 * Enabled send-side bandwidth estimation in video client, which improves video quality in poor network conditions.
 
+### Fixed
+* Fixed `CreateMeetingResponse` and `MeetingSessionConfiguration` to have nullable `externalMeetingId` since this is not required.
+
 ## [0.11.1] - 2021-02-24
 
 ### Added

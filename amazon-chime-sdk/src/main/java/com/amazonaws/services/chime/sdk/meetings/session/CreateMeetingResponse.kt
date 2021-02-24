@@ -9,7 +9,7 @@ package com.amazonaws.services.chime.sdk.meetings.session
 data class CreateMeetingResponse(val Meeting: Meeting)
 
 data class Meeting(
-    val ExternalMeetingId: String,
+    val ExternalMeetingId: String?,
     val MediaPlacement: MediaPlacement,
     val MediaRegion: String,
     val MeetingId: String
