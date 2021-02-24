@@ -1,4 +1,4 @@
-## [Unreleased]
+## [0.11.1] - 2021-02-24
 
 ### Added
 * Added `initializeAudioClientAppInfo` to `AppInfoUtil` for use with audio client.
