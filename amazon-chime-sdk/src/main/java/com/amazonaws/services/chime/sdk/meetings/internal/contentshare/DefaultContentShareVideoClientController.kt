@@ -41,6 +41,7 @@ class DefaultContentShareVideoClientController(
     private val VIDEO_CLIENT_FLAG_ENABLE_SEND_SIDE_BWE = 1 shl 5
     private val VIDEO_CLIENT_FLAG_ENABLE_USE_HW_DECODE_AND_RENDER = 1 shl 6
     private val VIDEO_CLIENT_FLAG_ENABLE_TWO_SIMULCAST_STREAMS = 1 shl 12
+    private val VIDEO_CLIENT_FLAG_DISABLE_SIMULCAST_P2P = 1 shl 14
     private val VIDEO_CLIENT_FLAG_DISABLE_CAPTURER = 1 shl 20
     private val VIDEO_CLIENT_FLAG_IS_CONTENT = 1 shl 23
     private val VIDEO_CLIENT_FLAG_ENABLE_INBAND_TURN_CREDS = 1 shl 26
@@ -94,6 +95,7 @@ class DefaultContentShareVideoClientController(
         flag = flag or VIDEO_CLIENT_FLAG_ENABLE_SEND_SIDE_BWE
         flag = flag or VIDEO_CLIENT_FLAG_ENABLE_USE_HW_DECODE_AND_RENDER
         flag = flag or VIDEO_CLIENT_FLAG_ENABLE_TWO_SIMULCAST_STREAMS
+        flag = flag or VIDEO_CLIENT_FLAG_DISABLE_SIMULCAST_P2P
         flag = flag or VIDEO_CLIENT_FLAG_DISABLE_CAPTURER
         flag = flag or VIDEO_CLIENT_FLAG_IS_CONTENT
         flag = flag or VIDEO_CLIENT_FLAG_ENABLE_INBAND_TURN_CREDS
