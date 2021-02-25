@@ -7,6 +7,7 @@ package com.amazonaws.services.chime.sdk.meetings.session
 
 import io.mockk.spyk
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertNull
 import org.junit.Test
 
 class MeetingSessionConfigurationTest {
@@ -46,6 +47,45 @@ class MeetingSessionConfigurationTest {
         assertEquals(signalingURL, meetingSessionConfiguration.urls.signalingURL)
         assertEquals(attendeeId, meetingSessionConfiguration.credentials.attendeeId)
         assertEquals(joinToken, meetingSessionConfiguration.credentials.joinToken)
+    }
+
+    @Test
+    fun `constructor should return null externalMeetingId when not provided through Meeting`() {
+        val meetingSessionConfiguration = MeetingSessionConfiguration(
+            CreateMeetingResponse(
+                Meeting(
+                    null,
+                    MediaPlacement(audioFallbackURL, audioHostURL, signalingURL, turnControlURL),
+                    mediaRegion,
+                    meetingId
+                )
+            ), CreateAttendeeResponse(Attendee(attendeeId, externalUserId, joinToken))
+        )
+
+        assertNull(meetingSessionConfiguration.externalMeetingId)
+    }
+
+    @Test
+    fun `constructor should return null externalMeetingId when not provided through constructor`() {
+        val creds = MeetingSessionCredentials(
+            attendeeId,
+            externalUserId,
+            joinToken
+        )
+        val urls = MeetingSessionURLs(
+            audioFallbackURL,
+            audioHostURL,
+            turnControlURL,
+            signalingURL,
+            ::defaultUrlRewriter
+        )
+        val meetingSessionConfiguration = MeetingSessionConfiguration(
+            meetingId,
+            creds,
+            urls
+        )
+
+        assertNull(meetingSessionConfiguration.externalMeetingId)
     }
 
     @Test

@@ -18,7 +18,7 @@ import com.amazonaws.services.chime.sdk.meetings.utils.ModalityType
  */
 data class MeetingSessionConfiguration(
     val meetingId: String,
-    val externalMeetingId: String,
+    val externalMeetingId: String?,
     val credentials: MeetingSessionCredentials,
     val urls: MeetingSessionURLs
 ) {
@@ -42,6 +42,12 @@ data class MeetingSessionConfiguration(
             urlRewriter
         )
     )
+
+    constructor(
+        meetingId: String,
+        credentials: MeetingSessionCredentials,
+        urls: MeetingSessionURLs
+    ) : this(meetingId, null, credentials, urls)
 
     fun createContentShareMeetingSessionConfiguration(): MeetingSessionConfiguration {
         val contentModality: String = DefaultModality.MODALITY_SEPARATOR + ModalityType.Content.value

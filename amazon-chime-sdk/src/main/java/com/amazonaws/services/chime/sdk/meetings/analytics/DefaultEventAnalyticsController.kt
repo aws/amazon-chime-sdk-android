@@ -53,7 +53,7 @@ class DefaultEventAnalyticsController(
     }
 
     override fun getCommonEventAttributes(): EventAttributes {
-        return mutableMapOf(
+        val attributes = mutableMapOf(
             EventAttributeName.deviceName to DeviceUtils.deviceName,
             EventAttributeName.deviceManufacturer to DeviceUtils.deviceManufacturer,
             EventAttributeName.deviceModel to DeviceUtils.deviceModel,
@@ -63,13 +63,18 @@ class DefaultEventAnalyticsController(
             EventAttributeName.sdkName to DeviceUtils.sdkName,
             EventAttributeName.sdkVersion to DeviceUtils.sdkVersion,
             EventAttributeName.meetingId to meetingSessionConfiguration.meetingId,
-            EventAttributeName.externalMeetingId to
-                    meetingSessionConfiguration.externalMeetingId,
+
             EventAttributeName.attendeeId to
                     meetingSessionConfiguration.credentials.attendeeId,
             EventAttributeName.externalUserId to
                     meetingSessionConfiguration.credentials.externalUserId
         )
+
+        meetingSessionConfiguration.externalMeetingId?.let {
+            attributes[EventAttributeName.externalMeetingId] = it
+        }
+
+        return attributes as EventAttributes
     }
 
     override fun addEventAnalyticsObserver(observer: EventAnalyticsObserver) {
