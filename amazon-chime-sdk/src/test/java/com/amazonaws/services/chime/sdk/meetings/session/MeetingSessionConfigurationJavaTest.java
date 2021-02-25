@@ -6,6 +6,7 @@ import kotlin.jvm.functions.Function1;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.assertNull;
 
 public class MeetingSessionConfigurationJavaTest {
     // Meeting
@@ -42,6 +43,54 @@ public class MeetingSessionConfigurationJavaTest {
         assertEquals(audioFallbackURL, meetingSessionConfiguration1.getUrls().getAudioFallbackURL());
         assertEquals(signalingURL, meetingSessionConfiguration1.getUrls().getSignalingURL());
         assertEquals(turnControlURL, meetingSessionConfiguration1.getUrls().getTurnControlURL());
+    }
+
+    @Test
+    public void constructorShouldSetExternalMeetingIdToNullWhenNotProvidedThroughMeeting() {
+        MediaPlacement mediaPlacement = new MediaPlacement(audioFallbackURL, audioHostURL, signalingURL, turnControlURL);
+
+        Function1<String, String> urlRewrite = new Function1<String, String>() {
+            @Override
+            public String invoke(String s) {
+                return s;
+            }
+        };
+
+        MeetingSessionCredentials creds = new MeetingSessionCredentials(
+                attendeeId,
+                externalUserId,
+                joinToken
+        );
+
+        MeetingSessionURLs urls = new MeetingSessionURLs(
+                mediaPlacement.getAudioFallbackUrl(),
+                mediaPlacement.getAudioHostUrl(),
+                mediaPlacement.getTurnControlUrl(),
+                mediaPlacement.getSignalingUrl(),
+                urlRewrite
+        );
+
+        MeetingSessionConfiguration meetingSessionConfiguration = new MeetingSessionConfiguration(
+                meetingId, creds, urls);
+
+        assertNull(meetingSessionConfiguration.getExternalMeetingId());
+
+    }
+
+    @Test
+    public void constructorShouldSetExternalMeetingIdToNullWhenNotProvidedThroughConstructor() {
+        CreateMeetingResponse createMeetingNullExternal = new CreateMeetingResponse(
+                new Meeting(
+                        null,
+                        new MediaPlacement(audioFallbackURL, audioHostURL, signalingURL, turnControlURL),
+                        mediaRegion,
+                        meetingId
+                )
+        );
+        MeetingSessionConfiguration meetingSessionConfiguration = new MeetingSessionConfiguration(
+                createMeetingNullExternal, createAttendee);
+
+        assertNull(meetingSessionConfiguration.getExternalMeetingId());
     }
 
     private String urlRewriter(String url) {

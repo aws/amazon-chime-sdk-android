@@ -43,6 +43,12 @@ data class MeetingSessionConfiguration(
         )
     )
 
+    constructor(
+        meetingId: String,
+        credentials: MeetingSessionCredentials,
+        urls: MeetingSessionURLs
+    ) : this(meetingId, null, credentials, urls)
+
     fun createContentShareMeetingSessionConfiguration(): MeetingSessionConfiguration {
         val contentModality: String = DefaultModality.MODALITY_SEPARATOR + ModalityType.Content.value
         return MeetingSessionConfiguration(
