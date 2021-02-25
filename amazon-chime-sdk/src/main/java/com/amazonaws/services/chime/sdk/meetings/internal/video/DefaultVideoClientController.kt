@@ -41,6 +41,7 @@ class DefaultVideoClientController(
     private val TOPIC_REGEX = "^[a-zA-Z0-9_-]{1,36}$".toRegex()
     private val TAG = "DefaultVideoClientController"
 
+    private val VIDEO_CLIENT_FLAG_ENABLE_SEND_SIDE_BWE = 1 shl 5
     private val VIDEO_CLIENT_FLAG_ENABLE_USE_HW_DECODE_AND_RENDER = 1 shl 6
     private val VIDEO_CLIENT_FLAG_ENABLE_TWO_SIMULCAST_STREAMS = 1 shl 12
     private val VIDEO_CLIENT_FLAG_DISABLE_CAPTURER = 1 shl 20
@@ -191,6 +192,7 @@ class DefaultVideoClientController(
         logger.info(TAG, "Starting video client")
         videoClient?.setReceiving(false)
         var flag = 0
+        flag = flag or VIDEO_CLIENT_FLAG_ENABLE_SEND_SIDE_BWE
         flag = flag or VIDEO_CLIENT_FLAG_ENABLE_USE_HW_DECODE_AND_RENDER
         flag = flag or VIDEO_CLIENT_FLAG_ENABLE_TWO_SIMULCAST_STREAMS
         flag = flag or VIDEO_CLIENT_FLAG_DISABLE_CAPTURER

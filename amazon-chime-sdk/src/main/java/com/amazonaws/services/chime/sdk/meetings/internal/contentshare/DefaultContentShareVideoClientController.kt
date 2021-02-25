@@ -38,6 +38,7 @@ class DefaultContentShareVideoClientController(
 
     private val TAG = "DefaultContentShareVideoClientController"
 
+    private val VIDEO_CLIENT_FLAG_ENABLE_SEND_SIDE_BWE = 1 shl 5
     private val VIDEO_CLIENT_FLAG_ENABLE_USE_HW_DECODE_AND_RENDER = 1 shl 6
     private val VIDEO_CLIENT_FLAG_ENABLE_TWO_SIMULCAST_STREAMS = 1 shl 12
     private val VIDEO_CLIENT_FLAG_DISABLE_CAPTURER = 1 shl 20
@@ -90,6 +91,7 @@ class DefaultContentShareVideoClientController(
     private fun startVideoClient(): Boolean {
         logger.info(TAG, "Starting content share video client for content share")
         var flag = 0
+        flag = flag or VIDEO_CLIENT_FLAG_ENABLE_SEND_SIDE_BWE
         flag = flag or VIDEO_CLIENT_FLAG_ENABLE_USE_HW_DECODE_AND_RENDER
         flag = flag or VIDEO_CLIENT_FLAG_ENABLE_TWO_SIMULCAST_STREAMS
         flag = flag or VIDEO_CLIENT_FLAG_DISABLE_CAPTURER
