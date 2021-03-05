@@ -1,4 +1,4 @@
-## [Unreleased]
+## [0.11.2] - 2021-03-04
 
 ### Changed
 * Enabled send-side bandwidth estimation in video client, which improves video quality in poor network conditions.
