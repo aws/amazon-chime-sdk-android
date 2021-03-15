@@ -25,6 +25,7 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.amazonaws.services.chime.sdk.meetings.analytics.EventAnalyticsObserver
@@ -72,6 +73,7 @@ import com.amazonaws.services.chime.sdkdemo.adapter.MessageAdapter
 import com.amazonaws.services.chime.sdkdemo.adapter.MetricAdapter
 import com.amazonaws.services.chime.sdkdemo.adapter.RosterAdapter
 import com.amazonaws.services.chime.sdkdemo.adapter.VideoAdapter
+import com.amazonaws.services.chime.sdkdemo.adapter.VideoDiffCallback
 import com.amazonaws.services.chime.sdkdemo.data.Message
 import com.amazonaws.services.chime.sdkdemo.data.MetricData
 import com.amazonaws.services.chime.sdkdemo.data.RosterAttendee
@@ -887,10 +889,20 @@ class MeetingFragment : Fragment(),
     }
 
     private fun onVideoPageUpdated() {
+        val oldList = mutableListOf<VideoCollectionTile>()
+        oldList.addAll(meetingModel.videoStatesInCurrentPage)
+
         // Recalculate videos in the current page and notify videoTileAdapter
         meetingModel.updateVideoStatesInCurrentPage()
         revalidateVideoPageIndex()
-        videoTileAdapter.notifyDataSetChanged()
+
+        val newList = mutableListOf<VideoCollectionTile>()
+        newList.addAll(meetingModel.videoStatesInCurrentPage)
+
+        val videoDiffCallback = VideoDiffCallback(oldList, newList)
+        val videoDiffResult: DiffUtil.DiffResult = DiffUtil.calculateDiff(videoDiffCallback)
+
+        videoDiffResult.dispatchUpdatesTo(videoTileAdapter)
 
         // Pause/Resume remote videos accordingly based on videoTileState and the tab that user is on
         meetingModel.remoteVideoTileStates.forEach {
