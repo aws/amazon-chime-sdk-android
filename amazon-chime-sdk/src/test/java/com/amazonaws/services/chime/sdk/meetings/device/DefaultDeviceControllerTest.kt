@@ -290,6 +290,22 @@ class DefaultDeviceControllerTest {
     }
 
     @Test
+    fun `chooseAudioDevice should call AudioClientController setRoute with headset`() {
+        setupForOldAPILevel()
+        every { audioClientController.setRoute(any()) } returns true
+        mockkStatic(DefaultAudioClientController::class)
+        DefaultAudioClientController.audioClientState = AudioClientState.STARTED
+        deviceController.chooseAudioDevice(
+            MediaDevice(
+                "usb headset",
+                MediaDeviceType.AUDIO_USB_HEADSET
+            )
+        )
+
+        verify { audioClientController.setRoute(AudioClient.SPK_STREAM_ROUTE_HEADSET) }
+    }
+
+    @Test
     fun `chooseAudioDevice should call audioManager startBluetoothSco when choosing bluetooth device`() {
         setupForOldAPILevel()
         every { audioClientController.setRoute(any()) } returns true

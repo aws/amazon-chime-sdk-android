@@ -165,6 +165,7 @@ class DefaultDeviceController(
             MediaDeviceType.AUDIO_BUILTIN_SPEAKER -> AudioClient.SPK_STREAM_ROUTE_SPEAKER
             MediaDeviceType.AUDIO_BLUETOOTH -> AudioClient.SPK_STREAM_ROUTE_BT_AUDIO
             MediaDeviceType.AUDIO_WIRED_HEADSET -> AudioClient.SPK_STREAM_ROUTE_HEADSET
+            MediaDeviceType.AUDIO_USB_HEADSET -> AudioClient.SPK_STREAM_ROUTE_HEADSET
             else -> AudioClient.SPK_STREAM_ROUTE_RECEIVER
         }
 
