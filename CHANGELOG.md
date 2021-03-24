@@ -2,6 +2,7 @@
 
 ### Fixed
 * [Demo] Fixed video flickering issue when active speakers were detected by using `DiffUtil` instead of `notifyDataSetChanged` to update the video adapter.
+* Fixed `DefaultDeviceController` not passing correct route for USB headset.
 
 ## [0.11.2] - 2021-03-04
 
