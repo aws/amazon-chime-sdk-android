@@ -21,7 +21,6 @@ import com.amazonaws.services.chime.sdk.meetings.utils.logger.Logger
 import com.xodee.client.audio.audioclient.AudioClient
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
 class DefaultAudioClientController(
@@ -39,7 +38,7 @@ class DefaultAudioClientController(
     private val DEFAULT_PRESENTER = true
     private val AUDIO_CLIENT_RESULT_SUCCESS = AudioClient.AUDIO_CLIENT_OK
 
-    private val uiScope = CoroutineScope(Dispatchers.Main)
+    private val audioClientScope = CoroutineScope(Dispatchers.IO)
     private val audioManager: AudioManager =
         context.getSystemService(Context.AUDIO_SERVICE) as AudioManager
     private var audioModePreCall: Int = audioManager.mode
@@ -117,37 +116,36 @@ class DefaultAudioClientController(
             )
             return
         }
+        audioClientScope.launch {
+            val audioUrlParts: List<String> =
+                audioHostUrl.split(":".toRegex()).dropLastWhile { it.isEmpty() }
 
-        val audioUrlParts: List<String> =
-            audioHostUrl.split(":".toRegex()).dropLastWhile { it.isEmpty() }
-
-        val (host: String, portStr: String) = if (audioUrlParts.size == 2) audioUrlParts else listOf(
-            audioUrlParts[0],
-            "$AUDIO_PORT_OFFSET"
-        )
-
-        // We subtract 200 here since audio client will add an offset of 200 for the DTLS port
-        val port = try {
-            Integer.parseInt(portStr) - AUDIO_PORT_OFFSET
-        } catch (exception: Exception) {
-            logger.warn(
-                TAG,
-                "Error parsing int. Using default value. Exception: ${exception.message}"
+            val (host: String, portStr: String) = if (audioUrlParts.size == 2) audioUrlParts else listOf(
+                audioUrlParts[0],
+                "$AUDIO_PORT_OFFSET"
             )
-            DEFAULT_PORT
-        }
-        setUpAudioConfiguration()
-        eventAnalyticsController.publishEvent(EventName.meetingStartRequested)
-        audioClientObserver.notifyAudioClientObserver { observer ->
-            observer.onAudioSessionStartedConnecting(
-                false
-            )
-        }
-        audioManager.mode = AudioManager.MODE_IN_COMMUNICATION
 
-        val appInfo = AppInfoUtil.initializeAudioClientAppInfo(context)
+            // We subtract 200 here since audio client will add an offset of 200 for the DTLS port
+            val port = try {
+                Integer.parseInt(portStr) - AUDIO_PORT_OFFSET
+            } catch (exception: Exception) {
+                logger.warn(
+                    TAG,
+                    "Error parsing int. Using default value. Exception: ${exception.message}"
+                )
+                DEFAULT_PORT
+            }
+            setUpAudioConfiguration()
+            eventAnalyticsController.publishEvent(EventName.meetingStartRequested)
+            audioClientObserver.notifyAudioClientObserver { observer ->
+                observer.onAudioSessionStartedConnecting(
+                    false
+                )
+            }
+            audioManager.mode = AudioManager.MODE_IN_COMMUNICATION
 
-        uiScope.launch {
+            val appInfo = AppInfoUtil.initializeAudioClientAppInfo(context)
+
             val res = audioClient.startSessionV2(
                 AudioClient.XTL_DEFAULT_TRANSPORT,
                 host,
@@ -187,7 +185,7 @@ class DefaultAudioClientController(
             return
         }
 
-        GlobalScope.launch {
+        audioClientScope.launch {
             val res = audioClient.stopSession()
 
             if (res != AUDIO_CLIENT_RESULT_SUCCESS) {
