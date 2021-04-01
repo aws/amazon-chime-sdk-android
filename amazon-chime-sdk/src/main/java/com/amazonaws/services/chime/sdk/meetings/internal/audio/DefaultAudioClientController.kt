@@ -29,7 +29,8 @@ class DefaultAudioClientController(
     private val audioClientObserver: AudioClientObserver,
     private val audioClient: AudioClient,
     private val meetingStatsCollector: MeetingStatsCollector,
-    private val eventAnalyticsController: EventAnalyticsController
+    private val eventAnalyticsController: EventAnalyticsController,
+    private val audioClientScope: CoroutineScope = CoroutineScope(Dispatchers.IO)
 ) : AudioClientController {
     private val TAG = "DefaultAudioClientController"
     private val DEFAULT_PORT = 0 // In case the URL does not have port
@@ -38,7 +39,6 @@ class DefaultAudioClientController(
     private val DEFAULT_PRESENTER = true
     private val AUDIO_CLIENT_RESULT_SUCCESS = AudioClient.AUDIO_CLIENT_OK
 
-    private val audioClientScope = CoroutineScope(Dispatchers.IO)
     private val audioManager: AudioManager =
         context.getSystemService(Context.AUDIO_SERVICE) as AudioManager
     private var audioModePreCall: Int = audioManager.mode

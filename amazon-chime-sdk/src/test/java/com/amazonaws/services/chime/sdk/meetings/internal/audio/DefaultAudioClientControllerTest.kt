@@ -30,9 +30,9 @@ import io.mockk.runs
 import io.mockk.verify
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.test.TestCoroutineDispatcher
+import kotlinx.coroutines.test.TestCoroutineScope
 import kotlinx.coroutines.test.resetMain
-import kotlinx.coroutines.test.setMain
+import kotlinx.coroutines.test.runBlockingTest
 import org.junit.After
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
@@ -63,7 +63,7 @@ class DefaultAudioClientControllerTest {
 
     private lateinit var audioClientController: DefaultAudioClientController
 
-    private val testDispatcher = TestCoroutineDispatcher()
+    private val testScope = TestCoroutineScope()
 
     private val testAudioClientSuccessCode = 0
     private val testAudioClientFailureCode = -1
@@ -94,15 +94,15 @@ class DefaultAudioClientControllerTest {
             mockAudioClientObserver,
             mockAudioClient,
             mockEventAnlyticsStateController,
-            mockEventAnalyticsController
+            mockEventAnalyticsController,
+            testScope
         )
-        Dispatchers.setMain(testDispatcher)
     }
 
     @After
     fun teardown() {
         Dispatchers.resetMain()
-        testDispatcher.cleanupTestCoroutines()
+        testScope.cleanupTestCoroutines()
     }
 
     private fun setupAudioManager() {
@@ -445,13 +445,15 @@ class DefaultAudioClientControllerTest {
     @Test
     fun `isVoiceEnabled should call AudioClient getVoiceFocusNoiseSuppression when audio client status is started`() {
         setupStartTests()
-        audioClientController.start(
-            testAudioFallbackUrl,
-            testAudioHostUrl,
-            testMeetingId,
-            testAttendeeId,
-            testJoinToken
-        )
+        testScope.runBlockingTest {
+            audioClientController.start(
+                testAudioFallbackUrl,
+                testAudioHostUrl,
+                testMeetingId,
+                testAttendeeId,
+                testJoinToken
+            )
+        }
 
         audioClientController.isVoiceFocusEnabled()
         verify(exactly = 1) { mockAudioClient.getVoiceFocusNoiseSuppression() }
