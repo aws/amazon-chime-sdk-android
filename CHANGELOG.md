@@ -1,4 +1,4 @@
-## [Unreleased]
+## [0.11.3] - 2021-04-02
 
 ### Fixed
 * [Demo] Fixed video flickering issue when active speakers were detected by using `DiffUtil` instead of `notifyDataSetChanged` to update the video adapter.
