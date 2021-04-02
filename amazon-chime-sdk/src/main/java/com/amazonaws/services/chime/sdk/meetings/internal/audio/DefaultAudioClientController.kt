@@ -21,6 +21,7 @@ import com.amazonaws.services.chime.sdk.meetings.utils.logger.Logger
 import com.xodee.client.audio.audioclient.AudioClient
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
 
 class DefaultAudioClientController(
@@ -30,7 +31,7 @@ class DefaultAudioClientController(
     private val audioClient: AudioClient,
     private val meetingStatsCollector: MeetingStatsCollector,
     private val eventAnalyticsController: EventAnalyticsController,
-    private val audioClientScope: CoroutineScope = CoroutineScope(Dispatchers.IO)
+    private val audioClientScope: CoroutineScope = CoroutineScope(Dispatchers.IO + SupervisorJob())
 ) : AudioClientController {
     private val TAG = "DefaultAudioClientController"
     private val DEFAULT_PORT = 0 // In case the URL does not have port
