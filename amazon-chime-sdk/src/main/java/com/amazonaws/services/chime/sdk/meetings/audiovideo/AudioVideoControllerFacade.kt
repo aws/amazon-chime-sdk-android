@@ -21,6 +21,7 @@ interface AudioVideoControllerFacade {
 
     /**
      * Stops audio and video.
+     * It's important to call this when your Android app is destroyed in order to clean up and explicitly release resources.
      */
     fun stop()
 
