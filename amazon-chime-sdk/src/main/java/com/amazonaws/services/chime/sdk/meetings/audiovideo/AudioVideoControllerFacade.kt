@@ -21,6 +21,8 @@ interface AudioVideoControllerFacade {
 
     /**
      * Stops audio and video.
+     * It's important to call this when your meeting connection is no longer needed
+     * in order to clean up and explicitly release resources.
      */
     fun stop()
 
