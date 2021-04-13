@@ -31,6 +31,9 @@ If applicable, add screenshots to help explain your problem.
  - OS: [e.g. Android 10]
  - Version amazon-chime-sdk: [e.g. 0.4.0]
  - Version amazon-chime-sdk-media: [e.g. 0.4.0]
+ - Can you reproduce this in the demo app?
+If you are reporting a crash:
+ - Please provide full crash logs.
 
 **Additional context**
 Add any other context about the problem here.
