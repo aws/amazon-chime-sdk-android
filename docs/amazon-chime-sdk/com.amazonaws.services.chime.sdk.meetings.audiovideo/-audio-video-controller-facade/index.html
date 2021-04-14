@@ -78,7 +78,9 @@
 <h4><a href="stop.html">stop</a></h4>
 </td>
 <td>
-<p>Stops audio and video.</p>
+<p>Stops audio and video.
+It's important to call this when your meeting connection is no longer needed
+in order to clean up and explicitly release resources.</p>
 <code><span class="keyword">abstract</span> <span class="keyword">fun </span><span class="identifier">stop</span><span class="symbol">(</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code></td>
 </tr>
 <tr>
