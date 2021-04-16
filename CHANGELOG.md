@@ -1,3 +1,8 @@
+## [unreleased]
+
+### Fixed
+* [Documentation] Fixed documentation to say `Amazon Voice Focus` instead of `voice focus`
+
 ## [0.11.4] - 2021-04-14
 
 ### Changed
@@ -107,8 +112,8 @@
 This release includes support for custom video sources, and therefore includes a lot of additional APIs.  Though most builders who have not been making modifications to internal render path should not need to make any changes and will not hit any compile time issues, there are some small breaking changes to certain render path APIs to ensure consistency within data flow across the SDK.  Recommendations are below, and all breaking changes should result in compile time errors (if you implemented the class yourself), if you continue to have difficulty resolving issues please cut an issue.
 
 ### Added
-* Added new APIs in `RealtimeControllerFacade` to enable/disable Voice Focus (ML-based noise suppression) and get the on/off status of Voice Focus.
-* Added Voice Focus feature in Android demo app.
+* Added new APIs in `RealtimeControllerFacade` to enable/disable Amazon Voice Focus (ML-based noise suppression) and get the on/off status of Amazon Voice Focus.
+* Added Amazon Voice Focus feature in Android demo app.
 * Added `VideoFrame`, `VideoRotation`, `VideoContentHint`, `VideoFrameBuffer`, `VideoFrameI420Buffer`, `VideoFrameRGBABuffer`, `VideoFrameTextureBuffer` classes, enums, and interfaces to hold video frames of various raw types.
 * Added `VideoSource` and `VideoSink` to facilitate transfer of `VideoFrame` objects.
 * Added `CameraCaptureSource`, `CaptureSourceError`, `CaptureSourceObserver`, `VideoCaptureFormat`, and `VideoCaptureSource` interfaces and enums to facilitate releasing capturers as part of the SDK.

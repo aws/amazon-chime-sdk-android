@@ -1089,7 +1089,7 @@ class MeetingFragment : Fragment(),
         notifyHandler(
             "Audio successfully started. reconnecting: $reconnecting"
         )
-        // Start Voice Focus as soon as audio session started
+        // Start Amazon Voice Focus as soon as audio session started
         setVoiceFocusEnabled(true)
         logWithFunctionName(
             object {}.javaClass.enclosingMethod?.name,

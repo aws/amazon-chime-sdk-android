@@ -119,7 +119,7 @@ If you discover a potential security issue in this project we ask that you notif
   - [Metrics](#metrics)
   - [Data Message](#data-message)
   - [Stopping a session](#stopping-a-session)
-  - [Voice Focus](#voice-focus)
+  - [Amazon Voice Focus](#amazon-voice-focus)
   - [Custom Video Source](#custom-video-source)
 
 ### Starting a session
@@ -564,16 +564,16 @@ meetingSession.audioVideo.addAudioVideoObserver(observer)
 meetingSession.audioVideo.stop()
 ```
 
-### Voice Focus
+### Amazon Voice Focus
 
-Voice focus reduces the background noise in the meeting for better meeting experience. For more details, see [Amazon Voice Focus](https://github.com/aws/amazon-chime-sdk-android/blob/master/guides/api_overview.md#11-using-amazon-voice-focus-optional).
+Amazon Voice Focus reduces the background noise in the meeting for better meeting experience. For more details, see [Amazon Voice Focus](https://github.com/aws/amazon-chime-sdk-android/blob/master/guides/api_overview.md#11-using-amazon-voice-focus-optional).
 
-#### Use case 24. Enable/Disable voice focus.
+#### Use case 24. Enable/Disable Amazon Voice Focus.
 
 ```kotlin
-val enbabled = meetingSession.audioVideo.realtimeSetVoiceFocusEnabled(true) // enabling voice focus successful
+val enbabled = meetingSession.audioVideo.realtimeSetVoiceFocusEnabled(true) // enabling Amazon Voice Focus successful
 
-val disabled = meetingSession.audioVideo.realtimeSetVoiceFocusEnabled(false) // disabling voice focus successful
+val disabled = meetingSession.audioVideo.realtimeSetVoiceFocusEnabled(false) // disabling Amazon Voice Focus successful
 ```
 
 ### Custom Video Source
