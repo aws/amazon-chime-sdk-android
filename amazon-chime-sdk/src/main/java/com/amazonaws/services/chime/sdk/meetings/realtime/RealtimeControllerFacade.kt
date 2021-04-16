@@ -84,19 +84,19 @@ interface RealtimeControllerFacade {
     fun removeRealtimeDataMessageObserverFromTopic(topic: String)
 
     /**
-     * Enable or disable Voice Focus (ML-based noise suppression) on the audio input.
+     * Enable or disable Amazon Voice Focus (ML-based noise suppression) on the audio input.
      *
-     * Voice Focus is disabled by default when audioClient starts.
+     * Amazon Voice Focus is disabled by default when audioClient starts.
      *
-     * @param enabled: Boolean - whether to enable Voice Focus or not
+     * @param enabled: Boolean - whether to enable Amazon Voice Focus or not
      * @return Boolean whether the enable/disable action succeeded
      */
     fun realtimeSetVoiceFocusEnabled(enabled: Boolean): Boolean
 
     /**
-     * Checks if Voice Focus is enabled.
+     * Checks if Amazon Voice Focus is enabled.
      *
-     * @return Boolean whether Voice Focus is enabled or not
+     * @return Boolean whether Amazon Voice Focus is enabled or not
      */
     fun realtimeIsVoiceFocusEnabled(): Boolean
 }
