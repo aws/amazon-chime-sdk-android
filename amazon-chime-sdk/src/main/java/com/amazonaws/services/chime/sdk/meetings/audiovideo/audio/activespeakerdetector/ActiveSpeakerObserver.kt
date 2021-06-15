@@ -21,7 +21,7 @@ interface ActiveSpeakerObserver {
     /**
      * Notifies observers of changes to active speaker.
      *
-     * @param attendeeInfo: Array<[AttendeeInfo]> - An array of active speakers.
+     * @param attendeeInfo: Array<[AttendeeInfo]> - An array of active speakers in decreasing order of score.
      */
     fun onActiveSpeakerDetected(attendeeInfo: Array<AttendeeInfo>)
 
