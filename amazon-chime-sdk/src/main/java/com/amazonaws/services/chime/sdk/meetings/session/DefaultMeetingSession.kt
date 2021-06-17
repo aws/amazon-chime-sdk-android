@@ -19,6 +19,10 @@ import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.DefaultVideoTi
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.gl.DefaultEglCoreFactory
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.gl.EglCoreFactory
 import com.amazonaws.services.chime.sdk.meetings.device.DefaultDeviceController
+import com.amazonaws.services.chime.sdk.meetings.ingestion.DefaultMeetingEventReporterFactory
+import com.amazonaws.services.chime.sdk.meetings.ingestion.EventReporterFactory
+import com.amazonaws.services.chime.sdk.meetings.ingestion.IngestionConfiguration
+import com.amazonaws.services.chime.sdk.meetings.ingestion.MeetingEventClientConfiguration
 import com.amazonaws.services.chime.sdk.meetings.internal.audio.AudioClientFactory
 import com.amazonaws.services.chime.sdk.meetings.internal.audio.DefaultAudioClientController
 import com.amazonaws.services.chime.sdk.meetings.internal.audio.DefaultAudioClientObserver
@@ -37,7 +41,18 @@ class DefaultMeetingSession @JvmOverloads constructor(
     override val configuration: MeetingSessionConfiguration,
     override val logger: Logger,
     context: Context,
-    eglCoreFactory: EglCoreFactory = DefaultEglCoreFactory()
+    eglCoreFactory: EglCoreFactory = DefaultEglCoreFactory(),
+    eventReporterFactory: EventReporterFactory = DefaultMeetingEventReporterFactory(
+        context,
+        IngestionConfiguration(
+            MeetingEventClientConfiguration(configuration.credentials.joinToken,
+                                            configuration.meetingId,
+                                            configuration.credentials.attendeeId),
+            configuration.urls.ingestionURL ?: "",
+            configuration.urls.ingestionURL.isNullOrEmpty()
+        ),
+        logger
+    )
 ) : MeetingSession {
 
     override val audioVideo: AudioVideoFacade
@@ -47,13 +62,16 @@ class DefaultMeetingSession @JvmOverloads constructor(
     init {
         val meetingStatsCollector = DefaultMeetingStatsCollector(logger)
 
+        val eventReporter = eventReporterFactory.createEventReporter()
+
         eventAnalyticsController = DefaultEventAnalyticsController(
             logger,
             configuration,
-            meetingStatsCollector)
+            meetingStatsCollector,
+            eventReporter
+        )
 
-        val metricsCollector =
-            DefaultClientMetricsCollector()
+        val metricsCollector = DefaultClientMetricsCollector()
         val audioClientObserver =
             DefaultAudioClientObserver(
                 logger,

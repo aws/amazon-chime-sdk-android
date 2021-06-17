@@ -144,6 +144,7 @@ class MeetingActivity : AppCompatActivity(),
     fun resetCachedDevice() {
         cachedDevice = null
     }
+
     fun getEglCoreFactory(): EglCoreFactory = meetingSessionModel.eglCoreFactory
 
     fun getCameraCaptureSource(): CameraCaptureSource = meetingSessionModel.cameraCaptureSource
@@ -165,7 +166,6 @@ class MeetingActivity : AppCompatActivity(),
 
     private fun createSessionConfiguration(response: String?): MeetingSessionConfiguration? {
         if (response.isNullOrBlank()) return null
-
         return try {
             val joinMeetingResponse = gson.fromJson(response, JoinMeetingResponse::class.java)
             MeetingSessionConfiguration(

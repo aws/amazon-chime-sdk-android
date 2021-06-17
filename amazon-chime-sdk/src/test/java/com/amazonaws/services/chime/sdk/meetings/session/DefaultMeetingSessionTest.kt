@@ -14,6 +14,7 @@ import android.os.HandlerThread
 import android.os.Looper
 import android.util.Log
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.gl.EglCoreFactory
+import com.amazonaws.services.chime.sdk.meetings.ingestion.EventReporterFactory
 import com.amazonaws.services.chime.sdk.meetings.internal.audio.AudioClientFactory
 import com.amazonaws.services.chime.sdk.meetings.utils.logger.Logger
 import com.xodee.client.audio.audioclient.AudioClient
@@ -55,6 +56,9 @@ class DefaultMeetingSessionTest {
     @MockK
     private lateinit var mockLooper: Looper
 
+    @MockK
+    private lateinit var eventReporterFactory: EventReporterFactory
+
     private lateinit var meetingSession: DefaultMeetingSession
 
     @Before
@@ -78,12 +82,12 @@ class DefaultMeetingSessionTest {
         every { AudioClientFactory.getAudioClient(any(), any()) } returns mockAudioClient
         every { logger.info(any(), any()) } just runs
         every { configuration.createContentShareMeetingSessionConfiguration() } returns contentConfiguration
-
+        every { eventReporterFactory.createEventReporter() } returns null
         mockkConstructor(HandlerThread::class)
         every { anyConstructed<HandlerThread>().looper } returns mockLooper
         every { anyConstructed<HandlerThread>().run() } just runs
 
-        meetingSession = DefaultMeetingSession(configuration, logger, context, mockEglCoreFactory)
+        meetingSession = DefaultMeetingSession(configuration, logger, context, mockEglCoreFactory, eventReporterFactory)
     }
 
     @Test

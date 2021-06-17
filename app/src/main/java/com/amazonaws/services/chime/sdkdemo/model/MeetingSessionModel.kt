@@ -38,6 +38,7 @@ class MeetingSessionModel : ViewModel() {
     lateinit var cameraCaptureSource: CameraCaptureSource
     lateinit var gpuVideoProcessor: GpuVideoProcessor
     lateinit var cpuVideoProcessor: CpuVideoProcessor
+
     // Source for screen capture and share, will be set only if created in call
     var screenShareManager: ScreenShareManager? = null
 }

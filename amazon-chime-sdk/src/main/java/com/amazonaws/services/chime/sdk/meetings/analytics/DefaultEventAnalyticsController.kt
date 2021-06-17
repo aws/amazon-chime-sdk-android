@@ -5,7 +5,9 @@
 
 package com.amazonaws.services.chime.sdk.meetings.analytics
 
-import com.amazonaws.services.chime.sdk.meetings.internal.utils.DeviceUtils
+import com.amazonaws.services.chime.sdk.meetings.ingestion.EventReporter
+import com.amazonaws.services.chime.sdk.meetings.internal.ingestion.SDKEvent
+import com.amazonaws.services.chime.sdk.meetings.internal.utils.EventAttributesUtils
 import com.amazonaws.services.chime.sdk.meetings.internal.utils.ObserverUtils
 import com.amazonaws.services.chime.sdk.meetings.session.MeetingSessionConfiguration
 import com.amazonaws.services.chime.sdk.meetings.utils.logger.Logger
@@ -14,7 +16,8 @@ import java.util.Calendar
 class DefaultEventAnalyticsController(
     private val logger: Logger,
     private val meetingSessionConfiguration: MeetingSessionConfiguration,
-    private val meetingStatsCollector: MeetingStatsCollector
+    private val meetingStatsCollector: MeetingStatsCollector,
+    private val eventReporter: EventReporter? = null
 ) : EventAnalyticsController {
     private var eventAnalyticsObservers: MutableSet<EventAnalyticsObserver> = mutableSetOf()
 
@@ -39,13 +42,22 @@ class DefaultEventAnalyticsController(
             else -> Unit
         }
 
+        eventReporter?.report(SDKEvent(name, eventAttributes))
+
         ObserverUtils.notifyObserverOnMainThread(eventAnalyticsObservers) {
             it.onEventReceived(name, eventAttributes)
         }
     }
 
     override fun pushHistory(historyEventName: MeetingHistoryEventName) {
-        meetingStatsCollector.addMeetingHistoryEvent(historyEventName, Calendar.getInstance().timeInMillis)
+        val currentTimeMs = Calendar.getInstance().timeInMillis
+        val eventAttributes = mutableMapOf(
+            EventAttributeName.timestampMs to currentTimeMs
+        ) as EventAttributes
+
+        eventReporter?.report(SDKEvent(historyEventName, eventAttributes))
+
+        meetingStatsCollector.addMeetingHistoryEvent(historyEventName, currentTimeMs)
     }
 
     override fun getMeetingHistory(): List<MeetingHistoryEvent> {
@@ -53,28 +65,7 @@ class DefaultEventAnalyticsController(
     }
 
     override fun getCommonEventAttributes(): EventAttributes {
-        val attributes = mutableMapOf(
-            EventAttributeName.deviceName to DeviceUtils.deviceName,
-            EventAttributeName.deviceManufacturer to DeviceUtils.deviceManufacturer,
-            EventAttributeName.deviceModel to DeviceUtils.deviceModel,
-            EventAttributeName.mediaSdkVersion to DeviceUtils.mediaSDKVersion,
-            EventAttributeName.osName to DeviceUtils.osName,
-            EventAttributeName.osVersion to DeviceUtils.osVersion,
-            EventAttributeName.sdkName to DeviceUtils.sdkName,
-            EventAttributeName.sdkVersion to DeviceUtils.sdkVersion,
-            EventAttributeName.meetingId to meetingSessionConfiguration.meetingId,
-
-            EventAttributeName.attendeeId to
-                    meetingSessionConfiguration.credentials.attendeeId,
-            EventAttributeName.externalUserId to
-                    meetingSessionConfiguration.credentials.externalUserId
-        )
-
-        meetingSessionConfiguration.externalMeetingId?.let {
-            attributes[EventAttributeName.externalMeetingId] = it
-        }
-
-        return attributes as EventAttributes
+        return EventAttributesUtils.getCommonAttributes(meetingSessionConfiguration)
     }
 
     override fun addEventAnalyticsObserver(observer: EventAnalyticsObserver) {
