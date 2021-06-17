@@ -5,6 +5,7 @@
 
 package com.amazonaws.services.chime.sdk.meetings.analytics
 
+import com.amazonaws.services.chime.sdk.meetings.ingestion.EventReporter
 import com.amazonaws.services.chime.sdk.meetings.internal.utils.DeviceUtils
 import com.amazonaws.services.chime.sdk.meetings.session.MeetingSessionConfiguration
 import com.amazonaws.services.chime.sdk.meetings.session.MeetingSessionCredentials
@@ -44,6 +45,9 @@ class DefaultEventAnalyticsControllerTest {
     private lateinit var mockMeetingSessionConfiguration: MeetingSessionConfiguration
 
     @MockK
+    private lateinit var eventReporter: EventReporter
+
+    @MockK
     private lateinit var mockMeetingStatsCollector: MeetingStatsCollector
 
     private val meetingDurationAttribute: EventAttributes =
@@ -58,7 +62,8 @@ class DefaultEventAnalyticsControllerTest {
             DefaultEventAnalyticsController(
                 mockLogger,
                 mockMeetingSessionConfiguration,
-                mockMeetingStatsCollector
+                mockMeetingStatsCollector,
+                eventReporter
             )
         every { mockMeetingStatsCollector.getMeetingStatsEventAttributes() } returns meetingDurationAttribute
         every { mockMeetingStatsCollector.getMeetingHistory() } returns emptyList()
@@ -112,6 +117,20 @@ class DefaultEventAnalyticsControllerTest {
         }
 
         verify(exactly = 0) { observer.onEventReceived(any(), any()) }
+    }
+
+    @Test
+    fun `publishEvent should invoked EventReporter's report`() {
+        testEventAnalyticsController.publishEvent(EventName.meetingFailed)
+
+        verify(exactly = 1) { eventReporter.report(any()) }
+    }
+
+    @Test
+    fun `pushHistory should invoked EventReporter's report`() {
+        testEventAnalyticsController.pushHistory(MeetingHistoryEventName.meetingReconnected)
+
+        verify(exactly = 1) { eventReporter.report(any()) }
     }
 
     @Test

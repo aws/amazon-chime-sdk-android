@@ -22,7 +22,8 @@ data class MeetingSessionConfiguration(
     val credentials: MeetingSessionCredentials,
     val urls: MeetingSessionURLs
 ) {
-    @JvmOverloads constructor(
+    @JvmOverloads
+    constructor(
         createMeetingResponse: CreateMeetingResponse,
         createAttendeeResponse: CreateAttendeeResponse,
         urlRewriter: URLRewriter = ::defaultUrlRewriter
@@ -39,7 +40,8 @@ data class MeetingSessionConfiguration(
             createMeetingResponse.Meeting.MediaPlacement.AudioHostUrl,
             createMeetingResponse.Meeting.MediaPlacement.TurnControlUrl,
             createMeetingResponse.Meeting.MediaPlacement.SignalingUrl,
-            urlRewriter
+            urlRewriter,
+            createMeetingResponse.Meeting.MediaPlacement.EventIngestionUrl
         )
     )
 
@@ -50,7 +52,8 @@ data class MeetingSessionConfiguration(
     ) : this(meetingId, null, credentials, urls)
 
     fun createContentShareMeetingSessionConfiguration(): MeetingSessionConfiguration {
-        val contentModality: String = DefaultModality.MODALITY_SEPARATOR + ModalityType.Content.value
+        val contentModality: String =
+            DefaultModality.MODALITY_SEPARATOR + ModalityType.Content.value
         return MeetingSessionConfiguration(
             meetingId,
             externalMeetingId,

@@ -1,3 +1,8 @@
+## Unreleased
+
+### Added
+* Added events ingestion to report meeting events to Amazon Chime backend.
+
 ## 2021-05-10
 
 ### Fixed

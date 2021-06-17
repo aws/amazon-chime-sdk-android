@@ -15,9 +15,10 @@ data class Meeting(
     val MeetingId: String
 )
 
-data class MediaPlacement(
+data class MediaPlacement @JvmOverloads constructor(
     val AudioFallbackUrl: String,
     val AudioHostUrl: String,
     val SignalingUrl: String,
-    val TurnControlUrl: String
+    val TurnControlUrl: String,
+    val EventIngestionUrl: String? = null
 )

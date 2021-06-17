@@ -26,6 +26,7 @@ class MeetingSessionConfigurationTest {
     private val audioHostURL = "audioHostURL"
     private val turnControlURL = "turnControlURL"
     private val signalingURL = "signalingURL"
+    private val ingestionURL = "ingestionURL"
 
     @Test
     fun `constructor should return object with data from parameters`() {
@@ -33,7 +34,7 @@ class MeetingSessionConfigurationTest {
             CreateMeetingResponse(
                 Meeting(
                     externalMeetingId,
-                    MediaPlacement(audioFallbackURL, audioHostURL, signalingURL, turnControlURL),
+                    MediaPlacement(audioFallbackURL, audioHostURL, signalingURL, turnControlURL, ingestionURL),
                     mediaRegion,
                     meetingId
                 )
@@ -47,6 +48,7 @@ class MeetingSessionConfigurationTest {
         assertEquals(signalingURL, meetingSessionConfiguration.urls.signalingURL)
         assertEquals(attendeeId, meetingSessionConfiguration.credentials.attendeeId)
         assertEquals(joinToken, meetingSessionConfiguration.credentials.joinToken)
+        assertEquals(ingestionURL, meetingSessionConfiguration.urls.ingestionURL)
     }
 
     @Test
@@ -63,6 +65,22 @@ class MeetingSessionConfigurationTest {
         )
 
         assertNull(meetingSessionConfiguration.externalMeetingId)
+    }
+
+    @Test
+    fun `constructor should return null ingestionUrl when not provided through Meeting`() {
+        val meetingSessionConfiguration = MeetingSessionConfiguration(
+            CreateMeetingResponse(
+                Meeting(
+                    null,
+                    MediaPlacement(audioFallbackURL, audioHostURL, signalingURL, turnControlURL),
+                    mediaRegion,
+                    meetingId
+                )
+            ), CreateAttendeeResponse(Attendee(attendeeId, externalUserId, joinToken))
+        )
+
+        assertNull(meetingSessionConfiguration.urls.ingestionURL)
     }
 
     @Test

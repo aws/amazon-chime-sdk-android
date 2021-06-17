@@ -6,7 +6,7 @@
 package com.amazonaws.services.chime.sdk.meetings.analytics
 
 /**
- * [EventName] represent some major event that could help builders to analyze the data.
+ * [EventName] represent sdk event that could help builders to analyze the data.
  */
 enum class EventName {
     /**
@@ -37,5 +37,5 @@ enum class EventName {
     /**
      * The meeting ended with failure.
      */
-    meetingFailed;
+    meetingFailed
 }
