@@ -1,0 +1,63 @@
+<HTML>
+<HEAD>
+<meta charset="UTF-8">
+<title>IngestionEvent - amazon-chime-sdk</title>
+<link rel="stylesheet" href="../../../style.css">
+</HEAD>
+<BODY>
+<a href="../../index.html">amazon-chime-sdk</a>&nbsp;/&nbsp;<a href="../index.html">com.amazonaws.services.chime.sdk.meetings.ingestion</a>&nbsp;/&nbsp;<a href="./index.html">IngestionEvent</a><br/>
+<br/>
+<h1>IngestionEvent</h1>
+<code><span class="keyword">data</span> <span class="keyword">class </span><span class="identifier">IngestionEvent</span></code>
+<p><a href="./index.html">IngestionEvent</a> defines the event format ingestion server will accept</p>
+<h3>Constructors</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<h4><a href="-init-.html">&lt;init&gt;</a></h4>
+</td>
+<td>
+<p><a href="./index.html">IngestionEvent</a> defines the event format ingestion server will accept</p>
+<code><span class="identifier">IngestionEvent</span><span class="symbol">(</span><span class="identifier" id="com.amazonaws.services.chime.sdk.meetings.ingestion.IngestionEvent$<init>(com.amazonaws.services.chime.sdk.meetings.ingestion.EventClientType, kotlin.collections.MutableMap((com.amazonaws.services.chime.sdk.meetings.analytics.EventAttributeName, kotlin.Any)), kotlin.collections.List((kotlin.collections.Map((kotlin.String, kotlin.Any)))), kotlin.Int)/type">type</span><span class="symbol">:</span>&nbsp;<a href="../-event-client-type/index.html"><span class="identifier">EventClientType</span></a><span class="symbol">, </span><span class="identifier" id="com.amazonaws.services.chime.sdk.meetings.ingestion.IngestionEvent$<init>(com.amazonaws.services.chime.sdk.meetings.ingestion.EventClientType, kotlin.collections.MutableMap((com.amazonaws.services.chime.sdk.meetings.analytics.EventAttributeName, kotlin.Any)), kotlin.collections.List((kotlin.collections.Map((kotlin.String, kotlin.Any)))), kotlin.Int)/metadata">metadata</span><span class="symbol">:</span>&nbsp;<a href="../-ingestion-metadata.html"><span class="identifier">IngestionMetadata</span></a><span class="symbol">, </span><span class="identifier" id="com.amazonaws.services.chime.sdk.meetings.ingestion.IngestionEvent$<init>(com.amazonaws.services.chime.sdk.meetings.ingestion.EventClientType, kotlin.collections.MutableMap((com.amazonaws.services.chime.sdk.meetings.analytics.EventAttributeName, kotlin.Any)), kotlin.collections.List((kotlin.collections.Map((kotlin.String, kotlin.Any)))), kotlin.Int)/payloads">payloads</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/index.html"><span class="identifier">List</span></a><span class="symbol">&lt;</span><a href="../-ingestion-payload.html"><span class="identifier">IngestionPayload</span></a><span class="symbol">&gt;</span><span class="symbol">, </span><span class="identifier" id="com.amazonaws.services.chime.sdk.meetings.ingestion.IngestionEvent$<init>(com.amazonaws.services.chime.sdk.meetings.ingestion.EventClientType, kotlin.collections.MutableMap((com.amazonaws.services.chime.sdk.meetings.analytics.EventAttributeName, kotlin.Any)), kotlin.collections.List((kotlin.collections.Map((kotlin.String, kotlin.Any)))), kotlin.Int)/version">version</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html"><span class="identifier">Int</span></a>&nbsp;<span class="symbol">=</span>&nbsp;1<span class="symbol">)</span></code></td>
+</tr>
+</tbody>
+</table>
+<h3>Properties</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<h4><a href="metadata.html">metadata</a></h4>
+</td>
+<td>
+<code><span class="keyword">val </span><span class="identifier">metadata</span><span class="symbol">: </span><a href="../-ingestion-metadata.html"><span class="identifier">IngestionMetadata</span></a></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="payloads.html">payloads</a></h4>
+</td>
+<td>
+<p>: <a href="#">ListMapString,Any</a> - list of map that contains details of event</p>
+<code><span class="keyword">val </span><span class="identifier">payloads</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/index.html"><span class="identifier">List</span></a><span class="symbol">&lt;</span><a href="../-ingestion-payload.html"><span class="identifier">IngestionPayload</span></a><span class="symbol">&gt;</span></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="type.html">type</a></h4>
+</td>
+<td>
+<p>: <a href="../-event-client-type/index.html">EventClientType</a> - type of Event.</p>
+<code><span class="keyword">val </span><span class="identifier">type</span><span class="symbol">: </span><a href="../-event-client-type/index.html"><span class="identifier">EventClientType</span></a></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="version.html">version</a></h4>
+</td>
+<td>
+<p>: <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a> - version of this event. If the format changes, it will have different version.</p>
+<code><span class="keyword">val </span><span class="identifier">version</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html"><span class="identifier">Int</span></a></code></td>
+</tr>
+</tbody>
+</table>
+</BODY>
+</HTML>
