@@ -12,6 +12,7 @@ com.amazonaws.services.chime.sdk.meetings.audiovideo.video.buffer
 com.amazonaws.services.chime.sdk.meetings.audiovideo.video.capture
 com.amazonaws.services.chime.sdk.meetings.audiovideo.video.gl
 com.amazonaws.services.chime.sdk.meetings.device
+com.amazonaws.services.chime.sdk.meetings.ingestion
 com.amazonaws.services.chime.sdk.meetings.realtime
 com.amazonaws.services.chime.sdk.meetings.realtime.datamessage
 com.amazonaws.services.chime.sdk.meetings.session

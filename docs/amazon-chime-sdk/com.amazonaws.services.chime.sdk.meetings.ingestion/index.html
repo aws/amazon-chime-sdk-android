@@ -1,0 +1,176 @@
+<HTML>
+<HEAD>
+<meta charset="UTF-8">
+<title>com.amazonaws.services.chime.sdk.meetings.ingestion - amazon-chime-sdk</title>
+<link rel="stylesheet" href="../../style.css">
+</HEAD>
+<BODY>
+<a href="../index.html">amazon-chime-sdk</a>&nbsp;/&nbsp;<a href="./index.html">com.amazonaws.services.chime.sdk.meetings.ingestion</a><br/>
+<br/>
+<h2>Package com.amazonaws.services.chime.sdk.meetings.ingestion</h2>
+<h3>Types</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<h4><a href="-default-event-reporter/index.html">DefaultEventReporter</a></h4>
+</td>
+<td>
+<code><span class="keyword">class </span><span class="identifier">DefaultEventReporter</span>&nbsp;<span class="symbol">:</span>&nbsp;<a href="-event-reporter/index.html"><span class="identifier">EventReporter</span></a></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="-default-event-sender/index.html">DefaultEventSender</a></h4>
+</td>
+<td>
+<code><span class="keyword">class </span><span class="identifier">DefaultEventSender</span>&nbsp;<span class="symbol">:</span>&nbsp;<a href="-event-sender/index.html"><span class="identifier">EventSender</span></a></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="-default-meeting-event-buffer/index.html">DefaultMeetingEventBuffer</a></h4>
+</td>
+<td>
+<code><span class="keyword">class </span><span class="identifier">DefaultMeetingEventBuffer</span>&nbsp;<span class="symbol">:</span>&nbsp;<a href="-event-buffer/index.html"><span class="identifier">EventBuffer</span></a></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="-default-meeting-event-reporter-factory/index.html">DefaultMeetingEventReporterFactory</a></h4>
+</td>
+<td>
+<code><span class="keyword">class </span><span class="identifier">DefaultMeetingEventReporterFactory</span>&nbsp;<span class="symbol">:</span>&nbsp;<a href="-event-reporter-factory/index.html"><span class="identifier">EventReporterFactory</span></a></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="-event-buffer/index.html">EventBuffer</a></h4>
+</td>
+<td>
+<p><a href="-event-buffer/index.html">EventBuffer</a> defines a buffer which will consume the <a href="#">SDKEvent</a> internally.</p>
+<code><span class="keyword">interface </span><span class="identifier">EventBuffer</span></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="-event-client-configuration/index.html">EventClientConfiguration</a></h4>
+</td>
+<td>
+<p><a href="-event-client-configuration/index.html">EventClientConfiguration</a> defines core properties needed for every event client configuration.</p>
+<code><span class="keyword">interface </span><span class="identifier">EventClientConfiguration</span></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="-event-client-type/index.html">EventClientType</a></h4>
+</td>
+<td>
+<p><a href="-event-client-type/index.html">EventClientType</a> defines the type of event client configuration that will be
+sent to the server.</p>
+<code><span class="keyword">enum</span> <span class="keyword">class </span><span class="identifier">EventClientType</span></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="-event-reporter/index.html">EventReporter</a></h4>
+</td>
+<td>
+<p><a href="-event-reporter/index.html">EventReporter</a> is class that process meeting event that is created in <a href="#">EventAnalyticsController</a>.</p>
+<code><span class="keyword">interface </span><span class="identifier">EventReporter</span></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="-event-reporter-factory/index.html">EventReporterFactory</a></h4>
+</td>
+<td>
+<p><a href="-event-reporter-factory/index.html">EventReporterFactory</a> facilitates creating <a href="-event-reporter/index.html">EventReporter</a></p>
+<code><span class="keyword">interface </span><span class="identifier">EventReporterFactory</span></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="-event-sender/index.html">EventSender</a></h4>
+</td>
+<td>
+<p><a href="-event-sender/index.html">EventSender</a> is responsible for sending <a href="-ingestion-record/index.html">IngestionRecord</a>.</p>
+<code><span class="keyword">interface </span><span class="identifier">EventSender</span></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="-ingestion-configuration/index.html">IngestionConfiguration</a></h4>
+</td>
+<td>
+<p><a href="-ingestion-configuration/index.html">IngestionConfiguration</a> defines the configuration that can customize <a href="-default-event-reporter/index.html">DefaultEventReporter</a>.</p>
+<code><span class="keyword">data</span> <span class="keyword">class </span><span class="identifier">IngestionConfiguration</span></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="-ingestion-event/index.html">IngestionEvent</a></h4>
+</td>
+<td>
+<p><a href="-ingestion-event/index.html">IngestionEvent</a> defines the event format ingestion server will accept</p>
+<code><span class="keyword">data</span> <span class="keyword">class </span><span class="identifier">IngestionEvent</span></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="-ingestion-metadata.html">IngestionMetadata</a></h4>
+</td>
+<td>
+<p>A record that contains batch of <a href="-ingestion-event/index.html">IngestionEvent</a> to send.
+This contains metadata that is shared among events.</p>
+<code><span class="keyword">typealias </span><span class="identifier">IngestionMetadata</span>&nbsp;<span class="symbol">=</span>&nbsp;<a href="../com.amazonaws.services.chime.sdk.meetings.analytics/-event-attributes.html"><span class="identifier">EventAttributes</span></a></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="-ingestion-payload.html">IngestionPayload</a></h4>
+</td>
+<td>
+<code><span class="keyword">typealias </span><span class="identifier">IngestionPayload</span>&nbsp;<span class="symbol">=</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-map/index.html"><span class="identifier">Map</span></a><span class="symbol">&lt;</span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">,</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-any/index.html"><span class="identifier">Any</span></a><span class="symbol">&gt;</span></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="-ingestion-record/index.html">IngestionRecord</a></h4>
+</td>
+<td>
+<code><span class="keyword">data</span> <span class="keyword">class </span><span class="identifier">IngestionRecord</span></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="-meeting-event-client-configuration/index.html">MeetingEventClientConfiguration</a></h4>
+</td>
+<td>
+<p><a href="-meeting-event-client-configuration/index.html">MeetingEventClientConfiguration</a> defines one type of <a href="-event-client-configuration/index.html">EventClientConfiguration</a>
+that is needed for <a href="-default-event-reporter/index.html">DefaultEventReporter</a></p>
+<code><span class="keyword">data</span> <span class="keyword">class </span><span class="identifier">MeetingEventClientConfiguration</span>&nbsp;<span class="symbol">:</span>&nbsp;<a href="-event-client-configuration/index.html"><span class="identifier">EventClientConfiguration</span></a></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="-noop-event-reporter-factory/index.html">NoopEventReporterFactory</a></h4>
+</td>
+<td>
+<p><a href="-noop-event-reporter-factory/index.html">NoopEventReporterFactory</a> returns null <a href="-event-reporter/index.html">EventReporter</a></p>
+<code><span class="keyword">class </span><span class="identifier">NoopEventReporterFactory</span>&nbsp;<span class="symbol">:</span>&nbsp;<a href="-event-reporter-factory/index.html"><span class="identifier">EventReporterFactory</span></a></code></td>
+</tr>
+</tbody>
+</table>
+<h3>Properties</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<h4><a href="-f-l-u-s-h_-i-n-t-e-r-v-a-l_-l-i-m-i-t_-m-i-n-i-m-u-m.html">FLUSH_INTERVAL_LIMIT_MINIMUM</a></h4>
+</td>
+<td>
+<code><span class="keyword">const</span> <span class="keyword">val </span><span class="identifier">FLUSH_INTERVAL_LIMIT_MINIMUM</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html"><span class="identifier">Long</span></a></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="-f-l-u-s-h_-s-i-z-e_-l-i-m-i-t_-m-a-x-i-m-u-m.html">FLUSH_SIZE_LIMIT_MAXIMUM</a></h4>
+</td>
+<td>
+<code><span class="keyword">const</span> <span class="keyword">val </span><span class="identifier">FLUSH_SIZE_LIMIT_MAXIMUM</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html"><span class="identifier">Int</span></a></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="-r-e-t-r-y_-c-o-u-n-t_-l-i-m-i-t_-m-a-x-i-m-u-m.html">RETRY_COUNT_LIMIT_MAXIMUM</a></h4>
+</td>
+<td>
+<code><span class="keyword">const</span> <span class="keyword">val </span><span class="identifier">RETRY_COUNT_LIMIT_MAXIMUM</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html"><span class="identifier">Int</span></a></code></td>
+</tr>
+</tbody>
+</table>
+</BODY>
+</HTML>

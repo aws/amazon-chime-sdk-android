@@ -138,6 +138,18 @@ It will track all child <a href="../com.amazonaws.services.chime.sdk.meetings.au
 <h5><a href="../com.amazonaws.services.chime.sdk.meetings.analytics/-default-event-analytics-controller/index.html">com.amazonaws.services.chime.sdk.meetings.analytics.DefaultEventAnalyticsController</a></h5>
 </tr>
 <tr>
+<h5><a href="../com.amazonaws.services.chime.sdk.meetings.ingestion/-default-event-reporter/index.html">com.amazonaws.services.chime.sdk.meetings.ingestion.DefaultEventReporter</a></h5>
+</tr>
+<tr>
+<h5><a href="../com.amazonaws.services.chime.sdk.meetings.ingestion/-default-event-sender/index.html">com.amazonaws.services.chime.sdk.meetings.ingestion.DefaultEventSender</a></h5>
+</tr>
+<tr>
+<h5><a href="../com.amazonaws.services.chime.sdk.meetings.ingestion/-default-meeting-event-buffer/index.html">com.amazonaws.services.chime.sdk.meetings.ingestion.DefaultMeetingEventBuffer</a></h5>
+</tr>
+<tr>
+<h5><a href="../com.amazonaws.services.chime.sdk.meetings.ingestion/-default-meeting-event-reporter-factory/index.html">com.amazonaws.services.chime.sdk.meetings.ingestion.DefaultMeetingEventReporterFactory</a></h5>
+</tr>
+<tr>
 <h5><a href="../com.amazonaws.services.chime.sdk.meetings.session/-default-meeting-session/index.html">com.amazonaws.services.chime.sdk.meetings.session.DefaultMeetingSession</a></h5>
 </tr>
 <tr>
@@ -228,8 +240,52 @@ through adding/removing <a href="../com.amazonaws.services.chime.sdk.meetings.an
 <p><a href="../com.amazonaws.services.chime.sdk.meetings.analytics/-event-attributes.html">EventAttributes</a> describes meeting event.</p>
 </tr>
 <tr>
+<h5><a href="../com.amazonaws.services.chime.sdk.meetings.ingestion/-event-buffer/index.html">com.amazonaws.services.chime.sdk.meetings.ingestion.EventBuffer</a></h5>
+<p><a href="../com.amazonaws.services.chime.sdk.meetings.ingestion/-event-buffer/index.html">EventBuffer</a> defines a buffer which will consume the <a href="#">SDKEvent</a> internally.</p>
+</tr>
+<tr>
+<h5><a href="../com.amazonaws.services.chime.sdk.meetings.ingestion/-event-client-configuration/index.html">com.amazonaws.services.chime.sdk.meetings.ingestion.EventClientConfiguration</a></h5>
+<p><a href="../com.amazonaws.services.chime.sdk.meetings.ingestion/-event-client-configuration/index.html">EventClientConfiguration</a> defines core properties needed for every event client configuration.</p>
+</tr>
+<tr>
+<h5><a href="../com.amazonaws.services.chime.sdk.meetings.ingestion/-event-client-type/index.html">com.amazonaws.services.chime.sdk.meetings.ingestion.EventClientType</a></h5>
+<p><a href="../com.amazonaws.services.chime.sdk.meetings.ingestion/-event-client-type/index.html">EventClientType</a> defines the type of event client configuration that will be
+sent to the server.</p>
+</tr>
+<tr>
 <h5><a href="../com.amazonaws.services.chime.sdk.meetings.analytics/-event-name/index.html">com.amazonaws.services.chime.sdk.meetings.analytics.EventName</a></h5>
-<p><a href="../com.amazonaws.services.chime.sdk.meetings.analytics/-event-name/index.html">EventName</a> represent some major event that could help builders to analyze the data.</p>
+<p><a href="../com.amazonaws.services.chime.sdk.meetings.analytics/-event-name/index.html">EventName</a> represent sdk event that could help builders to analyze the data.</p>
+</tr>
+<tr>
+<h5><a href="../com.amazonaws.services.chime.sdk.meetings.ingestion/-event-reporter/index.html">com.amazonaws.services.chime.sdk.meetings.ingestion.EventReporter</a></h5>
+<p><a href="../com.amazonaws.services.chime.sdk.meetings.ingestion/-event-reporter/index.html">EventReporter</a> is class that process meeting event that is created in <a href="#">EventAnalyticsController</a>.</p>
+</tr>
+<tr>
+<h5><a href="../com.amazonaws.services.chime.sdk.meetings.ingestion/-event-reporter-factory/index.html">com.amazonaws.services.chime.sdk.meetings.ingestion.EventReporterFactory</a></h5>
+<p><a href="../com.amazonaws.services.chime.sdk.meetings.ingestion/-event-reporter-factory/index.html">EventReporterFactory</a> facilitates creating <a href="../com.amazonaws.services.chime.sdk.meetings.ingestion/-event-reporter/index.html">EventReporter</a></p>
+</tr>
+<tr>
+<h5><a href="../com.amazonaws.services.chime.sdk.meetings.ingestion/-event-sender/index.html">com.amazonaws.services.chime.sdk.meetings.ingestion.EventSender</a></h5>
+<p><a href="../com.amazonaws.services.chime.sdk.meetings.ingestion/-event-sender/index.html">EventSender</a> is responsible for sending <a href="../com.amazonaws.services.chime.sdk.meetings.ingestion/-ingestion-record/index.html">IngestionRecord</a>.</p>
+</tr>
+<tr>
+<h5><a href="../com.amazonaws.services.chime.sdk.meetings.ingestion/-ingestion-configuration/index.html">com.amazonaws.services.chime.sdk.meetings.ingestion.IngestionConfiguration</a></h5>
+<p><a href="../com.amazonaws.services.chime.sdk.meetings.ingestion/-ingestion-configuration/index.html">IngestionConfiguration</a> defines the configuration that can customize <a href="../com.amazonaws.services.chime.sdk.meetings.ingestion/-default-event-reporter/index.html">DefaultEventReporter</a>.</p>
+</tr>
+<tr>
+<h5><a href="../com.amazonaws.services.chime.sdk.meetings.ingestion/-ingestion-event/index.html">com.amazonaws.services.chime.sdk.meetings.ingestion.IngestionEvent</a></h5>
+<p><a href="../com.amazonaws.services.chime.sdk.meetings.ingestion/-ingestion-event/index.html">IngestionEvent</a> defines the event format ingestion server will accept</p>
+</tr>
+<tr>
+<h5><a href="../com.amazonaws.services.chime.sdk.meetings.ingestion/-ingestion-metadata.html">com.amazonaws.services.chime.sdk.meetings.ingestion.IngestionMetadata</a></h5>
+<p>A record that contains batch of <a href="../com.amazonaws.services.chime.sdk.meetings.ingestion/-ingestion-event/index.html">IngestionEvent</a> to send.
+This contains metadata that is shared among events.</p>
+</tr>
+<tr>
+<h5><a href="../com.amazonaws.services.chime.sdk.meetings.ingestion/-ingestion-payload.html">com.amazonaws.services.chime.sdk.meetings.ingestion.IngestionPayload</a></h5>
+</tr>
+<tr>
+<h5><a href="../com.amazonaws.services.chime.sdk.meetings.ingestion/-ingestion-record/index.html">com.amazonaws.services.chime.sdk.meetings.ingestion.IngestionRecord</a></h5>
 </tr>
 <tr>
 <h5><a href="../com.amazonaws.services.chime.sdk.meetings.utils.logger/-logger/index.html">com.amazonaws.services.chime.sdk.meetings.utils.logger.Logger</a></h5>
@@ -251,6 +307,11 @@ through adding/removing <a href="../com.amazonaws.services.chime.sdk.meetings.an
 </tr>
 <tr>
 <h5><a href="../com.amazonaws.services.chime.sdk.meetings.session/-meeting/index.html">com.amazonaws.services.chime.sdk.meetings.session.Meeting</a></h5>
+</tr>
+<tr>
+<h5><a href="../com.amazonaws.services.chime.sdk.meetings.ingestion/-meeting-event-client-configuration/index.html">com.amazonaws.services.chime.sdk.meetings.ingestion.MeetingEventClientConfiguration</a></h5>
+<p><a href="../com.amazonaws.services.chime.sdk.meetings.ingestion/-meeting-event-client-configuration/index.html">MeetingEventClientConfiguration</a> defines one type of <a href="../com.amazonaws.services.chime.sdk.meetings.ingestion/-event-client-configuration/index.html">EventClientConfiguration</a>
+that is needed for <a href="../com.amazonaws.services.chime.sdk.meetings.ingestion/-default-event-reporter/index.html">DefaultEventReporter</a></p>
 </tr>
 <tr>
 <h5><a href="../com.amazonaws.services.chime.sdk.meetings.analytics/-meeting-history-event/index.html">com.amazonaws.services.chime.sdk.meetings.analytics.MeetingHistoryEvent</a></h5>
@@ -302,6 +363,10 @@ meeting service.</p>
 <tr>
  (extensions in package com.amazonaws.services.chime.sdk.meetings.analytics)
 <h5><a href="../com.amazonaws.services.chime.sdk.meetings.analytics/kotlin.collections.-mutable-map/index.html">kotlin.collections.MutableMap</a></h5>
+</tr>
+<tr>
+<h5><a href="../com.amazonaws.services.chime.sdk.meetings.ingestion/-noop-event-reporter-factory/index.html">com.amazonaws.services.chime.sdk.meetings.ingestion.NoopEventReporterFactory</a></h5>
+<p><a href="../com.amazonaws.services.chime.sdk.meetings.ingestion/-noop-event-reporter-factory/index.html">NoopEventReporterFactory</a> returns null <a href="../com.amazonaws.services.chime.sdk.meetings.ingestion/-event-reporter/index.html">EventReporter</a></p>
 </tr>
 <tr>
 <h5><a href="../com.amazonaws.services.chime.sdk.meetings.audiovideo.metric/-observable-metric/index.html">com.amazonaws.services.chime.sdk.meetings.audiovideo.metric.ObservableMetric</a></h5>

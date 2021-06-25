@@ -1,0 +1,46 @@
+<HTML>
+<HEAD>
+<meta charset="UTF-8">
+<title>DefaultMeetingEventBuffer - amazon-chime-sdk</title>
+<link rel="stylesheet" href="../../../style.css">
+</HEAD>
+<BODY>
+<a href="../../index.html">amazon-chime-sdk</a>&nbsp;/&nbsp;<a href="../index.html">com.amazonaws.services.chime.sdk.meetings.ingestion</a>&nbsp;/&nbsp;<a href="./index.html">DefaultMeetingEventBuffer</a><br/>
+<br/>
+<h1>DefaultMeetingEventBuffer</h1>
+<code><span class="keyword">class </span><span class="identifier">DefaultMeetingEventBuffer</span>&nbsp;<span class="symbol">:</span>&nbsp;<a href="../-event-buffer/index.html"><span class="identifier">EventBuffer</span></a></code>
+<h3>Constructors</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<h4><a href="-init-.html">&lt;init&gt;</a></h4>
+</td>
+<td>
+<code><span class="identifier">DefaultMeetingEventBuffer</span><span class="symbol">(</span><span class="identifier" id="com.amazonaws.services.chime.sdk.meetings.ingestion.DefaultMeetingEventBuffer$<init>(com.amazonaws.services.chime.sdk.meetings.ingestion.IngestionConfiguration, com.amazonaws.services.chime.sdk.meetings.internal.ingestion.EventDao, com.amazonaws.services.chime.sdk.meetings.internal.ingestion.DirtyEventDao, com.amazonaws.services.chime.sdk.meetings.ingestion.EventSender, com.amazonaws.services.chime.sdk.meetings.utils.logger.Logger, kotlinx.coroutines.CoroutineScope)/ingestionConfiguration">ingestionConfiguration</span><span class="symbol">:</span>&nbsp;<a href="../-ingestion-configuration/index.html"><span class="identifier">IngestionConfiguration</span></a><span class="symbol">, </span><span class="identifier" id="com.amazonaws.services.chime.sdk.meetings.ingestion.DefaultMeetingEventBuffer$<init>(com.amazonaws.services.chime.sdk.meetings.ingestion.IngestionConfiguration, com.amazonaws.services.chime.sdk.meetings.internal.ingestion.EventDao, com.amazonaws.services.chime.sdk.meetings.internal.ingestion.DirtyEventDao, com.amazonaws.services.chime.sdk.meetings.ingestion.EventSender, com.amazonaws.services.chime.sdk.meetings.utils.logger.Logger, kotlinx.coroutines.CoroutineScope)/eventDao">eventDao</span><span class="symbol">:</span>&nbsp;<span class="identifier">EventDao</span><span class="symbol">, </span><span class="identifier" id="com.amazonaws.services.chime.sdk.meetings.ingestion.DefaultMeetingEventBuffer$<init>(com.amazonaws.services.chime.sdk.meetings.ingestion.IngestionConfiguration, com.amazonaws.services.chime.sdk.meetings.internal.ingestion.EventDao, com.amazonaws.services.chime.sdk.meetings.internal.ingestion.DirtyEventDao, com.amazonaws.services.chime.sdk.meetings.ingestion.EventSender, com.amazonaws.services.chime.sdk.meetings.utils.logger.Logger, kotlinx.coroutines.CoroutineScope)/dirtyEventDao">dirtyEventDao</span><span class="symbol">:</span>&nbsp;<span class="identifier">DirtyEventDao</span><span class="symbol">, </span><span class="identifier" id="com.amazonaws.services.chime.sdk.meetings.ingestion.DefaultMeetingEventBuffer$<init>(com.amazonaws.services.chime.sdk.meetings.ingestion.IngestionConfiguration, com.amazonaws.services.chime.sdk.meetings.internal.ingestion.EventDao, com.amazonaws.services.chime.sdk.meetings.internal.ingestion.DirtyEventDao, com.amazonaws.services.chime.sdk.meetings.ingestion.EventSender, com.amazonaws.services.chime.sdk.meetings.utils.logger.Logger, kotlinx.coroutines.CoroutineScope)/eventSender">eventSender</span><span class="symbol">:</span>&nbsp;<a href="../-event-sender/index.html"><span class="identifier">EventSender</span></a><span class="symbol">, </span><span class="identifier" id="com.amazonaws.services.chime.sdk.meetings.ingestion.DefaultMeetingEventBuffer$<init>(com.amazonaws.services.chime.sdk.meetings.ingestion.IngestionConfiguration, com.amazonaws.services.chime.sdk.meetings.internal.ingestion.EventDao, com.amazonaws.services.chime.sdk.meetings.internal.ingestion.DirtyEventDao, com.amazonaws.services.chime.sdk.meetings.ingestion.EventSender, com.amazonaws.services.chime.sdk.meetings.utils.logger.Logger, kotlinx.coroutines.CoroutineScope)/logger">logger</span><span class="symbol">:</span>&nbsp;<a href="../../com.amazonaws.services.chime.sdk.meetings.utils.logger/-logger/index.html"><span class="identifier">Logger</span></a><span class="symbol">, </span><span class="identifier" id="com.amazonaws.services.chime.sdk.meetings.ingestion.DefaultMeetingEventBuffer$<init>(com.amazonaws.services.chime.sdk.meetings.ingestion.IngestionConfiguration, com.amazonaws.services.chime.sdk.meetings.internal.ingestion.EventDao, com.amazonaws.services.chime.sdk.meetings.internal.ingestion.DirtyEventDao, com.amazonaws.services.chime.sdk.meetings.ingestion.EventSender, com.amazonaws.services.chime.sdk.meetings.utils.logger.Logger, kotlinx.coroutines.CoroutineScope)/eventScope">eventScope</span><span class="symbol">:</span>&nbsp;<span class="identifier">CoroutineScope</span>&nbsp;<span class="symbol">=</span>&nbsp;CoroutineScope(Dispatchers.IO + SupervisorJob())<span class="symbol">)</span></code></td>
+</tr>
+</tbody>
+</table>
+<h3>Functions</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<h4><a href="add.html">add</a></h4>
+</td>
+<td>
+<p>Add a meeting event to the buffer.</p>
+<code><span class="keyword">fun </span><span class="identifier">add</span><span class="symbol">(</span><span class="identifier" id="com.amazonaws.services.chime.sdk.meetings.ingestion.DefaultMeetingEventBuffer$add(com.amazonaws.services.chime.sdk.meetings.internal.ingestion.SDKEvent)/item">item</span><span class="symbol">:</span>&nbsp;<span class="identifier">SDKEvent</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="process.html">process</a></h4>
+</td>
+<td>
+<p>Consume the data.</p>
+<code><span class="keyword">fun </span><span class="identifier">process</span><span class="symbol">(</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code></td>
+</tr>
+</tbody>
+</table>
+</BODY>
+</HTML>

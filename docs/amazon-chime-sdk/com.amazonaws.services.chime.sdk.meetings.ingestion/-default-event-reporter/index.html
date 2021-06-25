@@ -1,0 +1,54 @@
+<HTML>
+<HEAD>
+<meta charset="UTF-8">
+<title>DefaultEventReporter - amazon-chime-sdk</title>
+<link rel="stylesheet" href="../../../style.css">
+</HEAD>
+<BODY>
+<a href="../../index.html">amazon-chime-sdk</a>&nbsp;/&nbsp;<a href="../index.html">com.amazonaws.services.chime.sdk.meetings.ingestion</a>&nbsp;/&nbsp;<a href="./index.html">DefaultEventReporter</a><br/>
+<br/>
+<h1>DefaultEventReporter</h1>
+<code><span class="keyword">class </span><span class="identifier">DefaultEventReporter</span>&nbsp;<span class="symbol">:</span>&nbsp;<a href="../-event-reporter/index.html"><span class="identifier">EventReporter</span></a></code>
+<h3>Constructors</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<h4><a href="-init-.html">&lt;init&gt;</a></h4>
+</td>
+<td>
+<code><span class="identifier">DefaultEventReporter</span><span class="symbol">(</span><span class="identifier" id="com.amazonaws.services.chime.sdk.meetings.ingestion.DefaultEventReporter$<init>(com.amazonaws.services.chime.sdk.meetings.ingestion.IngestionConfiguration, com.amazonaws.services.chime.sdk.meetings.ingestion.EventBuffer, com.amazonaws.services.chime.sdk.meetings.utils.logger.Logger, java.util.Timer)/ingestionConfiguration">ingestionConfiguration</span><span class="symbol">:</span>&nbsp;<a href="../-ingestion-configuration/index.html"><span class="identifier">IngestionConfiguration</span></a><span class="symbol">, </span><span class="identifier" id="com.amazonaws.services.chime.sdk.meetings.ingestion.DefaultEventReporter$<init>(com.amazonaws.services.chime.sdk.meetings.ingestion.IngestionConfiguration, com.amazonaws.services.chime.sdk.meetings.ingestion.EventBuffer, com.amazonaws.services.chime.sdk.meetings.utils.logger.Logger, java.util.Timer)/eventBuffer">eventBuffer</span><span class="symbol">:</span>&nbsp;<a href="../-event-buffer/index.html"><span class="identifier">EventBuffer</span></a><span class="symbol">, </span><span class="identifier" id="com.amazonaws.services.chime.sdk.meetings.ingestion.DefaultEventReporter$<init>(com.amazonaws.services.chime.sdk.meetings.ingestion.IngestionConfiguration, com.amazonaws.services.chime.sdk.meetings.ingestion.EventBuffer, com.amazonaws.services.chime.sdk.meetings.utils.logger.Logger, java.util.Timer)/logger">logger</span><span class="symbol">:</span>&nbsp;<a href="../../com.amazonaws.services.chime.sdk.meetings.utils.logger/-logger/index.html"><span class="identifier">Logger</span></a><span class="symbol">, </span><span class="identifier" id="com.amazonaws.services.chime.sdk.meetings.ingestion.DefaultEventReporter$<init>(com.amazonaws.services.chime.sdk.meetings.ingestion.IngestionConfiguration, com.amazonaws.services.chime.sdk.meetings.ingestion.EventBuffer, com.amazonaws.services.chime.sdk.meetings.utils.logger.Logger, java.util.Timer)/timer">timer</span><span class="symbol">:</span>&nbsp;<a href="https://docs.oracle.com/javase/6/docs/api/java/util/Timer.html"><span class="identifier">Timer</span></a>&nbsp;<span class="symbol">=</span>&nbsp;Timer("DefaultEventReporter", false)<span class="symbol">)</span></code></td>
+</tr>
+</tbody>
+</table>
+<h3>Functions</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<h4><a href="report.html">report</a></h4>
+</td>
+<td>
+<p>Report the meeting event</p>
+<code><span class="keyword">fun </span><span class="identifier">report</span><span class="symbol">(</span><span class="identifier" id="com.amazonaws.services.chime.sdk.meetings.ingestion.DefaultEventReporter$report(com.amazonaws.services.chime.sdk.meetings.internal.ingestion.SDKEvent)/event">event</span><span class="symbol">:</span>&nbsp;<span class="identifier">SDKEvent</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="start.html">start</a></h4>
+</td>
+<td>
+<p>Start <a href="../-event-reporter/index.html">EventReporter</a> and process data</p>
+<code><span class="keyword">fun </span><span class="identifier">start</span><span class="symbol">(</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="stop.html">stop</a></h4>
+</td>
+<td>
+<p>Stop <a href="../-event-reporter/index.html">EventReporter</a> and processing data</p>
+<code><span class="keyword">fun </span><span class="identifier">stop</span><span class="symbol">(</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code></td>
+</tr>
+</tbody>
+</table>
+</BODY>
+</HTML>

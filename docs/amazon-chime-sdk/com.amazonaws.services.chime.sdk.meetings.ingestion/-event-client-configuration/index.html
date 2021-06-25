@@ -1,0 +1,49 @@
+<HTML>
+<HEAD>
+<meta charset="UTF-8">
+<title>EventClientConfiguration - amazon-chime-sdk</title>
+<link rel="stylesheet" href="../../../style.css">
+</HEAD>
+<BODY>
+<a href="../../index.html">amazon-chime-sdk</a>&nbsp;/&nbsp;<a href="../index.html">com.amazonaws.services.chime.sdk.meetings.ingestion</a>&nbsp;/&nbsp;<a href="./index.html">EventClientConfiguration</a><br/>
+<br/>
+<h1>EventClientConfiguration</h1>
+<code><span class="keyword">interface </span><span class="identifier">EventClientConfiguration</span></code>
+<p><a href="./index.html">EventClientConfiguration</a> defines core properties needed for every event client configuration.</p>
+<h3>Properties</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<h4><a href="event-client-join-token.html">eventClientJoinToken</a></h4>
+</td>
+<td>
+<p>eventClientJoinToken: <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a> - authentication token needed for ingestion url</p>
+<code><span class="keyword">abstract</span> <span class="keyword">val </span><span class="identifier">eventClientJoinToken</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="type.html">type</a></h4>
+</td>
+<td>
+<p>type: <a href="../-event-client-type/index.html">EventClientType</a> - type of <a href="./index.html">EventClientConfiguration</a></p>
+<code><span class="keyword">abstract</span> <span class="keyword">val </span><span class="identifier">type</span><span class="symbol">: </span><a href="../-event-client-type/index.html"><span class="identifier">EventClientType</span></a></code></td>
+</tr>
+</tbody>
+</table>
+<h3>Inheritors</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<h4><a href="../-meeting-event-client-configuration/index.html">MeetingEventClientConfiguration</a></h4>
+</td>
+<td>
+<p><a href="../-meeting-event-client-configuration/index.html">MeetingEventClientConfiguration</a> defines one type of <a href="./index.html">EventClientConfiguration</a>
+that is needed for <a href="../-default-event-reporter/index.html">DefaultEventReporter</a></p>
+<code><span class="keyword">data</span> <span class="keyword">class </span><span class="identifier">MeetingEventClientConfiguration</span>&nbsp;<span class="symbol">:</span>&nbsp;<a href="./index.html"><span class="identifier">EventClientConfiguration</span></a></code></td>
+</tr>
+</tbody>
+</table>
+</BODY>
+</HTML>
