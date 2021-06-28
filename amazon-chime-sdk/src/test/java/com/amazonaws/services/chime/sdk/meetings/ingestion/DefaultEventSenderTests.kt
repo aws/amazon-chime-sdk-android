@@ -15,9 +15,11 @@ import io.mockk.coVerify
 import io.mockk.every
 import io.mockk.impl.annotations.MockK
 import io.mockk.mockkObject
+import io.mockk.unmockkObject
 import kotlin.Exception
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runBlockingTest
+import org.junit.After
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
@@ -41,6 +43,11 @@ class DefaultEventSenderTests {
         every { ingestionConfiguration.ingestionUrl } returns "https://example.com"
         every { ingestionConfiguration.retryCountLimit } returns 5
         eventSender = DefaultEventSender(ingestionConfiguration, logger)
+    }
+
+    @After
+    fun cleanup() {
+        unmockkObject(HttpUtils)
     }
 
     @Test
