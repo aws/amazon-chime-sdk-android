@@ -1,3 +1,8 @@
+## Unreleased
+
+### Fixed
+* Fixed Screen share rotation issue (Issue #292)
+
 ## [0.11.5] - 2021-06-24
 
 ### Added
