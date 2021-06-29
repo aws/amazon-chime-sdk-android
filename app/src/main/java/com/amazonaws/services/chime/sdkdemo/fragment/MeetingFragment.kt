@@ -1372,7 +1372,7 @@ class MeetingFragment : Fragment(),
             audioVideo.unbindVideoView(it.videoTileState.tileId)
         }
         audioVideo.stopLocalVideo()
-        audioVideo.stopRemoteVideo()
+        audioVideo.stopContentShare()
         audioVideo.stopRemoteVideo()
         audioVideo.stop()
     }
