@@ -1,3 +1,9 @@
+## Unreleased
+
+### Fixed
+* Fixed Screen share rotation issue (Issue #289)
+* [Demo] Fixed crash when end meeting while screen sharing
+
 ## [0.11.5] - 2021-06-24
 
 ### Added
