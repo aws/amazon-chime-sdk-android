@@ -18,7 +18,6 @@ import com.amazonaws.services.chime.sdk.meetings.session.MeetingSessionConfigura
 import com.amazonaws.services.chime.sdk.meetings.utils.logger.Logger
 import com.google.gson.Gson
 import com.xodee.client.video.VideoClient
-import com.xodee.client.video.VideoClientCapturer
 import com.xodee.client.video.VideoClientConfig
 import com.xodee.client.video.VideoClientConfigBuilder
 import java.security.InvalidParameterException
@@ -185,7 +184,6 @@ class DefaultVideoClientController(
         logger.info(TAG, "Initializing video client")
         AppInfoUtil.initializeVideoClientAppDetailedInfo(context)
         VideoClient.javaInitializeGlobals(context)
-        VideoClientCapturer.getInstance(context)
         videoClient = videoClientFactory.getVideoClient(videoClientObserver)
     }
 
