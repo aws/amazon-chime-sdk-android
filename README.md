@@ -1,21 +1,24 @@
 # Amazon Chime SDK for Android
+[Amazon Chime SDK Project Board](https://aws.github.io/amazon-chime-sdk-js/modules/projectboard.html)
 
 > Note: If building with the SDK source code, the `development` branch contains bleeding-edge changes that may not build with the publically available Chime media library or may not be as stable as [public releases](https://github.com/aws/amazon-chime-sdk-android/releases).
 
 ## Build video calling, audio calling, and screen sharing applications powered by Amazon Chime.
 
 The Amazon Chime SDK for Android makes it easy to add collaborative audio calling,
-video calling, and screen share viewing features to Android applications by 
-using the same infrastructure services that power meetings on the Amazon 
+video calling, and screen share viewing features to Android applications by
+using the same infrastructure services that power meetings on the Amazon
 Chime service.
 
 This Amazon Chime SDK for Android works by connecting to meeting session
 resources that you have created in your AWS account. The SDK has everything
 you need to build custom calling and collaboration experiences in your
-Android application, including methods to: configure meeting sessions, list 
-and select audio devices, switch video devices, start and stop screen share 
-viewing, receive callbacks when media events occur such as volume changes, 
+Android application, including methods to: configure meeting sessions, list
+and select audio devices, switch video devices, start and stop screen share
+viewing, receive callbacks when media events occur such as volume changes,
 and manage meeting features such as audio mute and video tile bindings.
+
+We also have an [Amazon Chime SDK Project Board](https://aws.github.io/amazon-chime-sdk-js/modules/projectboard.html) where you can find community requests and their statuses.
 
 To get started, see the following resources:
 
@@ -81,7 +84,7 @@ compileOptions {
 
 ## Running the demo app
 
-> NOTE: This is just to run demo application and use SDK as code instead of aar library. 
+> NOTE: This is just to run demo application and use SDK as code instead of aar library.
 
 To run the demo application, follow these steps.
 
@@ -101,7 +104,7 @@ Unzip and copy the aar files to `amazon-chime-sdk-android/amazon-chime-sdk/libs`
 
 ### 3. Update demo app
 
-Update `test_url` in `strings.xml` at the path `amazon-chime-sdk-android/app/src/main/res/values` 
+Update `test_url` in `strings.xml` at the path `amazon-chime-sdk-android/app/src/main/res/values`
 with the URL of the serverless demo deployed in Step 1.
 
 > NOTE: use `https://xxxxx.xxxxx.xxx.com/Prod/`
@@ -125,7 +128,7 @@ If you discover a potential security issue in this project we ask that you notif
 
 ### Starting a session
 
-#### Use case 1. Start a session. 
+#### Use case 1. Start a session.
 
 You need to start the meeting session to start sending and receiving audio. Make sure that the user has granted audio permission first.
 
@@ -133,7 +136,7 @@ You need to start the meeting session to start sending and receiving audio. Make
 meetingSession.audioVideo.start()
 ```
 
-#### Use case 2. Add an observer to receive audio and video session life cycle events. 
+#### Use case 2. Add an observer to receive audio and video session life cycle events.
 
 > Note: To avoid missing any events, add an observer before the session starts. You can remove the observer by calling meetingSession.audioVideo.removeAudioVideoObserver(observer).
 
@@ -219,7 +222,7 @@ val observer = object: DeviceChangeObserver {
     }
 }
 
-meetingSession.audioVideo.addDeviceChangeObserver(observer) 
+meetingSession.audioVideo.addDeviceChangeObserver(observer)
 ```
 
 #### Use case 7. Get currently selected audio device.
@@ -239,7 +242,7 @@ var activeAudioDevice: MediaDevice? = null
 override fun onAudioDeviceChanged(freshAudioDeviceList: List<MediaDevice>) {
     val device = /* An item from freshAudioDeviceList */
     meetingSession.audioVideo.chooseAudioDevice(device)
-    activeAudioDevice = device // Update current device 
+    activeAudioDevice = device // Update current device
 }
 ```
 
@@ -255,9 +258,9 @@ val muted = meetingSession.audioVideo.realtimeLocalMute() // returns true if mut
 val unmuted = meetingSession.audioVideo.realtimeLocalUnmute() // returns true if unmuted, false if failed
 ```
 
-#### Use case 9. Add an observer to receive realtime events such as volume changes/signal change/muted status attendees. 
+#### Use case 9. Add an observer to receive realtime events such as volume changes/signal change/muted status attendees.
 
-You can use this to build real-time indicators UI and get them updated for changes delivered by the array. 
+You can use this to build real-time indicators UI and get them updated for changes delivered by the array.
 
 
 > Note: These callbacks will only include the delta from the previous callback.
@@ -271,7 +274,7 @@ val observer = object : RealtimeObserver {
             )
         }
     }
-    
+
     override fun onSignalStrengthChanged(signalUpdates: Array<SignalUpdate>) {
         signalUpdates.forEach { (attendeeInfo, signalStrength) ->
             logger.info(TAG, "${attendeeInfo.attendeeId}'s signal strength changed: " +
@@ -279,23 +282,23 @@ val observer = object : RealtimeObserver {
             )
         }
     }
-    
+
     override fun onAttendeesJoined(attendeeInfo: Array<AttendeeInfo>) {
         attendeeInfo.forEach { logger.info(TAG, "${attendeeInfo.attendeeId} joined the meeting") }
     }
-    
+
     override fun onAttendeesLeft(attendeeInfo: Array<AttendeeInfo>) {
         attendeeInfo.forEach { logger.info(TAG, "${attendeeInfo.attendeeId} left the meeting") }
     }
-    
+
     override fun onAttendeesDropped(attendeeInfo: Array<AttendeeInfo>) {
         attendeeInfo.forEach { logger.info(TAG, "${attendeeInfo.attendeeId} dropped from the meeting") }
     }
-    
+
     override fun fun onAttendeesMuted(attendeeInfo: Array<AttendeeInfo>) }
         attendeeInfo.forEach { logger.info(TAG, "${attendeeInfo.attendeeId} muted") }
     }
-    
+
     override fun onAttendeesUnmuted(attendeeInfo: Array<AttendeeInfo>) {
         attendeeInfo.forEach { logger.info(TAG, "${attendeeInfo.attendeeId} unmuted") }
     }
@@ -315,10 +318,10 @@ val observer = object : ActiveSpeakerObserver {
             logger.info(TAG, "${attendeeInfo[0].attendeeId} is the most active speaker")
         }
     }
-    
+
     // Set to receive onActiveSpeakerScoreChanged event at interval of 1s
     override val scoreCallbackIntervalMs: Int? get() = 1000
-    
+
     override fun onActiveSpeakerScoreChanged(scores: Map<AttendeeInfo, Double>) {
         val scoreString = scores.map { entry -> "${entry.key.attendeeId}: ${entry.value}" }.joinToString(",")
         logger.info(TAG, "Scores of active speakers are: $scoreString")
@@ -332,11 +335,11 @@ meetingSession.audioVideo.addActiveSpeakerObserver(DefaultActiveSpeakerPolicy(),
 ### Video
 
 > Note: You'll need to bind the video to a `VideoRenderView` to render it.
-> 
+>
 > A local video tile can be identified using the `isLocalTile` property.
-> 
+>
 > A content video tile can be identified using the `isContent` property. See [Screen and content share](#screen-and-content-share).
-> 
+>
 > A tile is created with a new tile ID when the same remote attendee restarts the video.
 
 
@@ -365,11 +368,11 @@ val observer = object : VideoTileObserver {
     override fun onVideoTileAdded(tileState: VideoTileState) {
         // Ignore local video (see View local video), content video (seeScreen and content share)
         if(tileState.isLocalTile || tileState.isContent) return
-        
+
         val videoRenderView = /* a VideoRenderView object in your application to show the video */
         meetingSession.audioVideo.bindVideoView(videoRenderView, tileState.tileId)
     }
-    
+
     override onVideoTileRemoved(tileState: VideoTileState) {
         // unbind video view to stop viewing the tile
         audioVideo.unbindVideoView(tileState.tileId)
@@ -381,12 +384,12 @@ meetingSession.audioVideo.addVideoTileObserver(observer)
 
 For more advanced video tile management, take a look at [Video Pagination](https://github.com/aws/amazon-chime-sdk-android/blob/master/guides/video_pagination.md).
 
-#### Use case 14. Start sharing your video. 
+#### Use case 14. Start sharing your video.
 
 ```kotlin
 // Use internal camera capture for the local video
  meetingSession.audioVideo.startLocalVideo()
- 
+
 // You can switch camera to change the video input device
 meetingSession.audioVideo.switchCamera()
 
@@ -406,12 +409,12 @@ val observer = object : VideoTileObserver {
     override fun onVideoTileAdded(tileState: VideoTileState) {
         // onVideoTileAdded is called after startLocalVideo
         val localVideoRenderView = /* a VideoRenderView object to show local video */
-        
+
         if (tileState.isLocalTile) {
             audioVideo.bindVideoView(localVideoRenderView, tileState.tileId)
         }
     }
-    
+
     override onVideoTileRemoved(tileState: VideoTileState) {
         // onVideoTileRemoved is called after stopLocalVideo
         if (tileState.isLocalTile) {
@@ -427,7 +430,7 @@ meetingSession.audioVideo.addVideoTileObserver(observer)
 ### Screen and content share
 
 > Note: When you or other attendees share content (e.g., screen capture or any other VideoSource object), the content attendee (attendee-id#content) joins the session and shares content as if a regular attendee shares a video.
-> 
+>
 > For example, your attendee ID is "my-id". When you call `meetingSession.audioVideo.startContentShare`, the content attendee "my-id#content" will join the session and share your content.
 
 #### Use case 17. Start sharing your screen or content.
@@ -457,7 +460,7 @@ See [Content Share](https://github.com/aws/amazon-chime-sdk-android/blob/master/
 meetingSession.audioVideo.stopContentShare()
 ```
 
-#### Use case 19. View attendee content or screens. 
+#### Use case 19. View attendee content or screens.
 
 Chime SDK allows two simultaneous content shares per meeting. Remote content shares will trigger `onVideoTileAdded`, while local share will not. To render the video for preview, add a `VideoSink` to the `VideoSource` in the `ContentShareSource`.
 
@@ -470,12 +473,12 @@ val observer = object : VideoTileObserver {
             // Get the attendee ID from "attendee-id#content"
             val baseAttendeeId = DefaultModality(attendeeId).base()
             logger.info(TAG, "$baseAttendeeId is sharing screen")
-            
+
             val contentVideoRenderView = /* a VideoRenderView object in your application to show the content video */
             meetingSession.audioVideo.bindVideoView(contentVideoRenderView, tileState.tileId)
         }
     }
-    
+
     override onVideoTileRemoved(tileState: VideoTileState) {
         // unbind video view to stop viewing the tile
         meetingSession.audioVideo.unbindVideoView(tileId)
@@ -500,7 +503,7 @@ val observer = object: MetricsObserver {
     }
 }
 
-meetingSession.audioVideo.addMetricsObserver(observer) 
+meetingSession.audioVideo.addMetricsObserver(observer)
 ```
 
 ### Data Message
@@ -555,7 +558,7 @@ val observer = object: AudioVideoObserver {
         // This is where meeting ended.
         // You can do some clean up work here.
     }
-    
+
     override fun onVideoSessionStopped(sessionStatus: MeetingSessionStatus) {
         // This will be invoked as well.
     }
