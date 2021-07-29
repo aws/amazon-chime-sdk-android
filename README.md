@@ -31,6 +31,7 @@ And review the following guides:
 
 * [API Overview](guides/api_overview.md)
 * [Getting Started](guides/getting_started.md)
+* [Frequently Asked Questions (FAQ)](#frequently-asked-questions)
 * [Custom Video Sources, Processors, and Sinks](guides/custom_video.md)
 * [Video Pagination with Active Speaker-Based Policy](guides/video_pagination.md)
 * [Content Share](guides/content_share.md)
@@ -583,6 +584,19 @@ val disabled = meetingSession.audioVideo.realtimeSetVoiceFocusEnabled(false) // 
 ### Custom Video Source
 
 Custom video source allows you to control the video, such as applying a video filter. For more details, see [Custom Video](https://github.com/aws/amazon-chime-sdk-android/blob/master/guides/custom_video.md).
+
+## Frequently Asked Questions
+
+Refer to [General FAQ](https://aws.github.io/amazon-chime-sdk-js/modules/faqs.html) for Amazon Chime SDK.
+
+### Debugging
+
+#### How can I get Amazon Chime SDK logs for debugging?
+Applications can get logs from Chime SDK by passing instances of Logger when creating [MeetingSession](https://github.com/aws/amazon-chime-sdk-android/blob/master/amazon-chime-sdk/src/main/java/com/amazonaws/services/chime/sdk/meetings/session/MeetingSession.kt#L18). Amazon Chime SDK has some default implementations of logger that your application can use, such as [ConsoleLogger](https://github.com/aws/amazon-chime-sdk-android/blob/master/amazon-chime-sdk/src/main/java/com/amazonaws/services/chime/sdk/meetings/utils/logger/ConsoleLogger.kt) which logs into console. `ConsoleLogger` is set to `INFO` level as default. Therefore, in order to get all logs, including media logs, create logger by following:
+```kotlin
+val logger = ConsoleLogger(LogLevel.VERBOSE)
+```
+
 
 ---
 
