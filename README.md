@@ -592,7 +592,7 @@ Refer to [General FAQ](https://aws.github.io/amazon-chime-sdk-js/modules/faqs.ht
 ### Debugging
 
 #### How can I get Amazon Chime SDK logs for debugging?
-Applications can get logs from Chime SDK by passing instances of Logger when creating [MeetingSession](https://github.com/aws/amazon-chime-sdk-android/blob/master/amazon-chime-sdk/src/main/java/com/amazonaws/services/chime/sdk/meetings/session/MeetingSession.kt#L18). Amazon Chime SDK has some default implementations of logger that your application can use, such as [ConsoleLogger](https://github.com/aws/amazon-chime-sdk-android/blob/master/amazon-chime-sdk/src/main/java/com/amazonaws/services/chime/sdk/meetings/utils/logger/ConsoleLogger.kt) which logs into console. `ConsoleLogger` is set to `INFO` level as default. Therefore, in order to get all logs, including media logs, create logger by following:
+Applications can get logs from Chime SDK by passing instances of Logger when creating [MeetingSession](https://aws.github.io/amazon-chime-sdk-android/amazon-chime-sdk/com.amazonaws.services.chime.sdk.meetings.session/-meeting-session/index.html). Amazon Chime SDK has some default implementations of logger that your application can use, such as [ConsoleLogger](https://aws.github.io/amazon-chime-sdk-android/amazon-chime-sdk/com.amazonaws.services.chime.sdk.meetings.utils.logger/-console-logger/index.html) which logs into console. `ConsoleLogger` is set to `INFO` level as default. Therefore, in order to get all logs, including media logs, create logger by following:
 ```kotlin
 val logger = ConsoleLogger(LogLevel.VERBOSE)
 ```
