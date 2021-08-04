@@ -99,6 +99,8 @@ class DefaultCameraCaptureSource @JvmOverloads constructor(
         }
 
     init {
+        // Load library so that some of webrtc definition is linked properly
+        System.loadLibrary("amazon_chime_media_client")
         val thread = HandlerThread("DefaultCameraCaptureSource")
         thread.start()
         handler = Handler(thread.looper)

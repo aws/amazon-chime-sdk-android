@@ -1,3 +1,8 @@
+## Unreleased
+
+### Fixed
+* Fixed issue where `DefaultCameraCaptureSource` cannot be used without `DefaultMeetingSession` (Issue #309)
+
 ## [0.11.6] - 2021-07-21
 
 ### Fixed
