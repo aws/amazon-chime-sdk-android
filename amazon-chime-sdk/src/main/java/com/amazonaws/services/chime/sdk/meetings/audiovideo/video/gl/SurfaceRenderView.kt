@@ -108,21 +108,19 @@ open class SurfaceRenderView @JvmOverloads constructor(
         renderer.release()
     }
 
-    override fun surfaceChanged(holder: SurfaceHolder?, format: Int, width: Int, height: Int) {}
+    override fun surfaceChanged(holder: SurfaceHolder, format: Int, width: Int, height: Int) {}
 
-    override fun surfaceDestroyed(holder: SurfaceHolder?) {
+    override fun surfaceDestroyed(holder: SurfaceHolder) {
         logger.info(TAG, "Surface destroyed, releasing EGL surface")
         renderer.releaseEglSurface()
     }
 
-    override fun surfaceCreated(holder: SurfaceHolder?) {
+    override fun surfaceCreated(holder: SurfaceHolder) {
         updateSurfaceSize()
 
         // Create the EGL surface and set it as current
-        holder?.let {
-            logger.info(TAG, "Surface created, creating EGL surface with resource")
-            renderer.createEglSurface(it.surface)
-        }
+        logger.info(TAG, "Surface created, creating EGL surface with resource")
+        renderer.createEglSurface(holder.surface)
     }
 
     override fun onMeasure(widthSpec: Int, heightSpec: Int) {

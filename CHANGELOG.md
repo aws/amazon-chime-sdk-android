@@ -1,7 +1,13 @@
 ## Unreleased
 
 ### Fixed
-* Fixed issue where `DefaultCameraCaptureSource` cannot be used without `DefaultMeetingSession` (Issue #309)
+* Fixed an issue where `DefaultCameraCaptureSource` cannot be used without `DefaultMeetingSession` (Issue #309)
+
+### Changed
+* **Breaking** Changed the behavior of `DefaultScreenCaptureSource` to better handle failure cases (Issue #317).
+  - Previously errors with getting the media projection either resulted in a SecurityException or silently failed.
+  - Now `onCaptureFailed` from `CaptureSourceObserver` will be called to handle errors with getting the media projection.
+* Updated targetSdkVersion from 28 to 30
 
 ## [0.11.6] - 2021-07-21
 
