@@ -37,6 +37,14 @@ import kotlinx.coroutines.runBlocking
  * Builders will need to get permission from users to obtain the [activityResultCode] and [activityData] arguments,
  * required to create an internal [MediaProjection] object.
  * Read [content share guide](https://github.com/aws/amazon-chime-sdk-android/blob/master/guides/content_share.md) for more information.
+ *
+ *  Note that you must finish starting the foreground service before calling start. Otherwise start
+ *  will fail to succeed despite having the user grant permission and despite having created
+ *  a foreground service for the [MediaProjection]. [CaptureSourceObserver.onCaptureFailed] will be
+ *  called with [CaptureSourceError.SystemFailure] in this case.
+ *
+ *  If the [MediaProjection] could not be obtained with the [activityResultCode] and [activityData],
+ *  [CaptureSourceObserver.onCaptureFailed] will be called with [CaptureSourceError.ConfigurationFailure].
  */
 class DefaultScreenCaptureSource(
     private val context: Context,
@@ -102,14 +110,16 @@ class DefaultScreenCaptureSource(
         // This function is shared with logic which restarts following orientation changes, so post it
         // onto the handler for thread safety
         handler.post {
-            startInternal()
+            val success = startInternal()
 
             // Set this to no-op any future restart requests on the handler
             isRestartingForOrientationChange = false
 
-            // Notify here so restarts do not trigger the callback
-            ObserverUtils.notifyObserverOnMainThread(observers) {
-                it.onCaptureStarted()
+            if (success) {
+                // Notify here so restarts do not trigger the callback
+                ObserverUtils.notifyObserverOnMainThread(observers) {
+                    it.onCaptureStarted()
+                }
             }
         }
     }
@@ -122,17 +132,31 @@ class DefaultScreenCaptureSource(
 
     // Separate internal function since only some logic is shared between external calls
     // and internal restarts; must be called on handler
-    private fun startInternal() {
+    private fun startInternal(): Boolean {
         if (mediaProjection != null) {
             logger.warn(TAG, "Screen capture has not been stopped before start request, stopping to release resources")
             stop()
         }
         logger.info(TAG, "Starting screen capture source")
 
-        mediaProjection = mediaProjectionManager.getMediaProjection(activityResultCode, activityData)
+        try {
+            mediaProjection = mediaProjectionManager.getMediaProjection(activityResultCode, activityData)
+        } catch (exception: SecurityException) {
+            logger.error(TAG, "Failed to retrieve media projection due to SecurityException. The foreground service may not have finished starting before start was called.")
+
+            ObserverUtils.notifyObserverOnMainThread(observers) {
+                it.onCaptureFailed(CaptureSourceError.SystemFailure)
+            }
+            return false
+        }
+
         if (mediaProjection == null) {
-            logger.error(TAG, "Was not able to retrieve media projection, may have been passed invalid result code or data")
-            return
+            logger.error(TAG, "Failed to retrieve media projection. The resultCode or data may have been invalid.")
+
+            ObserverUtils.notifyObserverOnMainThread(observers) {
+                it.onCaptureFailed(CaptureSourceError.ConfigurationFailure)
+            }
+            return false
         }
 
         // Note that these metrics depend on orientation
@@ -186,6 +210,7 @@ class DefaultScreenCaptureSource(
         )
 
         logger.info(TAG, "Media projection adapter activity succeeded, virtual display created")
+        return true
     }
 
     override fun stop() {

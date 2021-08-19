@@ -51,8 +51,8 @@ allprojects {
     project.ext {
         chimeBuildToolsVersion = "29.0.2"
         chimeMinSdkVersion = 21
-        chimeTargetSdkVersion = 28
-        chimeCompileSdkVersion = 29
+        chimeTargetSdkVersion = 30
+        chimeCompileSdkVersion = 30
         sdkDir = localProperties.getProperty('sdk.dir')
         ndkDir = localProperties.getProperty('ndk.dir')
     }

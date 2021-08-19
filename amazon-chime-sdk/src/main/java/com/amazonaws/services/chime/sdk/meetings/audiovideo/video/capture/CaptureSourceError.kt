@@ -27,7 +27,7 @@ enum class CaptureSourceError {
     SystemFailure,
 
     /**
-     * A failure observer during configuration
+     * A failure observed during configuration
      */
     ConfigurationFailure;
 }
