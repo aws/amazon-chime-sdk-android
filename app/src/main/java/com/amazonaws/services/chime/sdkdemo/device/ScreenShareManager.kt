@@ -7,6 +7,7 @@ package com.amazonaws.services.chime.sdkdemo.device
 
 import android.content.Context
 import android.content.Intent
+import android.content.ServiceConnection
 import android.media.projection.MediaProjection
 import android.os.Build
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.contentshare.ContentShareSource
@@ -26,11 +27,16 @@ class ScreenShareManager(
 ) : ContentShareSource() {
     override var videoSource: VideoSource? = screenCaptureSource
 
+    var screenCaptureConnectionService: ServiceConnection? = null
+
     fun start() = screenCaptureSource.start()
 
     fun stop() {
         context.stopService(Intent(context, ScreenCaptureService::class.java))
         screenCaptureSource.stop()
+        screenCaptureConnectionService?.let {
+            context.unbindService(it)
+        }
     }
 
     fun release() = screenCaptureSource.release()

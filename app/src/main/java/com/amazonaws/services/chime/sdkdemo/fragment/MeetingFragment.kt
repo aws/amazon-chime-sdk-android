@@ -7,12 +7,14 @@ package com.amazonaws.services.chime.sdkdemo.fragment
 
 import android.app.Activity
 import android.app.AlertDialog
+import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
+import android.content.ServiceConnection
 import android.content.pm.PackageManager
 import android.media.projection.MediaProjectionManager
 import android.os.Bundle
-import android.os.Handler
+import android.os.IBinder
 import android.os.PowerManager
 import android.view.LayoutInflater
 import android.view.View
@@ -98,7 +100,8 @@ import kotlinx.coroutines.sync.withLock
 
 class MeetingFragment : Fragment(),
     RealtimeObserver, AudioVideoObserver, VideoTileObserver,
-    MetricsObserver, ActiveSpeakerObserver, DeviceChangeObserver, DataMessageObserver, ContentShareObserver, EventAnalyticsObserver {
+    MetricsObserver, ActiveSpeakerObserver, DeviceChangeObserver, DataMessageObserver,
+    ContentShareObserver, EventAnalyticsObserver {
     private val logger = ConsoleLogger(LogLevel.DEBUG)
     private val mutex = Mutex()
     private val uiScope = CoroutineScope(Dispatchers.Main)
@@ -131,7 +134,7 @@ class MeetingFragment : Fragment(),
     private val DATA_MESSAGE_TOPIC = "chat"
     private val DATA_MESSAGE_LIFETIME_MS = 300000
 
-    private val ONE_SECONDS_IN_MS = 1000L
+    private var screenshareServiceConnection: ServiceConnection? = null
 
     enum class SubTab(val position: Int) {
         Attendees(0),
@@ -993,44 +996,60 @@ class MeetingFragment : Fragment(),
     }
 
     private fun startScreenShare(resultCode: Int, data: Intent, fragmentContext: Context) {
-        fragmentContext.startService(Intent(fragmentContext, ScreenCaptureService::class.java))
-
-        val runnable = Runnable {
-            val screenCaptureSource = DefaultScreenCaptureSource(
-                fragmentContext,
-                logger,
-                DefaultSurfaceTextureCaptureSourceFactory(
+        screenshareServiceConnection = object : ServiceConnection {
+            override fun onServiceConnected(className: ComponentName, service: IBinder) {
+                val screenCaptureSource = DefaultScreenCaptureSource(
+                    fragmentContext,
                     logger,
-                    eglCoreFactory
-                ),
-                resultCode,
-                data
-            )
+                    DefaultSurfaceTextureCaptureSourceFactory(
+                        logger,
+                        eglCoreFactory
+                    ),
+                    resultCode,
+                    data
+                )
 
-            val screenCaptureSourceObserver = object : CaptureSourceObserver {
-                override fun onCaptureStarted() {
-                    screenShareManager?.let { source ->
-                        audioVideo.startContentShare(source)
+                val screenCaptureSourceObserver = object : CaptureSourceObserver {
+                    override fun onCaptureStarted() {
+                        screenShareManager?.let { source ->
+                            audioVideo.startContentShare(source)
+                        }
+                    }
+
+                    override fun onCaptureStopped() {
+                        notifyHandler("Screen capture stopped")
+                    }
+
+                    override fun onCaptureFailed(error: CaptureSourceError) {
+                        notifyHandler("Screen capture failed with error $error")
+                        audioVideo.stopContentShare()
                     }
                 }
 
-                override fun onCaptureStopped() {
-                    notifyHandler("Screen capture stopped")
-                }
-
-                override fun onCaptureFailed(error: CaptureSourceError) {
-                    notifyHandler("Screen capture failed with error $error")
-                    audioVideo.stopContentShare()
-                }
+                screenShareManager = ScreenShareManager(screenCaptureSource, fragmentContext)
+                screenShareManager?.screenCaptureConnectionService = screenshareServiceConnection
+                screenShareManager?.addObserver(screenCaptureSourceObserver)
+                screenShareManager?.start()
+                (activity as MeetingActivity).setScreenShareManager(screenShareManager)
             }
 
-            screenShareManager = ScreenShareManager(screenCaptureSource, fragmentContext)
-            screenShareManager?.addObserver(screenCaptureSourceObserver)
-            screenShareManager?.start()
-            (activity as MeetingActivity).setScreenShareManager(screenShareManager)
+            override fun onServiceDisconnected(arg0: ComponentName) {
+            }
         }
 
-        Handler().postDelayed(runnable, ONE_SECONDS_IN_MS)
+        fragmentContext.startService(
+            Intent(
+                fragmentContext,
+                ScreenCaptureService::class.java
+            ).also { intent ->
+                screenshareServiceConnection?.let {
+                    context?.bindService(
+                        intent,
+                        it,
+                        Context.BIND_AUTO_CREATE
+                    )
+                }
+            })
     }
 
     override fun onContentShareStarted() {
