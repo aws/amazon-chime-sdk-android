@@ -1,7 +1,7 @@
 ## Unreleased
 
 ### Added
-* [Demo] Added delay between service start and screen share to avoid condition where screen share starts before service.
+* [Demo] Added binding to screen share service to avoid condition where screen share starts before service.
 
 ### Fixed
 * Fixed an issue where `DefaultCameraCaptureSource` cannot be used without `DefaultMeetingSession` (Issue #309)
