@@ -1,4 +1,4 @@
-## Unreleased
+## [0.12.0] - 2021-09-02
 
 ### Added
 * [Demo] Added binding to screen share service to avoid condition where screen share starts before service.
