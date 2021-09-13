@@ -520,7 +520,7 @@ val YOUR_ATTENDEE_ID = meetingSession.configuration.credentials.attendeeId
 
 val observer = object: DataMessageObserver {
     override fun onDataMessageReceived(dataMessage: DataMessage) {
-        // A throttled message is returned by backend from local sender
+        // A throttled message is returned by backend
         if (!dataMessage.throttled) {
             logger.info(TAG, "[${dataMessage.timestampMs}][{$dataMessage.senderAttendeeId}] : ${dataMessage.text()}")
     }
