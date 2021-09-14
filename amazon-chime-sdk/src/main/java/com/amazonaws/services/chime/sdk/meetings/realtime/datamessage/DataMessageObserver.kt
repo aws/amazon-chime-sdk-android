@@ -16,6 +16,8 @@ interface DataMessageObserver {
     /**
      * Handles data message being received.
      *
+     * Note: Data messages sent from local participant will not trigger this callback unless it's throttled.
+     *
      * @param dataMessage: [DataMessage] - data message being received
      */
     fun onDataMessageReceived(dataMessage: DataMessage)

@@ -513,13 +513,15 @@ meetingSession.audioVideo.addMetricsObserver(observer)
 
 You can receive real-time messages from multiple topics after starting the meeting session.
 
+> Note: Data messages sent from local participant will not trigger this callback unless it's throttled.
+
 ```kotlin
 val YOUR_ATTENDEE_ID = meetingSession.configuration.credentials.attendeeId
 
 val observer = object: DataMessageObserver {
     override fun onDataMessageReceived(dataMessage: DataMessage) {
-        // A throttled message is returned by backend from local sender
-        if (!dataMessage.throttled && dataMessage.senderAttendeeId != YOUR_ATTENDEE_ID) {
+        // A throttled message is returned by backend
+        if (!dataMessage.throttled) {
             logger.info(TAG, "[${dataMessage.timestampMs}][{$dataMessage.senderAttendeeId}] : ${dataMessage.text()}")
     }
 }
