@@ -138,6 +138,9 @@ class DefaultAudioClientControllerTest {
                 any(),
                 any(),
                 any(),
+                any(),
+                any(),
+                any(),
                 any()
             )
         } returns testAudioClientSuccessCode
@@ -297,6 +300,9 @@ class DefaultAudioClientControllerTest {
 
         verify {
             mockAudioClient.startSessionV2(
+                any(),
+                any(),
+                any(),
                 any(),
                 any(),
                 any(),
