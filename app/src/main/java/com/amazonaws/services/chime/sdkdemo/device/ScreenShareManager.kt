@@ -13,6 +13,7 @@ import android.os.Build
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.contentshare.ContentShareSource
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoSource
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.capture.CaptureSourceObserver
+import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.capture.DefaultCameraCaptureSource
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.capture.DefaultScreenCaptureSource
 import com.amazonaws.services.chime.sdkdemo.service.ScreenCaptureService
 
@@ -22,7 +23,7 @@ import com.amazonaws.services.chime.sdkdemo.service.ScreenCaptureService
  * starting [Build.VERSION_CODES.Q].
  */
 class ScreenShareManager(
-    private val screenCaptureSource: DefaultScreenCaptureSource,
+    private val screenCaptureSource: DefaultCameraCaptureSource,
     private val context: Context
 ) : ContentShareSource() {
     override var videoSource: VideoSource? = screenCaptureSource

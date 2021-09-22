@@ -12,6 +12,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.ServiceConnection
 import android.content.pm.PackageManager
+import android.hardware.camera2.CameraManager
 import android.media.projection.MediaProjectionManager
 import android.os.Bundle
 import android.os.IBinder
@@ -20,12 +21,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
-import android.widget.Button
-import android.widget.EditText
-import android.widget.ImageButton
-import android.widget.LinearLayout
-import android.widget.TextView
-import android.widget.Toast
+import android.widget.*
+import androidx.core.content.ContextCompat.getSystemService
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.DiffUtil
@@ -35,11 +32,7 @@ import com.amazonaws.services.chime.sdk.meetings.analytics.EventAnalyticsObserve
 import com.amazonaws.services.chime.sdk.meetings.analytics.EventAttributes
 import com.amazonaws.services.chime.sdk.meetings.analytics.EventName
 import com.amazonaws.services.chime.sdk.meetings.analytics.toJsonString
-import com.amazonaws.services.chime.sdk.meetings.audiovideo.AttendeeInfo
-import com.amazonaws.services.chime.sdk.meetings.audiovideo.AudioVideoFacade
-import com.amazonaws.services.chime.sdk.meetings.audiovideo.AudioVideoObserver
-import com.amazonaws.services.chime.sdk.meetings.audiovideo.SignalUpdate
-import com.amazonaws.services.chime.sdk.meetings.audiovideo.VolumeUpdate
+import com.amazonaws.services.chime.sdk.meetings.audiovideo.*
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.audio.activespeakerdetector.ActiveSpeakerObserver
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.audio.activespeakerpolicy.DefaultActiveSpeakerPolicy
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.contentshare.ContentShareObserver
@@ -49,11 +42,7 @@ import com.amazonaws.services.chime.sdk.meetings.audiovideo.metric.ObservableMet
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoPauseState
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoTileObserver
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoTileState
-import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.capture.CameraCaptureSource
-import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.capture.CaptureSourceError
-import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.capture.CaptureSourceObserver
-import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.capture.DefaultScreenCaptureSource
-import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.capture.DefaultSurfaceTextureCaptureSourceFactory
+import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.capture.*
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.gl.EglCoreFactory
 import com.amazonaws.services.chime.sdk.meetings.device.DeviceChangeObserver
 import com.amazonaws.services.chime.sdk.meetings.device.MediaDevice
@@ -71,12 +60,7 @@ import com.amazonaws.services.chime.sdk.meetings.utils.logger.LogLevel
 import com.amazonaws.services.chime.sdkdemo.R
 import com.amazonaws.services.chime.sdkdemo.activity.HomeActivity
 import com.amazonaws.services.chime.sdkdemo.activity.MeetingActivity
-import com.amazonaws.services.chime.sdkdemo.adapter.DeviceAdapter
-import com.amazonaws.services.chime.sdkdemo.adapter.MessageAdapter
-import com.amazonaws.services.chime.sdkdemo.adapter.MetricAdapter
-import com.amazonaws.services.chime.sdkdemo.adapter.RosterAdapter
-import com.amazonaws.services.chime.sdkdemo.adapter.VideoAdapter
-import com.amazonaws.services.chime.sdkdemo.adapter.VideoDiffCallback
+import com.amazonaws.services.chime.sdkdemo.adapter.*
 import com.amazonaws.services.chime.sdkdemo.data.Message
 import com.amazonaws.services.chime.sdkdemo.data.MetricData
 import com.amazonaws.services.chime.sdkdemo.data.RosterAttendee
@@ -91,12 +75,12 @@ import com.amazonaws.services.chime.sdkdemo.utils.PostLogger
 import com.amazonaws.services.chime.sdkdemo.utils.isLandscapeMode
 import com.google.android.material.tabs.TabLayout
 import com.google.gson.Gson
-import java.util.Calendar
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
+import java.util.*
 
 class MeetingFragment : Fragment(),
     RealtimeObserver, AudioVideoObserver, VideoTileObserver,
@@ -839,10 +823,11 @@ class MeetingFragment : Fragment(),
             audioVideo.stopContentShare()
             screenShareManager?.stop()
         } else {
-            startActivityForResult(
-                mediaProjectionManager.createScreenCaptureIntent(),
-                SCREEN_CAPTURE_REQUEST_CODE
-            )
+//            startActivityForResult(
+//                mediaProjectionManager.createScreenCaptureIntent(),
+//                SCREEN_CAPTURE_REQUEST_CODE
+//            )
+            startScreenShare(0, null, requireContext())
         }
     }
 
@@ -995,19 +980,25 @@ class MeetingFragment : Fragment(),
         }
     }
 
-    private fun startScreenShare(resultCode: Int, data: Intent, fragmentContext: Context) {
+    private fun startScreenShare(resultCode: Int, data: Intent?, fragmentContext: Context) {
         screenshareServiceConnection = object : ServiceConnection {
             override fun onServiceConnected(className: ComponentName, service: IBinder) {
-                val screenCaptureSource = DefaultScreenCaptureSource(
-                    fragmentContext,
-                    logger,
-                    DefaultSurfaceTextureCaptureSourceFactory(
+                val cameraManager: CameraManager = activity?.getSystemService(Context.CAMERA_SERVICE) as CameraManager
+                val devices = MediaDevice.listVideoDevices(cameraManager)
+                logger.info("Logging", "Starting Screen share")
+                for (d in devices) {
+                    logger.info("Logging", d.toString())
+                }
+
+                val screenCaptureSource = DefaultCameraCaptureSource(
+                    "0",
+                        fragmentContext,
+                        logger,
+                        DefaultSurfaceTextureCaptureSourceFactory(
                         logger,
                         eglCoreFactory
-                    ),
-                    resultCode,
-                    data
-                )
+                    ))
+
 
                 val screenCaptureSourceObserver = object : CaptureSourceObserver {
                     override fun onCaptureStarted() {

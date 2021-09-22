@@ -51,6 +51,7 @@ import kotlinx.coroutines.runBlocking
  * use the [Surface] provided by the capture source provided by a [SurfaceTextureCaptureSourceFactory]
  */
 class DefaultCameraCaptureSource @JvmOverloads constructor(
+    private val name: String,
     private val context: Context,
     private val logger: Logger,
     private val surfaceTextureCaptureSourceFactory: SurfaceTextureCaptureSourceFactory,
@@ -101,7 +102,7 @@ class DefaultCameraCaptureSource @JvmOverloads constructor(
     init {
         // Load library so that some of webrtc definition is linked properly
         System.loadLibrary("amazon_chime_media_client")
-        val thread = HandlerThread("DefaultCameraCaptureSource")
+        val thread = HandlerThread("DefaultCameraCaptureSource${name}")
         thread.start()
         handler = Handler(thread.looper)
     }
@@ -143,22 +144,22 @@ class DefaultCameraCaptureSource @JvmOverloads constructor(
     override var torchEnabled: Boolean = false
         @RequiresApi(Build.VERSION_CODES.M)
         set(value) {
-            if (cameraCharacteristics?.get(CameraCharacteristics.FLASH_INFO_AVAILABLE) == false) {
-                logger.warn(
-                    TAG,
-                    "Torch not supported on current camera, setting value and returning"
-                )
-                return
-            }
-
-            field = value
-            if (cameraDevice == null) {
-                // If not in a session, use the CameraManager API
-                device?.id?.let { cameraManager.setTorchMode(it, field) }
-            } else {
-                // Otherwise trigger a new request which will pick up the new value
-                createCaptureRequest()
-            }
+//            if (cameraCharacteristics?.get(CameraCharacteristics.FLASH_INFO_AVAILABLE) == false) {
+//                logger.warn(
+//                    TAG,
+//                    "Torch not supported on current camera, setting value and returning"
+//                )
+//                return
+//            }
+//
+//            field = value
+//            if (cameraDevice == null) {
+//                // If not in a session, use the CameraManager API
+//                device?.id?.let { cameraManager.setTorchMode(it, field) }
+//            } else {
+//                // Otherwise trigger a new request which will pick up the new value
+//                createCaptureRequest()
+//            }
         }
 
     override var format: VideoCaptureFormat = DESIRED_CAPTURE_FORMAT
@@ -230,7 +231,7 @@ class DefaultCameraCaptureSource @JvmOverloads constructor(
         surfaceTextureSource?.addVideoSink(this)
         surfaceTextureSource?.start()
 
-        cameraManager.openCamera(id, cameraDeviceStateCallback, handler)
+        cameraManager.openCamera(name, cameraDeviceStateCallback, handler)
     }
 
     override fun stop() {
@@ -415,14 +416,14 @@ class DefaultCameraCaptureSource @JvmOverloads constructor(
             captureRequestBuilder.set(CaptureRequest.CONTROL_AE_LOCK, false)
 
             // Set current torch status
-            if (torchEnabled) {
-                captureRequestBuilder.set(
-                    CaptureRequest.FLASH_MODE,
-                    CaptureRequest.FLASH_MODE_TORCH
-                )
-            } else {
-                captureRequestBuilder.set(CaptureRequest.FLASH_MODE, CaptureRequest.FLASH_MODE_OFF)
-            }
+//            if (torchEnabled) {
+//                captureRequestBuilder.set(
+//                    CaptureRequest.FLASH_MODE,
+//                    CaptureRequest.FLASH_MODE_TORCH
+//                )
+//            } else {
+//                captureRequestBuilder.set(CaptureRequest.FLASH_MODE, CaptureRequest.FLASH_MODE_OFF)
+//            }
 
             setStabilizationMode(captureRequestBuilder)
             setFocusMode(captureRequestBuilder)

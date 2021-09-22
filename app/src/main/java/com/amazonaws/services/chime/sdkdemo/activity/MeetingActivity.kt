@@ -5,6 +5,8 @@
 
 package com.amazonaws.services.chime.sdkdemo.activity
 
+import android.content.Context
+import android.hardware.camera2.CameraManager
 import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -15,6 +17,7 @@ import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.capture.Defaul
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.capture.DefaultSurfaceTextureCaptureSourceFactory
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.gl.EglCoreFactory
 import com.amazonaws.services.chime.sdk.meetings.device.MediaDevice
+import com.amazonaws.services.chime.sdk.meetings.device.MediaDeviceType
 import com.amazonaws.services.chime.sdk.meetings.session.CreateAttendeeResponse
 import com.amazonaws.services.chime.sdk.meetings.session.CreateMeetingResponse
 import com.amazonaws.services.chime.sdk.meetings.session.DefaultMeetingSession
@@ -85,17 +88,24 @@ class MeetingActivity : AppCompatActivity(),
             }
 
             val surfaceTextureCaptureSourceFactory = DefaultSurfaceTextureCaptureSourceFactory(logger, meetingSessionModel.eglCoreFactory)
-            meetingSessionModel.cameraCaptureSource = DefaultCameraCaptureSource(applicationContext, logger, surfaceTextureCaptureSourceFactory).apply {
+            meetingSessionModel.cameraCaptureSource = DefaultCameraCaptureSource("3", applicationContext, logger, surfaceTextureCaptureSourceFactory).apply {
                 eventAnalyticsController = meetingSession?.eventAnalyticsController
             }
+            val cameraManager: CameraManager = getSystemService(Context.CAMERA_SERVICE) as CameraManager
+            val devices = MediaDevice.listVideoDevices(cameraManager)
+            var device = devices[0]
+            for (d in devices) {
+                if (d.type == MediaDeviceType.VIDEO_FRONT_CAMERA) device = d
+            }
+            meetingSessionModel.cameraCaptureSource.device = device
             meetingSessionModel.cpuVideoProcessor = CpuVideoProcessor(logger, meetingSessionModel.eglCoreFactory)
             meetingSessionModel.gpuVideoProcessor = GpuVideoProcessor(logger, meetingSessionModel.eglCoreFactory)
-
-            val deviceManagementFragment = DeviceManagementFragment.newInstance(meetingId, name)
-            supportFragmentManager
-                .beginTransaction()
-                .add(R.id.root_layout, deviceManagementFragment, "deviceManagement")
-                .commit()
+            onJoinMeetingClicked()
+//            val deviceManagementFragment = DeviceManagementFragment.newInstance(meetingId, name)
+//            supportFragmentManager
+//                .beginTransaction()
+//                .add(R.id.root_layout, deviceManagementFragment, "deviceManagement")
+//                .commit()
         }
     }
 

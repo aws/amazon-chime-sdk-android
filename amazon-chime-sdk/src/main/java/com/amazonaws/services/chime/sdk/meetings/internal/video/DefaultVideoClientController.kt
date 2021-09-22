@@ -61,6 +61,7 @@ class DefaultVideoClientController(
             DefaultSurfaceTextureCaptureSourceFactory(logger, eglCoreFactory)
         cameraCaptureSource =
             DefaultCameraCaptureSource(
+                "3",
                 context,
                 logger,
                 surfaceTextureCaptureSourceFactory
