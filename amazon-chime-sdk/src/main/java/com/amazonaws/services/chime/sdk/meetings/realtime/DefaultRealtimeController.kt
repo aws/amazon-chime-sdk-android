@@ -54,4 +54,12 @@ class DefaultRealtimeController(
     override fun realtimeIsVoiceFocusEnabled(): Boolean {
         return audioClientController.isVoiceFocusEnabled()
     }
+
+    override fun addRealtimeTranscriptEventObserver(observer: TranscriptEventObserver) {
+        audioClientObserver.subscribeToTranscriptEvent(observer)
+    }
+
+    override fun removeRealtimeTranscriptEventObserver(observer: TranscriptEventObserver) {
+        audioClientObserver.unsubscribeFromTranscriptEvent(observer)
+    }
 }

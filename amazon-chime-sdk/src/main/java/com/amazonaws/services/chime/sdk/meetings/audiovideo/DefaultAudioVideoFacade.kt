@@ -31,6 +31,7 @@ import com.amazonaws.services.chime.sdk.meetings.device.DeviceController
 import com.amazonaws.services.chime.sdk.meetings.device.MediaDevice
 import com.amazonaws.services.chime.sdk.meetings.realtime.RealtimeControllerFacade
 import com.amazonaws.services.chime.sdk.meetings.realtime.RealtimeObserver
+import com.amazonaws.services.chime.sdk.meetings.realtime.TranscriptEventObserver
 import com.amazonaws.services.chime.sdk.meetings.realtime.datamessage.DataMessageObserver
 
 class DefaultAudioVideoFacade(
@@ -237,5 +238,13 @@ class DefaultAudioVideoFacade(
 
     override fun getCommonEventAttributes(): EventAttributes {
         return eventAnalyticsController.getCommonEventAttributes()
+    }
+
+    override fun addRealtimeTranscriptEventObserver(observer: TranscriptEventObserver) {
+        realtimeController.addRealtimeTranscriptEventObserver(observer)
+    }
+
+    override fun removeRealtimeTranscriptEventObserver(observer: TranscriptEventObserver) {
+        realtimeController.removeRealtimeTranscriptEventObserver(observer)
     }
 }

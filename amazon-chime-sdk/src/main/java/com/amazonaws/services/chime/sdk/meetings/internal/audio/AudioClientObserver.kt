@@ -7,12 +7,14 @@ package com.amazonaws.services.chime.sdk.meetings.internal.audio
 
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.AudioVideoObserver
 import com.amazonaws.services.chime.sdk.meetings.realtime.RealtimeObserver
+import com.amazonaws.services.chime.sdk.meetings.realtime.TranscriptEventObserver
 import com.xodee.client.audio.audioclient.AudioClientLogListener
 import com.xodee.client.audio.audioclient.AudioClientMetricsListener
 import com.xodee.client.audio.audioclient.AudioClientPresenceListener
 import com.xodee.client.audio.audioclient.AudioClientSignalStrengthChangeListener
 import com.xodee.client.audio.audioclient.AudioClientStateChangeListener
 import com.xodee.client.audio.audioclient.AudioClientVolumeStateChangeListener
+import com.xodee.client.audio.audioclient.AudioClientTranscriptEventsReceiveListener
 
 /**
  * [AudioClientObserver]'s responsibility is to handle AudioClient callbacks and maintain all
@@ -21,11 +23,14 @@ import com.xodee.client.audio.audioclient.AudioClientVolumeStateChangeListener
 interface AudioClientObserver : AudioClientStateChangeListener,
     AudioClientVolumeStateChangeListener,
     AudioClientSignalStrengthChangeListener, AudioClientLogListener,
-    AudioClientMetricsListener, AudioClientPresenceListener {
+    AudioClientMetricsListener, AudioClientPresenceListener,
+    AudioClientTranscriptEventsReceiveListener {
 
     fun subscribeToAudioClientStateChange(observer: AudioVideoObserver)
     fun unsubscribeFromAudioClientStateChange(observer: AudioVideoObserver)
     fun notifyAudioClientObserver(observerFunction: (observer: AudioVideoObserver) -> Unit)
     fun subscribeToRealTimeEvents(observer: RealtimeObserver)
     fun unsubscribeFromRealTimeEvents(observer: RealtimeObserver)
+    fun subscribeToTranscriptEvent(observer: TranscriptEventObserver)
+    fun unsubscribeFromTranscriptEvent(observer: TranscriptEventObserver)
 }
