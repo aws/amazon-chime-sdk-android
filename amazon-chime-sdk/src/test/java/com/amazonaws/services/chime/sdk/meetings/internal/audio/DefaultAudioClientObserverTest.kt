@@ -89,9 +89,6 @@ class DefaultAudioClientObserverTest {
     @MockK
     private lateinit var mockEventAnalyticsController: EventAnalyticsController
 
-    @MockK
-    private lateinit var mockTranscriptionStatusType: TranscriptionStatusTypeInternal
-
     private lateinit var audioClientObserver: DefaultAudioClientObserver
 
     private val testObserverFun = { observer: AudioVideoObserver ->
@@ -601,7 +598,7 @@ class DefaultAudioClientObserverTest {
         )
 
         val expectedTranscriptionStatusStarted = TranscriptionStatus(
-            TranscriptionStatusType.TranscriptionStatusTypeStarted,
+            TranscriptionStatusType.Started,
             timestampMs,
             transcriptionRegion,
             transcriptionConfiguration,
@@ -609,7 +606,7 @@ class DefaultAudioClientObserverTest {
         )
 
         val expectedTranscriptionStatusResume = TranscriptionStatus(
-            TranscriptionStatusType.TranscriptionStatusTypeResumed,
+            TranscriptionStatusType.Resumed,
             timestampMs,
             transcriptionRegion,
             transcriptionConfiguration,
@@ -642,7 +639,7 @@ class DefaultAudioClientObserverTest {
                 TranscriptAlternativeInternal(
                     arrayOf(
                         TranscriptItemInternal(
-                            TranscriptItemTypeInternal.TranscriptItemTypePronunciation,
+                            TranscriptItemTypeInternal.Pronunciation,
                             timestampMs,
                             timestampMs + 5L,
                             AttendeeInfoInternal(testId1, testId1),
@@ -650,7 +647,7 @@ class DefaultAudioClientObserverTest {
                             true
                         ),
                         TranscriptItemInternal(
-                            TranscriptItemTypeInternal.TranscriptItemTypePunctuation,
+                            TranscriptItemTypeInternal.Punctuation,
                             timestampMs + 5L,
                             timestampMs + 10L,
                             AttendeeInfoInternal(testId2, testId2),
@@ -700,18 +697,18 @@ class DefaultAudioClientObserverTest {
         )
 
         val expectedTranscriptOne = Transcript(
-            arrayListOf(
+            arrayOf(
                 TranscriptResult(
                     testResultId,
                     testChannelId,
                     isPartial,
                     timestampMs,
                     timestampMs + 10L,
-                    arrayListOf(
+                    arrayOf(
                         TranscriptAlternative(
-                            arrayListOf(
+                            arrayOf(
                                 TranscriptItem(
-                                    TranscriptItemType.TranscriptItemTypePronunciation,
+                                    TranscriptItemType.Pronunciation,
                                     timestampMs,
                                     timestampMs + 5L,
                                     AttendeeInfo(testId1, testId1),
@@ -719,7 +716,7 @@ class DefaultAudioClientObserverTest {
                                     true
                                 ),
                                 TranscriptItem(
-                                    TranscriptItemType.TranscriptItemTypePunctuation,
+                                    TranscriptItemType.Punctuation,
                                     timestampMs + 5L,
                                     timestampMs + 10L,
                                     AttendeeInfo(testId2, testId2),
@@ -735,16 +732,16 @@ class DefaultAudioClientObserverTest {
         )
 
         val expectedTranscriptTwo = Transcript(
-            arrayListOf(
+            arrayOf(
                 TranscriptResult(
                     testResultId,
                     testChannelId,
                     isPartial,
                     timestampMs + 10L,
                     timestampMs + 20L,
-                    arrayListOf(
+                    arrayOf(
                         TranscriptAlternative(
-                            arrayListOf(
+                            arrayOf(
                                 TranscriptItem(
                                     TranscriptItemType.TranscriptItemTypePunctuation,
                                     timestampMs + 10L,

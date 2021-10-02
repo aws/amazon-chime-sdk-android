@@ -14,7 +14,7 @@ import com.xodee.client.audio.audioclient.AudioClientPresenceListener
 import com.xodee.client.audio.audioclient.AudioClientSignalStrengthChangeListener
 import com.xodee.client.audio.audioclient.AudioClientStateChangeListener
 import com.xodee.client.audio.audioclient.AudioClientVolumeStateChangeListener
-import com.xodee.client.audio.audioclient.AudioClientTranscriptEventsReceiveListener
+import com.xodee.client.audio.audioclient.AudioClientTranscriptEventsListener
 
 /**
  * [AudioClientObserver]'s responsibility is to handle AudioClient callbacks and maintain all
@@ -24,7 +24,7 @@ interface AudioClientObserver : AudioClientStateChangeListener,
     AudioClientVolumeStateChangeListener,
     AudioClientSignalStrengthChangeListener, AudioClientLogListener,
     AudioClientMetricsListener, AudioClientPresenceListener,
-    AudioClientTranscriptEventsReceiveListener {
+    AudioClientTranscriptEventsListener {
 
     fun subscribeToAudioClientStateChange(observer: AudioVideoObserver)
     fun unsubscribeFromAudioClientStateChange(observer: AudioVideoObserver)

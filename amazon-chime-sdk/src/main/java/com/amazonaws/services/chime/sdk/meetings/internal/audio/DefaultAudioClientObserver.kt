@@ -230,15 +230,13 @@ class DefaultAudioClientObserver(
             val event: TranscriptEvent?
             when (rawEvent) {
                 is TranscriptionStatusInternal -> {
-                    event = TranscriptionStatusType.from(rawEvent.type.value)?.let {
-                        TranscriptionStatus(
-                            it,
-                            rawEvent.eventTimeMs,
-                            rawEvent.transcriptionRegion,
-                            rawEvent.transcriptionConfiguration,
-                            rawEvent.message
-                        )
-                    }
+                    event = TranscriptionStatus(
+                        TranscriptionStatusType.from(rawEvent.type.value),
+                        rawEvent.eventTimeMs,
+                        rawEvent.transcriptionRegion,
+                        rawEvent.transcriptionConfiguration,
+                        rawEvent.message
+                    )
                 }
                 is TranscriptInternal -> {
                     val results = mutableListOf<TranscriptResult>()
@@ -247,22 +245,20 @@ class DefaultAudioClientObserver(
                         rawResult.alternatives.forEach { rawAlternative ->
                             val items = mutableListOf<TranscriptItem>()
                             rawAlternative.items.forEach { rawItem ->
-                                val item = TranscriptItemType.from(rawItem.type.value)?.let {
-                                    TranscriptItem(
-                                        it,
-                                        rawItem.startTimeMs,
-                                        rawItem.endTimeMs,
-                                        AttendeeInfo(
-                                            rawItem.attendee.attendeeId,
-                                            rawItem.attendee.externalUserId
-                                        ),
-                                        rawItem.content,
-                                        rawItem.vocabularyFilterMatch
-                                    )
-                                }
-                                item?.let { items.add(it) }
+                                val item = TranscriptItem(
+                                    TranscriptItemType.from(rawItem.type.value),
+                                    rawItem.startTimeMs,
+                                    rawItem.endTimeMs,
+                                    AttendeeInfo(
+                                        rawItem.attendee.attendeeId,
+                                        rawItem.attendee.externalUserId
+                                    ),
+                                    rawItem.content,
+                                    rawItem.vocabularyFilterMatch
+                                )
+                                items.add(item)
                             }
-                            val alternative = TranscriptAlternative(items, rawAlternative.transcript)
+                            val alternative = TranscriptAlternative(items.toTypedArray(), rawAlternative.transcript)
                             alternatives.add(alternative)
                         }
                         val result = TranscriptResult(
@@ -271,17 +267,16 @@ class DefaultAudioClientObserver(
                             rawResult.isPartial,
                             rawResult.startTimeMs,
                             rawResult.endTimeMs,
-                            alternatives
+                            alternatives.toTypedArray()
                         )
                         results.add(result)
                     }
-                    event = Transcript(results)
+                    event = Transcript(results.toTypedArray())
                 } else -> {
                     logger.error(TAG, "Received transcript event in unknown format")
                     event = null
                 }
             }
-            logger.info(TAG, event.toString())
 
             transcriptEventObservers.forEach {
                 event.let { transcriptEvent ->
