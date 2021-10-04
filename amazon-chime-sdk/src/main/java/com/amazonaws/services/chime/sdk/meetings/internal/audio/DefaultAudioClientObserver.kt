@@ -258,7 +258,10 @@ class DefaultAudioClientObserver(
                                 )
                                 items.add(item)
                             }
-                            val alternative = TranscriptAlternative(items.toTypedArray(), rawAlternative.transcript)
+                            val alternative = TranscriptAlternative(
+                                items.toTypedArray(),
+                                rawAlternative.transcript
+                            )
                             alternatives.add(alternative)
                         }
                         val result = TranscriptResult(
@@ -279,10 +282,8 @@ class DefaultAudioClientObserver(
             }
 
             transcriptEventObservers.forEach {
-                event.let { transcriptEvent ->
-                    if (transcriptEvent != null) {
-                        it.onTranscriptEventReceived(transcriptEvent)
-                    }
+                event?.let { transcriptEvent ->
+                    it.onTranscriptEventReceived(transcriptEvent)
                 }
             }
         }
