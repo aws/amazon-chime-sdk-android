@@ -282,7 +282,7 @@ class DefaultAudioClientObserver(
             }
 
             event?.let { transcriptEvent ->
-                transcriptEventObservers.forEach {
+                ObserverUtils.notifyObserverOnMainThread(transcriptEventObservers) {
                     it.onTranscriptEventReceived(transcriptEvent)
                 }
             }
