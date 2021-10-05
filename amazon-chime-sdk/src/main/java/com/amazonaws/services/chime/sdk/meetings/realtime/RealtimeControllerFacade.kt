@@ -105,12 +105,12 @@ interface RealtimeControllerFacade {
      *
      * @param observer: [TranscriptEventObserver] - Observer that handles transcript event
      */
-    fun addRealtimeTranscriptEventObserver(observer: TranscriptEventObserver)
+    fun addRealtimeTranscriptEventObserver(observer: TranscriptEventObserver) {}
 
     /**
      * Unsubscribes from transcript event by removing the specified observer
      *
      * @param observer: [TranscriptEventObserver] - Observer that handles transcript event
      */
-    fun removeRealtimeTranscriptEventObserver(observer: TranscriptEventObserver)
+    fun removeRealtimeTranscriptEventObserver(observer: TranscriptEventObserver) {}
 }

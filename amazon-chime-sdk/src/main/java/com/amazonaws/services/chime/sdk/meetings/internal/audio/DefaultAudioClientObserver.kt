@@ -281,8 +281,8 @@ class DefaultAudioClientObserver(
                 }
             }
 
-            transcriptEventObservers.forEach {
-                event?.let { transcriptEvent ->
+            event?.let { transcriptEvent ->
+                transcriptEventObservers.forEach {
                     it.onTranscriptEventReceived(transcriptEvent)
                 }
             }
