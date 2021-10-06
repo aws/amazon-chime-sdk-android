@@ -6,7 +6,7 @@
 package com.amazonaws.services.chime.sdk.meetings.internal
 
 /**
- * [AttendeeStatus] describes status of Attendee - Join, Leave, Drop
+ * [AttendeeStatus] describes status of Attendee - Join, Leave, Drop, Join without audio
  */
 enum class AttendeeStatus(val value: Int) {
     /**
@@ -22,7 +22,12 @@ enum class AttendeeStatus(val value: Int) {
     /**
      * The attendee dropped due to network
      */
-    Dropped(3);
+    Dropped(3),
+
+    /**
+     * The attendee joined without audio
+     */
+    JoinedNoAudio(4);
 
     companion object {
         fun from(intValue: Int): AttendeeStatus? = values().find { it.value == intValue }

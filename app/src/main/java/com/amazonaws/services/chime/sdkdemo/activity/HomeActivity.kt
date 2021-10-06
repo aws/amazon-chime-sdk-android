@@ -12,13 +12,15 @@ import android.os.Bundle
 import android.view.View
 import android.widget.Button
 import android.widget.EditText
-import android.widget.ImageButton
 import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.core.os.bundleOf
 import androidx.lifecycle.ViewModelProvider
+import com.amazonaws.services.chime.sdk.meetings.audiovideo.AudioVideoConfiguration
+import com.amazonaws.services.chime.sdk.meetings.audiovideo.audio.AudioMode
 import com.amazonaws.services.chime.sdk.meetings.internal.utils.DefaultBackOffRetry
 import com.amazonaws.services.chime.sdk.meetings.internal.utils.HttpUtils
 import com.amazonaws.services.chime.sdk.meetings.utils.Versioning
@@ -54,12 +56,14 @@ class HomeActivity : AppCompatActivity() {
     private var meetingID: String? = null
     private var yourName: String? = null
     private var testUrl: String = ""
+    private lateinit var audioVideoConfig: AudioVideoConfiguration
     private lateinit var debugSettingsViewModel: DebugSettingsViewModel
 
     companion object {
         const val MEETING_RESPONSE_KEY = "MEETING_RESPONSE"
         const val MEETING_ID_KEY = "MEETING_ID"
         const val NAME_KEY = "NAME"
+        const val AUDIO_MODE_KEY = "AUDIO_MODE"
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -71,7 +75,14 @@ class HomeActivity : AppCompatActivity() {
         authenticationProgressBar = findViewById(R.id.progressAuthentication)
         debugSettingsViewModel = ViewModelProvider(this).get(DebugSettingsViewModel::class.java)
 
-        findViewById<ImageButton>(R.id.buttonContinue)?.setOnClickListener { joinMeeting() }
+        findViewById<Button>(R.id.buttonContinue)?.setOnClickListener {
+            audioVideoConfig = AudioVideoConfiguration()
+            joinMeeting()
+        }
+        findViewById<Button>(R.id.buttonContinueWithoutAudio)?.setOnClickListener {
+            audioVideoConfig = AudioVideoConfiguration(audioMode = AudioMode.NoAudio)
+            joinMeeting()
+        }
         findViewById<Button>(R.id.buttonDebugSettings)?.setOnClickListener { showDebugSettings() }
 
         val versionText: TextView = findViewById(R.id.versionText) as TextView
@@ -152,10 +163,16 @@ class HomeActivity : AppCompatActivity() {
                 if (meetingResponseJson == null) {
                     showToast(getString(R.string.user_notification_meeting_start_error))
                 } else {
-                    val intent = Intent(applicationContext, MeetingActivity::class.java)
-                    intent.putExtra(MEETING_RESPONSE_KEY, meetingResponseJson)
-                    intent.putExtra(MEETING_ID_KEY, meetingId)
-                    intent.putExtra(NAME_KEY, attendeeName)
+                    val intent = Intent(applicationContext, MeetingActivity::class.java).apply {
+                        putExtras(
+                            bundleOf(
+                                MEETING_RESPONSE_KEY to meetingResponseJson,
+                                MEETING_ID_KEY to meetingId,
+                                NAME_KEY to attendeeName,
+                                AUDIO_MODE_KEY to audioVideoConfig.audioMode.value
+                            )
+                        )
+                    }
                     startActivity(intent)
                 }
             }

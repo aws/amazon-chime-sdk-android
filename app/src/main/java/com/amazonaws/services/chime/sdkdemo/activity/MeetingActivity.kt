@@ -9,7 +9,9 @@ import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
+import com.amazonaws.services.chime.sdk.meetings.audiovideo.AudioVideoConfiguration
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.AudioVideoFacade
+import com.amazonaws.services.chime.sdk.meetings.audiovideo.audio.AudioMode
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.capture.CameraCaptureSource
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.capture.DefaultCameraCaptureSource
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.capture.DefaultSurfaceTextureCaptureSourceFactory
@@ -42,6 +44,7 @@ class MeetingActivity : AppCompatActivity(),
 
     private lateinit var meetingId: String
     private lateinit var name: String
+    private lateinit var audioVideoConfig: AudioVideoConfiguration
 
     private var cachedDevice: MediaDevice? = null
 
@@ -50,12 +53,16 @@ class MeetingActivity : AppCompatActivity(),
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_meeting)
-        meetingId = intent.getStringExtra(HomeActivity.MEETING_ID_KEY) as String
-        name = intent.getStringExtra(HomeActivity.NAME_KEY) as String
+        meetingId = intent.extras?.getString(HomeActivity.MEETING_ID_KEY) as String
+        name = intent.extras?.getString(HomeActivity.NAME_KEY) as String
+        val audioMode = intent.extras?.getInt(HomeActivity.AUDIO_MODE_KEY)?.let { intValue ->
+            AudioMode.from(intValue, defaultAudioMode = AudioMode.Mono)
+        } ?: AudioMode.Mono
+        audioVideoConfig = AudioVideoConfiguration(audioMode = audioMode)
 
         if (savedInstanceState == null) {
             val meetingResponseJson =
-                intent.getStringExtra(HomeActivity.MEETING_RESPONSE_KEY) as String
+                intent.extras?.getString(HomeActivity.MEETING_RESPONSE_KEY) as String
             val sessionConfig = createSessionConfiguration(meetingResponseJson)
             val meetingSession = sessionConfig?.let {
                 logger.info(TAG, "Creating meeting session for meeting Id: $meetingId")
@@ -91,7 +98,7 @@ class MeetingActivity : AppCompatActivity(),
             meetingSessionModel.cpuVideoProcessor = CpuVideoProcessor(logger, meetingSessionModel.eglCoreFactory)
             meetingSessionModel.gpuVideoProcessor = GpuVideoProcessor(logger, meetingSessionModel.eglCoreFactory)
 
-            val deviceManagementFragment = DeviceManagementFragment.newInstance(meetingId, name)
+            val deviceManagementFragment = DeviceManagementFragment.newInstance(meetingId, name, audioVideoConfig)
             supportFragmentManager
                 .beginTransaction()
                 .add(R.id.root_layout, deviceManagementFragment, "deviceManagement")
@@ -100,7 +107,7 @@ class MeetingActivity : AppCompatActivity(),
     }
 
     override fun onJoinMeetingClicked() {
-        val rosterViewFragment = MeetingFragment.newInstance(meetingId)
+        val rosterViewFragment = MeetingFragment.newInstance(meetingId, audioVideoConfig)
         supportFragmentManager
             .beginTransaction()
             .replace(R.id.root_layout, rosterViewFragment, "rosterViewFragment")
