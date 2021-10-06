@@ -1,3 +1,9 @@
+### Added
+* Added APIs for Audio Video configuration i.e `AudioVideoConfiguration` to be used during a meeting session.
+* Added support for joining meetings without audio i.e `AudioMode.NoAudio`.
+* Added an optional method `onAttendeesJoinedWithoutAudio` in `RealtimeObserver` to communicate the status of attendees who joined without audio.
+* [Demo] Added a way to join a meeting without audio.
+
 ## [0.12.0] - 2021-09-02
 
 ### Added

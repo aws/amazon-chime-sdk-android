@@ -51,12 +51,16 @@ class DefaultAudioVideoFacade(
     )
 
     override fun start() {
+        start(AudioVideoConfiguration())
+    }
+
+    override fun start(audioVideoConfiguration: AudioVideoConfiguration) {
         val hasPermission: Boolean = permissions.all {
             ContextCompat.checkSelfPermission(context, it) == PackageManager.PERMISSION_GRANTED
         }
 
         if (hasPermission) {
-            audioVideoController.start()
+            audioVideoController.start(audioVideoConfiguration)
         } else {
             throw SecurityException(
                 "Missing necessary permissions for WebRTC: ${permissions.joinToString(

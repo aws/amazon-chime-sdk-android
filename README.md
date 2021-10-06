@@ -250,6 +250,8 @@ override fun onAudioDeviceChanged(freshAudioDeviceList: List<MediaDevice>) {
 ### Audio
 
 > Note: So far, you've added observers to receive device and session lifecycle events. In the following use cases, you'll use the real-time API methods to send and receive volume indicators and control mute state.
+> Attendees can join a meeting with or without audio.
+> Attendees who join without audio aka Checked-In attendees will have no audio through their Mic and Speaker. They can still enable their video and view videos of other attendees. No volume and signal updates for Checked-In attendees will be delivered to other attendees in the meeting. Attendees may want to join a meeting without audio if they just want to be shown as present in the meeting and share or view videos but are using a different audio source. For example, multiple attendees joining a meeting from a conference room may want to use common audio source installed in the conference room.
 
 #### Use case 8. Mute and unmute an audio input.
 
@@ -288,6 +290,10 @@ val observer = object : RealtimeObserver {
         attendeeInfo.forEach { logger.info(TAG, "${attendeeInfo.attendeeId} joined the meeting") }
     }
 
+    override fun onAttendeesJoinedWithoutAudio(attendeeInfo: Array<AttendeeInfo>) {
+        attendeeInfo.forEach { logger.info(TAG, "${attendeeInfo.attendeeId} joined the meeting without audio") }
+    }
+
     override fun onAttendeesLeft(attendeeInfo: Array<AttendeeInfo>) {
         attendeeInfo.forEach { logger.info(TAG, "${attendeeInfo.attendeeId} left the meeting") }
     }
@@ -296,7 +302,7 @@ val observer = object : RealtimeObserver {
         attendeeInfo.forEach { logger.info(TAG, "${attendeeInfo.attendeeId} dropped from the meeting") }
     }
 
-    override fun fun onAttendeesMuted(attendeeInfo: Array<AttendeeInfo>) }
+    override fun onAttendeesMuted(attendeeInfo: Array<AttendeeInfo>) {
         attendeeInfo.forEach { logger.info(TAG, "${attendeeInfo.attendeeId} muted") }
     }
 

@@ -46,6 +46,15 @@ interface RealtimeObserver {
     fun onAttendeesJoined(attendeeInfo: Array<AttendeeInfo>)
 
     /**
+     * Handles attendee(s) being added with no audio through mic and speaker.
+     *
+     * Note: this callback will be called on main thread.
+     *
+     * @param attendeeInfo: Array<[AttendeeInfo]> - Attendees being added.
+     */
+    @JvmDefault fun onAttendeesJoinedWithoutAudio(attendeeInfo: Array<AttendeeInfo>) {}
+
+    /**
      * Handles attendee(s) being removed.
      *
      * Note: this callback will be called on main thread.
