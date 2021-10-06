@@ -13,8 +13,8 @@ import com.xodee.client.audio.audioclient.AudioClientMetricsListener
 import com.xodee.client.audio.audioclient.AudioClientPresenceListener
 import com.xodee.client.audio.audioclient.AudioClientSignalStrengthChangeListener
 import com.xodee.client.audio.audioclient.AudioClientStateChangeListener
-import com.xodee.client.audio.audioclient.AudioClientVolumeStateChangeListener
 import com.xodee.client.audio.audioclient.AudioClientTranscriptEventsListener
+import com.xodee.client.audio.audioclient.AudioClientVolumeStateChangeListener
 
 /**
  * [AudioClientObserver]'s responsibility is to handle AudioClient callbacks and maintain all

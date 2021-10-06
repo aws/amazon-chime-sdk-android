@@ -32,12 +32,12 @@ import com.amazonaws.services.chime.sdk.meetings.realtime.TranscriptEventObserve
 import com.amazonaws.services.chime.sdk.meetings.session.MeetingSessionConfiguration
 import com.amazonaws.services.chime.sdk.meetings.session.MeetingSessionStatusCode
 import com.amazonaws.services.chime.sdk.meetings.utils.logger.Logger
-import com.xodee.client.audio.audioclient.AttendeeUpdate
 import com.xodee.client.audio.audioclient.AttendeeInfo as AttendeeInfoInternal
+import com.xodee.client.audio.audioclient.AttendeeUpdate
 import com.xodee.client.audio.audioclient.AudioClient
-import com.xodee.client.audio.audioclient.transcript.TranscriptEvent as TranscriptEventInternal
 import com.xodee.client.audio.audioclient.transcript.Transcript as TranscriptInternal
 import com.xodee.client.audio.audioclient.transcript.TranscriptAlternative as TranscriptAlternativeInternal
+import com.xodee.client.audio.audioclient.transcript.TranscriptEvent as TranscriptEventInternal
 import com.xodee.client.audio.audioclient.transcript.TranscriptItem as TranscriptItemInternal
 import com.xodee.client.audio.audioclient.transcript.TranscriptItemType as TranscriptItemTypeInternal
 import com.xodee.client.audio.audioclient.transcript.TranscriptResult as TranscriptResultInternal
@@ -613,7 +613,7 @@ class DefaultAudioClientObserverTest {
             resumedStatusMessage
         )
 
-        val events : Array<TranscriptEventInternal> = arrayOf(transcriptionStatusStarted, transcriptionStatusResumed)
+        val events: Array<TranscriptEventInternal> = arrayOf(transcriptionStatusStarted, transcriptionStatusResumed)
 
         audioClientObserver.onTranscriptEventsReceived(events)
 
@@ -691,7 +691,7 @@ class DefaultAudioClientObserverTest {
             )
         )
 
-        val events : Array<TranscriptEventInternal> = arrayOf(
+        val events: Array<TranscriptEventInternal> = arrayOf(
             TranscriptInternal(arrayOf(transcriptResultOne)),
             TranscriptInternal(arrayOf(transcriptResultTwo))
         )

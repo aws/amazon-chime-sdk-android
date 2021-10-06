@@ -9,19 +9,36 @@ interface TranscriptEvent
 
 data class Transcript(val results: Array<TranscriptResult>) : TranscriptEvent
 
-data class TranscriptResult(val resultId: String, val channelId: String, val isPartial: Boolean,
-                            val startTimeMs: Long, val endTimeMs: Long,
-                            val alternatives: Array<TranscriptAlternative>)
+data class TranscriptResult(
+    val resultId: String,
+    val channelId: String,
+    val isPartial: Boolean,
+    val startTimeMs: Long,
+    val endTimeMs: Long,
+    val alternatives: Array<TranscriptAlternative>
+)
 
-data class TranscriptAlternative(val items: Array<TranscriptItem>, val transcript: String)
+data class TranscriptAlternative(
+    val items: Array<TranscriptItem>,
+    val transcript: String
+)
 
-data class TranscriptItem(val type: TranscriptItemType, val startTimeMs: Long,
-                          val endTimeMs: Long, val attendee: AttendeeInfo,
-                          val content: String, val vocabularyFilterMatch: Boolean)
+data class TranscriptItem(
+    val type: TranscriptItemType,
+    val startTimeMs: Long,
+    val endTimeMs: Long,
+    val attendee: AttendeeInfo,
+    val content: String,
+    val vocabularyFilterMatch: Boolean
+)
 
-data class TranscriptionStatus(val type: TranscriptionStatusType, val eventTimeMs: Long,
-                               val transcriptionRegion: String, val transcriptionConfiguration: String,
-                               val message: String) : TranscriptEvent
+data class TranscriptionStatus(
+    val type: TranscriptionStatusType,
+    val eventTimeMs: Long,
+    val transcriptionRegion: String,
+    val transcriptionConfiguration: String,
+    val message: String
+) : TranscriptEvent
 
 enum class TranscriptItemType(val value: Int) {
     Unknown(0),

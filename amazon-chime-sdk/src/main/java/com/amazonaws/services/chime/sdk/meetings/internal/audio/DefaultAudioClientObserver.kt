@@ -39,7 +39,6 @@ import com.xodee.client.audio.audioclient.AudioClient
 import com.xodee.client.audio.audioclient.transcript.Transcript as TranscriptInternal
 import com.xodee.client.audio.audioclient.transcript.TranscriptEvent as TranscriptEventInternal
 import com.xodee.client.audio.audioclient.transcript.TranscriptionStatus as TranscriptionStatusInternal
-
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
