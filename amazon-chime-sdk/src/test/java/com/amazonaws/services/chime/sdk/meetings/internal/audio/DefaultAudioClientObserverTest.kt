@@ -639,7 +639,7 @@ class DefaultAudioClientObserverTest {
                 TranscriptAlternativeInternal(
                     arrayOf(
                         TranscriptItemInternal(
-                            TranscriptItemTypeInternal.Pronunciation,
+                            TranscriptItemTypeInternal.TranscriptItemTypePronunciation,
                             timestampMs,
                             timestampMs + 5L,
                             AttendeeInfoInternal(testId1, testId1),
@@ -647,7 +647,7 @@ class DefaultAudioClientObserverTest {
                             true
                         ),
                         TranscriptItemInternal(
-                            TranscriptItemTypeInternal.Punctuation,
+                            TranscriptItemTypeInternal.TranscriptItemTypePunctuation,
                             timestampMs + 5L,
                             timestampMs + 10L,
                             AttendeeInfoInternal(testId2, testId2),
@@ -743,7 +743,7 @@ class DefaultAudioClientObserverTest {
                         TranscriptAlternative(
                             arrayOf(
                                 TranscriptItem(
-                                    TranscriptItemType.TranscriptItemTypePunctuation,
+                                    TranscriptItemType.Punctuation,
                                     timestampMs + 10L,
                                     timestampMs + 15L,
                                     AttendeeInfo(testId2, testId2),
@@ -751,7 +751,7 @@ class DefaultAudioClientObserverTest {
                                     true
                                 ),
                                 TranscriptItem(
-                                    TranscriptItemType.TranscriptItemTypePronunciation,
+                                    TranscriptItemType.Pronunciation,
                                     timestampMs + 15L,
                                     timestampMs + 20L,
                                     AttendeeInfo(testId1, testId1),
@@ -767,7 +767,6 @@ class DefaultAudioClientObserverTest {
         )
 
         audioClientObserver.onTranscriptEventsReceived(events)
-
         verify(exactly = 1) { mockTranscriptEventObserver.onTranscriptEventReceived(expectedTranscriptOne) }
         verify(exactly = 1) { mockTranscriptEventObserver.onTranscriptEventReceived(expectedTranscriptTwo) }
     }

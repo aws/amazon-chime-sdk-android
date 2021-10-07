@@ -7,7 +7,22 @@ package com.amazonaws.services.chime.sdk.meetings.audiovideo
 
 interface TranscriptEvent
 
-data class Transcript(val results: Array<TranscriptResult>) : TranscriptEvent
+data class Transcript(val results: Array<TranscriptResult>) : TranscriptEvent {
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (javaClass != other?.javaClass) return false
+
+        other as Transcript
+
+        if (!results.contentEquals(other.results)) return false
+
+        return true
+    }
+
+    override fun hashCode(): Int {
+        return results.contentHashCode()
+    }
+}
 
 data class TranscriptResult(
     val resultId: String,
@@ -16,12 +31,51 @@ data class TranscriptResult(
     val startTimeMs: Long,
     val endTimeMs: Long,
     val alternatives: Array<TranscriptAlternative>
-)
+) {
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (javaClass != other?.javaClass) return false
+
+        other as TranscriptResult
+
+        if (!alternatives.contentEquals(other.alternatives)) return false
+
+        return true
+    }
+
+    override fun hashCode(): Int {
+        var result = resultId.hashCode()
+        result = 31 * result + channelId.hashCode()
+        result = 31 * result + isPartial.hashCode()
+        result = 31 * result + startTimeMs.hashCode()
+        result = 31 * result + endTimeMs.hashCode()
+        result = 31 * result + alternatives.contentHashCode()
+        return result
+    }
+}
 
 data class TranscriptAlternative(
     val items: Array<TranscriptItem>,
     val transcript: String
-)
+) {
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (javaClass != other?.javaClass) return false
+
+        other as TranscriptAlternative
+
+        if (!items.contentEquals(other.items)) return false
+        if (transcript != other.transcript) return false
+
+        return true
+    }
+
+    override fun hashCode(): Int {
+        var result = items.contentHashCode()
+        result = 31 * result + transcript.hashCode()
+        return result
+    }
+}
 
 data class TranscriptItem(
     val type: TranscriptItemType,
