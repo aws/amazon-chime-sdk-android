@@ -244,12 +244,10 @@ class TranscriptionConfigFragment : Fragment() {
             if (position < transcribeEngines.size) {
                 when (transcribeEngines[position].engine) {
                     "transcribe_medical" -> {
-                        logger.info(TAG, "In transcribe_medical when clause")
                         populateLanguages(transcribeMedicalLanguages, languages, languageAdapter)
                         populateRegions(transcribeMedicalRegions, regions, regionAdapter)
                     }
                     "transcribe" -> {
-                        logger.info(TAG, "In transcribe when clause")
                         populateLanguages(transcribeLanguages, languages, languageAdapter)
                         populateRegions(transcribeRegions, regions, regionAdapter)
                     }
