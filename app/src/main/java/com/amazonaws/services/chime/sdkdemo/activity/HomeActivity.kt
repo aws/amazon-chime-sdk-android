@@ -64,6 +64,7 @@ class HomeActivity : AppCompatActivity() {
     companion object {
         const val MEETING_RESPONSE_KEY = "MEETING_RESPONSE"
         const val MEETING_ID_KEY = "MEETING_ID"
+        const val MEETING_URL_KEY = "MEETING_URL"
         const val NAME_KEY = "NAME"
     }
 
@@ -168,6 +169,7 @@ class HomeActivity : AppCompatActivity() {
                     val intent = Intent(applicationContext, MeetingActivity::class.java)
                     intent.putExtra(MEETING_RESPONSE_KEY, meetingResponseJson)
                     intent.putExtra(MEETING_ID_KEY, meetingId)
+                    intent.putExtra(MEETING_URL_KEY, meetingUrl)
                     intent.putExtra(NAME_KEY, attendeeName)
                     startActivity(intent)
                 }

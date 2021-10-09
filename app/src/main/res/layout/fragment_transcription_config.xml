@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+  ~ SPDX-License-Identifier: Apache-2.0
+  -->
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:id="@+id/transcriptionConfiguration"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:contentDescription="@string/live_transcription_configuration_layout"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/transcriptionConfigurationTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="32dp"
+                android:layout_marginBottom="32dp"
+                android:text="@string/live_transcription_configuration_title"
+                android:textAppearance="@style/TextAppearance.AppCompat.Display1" />
+
+            <Spinner
+                android:id="@+id/spinnerTranscribeEngine"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                android:contentDescription="@string/transcribe_engine_spinner"
+                android:minHeight="48dp"
+                android:paddingLeft="32dp"
+                android:paddingRight="32dp" />
+
+            <Spinner
+                android:id="@+id/spinnerLanguage"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                android:contentDescription="@string/language_setting_spinner"
+                android:minHeight="48dp"
+                android:paddingLeft="32dp"
+                android:paddingRight="32dp" />
+
+            <Spinner
+                android:id="@+id/spinnerRegion"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                android:contentDescription="@string/region_setting_spinner"
+                android:minHeight="48dp"
+                android:paddingLeft="32dp"
+                android:paddingRight="32dp" />
+
+            <Button
+                android:id="@+id/buttonStartTranscription"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="20dp"
+                android:layout_marginBottom="16dp"
+                android:contentDescription="@string/start_transcription"
+                android:paddingLeft="20dp"
+                android:paddingRight="20dp"
+                android:text="@string/start_transcription" />
+        </LinearLayout>
+    </ScrollView>
+
+</LinearLayout>

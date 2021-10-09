@@ -28,6 +28,7 @@
         </activity>
         <activity android:name=".activity.HomeActivity" />
         <activity android:name=".activity.MeetingActivity" />
+        <activity android:name=".activity.TranscriptionConfigActivity" android:parentActivityName=".activity.MeetingActivity"/>
 
         <service
             android:name=".service.ScreenCaptureService"

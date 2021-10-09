@@ -39,6 +39,11 @@ import com.amazonaws.services.chime.sdk.meetings.audiovideo.AttendeeInfo
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.AudioVideoFacade
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.AudioVideoObserver
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.SignalUpdate
+import com.amazonaws.services.chime.sdk.meetings.audiovideo.Transcript
+import com.amazonaws.services.chime.sdk.meetings.audiovideo.TranscriptEvent
+import com.amazonaws.services.chime.sdk.meetings.audiovideo.TranscriptItem
+import com.amazonaws.services.chime.sdk.meetings.audiovideo.TranscriptionStatus
+import com.amazonaws.services.chime.sdk.meetings.audiovideo.TranscriptionStatusType
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.VolumeUpdate
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.audio.activespeakerdetector.ActiveSpeakerObserver
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.audio.activespeakerpolicy.DefaultActiveSpeakerPolicy
@@ -59,6 +64,7 @@ import com.amazonaws.services.chime.sdk.meetings.device.DeviceChangeObserver
 import com.amazonaws.services.chime.sdk.meetings.device.MediaDevice
 import com.amazonaws.services.chime.sdk.meetings.device.MediaDeviceType
 import com.amazonaws.services.chime.sdk.meetings.realtime.RealtimeObserver
+import com.amazonaws.services.chime.sdk.meetings.realtime.TranscriptEventObserver
 import com.amazonaws.services.chime.sdk.meetings.realtime.datamessage.DataMessage
 import com.amazonaws.services.chime.sdk.meetings.realtime.datamessage.DataMessageObserver
 import com.amazonaws.services.chime.sdk.meetings.session.MeetingSessionCredentials
@@ -71,12 +77,15 @@ import com.amazonaws.services.chime.sdk.meetings.utils.logger.LogLevel
 import com.amazonaws.services.chime.sdkdemo.R
 import com.amazonaws.services.chime.sdkdemo.activity.HomeActivity
 import com.amazonaws.services.chime.sdkdemo.activity.MeetingActivity
+import com.amazonaws.services.chime.sdkdemo.activity.TranscriptionConfigActivity
+import com.amazonaws.services.chime.sdkdemo.adapter.CaptionAdapter
 import com.amazonaws.services.chime.sdkdemo.adapter.DeviceAdapter
 import com.amazonaws.services.chime.sdkdemo.adapter.MessageAdapter
 import com.amazonaws.services.chime.sdkdemo.adapter.MetricAdapter
 import com.amazonaws.services.chime.sdkdemo.adapter.RosterAdapter
 import com.amazonaws.services.chime.sdkdemo.adapter.VideoAdapter
 import com.amazonaws.services.chime.sdkdemo.adapter.VideoDiffCallback
+import com.amazonaws.services.chime.sdkdemo.data.Caption
 import com.amazonaws.services.chime.sdkdemo.data.Message
 import com.amazonaws.services.chime.sdkdemo.data.MetricData
 import com.amazonaws.services.chime.sdkdemo.data.RosterAttendee
@@ -88,23 +97,33 @@ import com.amazonaws.services.chime.sdkdemo.service.ScreenCaptureService
 import com.amazonaws.services.chime.sdkdemo.utils.CpuVideoProcessor
 import com.amazonaws.services.chime.sdkdemo.utils.GpuVideoProcessor
 import com.amazonaws.services.chime.sdkdemo.utils.PostLogger
+import com.amazonaws.services.chime.sdkdemo.utils.encodeURLParam
 import com.amazonaws.services.chime.sdkdemo.utils.isLandscapeMode
 import com.google.android.material.tabs.TabLayout
 import com.google.gson.Gson
+import java.io.BufferedReader
+import java.io.InputStreamReader
+import java.net.HttpURLConnection
+import java.net.URL
+import java.text.SimpleDateFormat
 import java.util.Calendar
+import java.util.Date
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
+import kotlinx.coroutines.withContext
 
 class MeetingFragment : Fragment(),
     RealtimeObserver, AudioVideoObserver, VideoTileObserver,
     MetricsObserver, ActiveSpeakerObserver, DeviceChangeObserver, DataMessageObserver,
-    ContentShareObserver, EventAnalyticsObserver {
+    ContentShareObserver, EventAnalyticsObserver, TranscriptEventObserver {
     private val logger = ConsoleLogger(LogLevel.DEBUG)
     private val mutex = Mutex()
     private val uiScope = CoroutineScope(Dispatchers.Main)
+    private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO
     private val meetingModel: MeetingModel by lazy { ViewModelProvider(this)[MeetingModel::class.java] }
     private var deviceDialog: AlertDialog? = null
     private var screenShareManager: ScreenShareManager? = null
@@ -141,7 +160,8 @@ class MeetingFragment : Fragment(),
         Chat(1),
         Video(2),
         Screen(3),
-        Metrics(4)
+        Captions(4),
+        Metrics(5)
     }
 
     private lateinit var noVideoOrScreenShareAvailable: TextView
@@ -153,6 +173,7 @@ class MeetingFragment : Fragment(),
     private lateinit var viewChat: LinearLayout
     private lateinit var recyclerViewMetrics: RecyclerView
     private lateinit var recyclerViewRoster: RecyclerView
+    private lateinit var recyclerViewCaptions: RecyclerView
     private lateinit var viewVideo: LinearLayout
     private lateinit var recyclerViewVideoCollection: RecyclerView
     private lateinit var prevVideoPageButton: Button
@@ -165,15 +186,19 @@ class MeetingFragment : Fragment(),
     private lateinit var videoTileAdapter: VideoAdapter
     private lateinit var screenTileAdapter: VideoAdapter
     private lateinit var messageAdapter: MessageAdapter
+    private lateinit var captionAdapter: CaptionAdapter
     private lateinit var tabLayout: TabLayout
     private lateinit var audioDeviceManager: AudioDeviceManager
 
     companion object {
-        fun newInstance(meetingId: String): MeetingFragment {
+        fun newInstance(meetingId: String, meetingUrl: String): MeetingFragment {
             val fragment = MeetingFragment()
 
             fragment.arguments =
-                Bundle().apply { putString(HomeActivity.MEETING_ID_KEY, meetingId) }
+                Bundle().apply {
+                    putString(HomeActivity.MEETING_ID_KEY, meetingId)
+                    putString(HomeActivity.MEETING_URL_KEY, meetingUrl)
+                }
             return fragment
         }
     }
@@ -233,7 +258,7 @@ class MeetingFragment : Fragment(),
         refreshNoVideosOrScreenShareAvailableText()
 
         selectTab(meetingModel.tabIndex)
-        subscribeToAttendeeChangeHandlers()
+        setupAudioVideoFacadeObservers()
         audioVideo.start()
         audioVideo.startRemoteVideo()
         return view
@@ -342,6 +367,13 @@ class MeetingFragment : Fragment(),
         }
 
         viewChat.visibility = View.GONE
+
+        // Caption
+        recyclerViewCaptions = view.findViewById(R.id.recyclerViewCaptions)
+        recyclerViewCaptions.layoutManager = LinearLayoutManager(activity)
+        captionAdapter = CaptionAdapter(meetingModel.currentCaptions)
+        recyclerViewCaptions.adapter = captionAdapter
+        recyclerViewCaptions.visibility = View.GONE
     }
 
     private fun setupTab(view: View) {
@@ -386,6 +418,7 @@ class MeetingFragment : Fragment(),
         viewVideo.visibility = View.GONE
         recyclerViewScreenShareCollection.visibility = View.GONE
         recyclerViewMetrics.visibility = View.GONE
+        recyclerViewCaptions.visibility = View.GONE
 
         meetingModel.tabIndex = index
         when (index) {
@@ -405,6 +438,9 @@ class MeetingFragment : Fragment(),
                 recyclerViewScreenShareCollection.visibility = View.VISIBLE
                 setScreenSurfaceViewsVisibility(View.VISIBLE)
                 resumeAllContentSharesExceptUserPausedVideos()
+            }
+            SubTab.Captions.position -> {
+                recyclerViewCaptions.visibility = View.VISIBLE
             }
             SubTab.Metrics.position -> {
                 recyclerViewMetrics.visibility = View.VISIBLE
@@ -480,6 +516,7 @@ class MeetingFragment : Fragment(),
         val additionalToggles = arrayOf(
             context?.getString(if (meetingModel.isSharingContent) R.string.disable_screen_capture_source else R.string.enable_screen_capture_source),
             context?.getString(if (isVoiceFocusEnabled) R.string.disable_voice_focus else R.string.enable_voice_focus),
+            context?.getString(if (meetingModel.isLiveTranscriptionEnabled) R.string.disable_live_transcription else R.string.enable_live_transcription),
             context?.getString(if (cameraCaptureSource.torchEnabled) R.string.disable_flashlight else R.string.enable_flashlight),
             context?.getString(if (meetingModel.isUsingCpuVideoProcessor) R.string.disable_cpu_filter else R.string.enable_cpu_filter),
             context?.getString(if (meetingModel.isUsingGpuVideoProcessor) R.string.disable_gpu_filter else R.string.enable_gpu_filter),
@@ -490,10 +527,13 @@ class MeetingFragment : Fragment(),
             when (which) {
                 0 -> toggleScreenCapture()
                 1 -> setVoiceFocusEnabled(!isVoiceFocusEnabled)
-                2 -> toggleFlashlight()
-                3 -> toggleCpuDemoFilter()
-                4 -> toggleGpuDemoFilter()
-                5 -> toggleCustomCaptureSource()
+                2 -> toggleLiveTranscription(
+                    arguments?.getString(HomeActivity.MEETING_URL_KEY) as String,
+                    arguments?.getString(HomeActivity.MEETING_ID_KEY) as String)
+                3 -> toggleFlashlight()
+                4 -> toggleCpuDemoFilter()
+                5 -> toggleGpuDemoFilter()
+                6 -> toggleCustomCaptureSource()
             }
         }
     }
@@ -717,6 +757,25 @@ class MeetingFragment : Fragment(),
         }
     }
 
+    private fun toggleLiveTranscription(meetingUrl: String, meetingId: String) {
+        if (meetingModel.isLiveTranscriptionEnabled) {
+            uiScope.launch {
+                val transcriptionResponseJson: String? = disableMeetingTranscription(meetingUrl, meetingId)
+
+                if (transcriptionResponseJson == null) {
+                    notifyHandler(getString(R.string.user_notification_transcription_stop_error))
+                } else {
+                    notifyHandler(getString(R.string.user_notification_transcription_stop_success))
+                }
+            }
+        } else {
+            val intent = Intent(context, TranscriptionConfigActivity::class.java)
+            intent.putExtra(HomeActivity.MEETING_ID_KEY, meetingId)
+            intent.putExtra(HomeActivity.MEETING_URL_KEY, meetingUrl)
+            startActivity(intent)
+        }
+    }
+
     private fun toggleVideo() {
         if (meetingModel.isCameraOn) {
             stopLocalVideo()
@@ -892,6 +951,99 @@ class MeetingFragment : Fragment(),
         }
         audioVideo.stopLocalVideo()
         buttonCamera.setImageResource(R.drawable.button_camera)
+    }
+
+    private fun addTranscriptEvent(transcriptEvent: TranscriptEvent) {
+        if (transcriptEvent is TranscriptionStatus) {
+            val status: TranscriptionStatus = transcriptEvent
+            val eventTime = this.formatTimestamp(status.eventTimeMs)
+            val content = "Live transcription ${status.type} at $eventTime in ${status.transcriptionRegion} with configuration: ${status.transcriptionConfiguration}"
+            val caption = Caption("",
+                false, content)
+            if (status.type == TranscriptionStatusType.Started) {
+                meetingModel.isLiveTranscriptionEnabled = true
+            }
+            if (status.type == TranscriptionStatusType.Stopped) {
+                meetingModel.isLiveTranscriptionEnabled = false
+            }
+            meetingModel.currentCaptions.add(caption)
+        } else if (transcriptEvent is Transcript) {
+            val transcript: Transcript = transcriptEvent
+            transcript.results.forEach { result ->
+                val alternative = result.alternatives.firstOrNull() ?: return
+                // for simplicity and demo purposes, assume each result only contains transcripts from
+                // the same speaker, which matches our observation with current transcription service behavior.
+                // More complicated UI logic can be achieved by iterating through each item
+                val speakerName: String
+                val item: TranscriptItem? = alternative.items.firstOrNull()
+                speakerName = if (item == null ||
+                    (item.attendee.attendeeId.isEmpty() || item.attendee.externalUserId.isEmpty()) ||
+                    !item.attendee.externalUserId.contains("#")) {
+                    logger.debug(TAG,
+                        "Empty speaker name due to empty items array for result: ${result.resultId}")
+                    ""
+                } else {
+                    getAttendeeName(item.attendee.attendeeId, item.attendee.externalUserId)
+                }
+                val caption = Caption(speakerName,
+                    result.isPartial,
+                    alternative.transcript)
+
+                val captionIndex = meetingModel.currentCaptionIndices[result.resultId]
+                if (captionIndex != null) {
+                    // update existing (partial) caption if exists
+                    meetingModel.currentCaptions[captionIndex] = caption
+                } else {
+                    meetingModel.currentCaptions.add(caption)
+                    meetingModel.currentCaptionIndices[result.resultId] = meetingModel.currentCaptions.count() - 1
+                }
+            }
+        }
+    }
+
+    private fun formatTimestamp(timestamp: Long): String {
+        return SimpleDateFormat("hh:mm:ss a").format(Date(timestamp))
+    }
+
+    private suspend fun disableMeetingTranscription(
+        meetingUrl: String,
+        meetingId: String?
+    ): String? {
+        return withContext(ioDispatcher) {
+            val url = if (meetingUrl.endsWith("/")) meetingUrl else "$meetingUrl/"
+            val serverUrl =
+                URL(
+                    "${url}stop_transcription?title=${encodeURLParam(meetingId)}"
+                )
+
+            try {
+                val response = StringBuffer()
+                with(serverUrl.openConnection() as HttpURLConnection) {
+                    requestMethod = "POST"
+                    doInput = true
+                    doOutput = true
+
+                    BufferedReader(InputStreamReader(inputStream)).use {
+                        var inputLine = it.readLine()
+                        while (inputLine != null) {
+                            response.append(inputLine)
+                            inputLine = it.readLine()
+                        }
+                        it.close()
+                    }
+
+                    if (responseCode == 200) {
+                        response.toString()
+                    } else {
+                        logger.error(TAG, "Unable to stop transcription. Response code: $responseCode")
+                        null
+                    }
+                }
+            } catch (exception: Exception) {
+                logger.error(TAG, "There was an exception while stopping transcription for the meeting $meetingId: $exception")
+                null
+            }
+        }
     }
 
     private fun onVideoPageUpdated() {
@@ -1364,7 +1516,7 @@ class MeetingFragment : Fragment(),
         }
     }
 
-    private fun subscribeToAttendeeChangeHandlers() {
+    private fun setupAudioVideoFacadeObservers() {
         audioVideo.addAudioVideoObserver(this)
         audioVideo.addDeviceChangeObserver(this)
         audioVideo.addMetricsObserver(this)
@@ -1374,9 +1526,10 @@ class MeetingFragment : Fragment(),
         audioVideo.addActiveSpeakerObserver(DefaultActiveSpeakerPolicy(), this)
         audioVideo.addContentShareObserver(this)
         audioVideo.addEventAnalyticsObserver(this)
+        audioVideo.addRealtimeTranscriptEventObserver(this)
     }
 
-    private fun unsubscribeFromAttendeeChangeHandlers() {
+    private fun removeAudioVideoFacadeObservers() {
         audioVideo.removeAudioVideoObserver(this)
         audioVideo.removeDeviceChangeObserver(this)
         audioVideo.removeMetricsObserver(this)
@@ -1385,6 +1538,7 @@ class MeetingFragment : Fragment(),
         audioVideo.removeVideoTileObserver(this)
         audioVideo.removeActiveSpeakerObserver(this)
         audioVideo.removeContentShareObserver(this)
+        audioVideo.removeRealtimeTranscriptEventObserver(this)
     }
 
     private fun endMeeting() {
@@ -1406,7 +1560,7 @@ class MeetingFragment : Fragment(),
     override fun onDestroy() {
         super.onDestroy()
         deviceDialog?.dismiss()
-        unsubscribeFromAttendeeChangeHandlers()
+        removeAudioVideoFacadeObservers()
     }
 
     // Handle backgrounded app
@@ -1450,6 +1604,16 @@ class MeetingFragment : Fragment(),
                 postLogger.publishLog(TAG)
             }
             else -> Unit
+        }
+    }
+
+    override fun onTranscriptEventReceived(transcriptEvent: TranscriptEvent) {
+        uiScope.launch {
+            mutex.withLock {
+                addTranscriptEvent(transcriptEvent = transcriptEvent)
+
+                captionAdapter.notifyDataSetChanged()
+            }
         }
     }
 }
