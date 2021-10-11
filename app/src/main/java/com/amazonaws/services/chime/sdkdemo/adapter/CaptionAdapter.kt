@@ -5,7 +5,6 @@
 
 package com.amazonaws.services.chime.sdkdemo.adapter
 
-import android.graphics.Color
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
@@ -37,21 +36,16 @@ class CaptionHolder(inflatedView: View) :
     private var view: View = inflatedView
 
     fun bindCaption(caption: Caption) {
-        val captionTextBackgroundColor: String = when {
+        val captionTextBackgroundColor: Int = when {
             caption.speakerName.isEmpty() -> {
                 // light grey
-                "#929292"
-            }
-            caption.isPartial -> {
-                // yellow
-                "#F6F19D"
-            }
-            else -> {
+                 R.color.colorMissingSpeaker
+            } else -> {
                 // white
-                "#FFFFFF"
+                 R.color.colorWhite
             }
         }
-        captionTextBackgroundColor.let { view.captionText.setBackgroundColor(Color.parseColor(it)) }
+        view.captionText.setBackgroundResource(captionTextBackgroundColor)
         view.speakerName.text = caption.speakerName
         view.captionText.text = caption.content
         view.captionText.contentDescription = caption.content

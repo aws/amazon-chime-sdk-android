@@ -49,6 +49,8 @@ class TranscriptionConfigFragment : Fragment() {
     )
 
     private val regionsMap = mapOf<String, String>(
+        "auto" to "Auto",
+        "" to "Not specified",
         "ap-northeast-1" to "Japan (Tokyo)",
         "ap-northeast-2" to "South Korea (Seoul)",
         "ap-southeast-2" to "Australia (Sydney)",
@@ -82,6 +84,8 @@ class TranscriptionConfigFragment : Fragment() {
     }
 
     private val transcribeRegions: List<TranscribeRegion> = arrayOf(
+        "auto",
+        "",
         "ap-northeast-1",
         "ap-northeast-2",
         "ap-southeast-2",
@@ -107,6 +111,8 @@ class TranscriptionConfigFragment : Fragment() {
     }
 
     private val transcribeMedicalRegions: List<TranscribeRegion> = arrayOf(
+        "auto",
+        "",
         "ap-southeast-2",
         "ca-central-1",
         "eu-west-1",
@@ -142,13 +148,12 @@ class TranscriptionConfigFragment : Fragment() {
     private val REGION_SPINNER_INDEX_KEY = "regionSpinnerIndex"
 
     companion object {
-        fun newInstance(meetingId: String, meetingUrl: String): TranscriptionConfigFragment {
+        fun newInstance(meetingId: String): TranscriptionConfigFragment {
             val fragment = TranscriptionConfigFragment()
 
             fragment.arguments =
                 Bundle().apply {
                     putString(HomeActivity.MEETING_ID_KEY, meetingId)
-                    putString(HomeActivity.MEETING_URL_KEY, meetingUrl)
                 }
             return fragment
         }
@@ -202,14 +207,12 @@ class TranscriptionConfigFragment : Fragment() {
         languageAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         languageSpinner.adapter = languageAdapter
         languageSpinner.isSelected = false
-        languageSpinner.onItemSelectedListener = onLanguageSelected
 
         regionSpinner = view.findViewById(R.id.spinnerRegion)
         regionAdapter = ArrayAdapter(context, android.R.layout.simple_spinner_item, regions)
         regionAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         regionSpinner.adapter = regionAdapter
         regionSpinner.isSelected = false
-        regionSpinner.onItemSelectedListener = onRegionSelected
 
         uiScope.launch {
             populateLanguages(transcribeLanguages, languages, languageAdapter)
@@ -259,22 +262,6 @@ class TranscriptionConfigFragment : Fragment() {
                 logger.error(TAG, "Incorrect position in TranscribeEngine spinner")
             }
             resetSpinner()
-        }
-
-        override fun onNothingSelected(p0: AdapterView<*>?) {
-        }
-    }
-
-    private val onLanguageSelected = object : AdapterView.OnItemSelectedListener {
-        override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-        }
-
-        override fun onNothingSelected(p0: AdapterView<*>?) {
-        }
-    }
-
-    private val onRegionSelected = object : AdapterView.OnItemSelectedListener {
-        override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
         }
 
         override fun onNothingSelected(p0: AdapterView<*>?) {

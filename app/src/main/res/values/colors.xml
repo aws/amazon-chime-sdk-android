@@ -16,4 +16,7 @@
     <!-- For roster view -->
     <color name="colorBackground">#E9E9E9</color>
     <color name="colorTranslucentBackground">#64000000</color>
+
+    <!-- For captions view -->
+    <color name="colorMissingSpeaker">#929292</color>
 </resources>

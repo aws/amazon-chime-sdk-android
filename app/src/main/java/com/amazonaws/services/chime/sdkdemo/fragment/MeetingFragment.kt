@@ -191,13 +191,12 @@ class MeetingFragment : Fragment(),
     private lateinit var audioDeviceManager: AudioDeviceManager
 
     companion object {
-        fun newInstance(meetingId: String, meetingUrl: String): MeetingFragment {
+        fun newInstance(meetingId: String): MeetingFragment {
             val fragment = MeetingFragment()
 
             fragment.arguments =
                 Bundle().apply {
                     putString(HomeActivity.MEETING_ID_KEY, meetingId)
-                    putString(HomeActivity.MEETING_URL_KEY, meetingUrl)
                 }
             return fragment
         }
@@ -528,7 +527,6 @@ class MeetingFragment : Fragment(),
                 0 -> toggleScreenCapture()
                 1 -> setVoiceFocusEnabled(!isVoiceFocusEnabled)
                 2 -> toggleLiveTranscription(
-                    arguments?.getString(HomeActivity.MEETING_URL_KEY) as String,
                     arguments?.getString(HomeActivity.MEETING_ID_KEY) as String)
                 3 -> toggleFlashlight()
                 4 -> toggleCpuDemoFilter()
@@ -757,10 +755,10 @@ class MeetingFragment : Fragment(),
         }
     }
 
-    private fun toggleLiveTranscription(meetingUrl: String, meetingId: String) {
+    private fun toggleLiveTranscription(meetingId: String) {
         if (meetingModel.isLiveTranscriptionEnabled) {
             uiScope.launch {
-                val transcriptionResponseJson: String? = disableMeetingTranscription(meetingUrl, meetingId)
+                val transcriptionResponseJson: String? = disableMeetingTranscription(meetingId)
 
                 if (transcriptionResponseJson == null) {
                     notifyHandler(getString(R.string.user_notification_transcription_stop_error))
@@ -771,7 +769,6 @@ class MeetingFragment : Fragment(),
         } else {
             val intent = Intent(context, TranscriptionConfigActivity::class.java)
             intent.putExtra(HomeActivity.MEETING_ID_KEY, meetingId)
-            intent.putExtra(HomeActivity.MEETING_URL_KEY, meetingUrl)
             startActivity(intent)
         }
     }
@@ -1005,15 +1002,12 @@ class MeetingFragment : Fragment(),
         return SimpleDateFormat("hh:mm:ss a").format(Date(timestamp))
     }
 
-    private suspend fun disableMeetingTranscription(
-        meetingUrl: String,
-        meetingId: String?
-    ): String? {
+    private suspend fun disableMeetingTranscription(meetingId: String?): String? {
         return withContext(ioDispatcher) {
-            val url = if (meetingUrl.endsWith("/")) meetingUrl else "$meetingUrl/"
+            val meetingUrl = if (getString(R.string.test_url).endsWith("/")) getString(R.string.test_url) else "${getString(R.string.test_url)}/"
             val serverUrl =
                 URL(
-                    "${url}stop_transcription?title=${encodeURLParam(meetingId)}"
+                    "${meetingUrl}stop_transcription?title=${encodeURLParam(meetingId)}"
                 )
 
             try {

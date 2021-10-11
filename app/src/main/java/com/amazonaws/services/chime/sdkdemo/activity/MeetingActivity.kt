@@ -41,7 +41,6 @@ class MeetingActivity : AppCompatActivity(),
     private val meetingSessionModel: MeetingSessionModel by lazy { ViewModelProvider(this)[MeetingSessionModel::class.java] }
 
     private lateinit var meetingId: String
-    private lateinit var meetingUrl: String
     private lateinit var name: String
 
     private var cachedDevice: MediaDevice? = null
@@ -52,7 +51,6 @@ class MeetingActivity : AppCompatActivity(),
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_meeting)
         meetingId = intent.getStringExtra(HomeActivity.MEETING_ID_KEY) as String
-        meetingUrl = intent.getStringExtra(HomeActivity.MEETING_URL_KEY) as String
         name = intent.getStringExtra(HomeActivity.NAME_KEY) as String
 
         if (savedInstanceState == null) {
@@ -102,7 +100,7 @@ class MeetingActivity : AppCompatActivity(),
     }
 
     override fun onJoinMeetingClicked() {
-        val rosterViewFragment = MeetingFragment.newInstance(meetingId, meetingUrl)
+        val rosterViewFragment = MeetingFragment.newInstance(meetingId)
         supportFragmentManager
             .beginTransaction()
             .replace(R.id.root_layout, rosterViewFragment, "rosterViewFragment")

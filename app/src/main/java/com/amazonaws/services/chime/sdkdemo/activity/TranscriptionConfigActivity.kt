@@ -31,23 +31,21 @@ import kotlinx.coroutines.withContext
 class TranscriptionConfigActivity : AppCompatActivity(),
     TranscriptionConfigFragment.TranscriptionConfigurationEventListener {
 
-    private val logger = ConsoleLogger(LogLevel.DEBUG)
+    private val logger = ConsoleLogger(LogLevel.INFO)
     private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO
     private val uiScope = CoroutineScope(Dispatchers.Main)
 
     private lateinit var meetingId: String
-    private lateinit var meetingUrl: String
 
-    private val TAG = "InTranscriptionConfig"
+    private val TAG = "TranscriptionConfigActivity"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_transcription_config)
         meetingId = intent.getStringExtra(HomeActivity.MEETING_ID_KEY) as String
-        meetingUrl = intent.getStringExtra(HomeActivity.MEETING_URL_KEY) as String
 
         if (savedInstanceState == null) {
-            val transcriptionConfigFragment = TranscriptionConfigFragment.newInstance(meetingId, meetingUrl)
+            val transcriptionConfigFragment = TranscriptionConfigFragment.newInstance(meetingId)
             supportFragmentManager
                 .beginTransaction()
                 .add(R.id.root_layout, transcriptionConfigFragment, "transcriptionConfig")
@@ -68,7 +66,7 @@ class TranscriptionConfigActivity : AppCompatActivity(),
     override fun onStartTranscription(engine: TranscribeEngine, language: TranscribeLanguage, region: TranscribeRegion) {
         uiScope.launch {
             val transcriptionResponseJson: String? =
-                enableMeetingTranscription(meetingUrl,
+                enableMeetingTranscription(
                     meetingId,
                     engine.engine,
                     language.code,
@@ -84,17 +82,16 @@ class TranscriptionConfigActivity : AppCompatActivity(),
     }
 
     private suspend fun enableMeetingTranscription(
-        meetingUrl: String,
         meetingId: String?,
         transcribeEngine: String?,
         transcriptionLanguage: String?,
         transcriptionRegion: String?
     ): String? {
         return withContext(ioDispatcher) {
-            val url = if (meetingUrl.endsWith("/")) meetingUrl else "$meetingUrl/"
+            val meetingUrl = if (getString(R.string.test_url).endsWith("/")) getString(R.string.test_url) else "${getString(R.string.test_url)}/"
             val serverUrl =
                 URL(
-                    "${url}start_transcription?title=${encodeURLParam(meetingId)}" +
+                    "${meetingUrl}start_transcription?title=${encodeURLParam(meetingId)}" +
                             "&language=${encodeURLParam(transcriptionLanguage)}" +
                             "&region=${encodeURLParam(transcriptionRegion)}" +
                             "&engine=${encodeURLParam(transcribeEngine)}"
