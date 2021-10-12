@@ -11,7 +11,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.amazonaws.services.chime.sdkdemo.R
 import com.amazonaws.services.chime.sdkdemo.data.Caption
 import com.amazonaws.services.chime.sdkdemo.utils.inflate
-import kotlinx.android.synthetic.main.row_caption.view.*
+import kotlinx.android.synthetic.main.row_caption.view.captionText
+import kotlinx.android.synthetic.main.row_caption.view.speakerName
 
 class CaptionAdapter(
     private val captions: Collection<Caption>
