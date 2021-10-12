@@ -12,6 +12,8 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.LayoutRes
 import java.net.URLEncoder
+import java.text.SimpleDateFormat
+import java.util.Date
 
 fun ViewGroup.inflate(@LayoutRes layoutRes: Int, attachToRoot: Boolean = false): View {
     return LayoutInflater.from(context).inflate(layoutRes, this, attachToRoot)
@@ -23,4 +25,8 @@ fun encodeURLParam(string: String?): String {
 
 fun isLandscapeMode(context: Context?): Boolean {
     return context?.let { it.resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE } ?: false
+}
+
+fun formatTimestamp(timestamp: Long): String {
+    return SimpleDateFormat("hh:mm:ss a").format(Date(timestamp))
 }

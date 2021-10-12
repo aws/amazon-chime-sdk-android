@@ -100,13 +100,12 @@ import com.amazonaws.services.chime.sdkdemo.utils.CpuVideoProcessor
 import com.amazonaws.services.chime.sdkdemo.utils.GpuVideoProcessor
 import com.amazonaws.services.chime.sdkdemo.utils.PostLogger
 import com.amazonaws.services.chime.sdkdemo.utils.encodeURLParam
+import com.amazonaws.services.chime.sdkdemo.utils.formatTimestamp
 import com.amazonaws.services.chime.sdkdemo.utils.isLandscapeMode
 import com.google.android.material.tabs.TabLayout
 import com.google.gson.Gson
 import java.net.URL
-import java.text.SimpleDateFormat
 import java.util.Calendar
-import java.util.Date
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -438,6 +437,7 @@ class MeetingFragment : Fragment(),
             }
             SubTab.Captions.position -> {
                 recyclerViewCaptions.visibility = View.VISIBLE
+                scrollToLastCaption()
             }
             SubTab.Metrics.position -> {
                 recyclerViewMetrics.visibility = View.VISIBLE
@@ -955,7 +955,7 @@ class MeetingFragment : Fragment(),
         when (transcriptEvent) {
             is TranscriptionStatus -> {
                 val status: TranscriptionStatus = transcriptEvent
-                val eventTime = this.formatTimestamp(status.eventTimeMs)
+                val eventTime = formatTimestamp(status.eventTimeMs)
                 val content = "Live transcription ${status.type} at $eventTime in ${status.transcriptionRegion} with configuration: ${status.transcriptionConfiguration}"
                 val caption = Caption(null, false, content)
                 if (status.type == TranscriptionStatusType.Started) {
@@ -995,10 +995,6 @@ class MeetingFragment : Fragment(),
                 }
             }
         }
-    }
-
-    private fun formatTimestamp(timestamp: Long): String {
-        return SimpleDateFormat("hh:mm:ss a").format(Date(timestamp))
     }
 
     private suspend fun disableMeetingTranscription(meetingId: String?): String? {
@@ -1463,6 +1459,12 @@ class MeetingFragment : Fragment(),
         }
     }
 
+    private fun scrollToLastCaption() {
+        if (meetingModel.currentCaptions.isNotEmpty()) {
+            recyclerViewCaptions.scrollToPosition(meetingModel.currentCaptions.size - 1)
+        }
+    }
+
     private fun isSelfAttendee(attendeeId: String): Boolean {
         return DefaultModality(attendeeId).base() == credentials.attendeeId
     }
@@ -1583,6 +1585,7 @@ class MeetingFragment : Fragment(),
     override fun onTranscriptEventReceived(transcriptEvent: TranscriptEvent) {
         uiScope.launch {
             addTranscriptEvent(transcriptEvent = transcriptEvent)
+            scrollToLastCaption()
 
             captionAdapter.notifyDataSetChanged()
         }

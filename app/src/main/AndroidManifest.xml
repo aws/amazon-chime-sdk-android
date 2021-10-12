@@ -28,7 +28,7 @@
         </activity>
         <activity android:name=".activity.HomeActivity" />
         <activity android:name=".activity.MeetingActivity" />
-        <activity android:name=".activity.TranscriptionConfigActivity" android:parentActivityName=".activity.MeetingActivity"/>
+        <activity android:name=".activity.TranscriptionConfigActivity" android:parentActivityName=".activity.MeetingActivity" android:configChanges="orientation|screenSize|keyboardHidden"/>
 
         <service
             android:name=".service.ScreenCaptureService"
