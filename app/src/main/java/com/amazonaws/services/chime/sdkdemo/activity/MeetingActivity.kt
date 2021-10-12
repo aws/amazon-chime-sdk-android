@@ -7,6 +7,7 @@ package com.amazonaws.services.chime.sdkdemo.activity
 
 import android.os.Bundle
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.AudioVideoFacade
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.capture.CameraCaptureSource
@@ -31,7 +32,7 @@ import com.amazonaws.services.chime.sdkdemo.utils.CpuVideoProcessor
 import com.amazonaws.services.chime.sdkdemo.utils.GpuVideoProcessor
 import com.google.gson.Gson
 
-class MeetingActivity : BaseActivity(),
+class MeetingActivity : AppCompatActivity(),
     DeviceManagementFragment.DeviceManagementEventListener,
     MeetingFragment.RosterViewEventListener {
 

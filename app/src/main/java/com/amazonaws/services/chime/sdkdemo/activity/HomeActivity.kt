@@ -15,6 +15,7 @@ import android.widget.EditText
 import android.widget.ImageButton
 import android.widget.ProgressBar
 import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProvider
@@ -27,16 +28,15 @@ import com.amazonaws.services.chime.sdkdemo.R
 import com.amazonaws.services.chime.sdkdemo.fragment.DebugSettingsFragment
 import com.amazonaws.services.chime.sdkdemo.model.DebugSettingsViewModel
 import com.amazonaws.services.chime.sdkdemo.utils.encodeURLParam
+import com.amazonaws.services.chime.sdkdemo.utils.showToast
 import java.net.URL
-import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-class HomeActivity : BaseActivity() {
+class HomeActivity : AppCompatActivity() {
     private val logger = ConsoleLogger(LogLevel.INFO)
     private val uiScope = CoroutineScope(Dispatchers.Main)
-    private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO
 
     private val MEETING_REGION = "us-east-1"
     private val TAG = "MeetingHomeActivity"
@@ -89,9 +89,9 @@ class HomeActivity : BaseActivity() {
         testUrl = getTestUrl()
 
         if (meetingID.isNullOrBlank()) {
-            showToast(this, getString(R.string.user_notification_meeting_id_invalid))
+            showToast(getString(R.string.user_notification_meeting_id_invalid))
         } else if (yourName.isNullOrBlank()) {
-            showToast(this, getString(R.string.user_notification_attendee_name_invalid))
+            showToast(getString(R.string.user_notification_attendee_name_invalid))
         } else {
             if (hasPermissionsAlready()) {
                 authenticate(testUrl, meetingID, yourName)
@@ -123,7 +123,7 @@ class HomeActivity : BaseActivity() {
                     grantResults.isEmpty() || grantResults.any { PackageManager.PERMISSION_GRANTED != it }
 
                 if (isMissingPermission) {
-                    showToast(this, getString(R.string.user_notification_permission_error))
+                    showToast(getString(R.string.user_notification_permission_error))
                     return
                 }
                 authenticate(testUrl, meetingID, yourName)
@@ -142,7 +142,7 @@ class HomeActivity : BaseActivity() {
                 "Joining meeting. meetingUrl: $meetingUrl, meetingId: $meetingId, attendeeName: $attendeeName"
             )
             if (!meetingUrl.startsWith("http")) {
-                showToast(applicationContext, getString(R.string.user_notification_meeting_url_error))
+                showToast(getString(R.string.user_notification_meeting_url_error))
             } else {
                 authenticationProgressBar?.visibility = View.VISIBLE
                 val meetingResponseJson: String? = joinMeeting(meetingUrl, meetingId, attendeeName)
@@ -150,7 +150,7 @@ class HomeActivity : BaseActivity() {
                 authenticationProgressBar?.visibility = View.INVISIBLE
 
                 if (meetingResponseJson == null) {
-                    showToast(applicationContext, getString(R.string.user_notification_meeting_start_error))
+                    showToast(getString(R.string.user_notification_meeting_start_error))
                 } else {
                     val intent = Intent(applicationContext, MeetingActivity::class.java)
                     intent.putExtra(MEETING_RESPONSE_KEY, meetingResponseJson)
@@ -169,17 +169,11 @@ class HomeActivity : BaseActivity() {
         val meetingServerUrl = if (meetingUrl.endsWith("/")) meetingUrl else "$meetingUrl/"
         val url = "${meetingServerUrl}join?title=${encodeURLParam(meetingId)}&name=${encodeURLParam(
             attendeeName)}&region=${encodeURLParam(MEETING_REGION)}"
-        return try {
-            val response = HttpUtils.post(URL(url), "", DefaultBackOffRetry(), logger)
-
-            if (response.httpException == null) {
-                response.data
-            } else {
-                logger.error(TAG, "Unable to join meeting. ${response.httpException}")
-                null
-            }
-        } catch (exception: Exception) {
-            logger.error(TAG, "There was an exception while joining the meeting: $exception")
+        val response = HttpUtils.post(URL(url), "", DefaultBackOffRetry(), logger)
+        return if (response.httpException == null) {
+            response.data
+        } else {
+            logger.error(TAG, "Unable to join meeting. ${response.httpException}")
             null
         }
     }

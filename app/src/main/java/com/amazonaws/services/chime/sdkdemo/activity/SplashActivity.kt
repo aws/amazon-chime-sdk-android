@@ -11,9 +11,10 @@ import android.os.Bundle
 import android.os.Handler
 import android.view.Window
 import android.view.WindowManager
+import androidx.appcompat.app.AppCompatActivity
 import com.amazonaws.services.chime.sdkdemo.R
 
-class SplashActivity : BaseActivity() {
+class SplashActivity : AppCompatActivity() {
 
     private val SPLASH_TIME_OUT_MILLISECOND: Long = 3000
 

@@ -7,6 +7,7 @@ package com.amazonaws.services.chime.sdkdemo.activity
 
 import android.os.Bundle
 import android.view.MenuItem
+import androidx.appcompat.app.AppCompatActivity
 import com.amazonaws.services.chime.sdk.meetings.internal.utils.DefaultBackOffRetry
 import com.amazonaws.services.chime.sdk.meetings.internal.utils.HttpUtils
 import com.amazonaws.services.chime.sdk.meetings.utils.logger.ConsoleLogger
@@ -17,12 +18,13 @@ import com.amazonaws.services.chime.sdkdemo.data.TranscribeLanguage
 import com.amazonaws.services.chime.sdkdemo.data.TranscribeRegion
 import com.amazonaws.services.chime.sdkdemo.fragment.TranscriptionConfigFragment
 import com.amazonaws.services.chime.sdkdemo.utils.encodeURLParam
+import com.amazonaws.services.chime.sdkdemo.utils.showToast
 import java.net.URL
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-class TranscriptionConfigActivity : BaseActivity(),
+class TranscriptionConfigActivity : AppCompatActivity(),
     TranscriptionConfigFragment.TranscriptionConfigurationEventListener {
 
     private val logger = ConsoleLogger(LogLevel.INFO)
@@ -67,9 +69,9 @@ class TranscriptionConfigActivity : BaseActivity(),
                     region.code)
 
             if (response == null) {
-                showToast(applicationContext, getString(R.string.user_notification_transcription_start_error))
+                showToast(getString(R.string.user_notification_transcription_start_error))
             } else {
-                showToast(applicationContext, getString(R.string.user_notification_transcription_start_success))
+                showToast(getString(R.string.user_notification_transcription_start_success))
             }
             onBackPressed()
         }
@@ -86,17 +88,12 @@ class TranscriptionConfigActivity : BaseActivity(),
                 "&language=${encodeURLParam(transcriptionLanguage)}" +
                 "&region=${encodeURLParam(transcriptionRegion)}" +
                 "&engine=${encodeURLParam(transcribeEngine)}"
-        return try {
-            val response = HttpUtils.post(URL(url), "", DefaultBackOffRetry(), logger)
+        val response = HttpUtils.post(URL(url), "", DefaultBackOffRetry(), logger)
 
-            if (response.httpException == null) {
-                response.data
-            } else {
-                logger.error(TAG, "Error sending start transcription request ${response.httpException}")
-                null
-            }
-        } catch (exception: Exception) {
-            logger.error(TAG, "Error sending start transcription request $exception")
+        return if (response.httpException == null) {
+            response.data
+        } else {
+            logger.error(TAG, "Error sending start transcription request ${response.httpException}")
             null
         }
     }

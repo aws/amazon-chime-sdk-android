@@ -120,7 +120,6 @@ class MeetingFragment : Fragment(),
     private val logger = ConsoleLogger(LogLevel.DEBUG)
     private val mutex = Mutex()
     private val uiScope = CoroutineScope(Dispatchers.Main)
-    private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO
     private val meetingModel: MeetingModel by lazy { ViewModelProvider(this)[MeetingModel::class.java] }
     private var deviceDialog: AlertDialog? = null
     private var screenShareManager: ScreenShareManager? = null
@@ -954,21 +953,20 @@ class MeetingFragment : Fragment(),
     private fun addTranscriptEvent(transcriptEvent: TranscriptEvent) {
         when (transcriptEvent) {
             is TranscriptionStatus -> {
-                val status: TranscriptionStatus = transcriptEvent
-                val eventTime = formatTimestamp(status.eventTimeMs)
-                val content = "Live transcription ${status.type} at $eventTime in ${status.transcriptionRegion} with configuration: ${status.transcriptionConfiguration}"
+                val eventTime = formatTimestamp(transcriptEvent.eventTimeMs)
+                val content =
+                    "Live transcription ${transcriptEvent.type} at $eventTime in ${transcriptEvent.transcriptionRegion} with configuration: ${transcriptEvent.transcriptionConfiguration}"
                 val caption = Caption(null, false, content)
-                if (status.type == TranscriptionStatusType.Started) {
+                if (transcriptEvent.type == TranscriptionStatusType.Started) {
                     meetingModel.isLiveTranscriptionEnabled = true
                 }
-                if (status.type == TranscriptionStatusType.Stopped) {
+                if (transcriptEvent.type == TranscriptionStatusType.Stopped) {
                     meetingModel.isLiveTranscriptionEnabled = false
                 }
                 meetingModel.currentCaptions.add(caption)
             }
             is Transcript -> {
-                val transcript: Transcript = transcriptEvent
-                transcript.results.forEach { result ->
+                transcriptEvent.results.forEach { result ->
                     val alternative = result.alternatives.firstOrNull() ?: return
                     // for simplicity and demo purposes, assume each result only contains transcripts from
                     // the same speaker, which matches our observation with current transcription service behavior.
@@ -976,8 +974,10 @@ class MeetingFragment : Fragment(),
                     val speakerName: String
                     val item: TranscriptItem? = alternative.items.firstOrNull()
                     speakerName = if (item == null) {
-                        logger.debug(TAG,
-                            "Empty speaker name due to empty items array for result: ${result.resultId}")
+                        logger.debug(
+                            TAG,
+                            "Empty speaker name due to empty items array for result: ${result.resultId}"
+                        )
                         "<UNKNOWN>"
                     } else {
                         getAttendeeName(item.attendee.attendeeId, item.attendee.externalUserId)
@@ -990,7 +990,8 @@ class MeetingFragment : Fragment(),
                         meetingModel.currentCaptions[captionIndex] = caption
                     } else {
                         meetingModel.currentCaptions.add(caption)
-                        meetingModel.currentCaptionIndices[result.resultId] = meetingModel.currentCaptions.count() - 1
+                        meetingModel.currentCaptionIndices[result.resultId] =
+                            meetingModel.currentCaptions.count() - 1
                     }
                 }
             }
@@ -1000,17 +1001,11 @@ class MeetingFragment : Fragment(),
     private suspend fun disableMeetingTranscription(meetingId: String?): String? {
         val meetingUrl = if (getString(R.string.test_url).endsWith("/")) getString(R.string.test_url) else "${getString(R.string.test_url)}/"
         val url = "${meetingUrl}stop_transcription?title=${encodeURLParam(meetingId)}"
-        return try {
-            val response = HttpUtils.post(URL(url), "", DefaultBackOffRetry(), logger)
-
-            if (response.httpException == null) {
-                response.data
-            } else {
-                logger.error(TAG, "Error sending stop transcription request ${response.httpException}")
-                null
-            }
-        } catch (exception: Exception) {
-            logger.error(TAG, "Error sending stop transcription request $exception")
+        val response = HttpUtils.post(URL(url), "", DefaultBackOffRetry(), logger)
+        return if (response.httpException == null) {
+            response.data
+        } else {
+            logger.error(TAG, "Error sending stop transcription request ${response.httpException}")
             null
         }
     }
