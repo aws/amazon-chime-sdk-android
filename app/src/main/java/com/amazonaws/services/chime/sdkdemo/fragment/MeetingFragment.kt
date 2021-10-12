@@ -63,6 +63,8 @@ import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.gl.EglCoreFact
 import com.amazonaws.services.chime.sdk.meetings.device.DeviceChangeObserver
 import com.amazonaws.services.chime.sdk.meetings.device.MediaDevice
 import com.amazonaws.services.chime.sdk.meetings.device.MediaDeviceType
+import com.amazonaws.services.chime.sdk.meetings.internal.utils.DefaultBackOffRetry
+import com.amazonaws.services.chime.sdk.meetings.internal.utils.HttpUtils
 import com.amazonaws.services.chime.sdk.meetings.realtime.RealtimeObserver
 import com.amazonaws.services.chime.sdk.meetings.realtime.TranscriptEventObserver
 import com.amazonaws.services.chime.sdk.meetings.realtime.datamessage.DataMessage
@@ -101,9 +103,6 @@ import com.amazonaws.services.chime.sdkdemo.utils.encodeURLParam
 import com.amazonaws.services.chime.sdkdemo.utils.isLandscapeMode
 import com.google.android.material.tabs.TabLayout
 import com.google.gson.Gson
-import java.io.BufferedReader
-import java.io.InputStreamReader
-import java.net.HttpURLConnection
 import java.net.URL
 import java.text.SimpleDateFormat
 import java.util.Calendar
@@ -114,7 +113,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
-import kotlinx.coroutines.withContext
 
 class MeetingFragment : Fragment(),
     RealtimeObserver, AudioVideoObserver, VideoTileObserver,
@@ -713,6 +711,9 @@ class MeetingFragment : Fragment(),
     }
 
     private fun getAttendeeName(attendeeId: String, externalUserId: String): String {
+        if ((attendeeId.isEmpty() || externalUserId.isEmpty()) || !externalUserId.contains('#')) {
+            return "<UNKNOWN>"
+        }
         val attendeeName = externalUserId.split('#')[1]
 
         return if (DefaultModality(attendeeId).hasModality(ModalityType.Content)) {
@@ -951,48 +952,46 @@ class MeetingFragment : Fragment(),
     }
 
     private fun addTranscriptEvent(transcriptEvent: TranscriptEvent) {
-        if (transcriptEvent is TranscriptionStatus) {
-            val status: TranscriptionStatus = transcriptEvent
-            val eventTime = this.formatTimestamp(status.eventTimeMs)
-            val content = "Live transcription ${status.type} at $eventTime in ${status.transcriptionRegion} with configuration: ${status.transcriptionConfiguration}"
-            val caption = Caption("",
-                false, content)
-            if (status.type == TranscriptionStatusType.Started) {
-                meetingModel.isLiveTranscriptionEnabled = true
-            }
-            if (status.type == TranscriptionStatusType.Stopped) {
-                meetingModel.isLiveTranscriptionEnabled = false
-            }
-            meetingModel.currentCaptions.add(caption)
-        } else if (transcriptEvent is Transcript) {
-            val transcript: Transcript = transcriptEvent
-            transcript.results.forEach { result ->
-                val alternative = result.alternatives.firstOrNull() ?: return
-                // for simplicity and demo purposes, assume each result only contains transcripts from
-                // the same speaker, which matches our observation with current transcription service behavior.
-                // More complicated UI logic can be achieved by iterating through each item
-                val speakerName: String
-                val item: TranscriptItem? = alternative.items.firstOrNull()
-                speakerName = if (item == null ||
-                    (item.attendee.attendeeId.isEmpty() || item.attendee.externalUserId.isEmpty()) ||
-                    !item.attendee.externalUserId.contains("#")) {
-                    logger.debug(TAG,
-                        "Empty speaker name due to empty items array for result: ${result.resultId}")
-                    ""
-                } else {
-                    getAttendeeName(item.attendee.attendeeId, item.attendee.externalUserId)
+        when (transcriptEvent) {
+            is TranscriptionStatus -> {
+                val status: TranscriptionStatus = transcriptEvent
+                val eventTime = this.formatTimestamp(status.eventTimeMs)
+                val content = "Live transcription ${status.type} at $eventTime in ${status.transcriptionRegion} with configuration: ${status.transcriptionConfiguration}"
+                val caption = Caption(null, false, content)
+                if (status.type == TranscriptionStatusType.Started) {
+                    meetingModel.isLiveTranscriptionEnabled = true
                 }
-                val caption = Caption(speakerName,
-                    result.isPartial,
-                    alternative.transcript)
+                if (status.type == TranscriptionStatusType.Stopped) {
+                    meetingModel.isLiveTranscriptionEnabled = false
+                }
+                meetingModel.currentCaptions.add(caption)
+            }
+            is Transcript -> {
+                val transcript: Transcript = transcriptEvent
+                transcript.results.forEach { result ->
+                    val alternative = result.alternatives.firstOrNull() ?: return
+                    // for simplicity and demo purposes, assume each result only contains transcripts from
+                    // the same speaker, which matches our observation with current transcription service behavior.
+                    // More complicated UI logic can be achieved by iterating through each item
+                    val speakerName: String
+                    val item: TranscriptItem? = alternative.items.firstOrNull()
+                    speakerName = if (item == null) {
+                        logger.debug(TAG,
+                            "Empty speaker name due to empty items array for result: ${result.resultId}")
+                        "<UNKNOWN>"
+                    } else {
+                        getAttendeeName(item.attendee.attendeeId, item.attendee.externalUserId)
+                    }
+                    val caption = Caption(speakerName, result.isPartial, alternative.transcript)
 
-                val captionIndex = meetingModel.currentCaptionIndices[result.resultId]
-                if (captionIndex != null) {
-                    // update existing (partial) caption if exists
-                    meetingModel.currentCaptions[captionIndex] = caption
-                } else {
-                    meetingModel.currentCaptions.add(caption)
-                    meetingModel.currentCaptionIndices[result.resultId] = meetingModel.currentCaptions.count() - 1
+                    val captionIndex = meetingModel.currentCaptionIndices[result.resultId]
+                    if (captionIndex != null) {
+                        // update existing (partial) caption if exists
+                        meetingModel.currentCaptions[captionIndex] = caption
+                    } else {
+                        meetingModel.currentCaptions.add(caption)
+                        meetingModel.currentCaptionIndices[result.resultId] = meetingModel.currentCaptions.count() - 1
+                    }
                 }
             }
         }
@@ -1003,40 +1002,20 @@ class MeetingFragment : Fragment(),
     }
 
     private suspend fun disableMeetingTranscription(meetingId: String?): String? {
-        return withContext(ioDispatcher) {
-            val meetingUrl = if (getString(R.string.test_url).endsWith("/")) getString(R.string.test_url) else "${getString(R.string.test_url)}/"
-            val serverUrl =
-                URL(
-                    "${meetingUrl}stop_transcription?title=${encodeURLParam(meetingId)}"
-                )
+        val meetingUrl = if (getString(R.string.test_url).endsWith("/")) getString(R.string.test_url) else "${getString(R.string.test_url)}/"
+        val url = "${meetingUrl}stop_transcription?title=${encodeURLParam(meetingId)}"
+        return try {
+            val response = HttpUtils.post(URL(url), "", DefaultBackOffRetry(), logger)
 
-            try {
-                val response = StringBuffer()
-                with(serverUrl.openConnection() as HttpURLConnection) {
-                    requestMethod = "POST"
-                    doInput = true
-                    doOutput = true
-
-                    BufferedReader(InputStreamReader(inputStream)).use {
-                        var inputLine = it.readLine()
-                        while (inputLine != null) {
-                            response.append(inputLine)
-                            inputLine = it.readLine()
-                        }
-                        it.close()
-                    }
-
-                    if (responseCode == 200) {
-                        response.toString()
-                    } else {
-                        logger.error(TAG, "Unable to stop transcription. Response code: $responseCode")
-                        null
-                    }
-                }
-            } catch (exception: Exception) {
-                logger.error(TAG, "There was an exception while stopping transcription for the meeting $meetingId: $exception")
+            if (response.httpException == null) {
+                response.data
+            } else {
+                logger.error(TAG, "Error sending stop transcription request ${response.httpException}")
                 null
             }
+        } catch (exception: Exception) {
+            logger.error(TAG, "Error sending stop transcription request $exception")
+            null
         }
     }
 
@@ -1603,11 +1582,9 @@ class MeetingFragment : Fragment(),
 
     override fun onTranscriptEventReceived(transcriptEvent: TranscriptEvent) {
         uiScope.launch {
-            mutex.withLock {
-                addTranscriptEvent(transcriptEvent = transcriptEvent)
+            addTranscriptEvent(transcriptEvent = transcriptEvent)
 
-                captionAdapter.notifyDataSetChanged()
-            }
+            captionAdapter.notifyDataSetChanged()
         }
     }
 }

@@ -6,7 +6,7 @@
 package com.amazonaws.services.chime.sdkdemo.data
 
 data class Caption(
-    val speakerName: String,
+    val speakerName: String?,
     val isPartial: Boolean,
     val content: String
 )

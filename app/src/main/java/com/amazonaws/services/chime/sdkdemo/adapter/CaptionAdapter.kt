@@ -36,17 +36,18 @@ class CaptionHolder(inflatedView: View) :
     private var view: View = inflatedView
 
     fun bindCaption(caption: Caption) {
+        val speakerName = caption.speakerName ?: ""
+
         val captionTextBackgroundColor: Int = when {
-            caption.speakerName.isEmpty() -> {
-                // light grey
-                 R.color.colorMissingSpeaker
-            } else -> {
-                // white
-                 R.color.colorWhite
+            speakerName.isEmpty() -> {
+                R.color.colorMissingSpeaker
+            }
+            else -> {
+                R.color.colorWhite
             }
         }
         view.captionText.setBackgroundResource(captionTextBackgroundColor)
-        view.speakerName.text = caption.speakerName
+        view.speakerName.text = speakerName
         view.captionText.text = caption.content
         view.captionText.contentDescription = caption.content
     }

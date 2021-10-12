@@ -6,7 +6,6 @@
 package com.amazonaws.services.chime.sdkdemo.activity
 
 import android.Manifest
-import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
@@ -16,11 +15,11 @@ import android.widget.EditText
 import android.widget.ImageButton
 import android.widget.ProgressBar
 import android.widget.TextView
-import android.widget.Toast
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProvider
+import com.amazonaws.services.chime.sdk.meetings.internal.utils.DefaultBackOffRetry
+import com.amazonaws.services.chime.sdk.meetings.internal.utils.HttpUtils
 import com.amazonaws.services.chime.sdk.meetings.utils.Versioning
 import com.amazonaws.services.chime.sdk.meetings.utils.logger.ConsoleLogger
 import com.amazonaws.services.chime.sdk.meetings.utils.logger.LogLevel
@@ -28,17 +27,13 @@ import com.amazonaws.services.chime.sdkdemo.R
 import com.amazonaws.services.chime.sdkdemo.fragment.DebugSettingsFragment
 import com.amazonaws.services.chime.sdkdemo.model.DebugSettingsViewModel
 import com.amazonaws.services.chime.sdkdemo.utils.encodeURLParam
-import java.io.BufferedReader
-import java.io.InputStreamReader
-import java.net.HttpURLConnection
 import java.net.URL
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
-class HomeActivity : AppCompatActivity() {
+class HomeActivity : BaseActivity() {
     private val logger = ConsoleLogger(LogLevel.INFO)
     private val uiScope = CoroutineScope(Dispatchers.Main)
     private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO
@@ -81,14 +76,6 @@ class HomeActivity : AppCompatActivity() {
 
         val versionText: TextView = findViewById(R.id.versionText) as TextView
         versionText.text = "${getString(R.string.version_prefix)}${Versioning.sdkVersion()}"
-    }
-
-    private fun showToast(context: Context, msg: String) {
-        Toast.makeText(
-            context,
-            msg,
-            Toast.LENGTH_LONG
-        ).show()
     }
 
     private fun showDebugSettings() {
@@ -179,42 +166,21 @@ class HomeActivity : AppCompatActivity() {
         meetingId: String?,
         attendeeName: String?
     ): String? {
-        return withContext(ioDispatcher) {
-            val url = if (meetingUrl.endsWith("/")) meetingUrl else "$meetingUrl/"
-            val serverUrl =
-                URL(
-                    "${url}join?title=${encodeURLParam(meetingId)}&name=${encodeURLParam(
-                        attendeeName
-                    )}&region=${encodeURLParam(MEETING_REGION)}"
-                )
+        val meetingServerUrl = if (meetingUrl.endsWith("/")) meetingUrl else "$meetingUrl/"
+        val url = "${meetingServerUrl}join?title=${encodeURLParam(meetingId)}&name=${encodeURLParam(
+            attendeeName)}&region=${encodeURLParam(MEETING_REGION)}"
+        return try {
+            val response = HttpUtils.post(URL(url), "", DefaultBackOffRetry(), logger)
 
-            try {
-                val response = StringBuffer()
-                with(serverUrl.openConnection() as HttpURLConnection) {
-                    requestMethod = "POST"
-                    doInput = true
-                    doOutput = true
-
-                    BufferedReader(InputStreamReader(inputStream)).use {
-                        var inputLine = it.readLine()
-                        while (inputLine != null) {
-                            response.append(inputLine)
-                            inputLine = it.readLine()
-                        }
-                        it.close()
-                    }
-
-                    if (responseCode == 200) {
-                        response.toString()
-                    } else {
-                        logger.error(TAG, "Unable to join meeting. Response code: $responseCode")
-                        null
-                    }
-                }
-            } catch (exception: Exception) {
-                logger.error(TAG, "There was an exception while joining the meeting: $exception")
+            if (response.httpException == null) {
+                response.data
+            } else {
+                logger.error(TAG, "Unable to join meeting. ${response.httpException}")
                 null
             }
+        } catch (exception: Exception) {
+            logger.error(TAG, "There was an exception while joining the meeting: $exception")
+            null
         }
     }
 }

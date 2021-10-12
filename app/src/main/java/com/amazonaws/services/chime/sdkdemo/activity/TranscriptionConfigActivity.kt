@@ -5,11 +5,10 @@
 
 package com.amazonaws.services.chime.sdkdemo.activity
 
-import android.content.Context
 import android.os.Bundle
 import android.view.MenuItem
-import android.widget.Toast
-import androidx.appcompat.app.AppCompatActivity
+import com.amazonaws.services.chime.sdk.meetings.internal.utils.DefaultBackOffRetry
+import com.amazonaws.services.chime.sdk.meetings.internal.utils.HttpUtils
 import com.amazonaws.services.chime.sdk.meetings.utils.logger.ConsoleLogger
 import com.amazonaws.services.chime.sdk.meetings.utils.logger.LogLevel
 import com.amazonaws.services.chime.sdkdemo.R
@@ -18,21 +17,16 @@ import com.amazonaws.services.chime.sdkdemo.data.TranscribeLanguage
 import com.amazonaws.services.chime.sdkdemo.data.TranscribeRegion
 import com.amazonaws.services.chime.sdkdemo.fragment.TranscriptionConfigFragment
 import com.amazonaws.services.chime.sdkdemo.utils.encodeURLParam
-import java.io.BufferedReader
-import java.io.InputStreamReader
-import java.net.HttpURLConnection
 import java.net.URL
-import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
-class TranscriptionConfigActivity : AppCompatActivity(),
+class TranscriptionConfigActivity : BaseActivity(),
     TranscriptionConfigFragment.TranscriptionConfigurationEventListener {
 
     private val logger = ConsoleLogger(LogLevel.INFO)
-    private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO
+
     private val uiScope = CoroutineScope(Dispatchers.Main)
 
     private lateinit var meetingId: String
@@ -65,14 +59,14 @@ class TranscriptionConfigActivity : AppCompatActivity(),
 
     override fun onStartTranscription(engine: TranscribeEngine, language: TranscribeLanguage, region: TranscribeRegion) {
         uiScope.launch {
-            val transcriptionResponseJson: String? =
+            val response: String? =
                 enableMeetingTranscription(
                     meetingId,
                     engine.engine,
                     language.code,
                     region.code)
 
-            if (transcriptionResponseJson == null) {
+            if (response == null) {
                 showToast(applicationContext, getString(R.string.user_notification_transcription_start_error))
             } else {
                 showToast(applicationContext, getString(R.string.user_notification_transcription_start_success))
@@ -87,51 +81,23 @@ class TranscriptionConfigActivity : AppCompatActivity(),
         transcriptionLanguage: String?,
         transcriptionRegion: String?
     ): String? {
-        return withContext(ioDispatcher) {
-            val meetingUrl = if (getString(R.string.test_url).endsWith("/")) getString(R.string.test_url) else "${getString(R.string.test_url)}/"
-            val serverUrl =
-                URL(
-                    "${meetingUrl}start_transcription?title=${encodeURLParam(meetingId)}" +
-                            "&language=${encodeURLParam(transcriptionLanguage)}" +
-                            "&region=${encodeURLParam(transcriptionRegion)}" +
-                            "&engine=${encodeURLParam(transcribeEngine)}"
-                )
+        val meetingUrl = if (getString(R.string.test_url).endsWith("/")) getString(R.string.test_url) else "${getString(R.string.test_url)}/"
+        val url = "${meetingUrl}start_transcription?title=${encodeURLParam(meetingId)}" +
+                "&language=${encodeURLParam(transcriptionLanguage)}" +
+                "&region=${encodeURLParam(transcriptionRegion)}" +
+                "&engine=${encodeURLParam(transcribeEngine)}"
+        return try {
+            val response = HttpUtils.post(URL(url), "", DefaultBackOffRetry(), logger)
 
-            try {
-                val response = StringBuffer()
-                with(serverUrl.openConnection() as HttpURLConnection) {
-                    requestMethod = "POST"
-                    doInput = true
-                    doOutput = true
-
-                    BufferedReader(InputStreamReader(inputStream)).use {
-                        var inputLine = it.readLine()
-                        while (inputLine != null) {
-                            response.append(inputLine)
-                            inputLine = it.readLine()
-                        }
-                        it.close()
-                    }
-
-                    if (responseCode == 200) {
-                        response.toString()
-                    } else {
-                        logger.error(TAG, "Unable to start transcription. Response code: $responseCode")
-                        null
-                    }
-                }
-            } catch (exception: Exception) {
-                logger.error(TAG, "There was an exception while starting transcription for the meeting $meetingId: $exception")
+            if (response.httpException == null) {
+                response.data
+            } else {
+                logger.error(TAG, "Error sending start transcription request ${response.httpException}")
                 null
             }
+        } catch (exception: Exception) {
+            logger.error(TAG, "Error sending start transcription request $exception")
+            null
         }
-    }
-
-    private fun showToast(context: Context, msg: String) {
-        Toast.makeText(
-            context,
-            msg,
-            Toast.LENGTH_LONG
-        ).show()
     }
 }
