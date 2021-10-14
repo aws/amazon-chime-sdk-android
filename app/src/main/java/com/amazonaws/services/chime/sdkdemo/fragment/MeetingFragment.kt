@@ -15,6 +15,7 @@ import android.content.pm.PackageManager
 import android.media.projection.MediaProjectionManager
 import android.os.Bundle
 import android.os.IBinder
+import android.os.Looper
 import android.os.PowerManager
 import android.view.LayoutInflater
 import android.view.View
@@ -124,6 +125,8 @@ class MeetingFragment : Fragment(),
     private var screenShareManager: ScreenShareManager? = null
     private val gson = Gson()
     private val appName = "SDKEvents"
+
+    private val SCROLL_TO_END_DELAY: Long = 100
 
     private lateinit var mediaProjectionManager: MediaProjectionManager
     private lateinit var powerManager: PowerManager
@@ -368,6 +371,11 @@ class MeetingFragment : Fragment(),
         captionAdapter = CaptionAdapter(meetingModel.currentCaptions)
         recyclerViewCaptions.adapter = captionAdapter
         recyclerViewCaptions.visibility = View.GONE
+
+        // orientation change scrolls to latest caption
+        Handler(Looper.getMainLooper()).postDelayed({
+            scrollToLastCaption()
+        }, SCROLL_TO_END_DELAY)
     }
 
     private fun setupTab(view: View) {
