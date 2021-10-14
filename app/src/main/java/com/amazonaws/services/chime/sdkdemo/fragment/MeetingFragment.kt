@@ -14,6 +14,7 @@ import android.content.ServiceConnection
 import android.content.pm.PackageManager
 import android.media.projection.MediaProjectionManager
 import android.os.Bundle
+import android.os.Handler
 import android.os.IBinder
 import android.os.Looper
 import android.os.PowerManager
