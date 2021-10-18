@@ -14,6 +14,14 @@ import com.amazonaws.services.chime.sdk.meetings.audiovideo.AttendeeInfo
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.AudioVideoObserver
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.SignalStrength
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.SignalUpdate
+import com.amazonaws.services.chime.sdk.meetings.audiovideo.Transcript
+import com.amazonaws.services.chime.sdk.meetings.audiovideo.TranscriptAlternative
+import com.amazonaws.services.chime.sdk.meetings.audiovideo.TranscriptEvent
+import com.amazonaws.services.chime.sdk.meetings.audiovideo.TranscriptItem
+import com.amazonaws.services.chime.sdk.meetings.audiovideo.TranscriptItemType
+import com.amazonaws.services.chime.sdk.meetings.audiovideo.TranscriptResult
+import com.amazonaws.services.chime.sdk.meetings.audiovideo.TranscriptionStatus
+import com.amazonaws.services.chime.sdk.meetings.audiovideo.TranscriptionStatusType
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.VolumeLevel
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.VolumeUpdate
 import com.amazonaws.services.chime.sdk.meetings.internal.AttendeeStatus
@@ -21,12 +29,16 @@ import com.amazonaws.services.chime.sdk.meetings.internal.SessionStateController
 import com.amazonaws.services.chime.sdk.meetings.internal.metric.ClientMetricsCollector
 import com.amazonaws.services.chime.sdk.meetings.internal.utils.ObserverUtils
 import com.amazonaws.services.chime.sdk.meetings.realtime.RealtimeObserver
+import com.amazonaws.services.chime.sdk.meetings.realtime.TranscriptEventObserver
 import com.amazonaws.services.chime.sdk.meetings.session.MeetingSessionConfiguration
 import com.amazonaws.services.chime.sdk.meetings.session.MeetingSessionStatus
 import com.amazonaws.services.chime.sdk.meetings.session.MeetingSessionStatusCode
 import com.amazonaws.services.chime.sdk.meetings.utils.logger.Logger
 import com.xodee.client.audio.audioclient.AttendeeUpdate
 import com.xodee.client.audio.audioclient.AudioClient
+import com.xodee.client.audio.audioclient.transcript.Transcript as TranscriptInternal
+import com.xodee.client.audio.audioclient.transcript.TranscriptEvent as TranscriptEventInternal
+import com.xodee.client.audio.audioclient.transcript.TranscriptionStatus as TranscriptionStatusInternal
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
@@ -54,6 +66,7 @@ class DefaultAudioClientObserver(
 
     private var audioClientStateObservers = mutableSetOf<AudioVideoObserver>()
     private var realtimeEventObservers = mutableSetOf<RealtimeObserver>()
+    private var transcriptEventObservers = mutableSetOf<TranscriptEventObserver>()
 
     /**
      * Volume state change can be used to figure out the meeting's current attendees.
@@ -209,6 +222,72 @@ class DefaultAudioClientObserver(
         currentAttendeeSignalMap = newAttendeeSignalMap
     }
 
+    override fun onTranscriptEventsReceived(events: Array<out TranscriptEventInternal>?) {
+        if (events == null) return
+
+        events.forEach { rawEvent ->
+            val event: TranscriptEvent?
+            when (rawEvent) {
+                is TranscriptionStatusInternal -> {
+                    event = TranscriptionStatus(
+                        TranscriptionStatusType.from(rawEvent.type.value),
+                        rawEvent.eventTimeMs,
+                        rawEvent.transcriptionRegion,
+                        rawEvent.transcriptionConfiguration,
+                        rawEvent.message
+                    )
+                }
+                is TranscriptInternal -> {
+                    val results = mutableListOf<TranscriptResult>()
+                    rawEvent.results.forEach { rawResult ->
+                        val alternatives = mutableListOf<TranscriptAlternative>()
+                        rawResult.alternatives.forEach { rawAlternative ->
+                            val items = mutableListOf<TranscriptItem>()
+                            rawAlternative.items.forEach { rawItem ->
+                                val item = TranscriptItem(
+                                    TranscriptItemType.from(rawItem.type.value),
+                                    rawItem.startTimeMs,
+                                    rawItem.endTimeMs,
+                                    AttendeeInfo(
+                                        rawItem.attendee.attendeeId,
+                                        rawItem.attendee.externalUserId
+                                    ),
+                                    rawItem.content,
+                                    rawItem.vocabularyFilterMatch
+                                )
+                                items.add(item)
+                            }
+                            val alternative = TranscriptAlternative(
+                                items.toTypedArray(),
+                                rawAlternative.transcript
+                            )
+                            alternatives.add(alternative)
+                        }
+                        val result = TranscriptResult(
+                            rawResult.resultId,
+                            rawResult.channelId,
+                            rawResult.isPartial,
+                            rawResult.startTimeMs,
+                            rawResult.endTimeMs,
+                            alternatives.toTypedArray()
+                        )
+                        results.add(result)
+                    }
+                    event = Transcript(results.toTypedArray())
+                } else -> {
+                    logger.error(TAG, "Received transcript event in unknown format")
+                    event = null
+                }
+            }
+
+            event?.let { transcriptEvent ->
+                ObserverUtils.notifyObserverOnMainThread(transcriptEventObservers) {
+                    it.onTranscriptEventReceived(transcriptEvent)
+                }
+            }
+        }
+    }
+
     private fun onAttendeesMuteStateChange(volumesDelta: Map<String, VolumeUpdate>) {
         val mutedAttendeeMap: Map<String, VolumeUpdate> = volumesDelta.filter { (_, value) ->
             value.volumeLevel == VolumeLevel.Muted
@@ -351,6 +430,14 @@ class DefaultAudioClientObserver(
 
     override fun unsubscribeFromRealTimeEvents(observer: RealtimeObserver) {
         realtimeEventObservers.remove(observer)
+    }
+
+    override fun subscribeToTranscriptEvent(observer: TranscriptEventObserver) {
+        transcriptEventObservers.add(observer)
+    }
+
+    override fun unsubscribeFromTranscriptEvent(observer: TranscriptEventObserver) {
+        transcriptEventObservers.remove(observer)
     }
 
     override fun notifyAudioClientObserver(observerFunction: (observer: AudioVideoObserver) -> Unit) {

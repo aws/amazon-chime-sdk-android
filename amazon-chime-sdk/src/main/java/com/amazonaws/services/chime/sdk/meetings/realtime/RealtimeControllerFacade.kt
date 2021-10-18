@@ -99,4 +99,18 @@ interface RealtimeControllerFacade {
      * @return Boolean whether Amazon Voice Focus is enabled or not
      */
     fun realtimeIsVoiceFocusEnabled(): Boolean
+
+    /**
+     * Subscribes to transcript event with an observer
+     *
+     * @param observer: [TranscriptEventObserver] - Observer that handles transcript event
+     */
+    fun addRealtimeTranscriptEventObserver(observer: TranscriptEventObserver) {}
+
+    /**
+     * Unsubscribes from transcript event by removing the specified observer
+     *
+     * @param observer: [TranscriptEventObserver] - Observer that handles transcript event
+     */
+    fun removeRealtimeTranscriptEventObserver(observer: TranscriptEventObserver) {}
 }

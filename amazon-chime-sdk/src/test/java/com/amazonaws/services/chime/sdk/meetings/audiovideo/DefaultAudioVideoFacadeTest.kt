@@ -21,6 +21,7 @@ import com.amazonaws.services.chime.sdk.meetings.device.MediaDevice
 import com.amazonaws.services.chime.sdk.meetings.device.MediaDeviceType
 import com.amazonaws.services.chime.sdk.meetings.realtime.RealtimeControllerFacade
 import com.amazonaws.services.chime.sdk.meetings.realtime.RealtimeObserver
+import com.amazonaws.services.chime.sdk.meetings.realtime.TranscriptEventObserver
 import com.amazonaws.services.chime.sdk.meetings.realtime.datamessage.DataMessageObserver
 import io.mockk.MockKAnnotations
 import io.mockk.every
@@ -58,6 +59,9 @@ class DefaultAudioVideoFacadeTest {
 
     @MockK
     private lateinit var mockDataMessageObserver: DataMessageObserver
+
+    @MockK
+    private lateinit var mockTranscriptEventObserver: TranscriptEventObserver
 
     @MockK
     private lateinit var mockDeviceChangeObserver: DeviceChangeObserver
@@ -231,6 +235,18 @@ class DefaultAudioVideoFacadeTest {
         every { realtimeController.realtimeIsVoiceFocusEnabled() } returns false
         assertFalse(audioVideoFacade.realtimeIsVoiceFocusEnabled())
         verify { realtimeController.realtimeIsVoiceFocusEnabled() }
+    }
+
+    @Test
+    fun `addRealtimeTranscriptEventObserver should call realtimeController addRealtimeTranscriptEventObserver with given observer`() {
+        audioVideoFacade.addRealtimeTranscriptEventObserver(mockTranscriptEventObserver)
+        verify { realtimeController.addRealtimeTranscriptEventObserver(mockTranscriptEventObserver) }
+    }
+
+    @Test
+    fun `removeRealtimeTranscriptEventObserver should call realtimeController removeRealtimeTranscriptEventObserver with given observer`() {
+        audioVideoFacade.removeRealtimeTranscriptEventObserver(mockTranscriptEventObserver)
+        verify { realtimeController.removeRealtimeTranscriptEventObserver(mockTranscriptEventObserver) }
     }
 
     @Test

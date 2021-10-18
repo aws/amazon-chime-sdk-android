@@ -32,6 +32,9 @@ class DefaultRealtimeControllerTest {
     private lateinit var mockDataMessageObserver: DataMessageObserver
 
     @MockK
+    private lateinit var mockTranscriptEventObserver: TranscriptEventObserver
+
+    @MockK
     private lateinit var audioClientObserver: AudioClientObserver
 
     @MockK
@@ -91,6 +94,18 @@ class DefaultRealtimeControllerTest {
     fun `removeRealtimeDataMessageObserverFromTopic should call videoClientObserver unsubscribeFromReceiveDataMessage with given topic`() {
         realtimeController.removeRealtimeDataMessageObserverFromTopic(messageTopic)
         verify { videoClientObserver.unsubscribeFromReceiveDataMessage(messageTopic) }
+    }
+
+    @Test
+    fun `addRealtimeTranscriptEventObserver should call audioClientObserver subscribeToTranscriptEvent with given observer`() {
+        realtimeController.addRealtimeTranscriptEventObserver(mockTranscriptEventObserver)
+        verify { audioClientObserver.subscribeToTranscriptEvent(mockTranscriptEventObserver) }
+    }
+
+    @Test
+    fun `removeRealtimeTranscriptEventObserver should call audioClientObserver unsubscribeFromTranscriptEvent with given observer`() {
+        realtimeController.removeRealtimeTranscriptEventObserver(mockTranscriptEventObserver)
+        verify { audioClientObserver.unsubscribeFromTranscriptEvent(mockTranscriptEventObserver) }
     }
 
     @Test
