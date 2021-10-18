@@ -28,7 +28,7 @@ class CaptionAdapter(
     }
 
     override fun onBindViewHolder(holder: CaptionHolder, position: Int) {
-        holder.bindCaption(captions.elementAt(position))
+        holder.bindCaption(captions.elementAt(position), position)
     }
 }
 
@@ -36,13 +36,13 @@ class CaptionHolder(inflatedView: View) :
     RecyclerView.ViewHolder(inflatedView) {
     private var view: View = inflatedView
 
-    fun bindCaption(caption: Caption) {
+    fun bindCaption(caption: Caption, position: Int) {
         val speakerName = caption.speakerName ?: ""
 
         val captionTextBackgroundColor = caption.speakerName?.let { R.color.colorWhite } ?: R.color.colorMissingSpeaker
         view.captionText.setBackgroundResource(captionTextBackgroundColor)
         view.speakerName.text = speakerName
         view.captionText.text = caption.content
-        view.captionText.contentDescription = caption.content
+        view.captionText.contentDescription = "caption-$position"
     }
 }
