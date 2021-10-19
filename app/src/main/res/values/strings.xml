@@ -46,6 +46,18 @@
     <string name="meeting_join">Join</string>
     <string name="preview_meeting_info">Ready to join meeting %1$s as %2$s.</string>
 
+    <!-- live transcription controller -->
+    <string name="live_transcription_configuration_title">Live Transcription Configuration</string>
+    <string name="live_transcription_configuration_layout">Live Transcription Configuration Layout</string>
+    <string name="start_transcription">Start Transcription</string>
+    <string name="transcribe_engine_spinner">Select Transcribe Engine</string>
+    <string name="language_setting_spinner">Select Language</string>
+    <string name="region_setting_spinner">Select Region</string>
+    <string name="user_notification_transcription_start_error">There was an error starting meeting transcription. Please try again</string>
+    <string name="user_notification_transcription_start_success">Transcription started for meeting</string>
+    <string name="user_notification_transcription_stop_error">There was an error stopping meeting transcription. Please try again</string>
+    <string name="user_notification_transcription_stop_success">Transcription stopped for meeting</string>
+
     <!-- toggle tab -->
     <string name="speaker_button">Toggle Speaker</string>
     <string name="toggle_camera">Toggle Camera</string>
@@ -55,6 +67,8 @@
     <string name="disable_screen_capture_source">Stop sharing screen</string>
     <string name="enable_voice_focus">Turn on Voice Focus (noise suppression)</string>
     <string name="disable_voice_focus">Turn off Voice Focus (noise suppression)</string>
+    <string name="enable_live_transcription">Turn on Live Transcription</string>
+    <string name="disable_live_transcription">Turn off Live Transcription</string>
     <string name="enable_flashlight">Turn on flashlight</string>
     <string name="disable_flashlight">Turn off flashlight</string>
     <string name="enable_cpu_filter">Turn on demo filter (CPU)</string>

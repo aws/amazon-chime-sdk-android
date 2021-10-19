@@ -8,6 +8,7 @@ package com.amazonaws.services.chime.sdkdemo.model
 import androidx.lifecycle.ViewModel
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.AttendeeInfo
 import com.amazonaws.services.chime.sdk.meetings.device.MediaDevice
+import com.amazonaws.services.chime.sdkdemo.data.Caption
 import com.amazonaws.services.chime.sdkdemo.data.Message
 import com.amazonaws.services.chime.sdkdemo.data.MetricData
 import com.amazonaws.services.chime.sdkdemo.data.RosterAttendee
@@ -30,12 +31,15 @@ class MeetingModel : ViewModel() {
     var currentVideoPageIndex = 0
     var currentMediaDevices = listOf<MediaDevice>()
     var currentMessages = mutableListOf<Message>()
+    val currentCaptions = mutableListOf<Caption>()
+    val currentCaptionIndices = mutableMapOf<String, Int>()
 
     var isMuted = false
     var isCameraOn = false
     var isDeviceListDialogOn = false
     var isAdditionalOptionsDialogOn = false
     var isSharingContent = false
+    var isLiveTranscriptionEnabled = false
     var lastReceivedMessageTimestamp = 0L
     var tabIndex = 0
     var isUsingCameraCaptureSource = true

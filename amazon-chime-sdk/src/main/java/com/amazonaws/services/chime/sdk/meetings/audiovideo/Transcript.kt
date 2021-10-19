@@ -7,6 +7,9 @@ package com.amazonaws.services.chime.sdk.meetings.audiovideo
 
 interface TranscriptEvent
 
+/*
+ * See [Using Amazon Chime SDK live transcription developer guide](https://docs.aws.amazon.com/chime/latest/dg/process-msgs.html) for details about transcription message types and data guidelines
+ */
 data class Transcript(val results: Array<TranscriptResult>) : TranscriptEvent {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
