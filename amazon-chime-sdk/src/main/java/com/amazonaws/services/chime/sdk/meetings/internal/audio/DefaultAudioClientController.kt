@@ -14,6 +14,7 @@ import com.amazonaws.services.chime.sdk.meetings.analytics.EventAnalyticsControl
 import com.amazonaws.services.chime.sdk.meetings.analytics.EventAttributeName
 import com.amazonaws.services.chime.sdk.meetings.analytics.EventName
 import com.amazonaws.services.chime.sdk.meetings.analytics.MeetingStatsCollector
+import com.amazonaws.services.chime.sdk.meetings.audiovideo.audio.AudioMode
 import com.amazonaws.services.chime.sdk.meetings.internal.utils.AppInfoUtil
 import com.amazonaws.services.chime.sdk.meetings.session.MeetingSessionStatus
 import com.amazonaws.services.chime.sdk.meetings.session.MeetingSessionStatusCode
@@ -35,10 +36,10 @@ class DefaultAudioClientController(
     private val TAG = "DefaultAudioClientController"
     private val DEFAULT_PORT = 0 // In case the URL does not have port
     private val AUDIO_PORT_OFFSET = 200 // Offset by 200 so that subtraction results in 0
-    private val DEFAULT_MIC_AND_SPEAKER = false
     private val DEFAULT_PRESENTER = true
     private val AUDIO_CLIENT_RESULT_SUCCESS = AudioClient.AUDIO_CLIENT_OK
 
+    private var muteMicAndSpeaker = false
     private val uiScope = CoroutineScope(Dispatchers.Main)
     private val audioManager: AudioManager =
         context.getSystemService(Context.AUDIO_SERVICE) as AudioManager
@@ -105,7 +106,8 @@ class DefaultAudioClientController(
         audioHostUrl: String,
         meetingId: String,
         attendeeId: String,
-        joinToken: String
+        joinToken: String,
+        audioMode: AudioMode
     ) {
         // Validate audio client state
         if (audioClientState != AudioClientState.INITIALIZED &&
@@ -148,6 +150,8 @@ class DefaultAudioClientController(
         val appInfo = AppInfoUtil.initializeAudioClientAppInfo(context)
 
         uiScope.launch {
+            muteMicAndSpeaker = audioMode == AudioMode.NoAudio
+
             val res = audioClient.startSessionV2(
                 AudioClient.XTL_DEFAULT_TRANSPORT,
                 host,
@@ -157,8 +161,8 @@ class DefaultAudioClientController(
                 attendeeId,
                 AudioClient.kCodecOpusLow,
                 AudioClient.kCodecOpusLow,
-                DEFAULT_MIC_AND_SPEAKER,
-                DEFAULT_MIC_AND_SPEAKER,
+                muteMicAndSpeaker,
+                muteMicAndSpeaker,
                 DEFAULT_PRESENTER,
                 audioFallbackUrl,
                 null,

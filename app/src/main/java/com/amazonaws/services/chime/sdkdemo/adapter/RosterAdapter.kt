@@ -10,6 +10,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.SignalStrength
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.VolumeLevel
+import com.amazonaws.services.chime.sdk.meetings.internal.AttendeeStatus
 import com.amazonaws.services.chime.sdkdemo.R
 import com.amazonaws.services.chime.sdkdemo.data.RosterAttendee
 import com.amazonaws.services.chime.sdkdemo.utils.inflate
@@ -48,39 +49,44 @@ class RosterHolder(inflatedView: View) :
         view.activeSpeakerIndicator.visibility = if (attendee.isActiveSpeaker) View.VISIBLE else View.INVISIBLE
         view.activeSpeakerIndicator.contentDescription = if (attendee.isActiveSpeaker) "${attendee.attendeeName} Active" else ""
 
-        if (attendee.signalStrength == SignalStrength.None ||
-            attendee.signalStrength == SignalStrength.Low
-        ) {
-            val drawable = if (attendee.volumeLevel == VolumeLevel.Muted) {
-                R.drawable.ic_microphone_poor_connectivity_dissabled
+        if (attendee.attendeeStatus == AttendeeStatus.Joined) {
+            if (attendee.signalStrength == SignalStrength.None ||
+                    attendee.signalStrength == SignalStrength.Low
+            ) {
+                val drawable = if (attendee.volumeLevel == VolumeLevel.Muted) {
+                    R.drawable.ic_microphone_poor_connectivity_dissabled
+                } else {
+                    R.drawable.ic_microphone_poor_connectivity
+                }
+                view.attendeeVolume.setImageResource(drawable)
+                view.contentDescription = "$attendeeName Signal Strength Poor"
             } else {
-                R.drawable.ic_microphone_poor_connectivity
+                when (attendee.volumeLevel) {
+                    VolumeLevel.Muted -> {
+                        view.attendeeVolume.setImageResource(R.drawable.ic_microphone_disabled)
+                        view.attendeeVolume.contentDescription = "$attendeeName Muted"
+                    }
+                    VolumeLevel.NotSpeaking -> {
+                        view.attendeeVolume.setImageResource(R.drawable.ic_microphone_enabled)
+                        view.attendeeVolume.contentDescription = "$attendeeName Not Speaking"
+                    }
+                    VolumeLevel.Low -> {
+                        view.attendeeVolume.setImageResource(R.drawable.ic_microphone_audio_1)
+                        view.attendeeVolume.contentDescription = "$attendeeName Speaking"
+                    }
+                    VolumeLevel.Medium -> {
+                        view.attendeeVolume.setImageResource(R.drawable.ic_microphone_audio_2)
+                        view.attendeeVolume.contentDescription = "$attendeeName Speaking"
+                    }
+                    VolumeLevel.High -> {
+                        view.attendeeVolume.setImageResource(R.drawable.ic_microphone_audio_3)
+                        view.attendeeVolume.contentDescription = "$attendeeName Speaking"
+                    }
+                }
             }
-            view.attendeeVolume.setImageResource(drawable)
-            view.contentDescription = "$attendeeName Signal Strength Poor"
+            view.attendeeVolume.visibility = View.VISIBLE
         } else {
-            when (attendee.volumeLevel) {
-                VolumeLevel.Muted -> {
-                    view.attendeeVolume.setImageResource(R.drawable.ic_microphone_disabled)
-                    view.attendeeVolume.contentDescription = "$attendeeName Muted"
-                }
-                VolumeLevel.NotSpeaking -> {
-                    view.attendeeVolume.setImageResource(R.drawable.ic_microphone_enabled)
-                    view.attendeeVolume.contentDescription = "$attendeeName Not Speaking"
-                }
-                VolumeLevel.Low -> {
-                    view.attendeeVolume.setImageResource(R.drawable.ic_microphone_audio_1)
-                    view.attendeeVolume.contentDescription = "$attendeeName Speaking"
-                }
-                VolumeLevel.Medium -> {
-                    view.attendeeVolume.setImageResource(R.drawable.ic_microphone_audio_2)
-                    view.attendeeVolume.contentDescription = "$attendeeName Speaking"
-                }
-                VolumeLevel.High -> {
-                    view.attendeeVolume.setImageResource(R.drawable.ic_microphone_audio_3)
-                    view.attendeeVolume.contentDescription = "$attendeeName Speaking"
-                }
-            }
+            view.attendeeVolume.visibility = View.GONE
         }
     }
 }

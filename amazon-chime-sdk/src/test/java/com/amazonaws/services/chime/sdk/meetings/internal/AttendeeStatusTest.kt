@@ -14,10 +14,11 @@ class AttendeeStatusTest {
         Assert.assertEquals(AttendeeStatus.Joined, AttendeeStatus.from(1))
         Assert.assertEquals(AttendeeStatus.Left, AttendeeStatus.from(2))
         Assert.assertEquals(AttendeeStatus.Dropped, AttendeeStatus.from(3))
+        Assert.assertEquals(AttendeeStatus.JoinedNoAudio, AttendeeStatus.from(4))
     }
 
     @Test
     fun `from should return null with invalid value from param`() {
-        Assert.assertNull(AttendeeStatus.from(4))
+        Assert.assertNull(AttendeeStatus.from(5))
     }
 }

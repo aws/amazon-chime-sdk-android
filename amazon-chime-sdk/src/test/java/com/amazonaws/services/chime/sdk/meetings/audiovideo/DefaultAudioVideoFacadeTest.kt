@@ -152,7 +152,16 @@ class DefaultAudioVideoFacadeTest {
         mockkStatic(ContextCompat::class)
         every { ContextCompat.checkSelfPermission(any(), any()) } returns 0
         audioVideoFacade.start()
-        verify { audioVideoController.start() }
+        verify { audioVideoController.start(AudioVideoConfiguration()) }
+    }
+
+    @Test
+    fun `start should call audioVideoController start with configuration when the required permissions are granted`() {
+        mockkStatic(ContextCompat::class)
+        every { ContextCompat.checkSelfPermission(any(), any()) } returns 0
+        val testConfiguration = AudioVideoConfiguration()
+        audioVideoFacade.start(testConfiguration)
+        verify { audioVideoController.start(testConfiguration) }
     }
 
     @Test
