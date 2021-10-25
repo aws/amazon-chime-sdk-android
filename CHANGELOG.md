@@ -1,3 +1,9 @@
+## [Unreleased]
+
+### Fixed
+* [Demo] Fixed demo app crashes when screen share is off and then leave meeting.
+
+
 ## [0.13.0] - 2021-11-01
 
 ### Added
