@@ -718,10 +718,10 @@ class MeetingFragment : Fragment(),
     }
 
     private fun getAttendeeName(attendeeId: String, externalUserId: String): String {
-        if ((attendeeId.isEmpty() || externalUserId.isEmpty()) || !externalUserId.contains('#')) {
+        if ((attendeeId.isEmpty() || externalUserId.isEmpty())) {
             return "<UNKNOWN>"
         }
-        val attendeeName = externalUserId.split('#')[1]
+        val attendeeName = if (externalUserId.contains('#')) externalUserId.split('#')[1] else externalUserId
 
         return if (DefaultModality(attendeeId).hasModality(ModalityType.Content)) {
             "$attendeeName $CONTENT_NAME_SUFFIX"
