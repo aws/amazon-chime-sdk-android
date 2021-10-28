@@ -15,7 +15,6 @@ import com.amazonaws.services.chime.sdk.meetings.TestConstant
 import com.amazonaws.services.chime.sdk.meetings.analytics.EventAnalyticsController
 import com.amazonaws.services.chime.sdk.meetings.analytics.EventName
 import com.amazonaws.services.chime.sdk.meetings.analytics.MeetingStatsCollector
-import com.amazonaws.services.chime.sdk.meetings.audiovideo.audio.AudioMode
 import com.amazonaws.services.chime.sdk.meetings.internal.utils.AppInfoUtil
 import com.amazonaws.services.chime.sdk.meetings.utils.logger.Logger
 import com.xodee.client.audio.audioclient.AppInfo
@@ -285,7 +284,7 @@ class DefaultAudioClientControllerTest {
     }
 
     @Test
-    fun `start should call AudioClient startSessionV2 with mute mic and speaker as false`() {
+    fun `start should call AudioClient startSessionV2`() {
         setupStartTests()
 
         audioClientController.start(
@@ -293,8 +292,7 @@ class DefaultAudioClientControllerTest {
             testAudioHostUrl,
             testMeetingId,
             testAttendeeId,
-            testJoinToken,
-            AudioMode.Mono
+            testJoinToken
         )
 
         verify {
@@ -307,41 +305,8 @@ class DefaultAudioClientControllerTest {
                 any(),
                 any(),
                 any(),
-                false,
-                false,
                 any(),
                 any(),
-                any(),
-                any()
-            )
-        }
-    }
-
-    @Test
-    fun `start with no audio should call AudioClient startSessionV2 with mute mic and speaker as true`() {
-        setupStartTests()
-
-        audioClientController.start(
-            testAudioFallbackUrl,
-            testAudioHostUrl,
-            testMeetingId,
-            testAttendeeId,
-            testJoinToken,
-            AudioMode.NoAudio
-        )
-
-        verify {
-            mockAudioClient.startSessionV2(
-                any(),
-                any(),
-                any(),
-                any(),
-                any(),
-                any(),
-                any(),
-                any(),
-                true,
-                true,
                 any(),
                 any(),
                 any(),
@@ -359,8 +324,7 @@ class DefaultAudioClientControllerTest {
                 testAudioHostUrl,
                 testMeetingId,
                 testAttendeeId,
-                testJoinToken,
-                AudioMode.Mono
+                testJoinToken
         )
 
         verify {
@@ -377,8 +341,7 @@ class DefaultAudioClientControllerTest {
             testAudioHostUrl,
             testMeetingId,
             testAttendeeId,
-            testJoinToken,
-            AudioMode.Mono
+            testJoinToken
         )
 
         verify(exactly = 1) { mockAudioClientObserver.notifyAudioClientObserver(any()) }
@@ -392,8 +355,7 @@ class DefaultAudioClientControllerTest {
             testAudioHostUrl,
             testMeetingId,
             testAttendeeId,
-            testJoinToken,
-            AudioMode.Mono
+            testJoinToken
         )
 
         verify(exactly = 1) { mockEventAnalyticsController.publishEvent(EventName.meetingStartRequested, any()) }
@@ -417,8 +379,7 @@ class DefaultAudioClientControllerTest {
             testAudioHostUrl,
             testMeetingId,
             testAttendeeId,
-            testJoinToken,
-            AudioMode.Mono
+            testJoinToken
         )
         every { mockAudioClient.stopSession() } returns testAudioClientSuccessCode
 
@@ -435,8 +396,7 @@ class DefaultAudioClientControllerTest {
             testAudioHostUrl,
             testMeetingId,
             testAttendeeId,
-            testJoinToken,
-            AudioMode.Mono
+            testJoinToken
         )
         every { mockAudioClient.stopSession() } returns testAudioClientSuccessCode
 
@@ -457,8 +417,7 @@ class DefaultAudioClientControllerTest {
             testAudioHostUrl,
             testMeetingId,
             testAttendeeId,
-            testJoinToken,
-            AudioMode.Mono
+            testJoinToken
         )
 
         val enableOutput: Boolean = audioClientController.setVoiceFocusEnabled(true)
@@ -491,8 +450,7 @@ class DefaultAudioClientControllerTest {
             testAudioHostUrl,
             testMeetingId,
             testAttendeeId,
-            testJoinToken,
-            AudioMode.Mono
+            testJoinToken
         )
 
         audioClientController.isVoiceFocusEnabled()

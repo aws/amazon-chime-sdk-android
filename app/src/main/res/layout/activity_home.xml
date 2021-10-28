@@ -42,23 +42,17 @@
         android:inputType="text"
         android:textAlignment="center" />
 
-    <Button
+    <ImageButton
         android:id="@+id/buttonContinue"
+        style="@style/Widget.AppCompat.ImageButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/join_with_audio"
+        android:background="@null"
         android:contentDescription="@string/main_continue"
-        android:gravity="center"
-        android:layout_gravity="center"/>
-
-    <Button
-        android:id="@+id/buttonContinueWithoutAudio"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/join_without_audio"
-        android:contentDescription="@string/main_continue_without_audio"
-        android:gravity="center"
-        android:layout_gravity="center"/>
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp"
+        android:src="@drawable/ic_dial_in"
+        android:tint="?android:attr/textColorPrimary" />
 
     <ProgressBar
         android:id="@+id/progressAuthentication"
