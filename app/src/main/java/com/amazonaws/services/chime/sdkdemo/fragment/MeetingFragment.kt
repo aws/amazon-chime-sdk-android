@@ -28,7 +28,6 @@ import android.widget.ImageButton
 import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
-import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.DiffUtil
@@ -39,7 +38,6 @@ import com.amazonaws.services.chime.sdk.meetings.analytics.EventAttributes
 import com.amazonaws.services.chime.sdk.meetings.analytics.EventName
 import com.amazonaws.services.chime.sdk.meetings.analytics.toJsonString
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.AttendeeInfo
-import com.amazonaws.services.chime.sdk.meetings.audiovideo.AudioVideoConfiguration
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.AudioVideoFacade
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.AudioVideoObserver
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.SignalUpdate
@@ -49,7 +47,6 @@ import com.amazonaws.services.chime.sdk.meetings.audiovideo.TranscriptItem
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.TranscriptionStatus
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.TranscriptionStatusType
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.VolumeUpdate
-import com.amazonaws.services.chime.sdk.meetings.audiovideo.audio.AudioMode
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.audio.activespeakerdetector.ActiveSpeakerObserver
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.audio.activespeakerpolicy.DefaultActiveSpeakerPolicy
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.contentshare.ContentShareObserver
@@ -68,7 +65,6 @@ import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.gl.EglCoreFact
 import com.amazonaws.services.chime.sdk.meetings.device.DeviceChangeObserver
 import com.amazonaws.services.chime.sdk.meetings.device.MediaDevice
 import com.amazonaws.services.chime.sdk.meetings.device.MediaDeviceType
-import com.amazonaws.services.chime.sdk.meetings.internal.AttendeeStatus
 import com.amazonaws.services.chime.sdk.meetings.internal.utils.DefaultBackOffRetry
 import com.amazonaws.services.chime.sdk.meetings.internal.utils.HttpUtils
 import com.amazonaws.services.chime.sdk.meetings.realtime.RealtimeObserver
@@ -170,7 +166,6 @@ class MeetingFragment : Fragment(),
     private lateinit var noVideoOrScreenShareAvailable: TextView
     private lateinit var editTextMessage: EditText
     private lateinit var buttonMute: ImageButton
-    private lateinit var buttonSpeaker: ImageButton
     private lateinit var buttonCamera: ImageButton
     private lateinit var deviceAlertDialogBuilder: AlertDialog.Builder
     private lateinit var additionalOptionsAlertDialogBuilder: AlertDialog.Builder
@@ -195,13 +190,13 @@ class MeetingFragment : Fragment(),
     private lateinit var audioDeviceManager: AudioDeviceManager
 
     companion object {
-        fun newInstance(meetingId: String, audioVideoConfig: AudioVideoConfiguration): MeetingFragment {
+        fun newInstance(meetingId: String): MeetingFragment {
             val fragment = MeetingFragment()
 
-            fragment.arguments = bundleOf(
-                HomeActivity.MEETING_ID_KEY to meetingId,
-                HomeActivity.AUDIO_MODE_KEY to audioVideoConfig.audioMode.value
-            )
+            fragment.arguments =
+                Bundle().apply {
+                    putString(HomeActivity.MEETING_ID_KEY, meetingId)
+                }
             return fragment
         }
     }
@@ -262,14 +257,7 @@ class MeetingFragment : Fragment(),
 
         selectTab(meetingModel.tabIndex)
         setupAudioVideoFacadeObservers()
-        val audioMode = arguments?.getInt(HomeActivity.AUDIO_MODE_KEY)?.let { intValue ->
-            AudioMode.from(intValue, defaultAudioMode = AudioMode.Mono)
-        } ?: AudioMode.Mono
-        val audioVideoConfig = AudioVideoConfiguration(audioMode = audioMode)
-        // Update the Mic & Speaker states
-        updateLocalAttendeeAudioState(audioEnabled = audioVideoConfig.audioMode != AudioMode.NoAudio)
-        // Start Audio Video
-        audioVideo.start(audioVideoConfig)
+        audioVideo.start()
         audioVideo.startRemoteVideo()
         return view
     }
@@ -278,8 +266,6 @@ class MeetingFragment : Fragment(),
         buttonMute = view.findViewById(R.id.buttonMute)
         buttonMute.setImageResource(if (meetingModel.isMuted) R.drawable.button_mute_on else R.drawable.button_mute)
         buttonMute.setOnClickListener { toggleMute() }
-
-        buttonSpeaker = view.findViewById(R.id.buttonSpeaker)
 
         buttonCamera = view.findViewById(R.id.buttonCamera)
         buttonCamera.setImageResource(if (meetingModel.isCameraOn) R.drawable.button_camera_on else R.drawable.button_camera)
@@ -612,11 +598,30 @@ class MeetingFragment : Fragment(),
     }
 
     override fun onAttendeesJoined(attendeeInfo: Array<AttendeeInfo>) {
-        onAttendeesJoinedWithStatus(attendeeInfo, AttendeeStatus.Joined)
-    }
+        uiScope.launch {
+            mutex.withLock {
+                attendeeInfo.forEach { (attendeeId, externalUserId) ->
+                    if (DefaultModality(attendeeId).hasModality(ModalityType.Content) &&
+                        !isSelfAttendee(attendeeId) &&
+                        meetingModel.isSharingContent) {
+                        audioVideo.stopContentShare()
+                        screenShareManager?.stop()
+                        val name = meetingModel.currentRoster[DefaultModality(attendeeId).base()]?.attendeeName ?: ""
+                        notifyHandler("$name took over the screen share")
+                    }
+                    meetingModel.currentRoster.getOrPut(
+                        attendeeId,
+                        {
+                            RosterAttendee(
+                                attendeeId,
+                                getAttendeeName(attendeeId, externalUserId)
+                            )
+                        })
+                }
 
-    override fun onAttendeesJoinedWithoutAudio(attendeeInfo: Array<AttendeeInfo>) {
-        onAttendeesJoinedWithStatus(attendeeInfo, AttendeeStatus.JoinedNoAudio)
+                rosterAdapter.notifyDataSetChanged()
+            }
+        }
     }
 
     override fun onAttendeesLeft(attendeeInfo: Array<AttendeeInfo>) {
@@ -710,45 +715,6 @@ class MeetingFragment : Fragment(),
             scoresStr,
             LogLevel.DEBUG
         )
-    }
-
-    private fun onAttendeesJoinedWithStatus(attendeeInfo: Array<AttendeeInfo>, status: AttendeeStatus) {
-        uiScope.launch {
-            mutex.withLock {
-                attendeeInfo.forEach { (attendeeId, externalUserId) ->
-                    if (DefaultModality(attendeeId).hasModality(ModalityType.Content) &&
-                            !isSelfAttendee(attendeeId) &&
-                            meetingModel.isSharingContent) {
-                        audioVideo.stopContentShare()
-                        screenShareManager?.stop()
-                        val name = meetingModel.currentRoster[DefaultModality(attendeeId).base()]?.attendeeName ?: ""
-                        notifyHandler("$name took over the screen share")
-                    }
-                    meetingModel.currentRoster.getOrPut(
-                        attendeeId,
-                        {
-                            RosterAttendee(
-                                attendeeId,
-                                getAttendeeName(attendeeId, externalUserId),
-                                attendeeStatus = status
-                            )
-                        }
-                    )
-                }
-
-                rosterAdapter.notifyDataSetChanged()
-            }
-        }
-    }
-
-    private fun updateLocalAttendeeAudioState(audioEnabled: Boolean) {
-        if (audioEnabled) {
-            buttonMute.visibility = View.VISIBLE
-            buttonSpeaker.visibility = View.VISIBLE
-        } else {
-            buttonMute.visibility = View.GONE
-            buttonSpeaker.visibility = View.GONE
-        }
     }
 
     private fun getAttendeeName(attendeeId: String, externalUserId: String): String {

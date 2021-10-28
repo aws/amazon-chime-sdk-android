@@ -23,17 +23,12 @@ class DefaultAudioVideoController(
     private val videoClientObserver: VideoClientObserver
 ) : AudioVideoControllerFacade {
     override fun start() {
-        start(AudioVideoConfiguration())
-    }
-
-    override fun start(audioVideoConfiguration: AudioVideoConfiguration) {
         audioClientController.start(
-            audioFallbackUrl = configuration.urls.audioFallbackURL,
-            audioHostUrl = configuration.urls.audioHostURL,
-            meetingId = configuration.meetingId,
-            attendeeId = configuration.credentials.attendeeId,
-            joinToken = configuration.credentials.joinToken,
-            audioMode = audioVideoConfiguration.audioMode
+            configuration.urls.audioFallbackURL,
+            configuration.urls.audioHostURL,
+            configuration.meetingId,
+            configuration.credentials.attendeeId,
+            configuration.credentials.joinToken
         )
         videoClientController.start()
     }

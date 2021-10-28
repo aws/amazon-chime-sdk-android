@@ -20,14 +20,6 @@ interface AudioVideoControllerFacade {
     fun start()
 
     /**
-     * Starts audio and video with the given configuration.
-     *
-     * @param audioVideoConfiguration: [AudioVideoConfiguration] - The configuration to be used for
-     * audio and video during a meeting session.
-     */
-    fun start(audioVideoConfiguration: AudioVideoConfiguration)
-
-    /**
      * Stops audio and video.
      * It's important to call this when your meeting connection is no longer needed
      * in order to clean up and explicitly release resources.
