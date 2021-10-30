@@ -110,6 +110,8 @@ class DefaultAudioClientObserverTest {
         AttendeeUpdate(testId1, testId1, VolumeLevel.Muted.value)
     private val testAttendeeUpdateJoined =
         AttendeeUpdate(testId1, testId1, AttendeeStatus.Joined.value)
+    private val testAttendeeUpdateJoinedNoAudio =
+        AttendeeUpdate(testId1, testId1, AttendeeStatus.JoinedNoAudio.value)
     private val testAttendeeUpdateLeft =
         AttendeeUpdate(testId1, testId1, AttendeeStatus.Left.value)
     private val testAttendeeUpdateDropped =
@@ -198,6 +200,15 @@ class DefaultAudioClientObserverTest {
     }
 
     @Test
+    fun `onAttendeesPresenceChange should notify added observers when a new attendee joined without audio`() {
+        audioClientObserver.onAttendeesPresenceChange(arrayOf(
+            testAttendeeUpdateJoinedNoAudio
+        ))
+
+        verify(exactly = 1) { mockRealtimeObserver.onAttendeesJoinedWithoutAudio(expectedAttendeeInfos) }
+    }
+
+    @Test
     fun `onAttendeesPresenceChange should notify added observers when an attendee left`() {
         audioClientObserver.onAttendeesPresenceChange(arrayOf(
             testAttendeeUpdateLeft
@@ -243,7 +254,39 @@ class DefaultAudioClientObserverTest {
     }
 
     @Test
-    fun `onAttendeesPresenceChange should notify added observers with rejoined attendee who has dropped `() {
+    fun `onAttendeesPresenceChange should notify added observers when attendee who had left rejoined without audio`() {
+        audioClientObserver.onAttendeesPresenceChange(arrayOf(
+            testAttendeeUpdateJoined
+        ))
+        audioClientObserver.onAttendeesPresenceChange(arrayOf(
+            testAttendeeUpdateLeft
+        ))
+        audioClientObserver.onAttendeesPresenceChange(arrayOf(
+            testAttendeeUpdateJoinedNoAudio
+        ))
+
+        verify(exactly = 1) { mockRealtimeObserver.onAttendeesJoined(expectedAttendeeInfos) }
+        verify(exactly = 1) { mockRealtimeObserver.onAttendeesJoinedWithoutAudio(expectedAttendeeInfos) }
+    }
+
+    @Test
+    fun `onAttendeesPresenceChange should notify added observers when no audio attendee who had left rejoined with audio`() {
+        audioClientObserver.onAttendeesPresenceChange(arrayOf(
+            testAttendeeUpdateJoinedNoAudio
+        ))
+        audioClientObserver.onAttendeesPresenceChange(arrayOf(
+            testAttendeeUpdateLeft
+        ))
+        audioClientObserver.onAttendeesPresenceChange(arrayOf(
+            testAttendeeUpdateJoined
+        ))
+
+        verify(exactly = 1) { mockRealtimeObserver.onAttendeesJoinedWithoutAudio(expectedAttendeeInfos) }
+        verify(exactly = 1) { mockRealtimeObserver.onAttendeesJoined(expectedAttendeeInfos) }
+    }
+
+    @Test
+    fun `onAttendeesPresenceChange should notify added observers with rejoined attendee who has dropped`() {
         audioClientObserver.onAttendeesPresenceChange(arrayOf(
             testAttendeeUpdateJoined
         ))
@@ -255,6 +298,21 @@ class DefaultAudioClientObserverTest {
         ))
 
         verify(exactly = 2) { mockRealtimeObserver.onAttendeesJoined(expectedAttendeeInfos) }
+    }
+
+    @Test
+    fun `onAttendeesPresenceChange should notify added observers with rejoined no audio attendee who has dropped`() {
+        audioClientObserver.onAttendeesPresenceChange(arrayOf(
+            testAttendeeUpdateJoinedNoAudio
+        ))
+        audioClientObserver.onAttendeesPresenceChange(arrayOf(
+            testAttendeeUpdateDropped
+        ))
+        audioClientObserver.onAttendeesPresenceChange(arrayOf(
+            testAttendeeUpdateJoinedNoAudio
+        ))
+
+        verify(exactly = 2) { mockRealtimeObserver.onAttendeesJoinedWithoutAudio(expectedAttendeeInfos) }
     }
 
     @Test

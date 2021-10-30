@@ -5,6 +5,7 @@
 
 package com.amazonaws.services.chime.sdk.meetings.audiovideo
 
+import com.amazonaws.services.chime.sdk.meetings.audiovideo.audio.AudioMode
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.metric.MetricsObserver
 import com.amazonaws.services.chime.sdk.meetings.internal.audio.AudioClientController
 import com.amazonaws.services.chime.sdk.meetings.internal.audio.AudioClientObserver
@@ -84,7 +85,24 @@ class DefaultAudioVideoControllerTest {
                 audioHostURL,
                 meetingId,
                 attendeeId,
-                joinToken
+                joinToken,
+                AudioMode.Mono
+            )
+        }
+    }
+
+    @Test
+    fun `start with audio video configuration should call audioClientController start with the parameters in configuration`() {
+        val testAudioVideoConfiguration = AudioVideoConfiguration(audioMode = AudioMode.NoAudio)
+        audioVideoController.start(testAudioVideoConfiguration)
+        verify {
+            audioClientController.start(
+                audioFallbackURL,
+                audioHostURL,
+                meetingId,
+                attendeeId,
+                joinToken,
+                AudioMode.NoAudio
             )
         }
     }
