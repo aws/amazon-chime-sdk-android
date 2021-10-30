@@ -79,8 +79,8 @@ class PostLogger(
 
     private suspend fun makeRequest(body: String, tag: String) {
         withContext(Dispatchers.IO) {
-            val serverUrl = URL(url)
             try {
+                val serverUrl = URL(url)
                 val response = StringBuffer()
                 with(serverUrl.openConnection() as HttpURLConnection) {
                     requestMethod = "POST"

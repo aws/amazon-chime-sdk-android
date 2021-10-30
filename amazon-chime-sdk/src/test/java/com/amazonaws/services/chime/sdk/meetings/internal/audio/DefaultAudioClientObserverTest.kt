@@ -243,7 +243,7 @@ class DefaultAudioClientObserverTest {
     }
 
     @Test
-    fun `onAttendeesPresenceChange should notify added observers with rejoined attendee who has dropped `() {
+    fun `onAttendeesPresenceChange should notify added observers with rejoined attendee who has dropped`() {
         audioClientObserver.onAttendeesPresenceChange(arrayOf(
             testAttendeeUpdateJoined
         ))

@@ -5,6 +5,8 @@
 
 package com.amazonaws.services.chime.sdk.meetings.internal.audio
 
+import com.amazonaws.services.chime.sdk.meetings.audiovideo.audio.AudioMode
+
 /**
  * [AudioClientController]'s responsibility is to handle AudioClient API calls such as starting
  * and stopping audio session
@@ -20,7 +22,8 @@ interface AudioClientController {
         audioHostUrl: String,
         meetingId: String,
         attendeeId: String,
-        joinToken: String
+        joinToken: String,
+        audioMode: AudioMode
     )
 
     fun stop()

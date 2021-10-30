@@ -351,6 +351,7 @@ class DefaultAudioClientObserver(
         // group by attendee status
         val attendeesByStatus = attendeeUpdates
             .groupBy({ AttendeeStatus.from(it.data) }, { createAttendeeInfo(it) })
+
         attendeesByStatus[AttendeeStatus.Joined]?.let {
             val attendeeJoined = it.minus(currentAttendees)
             if (attendeeJoined.isNotEmpty()) {
@@ -387,8 +388,7 @@ class DefaultAudioClientObserver(
     }
 
     private fun onAttendeesJoin(attendeeInfo: Array<AttendeeInfo>) {
-        logger.debug(TAG, "Added: ${attendeeInfo.joinToString(" ")}")
-
+        logger.debug(TAG, "Joined: ${attendeeInfo.joinToString(" ")}")
         ObserverUtils.notifyObserverOnMainThread(realtimeEventObservers) {
             it.onAttendeesJoined(
                 attendeeInfo
@@ -398,7 +398,6 @@ class DefaultAudioClientObserver(
 
     private fun onAttendeesLeft(attendeeInfo: Array<AttendeeInfo>) {
         logger.debug(TAG, "Left: ${attendeeInfo.joinToString(" ")}")
-
         ObserverUtils.notifyObserverOnMainThread(realtimeEventObservers) {
             it.onAttendeesLeft(
                 attendeeInfo
@@ -408,7 +407,6 @@ class DefaultAudioClientObserver(
 
     private fun onAttendeesDropped(attendeeInfo: Array<AttendeeInfo>) {
         logger.debug(TAG, "Dropped: ${attendeeInfo.joinToString(" ")}")
-
         ObserverUtils.notifyObserverOnMainThread(realtimeEventObservers) {
             it.onAttendeesDropped(
                 attendeeInfo
