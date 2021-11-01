@@ -525,7 +525,8 @@ class MeetingFragment : Fragment(),
             context?.getString(if (cameraCaptureSource.torchEnabled) R.string.disable_flashlight else R.string.enable_flashlight),
             context?.getString(if (meetingModel.isUsingCpuVideoProcessor) R.string.disable_cpu_filter else R.string.enable_cpu_filter),
             context?.getString(if (meetingModel.isUsingGpuVideoProcessor) R.string.disable_gpu_filter else R.string.enable_gpu_filter),
-            context?.getString(if (meetingModel.isUsingCameraCaptureSource) R.string.disable_custom_capture_source else R.string.enable_custom_capture_source)
+            context?.getString(if (meetingModel.isUsingCameraCaptureSource) R.string.disable_custom_capture_source else R.string.enable_custom_capture_source),
+            context?.getString(if (meetingModel.isUsingFaceDetection) R.string.disable_face_detection else R.string.enable_face_detection)
         )
 
         additionalOptionsAlertDialogBuilder.setItems(additionalToggles) { _, which ->
@@ -538,6 +539,7 @@ class MeetingFragment : Fragment(),
                 4 -> toggleCpuDemoFilter()
                 5 -> toggleGpuDemoFilter()
                 6 -> toggleCustomCaptureSource()
+                7 -> toggleFaceDetectionEnabled()
             }
         }
     }
@@ -897,6 +899,12 @@ class MeetingFragment : Fragment(),
             }
             startLocalVideo()
         }
+    }
+
+    private fun toggleFaceDetectionEnabled() {
+        if (!meetingModel.isLocalVideoStarted) return
+        cameraCaptureSource.faceDetectionEnabled = !meetingModel.isUsingFaceDetection
+        meetingModel.isUsingFaceDetection = cameraCaptureSource.faceDetectionEnabled
     }
 
     private fun toggleScreenCapture() {

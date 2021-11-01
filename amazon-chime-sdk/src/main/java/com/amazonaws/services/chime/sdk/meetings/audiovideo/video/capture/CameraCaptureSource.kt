@@ -29,6 +29,13 @@ interface CameraCaptureSource : VideoCaptureSource {
     var torchEnabled: Boolean
 
     /**
+     * Toggle for face detection. It focuses more on person, making photo more clear when
+     * a person is present.
+     * Should be set after [start] otherwise, it will be no-op
+     */
+    var faceDetectionEnabled: Boolean
+
+    /**
      * Current camera capture format. Actual format may be adjusted to use supported camera formats.
      * May be called regardless of whether [start] or [stop] has been called.
      */

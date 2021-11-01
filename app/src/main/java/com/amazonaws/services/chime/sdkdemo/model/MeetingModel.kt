@@ -47,6 +47,7 @@ class MeetingModel : ViewModel() {
     var wasLocalVideoStarted = false
     var isUsingGpuVideoProcessor = false
     var isUsingCpuVideoProcessor = false
+    var isUsingFaceDetection = false
 
     fun updateVideoStatesInCurrentPage() {
         videoStatesInCurrentPage.clear()

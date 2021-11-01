@@ -94,9 +94,6 @@ class DefaultCameraCaptureSource @JvmOverloads constructor(
     private val TAG = "DefaultCameraCaptureSource"
 
     var eventAnalyticsController: EventAnalyticsController? = null
-        set(value) {
-            field = value
-        }
 
     init {
         // Load library so that some of webrtc definition is linked properly
@@ -183,6 +180,24 @@ class DefaultCameraCaptureSource @JvmOverloads constructor(
             surfaceTextureSource?.let {
                 stop()
                 start()
+            }
+        }
+
+    override var faceDetectionEnabled: Boolean = false
+        set(value) {
+            val faceModes = cameraCharacteristics?.get(CameraCharacteristics.STATISTICS_INFO_AVAILABLE_FACE_DETECT_MODES)
+            if (faceModes?.contains(CameraCharacteristics.STATISTICS_FACE_DETECT_MODE_FULL) != true &&
+                faceModes?.contains(CameraCharacteristics.STATISTICS_FACE_DETECT_MODE_SIMPLE) != true
+            ) {
+                logger.warn(
+                    TAG,
+                    "Face detection mode not supported on current camera"
+                )
+                return
+            }
+            cameraDevice?.let {
+                field = value
+                createCaptureRequest()
             }
         }
 
@@ -289,6 +304,50 @@ class DefaultCameraCaptureSource @JvmOverloads constructor(
         }
     }
 
+    private fun setFaceDetectionMode(captureRequestBuilder: CaptureRequest.Builder) {
+        val faceDetectionMode =
+            captureRequestBuilder.get(CaptureRequest.STATISTICS_FACE_DETECT_MODE)
+
+        if (faceDetectionMode == CaptureRequest.STATISTICS_FACE_DETECT_MODE_FULL ||
+            faceDetectionMode == CaptureRequest.STATISTICS_FACE_DETECT_MODE_SIMPLE) return
+
+        val faceModes = cameraCharacteristics?.get(CameraCharacteristics.STATISTICS_INFO_AVAILABLE_FACE_DETECT_MODES)
+        // Some devices might support full mode, which returns all face metadata
+        // but some devices might only support simple mode, which returns face rectangle and confidence value only
+        if (faceModes?.contains(CameraCharacteristics.STATISTICS_FACE_DETECT_MODE_FULL) == true) {
+            captureRequestBuilder.set(
+                CaptureRequest.STATISTICS_FACE_DETECT_MODE,
+                CaptureRequest.STATISTICS_FACE_DETECT_MODE_FULL
+            )
+        } else if (faceModes?.contains(CameraCharacteristics.STATISTICS_FACE_DETECT_MODE_SIMPLE) == true) {
+            captureRequestBuilder.set(
+                CaptureRequest.STATISTICS_FACE_DETECT_MODE,
+                CaptureRequest.STATISTICS_FACE_DETECT_MODE_SIMPLE
+            )
+        }
+    }
+
+    private fun enableFaceDetectionMode(captureRequestBuilder: CaptureRequest.Builder) {
+        setSceneMode(captureRequestBuilder)
+        setFaceDetectionMode(captureRequestBuilder)
+    }
+
+    // Set Scene to focus on face
+    private fun setSceneMode(captureRequestBuilder: CaptureRequest.Builder) {
+        val currentSceneMode = captureRequestBuilder.get(CaptureRequest.CONTROL_SCENE_MODE)
+        // face detection mode overrides scene mode
+        if (currentSceneMode == null || currentSceneMode != CameraMetadata.CONTROL_SCENE_MODE_FACE_PRIORITY) {
+            logger.info(TAG, "setting scene mode for face detection")
+            captureRequestBuilder.set(
+                CaptureRequest.CONTROL_MODE,
+                CameraMetadata.CONTROL_MODE_USE_SCENE_MODE
+            )
+            captureRequestBuilder.set(
+                CaptureRequest.CONTROL_SCENE_MODE,
+                CameraMetadata.CONTROL_SCENE_MODE_FACE_PRIORITY
+            )
+        }
+    }
     // Implement and store callbacks as private constants since we can't inherit from all of them
     // due to Kotlin not allowing multiple class inheritance
 
@@ -407,6 +466,11 @@ class DefaultCameraCaptureSource @JvmOverloads constructor(
                 CaptureRequest.CONTROL_AE_TARGET_FPS_RANGE,
                 Range(bestFpsRange.lower, bestFpsRange.upper)
             )
+
+            // Set scene and face detection otherwise, it will use default
+            if (faceDetectionEnabled) {
+                enableFaceDetectionMode(captureRequestBuilder)
+            }
 
             // Set target auto exposure mode
             captureRequestBuilder.set(

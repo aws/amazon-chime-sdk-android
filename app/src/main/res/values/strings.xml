@@ -77,6 +77,8 @@
     <string name="disable_gpu_filter">Turn off demo filter (GPU)</string>
     <string name="enable_custom_capture_source">Turn on custom capture source</string>
     <string name="disable_custom_capture_source">Turn off custom capture source</string>
+    <string name="enable_face_detection">Turn on face detection</string>
+    <string name="disable_face_detection">Turn off face detection</string>
 
     <!-- Alert -->
     <string name="cancel">Cancel</string>
