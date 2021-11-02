@@ -3,6 +3,9 @@
 ### Fixed
 * [Demo] Fixed demo app crashes when screen share is off and then leave meeting.
 
+### Changed
+* Updated compileSdkVersion and targetSdkVersion from 30 to 31.
+
 
 ## [0.13.0] - 2021-11-01
 
