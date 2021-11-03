@@ -5,7 +5,8 @@
 
 ### Changed
 * Updated compileSdkVersion and targetSdkVersion from 30 to 31.
-
+* Changed the silence threshold to 0.2 from 0.0 for `DefaultActiveSpeakerPolicy` (Issue #259) to be more consistent with other platform.
+* Expose weights/rates/thresholds to `DefaultActiveSpeakerPolicy` constructor to make builders easier to customize `DefaultActiveSpeakerPolicy`.
 
 ## [0.13.0] - 2021-11-01
 
