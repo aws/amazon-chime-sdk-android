@@ -1,11 +1,14 @@
 ## [Unreleased]
 
+### Added
+* Supports face detection mode from `DefaultCameraCaptureSource`.
+* [Demo] Added enabling face detection mode.
+
 ### Fixed
 * [Demo] Fixed demo app crashes when screen share is off and then leave meeting.
 
 ### Changed
 * Updated compileSdkVersion and targetSdkVersion from 30 to 31.
-
 
 ## [0.13.0] - 2021-11-01
 
@@ -13,9 +16,6 @@
 * Supports integration with Amazon Transcribe and Amazon Transcribe Medical for live transcription. The Amazon Chime Service uses its active talker algorithm to select the top two active talkers, and sends their audio to Amazon Transcribe (or Amazon Transcribe Medical) in your AWS account. User-attributed transcriptions are then sent directly to every meeting attendee via data messages. Use transcriptions to overlay subtitles, build a transcript, or perform real-time content analysis. For more information, visit [the live transcription guide](https://docs.aws.amazon.com/chime/latest/dg/meeting-transcription.html).
 
 * [Demo] Added meeting captions functionality based on the live transcription APIs. You will need to have a serverless deployment to create new AWS Lambda endpoints for live transcription. Follow [the live transcription guide](https://docs.aws.amazon.com/chime/latest/dg/meeting-transcription.html) to create necessary service-linked role so that the demo app can call Amazon Transcribe and Amazon Transcribe Medical on your behalf.
-
-* Supports face detection mode from `DefaultCameraCaptureSource`.
-* [Demo] Added enabling face detection mode.
 
 ## [0.12.0] - 2021-09-02
 
