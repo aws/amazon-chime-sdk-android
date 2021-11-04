@@ -153,6 +153,7 @@ class MeetingFragment : Fragment(),
     private val DATA_MESSAGE_LIFETIME_MS = 300000
 
     private var screenshareServiceConnection: ServiceConnection? = null
+    private var isBound: Boolean = false
 
     enum class SubTab(val position: Int) {
         Attendees(0),
@@ -901,7 +902,7 @@ class MeetingFragment : Fragment(),
     private fun toggleScreenCapture() {
         if (meetingModel.isSharingContent) {
             audioVideo.stopContentShare()
-            screenShareManager?.stop()
+            screenShareManager?.stop(isBound)
         } else {
             startActivityForResult(
                 mediaProjectionManager.createScreenCaptureIntent(),
@@ -1132,6 +1133,7 @@ class MeetingFragment : Fragment(),
                     resultCode,
                     data
                 )
+                isBound = true
 
                 val screenCaptureSourceObserver = object : CaptureSourceObserver {
                     override fun onCaptureStarted() {
@@ -1158,6 +1160,7 @@ class MeetingFragment : Fragment(),
             }
 
             override fun onServiceDisconnected(arg0: ComponentName) {
+                isBound = false
             }
         }
 
@@ -1561,7 +1564,7 @@ class MeetingFragment : Fragment(),
         // Turn off screen share when screen locked
         if (meetingModel.isSharingContent && !powerManager.isInteractive) {
             audioVideo.stopContentShare()
-            screenShareManager?.stop()
+            screenShareManager?.stop(isBound)
         }
     }
 
