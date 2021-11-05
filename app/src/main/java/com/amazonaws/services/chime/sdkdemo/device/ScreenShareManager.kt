@@ -31,11 +31,11 @@ class ScreenShareManager(
 
     fun start() = screenCaptureSource.start()
 
-    fun stop() {
+    fun stop(isBound: Boolean = false) {
         context.stopService(Intent(context, ScreenCaptureService::class.java))
         screenCaptureSource.stop()
         screenCaptureConnectionService?.let {
-            context.unbindService(it)
+            if (isBound) context.unbindService(it)
         }
     }
 

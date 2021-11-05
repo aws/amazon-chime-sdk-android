@@ -1,5 +1,14 @@
 ## [Unreleased]
 
+### Fixed
+* [Demo] Fixed demo app crashes when screen share is off and then leave meeting.
+
+### Changed
+* Changed the silence threshold to 0.2 from 0.0 for `DefaultActiveSpeakerPolicy` (Issue #259) to be more consistent with other platform.
+* Expose weights/rates/thresholds to `DefaultActiveSpeakerPolicy` constructor to make builders easier to customize `DefaultActiveSpeakerPolicy`.
+
+## [0.13.0] - 2021-11-01
+
 ### Added
 * Added APIs for Audio Video configuration i.e `AudioVideoConfiguration` to be used during a meeting session.
 * Added support for joining meetings without audio i.e `AudioMode.NoAudio` or with audio using one of `AudioMode.Mono16K`, `AudioMode.Mono48K` and `AudioMode.Stwreo48K` audio modes.
