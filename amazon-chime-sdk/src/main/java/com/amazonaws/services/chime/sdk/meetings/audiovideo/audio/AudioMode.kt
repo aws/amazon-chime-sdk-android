@@ -15,9 +15,19 @@ enum class AudioMode(val value: Int) {
     NoAudio(0),
 
     /**
-     * The default audio mode with single audio channel.
+     * The mono audio mode with single audio channel and 16KHz.
      */
-    Mono(1);
+    Mono16K(1),
+
+    /**
+     * The mono audio mode with single audio channel and 48KHz.
+     */
+    Mono48K(2),
+
+    /**
+     * The stereo audio mode with two audio channels and 48KHz.
+     */
+    Stereo48K(3);
 
     companion object {
         fun from(intValue: Int): AudioMode? = values().find { it.value == intValue }

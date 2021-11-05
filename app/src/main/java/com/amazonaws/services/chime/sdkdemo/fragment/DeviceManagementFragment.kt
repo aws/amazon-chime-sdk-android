@@ -110,8 +110,8 @@ class DeviceManagementFragment : Fragment(), DeviceChangeObserver {
         val meetingId = arguments?.getString(HomeActivity.MEETING_ID_KEY)
         val name = arguments?.getString(HomeActivity.NAME_KEY)
         val audioMode = arguments?.getInt(HomeActivity.AUDIO_MODE_KEY)?.let { intValue ->
-            AudioMode.from(intValue, defaultAudioMode = AudioMode.Mono)
-        } ?: AudioMode.Mono
+            AudioMode.from(intValue, defaultAudioMode = AudioMode.Stereo48K)
+        } ?: AudioMode.Stereo48K
         audioVideo = (activity as MeetingActivity).getAudioVideo()
 
         val displayedText = getString(R.string.preview_meeting_info, meetingId, name)

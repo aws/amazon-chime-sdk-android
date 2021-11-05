@@ -86,13 +86,13 @@ class DefaultAudioVideoControllerTest {
                 meetingId,
                 attendeeId,
                 joinToken,
-                AudioMode.Mono
+                AudioMode.Stereo48K
             )
         }
     }
 
     @Test
-    fun `start with audio video configuration should call audioClientController start with the parameters in configuration`() {
+    fun `start with no audio should call audioClientController start with the parameters in configuration and no audio`() {
         val testAudioVideoConfiguration = AudioVideoConfiguration(audioMode = AudioMode.NoAudio)
         audioVideoController.start(testAudioVideoConfiguration)
         verify {
@@ -103,6 +103,54 @@ class DefaultAudioVideoControllerTest {
                 attendeeId,
                 joinToken,
                 AudioMode.NoAudio
+            )
+        }
+    }
+
+    @Test
+    fun `start with mono 16KHz should call audioClientController start with the parameters in configuration and mono 16KHz`() {
+        val testAudioVideoConfiguration = AudioVideoConfiguration(audioMode = AudioMode.Mono16K)
+        audioVideoController.start(testAudioVideoConfiguration)
+        verify {
+            audioClientController.start(
+                    audioFallbackURL,
+                    audioHostURL,
+                    meetingId,
+                    attendeeId,
+                    joinToken,
+                    AudioMode.Mono16K
+            )
+        }
+    }
+
+    @Test
+    fun `start with mono 48KHz should call audioClientController start with the parameters in configuration and mono 48KHz`() {
+        val testAudioVideoConfiguration = AudioVideoConfiguration(audioMode = AudioMode.Mono48K)
+        audioVideoController.start(testAudioVideoConfiguration)
+        verify {
+            audioClientController.start(
+                    audioFallbackURL,
+                    audioHostURL,
+                    meetingId,
+                    attendeeId,
+                    joinToken,
+                    AudioMode.Mono48K
+            )
+        }
+    }
+
+    @Test
+    fun `start with stereo 48KHz should call audioClientController start with the parameters in configuration and stereo 48KHz`() {
+        val testAudioVideoConfiguration = AudioVideoConfiguration(audioMode = AudioMode.Stereo48K)
+        audioVideoController.start(testAudioVideoConfiguration)
+        verify {
+            audioClientController.start(
+                    audioFallbackURL,
+                    audioHostURL,
+                    meetingId,
+                    attendeeId,
+                    joinToken,
+                    AudioMode.Stereo48K
             )
         }
     }

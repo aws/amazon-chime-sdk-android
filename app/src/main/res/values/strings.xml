@@ -8,10 +8,10 @@
     <string name="edit_meeting_id">Meeting ID</string>
     <string name="edit_name">Your Name</string>
     <string name="main_title">Join a meeting</string>
+    <string name="audio_mode_spinner">Audio Mode</string>
     <string name="main_continue">Continue</string>
     <string name="main_continue_without_audio">Continue without audio</string>
-    <string name="join_with_audio">Join with audio</string>
-    <string name="join_without_audio">Join without audio</string>
+    <string name="join_meeting">Join Meeting</string>
     <string name="main_debug_settings">Debug Settings</string>
     <string name="additional_options">Additional Options</string>
     <string name="meeting_leave">Leave Meeting</string>

@@ -20,6 +20,7 @@ import com.amazonaws.services.chime.sdk.meetings.session.MeetingSessionStatus
 import com.amazonaws.services.chime.sdk.meetings.session.MeetingSessionStatusCode
 import com.amazonaws.services.chime.sdk.meetings.utils.logger.Logger
 import com.xodee.client.audio.audioclient.AudioClient
+import com.xodee.client.audio.audioclient.AudioClient.AudioModeNative
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
@@ -152,6 +153,12 @@ class DefaultAudioClientController(
         uiScope.launch {
             muteMicAndSpeaker = audioMode == AudioMode.NoAudio
 
+            val audioModeNative = when (audioMode) {
+                AudioMode.NoAudio -> AudioModeNative.NO_AUDIO
+                AudioMode.Mono16K -> AudioModeNative.MONO_16K
+                AudioMode.Mono48K -> AudioModeNative.MONO_48K
+                AudioMode.Stereo48K -> AudioModeNative.STEREO_48K
+            }
             val res = audioClient.startSessionV2(
                 AudioClient.XTL_DEFAULT_TRANSPORT,
                 host,
@@ -159,14 +166,13 @@ class DefaultAudioClientController(
                 joinToken,
                 meetingId,
                 attendeeId,
-                AudioClient.kCodecOpusLow,
-                AudioClient.kCodecOpusLow,
                 muteMicAndSpeaker,
                 muteMicAndSpeaker,
                 DEFAULT_PRESENTER,
                 audioFallbackUrl,
                 null,
-                appInfo
+                appInfo,
+                audioModeNative
             )
 
             if (res != AUDIO_CLIENT_RESULT_SUCCESS) {

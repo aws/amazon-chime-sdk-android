@@ -7,7 +7,9 @@ class AudioModeTest {
     @Test
     fun `get enum value from int`() {
         Assert.assertEquals(AudioMode.from(0), AudioMode.NoAudio)
-        Assert.assertEquals(AudioMode.from(1), AudioMode.Mono)
+        Assert.assertEquals(AudioMode.from(1), AudioMode.Mono16K)
+        Assert.assertEquals(AudioMode.from(2), AudioMode.Mono48K)
+        Assert.assertEquals(AudioMode.from(3), AudioMode.Stereo48K)
     }
 
     @Test
@@ -17,6 +19,6 @@ class AudioModeTest {
 
     @Test
     fun `get enum value from int with fallback to default value`() {
-        Assert.assertEquals(AudioMode.from(-1, AudioMode.Mono), AudioMode.Mono)
+        Assert.assertEquals(AudioMode.from(-1, AudioMode.Stereo48K), AudioMode.Stereo48K)
     }
 }

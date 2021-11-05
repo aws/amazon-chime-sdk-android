@@ -15,5 +15,5 @@ import com.amazonaws.services.chime.sdk.meetings.audiovideo.audio.AudioMode
  * a meeting session.
  */
 data class AudioVideoConfiguration @JvmOverloads constructor(
-    val audioMode: AudioMode = AudioMode.Mono
+    val audioMode: AudioMode = AudioMode.Stereo48K
 )

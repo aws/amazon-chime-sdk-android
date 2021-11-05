@@ -6,7 +6,7 @@ import org.junit.Test
 
 class AudioVideoConfigurationTest {
     @Test
-    fun `default audio mode should be mono`() {
-        Assert.assertEquals(AudioVideoConfiguration().audioMode, AudioMode.Mono)
+    fun `default audio mode should be stereo`() {
+        Assert.assertEquals(AudioVideoConfiguration().audioMode, AudioMode.Stereo48K)
     }
 }

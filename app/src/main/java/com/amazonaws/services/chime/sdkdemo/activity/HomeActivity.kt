@@ -10,11 +10,13 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.view.View
+import android.widget.ArrayAdapter
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.AppCompatSpinner
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.os.bundleOf
@@ -52,10 +54,12 @@ class HomeActivity : AppCompatActivity() {
 
     private var meetingEditText: EditText? = null
     private var nameEditText: EditText? = null
+    private var audioMode: AppCompatSpinner? = null
     private var authenticationProgressBar: ProgressBar? = null
     private var meetingID: String? = null
     private var yourName: String? = null
     private var testUrl: String = ""
+    private var audioModes = listOf("Stereo/48KHz Audio", "Mono/48KHz Audio", "Mono/16KHz Audio", "No Audio")
     private lateinit var audioVideoConfig: AudioVideoConfiguration
     private lateinit var debugSettingsViewModel: DebugSettingsViewModel
 
@@ -72,15 +76,12 @@ class HomeActivity : AppCompatActivity() {
 
         meetingEditText = findViewById(R.id.editMeetingId)
         nameEditText = findViewById(R.id.editName)
+        audioMode = findViewById(R.id.audioModeSpinner)
         authenticationProgressBar = findViewById(R.id.progressAuthentication)
         debugSettingsViewModel = ViewModelProvider(this).get(DebugSettingsViewModel::class.java)
 
+        audioMode?.adapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, audioModes)
         findViewById<Button>(R.id.buttonContinue)?.setOnClickListener {
-            audioVideoConfig = AudioVideoConfiguration()
-            joinMeeting()
-        }
-        findViewById<Button>(R.id.buttonContinueWithoutAudio)?.setOnClickListener {
-            audioVideoConfig = AudioVideoConfiguration(audioMode = AudioMode.NoAudio)
             joinMeeting()
         }
         findViewById<Button>(R.id.buttonDebugSettings)?.setOnClickListener { showDebugSettings() }
@@ -95,6 +96,13 @@ class HomeActivity : AppCompatActivity() {
     }
 
     private fun joinMeeting() {
+        when (audioMode?.selectedItemPosition ?: 0) {
+            0 -> audioVideoConfig = AudioVideoConfiguration(audioMode = AudioMode.Stereo48K)
+            1 -> audioVideoConfig = AudioVideoConfiguration(audioMode = AudioMode.Mono48K)
+            2 -> audioVideoConfig = AudioVideoConfiguration(audioMode = AudioMode.Mono16K)
+            3 -> audioVideoConfig = AudioVideoConfiguration(audioMode = AudioMode.NoAudio)
+        }
+
         meetingID = meetingEditText?.text.toString().trim().replace("\\s+".toRegex(), "+")
         yourName = nameEditText?.text.toString().trim().replace("\\s+".toRegex(), "+")
         testUrl = getTestUrl()

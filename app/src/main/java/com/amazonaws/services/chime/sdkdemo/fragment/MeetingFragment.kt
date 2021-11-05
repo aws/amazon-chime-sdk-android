@@ -263,8 +263,8 @@ class MeetingFragment : Fragment(),
         selectTab(meetingModel.tabIndex)
         setupAudioVideoFacadeObservers()
         val audioMode = arguments?.getInt(HomeActivity.AUDIO_MODE_KEY)?.let { intValue ->
-            AudioMode.from(intValue, defaultAudioMode = AudioMode.Mono)
-        } ?: AudioMode.Mono
+            AudioMode.from(intValue, defaultAudioMode = AudioMode.Stereo48K)
+        } ?: AudioMode.Stereo48K
         val audioVideoConfig = AudioVideoConfiguration(audioMode = audioMode)
         // Update the Mic & Speaker states
         updateLocalAttendeeAudioState(audioEnabled = audioVideoConfig.audioMode != AudioMode.NoAudio)

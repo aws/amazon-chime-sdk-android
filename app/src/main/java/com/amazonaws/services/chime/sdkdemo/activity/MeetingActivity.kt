@@ -56,8 +56,8 @@ class MeetingActivity : AppCompatActivity(),
         meetingId = intent.extras?.getString(HomeActivity.MEETING_ID_KEY) as String
         name = intent.extras?.getString(HomeActivity.NAME_KEY) as String
         val audioMode = intent.extras?.getInt(HomeActivity.AUDIO_MODE_KEY)?.let { intValue ->
-            AudioMode.from(intValue, defaultAudioMode = AudioMode.Mono)
-        } ?: AudioMode.Mono
+            AudioMode.from(intValue, defaultAudioMode = AudioMode.Stereo48K)
+        } ?: AudioMode.Stereo48K
         audioVideoConfig = AudioVideoConfiguration(audioMode = audioMode)
 
         if (savedInstanceState == null) {
