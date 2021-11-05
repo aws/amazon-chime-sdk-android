@@ -2,6 +2,7 @@
 
 ### Fixed
 * [Demo] Fixed demo app crashes when screen share is off and then leave meeting.
+* Fixed crash when video frames with VideoFrameRGBABuffer are passed directly to DefaultVideoRenderView in video preview use case.
 
 ### Changed
 * Updated compileSdkVersion and targetSdkVersion from 30 to 31.
