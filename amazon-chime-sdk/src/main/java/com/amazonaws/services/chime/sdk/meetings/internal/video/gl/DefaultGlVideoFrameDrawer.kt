@@ -491,7 +491,7 @@ class DefaultGlVideoFrameDrawer() : GlVideoFrameDrawer {
             """
         precision mediump float;
         varying vec2 vTextureCoordinate;
-        uniform samplerExternalOES sTexture;
+        uniform sampler2D sTexture;
         void main() {
             gl_FragColor = texture2D(sTexture, vTextureCoordinate);
         }
