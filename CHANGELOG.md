@@ -1,8 +1,12 @@
+## [Unreleased]
+
+### Fixed
+* Fixed crash when rgba video frames are sent to DefaultVideoRenderView directly in preview use case.
+
 ## [0.13.1] - 2021-11-11
 
 ### Fixed
 * [Demo] Fixed demo app crashes when screen share is off and then leave meeting.
-* Fixed crash when rgba video frames are sent to DefaultVideoRenderView directly in preview use case.
 
 ### Changed
 * Changed the silence threshold to 0.2 from 0.0 for `DefaultActiveSpeakerPolicy` (Issue #259) to be more consistent with other platform.
