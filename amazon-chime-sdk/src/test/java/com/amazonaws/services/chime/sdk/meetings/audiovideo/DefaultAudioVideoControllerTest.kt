@@ -5,6 +5,7 @@
 
 package com.amazonaws.services.chime.sdk.meetings.audiovideo
 
+import com.amazonaws.services.chime.sdk.meetings.audiovideo.audio.AudioMode
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.metric.MetricsObserver
 import com.amazonaws.services.chime.sdk.meetings.internal.audio.AudioClientController
 import com.amazonaws.services.chime.sdk.meetings.internal.audio.AudioClientObserver
@@ -84,7 +85,56 @@ class DefaultAudioVideoControllerTest {
                 audioHostURL,
                 meetingId,
                 attendeeId,
-                joinToken
+                joinToken,
+                AudioMode.Stereo48K
+            )
+        }
+    }
+
+    @Test
+    fun `start with mono 16KHz should call audioClientController start with the parameters in configuration and mono 16KHz`() {
+        val testAudioVideoConfiguration = AudioVideoConfiguration(audioMode = AudioMode.Mono16K)
+        audioVideoController.start(testAudioVideoConfiguration)
+        verify {
+            audioClientController.start(
+                    audioFallbackURL,
+                    audioHostURL,
+                    meetingId,
+                    attendeeId,
+                    joinToken,
+                    AudioMode.Mono16K
+            )
+        }
+    }
+
+    @Test
+    fun `start with mono 48KHz should call audioClientController start with the parameters in configuration and mono 48KHz`() {
+        val testAudioVideoConfiguration = AudioVideoConfiguration(audioMode = AudioMode.Mono48K)
+        audioVideoController.start(testAudioVideoConfiguration)
+        verify {
+            audioClientController.start(
+                    audioFallbackURL,
+                    audioHostURL,
+                    meetingId,
+                    attendeeId,
+                    joinToken,
+                    AudioMode.Mono48K
+            )
+        }
+    }
+
+    @Test
+    fun `start with stereo 48KHz should call audioClientController start with the parameters in configuration and stereo 48KHz`() {
+        val testAudioVideoConfiguration = AudioVideoConfiguration(audioMode = AudioMode.Stereo48K)
+        audioVideoController.start(testAudioVideoConfiguration)
+        verify {
+            audioClientController.start(
+                    audioFallbackURL,
+                    audioHostURL,
+                    meetingId,
+                    attendeeId,
+                    joinToken,
+                    AudioMode.Stereo48K
             )
         }
     }

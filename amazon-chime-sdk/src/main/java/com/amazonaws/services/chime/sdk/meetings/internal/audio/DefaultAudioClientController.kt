@@ -14,11 +14,13 @@ import com.amazonaws.services.chime.sdk.meetings.analytics.EventAnalyticsControl
 import com.amazonaws.services.chime.sdk.meetings.analytics.EventAttributeName
 import com.amazonaws.services.chime.sdk.meetings.analytics.EventName
 import com.amazonaws.services.chime.sdk.meetings.analytics.MeetingStatsCollector
+import com.amazonaws.services.chime.sdk.meetings.audiovideo.audio.AudioMode
 import com.amazonaws.services.chime.sdk.meetings.internal.utils.AppInfoUtil
 import com.amazonaws.services.chime.sdk.meetings.session.MeetingSessionStatus
 import com.amazonaws.services.chime.sdk.meetings.session.MeetingSessionStatusCode
 import com.amazonaws.services.chime.sdk.meetings.utils.logger.Logger
 import com.xodee.client.audio.audioclient.AudioClient
+import com.xodee.client.audio.audioclient.AudioClient.AudioModeInternal
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
@@ -35,10 +37,10 @@ class DefaultAudioClientController(
     private val TAG = "DefaultAudioClientController"
     private val DEFAULT_PORT = 0 // In case the URL does not have port
     private val AUDIO_PORT_OFFSET = 200 // Offset by 200 so that subtraction results in 0
-    private val DEFAULT_MIC_AND_SPEAKER = false
     private val DEFAULT_PRESENTER = true
     private val AUDIO_CLIENT_RESULT_SUCCESS = AudioClient.AUDIO_CLIENT_OK
 
+    private var muteMicAndSpeaker = false
     private val uiScope = CoroutineScope(Dispatchers.Main)
     private val audioManager: AudioManager =
         context.getSystemService(Context.AUDIO_SERVICE) as AudioManager
@@ -49,7 +51,7 @@ class DefaultAudioClientController(
         var audioClientState = AudioClientState.INITIALIZED
     }
 
-    private fun setUpAudioConfiguration() {
+    private fun setUpAudioConfiguration(audioMode: AudioMode) {
         // There seems to be no call that gives us the native input sample rate, so we just use the output rate
         val nativeSR = AudioTrack.getNativeOutputSampleRate(AudioManager.STREAM_SYSTEM)
 
@@ -57,15 +59,25 @@ class DefaultAudioClientController(
         audioClient.sendMessage(AudioClient.MESS_SET_HARDWARE_SAMPLE_RATE, nativeSR)
 
         // This IO_SAMPLE_RATE is used to create OpenSLES:
+        val samplingRateConfig = when (audioMode) {
+            AudioMode.Mono16K -> 16000
+            AudioMode.Mono48K -> 48000
+            AudioMode.Stereo48K -> 48000
+        }
         audioClient.sendMessage(
             AudioClient.MESS_SET_IO_SAMPLE_RATE,
-            AudioClient.AUDIO_CLIENT_SAMPLE_RATE
+            samplingRateConfig
         )
 
         // Result is in bytes, so we divide by 2 (16-bit samples)
+        val outputChannelConfig = when (audioMode) {
+            AudioMode.Mono16K -> AudioFormat.CHANNEL_OUT_MONO
+            AudioMode.Mono48K -> AudioFormat.CHANNEL_OUT_MONO
+            AudioMode.Stereo48K -> AudioFormat.CHANNEL_OUT_STEREO
+        }
         val spkMinBufSizeInSamples = AudioTrack.getMinBufferSize(
             nativeSR,
-            AudioFormat.CHANNEL_OUT_MONO,
+            outputChannelConfig,
             AudioFormat.ENCODING_PCM_16BIT
         ) / 2
 
@@ -105,7 +117,8 @@ class DefaultAudioClientController(
         audioHostUrl: String,
         meetingId: String,
         attendeeId: String,
-        joinToken: String
+        joinToken: String,
+        audioMode: AudioMode
     ) {
         // Validate audio client state
         if (audioClientState != AudioClientState.INITIALIZED &&
@@ -136,7 +149,7 @@ class DefaultAudioClientController(
             )
             DEFAULT_PORT
         }
-        setUpAudioConfiguration()
+        setUpAudioConfiguration(audioMode)
         eventAnalyticsController.publishEvent(EventName.meetingStartRequested)
         audioClientObserver.notifyAudioClientObserver { observer ->
             observer.onAudioSessionStartedConnecting(
@@ -148,6 +161,11 @@ class DefaultAudioClientController(
         val appInfo = AppInfoUtil.initializeAudioClientAppInfo(context)
 
         uiScope.launch {
+            val audioModeInternal = when (audioMode) {
+                AudioMode.Mono16K -> AudioModeInternal.MONO_16K
+                AudioMode.Mono48K -> AudioModeInternal.MONO_48K
+                AudioMode.Stereo48K -> AudioModeInternal.STEREO_48K
+            }
             val res = audioClient.startSessionV2(
                 AudioClient.XTL_DEFAULT_TRANSPORT,
                 host,
@@ -155,14 +173,13 @@ class DefaultAudioClientController(
                 joinToken,
                 meetingId,
                 attendeeId,
-                AudioClient.kCodecOpusLow,
-                AudioClient.kCodecOpusLow,
-                DEFAULT_MIC_AND_SPEAKER,
-                DEFAULT_MIC_AND_SPEAKER,
+                muteMicAndSpeaker,
+                muteMicAndSpeaker,
                 DEFAULT_PRESENTER,
                 audioFallbackUrl,
                 null,
-                appInfo
+                appInfo,
+                audioModeInternal
             )
 
             if (res != AUDIO_CLIENT_RESULT_SUCCESS) {
