@@ -1,4 +1,4 @@
-## [Unreleased]
+## [0.14.0] - 2021-12-21
 
 ### Added
 * Added APIs for Audio Video configuration i.e `AudioVideoConfiguration` to be used during a meeting session.
