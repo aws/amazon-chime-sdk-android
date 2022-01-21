@@ -1,5 +1,6 @@
 ## Unreleased
 * Fixed out of order logging on `TextureRenderView`
+* Added Maven Support for Android SDK
 
 ## [0.14.0] - 2021-12-21
 
