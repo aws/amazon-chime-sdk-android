@@ -34,6 +34,9 @@
 * Added the meetingStartDurationMs event in ingestionEvents to record the time that elapsed between the start request and the beginning of the meeting.
 * Added priority based downlink policy to control the way how a recipient subscribes to the remote video sources
 
+### Fixed
+* Fixed calling start multiple times without stop crashes video in some phones. (Issue #356)
+
 ## [0.14.3] - 2022-02-10
 
 ## [0.14.2] - 2022-01-27
