@@ -18,7 +18,7 @@ if (versionFile.exists()) {
     }
 }
 version = versionProperties.getProperty('VERSION')
-media_version = versionProperties.getProperty('MEDIA_VERSION')
+def media_version = versionProperties.getProperty('MEDIA_VERSION')
 
 signing {
     if (!project.hasProperty('signing.key') || !project.hasProperty('signing.password') || !project.hasProperty('signing.keyId')) {
