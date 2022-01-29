@@ -18,14 +18,7 @@ if (versionFile.exists()) {
     }
 }
 version = versionProperties.getProperty('VERSION')
-
-task createZip(type: Zip) {
-    from("$rootDir") {
-        include "NOTICE.txt", "LICENSE.txt", "THIRD-PARTY.txt"
-    }
-    archiveFileName = "LICENSE.zip"
-    destinationDirectory = file("$rootDir/amazon-chime-sdk")
-}
+def media_version = versionProperties.getProperty('MEDIA_VERSION')
 
 signing {
     if (!project.hasProperty('signing.key') || !project.hasProperty('signing.password') || !project.hasProperty('signing.keyId')) {
@@ -49,9 +42,6 @@ project.afterEvaluate {
                 groupId = GROUP
                 version = version
                 artifactId = ARTIFACT_ID_SDK
-                artifact ("$rootDir/amazon-chime-sdk/LICENSE.zip") {
-                    builtBy createZip
-                }
 
                 pom {
                     name = POM_SDK_NAME
@@ -80,12 +70,9 @@ project.afterEvaluate {
             }
             publishChimeSDKMedia(MavenPublication) {
                 groupId = GROUP
-                version = version
+                version = media_version
                 artifactId = ARTIFACT_ID_SDK_MEDIA
                 artifact("$buildDir/../libs/amazon-chime-sdk-media.aar")
-                artifact ("$rootDir/amazon-chime-sdk/LICENSE.zip") {
-                    builtBy createZip
-                }
 
                 pom {
                     name = POM_SDK_MEDIA_NAME
