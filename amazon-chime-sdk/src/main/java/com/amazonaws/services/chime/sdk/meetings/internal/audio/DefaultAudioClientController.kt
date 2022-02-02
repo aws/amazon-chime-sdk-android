@@ -150,6 +150,7 @@ class DefaultAudioClientController(
             DEFAULT_PORT
         }
         setUpAudioConfiguration(audioMode)
+        meetingStatsCollector.updateMeetingStartConnectingTimeMs()
         eventAnalyticsController.publishEvent(EventName.meetingStartRequested)
         audioClientObserver.notifyAudioClientObserver { observer ->
             observer.onAudioSessionStartedConnecting(
