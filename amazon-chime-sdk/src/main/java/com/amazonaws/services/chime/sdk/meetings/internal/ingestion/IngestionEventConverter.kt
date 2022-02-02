@@ -7,11 +7,11 @@ package com.amazonaws.services.chime.sdk.meetings.internal.ingestion
 
 import com.amazonaws.services.chime.sdk.meetings.analytics.EventAttributeName
 import com.amazonaws.services.chime.sdk.meetings.analytics.EventAttributes
+import com.amazonaws.services.chime.sdk.meetings.ingestion.IngestionConfiguration
 import com.amazonaws.services.chime.sdk.meetings.ingestion.IngestionEvent
 import com.amazonaws.services.chime.sdk.meetings.ingestion.IngestionMetadata
 import com.amazonaws.services.chime.sdk.meetings.ingestion.IngestionPayload
 import com.amazonaws.services.chime.sdk.meetings.ingestion.IngestionRecord
-import com.amazonaws.services.chime.sdk.meetings.ingestion.IngestionConfiguration
 import com.amazonaws.services.chime.sdk.meetings.internal.utils.EventAttributesUtils
 
 object IngestionEventConverter {
