@@ -1,3 +1,8 @@
+## Unreleased
+
+###Fixed
+* Fixed Mobile SDK metrics missing issue by adding meetingStartDurationMs event
+
 ## [0.14.2] - 2022-01-27
 
 ### Added
