@@ -58,7 +58,7 @@ class DefaultMeetingStatsCollector(
             EventAttributeName.retryCount to retryCount,
             EventAttributeName.poorConnectionCount to poorConnectionCount,
             EventAttributeName.meetingDurationMs to if (meetingStartTimeMs == 0L) 0L else Calendar.getInstance().timeInMillis - meetingStartTimeMs,
-            EventAttributeName.meetingStartDurationMs to if (meetingStartConnectingTimeMs == 0L) 0L else meetingStartTimeMs - meetingStartConnectingTimeMs
+            EventAttributeName.meetingStartDurationMs to if (meetingStartTimeMs == 0L) 0L else meetingStartTimeMs - meetingStartConnectingTimeMs
         )
     }
 
