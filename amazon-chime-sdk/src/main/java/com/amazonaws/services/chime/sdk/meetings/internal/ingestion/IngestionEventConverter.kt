@@ -13,7 +13,6 @@ import com.amazonaws.services.chime.sdk.meetings.ingestion.IngestionEvent
 import com.amazonaws.services.chime.sdk.meetings.ingestion.IngestionMetadata
 import com.amazonaws.services.chime.sdk.meetings.ingestion.IngestionPayload
 import com.amazonaws.services.chime.sdk.meetings.ingestion.IngestionRecord
-import com.amazonaws.services.chime.sdk.meetings.ingestion.MeetingEventClientConfiguration
 import com.amazonaws.services.chime.sdk.meetings.internal.utils.EventAttributesUtils
 
 object IngestionEventConverter {
@@ -66,17 +65,7 @@ object IngestionEventConverter {
                 })
         }
 
-        val rootMetadata: IngestionMetadata = EventAttributesUtils.getCommonAttributes()
-        when (ingestionConfiguration.clientConfiguration) {
-            is MeetingEventClientConfiguration -> {
-                rootMetadata.putAll(
-                    mutableMapOf(
-                        EventAttributeName.meetingId to ingestionConfiguration.clientConfiguration.meetingId,
-                        EventAttributeName.attendeeId to ingestionConfiguration.clientConfiguration.attendeeId
-                    )
-                )
-            }
-        }
+        val rootMetadata: IngestionMetadata = EventAttributesUtils.getCommonAttributes(ingestionConfiguration)
 
         return IngestionRecord(rootMetadata, ingestionEvents)
     }
@@ -120,17 +109,7 @@ object IngestionEventConverter {
                 })
         }
 
-        val rootMetadata: IngestionMetadata = EventAttributesUtils.getCommonAttributes()
-        when (ingestionConfiguration.clientConfiguration) {
-            is MeetingEventClientConfiguration -> {
-                rootMetadata.putAll(
-                    mutableMapOf(
-                        EventAttributeName.meetingId to ingestionConfiguration.clientConfiguration.meetingId,
-                        EventAttributeName.attendeeId to ingestionConfiguration.clientConfiguration.attendeeId
-                    )
-                )
-            }
-        }
+        val rootMetadata: IngestionMetadata = EventAttributesUtils.getCommonAttributes(ingestionConfiguration)
         return IngestionRecord(rootMetadata, ingestionEvents)
     }
 
