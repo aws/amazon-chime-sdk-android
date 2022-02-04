@@ -7,9 +7,28 @@ package com.amazonaws.services.chime.sdk.meetings.internal.utils
 
 import com.amazonaws.services.chime.sdk.meetings.analytics.EventAttributeName
 import com.amazonaws.services.chime.sdk.meetings.analytics.EventAttributes
+import com.amazonaws.services.chime.sdk.meetings.ingestion.IngestionConfiguration
+import com.amazonaws.services.chime.sdk.meetings.ingestion.MeetingEventClientConfiguration
 import com.amazonaws.services.chime.sdk.meetings.session.MeetingSessionConfiguration
 
 object EventAttributesUtils {
+    fun getCommonAttributes(ingestionConfiguration: IngestionConfiguration): EventAttributes {
+        val attributes = getCommonAttributes()
+
+        when (ingestionConfiguration.clientConfiguration) {
+            is MeetingEventClientConfiguration -> {
+                attributes.putAll(
+                    mutableMapOf(
+                        EventAttributeName.meetingId to ingestionConfiguration.clientConfiguration.meetingId,
+                        EventAttributeName.attendeeId to ingestionConfiguration.clientConfiguration.attendeeId
+                    )
+                )
+            }
+        }
+
+        return attributes
+    }
+
     fun getCommonAttributes(meetingSessionConfiguration: MeetingSessionConfiguration): EventAttributes {
         val attributes = getCommonAttributes()
 

@@ -107,7 +107,7 @@ class DefaultMeetingEventBufferTests {
         val ttl = 100L
         coEvery { eventSender.sendRecord(any()) } returns false
         every { calendar.timeInMillis } returns 101L
-        every { IngestionEventConverter.fromDirtyMeetingEventItems(any()) }.returns(
+        every { IngestionEventConverter.fromDirtyMeetingEventItems(any(), any()) }.returns(
             ingestionRecord
         )
         every { dirtyEventDao.listDirtyMeetingEventItems(any()) } returns listOf(
@@ -139,7 +139,7 @@ class DefaultMeetingEventBufferTests {
     @Test
     fun `add should send immediately if it is meeting failed`() {
         coEvery { eventSender.sendRecord(any()) } returns true
-        every { IngestionEventConverter.fromMeetingEventItems(any()) }.returns(
+        every { IngestionEventConverter.fromMeetingEventItems(any(), any()) }.returns(
             ingestionRecord
         )
 
@@ -159,7 +159,7 @@ class DefaultMeetingEventBufferTests {
     @Test
     fun `add should not send immediately if it is not meeting failed`() {
         coEvery { eventSender.sendRecord(any()) } returns true
-        every { IngestionEventConverter.fromMeetingEventItems(any()) }.returns(
+        every { IngestionEventConverter.fromMeetingEventItems(any(), any()) }.returns(
             ingestionRecord
         )
 
@@ -189,7 +189,7 @@ class DefaultMeetingEventBufferTests {
     @Test
     fun `process should invoke eventSender sendRecord when there is stored events`() {
         every { eventDao.listMeetingEventItems(any()) } returns listOf(meetingEventItem)
-        every { IngestionEventConverter.fromMeetingEventItems(any()) }.returns(
+        every { IngestionEventConverter.fromMeetingEventItems(any(), any()) }.returns(
             ingestionRecord
         )
         coEvery { eventSender.sendRecord(any()) } returns true
@@ -206,7 +206,7 @@ class DefaultMeetingEventBufferTests {
     @Test
     fun `process should remove processed ids when sent succeeded`() {
         every { eventDao.listMeetingEventItems(any()) } returns listOf(meetingEventItem)
-        every { IngestionEventConverter.fromMeetingEventItems(any()) }.returns(
+        every { IngestionEventConverter.fromMeetingEventItems(any(), any()) }.returns(
             ingestionRecord
         )
         coEvery { eventSender.sendRecord(any()) } returns true
@@ -221,7 +221,7 @@ class DefaultMeetingEventBufferTests {
     @Test
     fun `process should remove processed ids when sent failed`() {
         every { eventDao.listMeetingEventItems(any()) } returns listOf(meetingEventItem)
-        every { IngestionEventConverter.fromMeetingEventItems(any()) }.returns(
+        every { IngestionEventConverter.fromMeetingEventItems(any(), any()) }.returns(
             ingestionRecord
         )
         coEvery { eventSender.sendRecord(any()) } returns false
@@ -236,7 +236,7 @@ class DefaultMeetingEventBufferTests {
     @Test
     fun `process should insert events as dirtyEvents when failed to send`() {
         every { eventDao.listMeetingEventItems(any()) } returns listOf(meetingEventItem)
-        every { IngestionEventConverter.fromMeetingEventItems(any()) }.returns(
+        every { IngestionEventConverter.fromMeetingEventItems(any(), any()) }.returns(
             ingestionRecord
         )
         coEvery { eventSender.sendRecord(any()) } returns false
