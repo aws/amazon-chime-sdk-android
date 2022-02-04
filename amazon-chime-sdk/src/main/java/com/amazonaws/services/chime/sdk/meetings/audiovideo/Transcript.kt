@@ -59,6 +59,7 @@ data class TranscriptResult(
 
 data class TranscriptAlternative(
     val items: Array<TranscriptItem>,
+    val entities: Array<TranscriptEntity>,
     val transcript: String
 ) {
     override fun equals(other: Any?): Boolean {
@@ -68,6 +69,7 @@ data class TranscriptAlternative(
         other as TranscriptAlternative
 
         if (!items.contentEquals(other.items)) return false
+        if (!entities.contentEquals(other.entities)) return false
         if (transcript != other.transcript) return false
 
         return true
@@ -80,13 +82,32 @@ data class TranscriptAlternative(
     }
 }
 
+data class TranscriptionStreamParams(
+    val contentIdentificationType: String?,
+    val contentRedactionType: String?,
+    val enablePartialResultsStability: Boolean,
+    val partialResultsStability: String?,
+    val piiEntityTypes: String?
+)
+
 data class TranscriptItem(
     val type: TranscriptItemType,
     val startTimeMs: Long,
     val endTimeMs: Long,
     val attendee: AttendeeInfo,
     val content: String,
-    val vocabularyFilterMatch: Boolean
+    val vocabularyFilterMatch: Boolean,
+    val confidence: Double,
+    val stable: Boolean
+)
+
+data class TranscriptEntity(
+    val type: String,
+    val startTimeMs: Long,
+    val endTimeMs: Long,
+    val content: String,
+    val category: String,
+    val confidence: Double
 )
 
 data class TranscriptionStatus(
@@ -122,4 +143,17 @@ enum class TranscriptionStatusType(val value: Int) {
             return values().find { it.value == intValue } ?: return Unknown
         }
     }
+}
+
+enum class TransciptPIIValues(val value: String) {
+    BankRouting("BANK_ROUTING"),
+    CreditCardNumber("CREDIT_DEBIT_NUMBER"),
+    CreditCardCVV("CREDIT_DEBIT_CVV"),
+    CreditCardExpiry("CREDIT_DEBIT_EXPIRY"),
+    PIN("PIN"),
+    EMAIL("EMAIL"),
+    ADDRESS("ADDRESS"),
+    NAME("NAME"),
+    PHONE("PHONE"),
+    SSN("SSN");
 }

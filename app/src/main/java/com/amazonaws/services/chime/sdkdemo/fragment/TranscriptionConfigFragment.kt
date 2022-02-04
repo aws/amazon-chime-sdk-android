@@ -15,12 +15,14 @@ import android.widget.ArrayAdapter
 import android.widget.Button
 import android.widget.Spinner
 import androidx.fragment.app.Fragment
+import com.amazonaws.services.chime.sdk.meetings.audiovideo.TransciptPIIValues
 import com.amazonaws.services.chime.sdk.meetings.utils.logger.ConsoleLogger
 import com.amazonaws.services.chime.sdk.meetings.utils.logger.LogLevel
 import com.amazonaws.services.chime.sdkdemo.R
 import com.amazonaws.services.chime.sdkdemo.activity.HomeActivity
 import com.amazonaws.services.chime.sdkdemo.data.TranscribeEngine
 import com.amazonaws.services.chime.sdkdemo.data.TranscribeLanguage
+import com.amazonaws.services.chime.sdkdemo.data.TranscribePII
 import com.amazonaws.services.chime.sdkdemo.data.TranscribeRegion
 import java.lang.ClassCastException
 import kotlinx.coroutines.CoroutineScope
@@ -103,6 +105,34 @@ class TranscriptionConfigFragment : Fragment() {
         }
     }
 
+    private val transcribeParity: List<TranscribePII> = mapOf<String, String>(
+        "low" to "Low",
+        "medium" to "Medium",
+        "high" to "High"
+    ).map {
+        TranscribePII(it.key, it.value)
+    }
+
+    private val transcribePIIContents: List<TranscribePII> = mapOf<String, String>(
+        "" to "ALL",
+        TransciptPIIValues.BankRouting.value to "BANK ROUTING",
+        TransciptPIIValues.CreditCardNumber.value to "CREDIT/DEBIT NUMBER",
+        TransciptPIIValues.CreditCardCVV.value to "CREDIT/DEBIT CVV",
+        TransciptPIIValues.CreditCardExpiry.value to "CREDIT/DEBIT EXPIRY",
+        TransciptPIIValues.PIN.value to "PIN",
+        TransciptPIIValues.EMAIL.value to "EMAIL",
+        TransciptPIIValues.ADDRESS.value to "ADDRESS",
+        TransciptPIIValues.NAME.value to "NAME",
+        TransciptPIIValues.PHONE.value to "PHONE NUMBER",
+        TransciptPIIValues.SSN.value to "SSN"
+    ).map {
+        TranscribePII(it.key, it.value)
+    }
+
+    private val transcribeIdentificationContents: MutableList<TranscribePII> = transcribePIIContents.toMutableList()
+    private val transcribeRedactionContents: MutableList<TranscribePII> = transcribePIIContents.toMutableList()
+    private val transcribeParities: MutableList<TranscribePII> = transcribeParity.toMutableList()
+
     private val transcribeMedicalLanguages: List<TranscribeLanguage> =
         arrayOf("en-US").mapNotNull { l ->
             languagesMap[l]?.let {
@@ -142,10 +172,19 @@ class TranscriptionConfigFragment : Fragment() {
     private lateinit var languageAdapter: ArrayAdapter<TranscribeLanguage>
     private lateinit var regionSpinner: Spinner
     private lateinit var regionAdapter: ArrayAdapter<TranscribeRegion>
+    private lateinit var paritySpinner: Spinner
+    private lateinit var parityAdapter: ArrayAdapter<TranscribePII>
+    private lateinit var piiContentIdentificationSpinner: Spinner
+    private lateinit var piiContentIdentificationAdapter: ArrayAdapter<TranscribePII>
+    private lateinit var piiContentRedactionSpinner: Spinner
+    private lateinit var piiContentRedactionAdapter: ArrayAdapter<TranscribePII>
 
     private val TRANSCRIBE_ENGINE_SPINNER_INDEX_KEY = "transcribeEngineSpinnerIndex"
     private val LANGUAGE_SPINNER_INDEX_KEY = "languageSpinnerIndex"
     private val REGION_SPINNER_INDEX_KEY = "regionSpinnerIndex"
+    private val PARITY_SPINNER_INDEX_KEY = "paritySpinnerIndex"
+    private val PII_CONTENT_IDENTIFICATION_SPINNER_INDEX_KEY = "piiContentIdentificationSpinnerIndex"
+    private val PII_CONTENT_REDACTION_SPINNER_INDEX_KEY = "piiContentRedactionSpinnerIndex"
 
     companion object {
         fun newInstance(meetingId: String): TranscriptionConfigFragment {
@@ -160,7 +199,14 @@ class TranscriptionConfigFragment : Fragment() {
     }
 
     interface TranscriptionConfigurationEventListener {
-        fun onStartTranscription(engine: TranscribeEngine, language: TranscribeLanguage, region: TranscribeRegion)
+        fun onStartTranscription(
+            engine: TranscribeEngine,
+            language: TranscribeLanguage,
+            region: TranscribeRegion,
+            transcribeParity: TranscribePII,
+            transcribePIIIdentication: TranscribePII,
+            transcribePIIRedaction: TranscribePII
+        )
     }
 
     override fun onAttach(context: Context) {
@@ -186,7 +232,10 @@ class TranscriptionConfigFragment : Fragment() {
             listener.onStartTranscription(
                 transcribeEngineSpinner.selectedItem as TranscribeEngine,
                 languageSpinner.selectedItem as TranscribeLanguage,
-                regionSpinner.selectedItem as TranscribeRegion
+                regionSpinner.selectedItem as TranscribeRegion,
+                paritySpinner.selectedItem as TranscribePII,
+                piiContentIdentificationSpinner.selectedItem as TranscribePII,
+                piiContentRedactionSpinner.selectedItem as TranscribePII
             )
         }
 
@@ -214,6 +263,32 @@ class TranscriptionConfigFragment : Fragment() {
         regionSpinner.adapter = regionAdapter
         regionSpinner.isSelected = false
 
+        paritySpinner = view.findViewById(R.id.spinnerParity)
+        parityAdapter = ArrayAdapter(context, android.R.layout.simple_spinner_item, transcribeParities)
+        parityAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        paritySpinner.adapter = parityAdapter
+        paritySpinner.isSelected = false
+        transcribeParities.add(0, TranscribePII(null, "Partial Stability"))
+        paritySpinner.setSelection(0, true)
+
+        piiContentIdentificationSpinner = view.findViewById(R.id.spinnerPIIContentIdentification)
+        piiContentIdentificationAdapter = ArrayAdapter(context, android.R.layout.simple_spinner_item, transcribeIdentificationContents)
+        piiContentIdentificationAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        piiContentIdentificationSpinner.adapter = piiContentIdentificationAdapter
+        piiContentIdentificationSpinner.isSelected = false
+        transcribeIdentificationContents.add(0, TranscribePII(null, "Enable PII Content Identification"))
+        piiContentIdentificationSpinner.setSelection(0, true)
+        piiContentIdentificationSpinner.onItemSelectedListener = onPIIContentIdentificationSelected
+
+        piiContentRedactionSpinner = view.findViewById(R.id.spinnerPIIContentRedaction)
+        piiContentRedactionAdapter = ArrayAdapter(context, android.R.layout.simple_spinner_item, transcribeRedactionContents)
+        piiContentRedactionAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        piiContentRedactionSpinner.adapter = piiContentRedactionAdapter
+        piiContentRedactionSpinner.isSelected = false
+        transcribeRedactionContents.add(0, TranscribePII(null, "Enable PII Content Redaction"))
+        piiContentRedactionSpinner.setSelection(0, true)
+        piiContentRedactionSpinner.onItemSelectedListener = onPIIContentRedactionSelected
+
         uiScope.launch {
             populateLanguages(transcribeLanguages, languages, languageAdapter)
             populateRegions(transcribeRegions, regions, regionAdapter)
@@ -221,15 +296,26 @@ class TranscriptionConfigFragment : Fragment() {
             var transcribeEngineSpinnerIndex = 0
             var languageSpinnerIndex = 0
             var regionSpinnerIndex = 0
+            var paritySpinnerIndex = 0
+            var piiContentIdentificationSpinnerIndex = 0
+            var piiContentRedactionSpinnerIndex = 0
             if (savedInstanceState != null) {
                 transcribeEngineSpinnerIndex = savedInstanceState.getInt(TRANSCRIBE_ENGINE_SPINNER_INDEX_KEY, 0)
                 languageSpinnerIndex = savedInstanceState.getInt(LANGUAGE_SPINNER_INDEX_KEY, 0)
                 regionSpinnerIndex = savedInstanceState.getInt(REGION_SPINNER_INDEX_KEY, 0)
+                paritySpinnerIndex = savedInstanceState.getInt(PARITY_SPINNER_INDEX_KEY, 0)
+                piiContentIdentificationSpinnerIndex = savedInstanceState.getInt(
+                    PII_CONTENT_IDENTIFICATION_SPINNER_INDEX_KEY, 0)
+                piiContentRedactionSpinnerIndex = savedInstanceState.getInt(
+                    PII_CONTENT_REDACTION_SPINNER_INDEX_KEY, 0)
             }
 
             transcribeEngineSpinner.setSelection(transcribeEngineSpinnerIndex)
             languageSpinner.setSelection(languageSpinnerIndex)
             regionSpinner.setSelection(regionSpinnerIndex)
+            paritySpinner.setSelection(paritySpinnerIndex)
+            piiContentIdentificationSpinner.setSelection(piiContentIdentificationSpinnerIndex)
+            piiContentRedactionSpinner.setSelection(piiContentRedactionSpinnerIndex)
         }
 
         return view
@@ -240,6 +326,9 @@ class TranscriptionConfigFragment : Fragment() {
         outState.putInt(TRANSCRIBE_ENGINE_SPINNER_INDEX_KEY, transcribeEngineSpinner.selectedItemPosition)
         outState.putInt(LANGUAGE_SPINNER_INDEX_KEY, languageSpinner.selectedItemPosition)
         outState.putInt(REGION_SPINNER_INDEX_KEY, regionSpinner.selectedItemPosition)
+        outState.putInt(PARITY_SPINNER_INDEX_KEY, paritySpinner.selectedItemPosition)
+        outState.putInt(PII_CONTENT_IDENTIFICATION_SPINNER_INDEX_KEY, piiContentIdentificationSpinner.selectedItemPosition)
+        outState.putInt(PII_CONTENT_REDACTION_SPINNER_INDEX_KEY, piiContentRedactionSpinner.selectedItemPosition)
     }
 
     private val onTranscribeEngineSelected = object : AdapterView.OnItemSelectedListener {
@@ -262,6 +351,40 @@ class TranscriptionConfigFragment : Fragment() {
                 logger.error(TAG, "Incorrect position in TranscribeEngine spinner")
             }
             resetSpinner()
+        }
+
+        override fun onNothingSelected(p0: AdapterView<*>?) {
+        }
+    }
+
+    private val onPIIContentIdentificationSelected = object : AdapterView.OnItemSelectedListener {
+        override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+            if (position == 0) {
+                piiContentRedactionSpinner.isEnabled = true
+            } else if (position < transcribeIdentificationContents.size) {
+                piiContentIdentificationSpinner.isEnabled = true
+                piiContentRedactionSpinner.setSelection(0, false)
+                piiContentRedactionSpinner.isEnabled = false
+            } else {
+                logger.error(TAG, "Incorrect position in piiContentIdentificationSpinner spinner")
+            }
+        }
+
+        override fun onNothingSelected(p0: AdapterView<*>?) {
+        }
+    }
+
+    private val onPIIContentRedactionSelected = object : AdapterView.OnItemSelectedListener {
+        override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+            if (position == 0) {
+                piiContentIdentificationSpinner.isEnabled = true
+            } else if (position < transcribeRedactionContents.size) {
+                piiContentRedactionSpinner.isEnabled = true
+                piiContentIdentificationSpinner.setSelection(0, true)
+                piiContentIdentificationSpinner.isEnabled = false
+            } else {
+                logger.error(TAG, "Incorrect position in piiContentRedactionSpinner spinner")
+            }
         }
 
         override fun onNothingSelected(p0: AdapterView<*>?) {

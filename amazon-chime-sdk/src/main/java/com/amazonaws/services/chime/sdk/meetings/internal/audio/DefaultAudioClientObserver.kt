@@ -16,6 +16,7 @@ import com.amazonaws.services.chime.sdk.meetings.audiovideo.SignalStrength
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.SignalUpdate
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.Transcript
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.TranscriptAlternative
+import com.amazonaws.services.chime.sdk.meetings.audiovideo.TranscriptEntity
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.TranscriptEvent
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.TranscriptItem
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.TranscriptItemType
@@ -253,12 +254,27 @@ class DefaultAudioClientObserver(
                                         rawItem.attendee.externalUserId
                                     ),
                                     rawItem.content,
-                                    rawItem.vocabularyFilterMatch
+                                    rawItem.vocabularyFilterMatch,
+                                    rawItem.confidence,
+                                    rawItem.stable
                                 )
                                 items.add(item)
                             }
+                            val entities = mutableListOf<TranscriptEntity>()
+                            rawAlternative.entities.forEach { rawEntity ->
+                                val entity = TranscriptEntity(
+                                    rawEntity.type,
+                                    rawEntity.startTimeMs,
+                                    rawEntity.endTimeMs,
+                                    rawEntity.content,
+                                    rawEntity.category,
+                                    rawEntity.confidence
+                                )
+                                entities.add(entity)
+                            }
                             val alternative = TranscriptAlternative(
                                 items.toTypedArray(),
+                                entities.toTypedArray(),
                                 rawAlternative.transcript
                             )
                             alternatives.add(alternative)
