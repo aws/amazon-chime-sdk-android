@@ -29,6 +29,11 @@ interface MeetingStatsCollector {
     fun updateMeetingStartTimeMs()
 
     /**
+     * Update meeting start request time.
+     */
+    fun updateMeetingStartConnectingTimeMs()
+
+    /**
      * Clear meeting stats.
      */
     fun resetMeetingStats()

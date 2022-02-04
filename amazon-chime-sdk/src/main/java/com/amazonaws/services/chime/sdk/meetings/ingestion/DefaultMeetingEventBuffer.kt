@@ -82,7 +82,7 @@ class DefaultMeetingEventBuffer @JvmOverloads constructor(
             }
 
             val eventRecord =
-                IngestionEventConverter.fromMeetingEventItems(eventItems)
+                IngestionEventConverter.fromMeetingEventItems(eventItems, ingestionConfiguration)
 
             val idsToRemove = eventItems.map { it.id }.toList()
 
@@ -142,7 +142,7 @@ class DefaultMeetingEventBuffer @JvmOverloads constructor(
             var dirtyEvents =
                 dirtyEventDao.listDirtyMeetingEventItems(ingestionConfiguration.flushSize)
             var ingestionRecord =
-                IngestionEventConverter.fromDirtyMeetingEventItems(dirtyEvents)
+                IngestionEventConverter.fromDirtyMeetingEventItems(dirtyEvents, ingestionConfiguration)
 
             var isSentSuccessful = true
             try {
@@ -161,7 +161,7 @@ class DefaultMeetingEventBuffer @JvmOverloads constructor(
                     )
                     ingestionRecord =
                         IngestionEventConverter.fromDirtyMeetingEventItems(
-                            dirtyEvents
+                            dirtyEvents, ingestionConfiguration
                         )
                 }
             } catch (exception: Exception) {
