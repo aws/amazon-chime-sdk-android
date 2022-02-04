@@ -60,6 +60,36 @@
                 android:paddingLeft="32dp"
                 android:paddingRight="32dp" />
 
+            <Spinner
+                android:id="@+id/spinnerParity"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                android:contentDescription="@string/partial_stability_spinner"
+                android:minHeight="48dp"
+                android:paddingLeft="32dp"
+                android:paddingRight="32dp" />
+
+            <Spinner
+                android:id="@+id/spinnerPIIContentIdentification"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                android:contentDescription="@string/pii_identification_spinner"
+                android:minHeight="48dp"
+                android:paddingLeft="32dp"
+                android:paddingRight="32dp" />
+
+            <Spinner
+                android:id="@+id/spinnerPIIContentRedaction"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                android:contentDescription="@string/pii_redaction_spinner"
+                android:minHeight="48dp"
+                android:paddingLeft="32dp"
+                android:paddingRight="32dp" />
+
             <Button
                 android:id="@+id/buttonStartTranscription"
                 android:layout_width="wrap_content"

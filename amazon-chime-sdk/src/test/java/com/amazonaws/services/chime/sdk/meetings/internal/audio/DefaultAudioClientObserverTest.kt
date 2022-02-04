@@ -17,6 +17,7 @@ import com.amazonaws.services.chime.sdk.meetings.audiovideo.SignalStrength
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.SignalUpdate
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.Transcript
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.TranscriptAlternative
+import com.amazonaws.services.chime.sdk.meetings.audiovideo.TranscriptEntity
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.TranscriptItem
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.TranscriptItemType
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.TranscriptResult
@@ -37,6 +38,7 @@ import com.xodee.client.audio.audioclient.AttendeeUpdate
 import com.xodee.client.audio.audioclient.AudioClient
 import com.xodee.client.audio.audioclient.transcript.Transcript as TranscriptInternal
 import com.xodee.client.audio.audioclient.transcript.TranscriptAlternative as TranscriptAlternativeInternal
+import com.xodee.client.audio.audioclient.transcript.TranscriptEntity as TranscriptEntityInternal
 import com.xodee.client.audio.audioclient.transcript.TranscriptEvent as TranscriptEventInternal
 import com.xodee.client.audio.audioclient.transcript.TranscriptItem as TranscriptItemInternal
 import com.xodee.client.audio.audioclient.transcript.TranscriptItemType as TranscriptItemTypeInternal
@@ -644,7 +646,9 @@ class DefaultAudioClientObserverTest {
                             timestampMs + 5L,
                             AttendeeInfoInternal(testId1, testId1),
                             "I",
-                            true
+                            true,
+                            true,
+                            0.0
                         ),
                         TranscriptItemInternal(
                             TranscriptItemTypeInternal.TranscriptItemTypePunctuation,
@@ -652,7 +656,190 @@ class DefaultAudioClientObserverTest {
                             timestampMs + 10L,
                             AttendeeInfoInternal(testId2, testId2),
                             "am",
-                            false
+                            false,
+                            true,
+                            0.0
+                        )
+                    ),
+                    arrayOf(),
+                    "I am"
+                )
+            )
+        )
+
+        val transcriptResultTwo = TranscriptResultInternal(
+            testResultId,
+            testChannelId,
+            isPartial,
+            timestampMs + 10L,
+            timestampMs + 20L,
+            arrayOf(
+                TranscriptAlternativeInternal(
+                    arrayOf(
+                        TranscriptItemInternal(
+                            TranscriptItemTypeInternal.TranscriptItemTypePunctuation,
+                            timestampMs + 10,
+                            timestampMs + 15L,
+                            AttendeeInfoInternal(testId2, testId2),
+                            "a",
+                            true,
+                            true,
+                            0.0
+                        ),
+                        TranscriptItemInternal(
+                            TranscriptItemTypeInternal.TranscriptItemTypePronunciation,
+                            timestampMs + 15L,
+                            timestampMs + 20L,
+                            AttendeeInfoInternal(testId1, testId1),
+                            "guardian",
+                            false,
+                            true,
+                            0.0
+                        )
+                    ),
+                    arrayOf(),
+                    "a guardian"
+                )
+            )
+        )
+
+        val events: Array<TranscriptEventInternal> = arrayOf(
+            TranscriptInternal(arrayOf(transcriptResultOne)),
+            TranscriptInternal(arrayOf(transcriptResultTwo))
+        )
+
+        val expectedTranscriptOne = Transcript(
+            arrayOf(
+                TranscriptResult(
+                    testResultId,
+                    testChannelId,
+                    isPartial,
+                    timestampMs,
+                    timestampMs + 10L,
+                    arrayOf(
+                        TranscriptAlternative(
+                            arrayOf(
+                                TranscriptItem(
+                                    TranscriptItemType.Pronunciation,
+                                    timestampMs,
+                                    timestampMs + 5L,
+                                    AttendeeInfo(testId1, testId1),
+                                    "I",
+                                    true,
+                                    0.0,
+                                    true
+                                ),
+                                TranscriptItem(
+                                    TranscriptItemType.Punctuation,
+                                    timestampMs + 5L,
+                                    timestampMs + 10L,
+                                    AttendeeInfo(testId2, testId2),
+                                    "am",
+                                    false,
+                                    0.0,
+                                    true
+                                )
+                            ),
+                            arrayOf(),
+                            "I am"
+                        )
+                    )
+                )
+            )
+        )
+
+        val expectedTranscriptTwo = Transcript(
+            arrayOf(
+                TranscriptResult(
+                    testResultId,
+                    testChannelId,
+                    isPartial,
+                    timestampMs + 10L,
+                    timestampMs + 20L,
+                    arrayOf(
+                        TranscriptAlternative(
+                            arrayOf(
+                                TranscriptItem(
+                                    TranscriptItemType.Punctuation,
+                                    timestampMs + 10L,
+                                    timestampMs + 15L,
+                                    AttendeeInfo(testId2, testId2),
+                                    "a",
+                                    true,
+                                    0.0,
+                                    true
+                                ),
+                                TranscriptItem(
+                                    TranscriptItemType.Pronunciation,
+                                    timestampMs + 15L,
+                                    timestampMs + 20L,
+                                    AttendeeInfo(testId1, testId1),
+                                    "guardian",
+                                    false,
+                                    0.0,
+                                    true
+                                )
+                            ),
+                            arrayOf(),
+                            "a guardian"
+                        )
+                    )
+                )
+            )
+        )
+
+        audioClientObserver.onTranscriptEventsReceived(events)
+        verify(exactly = 1) { mockTranscriptEventObserver.onTranscriptEventReceived(expectedTranscriptOne) }
+        verify(exactly = 1) { mockTranscriptEventObserver.onTranscriptEventReceived(expectedTranscriptTwo) }
+    }
+
+    @Test
+    fun `onTranscriptEventsReceived should send local Transcript with Transcript Entity events as input`() {
+        audioClientObserver.subscribeToTranscriptEvent(mockTranscriptEventObserver)
+
+        val testResultId = "testResultId"
+        val testChannelId = "testChannelId"
+        val isPartial = true
+
+        val transcriptResultOne = TranscriptResultInternal(
+            testResultId,
+            testChannelId,
+            isPartial,
+            timestampMs,
+            timestampMs + 10L,
+            arrayOf(
+                TranscriptAlternativeInternal(
+                    arrayOf(
+                        TranscriptItemInternal(
+                            TranscriptItemTypeInternal.TranscriptItemTypePronunciation,
+                            timestampMs,
+                            timestampMs + 5L,
+                            AttendeeInfoInternal(testId1, testId1),
+                            "I",
+                            true,
+                            true,
+                            0.0
+
+                        ),
+                        TranscriptItemInternal(
+                            TranscriptItemTypeInternal.TranscriptItemTypePunctuation,
+                            timestampMs + 5L,
+                            timestampMs + 10L,
+                            AttendeeInfoInternal(testId2, testId2),
+                            "am",
+                            false,
+                            true,
+                            0.0
+                        )
+                    ),
+                    arrayOf(
+                        TranscriptEntityInternal(
+                            "NAME",
+                            "PII",
+                            "John Doe",
+                            1.0,
+                            timestampMs + 5L,
+                            timestampMs + 10L
                         )
                     ),
                     "I am"
@@ -675,7 +862,9 @@ class DefaultAudioClientObserverTest {
                             timestampMs + 15L,
                             AttendeeInfoInternal(testId2, testId2),
                             "a",
-                            true
+                            true,
+                            true,
+                            0.0
                         ),
                         TranscriptItemInternal(
                             TranscriptItemTypeInternal.TranscriptItemTypePronunciation,
@@ -683,7 +872,19 @@ class DefaultAudioClientObserverTest {
                             timestampMs + 20L,
                             AttendeeInfoInternal(testId1, testId1),
                             "guardian",
-                            false
+                            false,
+                            true,
+                            0.0
+                        )
+                    ),
+                    arrayOf(
+                        TranscriptEntityInternal(
+                            "Address",
+                            "PII",
+                            "1600 Pennsylvania Ave",
+                            1.0,
+                            timestampMs + 5L,
+                            timestampMs + 10L
                         )
                     ),
                     "a guardian"
@@ -713,6 +914,8 @@ class DefaultAudioClientObserverTest {
                                     timestampMs + 5L,
                                     AttendeeInfo(testId1, testId1),
                                     "I",
+                                    true,
+                                    0.0,
                                     true
                                 ),
                                 TranscriptItem(
@@ -721,7 +924,19 @@ class DefaultAudioClientObserverTest {
                                     timestampMs + 10L,
                                     AttendeeInfo(testId2, testId2),
                                     "am",
-                                    false
+                                    false,
+                                    0.0,
+                                    true
+                                )
+                            ),
+                            arrayOf(
+                                TranscriptEntity(
+                                    "NAME",
+                                    timestampMs + 5L,
+                                    timestampMs + 10L,
+                                    "John Doe",
+                                    "PII",
+                                    1.0
                                 )
                             ),
                             "I am"
@@ -748,6 +963,8 @@ class DefaultAudioClientObserverTest {
                                     timestampMs + 15L,
                                     AttendeeInfo(testId2, testId2),
                                     "a",
+                                    true,
+                                    0.0,
                                     true
                                 ),
                                 TranscriptItem(
@@ -756,7 +973,19 @@ class DefaultAudioClientObserverTest {
                                     timestampMs + 20L,
                                     AttendeeInfo(testId1, testId1),
                                     "guardian",
-                                    false
+                                    false,
+                                    0.0,
+                                    true
+                                )
+                            ),
+                            arrayOf(
+                                TranscriptEntity(
+                                    "Address",
+                                    timestampMs + 5L,
+                                    timestampMs + 10L,
+                                    "1600 Pennsylvania Ave",
+                                    "PII",
+                                    1.0
                                 )
                             ),
                             "a guardian"
