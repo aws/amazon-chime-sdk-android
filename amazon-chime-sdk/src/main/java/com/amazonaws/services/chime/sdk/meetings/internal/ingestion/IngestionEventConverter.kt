@@ -8,6 +8,7 @@ package com.amazonaws.services.chime.sdk.meetings.internal.ingestion
 import com.amazonaws.services.chime.sdk.meetings.analytics.EventAttributeName
 import com.amazonaws.services.chime.sdk.meetings.analytics.EventAttributes
 import com.amazonaws.services.chime.sdk.meetings.ingestion.EventClientType
+import com.amazonaws.services.chime.sdk.meetings.ingestion.IngestionConfiguration
 import com.amazonaws.services.chime.sdk.meetings.ingestion.IngestionEvent
 import com.amazonaws.services.chime.sdk.meetings.ingestion.IngestionMetadata
 import com.amazonaws.services.chime.sdk.meetings.ingestion.IngestionPayload
@@ -25,7 +26,7 @@ object IngestionEventConverter {
     private val eventMetadataAttributeNames =
         listOf(EventAttributeName.meetingId, EventAttributeName.attendeeId)
 
-    fun fromDirtyMeetingEventItems(items: List<DirtyMeetingEventItem>): IngestionRecord {
+    fun fromDirtyMeetingEventItems(items: List<DirtyMeetingEventItem>, ingestionConfiguration: IngestionConfiguration): IngestionRecord {
         if (items.isEmpty()) {
             return IngestionRecord(mutableMapOf(), listOf())
         }
@@ -64,13 +65,13 @@ object IngestionEventConverter {
                 })
         }
 
-        val rootMetadata: IngestionMetadata = EventAttributesUtils.getCommonAttributes()
+        val rootMetadata: IngestionMetadata = EventAttributesUtils.getCommonAttributes(ingestionConfiguration)
 
         return IngestionRecord(rootMetadata, ingestionEvents)
     }
 
     // Need to have different name due to Kotlin name collision on List
-    fun fromMeetingEventItems(items: List<MeetingEventItem>): IngestionRecord {
+    fun fromMeetingEventItems(items: List<MeetingEventItem>, ingestionConfiguration: IngestionConfiguration): IngestionRecord {
         if (items.isEmpty()) {
             return IngestionRecord(mutableMapOf(), listOf())
         }
@@ -108,8 +109,7 @@ object IngestionEventConverter {
                 })
         }
 
-        val rootMetadata: IngestionMetadata = EventAttributesUtils.getCommonAttributes()
-
+        val rootMetadata: IngestionMetadata = EventAttributesUtils.getCommonAttributes(ingestionConfiguration)
         return IngestionRecord(rootMetadata, ingestionEvents)
     }
 

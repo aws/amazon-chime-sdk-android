@@ -1,0 +1,118 @@
+apply plugin: 'maven'
+apply plugin: 'signing'
+apply plugin: 'maven-publish'
+
+def localPropertiesFile = new File(getRootDir(), "local.properties")
+Properties localProperties = new Properties()
+if (localPropertiesFile.exists()) {
+    localPropertiesFile.withInputStream { instr ->
+        localProperties.load(instr)
+    }
+}
+
+def versionFile = new File(getRootDir(),  "version.properties")
+Properties versionProperties = new Properties()
+if (versionFile.exists()) {
+    versionFile.withInputStream { instr ->
+        versionProperties.load(instr)
+    }
+}
+version = versionProperties.getProperty('VERSION')
+def media_version = versionProperties.getProperty('MEDIA_VERSION')
+
+signing {
+    if (!project.hasProperty('signing.key') || !project.hasProperty('signing.password') || !project.hasProperty('signing.keyId')) {
+        logger.error('Missing GPG Signing Properties.')
+    }
+    def signingKey = findProperty("signing.key")
+    def signingPassword = findProperty("signing.password")
+    def keyId = findProperty("signing.keyId")
+    useInMemoryPgpKeys(keyId, signingKey, signingPassword)
+
+    sign(publishing.publications)
+}
+
+project.afterEvaluate {
+    publishing {
+        publications {
+            publishChimeSDK(MavenPublication) {
+                afterEvaluate {
+                    from components.release
+                }
+                groupId = GROUP
+                version = version
+                artifactId = ARTIFACT_ID_SDK
+
+                pom {
+                    name = POM_SDK_NAME
+                    description = POM_DESCRIPTION_SDK
+                    url = POM_URL
+                    licenses {
+                        license {
+                            name = POM_LICENCE_NAME
+                            url = POM_LICENCE_URL
+                            distribution = POM_LICENCE_DIST
+                        }
+                    }
+                    scm {
+                        url = POM_SCM_URL
+                        connection = POM_SCM_CONNECTION
+                        developerConnection = POM_SCM_DEV_CONNECTION
+                    }
+                    developers {
+                        developer {
+                            id = POM_DEVELOPER_ID
+                            organization = POM_DEVELOPER_ORGANIZATION
+                            organizationUrl = POM_DEVELOPER_ORGANIZATION_URL
+                        }
+                    }
+                }
+            }
+            publishChimeSDKMedia(MavenPublication) {
+                groupId = GROUP
+                version = media_version
+                artifactId = ARTIFACT_ID_SDK_MEDIA
+                artifact("$buildDir/../libs/amazon-chime-sdk-media.aar")
+
+                pom {
+                    name = POM_SDK_MEDIA_NAME
+                    description = POM_DESCRIPTION_SDK_MEDIA
+                    url = POM_URL
+                    licenses {
+                        license {
+                            name = POM_LICENCE_NAME
+                            url = POM_LICENCE_URL
+                            distribution = POM_LICENCE_DIST
+                        }
+                    }
+                    scm {
+                        url = POM_SCM_URL
+                        connection = POM_SCM_CONNECTION
+                        developerConnection = POM_SCM_DEV_CONNECTION
+                    }
+                    developers {
+                        developer {
+                            id = POM_DEVELOPER_ID
+                            organization = POM_DEVELOPER_ORGANIZATION
+                            organizationUrl = POM_DEVELOPER_ORGANIZATION_URL
+                        }
+                    }
+                }
+            }
+        }
+
+        repositories {
+            maven {
+                def releasesRepoUrl = "https://aws.oss.sonatype.org/service/local/staging/deploy/maven2/"
+                def snapshotsRepoUrl = "https://aws.oss.sonatype.org/content/repositories/snapshots/"
+                url = version.endsWith('SNAPSHOT') ? snapshotsRepoUrl : releasesRepoUrl
+                credentials {
+                    username = localProperties.getProperty('SONATYPE_USERNAME')
+                    password = localProperties.getProperty('SONATYPE_PASSWORD')
+                }
+            }
+        }
+    }
+}
+
+

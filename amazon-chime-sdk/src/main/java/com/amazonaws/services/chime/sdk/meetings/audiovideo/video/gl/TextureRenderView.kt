@@ -113,10 +113,10 @@ open class TextureRenderView @JvmOverloads constructor(
                 rotatedFrameHeight != frame.getRotatedHeight() ||
                 frameRotation != frame.rotation
         ) {
-            logger.info(TAG, "Video frame rotated size changed to ${rotatedFrameWidth}x$rotatedFrameHeight")
             rotatedFrameWidth = frame.getRotatedWidth()
             rotatedFrameHeight = frame.getRotatedHeight()
             frameRotation = frame.rotation
+            logger.info(TAG, "Video frame rotated size changed to ${rotatedFrameWidth}x$rotatedFrameHeight")
 
             CoroutineScope(Dispatchers.Main).launch {
                 requestLayout()

@@ -84,6 +84,11 @@ enum class EventAttributeName {
     maxVideoTileCount,
 
     /**
+     * Duration of the meeting starting process
+     */
+    meetingStartDurationMs,
+
+    /**
      * Duration of the meeting
      */
     meetingDurationMs,

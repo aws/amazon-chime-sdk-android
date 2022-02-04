@@ -5,6 +5,20 @@
 
 * [Demo] Added PII identification/redaction and partial stability meeting captions functionality based on the live transcription APIs. You will need to have a serverless deployment to create new AWS Lambda endpoints for live transcription. Follow [the live transcription guide](https://docs.aws.amazon.com/chime/latest/dg/meeting-transcription.html) to create necessary service-linked role so that the demo app can call Amazon Transcribe and Amazon Transcribe Medical on your behalf.
 
+## Unreleased
+
+###Added
+* Added the meetingStartDurationMs event in ingestionEvents to record the time that elapsed between the start request and the beginning of the meeting.
+
+## [0.14.2] - 2022-01-27
+
+### Added
+* Added Maven Support for Android SDK.
+
+### Fixed
+* Fixed out of order logging on `TextureRenderView`.
+* Fixed Maven release process error and skipped 0.14.1
+
 ## [0.14.0] - 2021-12-21
 
 ### Added

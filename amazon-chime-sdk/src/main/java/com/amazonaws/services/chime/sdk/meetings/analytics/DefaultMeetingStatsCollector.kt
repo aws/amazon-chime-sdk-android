@@ -11,6 +11,8 @@ import java.util.Calendar
 class DefaultMeetingStatsCollector(
     private val logger: Logger
 ) : MeetingStatsCollector {
+    // The time that the meeting is requested to be started
+    private var meetingStartConnectingTimeMs: Long = 0L
     // The time meeting has started
     private var meetingStartTimeMs: Long = 0L
     // The number of attempts to reconnect to the meeting
@@ -34,11 +36,16 @@ class DefaultMeetingStatsCollector(
         maxVideoTileCount = videoTileCount.coerceAtLeast(maxVideoTileCount)
     }
 
+    override fun updateMeetingStartConnectingTimeMs() {
+        meetingStartConnectingTimeMs = Calendar.getInstance().timeInMillis
+    }
+
     override fun updateMeetingStartTimeMs() {
         meetingStartTimeMs = Calendar.getInstance().timeInMillis
     }
 
     override fun resetMeetingStats() {
+        meetingStartConnectingTimeMs = 0L
         meetingStartTimeMs = 0L
         retryCount = 0
         poorConnectionCount = 0
@@ -50,7 +57,8 @@ class DefaultMeetingStatsCollector(
             EventAttributeName.maxVideoTileCount to maxVideoTileCount,
             EventAttributeName.retryCount to retryCount,
             EventAttributeName.poorConnectionCount to poorConnectionCount,
-            EventAttributeName.meetingDurationMs to if (meetingStartTimeMs == 0L) 0L else Calendar.getInstance().timeInMillis - meetingStartTimeMs
+            EventAttributeName.meetingDurationMs to if (meetingStartTimeMs == 0L) 0L else Calendar.getInstance().timeInMillis - meetingStartTimeMs,
+            EventAttributeName.meetingStartDurationMs to if (meetingStartTimeMs == 0L) 0L else meetingStartTimeMs - meetingStartConnectingTimeMs
         )
     }
 
