@@ -64,7 +64,7 @@ class CaptionHolder(inflatedView: View) :
         caption.item?.let {
             // Underline unstable words.
             val word = it.content
-            if (it.confidence < 0.3 && !it.content.startsWith("[")) {
+            if (it.confidence != null && it.confidence!! < 0.3 && !it.content.startsWith("[")) {
                 val spannable = SpannableString(caption.content)
                 spannable.setSpan(
                     UnderlineSpan(),

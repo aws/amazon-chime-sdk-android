@@ -661,7 +661,7 @@ class DefaultAudioClientObserverTest {
                             0.0
                         )
                     ),
-                    arrayOf(),
+                    null,
                     "I am"
                 )
             )
@@ -697,7 +697,7 @@ class DefaultAudioClientObserverTest {
                             0.0
                         )
                     ),
-                    arrayOf(),
+                    null,
                     "a guardian"
                 )
             )
@@ -740,7 +740,7 @@ class DefaultAudioClientObserverTest {
                                     true
                                 )
                             ),
-                            arrayOf(),
+                            null,
                             "I am"
                         )
                     )
@@ -780,7 +780,7 @@ class DefaultAudioClientObserverTest {
                                     true
                                 )
                             ),
-                            arrayOf(),
+                            null,
                             "a guardian"
                         )
                     )
@@ -820,16 +820,6 @@ class DefaultAudioClientObserverTest {
                             true,
                             0.0
 
-                        ),
-                        TranscriptItemInternal(
-                            TranscriptItemTypeInternal.TranscriptItemTypePunctuation,
-                            timestampMs + 5L,
-                            timestampMs + 10L,
-                            AttendeeInfoInternal(testId2, testId2),
-                            "am",
-                            false,
-                            true,
-                            0.0
                         )
                     ),
                     arrayOf(
@@ -847,54 +837,8 @@ class DefaultAudioClientObserverTest {
             )
         )
 
-        val transcriptResultTwo = TranscriptResultInternal(
-            testResultId,
-            testChannelId,
-            isPartial,
-            timestampMs + 10L,
-            timestampMs + 20L,
-            arrayOf(
-                TranscriptAlternativeInternal(
-                    arrayOf(
-                        TranscriptItemInternal(
-                            TranscriptItemTypeInternal.TranscriptItemTypePunctuation,
-                            timestampMs + 10,
-                            timestampMs + 15L,
-                            AttendeeInfoInternal(testId2, testId2),
-                            "a",
-                            true,
-                            true,
-                            0.0
-                        ),
-                        TranscriptItemInternal(
-                            TranscriptItemTypeInternal.TranscriptItemTypePronunciation,
-                            timestampMs + 15L,
-                            timestampMs + 20L,
-                            AttendeeInfoInternal(testId1, testId1),
-                            "guardian",
-                            false,
-                            true,
-                            0.0
-                        )
-                    ),
-                    arrayOf(
-                        TranscriptEntityInternal(
-                            "Address",
-                            "PII",
-                            "1600 Pennsylvania Ave",
-                            1.0,
-                            timestampMs + 5L,
-                            timestampMs + 10L
-                        )
-                    ),
-                    "a guardian"
-                )
-            )
-        )
-
         val events: Array<TranscriptEventInternal> = arrayOf(
-            TranscriptInternal(arrayOf(transcriptResultOne)),
-            TranscriptInternal(arrayOf(transcriptResultTwo))
+            TranscriptInternal(arrayOf(transcriptResultOne))
         )
 
         val expectedTranscriptOne = Transcript(
@@ -917,16 +861,6 @@ class DefaultAudioClientObserverTest {
                                     true,
                                     0.0,
                                     true
-                                ),
-                                TranscriptItem(
-                                    TranscriptItemType.Punctuation,
-                                    timestampMs + 5L,
-                                    timestampMs + 10L,
-                                    AttendeeInfo(testId2, testId2),
-                                    "am",
-                                    false,
-                                    0.0,
-                                    true
                                 )
                             ),
                             arrayOf(
@@ -946,58 +880,8 @@ class DefaultAudioClientObserverTest {
             )
         )
 
-        val expectedTranscriptTwo = Transcript(
-            arrayOf(
-                TranscriptResult(
-                    testResultId,
-                    testChannelId,
-                    isPartial,
-                    timestampMs + 10L,
-                    timestampMs + 20L,
-                    arrayOf(
-                        TranscriptAlternative(
-                            arrayOf(
-                                TranscriptItem(
-                                    TranscriptItemType.Punctuation,
-                                    timestampMs + 10L,
-                                    timestampMs + 15L,
-                                    AttendeeInfo(testId2, testId2),
-                                    "a",
-                                    true,
-                                    0.0,
-                                    true
-                                ),
-                                TranscriptItem(
-                                    TranscriptItemType.Pronunciation,
-                                    timestampMs + 15L,
-                                    timestampMs + 20L,
-                                    AttendeeInfo(testId1, testId1),
-                                    "guardian",
-                                    false,
-                                    0.0,
-                                    true
-                                )
-                            ),
-                            arrayOf(
-                                TranscriptEntity(
-                                    "Address",
-                                    timestampMs + 5L,
-                                    timestampMs + 10L,
-                                    "1600 Pennsylvania Ave",
-                                    "PII",
-                                    1.0
-                                )
-                            ),
-                            "a guardian"
-                        )
-                    )
-                )
-            )
-        )
-
         audioClientObserver.onTranscriptEventsReceived(events)
         verify(exactly = 1) { mockTranscriptEventObserver.onTranscriptEventReceived(expectedTranscriptOne) }
-        verify(exactly = 1) { mockTranscriptEventObserver.onTranscriptEventReceived(expectedTranscriptTwo) }
     }
 
     @Test

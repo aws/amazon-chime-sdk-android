@@ -59,7 +59,7 @@ data class TranscriptResult(
 
 data class TranscriptAlternative(
     val items: Array<TranscriptItem>,
-    val entities: Array<TranscriptEntity>,
+    val entities: Array<TranscriptEntity>?,
     val transcript: String
 ) {
     override fun equals(other: Any?): Boolean {
@@ -69,8 +69,13 @@ data class TranscriptAlternative(
         other as TranscriptAlternative
 
         if (!items.contentEquals(other.items)) return false
-        if (!entities.contentEquals(other.entities)) return false
         if (transcript != other.transcript) return false
+
+        entities?.let { thisEntity ->
+            if (other.entities?.let { thisEntity.contentEquals(it) } == false) {
+                return false
+            }
+        }
 
         return true
     }
@@ -97,12 +102,12 @@ data class TranscriptItem(
     val attendee: AttendeeInfo,
     val content: String,
     val vocabularyFilterMatch: Boolean,
-    val confidence: Double,
-    val stable: Boolean
+    val confidence: Double?,
+    val stable: Boolean?
 )
 
 data class TranscriptEntity(
-    val type: String,
+    val type: String?,
     val startTimeMs: Long,
     val endTimeMs: Long,
     val content: String,

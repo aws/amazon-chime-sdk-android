@@ -111,9 +111,9 @@ class TranscriptionConfigActivity : AppCompatActivity(),
             transcribeIdentificationContent.let { identification ->
                 if (identification == "") null
                 else identification
-            } ?: run { transcribeRedactionContent.let { reduction ->
-                if (reduction == "") null
-                else reduction
+            } ?: run { transcribeRedactionContent.let { redaction ->
+                if (redaction == "") null
+                else redaction
                 }
             }
         )
@@ -130,7 +130,6 @@ class TranscriptionConfigActivity : AppCompatActivity(),
             response.data
         } else {
             logger.error(TAG, "Error sending start transcription request ${response.httpException}")
-            logger.error(TAG, "Error message from server ${response.data}")
             null
         }
     }
