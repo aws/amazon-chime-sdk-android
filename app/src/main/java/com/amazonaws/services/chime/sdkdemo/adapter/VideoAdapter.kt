@@ -6,13 +6,15 @@
 package com.amazonaws.services.chime.sdkdemo.adapter
 
 import android.content.Context
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import android.widget.PopupMenu
+import android.widget.Toast
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.RecyclerView
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.AudioVideoFacade
-import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoPauseState
-import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoScalingType
+import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.*
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.capture.CameraCaptureSource
 import com.amazonaws.services.chime.sdk.meetings.device.MediaDeviceType
 import com.amazonaws.services.chime.sdk.meetings.utils.logger.Logger
@@ -29,6 +31,7 @@ import kotlinx.android.synthetic.main.item_video.view.video_surface
 class VideoAdapter(
     private val videoCollectionTiles: Collection<VideoCollectionTile>,
     private val userPausedVideoTileIds: MutableSet<Int>,
+    private val remoteVideoSourceConfigurations: MutableMap<RemoteVideoSource, VideoSubscriptionConfiguration>,
     private val audioVideoFacade: AudioVideoFacade,
     private val cameraCaptureSource: CameraCaptureSource?,
     private val context: Context?,
@@ -40,7 +43,7 @@ class VideoAdapter(
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): VideoHolder {
         tabContentLayout = (context as MeetingActivity).findViewById(R.id.constraintLayout)
         val inflatedView = parent.inflate(R.layout.item_video, false)
-        return VideoHolder(inflatedView, audioVideoFacade, userPausedVideoTileIds, logger, cameraCaptureSource)
+        return VideoHolder(context, inflatedView, audioVideoFacade, userPausedVideoTileIds, remoteVideoSourceConfigurations, logger, cameraCaptureSource)
     }
 
     override fun getItemCount(): Int {
@@ -67,9 +70,11 @@ class VideoAdapter(
 }
 
 class VideoHolder(
+    private val context: Context,
     private val view: View,
     private val audioVideo: AudioVideoFacade,
     private val userPausedVideoTileIds: MutableSet<Int>,
+    private val remoteVideoSourceConfigurations: MutableMap<RemoteVideoSource, VideoSubscriptionConfiguration>,
     private val logger: Logger,
     private val cameraCaptureSource: CameraCaptureSource?
 ) : RecyclerView.ViewHolder(view) {
@@ -135,7 +140,79 @@ class VideoHolder(
                     view.on_tile_button.setImageResource(R.drawable.ic_pause_video)
                 }
             }
+
+            view.video_surface.setOnClickListener {
+                logger.info("VideoAdapter", "onClick hhh")
+                val attendeeId = videoCollectionTile.videoTileState.attendeeId
+                logger.info("VideoAdapter", attendeeId)
+                val videoSource = RemoteVideoSource(attendeeId)
+                remoteVideoSourceConfigurations.remove(videoSource)
+                if(!remoteVideoSourceConfigurations.containsKey(videoSource)) {
+                    remoteVideoSourceConfigurations[videoSource] =
+                        VideoSubscriptionConfiguration(VideoPriority.HIGHEST, VideoResolution.LOW)
+                    logger.info("VideoAdapter not contains:", videoSource.attendeeId)
+
+                }
+                val updatedConfig = remoteVideoSourceConfigurations[videoSource]
+                logger.info("VideoAdapter", remoteVideoSourceConfigurations.size.toString())
+                if (updatedConfig != null) {
+                    showPopup(view.on_tile_button, videoSource, updatedConfig)
+                }
+                true
+
+            }
         }
+    }
+
+    private fun showPopup(view: View, videoSource: RemoteVideoSource, updatedConfig: VideoSubscriptionConfiguration) {
+        logger.info("VideoAdapter hhhh", "showPopUp")
+        val popup = PopupMenu(context, view)
+        popup.inflate(R.menu.popup_menu)
+        popup.setOnMenuItemClickListener { item: MenuItem? ->
+            when (item!!.itemId) {
+                R.id.highest -> {
+                    Toast.makeText(context, item.title, Toast.LENGTH_SHORT).show()
+                    updatedConfig.priority = VideoPriority.HIGHEST
+                }
+                R.id.high -> {
+                    Toast.makeText(context, item.title, Toast.LENGTH_SHORT).show()
+                    updatedConfig.priority = VideoPriority.HIGH
+                }
+                R.id.medium -> {
+                    Toast.makeText(context, item.title, Toast.LENGTH_SHORT).show()
+                    updatedConfig.priority = VideoPriority.MEDIUM
+                }
+                R.id.low -> {
+                    Toast.makeText(context, item.title, Toast.LENGTH_SHORT).show()
+                    updatedConfig.priority = VideoPriority.LOW
+                }
+                R.id.lowest -> {
+                    Toast.makeText(context, item.title, Toast.LENGTH_SHORT).show()
+                    updatedConfig.priority = VideoPriority.LOWEST
+                }
+            }
+
+            remoteVideoSourceConfigurations.remove(videoSource)
+            remoteVideoSourceConfigurations.keys.forEach{
+                logger.info("VideoAdapter before adding", it.attendeeId)
+                logger.info("VideoAdapter before adding", remoteVideoSourceConfigurations[it]?.priority.toString())
+
+            }
+            remoteVideoSourceConfigurations[videoSource] = updatedConfig
+            remoteVideoSourceConfigurations.keys.forEach{
+                logger.info("VideoAdapter update", it.attendeeId)
+                logger.info("VideoAdapter update", remoteVideoSourceConfigurations[it]?.priority.toString())
+
+            }
+            audioVideo.updateVideoSourceSubscriptions(remoteVideoSourceConfigurations, emptyArray())
+            logger.info("VideoAdapter","attendeeId:")
+            logger.info("VideoAdapter", videoSource.attendeeId)
+            logger.info("VideoAdapter", updatedConfig.priority.toString())
+            logger.info("VideoAdapter","remoteVideoSourceConfig size:")
+            logger.info("VideoAdapter",remoteVideoSourceConfigurations.size.toString())
+            true
+        }
+        popup.show();
     }
 
     private fun updateLocalVideoMirror() {

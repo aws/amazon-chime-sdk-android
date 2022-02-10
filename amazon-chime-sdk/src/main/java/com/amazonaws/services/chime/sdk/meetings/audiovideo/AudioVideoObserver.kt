@@ -6,6 +6,7 @@
 package com.amazonaws.services.chime.sdk.meetings.audiovideo
 
 import com.amazonaws.services.chime.sdk.meetings.session.MeetingSessionStatus
+import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.RemoteVideoSource
 
 /**
  * [AudioVideoObserver] handles audio / video session events.
@@ -99,4 +100,18 @@ interface AudioVideoObserver {
      * @param sessionStatus: [MeetingSessionStatus] - The reason why the session has stopped.
      */
     fun onVideoSessionStopped(sessionStatus: MeetingSessionStatus)
+
+    /**
+     * Called when remote video source(s) is/are no longer available.
+     *
+     * @param sources: [Array] - Array of RemoteVideoSource objects.
+     */
+    fun onRemoteVideoSourceUnavailable(sources: List<RemoteVideoSource>)
+
+    /**
+     * Called when remote video source(s) is/are now available.
+     *
+     * @param sources: [Array] - Array of RemoteVideoSource objects.
+     */
+    fun onRemoteVideoSourceAvailable(sources: List<RemoteVideoSource>)
 }

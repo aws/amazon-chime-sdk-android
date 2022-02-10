@@ -13,6 +13,8 @@ import com.amazonaws.services.chime.sdk.meetings.internal.metric.ClientMetricsCo
 import com.amazonaws.services.chime.sdk.meetings.internal.video.VideoClientController
 import com.amazonaws.services.chime.sdk.meetings.internal.video.VideoClientObserver
 import com.amazonaws.services.chime.sdk.meetings.session.MeetingSessionConfiguration
+import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.RemoteVideoSource
+import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoSubscriptionConfiguration
 
 class DefaultAudioVideoController(
     private val audioClientController: AudioClientController,
@@ -79,5 +81,9 @@ class DefaultAudioVideoController(
 
     override fun removeMetricsObserver(observer: MetricsObserver) {
         clientMetricsCollector.unsubscribeFromMetrics(observer)
+    }
+
+    override fun updateVideoSourceSubscriptions(addedOrUpdated: Map<RemoteVideoSource, VideoSubscriptionConfiguration>, removed: Array<RemoteVideoSource>) {
+        videoClientController.updateVideoSourceSubscriptions(addedOrUpdated, removed)
     }
 }

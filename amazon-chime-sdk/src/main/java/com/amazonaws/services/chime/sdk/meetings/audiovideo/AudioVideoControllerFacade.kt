@@ -9,6 +9,8 @@ import com.amazonaws.services.chime.sdk.meetings.audiovideo.metric.MetricsObserv
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoFrame
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoSource
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.capture.DefaultCameraCaptureSource
+import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.RemoteVideoSource
+import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoSubscriptionConfiguration
 
 /**
  * [AudioVideoControllerFacade] manages the signaling and peer connections.
@@ -101,4 +103,12 @@ interface AudioVideoControllerFacade {
      * Stop remote video.
      */
     fun stopRemoteVideo()
+
+    /**
+     * Updates the video subscription configuration for specified remote video sources.
+     *
+     * @param addedOrUpdated: [Map] - updated or added video source configurations.
+     * @param removed: [Array] - video sources to remove.
+     */
+    fun updateVideoSourceSubscriptions(addedOrUpdated: Map<RemoteVideoSource, VideoSubscriptionConfiguration>, removed: Array<RemoteVideoSource>)
 }

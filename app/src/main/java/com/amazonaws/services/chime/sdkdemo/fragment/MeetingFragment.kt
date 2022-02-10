@@ -56,9 +56,7 @@ import com.amazonaws.services.chime.sdk.meetings.audiovideo.contentshare.Content
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.contentshare.ContentShareStatus
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.metric.MetricsObserver
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.metric.ObservableMetric
-import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoPauseState
-import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoTileObserver
-import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoTileState
+import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.*
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.capture.CameraCaptureSource
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.capture.CaptureSourceError
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.capture.CaptureSourceObserver
@@ -117,6 +115,10 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
+import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoSubscriptionConfiguration
+import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoPriority
+import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.RemoteVideoSource
+import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoResolution
 
 class MeetingFragment : Fragment(),
     RealtimeObserver, AudioVideoObserver, VideoTileObserver,
@@ -328,6 +330,7 @@ class MeetingFragment : Fragment(),
         videoTileAdapter = VideoAdapter(
             meetingModel.videoStatesInCurrentPage,
             meetingModel.userPausedVideoTileIds,
+            meetingModel.remoteVideoSourceConfigurations,
             audioVideo,
             cameraCaptureSource,
             context,
@@ -342,6 +345,7 @@ class MeetingFragment : Fragment(),
             VideoAdapter(
                 meetingModel.currentScreenTiles,
                 meetingModel.userPausedVideoTileIds,
+                meetingModel.remoteVideoSourceConfigurations,
                 audioVideo,
                 null,
                 context,
@@ -1342,6 +1346,24 @@ class MeetingFragment : Fragment(),
             object {}.javaClass.enclosingMethod?.name,
             "${sessionStatus.statusCode}"
         )
+    }
+
+    override fun onRemoteVideoSourceAvailable(sources: List<RemoteVideoSource>) {
+        val added = mutableMapOf<RemoteVideoSource, VideoSubscriptionConfiguration>()
+        sources.forEach {
+            added[it] = VideoSubscriptionConfiguration(VideoPriority.MEDIUM, VideoResolution.HIGH)
+            meetingModel.remoteVideoSourceConfigurations[it] = VideoSubscriptionConfiguration(VideoPriority.MEDIUM, VideoResolution.HIGH)
+        }
+        audioVideo.updateVideoSourceSubscriptions(added, emptyArray())
+        logger.info("VideoAdapter", "onAvailable")
+    }
+
+    override fun onRemoteVideoSourceUnavailable(sources: List<RemoteVideoSource>) {
+        sources.forEach {
+            meetingModel.remoteVideoSourceConfigurations.remove(it)
+        }
+        audioVideo.updateVideoSourceSubscriptions(emptyMap(), sources.toTypedArray())
+        logger.info("VideoAdapter", "onUNAvailable")
     }
 
     override fun onVideoTileAdded(tileState: VideoTileState) {

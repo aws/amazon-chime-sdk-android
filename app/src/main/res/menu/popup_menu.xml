@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:id="@+id/lowest"
+        android:title="Lowest priority" />
+    <item android:id="@+id/low"
+        android:title="Low priority" />
+    <item android:id="@+id/medium"
+        android:title="Medium priority" />
+    <item android:id="@+id/high"
+        android:title="High priority" />
+    <item android:id="@+id/highest"
+        android:title="Highest priority" />
+</menu>

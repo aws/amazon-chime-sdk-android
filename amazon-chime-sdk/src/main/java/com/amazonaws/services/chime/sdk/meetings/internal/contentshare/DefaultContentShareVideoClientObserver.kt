@@ -23,6 +23,7 @@ import com.xodee.client.video.VideoClient
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import com.xodee.client.video.RemoteVideoSourceInternal
 
 class DefaultContentShareVideoClientObserver(
     private val context: Context,
@@ -168,9 +169,9 @@ class DefaultContentShareVideoClientObserver(
         return uris.map(urlRewriter)
     }
 
-    override fun onRemoteVideoSourceAvailable(sources: Array<RemoteVideoSource>?) {
+    override fun onRemoteVideoSourceAvailable(sources: Array<RemoteVideoSourceInternal>?) {
     }
 
-    override fun onRemoteVideoSourceUnavailable(sources: Array<RemoteVideoSource>?) {
+    override fun onRemoteVideoSourceUnavailable(sources: Array<RemoteVideoSourceInternal>?) {
     }
 }
