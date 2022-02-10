@@ -5,6 +5,7 @@
 
 package com.amazonaws.services.chime.sdkdemo.fragment
 
+import android.app.AlertDialog as AlertDialog
 import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -13,6 +14,9 @@ import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Button
+import android.widget.CheckBox
+import android.widget.CompoundButton
+import android.widget.EditText
 import android.widget.Spinner
 import androidx.fragment.app.Fragment
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.TransciptPIIValues
@@ -25,6 +29,7 @@ import com.amazonaws.services.chime.sdkdemo.data.TranscribeLanguage
 import com.amazonaws.services.chime.sdkdemo.data.TranscribePII
 import com.amazonaws.services.chime.sdkdemo.data.TranscribeRegion
 import java.lang.ClassCastException
+import kotlinx.android.synthetic.main.fragment_transcription_config.checkboxCustomLanguageModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -180,6 +185,7 @@ class TranscriptionConfigFragment : Fragment() {
     private lateinit var piiContentIdentificationAdapter: ArrayAdapter<TranscribePII>
     private lateinit var piiContentRedactionSpinner: Spinner
     private lateinit var piiContentRedactionAdapter: ArrayAdapter<TranscribePII>
+    private lateinit var customLanguageCheckbox: CheckBox
 
     private val TRANSCRIBE_ENGINE_SPINNER_INDEX_KEY = "transcribeEngineSpinnerIndex"
     private val LANGUAGE_SPINNER_INDEX_KEY = "languageSpinnerIndex"
@@ -207,7 +213,8 @@ class TranscriptionConfigFragment : Fragment() {
             region: TranscribeRegion,
             transcribeParity: TranscribePII,
             transcribePIIIdentication: TranscribePII,
-            transcribePIIRedaction: TranscribePII
+            transcribePIIRedaction: TranscribePII,
+            customLanguageModel: String
         )
     }
 
@@ -237,7 +244,8 @@ class TranscriptionConfigFragment : Fragment() {
                 regionSpinner.selectedItem as TranscribeRegion,
                 paritySpinner.selectedItem as TranscribePII,
                 piiContentIdentificationSpinner.selectedItem as TranscribePII,
-                piiContentRedactionSpinner.selectedItem as TranscribePII
+                piiContentRedactionSpinner.selectedItem as TranscribePII,
+                customLanguageCheckbox.text as String
             )
         }
 
@@ -287,6 +295,15 @@ class TranscriptionConfigFragment : Fragment() {
         piiContentRedactionSpinner.isSelected = false
         piiContentRedactionSpinner.setSelection(0, true)
         piiContentRedactionSpinner.onItemSelectedListener = onPIIContentRedactionSelected
+
+        customLanguageCheckbox = view.findViewById(R.id.checkboxCustomLanguageModel)
+        customLanguageCheckbox.setOnCheckedChangeListener { cb, isChecked ->
+            if (isChecked) {
+                setCustomLanguageModelName(cb)
+            } else {
+                checkboxCustomLanguageModel.text = resources.getString(R.string.custom_language_checkbox)
+            }
+        }
 
         uiScope.launch {
             populateLanguages(transcribeLanguages, languages, languageAdapter)
@@ -339,10 +356,12 @@ class TranscriptionConfigFragment : Fragment() {
                     "transcribe_medical" -> {
                         populateLanguages(transcribeMedicalLanguages, languages, languageAdapter)
                         populateRegions(transcribeMedicalRegions, regions, regionAdapter)
+                        hideClmPii()
                     }
                     "transcribe" -> {
                         populateLanguages(transcribeLanguages, languages, languageAdapter)
                         populateRegions(transcribeRegions, regions, regionAdapter)
+                        showClmPii()
                     }
                     else -> {
                         logger.error(TAG, "Invalid in TranscribeEngine selected")
@@ -401,12 +420,53 @@ class TranscriptionConfigFragment : Fragment() {
     private fun populatePII(newList: List<TranscribePII>, currentList: MutableList<TranscribePII>, adapter: ArrayAdapter<TranscribePII>, type: String) {
         currentList.clear()
         currentList.addAll(newList)
-        currentList.add(0,TranscribePII(null, "Enable PII Content $type"))
+        currentList.add(0, TranscribePII(null, "Enable PII Content $type"))
         adapter.notifyDataSetChanged()
     }
 
     private fun resetSpinner() {
         languageSpinner.setSelection(0, true)
         regionSpinner.setSelection(0, true)
+    }
+
+    private fun hideClmPii() {
+        piiContentIdentificationSpinner.setSelection(0, true)
+        piiContentRedactionSpinner.setSelection(0, true)
+        paritySpinner.setSelection(0, true)
+        checkboxCustomLanguageModel.text = resources.getString(R.string.custom_language_checkbox)
+        piiContentRedactionSpinner.visibility = View.GONE
+        piiContentIdentificationSpinner.visibility = View.GONE
+        checkboxCustomLanguageModel.visibility = View.GONE
+        paritySpinner.visibility = View.GONE
+    }
+
+    private fun showClmPii() {
+        piiContentRedactionSpinner.visibility = View.VISIBLE
+        piiContentIdentificationSpinner.visibility = View.VISIBLE
+        paritySpinner.visibility = View.VISIBLE
+        checkboxCustomLanguageModel.visibility = View.VISIBLE
+        checkboxCustomLanguageModel.isChecked = false
+    }
+
+    private fun setCustomLanguageModelName(cb: CompoundButton) {
+        val builder = AlertDialog.Builder(this.context)
+        val popUpView = layoutInflater.inflate(R.layout.custom_language_popup, null)
+        val customLanguageModelText = popUpView.findViewById<EditText>(R.id.customLanguageModelSetting)
+        val saveButton: Button = popUpView.findViewById(R.id.customLanguageSaveButton)
+        val cancelButton: Button = popUpView.findViewById(R.id.customLanguageCancelButton)
+        builder.setView(popUpView)
+        val dialog = builder.create()
+        dialog.show()
+
+        saveButton.setOnClickListener {
+            val customLanguageModelName = customLanguageModelText.hint.toString() + ": " + customLanguageModelText.text
+            customLanguageCheckbox.text = customLanguageModelName
+            dialog.dismiss()
+        }
+
+        cancelButton.setOnClickListener {
+            cb.isChecked = false
+            dialog.dismiss()
+        }
     }
 }

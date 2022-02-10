@@ -70,7 +70,8 @@ class TranscriptionConfigActivity : AppCompatActivity(),
         region: TranscribeRegion,
         transcribeParity: TranscribePII,
         transcribeIdentificationContent: TranscribePII,
-        transcribeRedactionContent: TranscribePII
+        transcribeRedactionContent: TranscribePII,
+        customLanguageModel: String
     ) {
         uiScope.launch {
             val response: String? =
@@ -81,7 +82,8 @@ class TranscriptionConfigActivity : AppCompatActivity(),
                     region.code,
                     transcribeParity.content,
                     transcribeIdentificationContent.content,
-                    transcribeRedactionContent.content
+                    transcribeRedactionContent.content,
+                    customLanguageModel
                 )
 
             if (response == null) {
@@ -100,7 +102,8 @@ class TranscriptionConfigActivity : AppCompatActivity(),
         transcriptionRegion: String?,
         transcribeParity: String?,
         transcribeIdentificationContent: String?,
-        transcribeRedactionContent: String?
+        transcribeRedactionContent: String?,
+        customLanguageModel: String
     ): String? {
         val parityStabilizationEnabled = transcribeParity != null
         val transcriptionStreamParams = TranscriptionStreamParams(
@@ -115,6 +118,11 @@ class TranscriptionConfigActivity : AppCompatActivity(),
                 if (redaction == "") null
                 else redaction
                 }
+            },
+            customLanguageModel?.let {
+                val modelName = customLanguageModel.split(": ")
+                if (modelName.size > 1) modelName[1]
+                else null
             }
         )
         val transcriptionAdditionalParams = gson.toJson(transcriptionStreamParams)

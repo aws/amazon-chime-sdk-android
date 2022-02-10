@@ -92,7 +92,8 @@ data class TranscriptionStreamParams(
     val contentRedactionType: String?,
     val enablePartialResultsStability: Boolean,
     val partialResultsStability: String?,
-    val piiEntityTypes: String?
+    val piiEntityTypes: String?,
+    val languageModelName: String?
 )
 
 data class TranscriptItem(

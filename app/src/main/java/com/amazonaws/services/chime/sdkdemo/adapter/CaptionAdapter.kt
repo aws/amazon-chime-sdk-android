@@ -61,19 +61,18 @@ class CaptionHolder(inflatedView: View) :
                     caption.content.indexOf(word) + word.length,
                     Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
                 )
-                //view.captionText.text = spannable
             }
         } ?: run { view.captionText.setTextColor(Color.BLACK) }
-        caption.items?.let {  items ->
+        caption.items?.let { items ->
             // Underline unstable words.
             items.forEach { item ->
                 val word = item.content
-                val hasLowConfidence = item.confidence?.let { it < 0.3 && it > 0.0} ?: run { false }
+                val hasLowConfidence = item.confidence?.let { it < 0.3 && it > 0.0 } ?: run { false }
                 val isCorrectContentType = !word.startsWith("[") && item.type != TranscriptItemType.Punctuation
                 if (hasLowConfidence && isCorrectContentType && caption.content.contains(word)) {
                     spannable.setSpan(
                         CustomUnderlineSpan(Color.RED, caption.content.indexOf(word), caption.content.indexOf(word) + word.length),
-                        caption.content.indexOf(word) ,
+                        caption.content.indexOf(word),
                         caption.content.indexOf(word) + word.length,
                         Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
                 }
@@ -84,7 +83,7 @@ class CaptionHolder(inflatedView: View) :
     }
 }
 
-private class CustomUnderlineSpan(underlineColor: Int, underlineStart: Int, underlineEnd: Int): LineBackgroundSpan {
+private class CustomUnderlineSpan(underlineColor: Int, underlineStart: Int, underlineEnd: Int) : LineBackgroundSpan {
 
     var color: Int
     var start: Int
@@ -102,12 +101,20 @@ private class CustomUnderlineSpan(underlineColor: Int, underlineStart: Int, unde
     }
 
     override fun drawBackground(
-        c: Canvas, p: Paint,
-        left: Int, right: Int, top: Int, baseline: Int, bottom: Int,
-        text: CharSequence, start: Int, end: Int, lnum: Int) {
-
-        if (this.end <= start) return;
-        if (this.start >= end || this.start < 0) return;
+        c: Canvas,
+        p: Paint,
+        left: Int,
+        right: Int,
+        top: Int,
+        baseline: Int,
+        bottom: Int,
+        text: CharSequence,
+        start: Int,
+        end: Int,
+        lnum: Int
+    ) {
+        if (this.end <= start) return
+        if (this.start >= end || this.start < 0) return
 
         var offsetX = 0
         if (this.start > start) {
