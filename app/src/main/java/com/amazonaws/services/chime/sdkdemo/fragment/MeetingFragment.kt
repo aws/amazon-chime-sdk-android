@@ -1013,12 +1013,12 @@ class MeetingFragment : Fragment(),
                     val caption: Caption
                     val entities = alternative.entities
                     caption = if (entities == null || result.isPartial) {
-                        Caption(speakerName, result.isPartial, alternative.transcript, item, null)
+                        Caption(speakerName, result.isPartial, alternative.transcript, alternative.items, null)
                     } else {
                         entities.forEach { entity ->
                             entitySet.addAll(entity.content.split(" "))
                         }
-                        Caption(speakerName, result.isPartial, alternative.transcript, item, entitySet)
+                        Caption(speakerName, result.isPartial, alternative.transcript, alternative.items, entitySet)
                     }
                     val captionIndex = meetingModel.currentCaptionIndices[result.resultId]
                     if (captionIndex != null) {

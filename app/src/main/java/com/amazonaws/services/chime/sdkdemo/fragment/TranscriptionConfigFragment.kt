@@ -105,7 +105,8 @@ class TranscriptionConfigFragment : Fragment() {
         }
     }
 
-    private val transcribeParity: List<TranscribePII> = mapOf<String, String>(
+    private val transcribeParity: List<TranscribePII> = mapOf<String?, String>(
+        null to "Partial Stability",
         "low" to "Low",
         "medium" to "Medium",
         "high" to "High"
@@ -129,8 +130,9 @@ class TranscriptionConfigFragment : Fragment() {
         TranscribePII(it.key, it.value)
     }
 
-    private val transcribeIdentificationContents: MutableList<TranscribePII> = transcribePIIContents.toMutableList()
-    private val transcribeRedactionContents: MutableList<TranscribePII> = transcribePIIContents.toMutableList()
+    private val transcribeIdentificationContents: MutableList<TranscribePII> = mutableListOf<TranscribePII>()
+    private val transcribeRedactionContents: MutableList<TranscribePII> = mutableListOf<TranscribePII>()
+
     private val transcribeParities: MutableList<TranscribePII> = transcribeParity.toMutableList()
 
     private val transcribeMedicalLanguages: List<TranscribeLanguage> =
@@ -268,7 +270,6 @@ class TranscriptionConfigFragment : Fragment() {
         parityAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         paritySpinner.adapter = parityAdapter
         paritySpinner.isSelected = false
-        transcribeParities.add(0, TranscribePII(null, "Partial Stability"))
         paritySpinner.setSelection(0, true)
 
         piiContentIdentificationSpinner = view.findViewById(R.id.spinnerPIIContentIdentification)
@@ -276,7 +277,6 @@ class TranscriptionConfigFragment : Fragment() {
         piiContentIdentificationAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         piiContentIdentificationSpinner.adapter = piiContentIdentificationAdapter
         piiContentIdentificationSpinner.isSelected = false
-        transcribeIdentificationContents.add(0, TranscribePII(null, "Enable PII Content Identification"))
         piiContentIdentificationSpinner.setSelection(0, true)
         piiContentIdentificationSpinner.onItemSelectedListener = onPIIContentIdentificationSelected
 
@@ -285,13 +285,14 @@ class TranscriptionConfigFragment : Fragment() {
         piiContentRedactionAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         piiContentRedactionSpinner.adapter = piiContentRedactionAdapter
         piiContentRedactionSpinner.isSelected = false
-        transcribeRedactionContents.add(0, TranscribePII(null, "Enable PII Content Redaction"))
         piiContentRedactionSpinner.setSelection(0, true)
         piiContentRedactionSpinner.onItemSelectedListener = onPIIContentRedactionSelected
 
         uiScope.launch {
             populateLanguages(transcribeLanguages, languages, languageAdapter)
             populateRegions(transcribeRegions, regions, regionAdapter)
+            populatePII(transcribePIIContents, transcribeIdentificationContents, piiContentIdentificationAdapter, "Identification")
+            populatePII(transcribePIIContents, transcribeRedactionContents, piiContentRedactionAdapter, "Redaction")
 
             var transcribeEngineSpinnerIndex = 0
             var languageSpinnerIndex = 0
@@ -359,14 +360,11 @@ class TranscriptionConfigFragment : Fragment() {
 
     private val onPIIContentIdentificationSelected = object : AdapterView.OnItemSelectedListener {
         override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-            if (position == 0) {
-                piiContentRedactionSpinner.isEnabled = true
-            } else if (position < transcribeIdentificationContents.size) {
-                piiContentIdentificationSpinner.isEnabled = true
-                piiContentRedactionSpinner.setSelection(0, false)
-                piiContentRedactionSpinner.isEnabled = false
+            if (position < transcribeIdentificationContents.size && position > 0) {
+                populatePII(transcribePIIContents, transcribeRedactionContents, piiContentRedactionAdapter, "Redaction")
+                piiContentRedactionSpinner.setSelection(0, true)
             } else {
-                logger.error(TAG, "Incorrect position in piiContentIdentificationSpinner spinner")
+                logger.error(TAG, "Incorrect position in TranscribeIdentification spinner")
             }
         }
 
@@ -376,14 +374,11 @@ class TranscriptionConfigFragment : Fragment() {
 
     private val onPIIContentRedactionSelected = object : AdapterView.OnItemSelectedListener {
         override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-            if (position == 0) {
-                piiContentIdentificationSpinner.isEnabled = true
-            } else if (position < transcribeRedactionContents.size) {
-                piiContentRedactionSpinner.isEnabled = true
+            if (position < transcribeRedactionContents.size && position > 0) {
+                populatePII(transcribePIIContents, transcribeIdentificationContents, piiContentIdentificationAdapter, "Identification")
                 piiContentIdentificationSpinner.setSelection(0, true)
-                piiContentIdentificationSpinner.isEnabled = false
             } else {
-                logger.error(TAG, "Incorrect position in piiContentRedactionSpinner spinner")
+                logger.error(TAG, "Incorrect position in TranscribeRedaction spinner")
             }
         }
 
@@ -400,6 +395,13 @@ class TranscriptionConfigFragment : Fragment() {
     private fun populateRegions(newList: List<TranscribeRegion>, currentList: MutableList<TranscribeRegion>, adapter: ArrayAdapter<TranscribeRegion>) {
         currentList.clear()
         currentList.addAll(newList)
+        adapter.notifyDataSetChanged()
+    }
+
+    private fun populatePII(newList: List<TranscribePII>, currentList: MutableList<TranscribePII>, adapter: ArrayAdapter<TranscribePII>, type: String) {
+        currentList.clear()
+        currentList.addAll(newList)
+        currentList.add(0,TranscribePII(null, "Enable PII Content $type"))
         adapter.notifyDataSetChanged()
     }
 

@@ -56,6 +56,9 @@
     <string name="transcribe_engine_spinner">Select Transcribe Engine</string>
     <string name="language_setting_spinner">Select Language</string>
     <string name="region_setting_spinner">Select Region</string>
+    <string name="partial_stability_spinner">Enable Partial Results Stabilization</string>
+    <string name="pii_identification_spinner">Enable PII Content Identification</string>
+    <string name="pii_redaction_spinner">Enable PII Content Redaction</string>
     <string name="user_notification_transcription_start_error">There was an error starting meeting transcription. Please try again</string>
     <string name="user_notification_transcription_start_success">Transcription started for meeting</string>
     <string name="user_notification_transcription_stop_error">There was an error stopping meeting transcription. Please try again</string>

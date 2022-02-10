@@ -5,14 +5,17 @@
 
 package com.amazonaws.services.chime.sdkdemo.adapter
 
+import android.graphics.Canvas
 import android.graphics.Color
+import android.graphics.Paint
 import android.text.Spannable
 import android.text.SpannableString
 import android.text.style.ForegroundColorSpan
-import android.text.style.UnderlineSpan
+import android.text.style.LineBackgroundSpan
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.amazonaws.services.chime.sdk.meetings.audiovideo.TranscriptItemType
 import com.amazonaws.services.chime.sdkdemo.R
 import com.amazonaws.services.chime.sdkdemo.data.Caption
 import com.amazonaws.services.chime.sdkdemo.utils.inflate
@@ -48,9 +51,9 @@ class CaptionHolder(inflatedView: View) :
         view.captionText.setBackgroundResource(captionTextBackgroundColor)
         view.speakerName.text = speakerName
         view.captionText.text = caption.content
+        val spannable = SpannableString(caption.content)
         caption.entityContentSet?.let { contents ->
             // Highlight PII identified and redacted words.
-            val spannable = SpannableString(caption.content)
             contents.forEach { word ->
                 spannable.setSpan(
                     ForegroundColorSpan(Color.GREEN),
@@ -58,23 +61,63 @@ class CaptionHolder(inflatedView: View) :
                     caption.content.indexOf(word) + word.length,
                     Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
                 )
-                view.captionText.text = spannable
+                //view.captionText.text = spannable
             }
         } ?: run { view.captionText.setTextColor(Color.BLACK) }
-        caption.item?.let {
+        caption.items?.let {  items ->
             // Underline unstable words.
-            val word = it.content
-            if (it.confidence != null && it.confidence!! < 0.3 && !it.content.startsWith("[")) {
-                val spannable = SpannableString(caption.content)
-                spannable.setSpan(
-                    UnderlineSpan(),
-                    caption.content.indexOf(word),
-                    caption.content.indexOf(word) + word.length,
-                    Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
-                )
-                view.captionText.text = spannable
+            items.forEach { item ->
+                val word = item.content
+                val hasLowConfidence = item.confidence?.let { it < 0.3 && it > 0.0} ?: run { false }
+                val isCorrectContentType = !word.startsWith("[") && item.type != TranscriptItemType.Punctuation
+                if (hasLowConfidence && isCorrectContentType && caption.content.contains(word)) {
+                    spannable.setSpan(
+                        CustomUnderlineSpan(Color.RED, caption.content.indexOf(word), caption.content.indexOf(word) + word.length),
+                        caption.content.indexOf(word) ,
+                        caption.content.indexOf(word) + word.length,
+                        Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+                }
             }
         }
+        view.captionText.text = spannable
         view.captionText.contentDescription = "caption-$position"
+    }
+}
+
+private class CustomUnderlineSpan(underlineColor: Int, underlineStart: Int, underlineEnd: Int): LineBackgroundSpan {
+
+    var color: Int
+    var start: Int
+    var end: Int
+    var p: Paint
+
+    init {
+        this.color = underlineColor
+        this.start = underlineStart
+        this.end = underlineEnd
+        p = Paint()
+        p.setColor(color)
+        p.strokeWidth = 3F
+        p.style = Paint.Style.FILL_AND_STROKE
+    }
+
+    override fun drawBackground(
+        c: Canvas, p: Paint,
+        left: Int, right: Int, top: Int, baseline: Int, bottom: Int,
+        text: CharSequence, start: Int, end: Int, lnum: Int) {
+
+        if (this.end <= start) return;
+        if (this.start >= end || this.start < 0) return;
+
+        var offsetX = 0
+        if (this.start > start) {
+            offsetX = p.measureText(text.subSequence(start, this.start).toString()).toInt()
+        }
+
+        val length = p.measureText(text.subSequence(
+            Math.max(start, this.start),
+            Math.min(end, this.end)
+        ).toString()).toInt()
+        c.drawLine(offsetX.toFloat(), baseline + 3F, (length + offsetX).toFloat(), baseline + 3F, this.p)
     }
 }
