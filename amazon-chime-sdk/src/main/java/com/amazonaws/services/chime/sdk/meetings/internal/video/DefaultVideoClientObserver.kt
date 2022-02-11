@@ -7,6 +7,7 @@ package com.amazonaws.services.chime.sdk.meetings.internal.video
 
 import android.content.Context
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.AudioVideoObserver
+import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.RemoteVideoSource
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoFrame
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoPauseState
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoRotation
