@@ -56,7 +56,13 @@ import com.amazonaws.services.chime.sdk.meetings.audiovideo.contentshare.Content
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.contentshare.ContentShareStatus
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.metric.MetricsObserver
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.metric.ObservableMetric
-import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.*
+import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.RemoteVideoSource
+import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoPauseState
+import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoPriority
+import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoResolution
+import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoSubscriptionConfiguration
+import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoTileObserver
+import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoTileState
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.capture.CameraCaptureSource
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.capture.CaptureSourceError
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.capture.CaptureSourceObserver
@@ -115,10 +121,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
-import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoSubscriptionConfiguration
-import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoPriority
-import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.RemoteVideoSource
-import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoResolution
 
 class MeetingFragment : Fragment(),
     RealtimeObserver, AudioVideoObserver, VideoTileObserver,

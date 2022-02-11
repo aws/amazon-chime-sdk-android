@@ -6,10 +6,10 @@
 package com.amazonaws.services.chime.sdk.meetings.internal.video
 
 import android.content.Context
-import android.os.Build
-import androidx.annotation.RequiresApi
 import com.amazonaws.services.chime.sdk.meetings.analytics.EventAnalyticsController
+import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.RemoteVideoSource
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoSource
+import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoSubscriptionConfiguration
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.capture.DefaultCameraCaptureSource
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.capture.DefaultSurfaceTextureCaptureSourceFactory
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.gl.EglCore
@@ -19,19 +19,16 @@ import com.amazonaws.services.chime.sdk.meetings.internal.utils.AppInfoUtil
 import com.amazonaws.services.chime.sdk.meetings.session.MeetingSessionConfiguration
 import com.amazonaws.services.chime.sdk.meetings.utils.logger.Logger
 import com.google.gson.Gson
+import com.xodee.client.video.RemoteVideoSourceInternal
 import com.xodee.client.video.VideoClient
 import com.xodee.client.video.VideoClientConfig
 import com.xodee.client.video.VideoClientConfigBuilder
-import java.security.InvalidParameterException
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
-import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.RemoteVideoSource
-import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoPriority
-import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoSubscriptionConfiguration
-import com.xodee.client.video.RemoteVideoSourceInternal
 import com.xodee.client.video.VideoPriorityInternal
 import com.xodee.client.video.VideoResolutionInternal
 import com.xodee.client.video.VideoSubscriptionConfigurationInternal
+import java.security.InvalidParameterException
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 
 class DefaultVideoClientController(
     private val context: Context,
@@ -74,7 +71,8 @@ class DefaultVideoClientController(
                 logger,
                 surfaceTextureCaptureSourceFactory
             ).apply {
-                eventAnalyticsController = this@DefaultVideoClientController.eventAnalyticsController
+                eventAnalyticsController =
+                    this@DefaultVideoClientController.eventAnalyticsController
             }
     }
 
@@ -194,22 +192,24 @@ class DefaultVideoClientController(
         removed: Array<RemoteVideoSource>
     ) {
         if (!videoClientStateController.canAct(VideoClientState.INITIALIZED)) return
-        logger.info(TAG, "Adding/updating video source subscriptions: $addedOrUpdated and removing: $removed")
+        logger.info(
+            TAG,
+            "Adding/updating video source subscriptions: $addedOrUpdated and removing: $removed"
+        )
 //
 //        val addedOrUpdatedInternal = addedOrUpdated.map { (source, config) ->
 //
 //            RemoteVideoSourceInternal(source.attendeeId) to
 //                    VideoSubscriptionConfigurationInternal(VideoPriorityInternal(config.priority.value), VideoResolutionInternal(config.resolution.width, config.resolution.height))
 //        }.toMap()
-        val addedOrUpdatedInternal: MutableMap<RemoteVideoSourceInternal, VideoSubscriptionConfigurationInternal> = mutableMapOf()
-        for((source, config) in addedOrUpdated) {
-//            var a = config.priority.toString()
-//            var b: VideoPriorityInternal  = VideoPriorityInternal.LOW
-
-            // val a: VideoPriorityInternal = VideoPriorityInternal.config
+        val addedOrUpdatedInternal: MutableMap<RemoteVideoSourceInternal, VideoSubscriptionConfigurationInternal> =
+            mutableMapOf()
+        for ((source, config) in addedOrUpdated) {
             addedOrUpdatedInternal[RemoteVideoSourceInternal(source.attendeeId)] =
-                VideoSubscriptionConfigurationInternal( VideoPriorityInternal(config.priority.value), VideoResolutionInternal(config.resolution.width, config.resolution.height))
-
+                VideoSubscriptionConfigurationInternal(
+                    VideoPriorityInternal(config.priority.value),
+                    VideoResolutionInternal(config.resolution.width, config.resolution.height)
+                )
         }
         val removedInternal = removed.map { source -> RemoteVideoSourceInternal(source.attendeeId) }
 

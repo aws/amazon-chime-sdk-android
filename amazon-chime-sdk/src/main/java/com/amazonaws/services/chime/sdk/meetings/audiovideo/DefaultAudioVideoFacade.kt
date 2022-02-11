@@ -22,7 +22,10 @@ import com.amazonaws.services.chime.sdk.meetings.audiovideo.contentshare.Content
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.contentshare.ContentShareObserver
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.contentshare.ContentShareSource
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.metric.MetricsObserver
-import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.*
+import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoRenderView
+import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoSource
+import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoTileController
+import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoTileObserver
 import com.amazonaws.services.chime.sdk.meetings.device.DeviceChangeObserver
 import com.amazonaws.services.chime.sdk.meetings.device.DeviceController
 import com.amazonaws.services.chime.sdk.meetings.device.MediaDevice
@@ -60,11 +63,13 @@ class DefaultAudioVideoFacade(
             audioVideoController.start(audioVideoConfiguration)
         } else {
             throw SecurityException(
-                "Missing necessary permissions for WebRTC: ${permissions.joinToString(
-                    separator = ", ",
-                    prefix = "",
-                    postfix = ""
-                )}"
+                "Missing necessary permissions for WebRTC: ${
+                    permissions.joinToString(
+                        separator = ", ",
+                        prefix = "",
+                        postfix = ""
+                    )
+                }"
             )
         }
     }

@@ -5,11 +5,11 @@
 
 package com.amazonaws.services.chime.sdk.meetings.internal.video
 
+import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.RemoteVideoSource
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoSource
+import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoSubscriptionConfiguration
 import com.amazonaws.services.chime.sdk.meetings.device.MediaDevice
 import com.amazonaws.services.chime.sdk.meetings.session.MeetingSessionConfiguration
-import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.RemoteVideoSource
-import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoSubscriptionConfiguration
 
 /**
  * [VideoClientController] uses the Video Client for video related functionality such as starting

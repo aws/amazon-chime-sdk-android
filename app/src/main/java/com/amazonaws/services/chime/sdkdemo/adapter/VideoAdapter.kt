@@ -14,7 +14,8 @@ import android.widget.Toast
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.RecyclerView
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.AudioVideoFacade
-import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.*
+import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoPauseState
+import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoScalingType
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.capture.CameraCaptureSource
 import com.amazonaws.services.chime.sdk.meetings.device.MediaDeviceType
 import com.amazonaws.services.chime.sdk.meetings.utils.logger.Logger
@@ -147,11 +148,10 @@ class VideoHolder(
                 logger.info("VideoAdapter", attendeeId)
                 val videoSource = RemoteVideoSource(attendeeId)
                 remoteVideoSourceConfigurations.remove(videoSource)
-                if(!remoteVideoSourceConfigurations.containsKey(videoSource)) {
+                if (!remoteVideoSourceConfigurations.containsKey(videoSource)) {
                     remoteVideoSourceConfigurations[videoSource] =
                         VideoSubscriptionConfiguration(VideoPriority.HIGHEST, VideoResolution.LOW)
                     logger.info("VideoAdapter not contains:", videoSource.attendeeId)
-
                 }
                 val updatedConfig = remoteVideoSourceConfigurations[videoSource]
                 logger.info("VideoAdapter", remoteVideoSourceConfigurations.size.toString())
@@ -159,7 +159,6 @@ class VideoHolder(
                     showPopup(view.on_tile_button, videoSource, updatedConfig)
                 }
                 true
-
             }
         }
     }
@@ -193,26 +192,24 @@ class VideoHolder(
             }
 
             remoteVideoSourceConfigurations.remove(videoSource)
-            remoteVideoSourceConfigurations.keys.forEach{
+            remoteVideoSourceConfigurations.keys.forEach {
                 logger.info("VideoAdapter before adding", it.attendeeId)
                 logger.info("VideoAdapter before adding", remoteVideoSourceConfigurations[it]?.priority.toString())
-
             }
             remoteVideoSourceConfigurations[videoSource] = updatedConfig
-            remoteVideoSourceConfigurations.keys.forEach{
+            remoteVideoSourceConfigurations.keys.forEach {
                 logger.info("VideoAdapter update", it.attendeeId)
                 logger.info("VideoAdapter update", remoteVideoSourceConfigurations[it]?.priority.toString())
-
             }
             audioVideo.updateVideoSourceSubscriptions(remoteVideoSourceConfigurations, emptyArray())
-            logger.info("VideoAdapter","attendeeId:")
+            logger.info("VideoAdapter", "attendeeId:")
             logger.info("VideoAdapter", videoSource.attendeeId)
             logger.info("VideoAdapter", updatedConfig.priority.toString())
-            logger.info("VideoAdapter","remoteVideoSourceConfig size:")
-            logger.info("VideoAdapter",remoteVideoSourceConfigurations.size.toString())
+            logger.info("VideoAdapter", "remoteVideoSourceConfig size:")
+            logger.info("VideoAdapter", remoteVideoSourceConfigurations.size.toString())
             true
         }
-        popup.show();
+        popup.show()
     }
 
     private fun updateLocalVideoMirror() {

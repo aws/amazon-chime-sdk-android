@@ -7,7 +7,10 @@ package com.amazonaws.services.chime.sdk.meetings.internal.video
 
 import android.content.Context
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.AudioVideoObserver
-import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.*
+import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoFrame
+import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoPauseState
+import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoRotation
+import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoTileController
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.buffer.VideoFrameBuffer
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.buffer.VideoFrameI420Buffer
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.buffer.VideoFrameTextureBuffer
@@ -23,7 +26,7 @@ import com.amazonaws.services.chime.sdk.meetings.session.URLRewriter
 import com.amazonaws.services.chime.sdk.meetings.utils.logger.Logger
 import com.xodee.client.audio.audioclient.AudioClient
 import com.xodee.client.video.DataMessage as mediaDataMessage
-import com.xodee.client.video.RemoteVideoSource
+import com.xodee.client.video.RemoteVideoSourceInternal
 import com.xodee.client.video.VideoClient
 import com.xodee.client.video.VideoClient.VIDEO_CLIENT_NO_PAUSE
 import com.xodee.client.video.VideoClient.VIDEO_CLIENT_REMOTE_PAUSED_BY_LOCAL_BAD_NETWORK
@@ -32,7 +35,6 @@ import java.security.InvalidParameterException
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import com.xodee.client.video.RemoteVideoSourceInternal
 
 class DefaultVideoClientObserver(
     private val context: Context,
@@ -288,16 +290,16 @@ class DefaultVideoClientObserver(
     }
 
     override fun onRemoteVideoSourceAvailable(sourcesInternal: Array<RemoteVideoSourceInternal>?) {
-        logger.info("VideoAdapter:defaultVideoClientObserver", "onRemoteVideoSourceAvailable");
-        if(sourcesInternal != null) {
+        logger.info("VideoAdapter:defaultVideoClientObserver", "onRemoteVideoSourceAvailable")
+        if (sourcesInternal != null) {
             val sources = sourcesInternal.map { source -> RemoteVideoSource(source.attendeeId) }
             forEachVideoClientStateObserver { observer -> observer.onRemoteVideoSourceAvailable(sources) }
         }
     }
 
     override fun onRemoteVideoSourceUnavailable(sourcesInternal: Array<RemoteVideoSourceInternal>?) {
-        logger.info("VideoAdapter:defaultVideoClientObserver", "onRemoteVideoSourceUnavailable");
-        if(sourcesInternal != null) {
+        logger.info("VideoAdapter:defaultVideoClientObserver", "onRemoteVideoSourceUnavailable")
+        if (sourcesInternal != null) {
             val sources = sourcesInternal.map { source -> RemoteVideoSource(source.attendeeId) }
             forEachVideoClientStateObserver { observer -> observer.onRemoteVideoSourceUnavailable(sources) }
         }

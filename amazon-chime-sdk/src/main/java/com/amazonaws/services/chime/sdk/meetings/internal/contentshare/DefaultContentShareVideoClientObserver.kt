@@ -18,12 +18,11 @@ import com.amazonaws.services.chime.sdk.meetings.internal.video.TURNRequestParam
 import com.amazonaws.services.chime.sdk.meetings.session.URLRewriter
 import com.amazonaws.services.chime.sdk.meetings.utils.logger.Logger
 import com.xodee.client.audio.audioclient.AudioClient
-import com.xodee.client.video.RemoteVideoSource
+import com.xodee.client.video.RemoteVideoSourceInternal
 import com.xodee.client.video.VideoClient
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import com.xodee.client.video.RemoteVideoSourceInternal
 
 class DefaultContentShareVideoClientObserver(
     private val context: Context,
@@ -84,7 +83,8 @@ class DefaultContentShareVideoClientObserver(
     override fun requestTurnCreds(client: VideoClient?) {
         logger.info(TAG, "requestTurnCreds")
         uiScope.launch {
-            val turnResponse: TURNCredentials? = TURNRequestUtils.doTurnRequest(turnRequestParams, logger)
+            val turnResponse: TURNCredentials? =
+                TURNRequestUtils.doTurnRequest(turnRequestParams, logger)
             with(turnResponse) {
                 val isActive = client?.isActive ?: false
                 if (this != null && isActive) {

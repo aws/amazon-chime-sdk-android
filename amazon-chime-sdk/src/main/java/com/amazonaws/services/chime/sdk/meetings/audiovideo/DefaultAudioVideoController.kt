@@ -6,15 +6,15 @@
 package com.amazonaws.services.chime.sdk.meetings.audiovideo
 
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.metric.MetricsObserver
+import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.RemoteVideoSource
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoSource
+import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoSubscriptionConfiguration
 import com.amazonaws.services.chime.sdk.meetings.internal.audio.AudioClientController
 import com.amazonaws.services.chime.sdk.meetings.internal.audio.AudioClientObserver
 import com.amazonaws.services.chime.sdk.meetings.internal.metric.ClientMetricsCollector
 import com.amazonaws.services.chime.sdk.meetings.internal.video.VideoClientController
 import com.amazonaws.services.chime.sdk.meetings.internal.video.VideoClientObserver
 import com.amazonaws.services.chime.sdk.meetings.session.MeetingSessionConfiguration
-import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.RemoteVideoSource
-import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoSubscriptionConfiguration
 
 class DefaultAudioVideoController(
     private val audioClientController: AudioClientController,
@@ -83,7 +83,10 @@ class DefaultAudioVideoController(
         clientMetricsCollector.unsubscribeFromMetrics(observer)
     }
 
-    override fun updateVideoSourceSubscriptions(addedOrUpdated: Map<RemoteVideoSource, VideoSubscriptionConfiguration>, removed: Array<RemoteVideoSource>) {
+    override fun updateVideoSourceSubscriptions(
+        addedOrUpdated: Map<RemoteVideoSource, VideoSubscriptionConfiguration>,
+        removed: Array<RemoteVideoSource>
+    ) {
         videoClientController.updateVideoSourceSubscriptions(addedOrUpdated, removed)
     }
 }

@@ -5,8 +5,8 @@
 
 package com.amazonaws.services.chime.sdk.meetings.audiovideo
 
-import com.amazonaws.services.chime.sdk.meetings.session.MeetingSessionStatus
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.RemoteVideoSource
+import com.amazonaws.services.chime.sdk.meetings.session.MeetingSessionStatus
 
 /**
  * [AudioVideoObserver] handles audio / video session events.
