@@ -18,6 +18,7 @@ import com.amazonaws.services.chime.sdk.meetings.internal.video.TURNRequestParam
 import com.amazonaws.services.chime.sdk.meetings.session.URLRewriter
 import com.amazonaws.services.chime.sdk.meetings.utils.logger.Logger
 import com.xodee.client.audio.audioclient.AudioClient
+import com.xodee.client.video.RemoteVideoSource
 import com.xodee.client.video.VideoClient
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -165,5 +166,11 @@ class DefaultContentShareVideoClientObserver(
 
     override fun onTurnURIsReceived(uris: List<String>): List<String> {
         return uris.map(urlRewriter)
+    }
+
+    override fun onRemoteVideoSourceAvailable(sources: Array<RemoteVideoSource>?) {
+    }
+
+    override fun onRemoteVideoSourceUnavailable(sources: Array<RemoteVideoSource>?) {
     }
 }
