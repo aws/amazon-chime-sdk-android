@@ -147,70 +147,46 @@ class VideoHolder(
             }
 
             view.video_surface.setOnClickListener {
-                logger.info("VideoAdapter", "onClick hhh")
                 val attendeeId = videoCollectionTile.videoTileState.attendeeId
-                logger.info("VideoAdapter", attendeeId)
-                val videoSource = RemoteVideoSource(attendeeId)
-                remoteVideoSourceConfigurations.remove(videoSource)
-                if (!remoteVideoSourceConfigurations.containsKey(videoSource)) {
-                    remoteVideoSourceConfigurations[videoSource] =
-                        VideoSubscriptionConfiguration(VideoPriority.HIGHEST, VideoResolution.LOW)
-                    logger.info("VideoAdapter not contains:", videoSource.attendeeId)
-                }
-                val updatedConfig = remoteVideoSourceConfigurations[videoSource]
-                logger.info("VideoAdapter", remoteVideoSourceConfigurations.size.toString())
-                if (updatedConfig != null) {
-                    showPopup(view.on_tile_button, videoSource, updatedConfig)
-                }
-                true
+                showPriorityPopup(view.on_tile_button, attendeeId)
             }
         }
     }
 
-    private fun showPopup(view: View, videoSource: RemoteVideoSource, updatedConfig: VideoSubscriptionConfiguration) {
-        logger.info("VideoAdapter hhhh", "showPopUp")
+    private fun showPriorityPopup(view: View, attendeeId: String) {
         val popup = PopupMenu(context, view)
         popup.inflate(R.menu.popup_menu)
         popup.setOnMenuItemClickListener { item: MenuItem? ->
+            var newPriority = VideoPriority.highest
             when (item!!.itemId) {
                 R.id.highest -> {
-                    Toast.makeText(context, item.title, Toast.LENGTH_SHORT).show()
-                    updatedConfig.priority = VideoPriority.HIGHEST
+                    newPriority = VideoPriority.highest
                 }
                 R.id.high -> {
-                    Toast.makeText(context, item.title, Toast.LENGTH_SHORT).show()
-                    updatedConfig.priority = VideoPriority.HIGH
+                    newPriority = VideoPriority.high
                 }
                 R.id.medium -> {
-                    Toast.makeText(context, item.title, Toast.LENGTH_SHORT).show()
-                    updatedConfig.priority = VideoPriority.MEDIUM
+                    newPriority = VideoPriority.medium
                 }
                 R.id.low -> {
-                    Toast.makeText(context, item.title, Toast.LENGTH_SHORT).show()
-                    updatedConfig.priority = VideoPriority.LOW
+                    newPriority = VideoPriority.low
                 }
                 R.id.lowest -> {
-                    Toast.makeText(context, item.title, Toast.LENGTH_SHORT).show()
-                    updatedConfig.priority = VideoPriority.LOWEST
+                    newPriority = VideoPriority.lowest
                 }
             }
 
-            remoteVideoSourceConfigurations.remove(videoSource)
-            remoteVideoSourceConfigurations.keys.forEach {
-                logger.info("VideoAdapter before adding", it.attendeeId)
-                logger.info("VideoAdapter before adding", remoteVideoSourceConfigurations[it]?.priority.toString())
+            var found = false
+            for ((source, configuration) in remoteVideoSourceConfigurations) {
+                if (source.attendeeId == attendeeId) {
+                    configuration.priority = newPriority
+                    found = true
+                }
             }
-            remoteVideoSourceConfigurations[videoSource] = updatedConfig
-            remoteVideoSourceConfigurations.keys.forEach {
-                logger.info("VideoAdapter update", it.attendeeId)
-                logger.info("VideoAdapter update", remoteVideoSourceConfigurations[it]?.priority.toString())
+            if (!found) {
+                remoteVideoSourceConfigurations[RemoteVideoSource(attendeeId)] = VideoSubscriptionConfiguration(newPriority, VideoResolution.high)
             }
             audioVideo.updateVideoSourceSubscriptions(remoteVideoSourceConfigurations, emptyArray())
-            logger.info("VideoAdapter", "attendeeId:")
-            logger.info("VideoAdapter", videoSource.attendeeId)
-            logger.info("VideoAdapter", updatedConfig.priority.toString())
-            logger.info("VideoAdapter", "remoteVideoSourceConfig size:")
-            logger.info("VideoAdapter", remoteVideoSourceConfigurations.size.toString())
             true
         }
         popup.show()

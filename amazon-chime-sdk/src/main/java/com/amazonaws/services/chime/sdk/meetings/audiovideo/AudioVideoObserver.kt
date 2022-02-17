@@ -104,14 +104,21 @@ interface AudioVideoObserver {
     /**
      * Called when remote video source(s) is/are no longer available.
      *
-     * @param sources: [Array] - Array of RemoteVideoSource objects.
+     * Video sources can be explicitly subscribed to through `updateVideoSourceSubscriptions`, which has more information.
+     * See note in `updateVideoSourceSubscriptions` documentation for information on subscription behavior if
+     * `updateVideoSourceSubscriptions` is never called.
+     *
+     * @param sources: [List] - List of RemoteVideoSource objects.
      */
     fun onRemoteVideoSourceUnavailable(sources: List<RemoteVideoSource>)
 
     /**
      * Called when remote video source(s) is/are now available.
      *
-     * @param sources: [Array] - Array of RemoteVideoSource objects.
+     * Note that these sources do not need to be removed via `updateVideoSourceSubscriptions`,
+     * as they will be automatically unsubscribed from.
+
+     * @param sources: [List] - List of RemoteVideoSource objects.
      */
     fun onRemoteVideoSourceAvailable(sources: List<RemoteVideoSource>)
 }

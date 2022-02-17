@@ -1353,11 +1353,10 @@ class MeetingFragment : Fragment(),
     override fun onRemoteVideoSourceAvailable(sources: List<RemoteVideoSource>) {
         val added = mutableMapOf<RemoteVideoSource, VideoSubscriptionConfiguration>()
         sources.forEach {
-            added[it] = VideoSubscriptionConfiguration(VideoPriority.MEDIUM, VideoResolution.HIGH)
-            meetingModel.remoteVideoSourceConfigurations[it] = VideoSubscriptionConfiguration(VideoPriority.MEDIUM, VideoResolution.HIGH)
+            added[it] = VideoSubscriptionConfiguration(VideoPriority.medium, VideoResolution.high)
+            meetingModel.remoteVideoSourceConfigurations[it] = VideoSubscriptionConfiguration(VideoPriority.medium, VideoResolution.high)
         }
         audioVideo.updateVideoSourceSubscriptions(added, emptyArray())
-        logger.info("VideoAdapter", "onAvailable")
     }
 
     override fun onRemoteVideoSourceUnavailable(sources: List<RemoteVideoSource>) {
@@ -1365,7 +1364,6 @@ class MeetingFragment : Fragment(),
             meetingModel.remoteVideoSourceConfigurations.remove(it)
         }
         audioVideo.updateVideoSourceSubscriptions(emptyMap(), sources.toTypedArray())
-        logger.info("VideoAdapter", "onUNAvailable")
     }
 
     override fun onVideoTileAdded(tileState: VideoTileState) {

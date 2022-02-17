@@ -105,7 +105,23 @@ interface AudioVideoControllerFacade {
     fun stopRemoteVideo()
 
     /**
-     * Updates the video subscription configuration for specified remote video sources.
+     * Add, update, or remove subscriptions to remote video sources provided via `remoteVideoSourcesDidBecomeAvailable`.
+     *
+     * Including a `RemoteVideoSource` in `addedOrUpdated` which was not previously provided will result in the negotiation of media flow for that source. After negotiation has
+     * completed,`videoTileDidAdd` on the tile controller will be called with the `TileState` of the source, and applications
+     * can render the video via 'bindVideoTile'. Reincluding a `RemoteVideoSource` can be done to update the provided `VideoSubscriptionConfiguration`,
+     * but it is not necessary to continue receiving frames.
+     *
+     * Including a `RemoteVideoSource` in `removed` will stop the flow video from that source, and lead to a `videoTileDidRemove` call on the
+     * tile controller to indicate to the application that the tile should be unbound. To restart the flow of media, the source should be re-added by
+     * including in `addedOrUpdated`. Note that videos no longer available in a meeting (i.e. listed in
+     * `remoteVideoSourcesDidBecomeUnavailable` do not need to be removed, as they will be automatically unsubscribed from.
+     *
+     * Note that before this function is called for the first time, the client will automatically subscribe to all video sources.
+     * However this behavior will cease upon first call (e.g. if there are 10 videos in the meeting, the controller will subscribe to all 10, however if
+     * `updateVideoSourceSubscriptions` is called with a single video in `addedOrUpdated`, the client will unsubscribe from the other 9.
+     * This automatic subscription behavior may be removed in future major version updates, builders should avoid relying on the logic
+     * and instead explicitly call `updateVideoSourceSubscriptions` with the sources they want to receive.
      *
      * @param addedOrUpdated: [Map] - updated or added video source configurations.
      * @param removed: [Array] - video sources to remove.
