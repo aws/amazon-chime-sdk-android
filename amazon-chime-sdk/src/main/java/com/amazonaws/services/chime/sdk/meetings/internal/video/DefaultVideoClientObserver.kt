@@ -177,12 +177,6 @@ class DefaultVideoClientObserver(
         clientMetricsCollector.processVideoClientMetrics(metricMap)
     }
 
-    override fun onRemoteVideoSourceAvailable(sources: Array<RemoteVideoSource>?) {
-    }
-
-    override fun onRemoteVideoSourceUnavailable(sources: Array<RemoteVideoSource>?) {
-    }
-
     override fun onLogMessage(logLevel: Int, message: String?) {
         if (message == null) return
         // Only print error and fatal as the Media team's request to avoid noise for application
