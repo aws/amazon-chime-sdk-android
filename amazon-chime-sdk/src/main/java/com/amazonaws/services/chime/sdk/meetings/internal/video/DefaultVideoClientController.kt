@@ -196,7 +196,7 @@ class DefaultVideoClientController(
             logger.info(
                 TAG,
                 "Adding/updating video sources subscription: ${key.attendeeId} with priority: ${addedOrUpdated[key]?.priority} " +
-                        "resolution: ${addedOrUpdated[key]?.resolution}"
+                        "targetResolution: ${addedOrUpdated[key]?.targetResolution}"
             )
         }
         for (key in removed) {
@@ -212,7 +212,7 @@ class DefaultVideoClientController(
             addedOrUpdatedInternal[RemoteVideoSourceInternal(source.attendeeId)] =
                 VideoSubscriptionConfigurationInternal(
                     VideoPriorityInternal(config.priority.value),
-                    VideoResolutionInternal(config.resolution.width, config.resolution.height)
+                    VideoResolutionInternal(config.targetResolution.width, config.targetResolution.height)
                 )
         }
         val removedInternal = removed.map { source -> RemoteVideoSourceInternal(source.attendeeId) }

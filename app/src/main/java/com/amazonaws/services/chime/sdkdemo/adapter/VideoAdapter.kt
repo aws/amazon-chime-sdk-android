@@ -185,11 +185,9 @@ class VideoHolder(
                 }
             }
 
-            var isVideoSourceExisted = false
             for ((source, configuration) in remoteVideoSourceConfigurations) {
                 if (source.attendeeId == attendeeId) {
                     configuration.priority = newPriority
-                    isVideoSourceExisted = true
                 }
             }
             audioVideo.updateVideoSourceSubscriptions(remoteVideoSourceConfigurations, emptyArray())
@@ -200,9 +198,9 @@ class VideoHolder(
 
     private fun updateLocalVideoMirror() {
         view.video_surface.mirror =
-                // If we are using internal source, base mirror state off that device type
-            (audioVideo.getActiveCamera()?.type == MediaDeviceType.VIDEO_FRONT_CAMERA ||
-                    // Otherwise (audioVideo.getActiveCamera() == null) use the device type of our external/custom camera capture source
-                    (audioVideo.getActiveCamera() == null && cameraCaptureSource?.device?.type == MediaDeviceType.VIDEO_FRONT_CAMERA))
+        // If we are using internal source, base mirror state off that device type
+        (audioVideo.getActiveCamera()?.type == MediaDeviceType.VIDEO_FRONT_CAMERA ||
+        // Otherwise (audioVideo.getActiveCamera() == null) use the device type of our external/custom camera capture source
+        (audioVideo.getActiveCamera() == null && cameraCaptureSource?.device?.type == MediaDeviceType.VIDEO_FRONT_CAMERA))
     }
 }
