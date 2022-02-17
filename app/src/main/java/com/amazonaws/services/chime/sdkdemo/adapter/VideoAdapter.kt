@@ -16,7 +16,6 @@ import com.amazonaws.services.chime.sdk.meetings.audiovideo.AudioVideoFacade
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.RemoteVideoSource
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoPauseState
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoPriority
-import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoResolution
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoScalingType
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoSubscriptionConfiguration
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.capture.CameraCaptureSource
@@ -192,10 +191,6 @@ class VideoHolder(
                     configuration.priority = newPriority
                     isVideoSourceExisted = true
                 }
-            }
-            if (!isVideoSourceExisted) {
-                remoteVideoSourceConfigurations[RemoteVideoSource(attendeeId)] =
-                    VideoSubscriptionConfiguration(newPriority, VideoResolution.High)
             }
             audioVideo.updateVideoSourceSubscriptions(remoteVideoSourceConfigurations, emptyArray())
             true
