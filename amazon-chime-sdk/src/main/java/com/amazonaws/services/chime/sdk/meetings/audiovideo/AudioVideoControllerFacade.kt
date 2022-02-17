@@ -115,7 +115,7 @@ interface AudioVideoControllerFacade {
      * Including a `RemoteVideoSource` in `removed` will stop the flow video from that source, and lead to a `videoTileDidRemove` call on the
      * tile controller to indicate to the application that the tile should be unbound. To restart the flow of media, the source should be re-added by
      * including in `addedOrUpdated`. Note that videos no longer available in a meeting (i.e. listed in
-     * `remoteVideoSourcesDidBecomeUnavailable` do not need to be removed, as they will be automatically unsubscribed from.
+     * `remoteVideoSourcesDidBecomeUnavailable`) do not need to be removed, as they will be automatically unsubscribed from.
      *
      * Note that before this function is called for the first time, the client will automatically subscribe to all video sources.
      * However this behavior will cease upon first call (e.g. if there are 10 videos in the meeting, the controller will subscribe to all 10, however if

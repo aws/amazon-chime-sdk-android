@@ -5,9 +5,9 @@ package com.amazonaws.services.chime.sdk.meetings.audiovideo.video
  * to adapt to variable network conditions, i.e. `highest` will be chosen before `high`, `medium`, etc.
  */
 enum class VideoPriority(val value: Int) {
-    lowest(0),
-    low(10),
-    medium(20),
-    high(30),
-    highest(40);
+    Lowest(0),
+    Low(10),
+    Medium(20),
+    High(30),
+    Highest(40);
 }

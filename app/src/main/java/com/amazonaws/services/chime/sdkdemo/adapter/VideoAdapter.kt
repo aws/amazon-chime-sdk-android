@@ -47,7 +47,15 @@ class VideoAdapter(
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): VideoHolder {
         tabContentLayout = (context as MeetingActivity).findViewById(R.id.constraintLayout)
         val inflatedView = parent.inflate(R.layout.item_video, false)
-        return VideoHolder(context, inflatedView, audioVideoFacade, userPausedVideoTileIds, remoteVideoSourceConfigurations, logger, cameraCaptureSource)
+        return VideoHolder(
+            context,
+            inflatedView,
+            audioVideoFacade,
+            userPausedVideoTileIds,
+            remoteVideoSourceConfigurations,
+            logger,
+            cameraCaptureSource
+        )
     }
 
     override fun getItemCount(): Int {
@@ -63,7 +71,8 @@ class VideoAdapter(
                 if (isLandscapeMode(context)) {
                     holder.tileContainer.layoutParams.width = viewportWidth / 2
                 } else {
-                    holder.tileContainer.layoutParams.height = (VIDEO_ASPECT_RATIO_16_9 * viewportWidth).toInt()
+                    holder.tileContainer.layoutParams.height =
+                        (VIDEO_ASPECT_RATIO_16_9 * viewportWidth).toInt()
                 }
             }
             val videoRenderView = holder.itemView.video_surface
@@ -156,34 +165,37 @@ class VideoHolder(
         val popup = PopupMenu(context, view)
         popup.inflate(R.menu.popup_menu)
         popup.setOnMenuItemClickListener { item: MenuItem? ->
-            var newPriority = VideoPriority.highest
-            when (item!!.itemId) {
-                R.id.highest -> {
-                    newPriority = VideoPriority.highest
-                }
-                R.id.high -> {
-                    newPriority = VideoPriority.high
-                }
-                R.id.medium -> {
-                    newPriority = VideoPriority.medium
-                }
-                R.id.low -> {
-                    newPriority = VideoPriority.low
-                }
-                R.id.lowest -> {
-                    newPriority = VideoPriority.lowest
+            var newPriority = VideoPriority.Highest
+            if (item != null) {
+                when (item.itemId) {
+                    R.id.highest -> {
+                        newPriority = VideoPriority.Highest
+                    }
+                    R.id.high -> {
+                        newPriority = VideoPriority.High
+                    }
+                    R.id.medium -> {
+                        newPriority = VideoPriority.Medium
+                    }
+                    R.id.low -> {
+                        newPriority = VideoPriority.Low
+                    }
+                    R.id.lowest -> {
+                        newPriority = VideoPriority.Lowest
+                    }
                 }
             }
 
-            var found = false
+            var isVideoSourceExisted = false
             for ((source, configuration) in remoteVideoSourceConfigurations) {
                 if (source.attendeeId == attendeeId) {
                     configuration.priority = newPriority
-                    found = true
+                    isVideoSourceExisted = true
                 }
             }
-            if (!found) {
-                remoteVideoSourceConfigurations[RemoteVideoSource(attendeeId)] = VideoSubscriptionConfiguration(newPriority, VideoResolution.high)
+            if (!isVideoSourceExisted) {
+                remoteVideoSourceConfigurations[RemoteVideoSource(attendeeId)] =
+                    VideoSubscriptionConfiguration(newPriority, VideoResolution.High)
             }
             audioVideo.updateVideoSourceSubscriptions(remoteVideoSourceConfigurations, emptyArray())
             true
@@ -193,9 +205,9 @@ class VideoHolder(
 
     private fun updateLocalVideoMirror() {
         view.video_surface.mirror =
-            // If we are using internal source, base mirror state off that device type
+                // If we are using internal source, base mirror state off that device type
             (audioVideo.getActiveCamera()?.type == MediaDeviceType.VIDEO_FRONT_CAMERA ||
-            // Otherwise (audioVideo.getActiveCamera() == null) use the device type of our external/custom camera capture source
-            (audioVideo.getActiveCamera() == null && cameraCaptureSource?.device?.type == MediaDeviceType.VIDEO_FRONT_CAMERA))
+                    // Otherwise (audioVideo.getActiveCamera() == null) use the device type of our external/custom camera capture source
+                    (audioVideo.getActiveCamera() == null && cameraCaptureSource?.device?.type == MediaDeviceType.VIDEO_FRONT_CAMERA))
     }
 }
