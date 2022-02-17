@@ -192,10 +192,19 @@ class DefaultVideoClientController(
         removed: Array<RemoteVideoSource>
     ) {
         if (!videoClientStateController.canAct(VideoClientState.INITIALIZED)) return
-        logger.info(
-            TAG,
-            "Adding/updating video source subscriptions: $addedOrUpdated and removing: $removed"
-        )
+        for (key in addedOrUpdated.keys) {
+            logger.info(
+                TAG,
+                "Adding/updating video sources subscription: ${key.attendeeId} with priority: ${addedOrUpdated[key]?.priority} " +
+                        "resolution: ${addedOrUpdated[key]?.resolution}"
+            )
+        }
+        for (key in removed) {
+            logger.info(
+                TAG,
+                "Removing video source subscription: ${key.attendeeId}"
+            )
+        }
 
         val addedOrUpdatedInternal: MutableMap<RemoteVideoSourceInternal, VideoSubscriptionConfigurationInternal> =
             mutableMapOf()

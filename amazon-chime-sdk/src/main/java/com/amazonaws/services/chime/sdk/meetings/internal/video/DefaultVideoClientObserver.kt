@@ -286,7 +286,7 @@ class DefaultVideoClientObserver(
 
     override fun onRemoteVideoSourceAvailable(sourcesInternal: Array<RemoteVideoSourceInternal>?) {
         logger.info("VideoAdapter:defaultVideoClientObserver", "onRemoteVideoSourceAvailable")
-        if (sourcesInternal != null) {
+        if (!sourcesInternal.isNullOrEmpty()) {
             val sources = sourcesInternal.map { source -> RemoteVideoSource(source.attendeeId) }
             forEachVideoClientStateObserver { observer -> observer.onRemoteVideoSourceAvailable(sources) }
         }
@@ -294,7 +294,7 @@ class DefaultVideoClientObserver(
 
     override fun onRemoteVideoSourceUnavailable(sourcesInternal: Array<RemoteVideoSourceInternal>?) {
         logger.info("VideoAdapter:defaultVideoClientObserver", "onRemoteVideoSourceUnavailable")
-        if (sourcesInternal != null) {
+        if (!sourcesInternal.isNullOrEmpty()) {
             val sources = sourcesInternal.map { source -> RemoteVideoSource(source.attendeeId) }
             forEachVideoClientStateObserver { observer -> observer.onRemoteVideoSourceUnavailable(sources) }
         }
