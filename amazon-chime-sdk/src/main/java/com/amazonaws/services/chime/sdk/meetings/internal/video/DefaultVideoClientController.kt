@@ -196,12 +196,7 @@ class DefaultVideoClientController(
             TAG,
             "Adding/updating video source subscriptions: $addedOrUpdated and removing: $removed"
         )
-//
-//        val addedOrUpdatedInternal = addedOrUpdated.map { (source, config) ->
-//
-//            RemoteVideoSourceInternal(source.attendeeId) to
-//                    VideoSubscriptionConfigurationInternal(VideoPriorityInternal(config.priority.value), VideoResolutionInternal(config.resolution.width, config.resolution.height))
-//        }.toMap()
+
         val addedOrUpdatedInternal: MutableMap<RemoteVideoSourceInternal, VideoSubscriptionConfigurationInternal> =
             mutableMapOf()
         for ((source, config) in addedOrUpdated) {
