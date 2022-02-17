@@ -26,7 +26,7 @@ import com.amazonaws.services.chime.sdk.meetings.session.URLRewriter
 import com.amazonaws.services.chime.sdk.meetings.utils.logger.Logger
 import com.xodee.client.audio.audioclient.AudioClient
 import com.xodee.client.video.DataMessage as mediaDataMessage
-import com.xodee.client.video.RemoteVideoSource
+import com.xodee.client.video.RemoteVideoSourceInternal
 import com.xodee.client.video.VideoClient
 import com.xodee.client.video.VideoClient.VIDEO_CLIENT_NO_PAUSE
 import com.xodee.client.video.VideoClient.VIDEO_CLIENT_REMOTE_PAUSED_BY_LOCAL_BAD_NETWORK
@@ -176,10 +176,10 @@ class DefaultVideoClientObserver(
         clientMetricsCollector.processVideoClientMetrics(metricMap)
     }
 
-    override fun onRemoteVideoSourceAvailable(sources: Array<RemoteVideoSource>?) {
+    override fun onRemoteVideoSourceAvailable(sources: Array<RemoteVideoSourceInternal>?) {
     }
 
-    override fun onRemoteVideoSourceUnavailable(sources: Array<RemoteVideoSource>?) {
+    override fun onRemoteVideoSourceUnavailable(sources: Array<RemoteVideoSourceInternal>?) {
     }
 
     override fun onLogMessage(logLevel: Int, message: String?) {
