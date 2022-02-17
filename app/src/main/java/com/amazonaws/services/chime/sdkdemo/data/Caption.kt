@@ -12,5 +12,5 @@ data class Caption(
     val isPartial: Boolean,
     val content: String,
     val items: Array<TranscriptItem>?,
-    val entityContentSet: MutableSet<String>?
+    val entities: MutableSet<String>?
 )

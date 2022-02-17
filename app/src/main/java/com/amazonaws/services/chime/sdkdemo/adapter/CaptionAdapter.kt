@@ -52,7 +52,7 @@ class CaptionHolder(inflatedView: View) :
         view.speakerName.text = speakerName
         view.captionText.text = caption.content
         val spannable = SpannableString(caption.content)
-        caption.entityContentSet?.let { contents ->
+        caption.entities?.let { contents ->
             // Highlight PII identified and redacted words.
             contents.forEach { word ->
                 spannable.setSpan(
@@ -64,7 +64,7 @@ class CaptionHolder(inflatedView: View) :
             }
         } ?: run { view.captionText.setTextColor(Color.BLACK) }
         caption.items?.let { items ->
-            // Underline unstable words.
+            // Underline words with low confidence score.
             items.forEach { item ->
                 val word = item.content
                 val hasLowConfidence = item.confidence?.let { it < 0.3 && it > 0.0 } ?: run { false }

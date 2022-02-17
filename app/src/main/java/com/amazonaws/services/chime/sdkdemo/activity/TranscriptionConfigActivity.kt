@@ -15,8 +15,8 @@ import com.amazonaws.services.chime.sdk.meetings.utils.logger.ConsoleLogger
 import com.amazonaws.services.chime.sdk.meetings.utils.logger.LogLevel
 import com.amazonaws.services.chime.sdkdemo.R
 import com.amazonaws.services.chime.sdkdemo.data.TranscribeEngine
+import com.amazonaws.services.chime.sdkdemo.data.TranscribeFilter
 import com.amazonaws.services.chime.sdkdemo.data.TranscribeLanguage
-import com.amazonaws.services.chime.sdkdemo.data.TranscribePII
 import com.amazonaws.services.chime.sdkdemo.data.TranscribeRegion
 import com.amazonaws.services.chime.sdkdemo.fragment.TranscriptionConfigFragment
 import com.amazonaws.services.chime.sdkdemo.utils.encodeURLParam
@@ -68,9 +68,9 @@ class TranscriptionConfigActivity : AppCompatActivity(),
         engine: TranscribeEngine,
         language: TranscribeLanguage,
         region: TranscribeRegion,
-        transcribeParity: TranscribePII,
-        transcribeIdentificationContent: TranscribePII,
-        transcribeRedactionContent: TranscribePII,
+        transcribePartialResultsStabilization: TranscribeFilter,
+        transcribeIdentificationFilter: TranscribeFilter,
+        transcribeRedactionFilter: TranscribeFilter,
         customLanguageModel: String
     ) {
         uiScope.launch {
@@ -80,9 +80,9 @@ class TranscriptionConfigActivity : AppCompatActivity(),
                     engine.engine,
                     language.code,
                     region.code,
-                    transcribeParity.content,
-                    transcribeIdentificationContent.content,
-                    transcribeRedactionContent.content,
+                    transcribePartialResultsStabilization.content,
+                    transcribeIdentificationFilter.content,
+                    transcribeRedactionFilter.content,
                     customLanguageModel
                 )
 
@@ -100,26 +100,33 @@ class TranscriptionConfigActivity : AppCompatActivity(),
         transcribeEngine: String?,
         transcriptionLanguage: String?,
         transcriptionRegion: String?,
-        transcribeParity: String?,
+        transcribePartialResultsStabilization: String?,
         transcribeIdentificationContent: String?,
         transcribeRedactionContent: String?,
         customLanguageModel: String
     ): String? {
-        val parityStabilizationEnabled = transcribeParity != null
+        val partialResultsStabilizationEnabled = transcribePartialResultsStabilization != null
+        val isTranscribeMedical = transcribeEngine.equals("transcribe_medical")
         val transcriptionStreamParams = TranscriptionStreamParams(
-            transcribeIdentificationContent?.let { "PII" },
-            transcribeRedactionContent?.let { "PII" },
-            parityStabilizationEnabled,
-            transcribeParity?.let { it },
-            transcribeIdentificationContent.let { identification ->
-                if (identification == "") null
+            contentIdentificationType = transcribeIdentificationContent?.let {
+                if (isTranscribeMedical) "PHI"
+                else "PII"
+            },
+            contentRedactionType = transcribeRedactionContent?.let { "PII" },
+            enablePartialResultsStability = partialResultsStabilizationEnabled,
+            partialResultsStability = transcribePartialResultsStabilization?.let {
+                if (it == "default") "high"
+                else it
+            },
+            piiEntityTypes = transcribeIdentificationContent.let { identification ->
+                if (identification == "" || isTranscribeMedical) null
                 else identification
             } ?: run { transcribeRedactionContent.let { redaction ->
                 if (redaction == "") null
                 else redaction
                 }
             },
-            customLanguageModel?.let {
+            languageModelName = customLanguageModel.let {
                 val modelName = customLanguageModel.split(": ")
                 if (modelName.size > 1) modelName[1]
                 else null

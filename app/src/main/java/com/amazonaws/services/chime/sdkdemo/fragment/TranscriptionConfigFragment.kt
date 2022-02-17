@@ -18,18 +18,20 @@ import android.widget.CheckBox
 import android.widget.CompoundButton
 import android.widget.EditText
 import android.widget.Spinner
+import android.widget.Toast
 import androidx.fragment.app.Fragment
-import com.amazonaws.services.chime.sdk.meetings.audiovideo.TransciptPIIValues
+import com.amazonaws.services.chime.sdk.meetings.audiovideo.TranscriptPIIFilters
 import com.amazonaws.services.chime.sdk.meetings.utils.logger.ConsoleLogger
 import com.amazonaws.services.chime.sdk.meetings.utils.logger.LogLevel
 import com.amazonaws.services.chime.sdkdemo.R
 import com.amazonaws.services.chime.sdkdemo.activity.HomeActivity
 import com.amazonaws.services.chime.sdkdemo.data.TranscribeEngine
+import com.amazonaws.services.chime.sdkdemo.data.TranscribeFilter
 import com.amazonaws.services.chime.sdkdemo.data.TranscribeLanguage
-import com.amazonaws.services.chime.sdkdemo.data.TranscribePII
 import com.amazonaws.services.chime.sdkdemo.data.TranscribeRegion
 import java.lang.ClassCastException
 import kotlinx.android.synthetic.main.fragment_transcription_config.checkboxCustomLanguageModel
+import kotlinx.android.synthetic.main.fragment_transcription_config.checkboxPHIContentIdentification
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -110,35 +112,35 @@ class TranscriptionConfigFragment : Fragment() {
         }
     }
 
-    private val transcribeParity: List<TranscribePII> = mapOf<String?, String>(
-        null to "Partial Stability",
+    private val transcribePartialResultStabilizationValues: List<TranscribeFilter> = mapOf<String?, String>(
+        null to "Enable Partial Results Stabilization",
+        "default" to "-- DEFAULT (HIGH) --",
         "low" to "Low",
         "medium" to "Medium",
         "high" to "High"
     ).map {
-        TranscribePII(it.key, it.value)
+        TranscribeFilter(it.key, it.value)
     }
 
-    private val transcribePIIContents: List<TranscribePII> = mapOf<String, String>(
+    private val transcribePiiFilters: List<TranscribeFilter> = mapOf<String, String>(
         "" to "ALL",
-        TransciptPIIValues.BankRouting.value to "BANK ROUTING",
-        TransciptPIIValues.CreditCardNumber.value to "CREDIT/DEBIT NUMBER",
-        TransciptPIIValues.CreditCardCVV.value to "CREDIT/DEBIT CVV",
-        TransciptPIIValues.CreditCardExpiry.value to "CREDIT/DEBIT EXPIRY",
-        TransciptPIIValues.PIN.value to "PIN",
-        TransciptPIIValues.EMAIL.value to "EMAIL",
-        TransciptPIIValues.ADDRESS.value to "ADDRESS",
-        TransciptPIIValues.NAME.value to "NAME",
-        TransciptPIIValues.PHONE.value to "PHONE NUMBER",
-        TransciptPIIValues.SSN.value to "SSN"
+        TranscriptPIIFilters.BankRouting.value to "BANK ROUTING",
+        TranscriptPIIFilters.CreditCardNumber.value to "CREDIT/DEBIT NUMBER",
+        TranscriptPIIFilters.CreditCardCVV.value to "CREDIT/DEBIT CVV",
+        TranscriptPIIFilters.CreditCardExpiry.value to "CREDIT/DEBIT EXPIRY",
+        TranscriptPIIFilters.PIN.value to "PIN",
+        TranscriptPIIFilters.EMAIL.value to "EMAIL",
+        TranscriptPIIFilters.ADDRESS.value to "ADDRESS",
+        TranscriptPIIFilters.NAME.value to "NAME",
+        TranscriptPIIFilters.PHONE.value to "PHONE NUMBER",
+        TranscriptPIIFilters.SSN.value to "SSN"
     ).map {
-        TranscribePII(it.key, it.value)
+        TranscribeFilter(it.key, it.value)
     }
 
-    private val transcribeIdentificationContents: MutableList<TranscribePII> = mutableListOf<TranscribePII>()
-    private val transcribeRedactionContents: MutableList<TranscribePII> = mutableListOf<TranscribePII>()
-
-    private val transcribeParities: MutableList<TranscribePII> = transcribeParity.toMutableList()
+    private val transcribeIdentificationFilters: MutableList<TranscribeFilter> = mutableListOf<TranscribeFilter>()
+    private val transcribeRedactionFilters: MutableList<TranscribeFilter> = mutableListOf<TranscribeFilter>()
+    private val transcribePartialResultStabilizationFilters: MutableList<TranscribeFilter> = transcribePartialResultStabilizationValues.toMutableList()
 
     private val transcribeMedicalLanguages: List<TranscribeLanguage> =
         arrayOf("en-US").mapNotNull { l ->
@@ -179,20 +181,23 @@ class TranscriptionConfigFragment : Fragment() {
     private lateinit var languageAdapter: ArrayAdapter<TranscribeLanguage>
     private lateinit var regionSpinner: Spinner
     private lateinit var regionAdapter: ArrayAdapter<TranscribeRegion>
-    private lateinit var paritySpinner: Spinner
-    private lateinit var parityAdapter: ArrayAdapter<TranscribePII>
-    private lateinit var piiContentIdentificationSpinner: Spinner
-    private lateinit var piiContentIdentificationAdapter: ArrayAdapter<TranscribePII>
-    private lateinit var piiContentRedactionSpinner: Spinner
-    private lateinit var piiContentRedactionAdapter: ArrayAdapter<TranscribePII>
+    private lateinit var partialResultsStabilizationSpinner: Spinner
+    private lateinit var partialResultsStabilizationAdapter: ArrayAdapter<TranscribeFilter>
+    private lateinit var piiIdentificationSpinner: Spinner
+    private lateinit var piiIdentificationAdapter: ArrayAdapter<TranscribeFilter>
+    private lateinit var piiRedactionSpinner: Spinner
+    private lateinit var piiRedactionAdapter: ArrayAdapter<TranscribeFilter>
+    private lateinit var phiIdentificationCheckBox: CheckBox
     private lateinit var customLanguageCheckbox: CheckBox
 
     private val TRANSCRIBE_ENGINE_SPINNER_INDEX_KEY = "transcribeEngineSpinnerIndex"
     private val LANGUAGE_SPINNER_INDEX_KEY = "languageSpinnerIndex"
     private val REGION_SPINNER_INDEX_KEY = "regionSpinnerIndex"
-    private val PARITY_SPINNER_INDEX_KEY = "paritySpinnerIndex"
+    private val PARTIAL_RESULTS_STABILIZATION_INDEX_KEY = "partialResultsStabilizationSpinnerIndex"
     private val PII_CONTENT_IDENTIFICATION_SPINNER_INDEX_KEY = "piiContentIdentificationSpinnerIndex"
     private val PII_CONTENT_REDACTION_SPINNER_INDEX_KEY = "piiContentRedactionSpinnerIndex"
+    private val PHI_CONTENT_IDENTIFICATION_ENABLED_KEY = "phiContentIdentificationEnabled"
+    private val CUSTOM_LANGUAGE_MODEL_NAME_KEY = "customLanguageModelName"
 
     companion object {
         fun newInstance(meetingId: String): TranscriptionConfigFragment {
@@ -211,9 +216,9 @@ class TranscriptionConfigFragment : Fragment() {
             engine: TranscribeEngine,
             language: TranscribeLanguage,
             region: TranscribeRegion,
-            transcribeParity: TranscribePII,
-            transcribePIIIdentication: TranscribePII,
-            transcribePIIRedaction: TranscribePII,
+            transcribePartialResultsStabilization: TranscribeFilter,
+            transcribeIdentificationFilter: TranscribeFilter,
+            transcribeRedactionFilter: TranscribeFilter,
             customLanguageModel: String
         )
     }
@@ -242,9 +247,9 @@ class TranscriptionConfigFragment : Fragment() {
                 transcribeEngineSpinner.selectedItem as TranscribeEngine,
                 languageSpinner.selectedItem as TranscribeLanguage,
                 regionSpinner.selectedItem as TranscribeRegion,
-                paritySpinner.selectedItem as TranscribePII,
-                piiContentIdentificationSpinner.selectedItem as TranscribePII,
-                piiContentRedactionSpinner.selectedItem as TranscribePII,
+                partialResultsStabilizationSpinner.selectedItem as TranscribeFilter,
+                piiIdentificationSpinner.selectedItem as TranscribeFilter,
+                piiRedactionSpinner.selectedItem as TranscribeFilter,
                 customLanguageCheckbox.text as String
             )
         }
@@ -273,28 +278,35 @@ class TranscriptionConfigFragment : Fragment() {
         regionSpinner.adapter = regionAdapter
         regionSpinner.isSelected = false
 
-        paritySpinner = view.findViewById(R.id.spinnerParity)
-        parityAdapter = ArrayAdapter(context, android.R.layout.simple_spinner_item, transcribeParities)
-        parityAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-        paritySpinner.adapter = parityAdapter
-        paritySpinner.isSelected = false
-        paritySpinner.setSelection(0, true)
+        partialResultsStabilizationSpinner = view.findViewById(R.id.spinnerPartialResultsStabilization)
+        partialResultsStabilizationAdapter = ArrayAdapter(context, android.R.layout.simple_spinner_item, transcribePartialResultStabilizationFilters)
+        partialResultsStabilizationAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        partialResultsStabilizationSpinner.adapter = partialResultsStabilizationAdapter
+        partialResultsStabilizationSpinner.isSelected = false
+        partialResultsStabilizationSpinner.setSelection(0, true)
 
-        piiContentIdentificationSpinner = view.findViewById(R.id.spinnerPIIContentIdentification)
-        piiContentIdentificationAdapter = ArrayAdapter(context, android.R.layout.simple_spinner_item, transcribeIdentificationContents)
-        piiContentIdentificationAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-        piiContentIdentificationSpinner.adapter = piiContentIdentificationAdapter
-        piiContentIdentificationSpinner.isSelected = false
-        piiContentIdentificationSpinner.setSelection(0, true)
-        piiContentIdentificationSpinner.onItemSelectedListener = onPIIContentIdentificationSelected
+        piiIdentificationSpinner = view.findViewById(R.id.spinnerPIIContentIdentification)
+        piiIdentificationAdapter = ArrayAdapter(context, android.R.layout.simple_spinner_item, transcribeIdentificationFilters)
+        piiIdentificationAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        piiIdentificationSpinner.adapter = piiIdentificationAdapter
+        piiIdentificationSpinner.isSelected = false
+        piiIdentificationSpinner.setSelection(0, true)
+        piiIdentificationSpinner.onItemSelectedListener = onPIIContentIdentificationSelected
 
-        piiContentRedactionSpinner = view.findViewById(R.id.spinnerPIIContentRedaction)
-        piiContentRedactionAdapter = ArrayAdapter(context, android.R.layout.simple_spinner_item, transcribeRedactionContents)
-        piiContentRedactionAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-        piiContentRedactionSpinner.adapter = piiContentRedactionAdapter
-        piiContentRedactionSpinner.isSelected = false
-        piiContentRedactionSpinner.setSelection(0, true)
-        piiContentRedactionSpinner.onItemSelectedListener = onPIIContentRedactionSelected
+        piiRedactionSpinner = view.findViewById(R.id.spinnerPIIContentRedaction)
+        piiRedactionAdapter = ArrayAdapter(context, android.R.layout.simple_spinner_item, transcribeRedactionFilters)
+        piiRedactionAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        piiRedactionSpinner.adapter = piiRedactionAdapter
+        piiRedactionSpinner.isSelected = false
+        piiRedactionSpinner.setSelection(0, true)
+        piiRedactionSpinner.onItemSelectedListener = onPIIContentRedactionSelected
+
+        phiIdentificationCheckBox = view.findViewById(R.id.checkboxPHIContentIdentification)
+        phiIdentificationCheckBox.setOnCheckedChangeListener { _, isChecked ->
+            if (isChecked) {
+                piiIdentificationSpinner.setSelection(1, true)
+            }
+        }
 
         customLanguageCheckbox = view.findViewById(R.id.checkboxCustomLanguageModel)
         customLanguageCheckbox.setOnCheckedChangeListener { cb, isChecked ->
@@ -308,32 +320,37 @@ class TranscriptionConfigFragment : Fragment() {
         uiScope.launch {
             populateLanguages(transcribeLanguages, languages, languageAdapter)
             populateRegions(transcribeRegions, regions, regionAdapter)
-            populatePII(transcribePIIContents, transcribeIdentificationContents, piiContentIdentificationAdapter, "Identification")
-            populatePII(transcribePIIContents, transcribeRedactionContents, piiContentRedactionAdapter, "Redaction")
+            populateTranscriptionFilters(transcribePiiFilters, transcribeIdentificationFilters, piiIdentificationAdapter, "Identification")
+            populateTranscriptionFilters(transcribePiiFilters, transcribeRedactionFilters, piiRedactionAdapter, "Redaction")
 
             var transcribeEngineSpinnerIndex = 0
             var languageSpinnerIndex = 0
             var regionSpinnerIndex = 0
-            var paritySpinnerIndex = 0
+            var partialResultsStabilizationSpinnerIndex = 0
             var piiContentIdentificationSpinnerIndex = 0
             var piiContentRedactionSpinnerIndex = 0
+            var phiContentIdentificationEnabled = false
+            var customLanguageModelName = resources.getString(R.string.custom_language_checkbox)
             if (savedInstanceState != null) {
                 transcribeEngineSpinnerIndex = savedInstanceState.getInt(TRANSCRIBE_ENGINE_SPINNER_INDEX_KEY, 0)
                 languageSpinnerIndex = savedInstanceState.getInt(LANGUAGE_SPINNER_INDEX_KEY, 0)
                 regionSpinnerIndex = savedInstanceState.getInt(REGION_SPINNER_INDEX_KEY, 0)
-                paritySpinnerIndex = savedInstanceState.getInt(PARITY_SPINNER_INDEX_KEY, 0)
-                piiContentIdentificationSpinnerIndex = savedInstanceState.getInt(
-                    PII_CONTENT_IDENTIFICATION_SPINNER_INDEX_KEY, 0)
-                piiContentRedactionSpinnerIndex = savedInstanceState.getInt(
-                    PII_CONTENT_REDACTION_SPINNER_INDEX_KEY, 0)
+                partialResultsStabilizationSpinnerIndex = savedInstanceState.getInt(PARTIAL_RESULTS_STABILIZATION_INDEX_KEY, 0)
+                piiContentIdentificationSpinnerIndex = savedInstanceState.getInt(PII_CONTENT_IDENTIFICATION_SPINNER_INDEX_KEY, 0)
+                piiContentRedactionSpinnerIndex = savedInstanceState.getInt(PII_CONTENT_REDACTION_SPINNER_INDEX_KEY, 0)
+                phiContentIdentificationEnabled = savedInstanceState.getBoolean(PHI_CONTENT_IDENTIFICATION_ENABLED_KEY, false)
+                customLanguageModelName = savedInstanceState.getString(CUSTOM_LANGUAGE_MODEL_NAME_KEY, resources.getString(R.string.custom_language_checkbox))
             }
 
             transcribeEngineSpinner.setSelection(transcribeEngineSpinnerIndex)
             languageSpinner.setSelection(languageSpinnerIndex)
             regionSpinner.setSelection(regionSpinnerIndex)
-            paritySpinner.setSelection(paritySpinnerIndex)
-            piiContentIdentificationSpinner.setSelection(piiContentIdentificationSpinnerIndex)
-            piiContentRedactionSpinner.setSelection(piiContentRedactionSpinnerIndex)
+            partialResultsStabilizationSpinner.setSelection(partialResultsStabilizationSpinnerIndex)
+            piiIdentificationSpinner.setSelection(piiContentIdentificationSpinnerIndex)
+            piiRedactionSpinner.setSelection(piiContentRedactionSpinnerIndex)
+            checkboxPHIContentIdentification.isChecked = phiContentIdentificationEnabled
+            checkboxCustomLanguageModel.isChecked = customLanguageModelName != (resources.getString(R.string.custom_language_checkbox))
+            checkboxCustomLanguageModel.text = customLanguageModelName
         }
 
         return view
@@ -344,9 +361,11 @@ class TranscriptionConfigFragment : Fragment() {
         outState.putInt(TRANSCRIBE_ENGINE_SPINNER_INDEX_KEY, transcribeEngineSpinner.selectedItemPosition)
         outState.putInt(LANGUAGE_SPINNER_INDEX_KEY, languageSpinner.selectedItemPosition)
         outState.putInt(REGION_SPINNER_INDEX_KEY, regionSpinner.selectedItemPosition)
-        outState.putInt(PARITY_SPINNER_INDEX_KEY, paritySpinner.selectedItemPosition)
-        outState.putInt(PII_CONTENT_IDENTIFICATION_SPINNER_INDEX_KEY, piiContentIdentificationSpinner.selectedItemPosition)
-        outState.putInt(PII_CONTENT_REDACTION_SPINNER_INDEX_KEY, piiContentRedactionSpinner.selectedItemPosition)
+        outState.putInt(PARTIAL_RESULTS_STABILIZATION_INDEX_KEY, partialResultsStabilizationSpinner.selectedItemPosition)
+        outState.putInt(PII_CONTENT_IDENTIFICATION_SPINNER_INDEX_KEY, piiIdentificationSpinner.selectedItemPosition)
+        outState.putInt(PII_CONTENT_REDACTION_SPINNER_INDEX_KEY, piiRedactionSpinner.selectedItemPosition)
+        outState.putBoolean(PHI_CONTENT_IDENTIFICATION_ENABLED_KEY, phiIdentificationCheckBox.isChecked)
+        outState.putString(CUSTOM_LANGUAGE_MODEL_NAME_KEY, checkboxCustomLanguageModel.text.toString())
     }
 
     private val onTranscribeEngineSelected = object : AdapterView.OnItemSelectedListener {
@@ -356,12 +375,14 @@ class TranscriptionConfigFragment : Fragment() {
                     "transcribe_medical" -> {
                         populateLanguages(transcribeMedicalLanguages, languages, languageAdapter)
                         populateRegions(transcribeMedicalRegions, regions, regionAdapter)
-                        hideClmPii()
+                        hideAdditionalTranscribeOptions()
+                        showAdditionalMedicalTranscribeOptions()
                     }
                     "transcribe" -> {
                         populateLanguages(transcribeLanguages, languages, languageAdapter)
                         populateRegions(transcribeRegions, regions, regionAdapter)
-                        showClmPii()
+                        showAdditionalTranscribeOptions()
+                        hideAdditionalMedicalTranscribeOptions()
                     }
                     else -> {
                         logger.error(TAG, "Invalid in TranscribeEngine selected")
@@ -379,9 +400,9 @@ class TranscriptionConfigFragment : Fragment() {
 
     private val onPIIContentIdentificationSelected = object : AdapterView.OnItemSelectedListener {
         override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-            if (position < transcribeIdentificationContents.size && position > 0) {
-                populatePII(transcribePIIContents, transcribeRedactionContents, piiContentRedactionAdapter, "Redaction")
-                piiContentRedactionSpinner.setSelection(0, true)
+            if (position < transcribeIdentificationFilters.size && position > 0) {
+                populateTranscriptionFilters(transcribePiiFilters, transcribeRedactionFilters, piiRedactionAdapter, "Redaction")
+                piiRedactionSpinner.setSelection(0, true)
             } else {
                 logger.error(TAG, "Incorrect position in TranscribeIdentification spinner")
             }
@@ -393,9 +414,9 @@ class TranscriptionConfigFragment : Fragment() {
 
     private val onPIIContentRedactionSelected = object : AdapterView.OnItemSelectedListener {
         override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-            if (position < transcribeRedactionContents.size && position > 0) {
-                populatePII(transcribePIIContents, transcribeIdentificationContents, piiContentIdentificationAdapter, "Identification")
-                piiContentIdentificationSpinner.setSelection(0, true)
+            if (position < transcribeRedactionFilters.size && position > 0) {
+                populateTranscriptionFilters(transcribePiiFilters, transcribeIdentificationFilters, piiIdentificationAdapter, "Identification")
+                piiIdentificationSpinner.setSelection(0, true)
             } else {
                 logger.error(TAG, "Incorrect position in TranscribeRedaction spinner")
             }
@@ -417,10 +438,10 @@ class TranscriptionConfigFragment : Fragment() {
         adapter.notifyDataSetChanged()
     }
 
-    private fun populatePII(newList: List<TranscribePII>, currentList: MutableList<TranscribePII>, adapter: ArrayAdapter<TranscribePII>, type: String) {
+    private fun populateTranscriptionFilters(newList: List<TranscribeFilter>, currentList: MutableList<TranscribeFilter>, adapter: ArrayAdapter<TranscribeFilter>, type: String) {
         currentList.clear()
         currentList.addAll(newList)
-        currentList.add(0, TranscribePII(null, "Enable PII Content $type"))
+        currentList.add(0, TranscribeFilter(null, "Enable PII Content $type"))
         adapter.notifyDataSetChanged()
     }
 
@@ -429,23 +450,35 @@ class TranscriptionConfigFragment : Fragment() {
         regionSpinner.setSelection(0, true)
     }
 
-    private fun hideClmPii() {
-        piiContentIdentificationSpinner.setSelection(0, true)
-        piiContentRedactionSpinner.setSelection(0, true)
-        paritySpinner.setSelection(0, true)
+    private fun hideAdditionalTranscribeOptions() {
+        // Enable PHI and disable PII when medicalTranscribe selected.
+        piiIdentificationSpinner.setSelection(0, true)
+        piiRedactionSpinner.setSelection(0, true)
+        partialResultsStabilizationSpinner.setSelection(0, true)
         checkboxCustomLanguageModel.text = resources.getString(R.string.custom_language_checkbox)
-        piiContentRedactionSpinner.visibility = View.GONE
-        piiContentIdentificationSpinner.visibility = View.GONE
+        piiRedactionSpinner.visibility = View.GONE
+        piiIdentificationSpinner.visibility = View.GONE
         checkboxCustomLanguageModel.visibility = View.GONE
-        paritySpinner.visibility = View.GONE
+        partialResultsStabilizationSpinner.visibility = View.GONE
     }
 
-    private fun showClmPii() {
-        piiContentRedactionSpinner.visibility = View.VISIBLE
-        piiContentIdentificationSpinner.visibility = View.VISIBLE
-        paritySpinner.visibility = View.VISIBLE
+    private fun showAdditionalTranscribeOptions() {
+        // Enable PII and disable PII when transcribe selected.
+        piiRedactionSpinner.visibility = View.VISIBLE
+        piiIdentificationSpinner.visibility = View.VISIBLE
+        partialResultsStabilizationSpinner.visibility = View.VISIBLE
         checkboxCustomLanguageModel.visibility = View.VISIBLE
         checkboxCustomLanguageModel.isChecked = false
+    }
+
+    private fun hideAdditionalMedicalTranscribeOptions() {
+        phiIdentificationCheckBox.isChecked = false
+        piiIdentificationSpinner.setSelection(0, true)
+        phiIdentificationCheckBox.visibility = View.GONE
+    }
+
+    private fun showAdditionalMedicalTranscribeOptions() {
+        phiIdentificationCheckBox.visibility = View.VISIBLE
     }
 
     private fun setCustomLanguageModelName(cb: CompoundButton) {
@@ -459,9 +492,13 @@ class TranscriptionConfigFragment : Fragment() {
         dialog.show()
 
         saveButton.setOnClickListener {
-            val customLanguageModelName = customLanguageModelText.hint.toString() + ": " + customLanguageModelText.text
-            customLanguageCheckbox.text = customLanguageModelName
-            dialog.dismiss()
+            if (customLanguageModelText.text.isEmpty()) {
+                Toast.makeText(context, "Custom language model name cannot be empty!", Toast.LENGTH_SHORT).show()
+            } else {
+                val customLanguageModelName = customLanguageModelText.hint.toString() + ": " + customLanguageModelText.text
+                customLanguageCheckbox.text = customLanguageModelName
+                dialog.dismiss()
+            }
         }
 
         cancelButton.setOnClickListener {

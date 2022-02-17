@@ -151,7 +151,7 @@ enum class TranscriptionStatusType(val value: Int) {
     }
 }
 
-enum class TransciptPIIValues(val value: String) {
+enum class TranscriptPIIFilters(val value: String) {
     BankRouting("BANK_ROUTING"),
     CreditCardNumber("CREDIT_DEBIT_NUMBER"),
     CreditCardCVV("CREDIT_DEBIT_CVV"),

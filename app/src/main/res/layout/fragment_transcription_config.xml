@@ -61,7 +61,7 @@
                 android:paddingRight="32dp" />
 
             <Spinner
-                android:id="@+id/spinnerParity"
+                android:id="@+id/spinnerPartialResultsStabilization"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="16dp"
@@ -91,6 +91,20 @@
                 android:paddingRight="32dp" />
 
             <CheckBox
+                android:id="@+id/checkboxPHIContentIdentification"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                android:button="@null"
+                android:drawableEnd="?android:attr/listChoiceIndicatorMultiple"
+                android:minHeight="48dp"
+                android:paddingStart="40dp"
+                android:paddingEnd="20dp"
+                android:visibility="gone"
+                android:text="@string/phi_identification_checkbox"
+                android:textSize="16sp" />
+
+            <CheckBox
                 android:id="@+id/checkboxCustomLanguageModel"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
@@ -102,7 +116,7 @@
                 android:paddingStart="40dp"
                 android:paddingEnd="20dp"
                 android:text="@string/custom_language_checkbox"
-                android:textSize="18sp" />
+                android:textSize="16sp" />
 
             <Button
                 android:id="@+id/buttonStartTranscription"

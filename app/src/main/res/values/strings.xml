@@ -59,6 +59,7 @@
     <string name="partial_stability_spinner">Enable Partial Results Stabilization</string>
     <string name="pii_identification_spinner">Enable PII Content Identification</string>
     <string name="pii_redaction_spinner">Enable PII Content Redaction</string>
+    <string name="phi_identification_checkbox">Enable PHI Content Identification</string>
     <string name="custom_language_checkbox">Enable Custom Language Model</string>
     <string name="custom_language_model_text_view">Custom Language Model</string>
     <string name="user_notification_transcription_start_error">There was an error starting meeting transcription. Please try again</string>

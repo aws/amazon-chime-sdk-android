@@ -18,7 +18,7 @@ data class TranscribeRegion(val code: String, val name: String) {
     }
 }
 
-data class TranscribePII(val content: String?, val value: String) {
+data class TranscribeFilter(val content: String?, val value: String) {
     override fun toString(): String {
         return value
     }
