@@ -83,7 +83,8 @@ class DefaultContentShareVideoClientObserver(
     override fun requestTurnCreds(client: VideoClient?) {
         logger.info(TAG, "requestTurnCreds")
         uiScope.launch {
-            val turnResponse: TURNCredentials? = TURNRequestUtils.doTurnRequest(turnRequestParams, logger)
+            val turnResponse: TURNCredentials? =
+                TURNRequestUtils.doTurnRequest(turnRequestParams, logger)
             with(turnResponse) {
                 val isActive = client?.isActive ?: false
                 if (this != null && isActive) {

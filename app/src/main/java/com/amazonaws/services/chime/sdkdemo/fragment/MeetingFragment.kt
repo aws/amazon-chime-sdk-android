@@ -56,7 +56,11 @@ import com.amazonaws.services.chime.sdk.meetings.audiovideo.contentshare.Content
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.contentshare.ContentShareStatus
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.metric.MetricsObserver
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.metric.ObservableMetric
+import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.RemoteVideoSource
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoPauseState
+import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoPriority
+import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoResolution
+import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoSubscriptionConfiguration
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoTileObserver
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoTileState
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.capture.CameraCaptureSource
@@ -328,6 +332,7 @@ class MeetingFragment : Fragment(),
         videoTileAdapter = VideoAdapter(
             meetingModel.videoStatesInCurrentPage,
             meetingModel.userPausedVideoTileIds,
+            meetingModel.remoteVideoSourceConfigurations,
             audioVideo,
             cameraCaptureSource,
             context,
@@ -342,6 +347,7 @@ class MeetingFragment : Fragment(),
             VideoAdapter(
                 meetingModel.currentScreenTiles,
                 meetingModel.userPausedVideoTileIds,
+                meetingModel.remoteVideoSourceConfigurations,
                 audioVideo,
                 null,
                 context,
@@ -1342,6 +1348,15 @@ class MeetingFragment : Fragment(),
             object {}.javaClass.enclosingMethod?.name,
             "${sessionStatus.statusCode}"
         )
+    }
+
+    override fun onRemoteVideoSourceAvailable(sources: List<RemoteVideoSource>) {
+        sources.forEach { meetingModel.remoteVideoSourceConfigurations.put(it, VideoSubscriptionConfiguration(VideoPriority.Medium, VideoResolution.High)) }
+        // Use the default auto subscribe behavior
+    }
+
+    override fun onRemoteVideoSourceUnavailable(sources: List<RemoteVideoSource>) {
+        sources.forEach { meetingModel.remoteVideoSourceConfigurations.remove(it) }
     }
 
     override fun onVideoTileAdded(tileState: VideoTileState) {

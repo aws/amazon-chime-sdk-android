@@ -2,6 +2,7 @@
 
 ### Added
 * Added the meetingStartDurationMs event in ingestionEvents to record the time that elapsed between the start request and the beginning of the meeting.
+* Added priority based downlink policy to control the way how a recipient subscribes to the remote video sources
 
 ## [0.14.3] - 2022-02-10
 
