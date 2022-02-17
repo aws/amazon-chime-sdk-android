@@ -1,15 +1,18 @@
 ## [Unreleased]
 
 ### Added
-* Supports integration of personal information identification/redaction and partial stability with Amazon Transcribe and Amazon Transcribe Medical for live transcription. The PII feature identifies/redacts personal information such as credit card info, addresses, SSN, etc. from live transcription. The partial stability feature allows you to enable and configure partial results stabilization for streaming audio transcriptions.
+* Supports integration of personal information identification/redaction, partial results stabilization, and custom language models with Amazon Transcribe and Amazon Transcribe Medical for live transcription. The PII feature identifies/redacts personal information such as credit card info, addresses, SSN, etc. from live transcription. The partial results stabilization feature allows you to enable and configure partial results stabilization for streaming audio transcriptions. Custom language models lets you upload custom models to improve transcription accuracy for your specific use case.
 
-* [Demo] Added PII identification/redaction and partial stability meeting captions functionality based on the live transcription APIs. You will need to have a serverless deployment to create new AWS Lambda endpoints for live transcription. Follow [the live transcription guide](https://docs.aws.amazon.com/chime/latest/dg/meeting-transcription.html) to create necessary service-linked role so that the demo app can call Amazon Transcribe and Amazon Transcribe Medical on your behalf.
+* [Demo] Added PII identification/redaction, partial stability, and custom language model features for meeting captions based on the live transcription APIs.
 
 ## Unreleased
 
 ###Added
 * Added the meetingStartDurationMs event in ingestionEvents to record the time that elapsed between the start request and the beginning of the meeting.
 
+## Unreleased
+
+## [0.14.3] - 2022-02-10
 ## [0.14.2] - 2022-01-27
 
 ### Added

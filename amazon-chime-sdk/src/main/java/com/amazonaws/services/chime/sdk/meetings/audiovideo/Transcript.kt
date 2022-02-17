@@ -90,7 +90,7 @@ data class TranscriptAlternative(
 data class TranscriptionStreamParams(
     val contentIdentificationType: String?,
     val contentRedactionType: String?,
-    val enablePartialResultsStability: Boolean,
+    val enablePartialResultsStabilization: Boolean,
     val partialResultsStability: String?,
     val piiEntityTypes: String?,
     val languageModelName: String?
@@ -149,17 +149,4 @@ enum class TranscriptionStatusType(val value: Int) {
             return values().find { it.value == intValue } ?: return Unknown
         }
     }
-}
-
-enum class TranscriptPIIFilters(val value: String) {
-    BankRouting("BANK_ROUTING"),
-    CreditCardNumber("CREDIT_DEBIT_NUMBER"),
-    CreditCardCVV("CREDIT_DEBIT_CVV"),
-    CreditCardExpiry("CREDIT_DEBIT_EXPIRY"),
-    PIN("PIN"),
-    EMAIL("EMAIL"),
-    ADDRESS("ADDRESS"),
-    NAME("NAME"),
-    PHONE("PHONE"),
-    SSN("SSN");
 }

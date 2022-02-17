@@ -176,12 +176,10 @@ class DefaultVideoClientObserver(
         clientMetricsCollector.processVideoClientMetrics(metricMap)
     }
 
-    override fun onRemoteVideoSourceAvailable(sources: Array<out RemoteVideoSource>?) {
-        TODO("Not yet implemented")
+    override fun onRemoteVideoSourceAvailable(sources: Array<RemoteVideoSource>?) {
     }
 
-    override fun onRemoteVideoSourceUnavailable(sources: Array<out RemoteVideoSource>?) {
-        TODO("Not yet implemented")
+    override fun onRemoteVideoSourceUnavailable(sources: Array<RemoteVideoSource>?) {
     }
 
     override fun onLogMessage(logLevel: Int, message: String?) {
