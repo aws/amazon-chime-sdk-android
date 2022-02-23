@@ -45,6 +45,7 @@ class MeetingActivity : AppCompatActivity(),
     private lateinit var meetingId: String
     private lateinit var name: String
     private lateinit var audioVideoConfig: AudioVideoConfiguration
+    private lateinit var meetingEndpointUrl: String
 
     private var cachedDevice: MediaDevice? = null
 
@@ -59,6 +60,7 @@ class MeetingActivity : AppCompatActivity(),
             AudioMode.from(intValue, defaultAudioMode = AudioMode.Stereo48K)
         } ?: AudioMode.Stereo48K
         audioVideoConfig = AudioVideoConfiguration(audioMode = audioMode)
+        meetingEndpointUrl = intent.extras?.getString(HomeActivity.MEETING_ENDPOINT_KEY) as String
 
         if (savedInstanceState == null) {
             val meetingResponseJson =
@@ -107,7 +109,7 @@ class MeetingActivity : AppCompatActivity(),
     }
 
     override fun onJoinMeetingClicked() {
-        val rosterViewFragment = MeetingFragment.newInstance(meetingId, audioVideoConfig)
+        val rosterViewFragment = MeetingFragment.newInstance(meetingId, audioVideoConfig, meetingEndpointUrl)
         supportFragmentManager
             .beginTransaction()
             .replace(R.id.root_layout, rosterViewFragment, "rosterViewFragment")

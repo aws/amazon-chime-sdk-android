@@ -1,3 +1,8 @@
+## [Unreleased]
+
+### Added
+* [Demo] Fix for Mobile SDK Gamma Canary failures in saucelabs. Added support for overridden meeting endpoint url in demo app.
+
 ## [0.14.3] - 2022-02-10
 
 ## [0.14.2] - 2022-01-27

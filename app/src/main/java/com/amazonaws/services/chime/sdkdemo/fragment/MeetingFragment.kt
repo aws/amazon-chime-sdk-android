@@ -196,12 +196,13 @@ class MeetingFragment : Fragment(),
     private lateinit var audioDeviceManager: AudioDeviceManager
 
     companion object {
-        fun newInstance(meetingId: String, audioVideoConfig: AudioVideoConfiguration): MeetingFragment {
+        fun newInstance(meetingId: String, audioVideoConfig: AudioVideoConfiguration, meetingEndpointUrl: String): MeetingFragment {
             val fragment = MeetingFragment()
 
             fragment.arguments = bundleOf(
                 HomeActivity.MEETING_ID_KEY to meetingId,
-                HomeActivity.AUDIO_MODE_KEY to audioVideoConfig.audioMode.value
+                HomeActivity.AUDIO_MODE_KEY to audioVideoConfig.audioMode.value,
+                HomeActivity.MEETING_ENDPOINT_KEY to meetingEndpointUrl
             )
             return fragment
         }
@@ -545,7 +546,8 @@ class MeetingFragment : Fragment(),
                 0 -> toggleScreenCapture()
                 1 -> setVoiceFocusEnabled(!isVoiceFocusEnabled)
                 2 -> toggleLiveTranscription(
-                    arguments?.getString(HomeActivity.MEETING_ID_KEY) as String)
+                    arguments?.getString(HomeActivity.MEETING_ID_KEY) as String,
+                    arguments?.getString(HomeActivity.MEETING_ENDPOINT_KEY) as String)
                 3 -> toggleFlashlight()
                 4 -> toggleCpuDemoFilter()
                 5 -> toggleGpuDemoFilter()
@@ -782,10 +784,10 @@ class MeetingFragment : Fragment(),
         }
     }
 
-    private fun toggleLiveTranscription(meetingId: String) {
+    private fun toggleLiveTranscription(meetingId: String, meetingEndpointUrl: String) {
         if (meetingModel.isLiveTranscriptionEnabled) {
             uiScope.launch {
-                val transcriptionResponseJson: String? = disableMeetingTranscription(meetingId)
+                val transcriptionResponseJson: String? = disableMeetingTranscription(meetingId, meetingEndpointUrl)
 
                 if (transcriptionResponseJson == null) {
                     notifyHandler(getString(R.string.user_notification_transcription_stop_error))
@@ -796,6 +798,7 @@ class MeetingFragment : Fragment(),
         } else {
             val intent = Intent(context, TranscriptionConfigActivity::class.java)
             intent.putExtra(HomeActivity.MEETING_ID_KEY, meetingId)
+            intent.putExtra(HomeActivity.MEETING_ENDPOINT_KEY, meetingEndpointUrl)
             startActivity(intent)
         }
     }
@@ -1025,8 +1028,8 @@ class MeetingFragment : Fragment(),
         }
     }
 
-    private suspend fun disableMeetingTranscription(meetingId: String?): String? {
-        val meetingUrl = if (getString(R.string.test_url).endsWith("/")) getString(R.string.test_url) else "${getString(R.string.test_url)}/"
+    private suspend fun disableMeetingTranscription(meetingId: String?, meetingEndpointUrl: String): String? {
+        val meetingUrl = if (meetingEndpointUrl.endsWith("/")) meetingEndpointUrl else meetingEndpointUrl.plus("/")
         val url = "${meetingUrl}stop_transcription?title=${encodeURLParam(meetingId)}"
         val response = HttpUtils.post(URL(url), "", DefaultBackOffRetry(), logger)
         return if (response.httpException == null) {
