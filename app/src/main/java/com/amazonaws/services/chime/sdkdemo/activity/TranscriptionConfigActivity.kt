@@ -35,11 +35,13 @@ class TranscriptionConfigActivity : AppCompatActivity(),
 
     private val TAG = "TranscriptionConfigActivity"
 
+    private lateinit var meetingEndpointUrl: String
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_transcription_config)
         meetingId = intent.getStringExtra(HomeActivity.MEETING_ID_KEY) as String
-
+        meetingEndpointUrl = intent.getStringExtra(HomeActivity.MEETING_ENDPOINT_KEY) as String
         if (savedInstanceState == null) {
             val transcriptionConfigFragment = TranscriptionConfigFragment.newInstance(meetingId)
             supportFragmentManager
@@ -83,7 +85,7 @@ class TranscriptionConfigActivity : AppCompatActivity(),
         transcriptionLanguage: String?,
         transcriptionRegion: String?
     ): String? {
-        val meetingUrl = if (getString(R.string.test_url).endsWith("/")) getString(R.string.test_url) else "${getString(R.string.test_url)}/"
+        val meetingUrl = if (meetingEndpointUrl.endsWith("/")) meetingEndpointUrl else meetingEndpointUrl.plus("/")
         val url = "${meetingUrl}start_transcription?title=${encodeURLParam(meetingId)}" +
                 "&language=${encodeURLParam(transcriptionLanguage)}" +
                 "&region=${encodeURLParam(transcriptionRegion)}" +
