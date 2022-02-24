@@ -42,6 +42,7 @@ import com.amazonaws.services.chime.sdk.meetings.audiovideo.AttendeeInfo
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.AudioVideoConfiguration
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.AudioVideoFacade
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.AudioVideoObserver
+import com.amazonaws.services.chime.sdk.meetings.audiovideo.PrimaryMeetingPromotionObserver
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.SignalUpdate
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.Transcript
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.TranscriptEvent
@@ -79,6 +80,9 @@ import com.amazonaws.services.chime.sdk.meetings.realtime.RealtimeObserver
 import com.amazonaws.services.chime.sdk.meetings.realtime.TranscriptEventObserver
 import com.amazonaws.services.chime.sdk.meetings.realtime.datamessage.DataMessage
 import com.amazonaws.services.chime.sdk.meetings.realtime.datamessage.DataMessageObserver
+import com.amazonaws.services.chime.sdk.meetings.session.CreateAttendeeResponse
+import com.amazonaws.services.chime.sdk.meetings.session.CreateMeetingResponse
+import com.amazonaws.services.chime.sdk.meetings.session.MeetingSessionConfiguration
 import com.amazonaws.services.chime.sdk.meetings.session.MeetingSessionCredentials
 import com.amazonaws.services.chime.sdk.meetings.session.MeetingSessionStatus
 import com.amazonaws.services.chime.sdk.meetings.session.MeetingSessionStatusCode
@@ -98,6 +102,7 @@ import com.amazonaws.services.chime.sdkdemo.adapter.RosterAdapter
 import com.amazonaws.services.chime.sdkdemo.adapter.VideoAdapter
 import com.amazonaws.services.chime.sdkdemo.adapter.VideoDiffCallback
 import com.amazonaws.services.chime.sdkdemo.data.Caption
+import com.amazonaws.services.chime.sdkdemo.data.JoinMeetingResponse
 import com.amazonaws.services.chime.sdkdemo.data.Message
 import com.amazonaws.services.chime.sdkdemo.data.MetricData
 import com.amazonaws.services.chime.sdkdemo.data.RosterAttendee
@@ -119,13 +124,14 @@ import java.util.Calendar
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 
 class MeetingFragment : Fragment(),
     RealtimeObserver, AudioVideoObserver, VideoTileObserver,
     MetricsObserver, ActiveSpeakerObserver, DeviceChangeObserver, DataMessageObserver,
-    ContentShareObserver, EventAnalyticsObserver, TranscriptEventObserver {
+    ContentShareObserver, EventAnalyticsObserver, TranscriptEventObserver, PrimaryMeetingPromotionObserver {
     private val logger = ConsoleLogger(LogLevel.DEBUG)
     private val mutex = Mutex()
     private val uiScope = CoroutineScope(Dispatchers.Main)
@@ -145,6 +151,7 @@ class MeetingFragment : Fragment(),
     private lateinit var gpuVideoProcessor: GpuVideoProcessor
     private lateinit var cpuVideoProcessor: CpuVideoProcessor
     private lateinit var eglCoreFactory: EglCoreFactory
+    private lateinit var demoUrl: String
     private lateinit var listener: RosterViewEventListener
     private lateinit var postLogger: PostLogger
 
@@ -163,6 +170,9 @@ class MeetingFragment : Fragment(),
     private var screenshareServiceConnection: ServiceConnection? = null
     private var isBound: Boolean = false
 
+    private var primaryExternalMeetingId: String? = null
+    private var hasJoinedPrimaryMeeting = false
+
     enum class SubTab(val position: Int) {
         Attendees(0),
         Chat(1),
@@ -174,6 +184,7 @@ class MeetingFragment : Fragment(),
 
     private lateinit var noVideoOrScreenShareAvailable: TextView
     private lateinit var editTextMessage: EditText
+    private lateinit var buttonSendChat: ImageButton
     private lateinit var buttonMute: ImageButton
     private lateinit var buttonSpeaker: ImageButton
     private lateinit var buttonCamera: ImageButton
@@ -236,6 +247,7 @@ class MeetingFragment : Fragment(),
         val activity = activity as Context
 
         credentials = (activity as MeetingActivity).getMeetingSessionCredentials()
+        primaryExternalMeetingId = activity.getPrimaryExternalMeetingId()
         audioVideo = activity.getAudioVideo()
         eglCoreFactory = activity.getEglCoreFactory()
         cameraCaptureSource = activity.getCameraCaptureSource()
@@ -243,11 +255,11 @@ class MeetingFragment : Fragment(),
         cpuVideoProcessor = activity.getCpuVideoProcessor()
         screenShareManager = activity.getScreenShareManager()
         audioDeviceManager = AudioDeviceManager(audioVideo)
-        val url = if (getString(R.string.test_url).endsWith("/")) getString(R.string.test_url) else "${getString(R.string.test_url)}/"
+        demoUrl = if (getString(R.string.test_url).endsWith("/")) getString(R.string.test_url) else "${getString(R.string.test_url)}/"
         postLogger = PostLogger(
             appName,
             activity.getMeetingSessionConfiguration(),
-            "${url}log_meeting_event",
+            "${demoUrl}log_meeting_event",
             LogLevel.INFO
         )
 
@@ -262,6 +274,10 @@ class MeetingFragment : Fragment(),
         setupTab(view)
         setupAudioDeviceSelectionDialog()
         setupAdditionalOptionsDialog()
+
+        if (!primaryExternalMeetingId.isNullOrEmpty()) {
+            updateUiForPromotionStatus(false)
+        }
 
         noVideoOrScreenShareAvailable = view.findViewById(R.id.noVideoOrScreenShareAvailable)
         refreshNoVideosOrScreenShareAvailableText()
@@ -284,6 +300,7 @@ class MeetingFragment : Fragment(),
         buttonMute.setOnClickListener { toggleMute() }
 
         buttonSpeaker = view.findViewById(R.id.buttonSpeaker)
+        buttonSpeaker.setOnClickListener { toggleSpeaker() }
 
         buttonCamera = view.findViewById(R.id.buttonCamera)
         buttonCamera.setImageResource(if (meetingModel.isCameraOn) R.drawable.button_camera_on else R.drawable.button_camera)
@@ -292,11 +309,26 @@ class MeetingFragment : Fragment(),
         view.findViewById<ImageButton>(R.id.buttonMore)
             ?.setOnClickListener { toggleAdditionalOptionsMenu() }
 
-        view.findViewById<ImageButton>(R.id.buttonSpeaker)
-            ?.setOnClickListener { toggleSpeaker() }
-
         view.findViewById<ImageButton>(R.id.buttonLeave)
             ?.setOnClickListener { endMeeting() }
+    }
+
+    private fun updateUiForPromotionStatus(promoted: Boolean) {
+        val buttons = listOf(
+            buttonMute,
+            buttonCamera,
+            buttonSendChat
+        )
+
+        buttons.forEach {
+            if (!promoted) {
+                it.alpha = 0.2f
+                it.isClickable = false
+            } else {
+                it.alpha = 1f
+                it.isClickable = true
+            }
+        }
     }
 
     private fun setupSubViews(view: View) {
@@ -380,7 +412,8 @@ class MeetingFragment : Fragment(),
                 else -> false
             }
         }
-        view.findViewById<ImageButton>(R.id.buttonSubmitMessage)?.let {
+        buttonSendChat = view.findViewById(R.id.buttonSubmitMessage)
+        buttonSendChat.let {
             it.setOnClickListener { sendMessage() }
         }
 
@@ -535,9 +568,20 @@ class MeetingFragment : Fragment(),
     }
 
     private fun refreshAdditionalOptionsDialogItems() {
-        val isVoiceFocusEnabled = audioVideo.realtimeIsVoiceFocusEnabled()
+        if (!primaryExternalMeetingId.isNullOrEmpty() && !hasJoinedPrimaryMeeting) {
+            val additionalToggles = arrayOf(
+                context?.getString(R.string.promote_to_primary_meeting)
+            )
 
-        val additionalToggles = arrayOf(
+            additionalOptionsAlertDialogBuilder.setItems(additionalToggles) { _, which ->
+                when (which) {
+                    0 -> promoteToPrimaryMeeting()
+                }
+            }
+            return
+        }
+        val isVoiceFocusEnabled = audioVideo.realtimeIsVoiceFocusEnabled()
+        val additionalToggles = mutableListOf(
             context?.getString(if (meetingModel.isSharingContent) R.string.disable_screen_capture_source else R.string.enable_screen_capture_source),
             context?.getString(if (isVoiceFocusEnabled) R.string.disable_voice_focus else R.string.enable_voice_focus),
             context?.getString(if (meetingModel.isLiveTranscriptionEnabled) R.string.disable_live_transcription else R.string.enable_live_transcription),
@@ -546,8 +590,11 @@ class MeetingFragment : Fragment(),
             context?.getString(if (meetingModel.isUsingGpuVideoProcessor) R.string.disable_gpu_filter else R.string.enable_gpu_filter),
             context?.getString(if (meetingModel.isUsingCameraCaptureSource) R.string.disable_custom_capture_source else R.string.enable_custom_capture_source)
         )
+        if (!primaryExternalMeetingId.isNullOrEmpty()) {
+            additionalToggles.add(context?.getString(R.string.demote_from_primary_meeting))
+        }
 
-        additionalOptionsAlertDialogBuilder.setItems(additionalToggles) { _, which ->
+        additionalOptionsAlertDialogBuilder.setItems(additionalToggles.toTypedArray()) { _, which ->
             when (which) {
                 0 -> toggleScreenCapture()
                 1 -> setVoiceFocusEnabled(!isVoiceFocusEnabled)
@@ -558,8 +605,73 @@ class MeetingFragment : Fragment(),
                 4 -> toggleCpuDemoFilter()
                 5 -> toggleGpuDemoFilter()
                 6 -> toggleCustomCaptureSource()
+                7 -> demoteFromPrimaryMeeting() // May not be accessible
             }
         }
+    }
+
+    private fun promoteToPrimaryMeeting() {
+        val primaryMeetingCredentials = runBlocking { getJoinResponseForPrimaryMeeting() }
+        if (primaryMeetingCredentials != null) {
+            audioVideo.promoteToPrimaryMeeting(primaryMeetingCredentials, this)
+        } else {
+            logger.error(TAG, "Could not retrieve primary meeting credentials")
+        }
+    }
+
+    private suspend fun getJoinResponseForPrimaryMeeting(): MeetingSessionCredentials? {
+        var url = if (demoUrl.endsWith("/")) demoUrl else "$demoUrl/"
+        val attendeeName = getAttendeeName(credentials.attendeeId, credentials.externalUserId)
+        url = "${url}join?title=${encodeURLParam(primaryExternalMeetingId)}&name=promoted-${encodeURLParam(attendeeName)}"
+        url += "&region=region"
+        val response = HttpUtils.post(URL(url), "", DefaultBackOffRetry(), logger)
+        val responseData = if (response.httpException == null) {
+            response.data
+        } else {
+            logger.error(TAG, "Unable to request primary meeting attendee credentials. ${response.httpException}")
+            null
+        }
+        return try {
+            val joinMeetingResponse = gson.fromJson(responseData, JoinMeetingResponse::class.java)
+            MeetingSessionConfiguration(
+                CreateMeetingResponse(joinMeetingResponse.joinInfo.meetingResponse.meeting),
+                CreateAttendeeResponse(joinMeetingResponse.joinInfo.attendeeResponse.attendee),
+                ::dummyUrlRewriter
+            ).credentials
+        } catch (exception: Exception) {
+            logger.error(
+                TAG,
+                "Error creating session configuration: ${exception.localizedMessage}"
+            )
+            null
+        }
+    }
+
+    private fun dummyUrlRewriter(url: String): String {
+        return url
+    }
+
+    private fun demoteFromPrimaryMeeting() {
+        audioVideo.demoteFromPrimaryMeeting()
+    }
+
+    override fun onPrimaryMeetingPromotion(status: MeetingSessionStatus) {
+        logger.info(TAG, "Completed primary meeting promotion with status $status")
+        if (status.statusCode == MeetingSessionStatusCode.OK) {
+            notifyHandler("Promoted to primary meeting")
+            hasJoinedPrimaryMeeting = true
+            updateUiForPromotionStatus(true)
+        } else {
+            notifyHandler("Promotion to primary meeting failed")
+        }
+    }
+
+    override fun onPrimaryMeetingDemotion(status: MeetingSessionStatus) {
+        notifyHandler(
+            "Demoted from primary meeting for reason: ${status.statusCode}"
+        )
+        hasJoinedPrimaryMeeting = false
+        updateUiForPromotionStatus(false)
     }
 
     override fun onAudioDeviceChanged(freshAudioDeviceList: List<MediaDevice>) {
@@ -1342,10 +1454,14 @@ class MeetingFragment : Fragment(),
     }
 
     override fun onVideoSessionStarted(sessionStatus: MeetingSessionStatus) {
-        val message =
-            if (sessionStatus.statusCode == MeetingSessionStatusCode.VideoAtCapacityViewOnly) "Video encountered an error: ${sessionStatus.statusCode}" else "Video successfully started: ${sessionStatus.statusCode}"
-
-        notifyHandler(message)
+        when (sessionStatus.statusCode) {
+            MeetingSessionStatusCode.VideoAtCapacityViewOnly -> {
+                notifyHandler("Currently cannot enable video in meeting")
+                stopLocalVideo()
+                meetingModel.isCameraOn = !meetingModel.isCameraOn
+                refreshNoVideosOrScreenShareAvailableText()
+            }
+        }
         logWithFunctionName(
             object {}.javaClass.enclosingMethod?.name,
             "${sessionStatus.statusCode}"

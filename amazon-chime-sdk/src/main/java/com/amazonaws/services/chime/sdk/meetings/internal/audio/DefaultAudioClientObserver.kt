@@ -12,6 +12,7 @@ import com.amazonaws.services.chime.sdk.meetings.analytics.MeetingHistoryEventNa
 import com.amazonaws.services.chime.sdk.meetings.analytics.MeetingStatsCollector
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.AttendeeInfo
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.AudioVideoObserver
+import com.amazonaws.services.chime.sdk.meetings.audiovideo.PrimaryMeetingPromotionObserver
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.SignalStrength
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.SignalUpdate
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.Transcript
@@ -77,6 +78,8 @@ class DefaultAudioClientObserver(
     private var currentAttendees = mutableSetOf<AttendeeInfo>()
     private var currentAttendeeVolumeMap = mapOf<String, VolumeUpdate>()
     private var currentAttendeeSignalMap = mapOf<String, SignalUpdate>()
+
+    override var primaryMeetingPromotionObserver: PrimaryMeetingPromotionObserver? = null
 
     override fun onAudioClientStateChange(newInternalAudioState: Int, newInternalAudioStatus: Int) {
         val newAudioState: SessionStateControllerAction = toAudioClientState(newInternalAudioState)
@@ -438,6 +441,33 @@ class DefaultAudioClientObserver(
             it.onAttendeesDropped(
                 attendeeInfo
             )
+        }
+    }
+
+    override fun onAudioClientPrimaryMeetingEvent(type: Int, status: Int) {
+        logger.info(TAG, "Primary meeting event for notified with type $type and status $status")
+        val sdkStatus = when (status) {
+            AudioClient.AUDIO_CLIENT_PRIMARY_MEETING_OK -> MeetingSessionStatusCode.OK
+            AudioClient.AUDIO_SERVER_PRIMARY_MEETING_DISCONNECTED -> MeetingSessionStatusCode.AudioDisconnected
+            AudioClient.AUDIO_SERVER_PRIMARY_MEETING_INTERNAL_ERROR -> MeetingSessionStatusCode.AudioInternalServerError
+            AudioClient.AUDIO_SERVER_PRIMARY_MEETING_AUTHENTICATION_FAILED -> MeetingSessionStatusCode.AudioAuthenticationRejected
+            AudioClient.AUDIO_SERVER_PRIMARY_MEETING_REMOVED_FROM_MEETING -> MeetingSessionStatusCode.AudioDisconnectAudio
+            else -> MeetingSessionStatusCode.AudioInternalServerError
+        }
+
+        when (type) {
+            AudioClient.AUDIO_SERVER_PRIMARY_MEETING_JOIN_ACK -> {
+                primaryMeetingPromotionObserver?.onPrimaryMeetingPromotion(MeetingSessionStatus(sdkStatus))
+                    ?: run {
+                    logger.info(TAG, "Primary meeting promotion completed from audio but no primary meeting promotion callback is set")
+                }
+            }
+            AudioClient.AUDIO_SERVER_PRIMARY_MEETING_LEAVE -> {
+                primaryMeetingPromotionObserver?.onPrimaryMeetingDemotion(MeetingSessionStatus(sdkStatus))
+                    ?: run {
+                        logger.info(TAG, "Primary meeting demotion occurred from audio but no primary meeting demotion callback is set")
+                }
+            }
         }
     }
 

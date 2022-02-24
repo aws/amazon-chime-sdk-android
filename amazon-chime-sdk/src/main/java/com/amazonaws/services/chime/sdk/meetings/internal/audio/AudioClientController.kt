@@ -5,7 +5,9 @@
 
 package com.amazonaws.services.chime.sdk.meetings.internal.audio
 
+import com.amazonaws.services.chime.sdk.meetings.audiovideo.PrimaryMeetingPromotionObserver
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.audio.AudioMode
+import com.amazonaws.services.chime.sdk.meetings.session.MeetingSessionCredentials
 
 /**
  * [AudioClientController]'s responsibility is to handle AudioClient API calls such as starting
@@ -30,4 +32,6 @@ interface AudioClientController {
     fun setMute(isMuted: Boolean): Boolean
     fun setVoiceFocusEnabled(enabled: Boolean): Boolean
     fun isVoiceFocusEnabled(): Boolean
+    fun promoteToPrimaryMeeting(credentials: MeetingSessionCredentials, observer: PrimaryMeetingPromotionObserver)
+    fun demoteFromPrimaryMeeting()
 }

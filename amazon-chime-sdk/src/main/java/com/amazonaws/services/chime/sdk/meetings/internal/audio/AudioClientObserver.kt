@@ -6,11 +6,13 @@
 package com.amazonaws.services.chime.sdk.meetings.internal.audio
 
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.AudioVideoObserver
+import com.amazonaws.services.chime.sdk.meetings.audiovideo.PrimaryMeetingPromotionObserver
 import com.amazonaws.services.chime.sdk.meetings.realtime.RealtimeObserver
 import com.amazonaws.services.chime.sdk.meetings.realtime.TranscriptEventObserver
 import com.xodee.client.audio.audioclient.AudioClientLogListener
 import com.xodee.client.audio.audioclient.AudioClientMetricsListener
 import com.xodee.client.audio.audioclient.AudioClientPresenceListener
+import com.xodee.client.audio.audioclient.AudioClientPrimaryMeetingEventListener
 import com.xodee.client.audio.audioclient.AudioClientSignalStrengthChangeListener
 import com.xodee.client.audio.audioclient.AudioClientStateChangeListener
 import com.xodee.client.audio.audioclient.AudioClientTranscriptEventsListener
@@ -24,7 +26,7 @@ interface AudioClientObserver : AudioClientStateChangeListener,
     AudioClientVolumeStateChangeListener,
     AudioClientSignalStrengthChangeListener, AudioClientLogListener,
     AudioClientMetricsListener, AudioClientPresenceListener,
-    AudioClientTranscriptEventsListener {
+    AudioClientTranscriptEventsListener, AudioClientPrimaryMeetingEventListener {
 
     fun subscribeToAudioClientStateChange(observer: AudioVideoObserver)
     fun unsubscribeFromAudioClientStateChange(observer: AudioVideoObserver)
@@ -33,4 +35,6 @@ interface AudioClientObserver : AudioClientStateChangeListener,
     fun unsubscribeFromRealTimeEvents(observer: RealtimeObserver)
     fun subscribeToTranscriptEvent(observer: TranscriptEventObserver)
     fun unsubscribeFromTranscriptEvent(observer: TranscriptEventObserver)
+    // This only supports one observer at a time
+    var primaryMeetingPromotionObserver: PrimaryMeetingPromotionObserver?
 }

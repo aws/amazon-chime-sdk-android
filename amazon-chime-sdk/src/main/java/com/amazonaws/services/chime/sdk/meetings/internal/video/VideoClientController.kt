@@ -5,11 +5,13 @@
 
 package com.amazonaws.services.chime.sdk.meetings.internal.video
 
+import com.amazonaws.services.chime.sdk.meetings.audiovideo.PrimaryMeetingPromotionObserver
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.RemoteVideoSource
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoSource
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoSubscriptionConfiguration
 import com.amazonaws.services.chime.sdk.meetings.device.MediaDevice
 import com.amazonaws.services.chime.sdk.meetings.session.MeetingSessionConfiguration
+import com.amazonaws.services.chime.sdk.meetings.session.MeetingSessionCredentials
 
 /**
  * [VideoClientController] uses the Video Client for video related functionality such as starting
@@ -115,4 +117,14 @@ interface VideoClientController {
      * @param removed: Array<RemoteVideoSource>
      */
     fun updateVideoSourceSubscriptions(addedOrUpdated: Map<RemoteVideoSource, VideoSubscriptionConfiguration>, removed: Array<RemoteVideoSource>)
+
+    /**
+     * See [AudioVideoFacade.promoteToPrimaryMeeting]
+     */
+    fun promoteToPrimaryMeeting(credentials: MeetingSessionCredentials, observer: PrimaryMeetingPromotionObserver)
+
+    /**
+     * See [AudioVideoFacade.demoteFromPrimaryMeeting]
+     */
+    fun demoteFromPrimaryMeeting()
 }

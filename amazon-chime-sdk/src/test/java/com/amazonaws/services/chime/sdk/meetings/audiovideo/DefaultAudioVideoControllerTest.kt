@@ -14,11 +14,22 @@ import com.amazonaws.services.chime.sdk.meetings.internal.video.VideoClientContr
 import com.amazonaws.services.chime.sdk.meetings.internal.video.VideoClientObserver
 import com.amazonaws.services.chime.sdk.meetings.session.MeetingSessionConfiguration
 import com.amazonaws.services.chime.sdk.meetings.session.MeetingSessionCredentials
+import com.amazonaws.services.chime.sdk.meetings.session.MeetingSessionStatus
+import com.amazonaws.services.chime.sdk.meetings.session.MeetingSessionStatusCode
 import com.amazonaws.services.chime.sdk.meetings.session.MeetingSessionURLs
 import com.amazonaws.services.chime.sdk.meetings.session.defaultUrlRewriter
 import io.mockk.MockKAnnotations
+import io.mockk.every
 import io.mockk.impl.annotations.MockK
+import io.mockk.mockkConstructor
+import io.mockk.slot
 import io.mockk.verify
+import java.util.Timer
+import java.util.TimerTask
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.test.TestCoroutineDispatcher
+import kotlinx.coroutines.test.setMain
 import org.junit.Before
 import org.junit.Test
 
@@ -62,8 +73,22 @@ class DefaultAudioVideoControllerTest {
 
     private lateinit var audioVideoController: DefaultAudioVideoController
 
+    @MockK
+    private lateinit var mockPrimaryMeetingSessionCredentials: MeetingSessionCredentials
+
+    @MockK
+    private lateinit var mockPrimaryMeetingPromotionObserver: PrimaryMeetingPromotionObserver
+
+    @MockK
+    private lateinit var mockTimer: Timer
+
+    @ExperimentalCoroutinesApi
+    private val testDispatcher = TestCoroutineDispatcher()
+
+    @ExperimentalCoroutinesApi
     @Before
     fun setup() {
+        Dispatchers.setMain(testDispatcher)
         MockKAnnotations.init(this, relaxUnitFun = true)
         audioVideoController =
             DefaultAudioVideoController(
@@ -245,5 +270,88 @@ class DefaultAudioVideoControllerTest {
         audioVideoController.stopRemoteVideo()
 
         verify { videoClientController.stopRemoteVideo() }
+    }
+
+    @Test
+    fun `promoteToPrimaryMeeting returns success when both audio and video client callback for success`() {
+        val audioObserver = slot<PrimaryMeetingPromotionObserver>()
+        val videoObserver = slot<PrimaryMeetingPromotionObserver>()
+        every { audioClientController.promoteToPrimaryMeeting(any(), observer = capture(audioObserver)) } returns Unit
+        every { videoClientController.promoteToPrimaryMeeting(any(), observer = capture(videoObserver)) } returns Unit
+
+        audioVideoController.promoteToPrimaryMeeting(mockPrimaryMeetingSessionCredentials, mockPrimaryMeetingPromotionObserver)
+        audioObserver.captured.onPrimaryMeetingPromotion(MeetingSessionStatus(MeetingSessionStatusCode.OK))
+        videoObserver.captured.onPrimaryMeetingPromotion(MeetingSessionStatus(MeetingSessionStatusCode.OK))
+
+        verify { mockPrimaryMeetingPromotionObserver.onPrimaryMeetingPromotion(MeetingSessionStatus(MeetingSessionStatusCode.OK)) }
+    }
+
+    @Test
+    fun `promoteToPrimaryMeeting returns failure when video fails`() {
+        val audioObserver = slot<PrimaryMeetingPromotionObserver>()
+        val videoObserver = slot<PrimaryMeetingPromotionObserver>()
+        every { audioClientController.promoteToPrimaryMeeting(any(), observer = capture(audioObserver)) } returns Unit
+        every { videoClientController.promoteToPrimaryMeeting(any(), observer = capture(videoObserver)) } returns Unit
+
+        audioVideoController.promoteToPrimaryMeeting(mockPrimaryMeetingSessionCredentials, mockPrimaryMeetingPromotionObserver)
+        audioObserver.captured.onPrimaryMeetingPromotion(MeetingSessionStatus(MeetingSessionStatusCode.OK))
+
+        videoObserver.captured.onPrimaryMeetingPromotion(MeetingSessionStatus(MeetingSessionStatusCode.AudioServiceUnavailable))
+        verify { mockPrimaryMeetingPromotionObserver.onPrimaryMeetingPromotion(MeetingSessionStatus(MeetingSessionStatusCode.AudioServiceUnavailable)) }
+    }
+
+    @Test
+    fun `promoteToPrimaryMeeting returns failure when audio fails`() {
+        val audioObserver = slot<PrimaryMeetingPromotionObserver>()
+        val videoObserver = slot<PrimaryMeetingPromotionObserver>()
+        every { audioClientController.promoteToPrimaryMeeting(any(), observer = capture(audioObserver)) } returns Unit
+        every { videoClientController.promoteToPrimaryMeeting(any(), observer = capture(videoObserver)) } returns Unit
+
+        audioVideoController.promoteToPrimaryMeeting(mockPrimaryMeetingSessionCredentials, mockPrimaryMeetingPromotionObserver)
+        audioObserver.captured.onPrimaryMeetingPromotion(MeetingSessionStatus(MeetingSessionStatusCode.AudioServiceUnavailable))
+        videoObserver.captured.onPrimaryMeetingPromotion(MeetingSessionStatus(MeetingSessionStatusCode.OK))
+
+        verify { mockPrimaryMeetingPromotionObserver.onPrimaryMeetingPromotion(MeetingSessionStatus(MeetingSessionStatusCode.AudioServiceUnavailable)) }
+    }
+
+    @Test
+    fun `promoteToPrimaryMeeting returns failure if either times out`() {
+        mockkConstructor(Timer::class)
+        val timerTaskSlot = slot<TimerTask>()
+        every { anyConstructed<Timer>().schedule(capture(timerTaskSlot), 5000L) } returns Unit
+        val audioObserver = slot<PrimaryMeetingPromotionObserver>()
+        val videoObserver = slot<PrimaryMeetingPromotionObserver>()
+        every { audioClientController.promoteToPrimaryMeeting(any(), observer = capture(audioObserver)) } returns Unit
+        every { videoClientController.promoteToPrimaryMeeting(any(), observer = capture(videoObserver)) } returns Unit
+
+        audioVideoController.promoteToPrimaryMeeting(mockPrimaryMeetingSessionCredentials, mockPrimaryMeetingPromotionObserver)
+        videoObserver.captured.onPrimaryMeetingPromotion(MeetingSessionStatus(MeetingSessionStatusCode.OK))
+        timerTaskSlot.captured.run()
+
+        verify { mockPrimaryMeetingPromotionObserver.onPrimaryMeetingPromotion(MeetingSessionStatus(MeetingSessionStatusCode.AudioInternalServerError)) }
+    }
+
+    @Test
+    fun `demoteFromPrimaryMeeting calls demoteFromPrimaryMeeting on clients and also calls observer function`() {
+        every { audioClientController.promoteToPrimaryMeeting(any(), any()) } returns Unit
+        every { videoClientController.promoteToPrimaryMeeting(any(), any()) } returns Unit
+
+        audioVideoController.promoteToPrimaryMeeting(mockPrimaryMeetingSessionCredentials, mockPrimaryMeetingPromotionObserver)
+        audioVideoController.demoteFromPrimaryMeeting()
+
+        verify { mockPrimaryMeetingPromotionObserver.onPrimaryMeetingDemotion(MeetingSessionStatus(MeetingSessionStatusCode.OK)) }
+    }
+
+    @Test
+    fun `promoteToPrimaryMeeting and a demotion from client will call original observer`() {
+        val audioObserver = slot<PrimaryMeetingPromotionObserver>()
+        val videoObserver = slot<PrimaryMeetingPromotionObserver>()
+        every { audioClientController.promoteToPrimaryMeeting(any(), observer = capture(audioObserver)) } returns Unit
+        every { videoClientController.promoteToPrimaryMeeting(any(), observer = capture(videoObserver)) } returns Unit
+
+        audioVideoController.promoteToPrimaryMeeting(mockPrimaryMeetingSessionCredentials, mockPrimaryMeetingPromotionObserver)
+        audioObserver.captured.onPrimaryMeetingDemotion(MeetingSessionStatus(MeetingSessionStatusCode.AudioServiceUnavailable))
+
+        verify { mockPrimaryMeetingPromotionObserver.onPrimaryMeetingDemotion(MeetingSessionStatus(MeetingSessionStatusCode.AudioServiceUnavailable)) }
     }
 }
