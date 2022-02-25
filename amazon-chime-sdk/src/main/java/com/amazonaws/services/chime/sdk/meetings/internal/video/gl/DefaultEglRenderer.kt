@@ -223,9 +223,13 @@ class DefaultEglRenderer(private val logger: Logger) : EglRenderer {
                 EGL14.EGL_HEIGHT, heightArray, 0
         )
 
-        // Draw frame and swap buffers, which will make it visible
-        frameDrawer.drawFrame(frame, 0, 0, widthArray[0], heightArray[0], drawMatrix)
-        EGL14.eglSwapBuffers(eglCore?.eglDisplay, eglCore?.eglSurface)
+        try {
+            // Draw frame and swap buffers, which will make it visible
+            frameDrawer.drawFrame(frame, 0, 0, widthArray[0], heightArray[0], drawMatrix)
+            EGL14.eglSwapBuffers(eglCore?.eglDisplay, eglCore?.eglSurface)
+        } catch (e: Throwable) {
+            logger.verbose(TAG, "Failed to draw frame, ignore...")
+        }
 
         frame.release()
     }
