@@ -1,0 +1,33 @@
+<HTML>
+<HEAD>
+<meta charset="UTF-8">
+<title>AudioVideoControllerFacade.updateVideoSourceSubscriptions - amazon-chime-sdk</title>
+<link rel="stylesheet" href="../../../style.css">
+</HEAD>
+<BODY>
+<a href="../../index.html">amazon-chime-sdk</a>&nbsp;/&nbsp;<a href="../index.html">com.amazonaws.services.chime.sdk.meetings.audiovideo</a>&nbsp;/&nbsp;<a href="index.html">AudioVideoControllerFacade</a>&nbsp;/&nbsp;<a href="./update-video-source-subscriptions.html">updateVideoSourceSubscriptions</a><br/>
+<br/>
+<h1>updateVideoSourceSubscriptions</h1>
+<a name="com.amazonaws.services.chime.sdk.meetings.audiovideo.AudioVideoControllerFacade$updateVideoSourceSubscriptions(kotlin.collections.Map((com.amazonaws.services.chime.sdk.meetings.audiovideo.video.RemoteVideoSource, com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoSubscriptionConfiguration)), kotlin.Array((com.amazonaws.services.chime.sdk.meetings.audiovideo.video.RemoteVideoSource)))"></a>
+<code><span class="keyword">abstract</span> <span class="keyword">fun </span><span class="identifier">updateVideoSourceSubscriptions</span><span class="symbol">(</span><span class="identifier" id="com.amazonaws.services.chime.sdk.meetings.audiovideo.AudioVideoControllerFacade$updateVideoSourceSubscriptions(kotlin.collections.Map((com.amazonaws.services.chime.sdk.meetings.audiovideo.video.RemoteVideoSource, com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoSubscriptionConfiguration)), kotlin.Array((com.amazonaws.services.chime.sdk.meetings.audiovideo.video.RemoteVideoSource)))/addedOrUpdated">addedOrUpdated</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-map/index.html"><span class="identifier">Map</span></a><span class="symbol">&lt;</span><a href="../../com.amazonaws.services.chime.sdk.meetings.audiovideo.video/-remote-video-source/index.html"><span class="identifier">RemoteVideoSource</span></a><span class="symbol">,</span>&nbsp;<a href="../../com.amazonaws.services.chime.sdk.meetings.audiovideo.video/-video-subscription-configuration/index.html"><span class="identifier">VideoSubscriptionConfiguration</span></a><span class="symbol">&gt;</span><span class="symbol">, </span><span class="identifier" id="com.amazonaws.services.chime.sdk.meetings.audiovideo.AudioVideoControllerFacade$updateVideoSourceSubscriptions(kotlin.collections.Map((com.amazonaws.services.chime.sdk.meetings.audiovideo.video.RemoteVideoSource, com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoSubscriptionConfiguration)), kotlin.Array((com.amazonaws.services.chime.sdk.meetings.audiovideo.video.RemoteVideoSource)))/removed">removed</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-array/index.html"><span class="identifier">Array</span></a><span class="symbol">&lt;</span><a href="../../com.amazonaws.services.chime.sdk.meetings.audiovideo.video/-remote-video-source/index.html"><span class="identifier">RemoteVideoSource</span></a><span class="symbol">&gt;</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code>
+<p>Add, update, or remove subscriptions to remote video sources provided via <code>remoteVideoSourcesDidBecomeAvailable</code>.</p>
+<p>Including a <code>RemoteVideoSource</code> in <code>addedOrUpdated</code> which was not previously provided will result in the negotiation of media flow for that source. After negotiation has
+completed,<code>videoTileDidAdd</code> on the tile controller will be called with the <code>TileState</code> of the source, and applications
+can render the video via 'bindVideoTile'. Reincluding a <code>RemoteVideoSource</code> can be done to update the provided <code>VideoSubscriptionConfiguration</code>,
+but it is not necessary to continue receiving frames.</p>
+<p>Including a <code>RemoteVideoSource</code> in <code>removed</code> will stop the flow video from that source, and lead to a <code>videoTileDidRemove</code> call on the
+tile controller to indicate to the application that the tile should be unbound. To restart the flow of media, the source should be re-added by
+including in <code>addedOrUpdated</code>. Note that videos no longer available in a meeting (i.e. listed in
+<code>remoteVideoSourcesDidBecomeUnavailable</code>) do not need to be removed, as they will be automatically unsubscribed from.</p>
+<p>Note that before this function is called for the first time, the client will automatically subscribe to all video sources.
+However this behavior will cease upon first call (e.g. if there are 10 videos in the meeting, the controller will subscribe to all 10, however if
+<code>updateVideoSourceSubscriptions</code> is called with a single video in <code>addedOrUpdated</code>, the client will unsubscribe from the other 9.
+This automatic subscription behavior may be removed in future major version updates, builders should avoid relying on the logic
+and instead explicitly call <code>updateVideoSourceSubscriptions</code> with the sources they want to receive.</p>
+<h3>Parameters</h3>
+<p><a name="addedOrUpdated"></a>
+<code>addedOrUpdated</code> - : <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-map/index.html">Map</a> - updated or added video source configurations.</p>
+<p><a name="removed"></a>
+<code>removed</code> - : <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-array/index.html">Array</a> - video sources to remove.</p>
+</BODY>
+</HTML>
