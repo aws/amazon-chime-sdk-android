@@ -18,7 +18,7 @@ import com.amazonaws.services.chime.sdk.meetings.internal.video.TURNRequestParam
 import com.amazonaws.services.chime.sdk.meetings.session.URLRewriter
 import com.amazonaws.services.chime.sdk.meetings.utils.logger.Logger
 import com.xodee.client.audio.audioclient.AudioClient
-import com.xodee.client.video.RemoteVideoSource
+import com.xodee.client.video.RemoteVideoSourceInternal
 import com.xodee.client.video.VideoClient
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -83,7 +83,8 @@ class DefaultContentShareVideoClientObserver(
     override fun requestTurnCreds(client: VideoClient?) {
         logger.info(TAG, "requestTurnCreds")
         uiScope.launch {
-            val turnResponse: TURNCredentials? = TURNRequestUtils.doTurnRequest(turnRequestParams, logger)
+            val turnResponse: TURNCredentials? =
+                TURNRequestUtils.doTurnRequest(turnRequestParams, logger)
             with(turnResponse) {
                 val isActive = client?.isActive ?: false
                 if (this != null && isActive) {
@@ -130,14 +131,6 @@ class DefaultContentShareVideoClientObserver(
         clientMetricsCollector.processContentShareVideoClientMetrics(metricMap)
     }
 
-    override fun onRemoteVideoSourceAvailable(sources: Array<out RemoteVideoSource>?) {
-        TODO("Not yet implemented")
-    }
-
-    override fun onRemoteVideoSourceUnavailable(sources: Array<out RemoteVideoSource>?) {
-        TODO("Not yet implemented")
-    }
-
     private fun resetContentShareVideoClientMetrics() {
         clientMetricsCollector.processContentShareVideoClientMetrics(emptyMap())
     }
@@ -174,5 +167,11 @@ class DefaultContentShareVideoClientObserver(
 
     override fun onTurnURIsReceived(uris: List<String>): List<String> {
         return uris.map(urlRewriter)
+    }
+
+    override fun onRemoteVideoSourceAvailable(sources: Array<RemoteVideoSourceInternal>?) {
+    }
+
+    override fun onRemoteVideoSourceUnavailable(sources: Array<RemoteVideoSourceInternal>?) {
     }
 }

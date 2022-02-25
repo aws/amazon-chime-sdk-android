@@ -23,3 +23,12 @@ data class TranscribeOption(val content: String?, val value: String) {
         return value
     }
 }
+
+data class TranscriptionStreamParams(
+    val contentIdentificationType: String?,
+    val contentRedactionType: String?,
+    val enablePartialResultsStabilization: Boolean,
+    val partialResultsStability: String?,
+    val piiEntityTypes: String?,
+    val languageModelName: String?
+)

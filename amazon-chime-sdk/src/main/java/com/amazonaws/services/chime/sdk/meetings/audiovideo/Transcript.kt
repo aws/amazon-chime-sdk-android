@@ -87,15 +87,6 @@ data class TranscriptAlternative(
     }
 }
 
-data class TranscriptionStreamParams(
-    val contentIdentificationType: String?,
-    val contentRedactionType: String?,
-    val enablePartialResultsStabilization: Boolean,
-    val partialResultsStability: String?,
-    val piiEntityTypes: String?,
-    val languageModelName: String?
-)
-
 data class TranscriptItem(
     val type: TranscriptItemType,
     val startTimeMs: Long,

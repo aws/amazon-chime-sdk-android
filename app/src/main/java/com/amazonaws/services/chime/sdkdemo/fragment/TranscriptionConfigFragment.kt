@@ -215,10 +215,10 @@ class TranscriptionConfigFragment : Fragment() {
             engine: TranscribeEngine,
             language: TranscribeLanguage,
             region: TranscribeRegion,
-            transcribePartialResultsStabilization: TranscribeOption,
-            transcribeContentIdentification: TranscribeOption,
-            transcribeContentRedaction: TranscribeOption,
-            customLanguageModel: String
+            partialResultsStability: TranscribeOption,
+            contentIdentificationType: TranscribeOption,
+            contentRedactionType: TranscribeOption,
+            languageModelName: String
         )
     }
 

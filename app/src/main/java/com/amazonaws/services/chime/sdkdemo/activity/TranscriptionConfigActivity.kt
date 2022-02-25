@@ -8,7 +8,6 @@ package com.amazonaws.services.chime.sdkdemo.activity
 import android.os.Bundle
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
-import com.amazonaws.services.chime.sdk.meetings.audiovideo.TranscriptionStreamParams
 import com.amazonaws.services.chime.sdk.meetings.internal.utils.DefaultBackOffRetry
 import com.amazonaws.services.chime.sdk.meetings.internal.utils.HttpUtils
 import com.amazonaws.services.chime.sdk.meetings.utils.logger.ConsoleLogger
@@ -18,6 +17,7 @@ import com.amazonaws.services.chime.sdkdemo.data.TranscribeEngine
 import com.amazonaws.services.chime.sdkdemo.data.TranscribeLanguage
 import com.amazonaws.services.chime.sdkdemo.data.TranscribeOption
 import com.amazonaws.services.chime.sdkdemo.data.TranscribeRegion
+import com.amazonaws.services.chime.sdkdemo.data.TranscriptionStreamParams
 import com.amazonaws.services.chime.sdkdemo.fragment.TranscriptionConfigFragment
 import com.amazonaws.services.chime.sdkdemo.utils.encodeURLParam
 import com.amazonaws.services.chime.sdkdemo.utils.showToast
@@ -68,10 +68,10 @@ class TranscriptionConfigActivity : AppCompatActivity(),
         engine: TranscribeEngine,
         language: TranscribeLanguage,
         region: TranscribeRegion,
-        transcribePartialResultsStabilization: TranscribeOption,
-        transcribeContentIdentification: TranscribeOption,
-        transcribeContentRedaction: TranscribeOption,
-        customLanguageModel: String
+        partialResultsStability: TranscribeOption,
+        contentIdentificationType: TranscribeOption,
+        contentRedactionType: TranscribeOption,
+        languageModelName: String
     ) {
         uiScope.launch {
             val response: String? =
@@ -80,10 +80,10 @@ class TranscriptionConfigActivity : AppCompatActivity(),
                     engine.engine,
                     language.code,
                     region.code,
-                    transcribePartialResultsStabilization.content,
-                    transcribeContentIdentification.content,
-                    transcribeContentRedaction.content,
-                    customLanguageModel
+                    partialResultsStability.content,
+                    contentIdentificationType.content,
+                    contentRedactionType.content,
+                    languageModelName
                 )
 
             if (response == null) {
