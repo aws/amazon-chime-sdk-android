@@ -644,7 +644,9 @@ class DefaultAudioClientObserverTest {
                             timestampMs + 5L,
                             AttendeeInfoInternal(testId1, testId1),
                             "I",
-                            true
+                            true,
+                            true,
+                            0.0
                         ),
                         TranscriptItemInternal(
                             TranscriptItemTypeInternal.TranscriptItemTypePunctuation,
@@ -652,9 +654,12 @@ class DefaultAudioClientObserverTest {
                             timestampMs + 10L,
                             AttendeeInfoInternal(testId2, testId2),
                             "am",
-                            false
+                            false,
+                            true,
+                            0.0
                         )
                     ),
+                    null,
                     "I am"
                 )
             )
@@ -675,7 +680,9 @@ class DefaultAudioClientObserverTest {
                             timestampMs + 15L,
                             AttendeeInfoInternal(testId2, testId2),
                             "a",
-                            true
+                            true,
+                            true,
+                            0.0
                         ),
                         TranscriptItemInternal(
                             TranscriptItemTypeInternal.TranscriptItemTypePronunciation,
@@ -683,9 +690,12 @@ class DefaultAudioClientObserverTest {
                             timestampMs + 20L,
                             AttendeeInfoInternal(testId1, testId1),
                             "guardian",
-                            false
+                            false,
+                            true,
+                            0.0
                         )
                     ),
+                    null,
                     "a guardian"
                 )
             )
