@@ -801,87 +801,31 @@ class DefaultAudioClientObserverTest {
         val testChannelId = "testChannelId"
         val isPartial = true
 
-        val transcriptResultOne = TranscriptResultInternal(
-            testResultId,
-            testChannelId,
-            isPartial,
-            timestampMs,
-            timestampMs + 10L,
-            arrayOf(
-                TranscriptAlternativeInternal(
-                    arrayOf(
-                        TranscriptItemInternal(
-                            TranscriptItemTypeInternal.TranscriptItemTypePronunciation,
-                            timestampMs,
-                            timestampMs + 5L,
-                            AttendeeInfoInternal(testId1, testId1),
-                            "I",
-                            true,
-                            true,
-                            0.0
+        val transcriptResultItem = TranscriptItemInternal(TranscriptItemTypeInternal.TranscriptItemTypePronunciation,
+            timestampMs, timestampMs + 5L, AttendeeInfoInternal(testId1, testId1), "I", true, true, 0.0)
 
-                        )
-                    ),
-                    arrayOf(
-                        TranscriptEntityInternal(
-                            "NAME",
-                            "PII",
-                            "John Doe",
-                            1.0,
-                            timestampMs + 5L,
-                            timestampMs + 10L
-                        )
-                    ),
-                    "I am"
-                )
-            )
-        )
+        val transcriptResultEntity = TranscriptEntityInternal("NAME", "PII", "John Doe", 1.0, timestampMs + 5L, timestampMs + 10L)
 
-        val events: Array<TranscriptEventInternal> = arrayOf(
-            TranscriptInternal(arrayOf(transcriptResultOne))
-        )
+        val transcriptResultAlternative = TranscriptAlternativeInternal(arrayOf(transcriptResultItem), arrayOf(transcriptResultEntity), "I am")
 
-        val expectedTranscriptOne = Transcript(
-            arrayOf(
-                TranscriptResult(
-                    testResultId,
-                    testChannelId,
-                    isPartial,
-                    timestampMs,
-                    timestampMs + 10L,
-                    arrayOf(
-                        TranscriptAlternative(
-                            arrayOf(
-                                TranscriptItem(
-                                    TranscriptItemType.Pronunciation,
-                                    timestampMs,
-                                    timestampMs + 5L,
-                                    AttendeeInfo(testId1, testId1),
-                                    "I",
-                                    true,
-                                    0.0,
-                                    true
-                                )
-                            ),
-                            arrayOf(
-                                TranscriptEntity(
-                                    "NAME",
-                                    timestampMs + 5L,
-                                    timestampMs + 10L,
-                                    "John Doe",
-                                    "PII",
-                                    1.0
-                                )
-                            ),
-                            "I am"
-                        )
-                    )
-                )
-            )
-        )
+        val transcriptResult = TranscriptResultInternal(testResultId, testChannelId, isPartial, timestampMs, timestampMs + 10L, arrayOf(transcriptResultAlternative))
+
+        val events: Array<TranscriptEventInternal> = arrayOf(TranscriptInternal(arrayOf(transcriptResult)))
+
+        val expectedTranscriptItem = TranscriptItem(TranscriptItemType.Pronunciation, timestampMs, timestampMs + 5L,
+            AttendeeInfo(testId1, testId1), "I", true, 0.0, true)
+
+        val expectedTranscriptEntity = TranscriptEntity("NAME", timestampMs + 5L, timestampMs + 10L,
+            "John Doe", "PII", 1.0)
+
+        val expectedTranscriptAlternative = TranscriptAlternative(arrayOf(expectedTranscriptItem), arrayOf(expectedTranscriptEntity),
+            "I am")
+
+        val expectedTranscript = Transcript(arrayOf(TranscriptResult(testResultId, testChannelId, isPartial,
+            timestampMs, timestampMs + 10L, arrayOf(expectedTranscriptAlternative))))
 
         audioClientObserver.onTranscriptEventsReceived(events)
-        verify(exactly = 1) { mockTranscriptEventObserver.onTranscriptEventReceived(expectedTranscriptOne) }
+        verify(exactly = 1) { mockTranscriptEventObserver.onTranscriptEventReceived(expectedTranscript) }
     }
 
     @Test

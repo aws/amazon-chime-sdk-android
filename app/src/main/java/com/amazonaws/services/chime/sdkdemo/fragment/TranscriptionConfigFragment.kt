@@ -5,7 +5,6 @@
 
 package com.amazonaws.services.chime.sdkdemo.fragment
 
-import android.app.AlertDialog as AlertDialog
 import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -15,10 +14,8 @@ import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Button
 import android.widget.CheckBox
-import android.widget.CompoundButton
 import android.widget.EditText
 import android.widget.Spinner
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.amazonaws.services.chime.sdk.meetings.utils.logger.ConsoleLogger
 import com.amazonaws.services.chime.sdk.meetings.utils.logger.LogLevel
@@ -187,7 +184,8 @@ class TranscriptionConfigFragment : Fragment() {
     private lateinit var piiRedactionSpinner: Spinner
     private lateinit var piiRedactionAdapter: ArrayAdapter<TranscribeOption>
     private lateinit var phiIdentificationCheckBox: CheckBox
-    private lateinit var customLanguageCheckbox: CheckBox
+    private lateinit var customLanguageModelCheckbox: CheckBox
+    private lateinit var customLanguageModelEditText: EditText
 
     private val TRANSCRIBE_ENGINE_SPINNER_INDEX_KEY = "transcribeEngineSpinnerIndex"
     private val LANGUAGE_SPINNER_INDEX_KEY = "languageSpinnerIndex"
@@ -249,7 +247,7 @@ class TranscriptionConfigFragment : Fragment() {
                 partialResultsStabilizationSpinner.selectedItem as TranscribeOption,
                 piiIdentificationSpinner.selectedItem as TranscribeOption,
                 piiRedactionSpinner.selectedItem as TranscribeOption,
-                customLanguageCheckbox.text as String
+                customLanguageModelEditText.text.toString()
             )
         }
 
@@ -307,20 +305,23 @@ class TranscriptionConfigFragment : Fragment() {
             }
         }
 
-        customLanguageCheckbox = view.findViewById(R.id.checkboxCustomLanguageModel)
-        customLanguageCheckbox.setOnCheckedChangeListener { cb, isChecked ->
+        customLanguageModelEditText = view.findViewById(R.id.editTextCustomLanguageModel)
+
+        customLanguageModelCheckbox = view.findViewById(R.id.checkboxCustomLanguageModel)
+        // Show / Hide EditText field for custom language model when checkbox clicked.
+        customLanguageModelCheckbox.setOnCheckedChangeListener { _, isChecked ->
             if (isChecked) {
-                setCustomLanguageModelName(cb)
+                customLanguageModelEditText.visibility = View.VISIBLE
             } else {
-                checkboxCustomLanguageModel.text = resources.getString(R.string.custom_language_checkbox)
+                customLanguageModelEditText.visibility = View.GONE
             }
         }
 
         uiScope.launch {
             populateLanguages(transcribeLanguages, languages, languageAdapter)
             populateRegions(transcribeRegions, regions, regionAdapter)
-            populateTranscriptionFilters(transcribePiiOptions, transcribeIdentificationOptions, piiIdentificationAdapter, "Identification")
-            populateTranscriptionFilters(transcribePiiOptions, transcribeRedactionOptions, piiRedactionAdapter, "Redaction")
+            populateTranscriptionOptions(transcribePiiOptions, transcribeIdentificationOptions, piiIdentificationAdapter, "Identification")
+            populateTranscriptionOptions(transcribePiiOptions, transcribeRedactionOptions, piiRedactionAdapter, "Redaction")
 
             var transcribeEngineSpinnerIndex = 0
             var languageSpinnerIndex = 0
@@ -374,14 +375,12 @@ class TranscriptionConfigFragment : Fragment() {
                     "transcribe_medical" -> {
                         populateLanguages(transcribeMedicalLanguages, languages, languageAdapter)
                         populateRegions(transcribeMedicalRegions, regions, regionAdapter)
-                        hideAdditionalTranscribeOptions()
-                        showAdditionalMedicalTranscribeOptions()
+                        hideAdditionalTranscribeOptionsAndShowAdditionalMedicalTranscribeOptions()
                     }
                     "transcribe" -> {
                         populateLanguages(transcribeLanguages, languages, languageAdapter)
                         populateRegions(transcribeRegions, regions, regionAdapter)
-                        showAdditionalTranscribeOptions()
-                        hideAdditionalMedicalTranscribeOptions()
+                        showAdditionalTranscribeOptionsAndHideAdditionalMedicalTranscribeOptions()
                     }
                     else -> {
                         logger.error(TAG, "Invalid in TranscribeEngine selected")
@@ -397,10 +396,11 @@ class TranscriptionConfigFragment : Fragment() {
         }
     }
 
+    // Reset the redaction spinner when content identification selected.
     private val onPIIContentIdentificationSelected = object : AdapterView.OnItemSelectedListener {
         override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
             if (position < transcribeIdentificationOptions.size && position > 0) {
-                populateTranscriptionFilters(transcribePiiOptions, transcribeRedactionOptions, piiRedactionAdapter, "Redaction")
+                populateTranscriptionOptions(transcribePiiOptions, transcribeRedactionOptions, piiRedactionAdapter, "Redaction")
                 piiRedactionSpinner.setSelection(0, true)
             } else {
                 logger.error(TAG, "Incorrect position in TranscribeIdentification spinner")
@@ -411,10 +411,11 @@ class TranscriptionConfigFragment : Fragment() {
         }
     }
 
+    // Reset the identification spinner when content redaction selected.
     private val onPIIContentRedactionSelected = object : AdapterView.OnItemSelectedListener {
         override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
             if (position < transcribeRedactionOptions.size && position > 0) {
-                populateTranscriptionFilters(transcribePiiOptions, transcribeIdentificationOptions, piiIdentificationAdapter, "Identification")
+                populateTranscriptionOptions(transcribePiiOptions, transcribeIdentificationOptions, piiIdentificationAdapter, "Identification")
                 piiIdentificationSpinner.setSelection(0, true)
             } else {
                 logger.error(TAG, "Incorrect position in TranscribeRedaction spinner")
@@ -437,7 +438,8 @@ class TranscriptionConfigFragment : Fragment() {
         adapter.notifyDataSetChanged()
     }
 
-    private fun populateTranscriptionFilters(newList: List<TranscribeOption>, currentList: MutableList<TranscribeOption>, adapter: ArrayAdapter<TranscribeOption>, type: String) {
+    // Populate content identification / redaction spinners and set the label of the spinner with the given 'type' (E.G identification or redaction).
+    private fun populateTranscriptionOptions(newList: List<TranscribeOption>, currentList: MutableList<TranscribeOption>, adapter: ArrayAdapter<TranscribeOption>, type: String) {
         currentList.clear()
         currentList.addAll(newList)
         currentList.add(0, TranscribeOption(null, "Enable PII Content $type"))
@@ -449,7 +451,7 @@ class TranscriptionConfigFragment : Fragment() {
         regionSpinner.setSelection(0, true)
     }
 
-    private fun hideAdditionalTranscribeOptions() {
+    private fun hideAdditionalTranscribeOptionsAndShowAdditionalMedicalTranscribeOptions() {
         // Enable PHI and disable PII when medicalTranscribe selected.
         piiIdentificationSpinner.setSelection(0, true)
         piiRedactionSpinner.setSelection(0, true)
@@ -459,50 +461,19 @@ class TranscriptionConfigFragment : Fragment() {
         piiIdentificationSpinner.visibility = View.GONE
         checkboxCustomLanguageModel.visibility = View.GONE
         partialResultsStabilizationSpinner.visibility = View.GONE
+        customLanguageModelEditText.visibility = View.GONE
+        phiIdentificationCheckBox.visibility = View.VISIBLE
     }
 
-    private fun showAdditionalTranscribeOptions() {
-        // Enable PII and disable PII when transcribe selected.
+    private fun showAdditionalTranscribeOptionsAndHideAdditionalMedicalTranscribeOptions() {
+        // Enable PII and disable PHI when transcribe selected.
         piiRedactionSpinner.visibility = View.VISIBLE
         piiIdentificationSpinner.visibility = View.VISIBLE
         partialResultsStabilizationSpinner.visibility = View.VISIBLE
         checkboxCustomLanguageModel.visibility = View.VISIBLE
         checkboxCustomLanguageModel.isChecked = false
-    }
-
-    private fun hideAdditionalMedicalTranscribeOptions() {
         phiIdentificationCheckBox.isChecked = false
         piiIdentificationSpinner.setSelection(0, true)
         phiIdentificationCheckBox.visibility = View.GONE
-    }
-
-    private fun showAdditionalMedicalTranscribeOptions() {
-        phiIdentificationCheckBox.visibility = View.VISIBLE
-    }
-
-    private fun setCustomLanguageModelName(cb: CompoundButton) {
-        val builder = AlertDialog.Builder(this.context)
-        val popUpView = layoutInflater.inflate(R.layout.custom_language_popup, null)
-        val customLanguageModelText = popUpView.findViewById<EditText>(R.id.customLanguageModelSetting)
-        val saveButton: Button = popUpView.findViewById(R.id.customLanguageSaveButton)
-        val cancelButton: Button = popUpView.findViewById(R.id.customLanguageCancelButton)
-        builder.setView(popUpView)
-        val dialog = builder.create()
-        dialog.show()
-
-        saveButton.setOnClickListener {
-            if (customLanguageModelText.text.isEmpty()) {
-                Toast.makeText(context, "Custom language model name cannot be empty!", Toast.LENGTH_SHORT).show()
-            } else {
-                val customLanguageModelName = customLanguageModelText.hint.toString() + ": " + customLanguageModelText.text
-                customLanguageCheckbox.text = customLanguageModelName
-                dialog.dismiss()
-            }
-        }
-
-        cancelButton.setOnClickListener {
-            cb.isChecked = false
-            dialog.dismiss()
-        }
     }
 }

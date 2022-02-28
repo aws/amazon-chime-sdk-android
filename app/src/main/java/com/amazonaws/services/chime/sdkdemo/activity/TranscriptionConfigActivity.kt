@@ -127,9 +127,7 @@ class TranscriptionConfigActivity : AppCompatActivity(),
                 }
             },
             languageModelName = customLanguageModel.let {
-                val modelName = customLanguageModel.split(": ")
-                if (modelName.size > 1) modelName[1]
-                else null
+                it.ifEmpty { null }
             }
         )
         val transcriptionAdditionalParams = gson.toJson(transcriptionStreamParams)

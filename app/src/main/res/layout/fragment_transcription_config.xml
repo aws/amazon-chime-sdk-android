@@ -75,7 +75,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="16dp"
-                android:contentDescription="@string/pii_identification_spinner"
+                android:contentDescription="@string/identification_spinner"
                 android:minHeight="48dp"
                 android:paddingLeft="32dp"
                 android:paddingRight="32dp" />
@@ -85,7 +85,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="16dp"
-                android:contentDescription="@string/pii_redaction_spinner"
+                android:contentDescription="@string/redaction_spinner"
                 android:minHeight="48dp"
                 android:paddingLeft="32dp"
                 android:paddingRight="32dp" />
@@ -118,6 +118,23 @@
                 android:text="@string/custom_language_checkbox"
                 android:textSize="16sp" />
 
+            <EditText
+                android:id="@+id/editTextCustomLanguageModel"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                android:layout_marginLeft="40dp"
+                android:layout_marginRight="40dp"
+                android:hint="@string/custom_language_model_text_view"
+                android:background="@color/colorWhite"
+                android:inputType="text"
+                android:textColor="@color/colorBlack"
+                android:textAlignment="viewStart"
+                android:cursorVisible="false"
+                android:visibility="gone"
+                android:textSize="16sp"
+                android:paddingStart="40dp"
+                android:paddingEnd="20dp" />
             <Button
                 android:id="@+id/buttonStartTranscription"
                 android:layout_width="wrap_content"
