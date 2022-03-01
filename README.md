@@ -42,12 +42,26 @@ And review the following guides:
 
 > NOTE: If you just want to run demo application, skip to [Running the demo app](#running-the-demo-app)
 
-The Mobile SDKs for Android can be directly embedded via .aar files, or you can download them from the Maven Central repository, by integrating them into your Android project's Gradle files.
+The Mobile SDKs for Android could be downloaded from the Maven Central repository, by integrated into your Android project's Gradle files, or you can be directly embedded via .aar files.
+
+For the purpose of setup, your project's root folder will be referred to as `root`.
+
+### From Maven
+
+To obtain the dependencies from Maven, add the dependencies to your app's (module-level) `build.gradle`.
+
+Update `build.gradle` in `root/app` and add the following under `dependencies`:
+
+```
+dependencies {
+    implementation 'software.aws.chimesdk:amazon-chime-sdk-media:$MEDIA_VERSION'
+    implementation 'software.aws.chimesdk:amazon-chime-sdk:$SDK_VERSION'
+}
+```
+The version numbers could be obtained from the latest [release](https://github.com/aws/amazon-chime-sdk-android/releases/latest).
 
 ### Manually download SDK binaries
 To include the SDK binaries in your own project, follow these steps.
-
-For the purpose of setup, your project's root folder will be referred to as `root`
 
 #### 1. Download binaries
 
@@ -85,18 +99,6 @@ compileOptions {
     targetCompatibility JavaVersion.VERSION_1_8
 }
 ```
-
-### From Maven
-
-You also could obtain the dependencies from Maven. To do so, add the dependencies to your app's (module-level) build.gradle, in the dependencies section:
-
-```
-dependencies {
-    implementation 'software.aws.chimesdk:amazon-chime-sdk-media:$MEDIA_VERSION'
-    implementation 'software.aws.chimesdk:amazon-chime-sdk:$SDK_VERSION'
-}
-```
-The version numbers could be obtained from the latest [release](https://github.com/aws/amazon-chime-sdk-android/releases/latest).
 
 ## Running the demo app
 
