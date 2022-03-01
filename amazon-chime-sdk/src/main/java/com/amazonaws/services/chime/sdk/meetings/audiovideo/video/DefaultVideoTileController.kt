@@ -151,6 +151,10 @@ class DefaultVideoTileController(
         logger.info(TAG, "Binding VideoView to Tile with tileId = $tileId")
 
         renderViewToBoundVideoTileMap[videoView]?.let {
+            if (it.state.tileId == tileId) {
+                logger.info(TAG, "Already binding with the tile Id $tileId, ignore...")
+                return
+            }
             logger.warn(TAG, "Override the binding from ${it.state.tileId} to $tileId")
             removeRenderViewFromBoundVideoTileMap(it.state.tileId)
         }
