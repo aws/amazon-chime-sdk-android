@@ -42,17 +42,34 @@ And review the following guides:
 
 > NOTE: If you just want to run demo application, skip to [Running the demo app](#running-the-demo-app)
 
+The Mobile SDKs for Android could be downloaded from the Maven Central repository, by integrated into your Android project's Gradle files, or you can be directly embedded via .aar files.
+
+For the purpose of setup, your project's root folder will be referred to as `root`.
+
+### From Maven
+
+To obtain the dependencies from Maven, add the dependencies to your app's (module-level) `build.gradle`.
+
+Update `build.gradle` in `root/app` and add the following under `dependencies`:
+
+```
+dependencies {
+    implementation 'software.aws.chimesdk:amazon-chime-sdk-media:$MEDIA_VERSION'
+    implementation 'software.aws.chimesdk:amazon-chime-sdk:$SDK_VERSION'
+}
+```
+The version numbers could be obtained from the latest [release](https://github.com/aws/amazon-chime-sdk-android/releases/latest).
+
+### Manually download SDK binaries
 To include the SDK binaries in your own project, follow these steps.
 
-For the purpose of setup, your project's root folder will be referred to as `root`
-
-### 1. Download binaries
+#### 1. Download binaries
 
 Download `amazon-chime-sdk` and `amazon-chime-sdk-media` binaries from the latest [release](https://github.com/aws/amazon-chime-sdk-android/releases/latest).
 
 Unzip them and copy the aar files to `root/app/libs`
 
-### 2. Update gradle files
+#### 2. Update gradle files
 
 Update `build.gradle` in `root` by adding the following under `repositories` in `allprojects`:
 
