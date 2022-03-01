@@ -67,6 +67,7 @@ class HomeActivity : AppCompatActivity() {
         const val MEETING_RESPONSE_KEY = "MEETING_RESPONSE"
         const val MEETING_ID_KEY = "MEETING_ID"
         const val NAME_KEY = "NAME"
+        const val MEETING_ENDPOINT_KEY = "MEETING_ENDPOINT_URL"
         const val AUDIO_MODE_KEY = "AUDIO_MODE"
     }
 
@@ -176,6 +177,7 @@ class HomeActivity : AppCompatActivity() {
                                 MEETING_RESPONSE_KEY to meetingResponseJson,
                                 MEETING_ID_KEY to meetingId,
                                 NAME_KEY to attendeeName,
+                                MEETING_ENDPOINT_KEY to meetingUrl,
                                 AUDIO_MODE_KEY to audioVideoConfig.audioMode.value
                             )
                         )

@@ -528,6 +528,24 @@ class DefaultVideoTileControllerTest {
     }
 
     @Test
+    fun `bind should not rebind the view when already bound with the same tile`() {
+        runBlockingTest {
+            videoTileController.onReceiveFrame(
+                mockVideoFrame,
+                tileId,
+                attendeeId,
+                VideoPauseState.Unpaused
+            )
+        }
+
+        videoTileController.bindVideoView(mockVideoRenderView, tileId)
+        videoTileController.bindVideoView(mockVideoRenderView, tileId)
+
+        verify(exactly = 1) { mockVideoTile.bind(any()) }
+        verify(exactly = 0) { mockVideoTile.unbind() }
+    }
+
+    @Test
     fun `bind should NOT call unbind on the first view when not bound`() {
         val mockVideoTile2: VideoTile = mockk(relaxUnitFun = true)
         val mockVideoRenderView2: VideoRenderView = mockk(relaxUnitFun = true)

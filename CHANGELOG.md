@@ -1,3 +1,11 @@
+## [Unreleased]
+
+### Fixed
+* Catch and ignore the exception from rendering one video frame and move on to the next. This helps workaround a openGL error on some Android 12 devices at initial rendering phase.
+
+### Added
+* [Demo] Added overridden endpoint url capability to live transcription API.
+
 ## [0.15.0] - 2022-02-24
 
 ### Added
