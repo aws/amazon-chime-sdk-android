@@ -140,6 +140,22 @@ class DefaultAudioVideoControllerTest {
     }
 
     @Test
+    fun `start with no_device should call audioClientController start with the parameters in configuration and no device`() {
+        val testAudioVideoConfiguration = AudioVideoConfiguration(audioMode = AudioMode.NoDevice)
+        audioVideoController.start(testAudioVideoConfiguration)
+        verify {
+            audioClientController.start(
+                audioFallbackURL,
+                audioHostURL,
+                meetingId,
+                attendeeId,
+                joinToken,
+                AudioMode.NoDevice
+            )
+        }
+    }
+
+    @Test
     fun `start should call videoClientController start with the parameters in configuration`() {
         audioVideoController.start()
         verify {

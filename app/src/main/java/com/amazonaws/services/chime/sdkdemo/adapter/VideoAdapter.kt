@@ -6,13 +6,18 @@
 package com.amazonaws.services.chime.sdkdemo.adapter
 
 import android.content.Context
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import android.widget.PopupMenu
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.RecyclerView
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.AudioVideoFacade
+import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.RemoteVideoSource
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoPauseState
+import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoPriority
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoScalingType
+import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoSubscriptionConfiguration
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.capture.CameraCaptureSource
 import com.amazonaws.services.chime.sdk.meetings.device.MediaDeviceType
 import com.amazonaws.services.chime.sdk.meetings.utils.logger.Logger
@@ -29,6 +34,7 @@ import kotlinx.android.synthetic.main.item_video.view.video_surface
 class VideoAdapter(
     private val videoCollectionTiles: Collection<VideoCollectionTile>,
     private val userPausedVideoTileIds: MutableSet<Int>,
+    private val remoteVideoSourceConfigurations: MutableMap<RemoteVideoSource, VideoSubscriptionConfiguration>,
     private val audioVideoFacade: AudioVideoFacade,
     private val cameraCaptureSource: CameraCaptureSource?,
     private val context: Context?,
@@ -40,7 +46,15 @@ class VideoAdapter(
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): VideoHolder {
         tabContentLayout = (context as MeetingActivity).findViewById(R.id.constraintLayout)
         val inflatedView = parent.inflate(R.layout.item_video, false)
-        return VideoHolder(inflatedView, audioVideoFacade, userPausedVideoTileIds, logger, cameraCaptureSource)
+        return VideoHolder(
+            context,
+            inflatedView,
+            audioVideoFacade,
+            userPausedVideoTileIds,
+            remoteVideoSourceConfigurations,
+            logger,
+            cameraCaptureSource
+        )
     }
 
     override fun getItemCount(): Int {
@@ -56,7 +70,8 @@ class VideoAdapter(
                 if (isLandscapeMode(context)) {
                     holder.tileContainer.layoutParams.width = viewportWidth / 2
                 } else {
-                    holder.tileContainer.layoutParams.height = (VIDEO_ASPECT_RATIO_16_9 * viewportWidth).toInt()
+                    holder.tileContainer.layoutParams.height =
+                        (VIDEO_ASPECT_RATIO_16_9 * viewportWidth).toInt()
                 }
             }
             val videoRenderView = holder.itemView.video_surface
@@ -67,9 +82,11 @@ class VideoAdapter(
 }
 
 class VideoHolder(
+    private val context: Context,
     private val view: View,
     private val audioVideo: AudioVideoFacade,
     private val userPausedVideoTileIds: MutableSet<Int>,
+    private val remoteVideoSourceConfigurations: MutableMap<RemoteVideoSource, VideoSubscriptionConfiguration>,
     private val logger: Logger,
     private val cameraCaptureSource: CameraCaptureSource?
 ) : RecyclerView.ViewHolder(view) {
@@ -135,7 +152,48 @@ class VideoHolder(
                     view.on_tile_button.setImageResource(R.drawable.ic_pause_video)
                 }
             }
+
+            view.video_surface.setOnClickListener {
+                val attendeeId = videoCollectionTile.videoTileState.attendeeId
+                showPriorityPopup(view.on_tile_button, attendeeId)
+            }
         }
+    }
+
+    private fun showPriorityPopup(view: View, attendeeId: String) {
+        val popup = PopupMenu(context, view)
+        popup.inflate(R.menu.popup_menu)
+        popup.setOnMenuItemClickListener { item: MenuItem? ->
+            var newPriority = VideoPriority.Highest
+            if (item != null) {
+                when (item.itemId) {
+                    R.id.highest -> {
+                        newPriority = VideoPriority.Highest
+                    }
+                    R.id.high -> {
+                        newPriority = VideoPriority.High
+                    }
+                    R.id.medium -> {
+                        newPriority = VideoPriority.Medium
+                    }
+                    R.id.low -> {
+                        newPriority = VideoPriority.Low
+                    }
+                    R.id.lowest -> {
+                        newPriority = VideoPriority.Lowest
+                    }
+                }
+            }
+
+            for ((source, configuration) in remoteVideoSourceConfigurations) {
+                if (source.attendeeId == attendeeId) {
+                    configuration.priority = newPriority
+                }
+            }
+            audioVideo.updateVideoSourceSubscriptions(remoteVideoSourceConfigurations, emptyArray())
+            true
+        }
+        popup.show()
     }
 
     private fun updateLocalVideoMirror() {
