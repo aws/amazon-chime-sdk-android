@@ -7,18 +7,17 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.BaseExpandableListAdapter
 import android.widget.CheckedTextView
-import com.amazonaws.services.chime.sdkdemo.data.TranscribeLanguage
-import com.amazonaws.services.chime.sdkdemo.utils.inflate
 import com.amazonaws.services.chime.sdkdemo.R
+import com.amazonaws.services.chime.sdkdemo.data.TranscribeLanguage
 import com.amazonaws.services.chime.sdkdemo.data.TranscribeLanguageOption
+import com.amazonaws.services.chime.sdkdemo.utils.inflate
 
-
-class LanguageOptionsAdapter (
+class LanguageOptionsAdapter(
     private val context: Context,
     private val languageOptions: Map<String, List<TranscribeLanguage?>>,
     private val languageGroups: List<String>,
     private val languageOptionsSelected: Set<TranscribeLanguageOption>
-    ): BaseExpandableListAdapter() {
+) : BaseExpandableListAdapter() {
 
     override fun getGroupCount(): Int {
         return languageOptions.size
@@ -45,7 +44,7 @@ class LanguageOptionsAdapter (
     }
 
     override fun hasStableIds(): Boolean {
-        return false;
+        return false
     }
 
     override fun getGroupView(listPosition: Int, isExpanded: Boolean, convertView_: View?, parent: ViewGroup?): View {
@@ -65,8 +64,7 @@ class LanguageOptionsAdapter (
     override fun getChildView(listPosition: Int, expandedListPosition: Int, isLastChild: Boolean, convertView_: View?, ViewGroup: ViewGroup?): View {
         val expandedListText = (getChild(listPosition, expandedListPosition) as TranscribeLanguage).name
         var convertView = convertView_
-        if (convertView == null)
-        {
+        if (convertView == null) {
             val layoutInflater = context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
             convertView = layoutInflater.inflate(R.layout.row_language_option, null)
         }
@@ -80,6 +78,6 @@ class LanguageOptionsAdapter (
     }
 
     override fun isChildSelectable(p0: Int, p1: Int): Boolean {
-        return true;
+        return true
     }
 }

@@ -21,7 +21,7 @@ import android.widget.CompoundButton
 import android.widget.EditText
 import android.widget.ExpandableListAdapter
 import android.widget.ExpandableListView
-import android.widget.ExpandableListView.*
+import android.widget.ExpandableListView.OnChildClickListener
 import android.widget.Spinner
 import android.widget.TextView
 import androidx.fragment.app.Fragment
@@ -628,13 +628,14 @@ class TranscriptionConfigFragment : Fragment() {
         languageOptionsAdapter = LanguageOptionsAdapter(this.requireContext(), languageOptions,
             languageGroups, languageOptionsSelected)
         languageOptionsListView.setAdapter(languageOptionsAdapter)
-        languageOptionsListView.setOnChildClickListener(OnChildClickListener {
-                _, view, groupPosition, childPosition, _ ->
+        languageOptionsListView.setOnChildClickListener(OnChildClickListener { _, view, groupPosition, childPosition, _ ->
 
             val languageOptionCheck: CheckedTextView = view.findViewById(R.id.languageOption)
             languageOptionCheck.toggle()
-            val languageSelected: TranscribeLanguage? = languageOptions[languageGroups[groupPosition]]?.get(childPosition)
-            val selectedCell: TranscribeLanguageOption? = languageSelected?.let { TranscribeLanguageOption(groupPosition, childPosition, it) }
+            val languageSelected: TranscribeLanguage? =
+                languageOptions[languageGroups[groupPosition]]?.get(childPosition)
+            val selectedCell: TranscribeLanguageOption? =
+                languageSelected?.let { TranscribeLanguageOption(groupPosition, childPosition, it) }
             selectedCell?.let {
                 if (languageOptionsSelected.contains(selectedCell)) {
                     languageOptionsSelected.remove(selectedCell)
@@ -643,7 +644,11 @@ class TranscriptionConfigFragment : Fragment() {
                 }
             }
 
-            validateLanguageOptions(languageGroups, languageOptionsSelected, languageOptionsAlertDialog)
+            validateLanguageOptions(
+                languageGroups,
+                languageOptionsSelected,
+                languageOptionsAlertDialog
+            )
 
             return@OnChildClickListener false
         })
@@ -658,16 +663,7 @@ class TranscriptionConfigFragment : Fragment() {
 
         saveButton.setOnClickListener {
             if (validateLanguageOptions(languageGroups, languageOptionsSelected, languageOptionsAlertDialog)) {
-                val languageOptionsCheckedPosition = languageOptionsListView.checkedItemPositions
-                for (i in 0 until languageOptionsCheckedPosition.size()) {
-                    val key: Int = languageOptionsCheckedPosition.keyAt(i)
-                    if (languageOptionsCheckedPosition.get(key)) {
-                        logger.info(TAG, i.toString() + " -> " + languages[key])
-                    }
-                }
-
-
-                val languageOptionsSelected : List<TranscribeLanguage> = languageOptionsSelected.map { x-> x.transcribeLanguage }
+                val languageOptionsSelected: List<TranscribeLanguage> = languageOptionsSelected.map { x -> x.transcribeLanguage }
                 populatePreferredLanguage(languageOptionsSelected, preferredLanguageOptions, preferredLanguageAdapter)
                 languageOptionsTextView.text = String.format("%s %s", getString(R.string.language_options_text_title),
                     languageOptionsSelected.joinToString(", "))
@@ -695,13 +691,15 @@ class TranscriptionConfigFragment : Fragment() {
         return languageOptionsSelected.joinToString(",") { x -> x.transcribeLanguage.code }
     }
 
-    private fun validateLanguageOptions(languageLocales: ArrayList<String>,
-                                        languageOptionsSelectedSet: MutableSet<TranscribeLanguageOption>,
-                                        view: View) : Boolean {
+    private fun validateLanguageOptions(
+        languageLocales: ArrayList<String>,
+        languageOptionsSelectedSet: MutableSet<TranscribeLanguageOption>,
+        view: View
+    ): Boolean {
         var isValid = false
         val duplicateLanguageLocale: HashSet<String> = HashSet<String>()
         val languageLocaleSelectedSet: HashSet<Int> = HashSet<Int>()
-        for(languageOptionSelected in languageOptionsSelectedSet) {
+        for (languageOptionSelected in languageOptionsSelectedSet) {
             if (languageLocaleSelectedSet.contains(languageOptionSelected.languageGroupIndex) &&
                 !duplicateLanguageLocale.contains(languageLocales[languageOptionSelected.languageGroupIndex])) {
                 duplicateLanguageLocale.add(languageLocales[languageOptionSelected.languageGroupIndex])

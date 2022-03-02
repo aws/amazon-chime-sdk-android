@@ -1,7 +1,5 @@
 package com.amazonaws.services.chime.sdkdemo.data
 
-import com.amazonaws.services.chime.sdk.meetings.audiovideo.TranscriptAlternative
-
 data class TranscribeEngine(val engine: String, val name: String) {
     override fun toString(): String {
         return name
@@ -26,8 +24,11 @@ data class TranscribeOption(val content: String?, val value: String) {
     }
 }
 
-data class TranscribeLanguageOption(val languageGroupIndex: Int, val languageCodeIndex: Int,
-                                    val transcribeLanguage: TranscribeLanguage) {
+data class TranscribeLanguageOption(
+    val languageGroupIndex: Int,
+    val languageCodeIndex: Int,
+    val transcribeLanguage: TranscribeLanguage
+) {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (javaClass != other?.javaClass) return false
