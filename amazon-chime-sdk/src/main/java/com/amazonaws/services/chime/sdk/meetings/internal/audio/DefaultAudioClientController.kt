@@ -63,6 +63,7 @@ class DefaultAudioClientController(
             AudioMode.Mono16K -> 16000
             AudioMode.Mono48K -> 48000
             AudioMode.Stereo48K -> 48000
+            AudioMode.NoDevice -> 16000
         }
         audioClient.sendMessage(
             AudioClient.MESS_SET_IO_SAMPLE_RATE,
@@ -74,6 +75,7 @@ class DefaultAudioClientController(
             AudioMode.Mono16K -> AudioFormat.CHANNEL_OUT_MONO
             AudioMode.Mono48K -> AudioFormat.CHANNEL_OUT_MONO
             AudioMode.Stereo48K -> AudioFormat.CHANNEL_OUT_STEREO
+            AudioMode.NoDevice -> AudioFormat.CHANNEL_OUT_MONO
         }
         val spkMinBufSizeInSamples = AudioTrack.getMinBufferSize(
             nativeSR,
@@ -166,6 +168,7 @@ class DefaultAudioClientController(
                 AudioMode.Mono16K -> AudioModeInternal.MONO_16K
                 AudioMode.Mono48K -> AudioModeInternal.MONO_48K
                 AudioMode.Stereo48K -> AudioModeInternal.STEREO_48K
+                AudioMode.NoDevice -> AudioModeInternal.NO_DEVICE
             }
             val res = audioClient.startSessionV2(
                 AudioClient.XTL_DEFAULT_TRANSPORT,

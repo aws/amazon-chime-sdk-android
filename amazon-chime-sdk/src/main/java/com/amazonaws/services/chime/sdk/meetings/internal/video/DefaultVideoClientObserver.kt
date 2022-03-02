@@ -7,6 +7,7 @@ package com.amazonaws.services.chime.sdk.meetings.internal.video
 
 import android.content.Context
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.AudioVideoObserver
+import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.RemoteVideoSource
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoFrame
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoPauseState
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoRotation
@@ -49,6 +50,9 @@ class DefaultVideoClientObserver(
     private var videoClientStateObservers = mutableSetOf<AudioVideoObserver>()
     private var videoClientTileObservers = mutableSetOf<VideoTileController>()
     private var dataMessageObserversByTopic = mutableMapOf<String, MutableSet<DataMessageObserver>>()
+    // We have designed the SDK API to allow using `RemoteVideoSource` as a key in a map, e.g. for  `updateVideoSourceSubscription`.
+    // Therefore we need to map to a consistent set of sources from the internal sources, by using attendeeId as a unique identifier.
+    private var cachedRemoveVideoSources = mutableSetOf<RemoteVideoSource>()
 
     private val uiScope = CoroutineScope(Dispatchers.Main)
 
@@ -176,12 +180,6 @@ class DefaultVideoClientObserver(
         clientMetricsCollector.processVideoClientMetrics(metricMap)
     }
 
-    override fun onRemoteVideoSourceAvailable(sources: Array<RemoteVideoSourceInternal>?) {
-    }
-
-    override fun onRemoteVideoSourceUnavailable(sources: Array<RemoteVideoSourceInternal>?) {
-    }
-
     override fun onLogMessage(logLevel: Int, message: String?) {
         if (message == null) return
         // Only print error and fatal as the Media team's request to avoid noise for application
@@ -253,6 +251,39 @@ class DefaultVideoClientObserver(
 
     override fun onTurnURIsReceived(uris: List<String>): List<String> {
         return uris.map(urlRewriter)
+    }
+
+    override fun onRemoteVideoSourceAvailable(sourcesInternal: Array<RemoteVideoSourceInternal>?) {
+        if (sourcesInternal == null) return
+        val sources = sourcesInternal.map { internalSource ->
+            // Find the cached source if exists (see comment above cachedRemoveVideoSources)
+            for (cachedSource in cachedRemoveVideoSources) {
+                if (cachedSource.attendeeId == internalSource.attendeeId) {
+                    return@map cachedSource
+                }
+            }
+            // Otherwise create a new one and add to cached set
+            val newSource = RemoteVideoSource(internalSource.attendeeId)
+            cachedRemoveVideoSources.add(newSource)
+            newSource
+        }
+        forEachVideoClientStateObserver { observer -> observer.onRemoteVideoSourceAvailable(sources) }
+    }
+
+    override fun onRemoteVideoSourceUnavailable(sourcesInternal: Array<RemoteVideoSourceInternal>?) {
+        if (sourcesInternal == null) return
+        val sources = sourcesInternal.map { internalSource ->
+            // Find the cached source if exists (see comment above cachedRemoveVideoSources)
+            for (cachedSource in cachedRemoveVideoSources) {
+                if (cachedSource.attendeeId == internalSource.attendeeId) {
+                    cachedRemoveVideoSources.remove((cachedSource))
+                    return@map cachedSource
+                }
+            }
+            this.logger.error(TAG, "Could not find cached source to remove")
+            RemoteVideoSource(internalSource.attendeeId) // This is likely not useful
+        }
+        forEachVideoClientStateObserver { observer -> observer.onRemoteVideoSourceUnavailable(sources) }
     }
 
     override fun subscribeToVideoClientStateChange(observer: AudioVideoObserver) {
