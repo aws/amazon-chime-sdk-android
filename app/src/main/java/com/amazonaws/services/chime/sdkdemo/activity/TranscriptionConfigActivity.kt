@@ -66,24 +66,30 @@ class TranscriptionConfigActivity : AppCompatActivity(),
 
     override fun onStartTranscription(
         engine: TranscribeEngine,
-        language: TranscribeLanguage,
+        language: TranscribeLanguage?,
         region: TranscribeRegion,
         partialResultsStability: TranscribeOption,
-        contentIdentificationType: TranscribeOption,
-        contentRedactionType: TranscribeOption,
-        languageModelName: String
+        contentIdentificationType: TranscribeOption?,
+        contentRedactionType: TranscribeOption?,
+        languageModelName: String?,
+        identifyLanguage: Boolean,
+        languageOptions: String?,
+        preferredLanguage: TranscribeLanguage?
     ) {
         uiScope.launch {
             val response: String? =
                 enableMeetingTranscription(
                     meetingId,
                     engine.engine,
-                    language.code,
+                    language?.code,
                     region.code,
                     partialResultsStability.content,
-                    contentIdentificationType.content,
-                    contentRedactionType.content,
-                    languageModelName
+                    contentIdentificationType?.content,
+                    contentRedactionType?.content,
+                    languageModelName,
+                    identifyLanguage,
+                    languageOptions,
+                    preferredLanguage?.code
                 )
 
             if (response == null) {
@@ -97,16 +103,19 @@ class TranscriptionConfigActivity : AppCompatActivity(),
 
     private suspend fun enableMeetingTranscription(
         meetingId: String?,
-        transcribeEngine: String?,
-        transcriptionLanguage: String?,
-        transcriptionRegion: String?,
+        engine: String?,
+        languageCode: String?,
+        region: String?,
         transcribePartialResultsStabilization: String?,
         transcribeContentIdentification: String?,
         transcribeContentRedaction: String?,
-        customLanguageModel: String
+        customLanguageModel: String?,
+        identifyLanguage: Boolean?,
+        languageOptions: String?,
+        preferredLanguage: String?
     ): String? {
         val partialResultsStabilizationEnabled = transcribePartialResultsStabilization != null
-        val isTranscribeMedical = transcribeEngine.equals("transcribe_medical")
+        val isTranscribeMedical = engine.equals("transcribe_medical")
         val transcriptionStreamParams = TranscriptionStreamParams(
             contentIdentificationType = transcribeContentIdentification?.let {
                 if (isTranscribeMedical) "PHI"
@@ -127,15 +136,31 @@ class TranscriptionConfigActivity : AppCompatActivity(),
                 }
             },
             languageModelName = customLanguageModel.let {
-                it.ifEmpty { null }
+                if (!customLanguageModel.isNullOrEmpty()) {
+                    customLanguageModel
+                } else null
+            },
+            identifyLanguage = identifyLanguage,
+            languageOptions = languageOptions.let {
+                if (!languageOptions.isNullOrEmpty()) {
+                    languageOptions
+                } else null
+            },
+            preferredLanguage = preferredLanguage.let {
+                if (!preferredLanguage.isNullOrEmpty()) {
+                    preferredLanguage
+                } else null
             }
         )
         val transcriptionAdditionalParams = gson.toJson(transcriptionStreamParams)
+        val languageCodeParams = if (isTranscribeMedical || (!isTranscribeMedical && identifyLanguage == false)) {
+            "&language=${encodeURLParam(languageCode)}"
+        } else ""
         val meetingUrl = if (getString(R.string.test_url).endsWith("/")) getString(R.string.test_url) else "${getString(R.string.test_url)}/"
         val url = "${meetingUrl}start_transcription?title=${encodeURLParam(meetingId)}" +
-                "&language=${encodeURLParam(transcriptionLanguage)}" +
-                "&region=${encodeURLParam(transcriptionRegion)}" +
-                "&engine=${encodeURLParam(transcribeEngine)}" +
+                languageCodeParams +
+                "&region=${encodeURLParam(region)}" +
+                "&engine=${encodeURLParam(engine)}" +
                 "&transcriptionStreamParams=${encodeURLParam(transcriptionAdditionalParams)}"
         val response = HttpUtils.post(URL(url), "", DefaultBackOffRetry(), logger)
 

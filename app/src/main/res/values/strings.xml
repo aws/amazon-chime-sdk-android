@@ -59,6 +59,10 @@
     <string name="partial_stability_spinner">Enable Partial Results Stabilization</string>
     <string name="identification_spinner">Enable PII Content Identification</string>
     <string name="redaction_spinner">Enable PII Content Redaction</string>
+    <string name="identify_language_checkbox">Enable Automatic Language Identification</string>
+    <string name="language_options_text_title">Language Options: </string>
+    <string name="language_options_list_view">Select a minimum of 2 Language Options</string>
+    <string name="preferred_language_spinner">Specify one preferred language</string>
     <string name="phi_identification_checkbox">Enable PHI Content Identification</string>
     <string name="custom_language_checkbox">Enable Custom Language Model</string>
     <string name="custom_language_model_text_view">Custom Language Model</string>
@@ -89,6 +93,7 @@
 
     <!-- Alert -->
     <string name="cancel">Cancel</string>
+    <string name="save">Save</string>
     <string name="alert_title_choose_audio">Choose a device</string>
     <string name="alert_title_additional_options">Additional Options</string>
 
@@ -107,6 +112,8 @@
     <string name="user_notification_filter_both_enabled_error">Cannot toggle both filters on at same time</string>
     <string name="user_notification_meeting_url_error">Your url is invalid</string>
     <string name="user_notification_meeting_start_error">There was an error starting the meeting. Please try again</string>
+    <string name="user_notification_language_option_invalid_selection">Multiple language variant selected for locale: %1$s.\nPlease select one language locale per variant.</string>
+    <string name="user_notification_language_option_missing_selection">Please select at least 2 language options.</string>
     <string name="enter_message">Enter message</string>
     <string name="send_message">Send Message</string>
     <string name="tab_layout">Tab Layout</string>

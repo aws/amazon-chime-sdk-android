@@ -5,24 +5,34 @@
 
 package com.amazonaws.services.chime.sdkdemo.fragment
 
+import android.app.AlertDialog
 import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
+import android.widget.AdapterView.OnItemSelectedListener
 import android.widget.ArrayAdapter
 import android.widget.Button
 import android.widget.CheckBox
+import android.widget.CheckedTextView
+import android.widget.CompoundButton
 import android.widget.EditText
+import android.widget.ExpandableListAdapter
+import android.widget.ExpandableListView
+import android.widget.ExpandableListView.*
 import android.widget.Spinner
+import android.widget.TextView
 import androidx.fragment.app.Fragment
 import com.amazonaws.services.chime.sdk.meetings.utils.logger.ConsoleLogger
 import com.amazonaws.services.chime.sdk.meetings.utils.logger.LogLevel
 import com.amazonaws.services.chime.sdkdemo.R
 import com.amazonaws.services.chime.sdkdemo.activity.HomeActivity
+import com.amazonaws.services.chime.sdkdemo.adapter.LanguageOptionsAdapter
 import com.amazonaws.services.chime.sdkdemo.data.TranscribeEngine
 import com.amazonaws.services.chime.sdkdemo.data.TranscribeLanguage
+import com.amazonaws.services.chime.sdkdemo.data.TranscribeLanguageOption
 import com.amazonaws.services.chime.sdkdemo.data.TranscribeOption
 import com.amazonaws.services.chime.sdkdemo.data.TranscribeRegion
 import java.lang.ClassCastException
@@ -38,6 +48,18 @@ class TranscriptionConfigFragment : Fragment() {
     private var languages = mutableListOf<TranscribeLanguage>()
     private var regions = mutableListOf<TranscribeRegion>()
 
+    private val languageGroups = arrayListOf<String>(
+        "English",
+        "Spanish",
+        "French",
+        "Italian",
+        "German",
+        "Portuguese",
+        "Japanese",
+        "Korean",
+        "Chinese"
+    )
+
     private val languagesMap = mapOf<String, String>(
         "en-US" to "US English (en-US)",
         "es-US" to "US Spanish (es-US)",
@@ -51,6 +73,21 @@ class TranscriptionConfigFragment : Fragment() {
         "ja-JP" to "Japanese (ja-JP)",
         "ko-KR" to "Korean (ko-KR)",
         "zh-CN" to "Mandarin Chinese - Mainland (zh-CN)"
+    )
+
+    private val languageGroupMapping: List<Pair<String, String>> = listOf<Pair<String, String>>(
+        Pair("English", "en-US"),
+        Pair("English", "en-GB"),
+        Pair("English", "en-AU"),
+        Pair("Spanish", "es-US"),
+        Pair("French", "fr-CA"),
+        Pair("French", "fr-FR"),
+        Pair("Italian", "it-IT"),
+        Pair("German", "de-DE"),
+        Pair("Portuguese", "pt-BR"),
+        Pair("Japanese", "ja-JP"),
+        Pair("Korean", "ko-KR"),
+        Pair("Chinese", "zh-CN")
     )
 
     private val regionsMap = mapOf<String, String>(
@@ -134,9 +171,18 @@ class TranscriptionConfigFragment : Fragment() {
         TranscribeOption(it.key, it.value)
     }
 
+    private val transcribePreferredLanguageDefaultOption: List<TranscribeLanguage> = mapOf<String, String>(
+        "" to "[Optional] Select preferred language"
+    ).map {
+        TranscribeLanguage(it.key, it.value)
+    }
+
     private val transcribeIdentificationOptions: MutableList<TranscribeOption> = mutableListOf<TranscribeOption>()
     private val transcribeRedactionOptions: MutableList<TranscribeOption> = mutableListOf<TranscribeOption>()
     private val transcribePartialResultStabilizationOptions: MutableList<TranscribeOption> = transcribePartialResultStabilizationValues.toMutableList()
+    private val preferredLanguageOptions: MutableList<TranscribeLanguage> = mutableListOf<TranscribeLanguage>()
+    private val languageOptionsSelected: MutableSet<TranscribeLanguageOption> = mutableSetOf<TranscribeLanguageOption>()
+    private val languageOptions: HashMap<String, MutableList<TranscribeLanguage?>> = HashMap()
 
     private val transcribeMedicalLanguages: List<TranscribeLanguage> =
         arrayOf("en-US").mapNotNull { l ->
@@ -186,6 +232,12 @@ class TranscriptionConfigFragment : Fragment() {
     private lateinit var phiIdentificationCheckBox: CheckBox
     private lateinit var customLanguageModelCheckbox: CheckBox
     private lateinit var customLanguageModelEditText: EditText
+    private lateinit var identifyLanguageCheckbox: CheckBox
+    private lateinit var languageOptionsListView: ExpandableListView
+    private lateinit var languageOptionsTextView: TextView
+    private lateinit var languageOptionsAdapter: ExpandableListAdapter
+    private lateinit var preferredLanguageSpinner: Spinner
+    private lateinit var preferredLanguageAdapter: ArrayAdapter<TranscribeLanguage>
 
     private val TRANSCRIBE_ENGINE_SPINNER_INDEX_KEY = "transcribeEngineSpinnerIndex"
     private val LANGUAGE_SPINNER_INDEX_KEY = "languageSpinnerIndex"
@@ -195,6 +247,9 @@ class TranscriptionConfigFragment : Fragment() {
     private val PII_CONTENT_REDACTION_SPINNER_INDEX_KEY = "piiContentRedactionSpinnerIndex"
     private val PHI_CONTENT_IDENTIFICATION_ENABLED_KEY = "phiContentIdentificationEnabled"
     private val CUSTOM_LANGUAGE_MODEL_NAME_KEY = "customLanguageModelName"
+    private val IDENTIFY_LANGUAGE_ENABLED_KEY = "identifyLanguageEnabled"
+    private val LANGUAGE_OPTIONS_INDEX = "languageOptionsIndex"
+    private val PREFERRED_LANGUAGE_INDEX = "preferredLanguageIndex"
 
     companion object {
         fun newInstance(meetingId: String): TranscriptionConfigFragment {
@@ -211,12 +266,15 @@ class TranscriptionConfigFragment : Fragment() {
     interface TranscriptionConfigurationEventListener {
         fun onStartTranscription(
             engine: TranscribeEngine,
-            language: TranscribeLanguage,
+            language: TranscribeLanguage?,
             region: TranscribeRegion,
             partialResultsStability: TranscribeOption,
-            contentIdentificationType: TranscribeOption,
-            contentRedactionType: TranscribeOption,
-            languageModelName: String
+            contentIdentificationType: TranscribeOption?,
+            contentRedactionType: TranscribeOption?,
+            languageModelName: String?,
+            identifyLanguage: Boolean,
+            languageOptions: String?,
+            preferredLanguage: TranscribeLanguage?
         )
     }
 
@@ -238,16 +296,25 @@ class TranscriptionConfigFragment : Fragment() {
     ): View? {
         val view = inflater.inflate(R.layout.fragment_transcription_config, container, false)
         val context = activity as Context
-
         view.findViewById<Button>(R.id.buttonStartTranscription)?.setOnClickListener {
             listener.onStartTranscription(
                 transcribeEngineSpinner.selectedItem as TranscribeEngine,
-                languageSpinner.selectedItem as TranscribeLanguage,
+                languageSpinner.selectedItem?.let {
+                    languageSpinner.selectedItem as TranscribeLanguage },
                 regionSpinner.selectedItem as TranscribeRegion,
                 partialResultsStabilizationSpinner.selectedItem as TranscribeOption,
-                piiIdentificationSpinner.selectedItem as TranscribeOption,
-                piiRedactionSpinner.selectedItem as TranscribeOption,
-                customLanguageModelEditText.text.toString()
+                if (piiIdentificationSpinner.isEnabled) {
+                    piiIdentificationSpinner.selectedItem as TranscribeOption } else null,
+                if (piiRedactionSpinner.isEnabled) {
+                    piiRedactionSpinner.selectedItem as TranscribeOption } else null,
+                if (customLanguageModelCheckbox.isEnabled) {
+                    customLanguageModelEditText.text.toString() } else null,
+                identifyLanguageCheckbox.isChecked,
+                if (identifyLanguageCheckbox.isChecked) {
+                    formatLanguageOptions() } else null,
+                if (identifyLanguageCheckbox.isChecked) {
+                    preferredLanguageSpinner.selectedItem?.let {
+                        preferredLanguageSpinner.selectedItem as TranscribeLanguage } } else null
             )
         }
 
@@ -274,6 +341,39 @@ class TranscriptionConfigFragment : Fragment() {
         regionAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         regionSpinner.adapter = regionAdapter
         regionSpinner.isSelected = false
+
+        identifyLanguageCheckbox = view.findViewById(R.id.checkboxIdentifyLanguage)
+        languageOptionsTextView = view.findViewById(R.id.testViewLanguageOptions)
+        identifyLanguageCheckbox.setOnCheckedChangeListener { cb, isChecked ->
+        if (isChecked) {
+            showLanguageOptionsAlertDialog(cb)
+            languageSpinner.isEnabled = false
+            piiIdentificationSpinner.isEnabled = false
+            piiRedactionSpinner.isEnabled = false
+            phiIdentificationCheckBox.isEnabled = false
+            preferredLanguageSpinner.visibility = View.VISIBLE
+            languageOptionsTextView.visibility = View.VISIBLE
+            customLanguageModelCheckbox.isEnabled = false
+            customLanguageModelEditText.isEnabled = false
+            customLanguageModelEditText.visibility = View.GONE
+        } else {
+            preferredLanguageSpinner.visibility = View.GONE
+            languageOptionsTextView.isEnabled = false
+            languageSpinner.isEnabled = true
+            piiIdentificationSpinner.isEnabled = true
+            piiRedactionSpinner.isEnabled = true
+            languageOptionsTextView.visibility = View.GONE
+            customLanguageModelCheckbox.isEnabled = true
+            customLanguageModelEditText.isEnabled = true
+            customLanguageModelEditText.visibility = View.VISIBLE
+        }
+    }
+
+        preferredLanguageSpinner = view.findViewById(R.id.spinnerPreferredLanguage)
+        preferredLanguageAdapter = ArrayAdapter(context, android.R.layout.simple_spinner_item, preferredLanguageOptions)
+        preferredLanguageAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        preferredLanguageSpinner.adapter = preferredLanguageAdapter
+        preferredLanguageSpinner.isSelected = false
 
         partialResultsStabilizationSpinner = view.findViewById(R.id.spinnerPartialResultsStabilization)
         partialResultsStabilizationAdapter = ArrayAdapter(context, android.R.layout.simple_spinner_item, transcribePartialResultStabilizationOptions)
@@ -322,6 +422,7 @@ class TranscriptionConfigFragment : Fragment() {
             populateRegions(transcribeRegions, regions, regionAdapter)
             populateTranscriptionOptions(transcribePiiOptions, transcribeIdentificationOptions, piiIdentificationAdapter, "Identification")
             populateTranscriptionOptions(transcribePiiOptions, transcribeRedactionOptions, piiRedactionAdapter, "Redaction")
+            populateLanguageOptions(languageOptions)
 
             var transcribeEngineSpinnerIndex = 0
             var languageSpinnerIndex = 0
@@ -331,6 +432,8 @@ class TranscriptionConfigFragment : Fragment() {
             var piiContentRedactionSpinnerIndex = 0
             var phiContentIdentificationEnabled = false
             var customLanguageModelName = resources.getString(R.string.custom_language_checkbox)
+            var preferredLanguageSpinnerIndex = 0
+            var identifyLanguageEnabled = false
             if (savedInstanceState != null) {
                 transcribeEngineSpinnerIndex = savedInstanceState.getInt(TRANSCRIBE_ENGINE_SPINNER_INDEX_KEY, 0)
                 languageSpinnerIndex = savedInstanceState.getInt(LANGUAGE_SPINNER_INDEX_KEY, 0)
@@ -340,6 +443,9 @@ class TranscriptionConfigFragment : Fragment() {
                 piiContentRedactionSpinnerIndex = savedInstanceState.getInt(PII_CONTENT_REDACTION_SPINNER_INDEX_KEY, 0)
                 phiContentIdentificationEnabled = savedInstanceState.getBoolean(PHI_CONTENT_IDENTIFICATION_ENABLED_KEY, false)
                 customLanguageModelName = savedInstanceState.getString(CUSTOM_LANGUAGE_MODEL_NAME_KEY, resources.getString(R.string.custom_language_checkbox))
+                identifyLanguageEnabled = savedInstanceState.getBoolean(IDENTIFY_LANGUAGE_ENABLED_KEY, false)
+//                languageOptionsSpinnerIndex = savedInstanceState.getInt(LANGUAGE_OPTIONS_INDEX, 0)
+                preferredLanguageSpinnerIndex = savedInstanceState.getInt(PREFERRED_LANGUAGE_INDEX, 0)
             }
 
             transcribeEngineSpinner.setSelection(transcribeEngineSpinnerIndex)
@@ -351,6 +457,9 @@ class TranscriptionConfigFragment : Fragment() {
             checkboxPHIContentIdentification.isChecked = phiContentIdentificationEnabled
             checkboxCustomLanguageModel.isChecked = customLanguageModelName != (resources.getString(R.string.custom_language_checkbox))
             checkboxCustomLanguageModel.text = customLanguageModelName
+            identifyLanguageCheckbox.isChecked = identifyLanguageEnabled
+//            languageOptionsSpinner.setSelection(languageOptionsSpinnerIndex)
+            preferredLanguageSpinner.setSelection(preferredLanguageSpinnerIndex)
         }
 
         return view
@@ -366,9 +475,11 @@ class TranscriptionConfigFragment : Fragment() {
         outState.putInt(PII_CONTENT_REDACTION_SPINNER_INDEX_KEY, piiRedactionSpinner.selectedItemPosition)
         outState.putBoolean(PHI_CONTENT_IDENTIFICATION_ENABLED_KEY, phiIdentificationCheckBox.isChecked)
         outState.putString(CUSTOM_LANGUAGE_MODEL_NAME_KEY, checkboxCustomLanguageModel.text.toString())
+        outState.putInt(PREFERRED_LANGUAGE_INDEX, preferredLanguageSpinner.selectedItemPosition)
+        outState.putBoolean(IDENTIFY_LANGUAGE_ENABLED_KEY, identifyLanguageCheckbox.isChecked)
     }
 
-    private val onTranscribeEngineSelected = object : AdapterView.OnItemSelectedListener {
+    private val onTranscribeEngineSelected = object : OnItemSelectedListener {
         override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
             if (position < transcribeEngines.size) {
                 when (transcribeEngines[position].engine) {
@@ -397,7 +508,7 @@ class TranscriptionConfigFragment : Fragment() {
     }
 
     // Reset the redaction spinner when content identification selected.
-    private val onPIIContentIdentificationSelected = object : AdapterView.OnItemSelectedListener {
+    private val onPIIContentIdentificationSelected = object : OnItemSelectedListener {
         override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
             if (position < transcribeIdentificationOptions.size && position > 0) {
                 populateTranscriptionOptions(transcribePiiOptions, transcribeRedactionOptions, piiRedactionAdapter, "Redaction")
@@ -446,6 +557,25 @@ class TranscriptionConfigFragment : Fragment() {
         adapter.notifyDataSetChanged()
     }
 
+    private fun populateLanguageOptions(languageOptions: HashMap<String, MutableList<TranscribeLanguage?>>) {
+        for ((locale, variant) in languageGroupMapping) {
+            if (languageOptions.containsKey(locale)) {
+                languageOptions[locale]?.add(languagesMap[variant]?.let {
+                    TranscribeLanguage(variant, it) })
+            } else {
+                languageOptions[locale] =
+                    mutableListOf(languagesMap[variant]?.let { TranscribeLanguage(variant, it) })
+            }
+        }
+    }
+
+    private fun populatePreferredLanguage(newList: List<TranscribeLanguage>, currentList: MutableList<TranscribeLanguage>, adapter: ArrayAdapter<TranscribeLanguage>) {
+        currentList.clear()
+        currentList.add(transcribePreferredLanguageDefaultOption[0])
+        currentList.addAll(newList)
+        adapter.notifyDataSetChanged()
+    }
+
     private fun resetSpinner() {
         languageSpinner.setSelection(0, true)
         regionSpinner.setSelection(0, true)
@@ -463,6 +593,11 @@ class TranscriptionConfigFragment : Fragment() {
         partialResultsStabilizationSpinner.visibility = View.GONE
         customLanguageModelEditText.visibility = View.GONE
         phiIdentificationCheckBox.visibility = View.VISIBLE
+        identifyLanguageCheckbox.visibility = View.GONE
+        languageOptionsTextView.visibility = View.GONE
+        preferredLanguageSpinner.visibility = View.GONE
+        languageSpinner.isEnabled = true
+        phiIdentificationCheckBox.isEnabled = true
     }
 
     private fun showAdditionalTranscribeOptionsAndHideAdditionalMedicalTranscribeOptions() {
@@ -475,5 +610,121 @@ class TranscriptionConfigFragment : Fragment() {
         phiIdentificationCheckBox.isChecked = false
         piiIdentificationSpinner.setSelection(0, true)
         phiIdentificationCheckBox.visibility = View.GONE
+        identifyLanguageCheckbox.visibility = View.VISIBLE
+        identifyLanguageCheckbox.isChecked = false
+        languageOptionsTextView.visibility = View.GONE
+        preferredLanguageSpinner.visibility = View.GONE
+        customLanguageModelCheckbox.isEnabled = true
+        customLanguageModelEditText.isEnabled = true
+    }
+
+    private fun showLanguageOptionsAlertDialog(cb: CompoundButton) {
+        logger.info(TAG, "" + cb)
+        val builder = AlertDialog.Builder(this.context)
+        val languageOptionsAlertDialog =
+            layoutInflater.inflate(R.layout.alert_dialog_language_options, null)
+        languageOptionsListView = languageOptionsAlertDialog.findViewById<ExpandableListView>(R.id.listViewLanguageOptions)
+
+        languageOptionsAdapter = LanguageOptionsAdapter(this.requireContext(), languageOptions,
+            languageGroups, languageOptionsSelected)
+        languageOptionsListView.setAdapter(languageOptionsAdapter)
+        languageOptionsListView.setOnChildClickListener(OnChildClickListener {
+                _, view, groupPosition, childPosition, _ ->
+
+            val languageOptionCheck: CheckedTextView = view.findViewById(R.id.languageOption)
+            languageOptionCheck.toggle()
+            val languageSelected: TranscribeLanguage? = languageOptions[languageGroups[groupPosition]]?.get(childPosition)
+            val selectedCell: TranscribeLanguageOption? = languageSelected?.let { TranscribeLanguageOption(groupPosition, childPosition, it) }
+            selectedCell?.let {
+                if (languageOptionsSelected.contains(selectedCell)) {
+                    languageOptionsSelected.remove(selectedCell)
+                } else {
+                    languageOptionsSelected.add(selectedCell)
+                }
+            }
+
+            validateLanguageOptions(languageGroups, languageOptionsSelected, languageOptionsAlertDialog)
+
+            return@OnChildClickListener false
+        })
+
+        expandLanguageOptionsGroup()
+
+        val saveButton: Button = languageOptionsAlertDialog.findViewById(R.id.buttonSaveLanguageOptions)
+        val cancelButton: Button = languageOptionsAlertDialog.findViewById(R.id.buttonCancelLanguageOptions)
+        builder.setView(languageOptionsAlertDialog)
+        val alertDialog = builder.create()
+        alertDialog.show()
+
+        saveButton.setOnClickListener {
+            if (validateLanguageOptions(languageGroups, languageOptionsSelected, languageOptionsAlertDialog)) {
+                val languageOptionsCheckedPosition = languageOptionsListView.checkedItemPositions
+                for (i in 0 until languageOptionsCheckedPosition.size()) {
+                    val key: Int = languageOptionsCheckedPosition.keyAt(i)
+                    if (languageOptionsCheckedPosition.get(key)) {
+                        logger.info(TAG, i.toString() + " -> " + languages[key])
+                    }
+                }
+
+
+                val languageOptionsSelected : List<TranscribeLanguage> = languageOptionsSelected.map { x-> x.transcribeLanguage }
+                populatePreferredLanguage(languageOptionsSelected, preferredLanguageOptions, preferredLanguageAdapter)
+                languageOptionsTextView.text = String.format("%s %s", getString(R.string.language_options_text_title),
+                    languageOptionsSelected.joinToString(", "))
+
+                alertDialog.dismiss()
+            }
+        }
+
+        cancelButton.setOnClickListener {
+            cb.isChecked = false
+            alertDialog.dismiss()
+        }
+    }
+
+    private fun expandLanguageOptionsGroup() {
+        for (i in 0 until languageOptionsAdapter.groupCount) {
+            languageOptionsListView.expandGroup(i)
+        }
+    }
+
+    private fun formatLanguageOptions(): String {
+        if (languageOptionsSelected.isEmpty()) {
+            return ""
+        }
+        return languageOptionsSelected.joinToString(",") { x -> x.transcribeLanguage.code }
+    }
+
+    private fun validateLanguageOptions(languageLocales: ArrayList<String>,
+                                        languageOptionsSelectedSet: MutableSet<TranscribeLanguageOption>,
+                                        view: View) : Boolean {
+        var isValid = false
+        val duplicateLanguageLocale: HashSet<String> = HashSet<String>()
+        val languageLocaleSelectedSet: HashSet<Int> = HashSet<Int>()
+        for(languageOptionSelected in languageOptionsSelectedSet) {
+            if (languageLocaleSelectedSet.contains(languageOptionSelected.languageGroupIndex) &&
+                !duplicateLanguageLocale.contains(languageLocales[languageOptionSelected.languageGroupIndex])) {
+                duplicateLanguageLocale.add(languageLocales[languageOptionSelected.languageGroupIndex])
+            } else {
+                languageLocaleSelectedSet.add(languageOptionSelected.languageGroupIndex)
+            }
+        }
+
+        val displayErrorMessageText: String = when {
+            duplicateLanguageLocale.size > 0 -> {
+                getString(R.string.user_notification_language_option_invalid_selection,
+                    duplicateLanguageLocale.joinToString(", "))
+            }
+            languageLocaleSelectedSet.size < 2 -> {
+                getString(R.string.user_notification_language_option_missing_selection)
+            }
+            else -> {
+                isValid = true
+                ""
+            }
+        }
+
+        view.findViewById<TextView>(R.id.textViewErrorLanguageOptions).text = displayErrorMessageText
+        return isValid
     }
 }

@@ -20,6 +20,7 @@ import com.amazonaws.services.chime.sdk.meetings.audiovideo.TranscriptEntity
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.TranscriptEvent
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.TranscriptItem
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.TranscriptItemType
+import com.amazonaws.services.chime.sdk.meetings.audiovideo.TranscriptLanguageWithScore
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.TranscriptResult
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.TranscriptionStatus
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.TranscriptionStatusType
@@ -281,13 +282,23 @@ class DefaultAudioClientObserver(
                             )
                             alternatives.add(alternative)
                         }
+                        val languageIdentifications = mutableListOf<TranscriptLanguageWithScore>()
+                        rawResult.languageIdentifications.forEach { rawLanguageIdentification ->
+                            val languageIdentification = TranscriptLanguageWithScore(
+                                rawLanguageIdentification.languageCode,
+                                rawLanguageIdentification.score
+                            )
+                            languageIdentifications.add(languageIdentification)
+                        }
                         val result = TranscriptResult(
                             rawResult.resultId,
                             rawResult.channelId,
                             rawResult.isPartial,
                             rawResult.startTimeMs,
                             rawResult.endTimeMs,
-                            alternatives.toTypedArray()
+                            alternatives.toTypedArray(),
+                            rawResult.languageCode,
+                            languageIdentifications.toTypedArray()
                         )
                         results.add(result)
                     }

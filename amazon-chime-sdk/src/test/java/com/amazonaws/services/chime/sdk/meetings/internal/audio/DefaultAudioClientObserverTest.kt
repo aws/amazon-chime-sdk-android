@@ -664,7 +664,9 @@ class DefaultAudioClientObserverTest {
                     null,
                     "I am"
                 )
-            )
+            ),
+            null,
+            arrayOf()
         )
 
         val transcriptResultTwo = TranscriptResultInternal(
@@ -700,7 +702,9 @@ class DefaultAudioClientObserverTest {
                     null,
                     "a guardian"
                 )
-            )
+            ),
+            null,
+            arrayOf()
         )
 
         val events: Array<TranscriptEventInternal> = arrayOf(
@@ -743,7 +747,9 @@ class DefaultAudioClientObserverTest {
                             null,
                             "I am"
                         )
-                    )
+                    ),
+                    null,
+                    arrayOf()
                 )
             )
         )
@@ -783,7 +789,9 @@ class DefaultAudioClientObserverTest {
                             null,
                             "a guardian"
                         )
-                    )
+                    ),
+                    null,
+                    arrayOf()
                 )
             )
         )
@@ -808,7 +816,7 @@ class DefaultAudioClientObserverTest {
 
         val transcriptResultAlternative = TranscriptAlternativeInternal(arrayOf(transcriptResultItem), arrayOf(transcriptResultEntity), "I am")
 
-        val transcriptResult = TranscriptResultInternal(testResultId, testChannelId, isPartial, timestampMs, timestampMs + 10L, arrayOf(transcriptResultAlternative))
+        val transcriptResult = TranscriptResultInternal(testResultId, testChannelId, isPartial, timestampMs, timestampMs + 10L, arrayOf(transcriptResultAlternative), null, arrayOf())
 
         val events: Array<TranscriptEventInternal> = arrayOf(TranscriptInternal(arrayOf(transcriptResult)))
 
@@ -822,7 +830,7 @@ class DefaultAudioClientObserverTest {
             "I am")
 
         val expectedTranscript = Transcript(arrayOf(TranscriptResult(testResultId, testChannelId, isPartial,
-            timestampMs, timestampMs + 10L, arrayOf(expectedTranscriptAlternative))))
+            timestampMs, timestampMs + 10L, arrayOf(expectedTranscriptAlternative), null, arrayOf())))
 
         audioClientObserver.onTranscriptEventsReceived(events)
         verify(exactly = 1) { mockTranscriptEventObserver.onTranscriptEventReceived(expectedTranscript) }

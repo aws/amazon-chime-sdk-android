@@ -33,7 +33,9 @@ data class TranscriptResult(
     val isPartial: Boolean,
     val startTimeMs: Long,
     val endTimeMs: Long,
-    val alternatives: Array<TranscriptAlternative>
+    val alternatives: Array<TranscriptAlternative>,
+    val languageCode: String?,
+    val languageIdentifications: Array<TranscriptLanguageWithScore>?
 ) {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
@@ -43,6 +45,11 @@ data class TranscriptResult(
 
         if (!alternatives.contentEquals(other.alternatives)) return false
 
+        languageIdentifications?.let { thisLanguageIdentification ->
+            if (other.languageIdentifications?.let { thisLanguageIdentification.contentEquals(it) } == false) {
+                return false
+            }
+        }
         return true
     }
 
@@ -53,6 +60,10 @@ data class TranscriptResult(
         result = 31 * result + startTimeMs.hashCode()
         result = 31 * result + endTimeMs.hashCode()
         result = 31 * result + alternatives.contentHashCode()
+        result = 31 * result + languageCode.hashCode()
+        languageIdentifications?.let {
+                it -> result = 31 * result + (it.contentHashCode())
+        }
         return result
     }
 }
@@ -105,6 +116,11 @@ data class TranscriptEntity(
     val content: String,
     val category: String,
     val confidence: Double
+)
+
+data class TranscriptLanguageWithScore(
+    val languageCode: String,
+    val score: Double
 )
 
 data class TranscriptionStatus(
