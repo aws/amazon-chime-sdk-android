@@ -52,6 +52,10 @@ class HomeActivity : AppCompatActivity() {
         Manifest.permission.CAMERA
     )
 
+    private val NODEVICE_WEBRTC_PERM = arrayOf(
+        Manifest.permission.CAMERA
+    )
+
     private var meetingEditText: EditText? = null
     private var nameEditText: EditText? = null
     private var audioMode: AppCompatSpinner? = null
@@ -59,7 +63,7 @@ class HomeActivity : AppCompatActivity() {
     private var meetingID: String? = null
     private var yourName: String? = null
     private var testUrl: String = ""
-    private var audioModes = listOf("Stereo/48KHz Audio", "Mono/48KHz Audio", "Mono/16KHz Audio")
+    private var audioModes = listOf("NoDevice", "Mono/48KHz Audio", "Mono/16KHz Audio")
     private lateinit var audioVideoConfig: AudioVideoConfiguration
     private lateinit var debugSettingsViewModel: DebugSettingsViewModel
 
@@ -98,7 +102,7 @@ class HomeActivity : AppCompatActivity() {
 
     private fun joinMeeting() {
         when (audioMode?.selectedItemPosition ?: 0) {
-            0 -> audioVideoConfig = AudioVideoConfiguration(audioMode = AudioMode.Stereo48K)
+            0 -> audioVideoConfig = AudioVideoConfiguration(audioMode = AudioMode.NoDevice)
             1 -> audioVideoConfig = AudioVideoConfiguration(audioMode = AudioMode.Mono48K)
             2 -> audioVideoConfig = AudioVideoConfiguration(audioMode = AudioMode.Mono16K)
         }
@@ -112,11 +116,14 @@ class HomeActivity : AppCompatActivity() {
         } else if (yourName.isNullOrBlank()) {
             showToast(getString(R.string.user_notification_attendee_name_invalid))
         } else {
-            if (hasPermissionsAlready()) {
-                authenticate(testUrl, meetingID, yourName)
-            } else {
-                ActivityCompat.requestPermissions(this, WEBRTC_PERM, WEBRTC_PERMISSION_REQUEST_CODE)
+            val webrtcPerm =
+                if (audioVideoConfig.audioMode == AudioMode.NoDevice) NODEVICE_WEBRTC_PERM else WEBRTC_PERM
+            if (!hasPermissionsAlready(webrtcPerm)) {
+                ActivityCompat.requestPermissions(this, webrtcPerm, WEBRTC_PERMISSION_REQUEST_CODE)
+                return
             }
+
+            authenticate(testUrl, meetingID, yourName)
         }
     }
 
@@ -125,8 +132,8 @@ class HomeActivity : AppCompatActivity() {
         return if (endpointUrl.isNullOrEmpty()) getString(R.string.test_url) else endpointUrl
     }
 
-    private fun hasPermissionsAlready(): Boolean {
-        return WEBRTC_PERM.all {
+    private fun hasPermissionsAlready(webrtcPerm: Array<String>): Boolean {
+        return webrtcPerm.all {
             ContextCompat.checkSelfPermission(this, it) == PackageManager.PERMISSION_GRANTED
         }
     }
@@ -193,8 +200,11 @@ class HomeActivity : AppCompatActivity() {
         attendeeName: String?
     ): String? {
         val meetingServerUrl = if (meetingUrl.endsWith("/")) meetingUrl else "$meetingUrl/"
-        val url = "${meetingServerUrl}join?title=${encodeURLParam(meetingId)}&name=${encodeURLParam(
-            attendeeName)}&region=${encodeURLParam(MEETING_REGION)}"
+        val url = "${meetingServerUrl}join?title=${encodeURLParam(meetingId)}&name=${
+            encodeURLParam(
+                attendeeName
+            )
+        }&region=${encodeURLParam(MEETING_REGION)}"
         val response = HttpUtils.post(URL(url), "", DefaultBackOffRetry(), logger)
         return if (response.httpException == null) {
             response.data

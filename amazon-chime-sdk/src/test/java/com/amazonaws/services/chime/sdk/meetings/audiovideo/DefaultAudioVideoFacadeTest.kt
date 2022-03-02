@@ -9,6 +9,7 @@ import android.content.Context
 import androidx.core.content.ContextCompat
 import com.amazonaws.services.chime.sdk.meetings.analytics.EventAnalyticsController
 import com.amazonaws.services.chime.sdk.meetings.analytics.EventAnalyticsObserver
+import com.amazonaws.services.chime.sdk.meetings.audiovideo.audio.AudioMode
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.audio.activespeakerdetector.ActiveSpeakerDetectorFacade
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.contentshare.ContentShareController
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.contentshare.ContentShareObserver
@@ -103,10 +104,17 @@ class DefaultAudioVideoFacadeTest {
     fun setup() = MockKAnnotations.init(this, relaxUnitFun = true)
 
     @Test(expected = SecurityException::class)
-    fun `start should throw exception when the required permissions are not granted`() {
+    fun `start should throw exception when the required permissions are not granted with default AudioMode`() {
         mockkStatic(ContextCompat::class)
         every { ContextCompat.checkSelfPermission(any(), any()) } returns 1
         audioVideoFacade.start()
+    }
+
+    @Test
+    fun `start should not check permissions if AudioMode is NoDevice`() {
+        mockkStatic(ContextCompat::class)
+        audioVideoFacade.start(AudioVideoConfiguration(audioMode = AudioMode.NoDevice))
+        verify(exactly = 0) { ContextCompat.checkSelfPermission(any(), any()) }
     }
 
     @Test
