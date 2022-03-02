@@ -3,13 +3,5 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-def tincanRootDir = new File(getRootDir(), '../tincan/android/media_client')
-def shadedWebrtcRootDir = new File(getRootDir(), '../tincan/android/shadedwebrtc')
-
-include ':tincan'
-project(':tincan').projectDir = tincanRootDir
-include ':tincan:shadedwebrtc'
-project(':tincan:shadedwebrtc').projectDir = shadedWebrtcRootDir
-
 include ':app', ':amazon-chime-sdk'
 rootProject.name='amazon-chime-sdk-android'
