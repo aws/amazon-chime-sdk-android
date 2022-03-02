@@ -15,6 +15,7 @@ import com.amazonaws.services.chime.sdk.meetings.analytics.EventAnalyticsControl
 import com.amazonaws.services.chime.sdk.meetings.analytics.EventAnalyticsObserver
 import com.amazonaws.services.chime.sdk.meetings.analytics.EventAttributes
 import com.amazonaws.services.chime.sdk.meetings.analytics.MeetingHistoryEvent
+import com.amazonaws.services.chime.sdk.meetings.audiovideo.audio.AudioMode
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.audio.activespeakerdetector.ActiveSpeakerDetectorFacade
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.audio.activespeakerdetector.ActiveSpeakerObserver
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.audio.activespeakerpolicy.ActiveSpeakerPolicy
@@ -57,23 +58,23 @@ class DefaultAudioVideoFacade(
     }
 
     override fun start(audioVideoConfiguration: AudioVideoConfiguration) {
-        val hasPermission: Boolean = permissions.all {
-            ContextCompat.checkSelfPermission(context, it) == PackageManager.PERMISSION_GRANTED
+        if (audioVideoConfiguration.audioMode != AudioMode.NoDevice) {
+            val hasPermission: Boolean = permissions.all {
+                ContextCompat.checkSelfPermission(context, it) == PackageManager.PERMISSION_GRANTED
+            }
+            if (!hasPermission) {
+                throw SecurityException(
+                    "Missing necessary permissions for WebRTC: ${
+                        permissions.joinToString(
+                            separator = ", ",
+                            prefix = "",
+                            postfix = ""
+                        )
+                    }"
+                )
+            }
         }
-
-        if (hasPermission) {
-            audioVideoController.start(audioVideoConfiguration)
-        } else {
-            throw SecurityException(
-                "Missing necessary permissions for WebRTC: ${
-                    permissions.joinToString(
-                        separator = ", ",
-                        prefix = "",
-                        postfix = ""
-                    )
-                }"
-            )
-        }
+        audioVideoController.start(audioVideoConfiguration)
     }
 
     override fun addAudioVideoObserver(observer: AudioVideoObserver) {
