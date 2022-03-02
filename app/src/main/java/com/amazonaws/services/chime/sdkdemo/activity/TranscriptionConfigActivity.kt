@@ -39,9 +39,9 @@ class TranscriptionConfigActivity : AppCompatActivity(),
     private val TAG = "TranscriptionConfigActivity"
 
     private val gson = Gson()
-    
+
     private lateinit var meetingEndpointUrl: String
-      
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_transcription_config)
