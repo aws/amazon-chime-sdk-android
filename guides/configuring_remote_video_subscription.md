@@ -73,4 +73,4 @@ fun pinTile(attendeeId: String) {
 
 ```
 
-`updateVideoSoueceSubscription` will trigger the remote selection logic based on the priority settings of each video then update the tile management accordingly.
+`updateVideoSourceSubscription` will trigger the remote selection logic based on the priority settings of each video then update the tile management accordingly.
