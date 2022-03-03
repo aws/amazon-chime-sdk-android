@@ -1,7 +1,7 @@
 package com.amazonaws.services.chime.sdk.meetings.audiovideo.video
 
 /**
- * Configuration for a specific video configuration.
+ * Configuration for a specific video source.
  * The values are intentionally mutable so that a map of all current configurations can be kept and updated as needed.
  *
  * VideoSubscriptionConfiguration is used to contain the priority and resolution of
