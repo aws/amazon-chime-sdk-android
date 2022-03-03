@@ -62,7 +62,7 @@ data class TranscriptResult(
         result = 31 * result + alternatives.contentHashCode()
         result = 31 * result + languageCode.hashCode()
         languageIdentifications?.let {
-                it -> result = 31 * result + (it.contentHashCode())
+            it -> result = 31 * result + (it.contentHashCode())
         }
         return result
     }

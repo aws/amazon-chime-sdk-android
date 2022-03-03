@@ -138,20 +138,14 @@ class TranscriptionConfigActivity : AppCompatActivity(),
                 }
             },
             languageModelName = customLanguageModel.let {
-                if (!customLanguageModel.isNullOrEmpty()) {
-                    customLanguageModel
-                } else null
+                it?.ifEmpty { null }
             },
             identifyLanguage = identifyLanguage,
             languageOptions = languageOptions.let {
-                if (!languageOptions.isNullOrEmpty()) {
-                    languageOptions
-                } else null
+                it?.ifEmpty { null }
             },
             preferredLanguage = preferredLanguage.let {
-                if (!preferredLanguage.isNullOrEmpty()) {
-                    preferredLanguage
-                } else null
+                it?.ifEmpty { null }
             }
         )
         val transcriptionAdditionalParams = gson.toJson(transcriptionStreamParams)

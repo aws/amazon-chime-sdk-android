@@ -24,15 +24,15 @@ class LanguageOptionsAdapter(
     }
 
     override fun getChildrenCount(listPosition: Int): Int {
-        return languageOptions[languageGroups[listPosition]]?.size!!
+        return languageOptions[languageGroups[listPosition]]?.size ?: 0
     }
 
     override fun getGroup(listPosition: Int): Any {
         return languageGroups[listPosition]
     }
 
-    override fun getChild(listPosition: Int, expandedListPosition: Int): Any {
-        return languageOptions[languageGroups[listPosition]]?.get(expandedListPosition)!!
+    override fun getChild(listPosition: Int, expandedListPosition: Int): TranscribeLanguage? {
+        return languageOptions[languageGroups[listPosition]]?.getOrNull(expandedListPosition)
     }
 
     override fun getGroupId(listPosition: Int): Long {
@@ -47,33 +47,37 @@ class LanguageOptionsAdapter(
         return false
     }
 
-    override fun getGroupView(listPosition: Int, isExpanded: Boolean, convertView_: View?, parent: ViewGroup?): View {
+    override fun getGroupView(listPosition: Int, isExpanded: Boolean, convertView_: View?, parent: ViewGroup?): View? {
         var convertView: View? = convertView_
         val listTitle = getGroup(listPosition) as String
         if (convertView == null) {
             convertView = parent?.inflate(R.layout.row_language_option, false)
         }
-
-        val listTitleTextView: CheckedTextView = convertView!!.findViewById(R.id.languageOption)
-        listTitleTextView.setTypeface(null, Typeface.BOLD)
-        listTitleTextView.checkMarkDrawable = null
-        listTitleTextView.text = listTitle
+        if (convertView != null) {
+            val listTitleTextView: CheckedTextView = convertView.findViewById(R.id.languageOption)
+            listTitleTextView.setTypeface(null, Typeface.BOLD)
+            listTitleTextView.checkMarkDrawable = null
+            listTitleTextView.text = listTitle
+        }
         return convertView
     }
 
-    override fun getChildView(listPosition: Int, expandedListPosition: Int, isLastChild: Boolean, convertView_: View?, ViewGroup: ViewGroup?): View {
+    override fun getChildView(listPosition: Int, expandedListPosition: Int, isLastChild: Boolean, convertView_: View?, ViewGroup: ViewGroup?): View? {
         val expandedListText = (getChild(listPosition, expandedListPosition) as TranscribeLanguage).name
         var convertView = convertView_
         if (convertView == null) {
             val layoutInflater = context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
             convertView = layoutInflater.inflate(R.layout.row_language_option, null)
         }
-        val textView: CheckedTextView = convertView!!.findViewById(R.id.languageOption)
-        val cell = languageOptions[languageGroups[listPosition]]?.get(expandedListPosition)?.let {
-            TranscribeLanguageOption(listPosition, expandedListPosition, it)
+        if (convertView != null) {
+            val textView: CheckedTextView = convertView.findViewById(R.id.languageOption)
+            val cell = languageOptions[languageGroups[listPosition]]?.get(expandedListPosition)?.let {
+                TranscribeLanguageOption(listPosition, expandedListPosition, it)
+            }
+            textView.isChecked = languageOptionsSelected.contains(cell)
+            textView.text = expandedListText
         }
-        textView.isChecked = languageOptionsSelected.contains(cell)
-        textView.text = expandedListText
+
         return convertView
     }
 

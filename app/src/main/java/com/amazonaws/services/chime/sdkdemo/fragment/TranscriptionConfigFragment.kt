@@ -343,10 +343,10 @@ class TranscriptionConfigFragment : Fragment() {
         regionSpinner.isSelected = false
 
         identifyLanguageCheckbox = view.findViewById(R.id.checkboxIdentifyLanguage)
-        languageOptionsTextView = view.findViewById(R.id.testViewLanguageOptions)
-        identifyLanguageCheckbox.setOnCheckedChangeListener { cb, isChecked ->
+        languageOptionsTextView = view.findViewById(R.id.textViewLanguageOptions)
+        identifyLanguageCheckbox.setOnCheckedChangeListener { languageOptionDialogBox, isChecked ->
         if (isChecked) {
-            showLanguageOptionsAlertDialog(cb)
+            showLanguageOptionsAlertDialog(languageOptionDialogBox)
             languageSpinner.isEnabled = false
             piiIdentificationSpinner.isEnabled = false
             piiRedactionSpinner.isEnabled = false
@@ -618,8 +618,7 @@ class TranscriptionConfigFragment : Fragment() {
         customLanguageModelEditText.isEnabled = true
     }
 
-    private fun showLanguageOptionsAlertDialog(cb: CompoundButton) {
-        logger.info(TAG, "" + cb)
+    private fun showLanguageOptionsAlertDialog(languageOptionDialogBox: CompoundButton) {
         val builder = AlertDialog.Builder(this.context)
         val languageOptionsAlertDialog =
             layoutInflater.inflate(R.layout.alert_dialog_language_options, null)
@@ -663,7 +662,8 @@ class TranscriptionConfigFragment : Fragment() {
 
         saveButton.setOnClickListener {
             if (validateLanguageOptions(languageGroups, languageOptionsSelected, languageOptionsAlertDialog)) {
-                val languageOptionsSelected: List<TranscribeLanguage> = languageOptionsSelected.map { x -> x.transcribeLanguage }
+                val languageOptionsSelected: List<TranscribeLanguage> =
+                    languageOptionsSelected.map { languageOptionSelected -> languageOptionSelected.transcribeLanguage }
                 populatePreferredLanguage(languageOptionsSelected, preferredLanguageOptions, preferredLanguageAdapter)
                 languageOptionsTextView.text = String.format("%s %s", getString(R.string.language_options_text_title),
                     languageOptionsSelected.joinToString(", "))
@@ -673,7 +673,7 @@ class TranscriptionConfigFragment : Fragment() {
         }
 
         cancelButton.setOnClickListener {
-            cb.isChecked = false
+            languageOptionDialogBox.isChecked = false
             alertDialog.dismiss()
         }
     }
@@ -685,10 +685,10 @@ class TranscriptionConfigFragment : Fragment() {
     }
 
     private fun formatLanguageOptions(): String {
-        if (languageOptionsSelected.isEmpty()) {
-            return ""
+        return if (languageOptionsSelected.isEmpty()) "" else
+            languageOptionsSelected.joinToString(",") {
+                languageOptionSelected -> languageOptionSelected.transcribeLanguage.code
         }
-        return languageOptionsSelected.joinToString(",") { x -> x.transcribeLanguage.code }
     }
 
     private fun validateLanguageOptions(

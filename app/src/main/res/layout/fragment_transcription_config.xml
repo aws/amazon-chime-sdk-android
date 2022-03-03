@@ -37,8 +37,8 @@
                 android:layout_marginBottom="16dp"
                 android:contentDescription="@string/transcribe_engine_spinner"
                 android:minHeight="48dp"
-                android:paddingLeft="32dp"
-                android:paddingRight="32dp" />
+                android:paddingStart="32dp"
+                android:paddingEnd="32dp" />
 
             <Spinner
                 android:id="@+id/spinnerLanguage"
@@ -47,8 +47,8 @@
                 android:layout_marginBottom="16dp"
                 android:contentDescription="@string/language_setting_spinner"
                 android:minHeight="48dp"
-                android:paddingLeft="32dp"
-                android:paddingRight="32dp" />
+                android:paddingStart="32dp"
+                android:paddingEnd="32dp" />
 
             <Spinner
                 android:id="@+id/spinnerRegion"
@@ -57,8 +57,8 @@
                 android:layout_marginBottom="16dp"
                 android:contentDescription="@string/region_setting_spinner"
                 android:minHeight="48dp"
-                android:paddingLeft="32dp"
-                android:paddingRight="32dp" />
+                android:paddingStart="32dp"
+                android:paddingEnd="32dp" />
 
             <CheckBox
                 android:id="@+id/checkboxIdentifyLanguage"
@@ -75,13 +75,13 @@
                 android:textSize="16sp" />
 
             <TextView
-                android:id="@+id/testViewLanguageOptions"
+                android:id="@+id/textViewLanguageOptions"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="16dp"
                 android:enabled="true"
-                android:paddingLeft="32dp"
-                android:paddingRight="32dp"
+                android:paddingStart="39dp"
+                android:paddingEnd="32dp"
                 android:textAppearance="@style/TextAppearance.AppCompat.Display1"
                 android:textColor="@color/colorText"
                 android:textSize="16sp"
@@ -94,8 +94,8 @@
                 android:layout_marginBottom="16dp"
                 android:contentDescription="@string/preferred_language_spinner"
                 android:minHeight="48dp"
-                android:paddingLeft="32dp"
-                android:paddingRight="32dp"
+                android:paddingStart="32dp"
+                android:paddingEnd="32dp"
                 android:visibility="gone"
                 />
 
@@ -106,8 +106,8 @@
                 android:layout_marginBottom="16dp"
                 android:contentDescription="@string/partial_stability_spinner"
                 android:minHeight="48dp"
-                android:paddingLeft="32dp"
-                android:paddingRight="32dp"
+                android:paddingStart="32dp"
+                android:paddingEnd="32dp"
                 android:visibility="visible"
                 />
 
@@ -118,8 +118,8 @@
                 android:layout_marginBottom="16dp"
                 android:contentDescription="@string/identification_spinner"
                 android:minHeight="48dp"
-                android:paddingLeft="32dp"
-                android:paddingRight="32dp"
+                android:paddingStart="32dp"
+                android:paddingEnd="32dp"
                 android:visibility="visible"
                 />
 
@@ -130,8 +130,8 @@
                 android:layout_marginBottom="16dp"
                 android:contentDescription="@string/redaction_spinner"
                 android:minHeight="48dp"
-                android:paddingLeft="32dp"
-                android:paddingRight="32dp"
+                android:paddingStart="32dp"
+                android:paddingEnd="32dp"
                 android:visibility="visible"
                 />
 
@@ -191,8 +191,8 @@
                 android:layout_marginTop="20dp"
                 android:layout_marginBottom="16dp"
                 android:contentDescription="@string/start_transcription"
-                android:paddingLeft="20dp"
-                android:paddingRight="20dp"
+                android:paddingStart="20dp"
+                android:paddingEnd="20dp"
                 android:text="@string/start_transcription" />
         </LinearLayout>
     </ScrollView>
