@@ -992,7 +992,7 @@ class MeetingFragment : Fragment(),
                 val eventTime = formatTimestamp(transcriptEvent.eventTimeMs)
                 val content =
                     "Live transcription ${transcriptEvent.type} at $eventTime in ${transcriptEvent.transcriptionRegion} with configuration: ${transcriptEvent.transcriptionConfiguration}"
-                val caption = Caption(null, false, content, null, null)
+                val caption = Caption(null, false, content)
                 if (transcriptEvent.type == TranscriptionStatusType.Started) {
                     meetingModel.isLiveTranscriptionEnabled = true
                 }
@@ -1022,7 +1022,7 @@ class MeetingFragment : Fragment(),
                     val caption: Caption
                     val entities = alternative.entities
                     caption = if (entities == null || result.isPartial) {
-                        Caption(speakerName, result.isPartial, alternative.transcript, alternative.items, null)
+                        Caption(speakerName, result.isPartial, alternative.transcript, alternative.items)
                     } else {
                         entities.forEach { entity ->
                             entitySet.addAll(entity.content.split(" "))

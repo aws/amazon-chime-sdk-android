@@ -260,23 +260,23 @@ class DefaultAudioClientObserver(
                                 )
                                 items.add(item)
                             }
-                            val entities = mutableListOf<TranscriptEntity>()
+                            val entities: MutableList<TranscriptEntity>? = mutableListOf<TranscriptEntity>()
                             rawAlternative.entities?.let {
                                 it.forEach { rawEntity ->
                                     val entity = TranscriptEntity(
-                                        rawEntity.type,
+                                        rawEntity.category,
+                                        rawEntity.confidence,
+                                        rawEntity.content,
                                         rawEntity.startTimeMs,
                                         rawEntity.endTimeMs,
-                                        rawEntity.content,
-                                        rawEntity.category,
-                                        rawEntity.confidence
+                                        rawEntity.type
                                     )
-                                    entities.add(entity)
+                                    entities?.add(entity)
                                 }
                             }
                             val alternative = TranscriptAlternative(
                                 items.toTypedArray(),
-                                entities.toTypedArray(),
+                                entities?.toTypedArray(),
                                 rawAlternative.transcript
                             )
                             alternatives.add(alternative)

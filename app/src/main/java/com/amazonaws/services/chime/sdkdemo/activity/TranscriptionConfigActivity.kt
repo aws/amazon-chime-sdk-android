@@ -13,10 +13,7 @@ import com.amazonaws.services.chime.sdk.meetings.internal.utils.HttpUtils
 import com.amazonaws.services.chime.sdk.meetings.utils.logger.ConsoleLogger
 import com.amazonaws.services.chime.sdk.meetings.utils.logger.LogLevel
 import com.amazonaws.services.chime.sdkdemo.R
-import com.amazonaws.services.chime.sdkdemo.data.TranscribeEngine
-import com.amazonaws.services.chime.sdkdemo.data.TranscribeLanguage
-import com.amazonaws.services.chime.sdkdemo.data.TranscribeOption
-import com.amazonaws.services.chime.sdkdemo.data.TranscribeRegion
+import com.amazonaws.services.chime.sdkdemo.data.SpinnerItem
 import com.amazonaws.services.chime.sdkdemo.data.TranscriptionStreamParams
 import com.amazonaws.services.chime.sdkdemo.fragment.TranscriptionConfigFragment
 import com.amazonaws.services.chime.sdkdemo.utils.encodeURLParam
@@ -30,6 +27,12 @@ import kotlinx.coroutines.launch
 class TranscriptionConfigActivity : AppCompatActivity(),
     TranscriptionConfigFragment.TranscriptionConfigurationEventListener {
 
+    private val transcribeContentIdentificationType = "PII"
+    private val transcribeMedicalContentIdentificationType = "PHI"
+    private val transcribeMedicalEngine = "transcribe_medical"
+    private val transcribePartialResultsStabilizationDefault = "default"
+    private val transcribePartialResultsStabilizationHigh = "high"
+
     private val logger = ConsoleLogger(LogLevel.INFO)
 
     private val uiScope = CoroutineScope(Dispatchers.Main)
@@ -41,7 +44,7 @@ class TranscriptionConfigActivity : AppCompatActivity(),
     private val gson = Gson()
     
     private lateinit var meetingEndpointUrl: String
-      
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_transcription_config)
@@ -67,24 +70,24 @@ class TranscriptionConfigActivity : AppCompatActivity(),
     }
 
     override fun onStartTranscription(
-        engine: TranscribeEngine,
-        language: TranscribeLanguage,
-        region: TranscribeRegion,
-        partialResultsStability: TranscribeOption,
-        contentIdentificationType: TranscribeOption,
-        contentRedactionType: TranscribeOption,
+        engine: SpinnerItem,
+        language: SpinnerItem,
+        region: SpinnerItem,
+        partialResultsStability: SpinnerItem,
+        contentIdentificationType: SpinnerItem,
+        contentRedactionType: SpinnerItem,
         languageModelName: String
     ) {
         uiScope.launch {
             val response: String? =
                 enableMeetingTranscription(
                     meetingId,
-                    engine.engine,
-                    language.code,
-                    region.code,
-                    partialResultsStability.content,
-                    contentIdentificationType.content,
-                    contentRedactionType.content,
+                    engine.spinnerText,
+                    language.spinnerText,
+                    region.spinnerText,
+                    partialResultsStability.spinnerText,
+                    contentIdentificationType.spinnerText,
+                    contentRedactionType.spinnerText,
                     languageModelName
                 )
 
@@ -108,16 +111,16 @@ class TranscriptionConfigActivity : AppCompatActivity(),
         customLanguageModel: String
     ): String? {
         val partialResultsStabilizationEnabled = transcribePartialResultsStabilization != null
-        val isTranscribeMedical = transcribeEngine.equals("transcribe_medical")
+        val isTranscribeMedical = transcribeEngine.equals(transcribeMedicalEngine)
         val transcriptionStreamParams = TranscriptionStreamParams(
             contentIdentificationType = transcribeContentIdentification?.let {
-                if (isTranscribeMedical) "PHI"
-                else "PII"
+                if (isTranscribeMedical) transcribeMedicalContentIdentificationType
+                else transcribeContentIdentificationType
             },
-            contentRedactionType = transcribeContentRedaction?.let { "PII" },
+            contentRedactionType = transcribeContentRedaction?.let { transcribeContentIdentificationType },
             enablePartialResultsStabilization = partialResultsStabilizationEnabled,
             partialResultsStability = transcribePartialResultsStabilization?.let {
-                if (it == "default") "high"
+                if (it == transcribePartialResultsStabilizationDefault) transcribePartialResultsStabilizationHigh
                 else it
             },
             piiEntityTypes = transcribeContentIdentification.let { identification ->

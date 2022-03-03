@@ -43,6 +43,9 @@ class CaptionAdapter(
 class CaptionHolder(inflatedView: View) :
     RecyclerView.ViewHolder(inflatedView) {
     private var view: View = inflatedView
+    private val upperThreshold = 0.3
+    private val lowerThreshold = 0.0
+    private val filteredCaptionFirstIndex = "["
 
     fun bindCaption(caption: Caption, position: Int) {
         val speakerName = caption.speakerName ?: ""
@@ -67,8 +70,8 @@ class CaptionHolder(inflatedView: View) :
             // Underline words with low confidence score.
             items.forEach { item ->
                 val word = item.content
-                val hasLowConfidence = item.confidence?.let { it < 0.3 && it > 0.0 } ?: run { false }
-                val isCorrectContentType = !word.startsWith("[") && item.type != TranscriptItemType.Punctuation
+                val hasLowConfidence = item.confidence?.let { it > lowerThreshold && it < upperThreshold } ?: run { false }
+                val isCorrectContentType = !word.startsWith(filteredCaptionFirstIndex) && item.type != TranscriptItemType.Punctuation
                 if (hasLowConfidence && isCorrectContentType && caption.content.contains(word)) {
                     spannable.setSpan(
                         CustomUnderlineSpan(Color.RED, caption.content.indexOf(word), caption.content.indexOf(word) + word.length),
@@ -101,8 +104,8 @@ private class CustomUnderlineSpan(underlineColor: Int, underlineStart: Int, unde
     }
 
     override fun drawBackground(
-        c: Canvas,
-        p: Paint,
+        canvas: Canvas,
+        paint: Paint,
         left: Int,
         right: Int,
         top: Int,
@@ -118,13 +121,13 @@ private class CustomUnderlineSpan(underlineColor: Int, underlineStart: Int, unde
 
         var offsetX = 0
         if (this.start > start) {
-            offsetX = p.measureText(text.subSequence(start, this.start).toString()).toInt()
+            offsetX = paint.measureText(text.subSequence(start, this.start).toString()).toInt()
         }
 
-        val length = p.measureText(text.subSequence(
+        val length = paint.measureText(text.subSequence(
             Math.max(start, this.start),
             Math.min(end, this.end)
         ).toString()).toInt()
-        c.drawLine(offsetX.toFloat(), baseline + 3F, (length + offsetX).toFloat(), baseline + 3F, this.p)
+        canvas.drawLine(offsetX.toFloat(), baseline + 3F, (length + offsetX).toFloat(), baseline + 3F, this.p)
     }
 }

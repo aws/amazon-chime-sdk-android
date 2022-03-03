@@ -6,22 +6,23 @@
 ### Added
 * [Demo] Added overridden endpoint url capability to live transcription API.
 
+### Added
+* Adds support for new features from Transcribe Streaming Service including content identification and redaction, partial results stabilization, and custom language models to live transcription.
+  * The personal information identification feature identifies/redacts personal information such as credit card info, addresses, SSN, etc. from live transcription. More information can be found [here](https://aws.amazon.com/blogs/machine-learning/introducing-pii-identification-and-redaction-in-streaming-transcriptions-using-amazon-transcribe/).
+  * The partial results stabilization feature allows you to enable and configure partial results stabilization for streaming audio transcriptions. More information can be found [here](https://docs.aws.amazon.com/transcribe/latest/dg/result-stabilization.html).
+  * Custom language models lets you upload custom models to improve transcription accuracy for your specific use case.  More information can be found [here](https://aws.amazon.com/about-aws/whats-new/2020/08/amazon-transcribe-launches-custom-language-models/).
+
+* [Demo] Added personal information identification/redaction, partial results stabilization, and custom language model features for meeting captions based on the live transcription APIs.
+
+
 ## [0.15.0] - 2022-02-24
 
 ### Added
-* Supports integration of personal information identification/redaction, partial results stabilization, and custom language models with Amazon Transcribe and Amazon Transcribe Medical for live transcription. The PII feature identifies/redacts personal information such as credit card info, addresses, SSN, etc. from live transcription. The partial results stabilization feature allows you to enable and configure partial results stabilization for streaming audio transcriptions. Custom language models lets you upload custom models to improve transcription accuracy for your specific use case.
-
-* [Demo] Added PII identification/redaction, partial stability, and custom language model features for meeting captions based on the live transcription APIs.
-
-## Unreleased
-
-###Added
 * Added the meetingStartDurationMs event in ingestionEvents to record the time that elapsed between the start request and the beginning of the meeting.
 * Added priority based downlink policy to control the way how a recipient subscribes to the remote video sources
 
-## Unreleased
-
 ## [0.14.3] - 2022-02-10
+
 ## [0.14.2] - 2022-01-27
 
 ### Added
@@ -125,13 +126,13 @@
 
 ### Added
 * Added Analytics
-    * `EventAnalyticsController`, `EventAnalyticsFacade`, `EventAnalyticsObserver` to handle analytics.
-    * Added `EventAttributes`, `EventName`, `MeetingHistoryEventName` for meeting event information.
-    * Added `externalMeetingId` to property of `MeetingSessionConfiguration`.
-    * Added `PermissionError` to `CaptureSourceError`.
-    * **Breaking** Added `eventAnalyticsController` to property of `AudioVideoFacade`.
-    * [Demo] Added `PostLogger` to demo application to showcase sending events to backend.
-    * [Documentation] Added analytics API usage documentation.
+  * `EventAnalyticsController`, `EventAnalyticsFacade`, `EventAnalyticsObserver` to handle analytics.
+  * Added `EventAttributes`, `EventName`, `MeetingHistoryEventName` for meeting event information.
+  * Added `externalMeetingId` to property of `MeetingSessionConfiguration`.
+  * Added `PermissionError` to `CaptureSourceError`.
+  * **Breaking** Added `eventAnalyticsController` to property of `AudioVideoFacade`.
+  * [Demo] Added `PostLogger` to demo application to showcase sending events to backend.
+  * [Documentation] Added analytics API usage documentation.
 
 ### Changed
 * Analytics
@@ -263,7 +264,7 @@ This release includes support for custom video sources, and therefore includes a
 ## [0.7.2] - 2020-09-01
 
 ### Fixed
-* Fixed the issue that `listAudioDevices` does not return built-in handset for some devices 
+* Fixed the issue that `listAudioDevices` does not return built-in handset for some devices
 * Fixed a bug that attendee events got filtered out due to absence of `externalUserId`
 
 ## [0.7.1] - 2020-08-13

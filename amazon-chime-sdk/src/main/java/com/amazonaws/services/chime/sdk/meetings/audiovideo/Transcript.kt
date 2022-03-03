@@ -71,13 +71,11 @@ data class TranscriptAlternative(
         if (!items.contentEquals(other.items)) return false
         if (transcript != other.transcript) return false
 
-        entities?.let { thisEntity ->
-            if (other.entities?.let { thisEntity.contentEquals(it) } == false) {
-                return false
-            }
+        return if (entities == null) {
+            other.entities == null
+        } else {
+            other.entities?.let { entities.contentEquals(it) } ?: false
         }
-
-        return true
     }
 
     override fun hashCode(): Int {
@@ -99,12 +97,12 @@ data class TranscriptItem(
 )
 
 data class TranscriptEntity(
-    val type: String?,
+    val category: String,
+    val confidence: Double,
+    val content: String,
     val startTimeMs: Long,
     val endTimeMs: Long,
-    val content: String,
-    val category: String,
-    val confidence: Double
+    val type: String?
 )
 
 data class TranscriptionStatus(
