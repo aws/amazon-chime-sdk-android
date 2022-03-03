@@ -41,9 +41,9 @@ class TranscriptionConfigActivity : AppCompatActivity(),
 
     private val TAG = "TranscriptionConfigActivity"
 
-    private val gson = Gson()
-    
     private lateinit var meetingEndpointUrl: String
+
+    private val gson = Gson()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
