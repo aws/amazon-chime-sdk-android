@@ -119,13 +119,13 @@
 
 ### Added
 * Added Analytics
-  * `EventAnalyticsController`, `EventAnalyticsFacade`, `EventAnalyticsObserver` to handle analytics.
-  * Added `EventAttributes`, `EventName`, `MeetingHistoryEventName` for meeting event information.
-  * Added `externalMeetingId` to property of `MeetingSessionConfiguration`.
-  * Added `PermissionError` to `CaptureSourceError`.
-  * **Breaking** Added `eventAnalyticsController` to property of `AudioVideoFacade`.
-  * [Demo] Added `PostLogger` to demo application to showcase sending events to backend.
-  * [Documentation] Added analytics API usage documentation.
+    * `EventAnalyticsController`, `EventAnalyticsFacade`, `EventAnalyticsObserver` to handle analytics.
+    * Added `EventAttributes`, `EventName`, `MeetingHistoryEventName` for meeting event information.
+    * Added `externalMeetingId` to property of `MeetingSessionConfiguration`.
+    * Added `PermissionError` to `CaptureSourceError`.
+    * **Breaking** Added `eventAnalyticsController` to property of `AudioVideoFacade`.
+    * [Demo] Added `PostLogger` to demo application to showcase sending events to backend.
+    * [Documentation] Added analytics API usage documentation.
 
 ### Changed
 * Analytics
@@ -257,7 +257,7 @@ This release includes support for custom video sources, and therefore includes a
 ## [0.7.2] - 2020-09-01
 
 ### Fixed
-* Fixed the issue that `listAudioDevices` does not return built-in handset for some devices
+* Fixed the issue that `listAudioDevices` does not return built-in handset for some devices 
 * Fixed a bug that attendee events got filtered out due to absence of `externalUserId`
 
 ## [0.7.1] - 2020-08-13
