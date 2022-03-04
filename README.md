@@ -37,6 +37,7 @@ And review the following guides:
 * [Content Share](guides/content_share.md)
 * [Meeting Events](guides/meeting_events.md)
 * [Event Ingestion](guides/event_ingestion.md)
+* [Configuring Remote Video Subscription](guides/configuring_remote_video_subscription.md)
 
 ## Setup
 

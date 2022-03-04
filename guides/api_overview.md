@@ -350,3 +350,7 @@ You can implement the following callbacks:
 You will receive content share metrics if you registered a metric observer by [9.Receiving metrics (optional)](https://github.com/aws/amazon-chime-sdk-android/blob/master/guides/api_overview.md#9-receiving-metrics-optional).
 
 Content share metrics will be prefixed by `contentShare`. Or you can use the [isContentShareMetric()](https://aws.github.io/amazon-chime-sdk-android/amazon-chime-sdk/com.amazonaws.services.chime.sdk.meetings.audiovideo.metric/-observable-metric/is-content-share-metric.html) to help identify a content share metric.
+
+## 14. Configuring Remote Video Subscriptions (optional)
+
+Amazon Chime SDK allows builders to have complete control over the remote videos received by each of their application’s end-users. This can be accomplished using the API [AudioVideoFacade.updateVideoSourceSubscriptions](https://aws.github.io/amazon-chime-sdk-android/amazon-chime-sdk/com.amazonaws.services.chime.sdk.meetings.audiovideo/-default-audio-video-facade/update-video-source-subscriptions.html). See [Configuring Remote Video Subscriptions](guides/configuring_remote_video_subscription.md) for more information.
