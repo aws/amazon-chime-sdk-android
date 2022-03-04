@@ -267,7 +267,7 @@ class DefaultAudioClientObserver(
                                         rawEntity.confidence,
                                         rawEntity.content,
                                         rawEntity.startTimeMs,
-                                        rawResult.endTimeMs,
+                                        rawEntity.endTimeMs,
                                         rawEntity.type
                                     )
                                 }.toTypedArray() ?: run { null }
