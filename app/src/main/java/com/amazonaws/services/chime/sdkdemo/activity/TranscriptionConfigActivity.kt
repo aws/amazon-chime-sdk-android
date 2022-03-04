@@ -27,11 +27,13 @@ import kotlinx.coroutines.launch
 class TranscriptionConfigActivity : AppCompatActivity(),
     TranscriptionConfigFragment.TranscriptionConfigurationEventListener {
 
-    private val transcribeContentIdentificationType = "PII"
-    private val transcribeMedicalContentIdentificationType = "PHI"
-    private val transcribeMedicalEngine = "transcribe_medical"
-    private val transcribePartialResultsStabilizationDefault = "default"
-    private val transcribePartialResultsStabilizationHigh = "high"
+    companion object {
+        private const val TRANSCRIBE_CONTENT_IDENTIFICATION_TYPE = "PII"
+        private const val TRANSCRIBE_MEDICAL_CONTENT_IDENTIFICATION_TYPE = "PHI"
+        private const val TRANSCRIBE_MEDICAL_ENGINE = "transcribe_medical"
+        private const val TRANSCRIBE_PARTIAL_RESULTS_STABILIZATION_DEFAULT = "default"
+        private const val TRANSCRIBE_PARTIAL_RESULTS_STABILIZATION_HIGH = "high"
+    }
 
     private val logger = ConsoleLogger(LogLevel.INFO)
 
@@ -111,29 +113,23 @@ class TranscriptionConfigActivity : AppCompatActivity(),
         customLanguageModel: String
     ): String? {
         val partialResultsStabilizationEnabled = transcribePartialResultsStabilization != null
-        val isTranscribeMedical = transcribeEngine.equals(transcribeMedicalEngine)
+        val isTranscribeMedical = transcribeEngine.equals(TRANSCRIBE_MEDICAL_ENGINE)
         val transcriptionStreamParams = TranscriptionStreamParams(
             contentIdentificationType = transcribeContentIdentification?.let {
-                if (isTranscribeMedical) transcribeMedicalContentIdentificationType
-                else transcribeContentIdentificationType
+                if (isTranscribeMedical) TRANSCRIBE_MEDICAL_CONTENT_IDENTIFICATION_TYPE
+                else TRANSCRIBE_CONTENT_IDENTIFICATION_TYPE
             },
-            contentRedactionType = transcribeContentRedaction?.let { transcribeContentIdentificationType },
+            contentRedactionType = transcribeContentRedaction?.let { TRANSCRIBE_CONTENT_IDENTIFICATION_TYPE },
             enablePartialResultsStabilization = partialResultsStabilizationEnabled,
             partialResultsStability = transcribePartialResultsStabilization?.let {
-                if (it == transcribePartialResultsStabilizationDefault) transcribePartialResultsStabilizationHigh
+                if (it == TRANSCRIBE_PARTIAL_RESULTS_STABILIZATION_DEFAULT) TRANSCRIBE_PARTIAL_RESULTS_STABILIZATION_HIGH
                 else it
             },
-            piiEntityTypes = transcribeContentIdentification.let { identification ->
-                if (identification == "" || isTranscribeMedical) null
+            piiEntityTypes = transcribeContentIdentification?.let { identification ->
+                if (identification.isEmpty() || isTranscribeMedical) null
                 else identification
-            } ?: run { transcribeContentRedaction.let { redaction ->
-                if (redaction == "") null
-                else redaction
-                }
-            },
-            languageModelName = customLanguageModel.let {
-                it.ifEmpty { null }
-            }
+            } ?: run { if (transcribeContentRedaction.isNullOrEmpty()) null else transcribeContentRedaction },
+            languageModelName = customLanguageModel.ifEmpty { null }
         )
         val transcriptionAdditionalParams = gson.toJson(transcriptionStreamParams)
 

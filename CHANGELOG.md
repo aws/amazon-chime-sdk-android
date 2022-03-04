@@ -4,16 +4,9 @@
 * Catch and ignore the exception from rendering one video frame and move on to the next. This helps workaround a openGL error on some Android 12 devices at initial rendering phase.
 
 ### Added
+* Added support to live transcription for new features including personally identifiable information content identification and redaction, partial results stabilization, and custom language models for Amazon Transcribe and PHI content identification for Amazon Transcribe Medical.
+* [Demo] Added language identification configuration for live transcription API.
 * [Demo] Added overridden endpoint url capability to live transcription API.
-
-### Added
-* Adds support for new features from Transcribe Streaming Service including content identification and redaction, partial results stabilization, and custom language models to live transcription.
-  * The personal information identification feature identifies/redacts personal information such as credit card info, addresses, SSN, etc. from live transcription. More information can be found [here](https://aws.amazon.com/blogs/machine-learning/introducing-pii-identification-and-redaction-in-streaming-transcriptions-using-amazon-transcribe/).
-  * The partial results stabilization feature allows you to enable and configure partial results stabilization for streaming audio transcriptions. More information can be found [here](https://docs.aws.amazon.com/transcribe/latest/dg/result-stabilization.html).
-  * Custom language models lets you upload custom models to improve transcription accuracy for your specific use case.  More information can be found [here](https://aws.amazon.com/about-aws/whats-new/2020/08/amazon-transcribe-launches-custom-language-models/).
-
-* [Demo] Added personal information identification/redaction, partial results stabilization, and custom language model features for meeting captions based on the live transcription APIs.
-
 
 ## [0.15.0] - 2022-02-24
 

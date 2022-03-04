@@ -42,10 +42,14 @@ class CaptionAdapter(
 
 class CaptionHolder(inflatedView: View) :
     RecyclerView.ViewHolder(inflatedView) {
+
+    companion object {
+        private const val UPPER_THRESHOLD = 0.3
+        private const val LOWER_THRESHOLD = 0.0
+        private const val FILTERED_CAPTION_FIRST_INDEX = "["
+    }
+
     private var view: View = inflatedView
-    private val upperThreshold = 0.3
-    private val lowerThreshold = 0.0
-    private val filteredCaptionFirstIndex = "["
 
     fun bindCaption(caption: Caption, position: Int) {
         val speakerName = caption.speakerName ?: ""
@@ -70,8 +74,8 @@ class CaptionHolder(inflatedView: View) :
             // Underline words with low confidence score.
             items.forEach { item ->
                 val word = item.content
-                val hasLowConfidence = item.confidence?.let { it > lowerThreshold && it < upperThreshold } ?: run { false }
-                val isCorrectContentType = !word.startsWith(filteredCaptionFirstIndex) && item.type != TranscriptItemType.Punctuation
+                val hasLowConfidence = item.confidence?.let { it > LOWER_THRESHOLD && it < UPPER_THRESHOLD } ?: run { false }
+                val isCorrectContentType = !word.startsWith(FILTERED_CAPTION_FIRST_INDEX) && item.type != TranscriptItemType.Punctuation
                 if (hasLowConfidence && isCorrectContentType && caption.content.contains(word)) {
                     spannable.setSpan(
                         CustomUnderlineSpan(Color.RED, caption.content.indexOf(word), caption.content.indexOf(word) + word.length),
@@ -91,16 +95,16 @@ private class CustomUnderlineSpan(underlineColor: Int, underlineStart: Int, unde
     var color: Int
     var start: Int
     var end: Int
-    var p: Paint
+    var underlinePaint: Paint
 
     init {
         this.color = underlineColor
         this.start = underlineStart
         this.end = underlineEnd
-        p = Paint()
-        p.setColor(color)
-        p.strokeWidth = 3F
-        p.style = Paint.Style.FILL_AND_STROKE
+        underlinePaint = Paint()
+        underlinePaint.setColor(color)
+        underlinePaint.strokeWidth = 3F
+        underlinePaint.style = Paint.Style.FILL_AND_STROKE
     }
 
     override fun drawBackground(
@@ -128,6 +132,6 @@ private class CustomUnderlineSpan(underlineColor: Int, underlineStart: Int, unde
             Math.max(start, this.start),
             Math.min(end, this.end)
         ).toString()).toInt()
-        canvas.drawLine(offsetX.toFloat(), baseline + 3F, (length + offsetX).toFloat(), baseline + 3F, this.p)
+        canvas.drawLine(offsetX.toFloat(), baseline + 3F, (length + offsetX).toFloat(), baseline + 3F, this.underlinePaint)
     }
 }
