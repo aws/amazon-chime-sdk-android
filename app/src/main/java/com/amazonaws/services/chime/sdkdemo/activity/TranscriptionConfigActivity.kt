@@ -13,10 +13,7 @@ import com.amazonaws.services.chime.sdk.meetings.internal.utils.HttpUtils
 import com.amazonaws.services.chime.sdk.meetings.utils.logger.ConsoleLogger
 import com.amazonaws.services.chime.sdk.meetings.utils.logger.LogLevel
 import com.amazonaws.services.chime.sdkdemo.R
-import com.amazonaws.services.chime.sdkdemo.data.TranscribeEngine
-import com.amazonaws.services.chime.sdkdemo.data.TranscribeLanguage
-import com.amazonaws.services.chime.sdkdemo.data.TranscribeOption
-import com.amazonaws.services.chime.sdkdemo.data.TranscribeRegion
+import com.amazonaws.services.chime.sdkdemo.data.SpinnerItem
 import com.amazonaws.services.chime.sdkdemo.data.TranscriptionStreamParams
 import com.amazonaws.services.chime.sdkdemo.fragment.TranscriptionConfigFragment
 import com.amazonaws.services.chime.sdkdemo.utils.encodeURLParam
@@ -30,6 +27,14 @@ import kotlinx.coroutines.launch
 class TranscriptionConfigActivity : AppCompatActivity(),
     TranscriptionConfigFragment.TranscriptionConfigurationEventListener {
 
+    companion object {
+        private const val TRANSCRIBE_CONTENT_IDENTIFICATION_TYPE = "PII"
+        private const val TRANSCRIBE_MEDICAL_CONTENT_IDENTIFICATION_TYPE = "PHI"
+        private const val TRANSCRIBE_MEDICAL_ENGINE = "transcribe_medical"
+        private const val TRANSCRIBE_PARTIAL_RESULTS_STABILIZATION_DEFAULT = "default"
+        private const val TRANSCRIBE_PARTIAL_RESULTS_STABILIZATION_HIGH = "high"
+    }
+
     private val logger = ConsoleLogger(LogLevel.INFO)
 
     private val uiScope = CoroutineScope(Dispatchers.Main)
@@ -38,9 +43,9 @@ class TranscriptionConfigActivity : AppCompatActivity(),
 
     private val TAG = "TranscriptionConfigActivity"
 
-    private val gson = Gson()
-
     private lateinit var meetingEndpointUrl: String
+
+    private val gson = Gson()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -67,28 +72,28 @@ class TranscriptionConfigActivity : AppCompatActivity(),
     }
 
     override fun onStartTranscription(
-        engine: TranscribeEngine,
-        language: TranscribeLanguage?,
-        region: TranscribeRegion,
-        partialResultsStability: TranscribeOption,
-        contentIdentificationType: TranscribeOption?,
-        contentRedactionType: TranscribeOption?,
-        languageModelName: String?,
+        engine: SpinnerItem,
+        language: SpinnerItem,
+        region: SpinnerItem,
+        partialResultsStability: SpinnerItem,
+        contentIdentificationType: SpinnerItem,
+        contentRedactionType: SpinnerItem,
+        languageModelName: String
         identifyLanguage: Boolean,
         languageOptions: String?,
-        preferredLanguage: TranscribeLanguage?
+        preferredLanguage: SpinnerItem?
     ) {
         uiScope.launch {
             val response: String? =
                 enableMeetingTranscription(
                     meetingId,
-                    engine.engine,
-                    language?.code,
-                    region.code,
-                    partialResultsStability.content,
-                    contentIdentificationType?.content,
-                    contentRedactionType?.content,
-                    languageModelName,
+                    engine.spinnerText,
+                    language?.spinnerText,
+                    region.spinnerText,
+                    partialResultsStability.spinnerText,
+                    contentIdentificationType.spinnerText,
+                    contentRedactionType.spinnerText,
+                    languageModelName
                     identifyLanguage,
                     languageOptions,
                     preferredLanguage?.code
@@ -117,36 +122,26 @@ class TranscriptionConfigActivity : AppCompatActivity(),
         preferredLanguage: String?
     ): String? {
         val partialResultsStabilizationEnabled = transcribePartialResultsStabilization != null
-        val isTranscribeMedical = engine.equals("transcribe_medical")
+        val isTranscribeMedical = transcribeEngine.equals(TRANSCRIBE_MEDICAL_ENGINE)
         val transcriptionStreamParams = TranscriptionStreamParams(
             contentIdentificationType = transcribeContentIdentification?.let {
-                if (isTranscribeMedical) "PHI"
-                else "PII"
+                if (isTranscribeMedical) TRANSCRIBE_MEDICAL_CONTENT_IDENTIFICATION_TYPE
+                else TRANSCRIBE_CONTENT_IDENTIFICATION_TYPE
             },
-            contentRedactionType = transcribeContentRedaction?.let { "PII" },
+            contentRedactionType = transcribeContentRedaction?.let { TRANSCRIBE_CONTENT_IDENTIFICATION_TYPE },
             enablePartialResultsStabilization = partialResultsStabilizationEnabled,
             partialResultsStability = transcribePartialResultsStabilization?.let {
-                if (it == "default") "high"
+                if (it == TRANSCRIBE_PARTIAL_RESULTS_STABILIZATION_DEFAULT) TRANSCRIBE_PARTIAL_RESULTS_STABILIZATION_HIGH
                 else it
             },
-            piiEntityTypes = transcribeContentIdentification.let { identification ->
-                if (identification == "" || isTranscribeMedical) null
+            piiEntityTypes = transcribeContentIdentification?.let { identification ->
+                if (identification.isEmpty() || isTranscribeMedical) null
                 else identification
-            } ?: run { transcribeContentRedaction.let { redaction ->
-                if (redaction == "") null
-                else redaction
-                }
-            },
-            languageModelName = customLanguageModel.let {
-                it?.ifEmpty { null }
-            },
+            } ?: run { if (transcribeContentRedaction.isNullOrEmpty()) null else transcribeContentRedaction },
+            languageModelName = customLanguageModel.ifEmpty { null },
             identifyLanguage = identifyLanguage,
-            languageOptions = languageOptions.let {
-                it?.ifEmpty { null }
-            },
-            preferredLanguage = preferredLanguage.let {
-                it?.ifEmpty { null }
-            }
+            languageOptions = languageOptions.ifEmpty { null },
+            preferredLanguage = preferredLanguage.ifEmpty { null }
         )
         val transcriptionAdditionalParams = gson.toJson(transcriptionStreamParams)
         val languageCodeParams = if (isTranscribeMedical || (!isTranscribeMedical && identifyLanguage == false)) {

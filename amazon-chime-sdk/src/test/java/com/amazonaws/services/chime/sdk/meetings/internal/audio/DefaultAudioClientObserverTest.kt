@@ -661,7 +661,7 @@ class DefaultAudioClientObserverTest {
                             0.0
                         )
                     ),
-                    null,
+                    arrayOf(),
                     "I am"
                 )
             ),
@@ -699,7 +699,7 @@ class DefaultAudioClientObserverTest {
                             0.0
                         )
                     ),
-                    null,
+                    arrayOf(),
                     "a guardian"
                 )
             ),
@@ -744,7 +744,7 @@ class DefaultAudioClientObserverTest {
                                     true
                                 )
                             ),
-                            null,
+                            arrayOf(),
                             "I am"
                         )
                     ),
@@ -786,7 +786,7 @@ class DefaultAudioClientObserverTest {
                                     true
                                 )
                             ),
-                            null,
+                            arrayOf(),
                             "a guardian"
                         )
                     ),
@@ -812,7 +812,7 @@ class DefaultAudioClientObserverTest {
         val transcriptResultItem = TranscriptItemInternal(TranscriptItemTypeInternal.TranscriptItemTypePronunciation,
             timestampMs, timestampMs + 5L, AttendeeInfoInternal(testId1, testId1), "I", true, true, 0.0)
 
-        val transcriptResultEntity = TranscriptEntityInternal("NAME", "PII", "John Doe", 1.0, timestampMs + 5L, timestampMs + 10L)
+        val transcriptResultEntity = TranscriptEntityInternal("PII", "NAME", "John Doe", 1.0, timestampMs + 5L, timestampMs + 10L)
 
         val transcriptResultAlternative = TranscriptAlternativeInternal(arrayOf(transcriptResultItem), arrayOf(transcriptResultEntity), "I am")
 
@@ -823,8 +823,7 @@ class DefaultAudioClientObserverTest {
         val expectedTranscriptItem = TranscriptItem(TranscriptItemType.Pronunciation, timestampMs, timestampMs + 5L,
             AttendeeInfo(testId1, testId1), "I", true, 0.0, true)
 
-        val expectedTranscriptEntity = TranscriptEntity("NAME", timestampMs + 5L, timestampMs + 10L,
-            "John Doe", "PII", 1.0)
+        val expectedTranscriptEntity = TranscriptEntity("NAME", 1.0, "John Doe", timestampMs + 5L, timestampMs + 10L, "PII")
 
         val expectedTranscriptAlternative = TranscriptAlternative(arrayOf(expectedTranscriptItem), arrayOf(expectedTranscriptEntity),
             "I am")

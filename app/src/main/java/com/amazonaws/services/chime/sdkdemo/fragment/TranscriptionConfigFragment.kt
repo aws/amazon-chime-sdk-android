@@ -30,11 +30,8 @@ import com.amazonaws.services.chime.sdk.meetings.utils.logger.LogLevel
 import com.amazonaws.services.chime.sdkdemo.R
 import com.amazonaws.services.chime.sdkdemo.activity.HomeActivity
 import com.amazonaws.services.chime.sdkdemo.adapter.LanguageOptionsAdapter
-import com.amazonaws.services.chime.sdkdemo.data.TranscribeEngine
-import com.amazonaws.services.chime.sdkdemo.data.TranscribeLanguage
+import com.amazonaws.services.chime.sdkdemo.data.SpinnerItem
 import com.amazonaws.services.chime.sdkdemo.data.TranscribeLanguageOption
-import com.amazonaws.services.chime.sdkdemo.data.TranscribeOption
-import com.amazonaws.services.chime.sdkdemo.data.TranscribeRegion
 import java.lang.ClassCastException
 import kotlinx.android.synthetic.main.fragment_transcription_config.checkboxCustomLanguageModel
 import kotlinx.android.synthetic.main.fragment_transcription_config.checkboxPHIContentIdentification
@@ -45,8 +42,8 @@ import kotlinx.coroutines.launch
 class TranscriptionConfigFragment : Fragment() {
     private val logger = ConsoleLogger(LogLevel.INFO)
     private val uiScope = CoroutineScope(Dispatchers.Main)
-    private var languages = mutableListOf<TranscribeLanguage>()
-    private var regions = mutableListOf<TranscribeRegion>()
+    private var languages = mutableListOf<SpinnerItem>()
+    private var regions = mutableListOf<SpinnerItem>()
 
     private val languageGroups = arrayListOf<String>(
         "English",
@@ -106,7 +103,7 @@ class TranscriptionConfigFragment : Fragment() {
         "us-west-2" to "United States (Oregon)"
     )
 
-    private val transcribeLanguages: List<TranscribeLanguage> = arrayOf(
+    private val transcribeLanguages: List<SpinnerItem> = arrayOf(
         "en-US",
         "es-US",
         "en-GB",
@@ -121,11 +118,11 @@ class TranscriptionConfigFragment : Fragment() {
         "zh-CN"
     ).mapNotNull { l ->
         languagesMap[l]?.let {
-            TranscribeLanguage(l, it)
+            SpinnerItem(l, it)
         }
     }
 
-    private val transcribeRegions: List<TranscribeRegion> = arrayOf(
+    private val transcribeRegions: List<SpinnerItem> = arrayOf(
         "auto",
         "",
         "ap-northeast-1",
@@ -141,21 +138,21 @@ class TranscriptionConfigFragment : Fragment() {
         "us-west-2"
     ).mapNotNull { l ->
         regionsMap[l]?.let {
-            TranscribeRegion(l, it)
+            SpinnerItem(l, it)
         }
     }
 
-    private val transcribePartialResultStabilizationValues: List<TranscribeOption> = mapOf<String?, String>(
+    private val transcribePartialResultStabilizationValues: List<SpinnerItem> = mapOf<String?, String>(
         null to "Enable Partial Results Stabilization",
         "default" to "-- DEFAULT (HIGH) --",
         "low" to "Low",
         "medium" to "Medium",
         "high" to "High"
     ).map {
-        TranscribeOption(it.key, it.value)
+        SpinnerItem(it.key, it.value)
     }
 
-    private val transcribePiiOptions: List<TranscribeOption> = mapOf<String, String>(
+    private val transcribePiiOptions: List<SpinnerItem> = mapOf<String, String>(
         "" to "ALL",
         "BANK_ROUTING" to "BANK ROUTING",
         "CREDIT_DEBIT_NUMBER" to "CREDIT/DEBIT NUMBER",
@@ -168,7 +165,7 @@ class TranscriptionConfigFragment : Fragment() {
         "PHONE" to "PHONE NUMBER",
         "SSN" to "SSN"
     ).map {
-        TranscribeOption(it.key, it.value)
+        SpinnerItem(it.key, it.value)
     }
 
     private val transcribePreferredLanguageDefaultOption: List<TranscribeLanguage> = mapOf<String, String>(
@@ -177,21 +174,21 @@ class TranscriptionConfigFragment : Fragment() {
         TranscribeLanguage(it.key, it.value)
     }
 
-    private val transcribeIdentificationOptions: MutableList<TranscribeOption> = mutableListOf<TranscribeOption>()
-    private val transcribeRedactionOptions: MutableList<TranscribeOption> = mutableListOf<TranscribeOption>()
-    private val transcribePartialResultStabilizationOptions: MutableList<TranscribeOption> = transcribePartialResultStabilizationValues.toMutableList()
-    private val preferredLanguageOptions: MutableList<TranscribeLanguage> = mutableListOf<TranscribeLanguage>()
+    private val transcribeIdentificationOptions: MutableList<SpinnerItem> = mutableListOf<SpinnerItem>()
+    private val transcribeRedactionOptions: MutableList<SpinnerItem> = mutableListOf<SpinnerItem>()
+    private val transcribePartialResultStabilizationOptions: MutableList<SpinnerItem> = transcribePartialResultStabilizationValues.toMutableList()
+    private val preferredLanguageOptions: MutableList<SpinnerItem> = mutableListOf<SpinnerItem>()
     private val languageOptionsSelected: MutableSet<TranscribeLanguageOption> = mutableSetOf<TranscribeLanguageOption>()
-    private val languageOptions: HashMap<String, MutableList<TranscribeLanguage?>> = HashMap()
+    private val languageOptions: HashMap<String, MutableList<SpinnerItem?>> = HashMap()
 
-    private val transcribeMedicalLanguages: List<TranscribeLanguage> =
+    private val transcribeMedicalLanguages: List<SpinnerItem> =
         arrayOf("en-US").mapNotNull { l ->
             languagesMap[l]?.let {
-                TranscribeLanguage(l, it)
+                SpinnerItem(l, it)
         }
     }
 
-    private val transcribeMedicalRegions: List<TranscribeRegion> = arrayOf(
+    private val transcribeMedicalRegions: List<SpinnerItem> = arrayOf(
         "auto",
         "",
         "ap-southeast-2",
@@ -202,15 +199,15 @@ class TranscriptionConfigFragment : Fragment() {
         "us-west-2"
     ).mapNotNull { l ->
         regionsMap[l]?.let {
-            TranscribeRegion(l, it)
+            SpinnerItem(l, it)
         }
     }
 
-    private val transcribeEngines: List<TranscribeEngine> = mapOf<String, String>(
+    private val transcribeEngines: List<SpinnerItem> = mapOf<String, String>(
         "transcribe" to "Amazon Transcribe",
         "transcribe_medical" to "Amazon Transcribe Medical"
     ).map {
-        TranscribeEngine(it.key, it.value)
+        SpinnerItem(it.key, it.value)
     }
 
     private lateinit var listener: TranscriptionConfigurationEventListener
@@ -218,17 +215,17 @@ class TranscriptionConfigFragment : Fragment() {
     private val TAG = "TranscriptionConfigurationFragment"
 
     private lateinit var transcribeEngineSpinner: Spinner
-    private lateinit var transcribeEngineAdapter: ArrayAdapter<TranscribeEngine>
+    private lateinit var transcribeEngineAdapter: ArrayAdapter<SpinnerItem>
     private lateinit var languageSpinner: Spinner
-    private lateinit var languageAdapter: ArrayAdapter<TranscribeLanguage>
+    private lateinit var languageAdapter: ArrayAdapter<SpinnerItem>
     private lateinit var regionSpinner: Spinner
-    private lateinit var regionAdapter: ArrayAdapter<TranscribeRegion>
+    private lateinit var regionAdapter: ArrayAdapter<SpinnerItem>
     private lateinit var partialResultsStabilizationSpinner: Spinner
-    private lateinit var partialResultsStabilizationAdapter: ArrayAdapter<TranscribeOption>
+    private lateinit var partialResultsStabilizationAdapter: ArrayAdapter<SpinnerItem>
     private lateinit var piiIdentificationSpinner: Spinner
-    private lateinit var piiIdentificationAdapter: ArrayAdapter<TranscribeOption>
+    private lateinit var piiIdentificationAdapter: ArrayAdapter<SpinnerItem>
     private lateinit var piiRedactionSpinner: Spinner
-    private lateinit var piiRedactionAdapter: ArrayAdapter<TranscribeOption>
+    private lateinit var piiRedactionAdapter: ArrayAdapter<SpinnerItem>
     private lateinit var phiIdentificationCheckBox: CheckBox
     private lateinit var customLanguageModelCheckbox: CheckBox
     private lateinit var customLanguageModelEditText: EditText
@@ -265,12 +262,12 @@ class TranscriptionConfigFragment : Fragment() {
 
     interface TranscriptionConfigurationEventListener {
         fun onStartTranscription(
-            engine: TranscribeEngine,
-            language: TranscribeLanguage?,
-            region: TranscribeRegion,
-            partialResultsStability: TranscribeOption,
-            contentIdentificationType: TranscribeOption?,
-            contentRedactionType: TranscribeOption?,
+            engine: SpinnerItem,
+            language: SpinnerItem?,
+            region: SpinnerItem,
+            partialResultsStability: SpinnerItem,
+            contentIdentificationType: SpinnerItem?,
+            contentRedactionType: SpinnerItem?,
             languageModelName: String?,
             identifyLanguage: Boolean,
             languageOptions: String?,
@@ -298,15 +295,15 @@ class TranscriptionConfigFragment : Fragment() {
         val context = activity as Context
         view.findViewById<Button>(R.id.buttonStartTranscription)?.setOnClickListener {
             listener.onStartTranscription(
-                transcribeEngineSpinner.selectedItem as TranscribeEngine,
+                transcribeEngineSpinner.selectedItem as SpinnerItem,
                 languageSpinner.selectedItem?.let {
-                    languageSpinner.selectedItem as TranscribeLanguage },
-                regionSpinner.selectedItem as TranscribeRegion,
-                partialResultsStabilizationSpinner.selectedItem as TranscribeOption,
+                    languageSpinner.selectedItem as SpinnerItem },
+                regionSpinner.selectedItem as SpinnerItem,
+                partialResultsStabilizationSpinner.selectedItem as SpinnerItem,
                 if (piiIdentificationSpinner.isEnabled) {
-                    piiIdentificationSpinner.selectedItem as TranscribeOption } else null,
+                    piiIdentificationSpinner.selectedItem as SpinnerItem } else null,
                 if (piiRedactionSpinner.isEnabled) {
-                    piiRedactionSpinner.selectedItem as TranscribeOption } else null,
+                    piiRedactionSpinner.selectedItem as SpinnerItem } else null,
                 if (customLanguageModelCheckbox.isEnabled) {
                     customLanguageModelEditText.text.toString() } else null,
                 identifyLanguageCheckbox.isChecked,
@@ -402,6 +399,8 @@ class TranscriptionConfigFragment : Fragment() {
         phiIdentificationCheckBox.setOnCheckedChangeListener { _, isChecked ->
             if (isChecked) {
                 piiIdentificationSpinner.setSelection(1, true)
+            } else {
+                piiIdentificationSpinner.setSelection(0, true)
             }
         }
 
@@ -482,16 +481,14 @@ class TranscriptionConfigFragment : Fragment() {
     private val onTranscribeEngineSelected = object : OnItemSelectedListener {
         override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
             if (position < transcribeEngines.size) {
-                when (transcribeEngines[position].engine) {
+                populateLanguages(transcribeMedicalLanguages, languages, languageAdapter)
+                populateRegions(transcribeMedicalRegions, regions, regionAdapter)
+                when (transcribeEngines[position].spinnerText) {
                     "transcribe_medical" -> {
-                        populateLanguages(transcribeMedicalLanguages, languages, languageAdapter)
-                        populateRegions(transcribeMedicalRegions, regions, regionAdapter)
-                        hideAdditionalTranscribeOptionsAndShowAdditionalMedicalTranscribeOptions()
+                        displayAdditionalTranscriptionOptions(true)
                     }
                     "transcribe" -> {
-                        populateLanguages(transcribeLanguages, languages, languageAdapter)
-                        populateRegions(transcribeRegions, regions, regionAdapter)
-                        showAdditionalTranscribeOptionsAndHideAdditionalMedicalTranscribeOptions()
+                        displayAdditionalTranscriptionOptions(false)
                     }
                     else -> {
                         logger.error(TAG, "Invalid in TranscribeEngine selected")
@@ -537,23 +534,23 @@ class TranscriptionConfigFragment : Fragment() {
         }
     }
 
-    private fun populateLanguages(newList: List<TranscribeLanguage>, currentList: MutableList<TranscribeLanguage>, adapter: ArrayAdapter<TranscribeLanguage>) {
+    private fun populateLanguages(newList: List<SpinnerItem>, currentList: MutableList<SpinnerItem>, adapter: ArrayAdapter<SpinnerItem>) {
         currentList.clear()
         currentList.addAll(newList)
         adapter.notifyDataSetChanged()
     }
 
-    private fun populateRegions(newList: List<TranscribeRegion>, currentList: MutableList<TranscribeRegion>, adapter: ArrayAdapter<TranscribeRegion>) {
+    private fun populateRegions(newList: List<SpinnerItem>, currentList: MutableList<SpinnerItem>, adapter: ArrayAdapter<SpinnerItem>) {
         currentList.clear()
         currentList.addAll(newList)
         adapter.notifyDataSetChanged()
     }
 
     // Populate content identification / redaction spinners and set the label of the spinner with the given 'type' (E.G identification or redaction).
-    private fun populateTranscriptionOptions(newList: List<TranscribeOption>, currentList: MutableList<TranscribeOption>, adapter: ArrayAdapter<TranscribeOption>, type: String) {
+    private fun populateTranscriptionOptions(newList: List<SpinnerItem>, currentList: MutableList<SpinnerItem>, adapter: ArrayAdapter<SpinnerItem>, type: String) {
         currentList.clear()
         currentList.addAll(newList)
-        currentList.add(0, TranscribeOption(null, "Enable PII Content $type"))
+        currentList.add(0, SpinnerItem(null, "Enable PII Content $type"))
         adapter.notifyDataSetChanged()
     }
 
@@ -581,21 +578,25 @@ class TranscriptionConfigFragment : Fragment() {
         regionSpinner.setSelection(0, true)
     }
 
-    private fun hideAdditionalTranscribeOptionsAndShowAdditionalMedicalTranscribeOptions() {
-        // Enable PHI and disable PII when medicalTranscribe selected.
+    // Enable / Disable additional transcription options based on engine selected.
+    private fun displayAdditionalTranscriptionOptions(isTranscribeMedical: Boolean) {
         piiIdentificationSpinner.setSelection(0, true)
         piiRedactionSpinner.setSelection(0, true)
         partialResultsStabilizationSpinner.setSelection(0, true)
+        checkboxCustomLanguageModel.isChecked = false
+        phiIdentificationCheckBox.isChecked = false
+        piiIdentificationSpinner.setSelection(0, true)
         checkboxCustomLanguageModel.text = resources.getString(R.string.custom_language_checkbox)
-        piiRedactionSpinner.visibility = View.GONE
-        piiIdentificationSpinner.visibility = View.GONE
-        checkboxCustomLanguageModel.visibility = View.GONE
-        partialResultsStabilizationSpinner.visibility = View.GONE
         customLanguageModelEditText.visibility = View.GONE
-        phiIdentificationCheckBox.visibility = View.VISIBLE
-        identifyLanguageCheckbox.visibility = View.GONE
-        languageOptionsTextView.visibility = View.GONE
-        preferredLanguageSpinner.visibility = View.GONE
+
+        piiRedactionSpinner.visibility = if (isTranscribeMedical) View.GONE else View.VISIBLE
+        piiIdentificationSpinner.visibility = if (isTranscribeMedical) View.GONE else View.VISIBLE
+        checkboxCustomLanguageModel.visibility = if (isTranscribeMedical) View.GONE else View.VISIBLE
+        partialResultsStabilizationSpinner.visibility = if (isTranscribeMedical) View.GONE else View.VISIBLE
+        phiIdentificationCheckBox.visibility = if (isTranscribeMedical) View.VISIBLE else View.GONE
+        identifyLanguageCheckbox.visibility = if (isTranscribeMedical) View.GONE else View.VISIBLE
+        languageOptionsTextView.visibility = if (isTranscribeMedical) View.GONE else View.VISIBLE
+        preferredLanguageSpinner.visibility = if (isTranscribeMedical) View.GONE else View.VISIBLE
         languageSpinner.isEnabled = true
         phiIdentificationCheckBox.isEnabled = true
     }
