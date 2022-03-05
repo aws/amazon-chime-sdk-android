@@ -8,13 +8,13 @@ import android.view.ViewGroup
 import android.widget.BaseExpandableListAdapter
 import android.widget.CheckedTextView
 import com.amazonaws.services.chime.sdkdemo.R
-import com.amazonaws.services.chime.sdkdemo.data.TranscribeLanguage
+import com.amazonaws.services.chime.sdkdemo.data.SpinnerItem
 import com.amazonaws.services.chime.sdkdemo.data.TranscribeLanguageOption
 import com.amazonaws.services.chime.sdkdemo.utils.inflate
 
 class LanguageOptionsAdapter(
     private val context: Context,
-    private val languageOptions: Map<String, List<TranscribeLanguage?>>,
+    private val languageOptions: Map<String, List<SpinnerItem?>>,
     private val languageGroups: List<String>,
     private val languageOptionsSelected: Set<TranscribeLanguageOption>
 ) : BaseExpandableListAdapter() {
@@ -31,7 +31,7 @@ class LanguageOptionsAdapter(
         return languageGroups[listPosition]
     }
 
-    override fun getChild(listPosition: Int, expandedListPosition: Int): TranscribeLanguage? {
+    override fun getChild(listPosition: Int, expandedListPosition: Int): SpinnerItem? {
         return languageOptions[languageGroups[listPosition]]?.getOrNull(expandedListPosition)
     }
 
@@ -52,9 +52,8 @@ class LanguageOptionsAdapter(
         val listTitle = getGroup(listPosition) as String
         if (convertView == null) {
             convertView = parent?.inflate(R.layout.row_language_option, false)
-        }
-        if (convertView != null) {
-            val listTitleTextView: CheckedTextView = convertView.findViewById(R.id.languageOption)
+        } else {
+            val listTitleTextView: CheckedTextView = convertView.findViewById(R.id.checkedTextViewLanguageOptionRow)
             listTitleTextView.setTypeface(null, Typeface.BOLD)
             listTitleTextView.checkMarkDrawable = null
             listTitleTextView.text = listTitle
@@ -63,14 +62,13 @@ class LanguageOptionsAdapter(
     }
 
     override fun getChildView(listPosition: Int, expandedListPosition: Int, isLastChild: Boolean, convertView_: View?, ViewGroup: ViewGroup?): View? {
-        val expandedListText = (getChild(listPosition, expandedListPosition) as TranscribeLanguage).name
+        val expandedListText = (getChild(listPosition, expandedListPosition) as SpinnerItem).spinnerText
         var convertView = convertView_
         if (convertView == null) {
             val layoutInflater = context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
             convertView = layoutInflater.inflate(R.layout.row_language_option, null)
-        }
-        if (convertView != null) {
-            val textView: CheckedTextView = convertView.findViewById(R.id.languageOption)
+        } else {
+            val textView: CheckedTextView = convertView.findViewById(R.id.checkedTextViewLanguageOptionRow)
             val cell = languageOptions[languageGroups[listPosition]]?.get(expandedListPosition)?.let {
                 TranscribeLanguageOption(listPosition, expandedListPosition, it)
             }

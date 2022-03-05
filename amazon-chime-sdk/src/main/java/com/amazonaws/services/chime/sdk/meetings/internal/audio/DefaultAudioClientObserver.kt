@@ -280,13 +280,13 @@ class DefaultAudioClientObserver(
                             )
                             alternatives.add(alternative)
                         }
-                        val languageIdentifications = mutableListOf<TranscriptLanguageWithScore>()
-                        rawResult.languageIdentifications.forEach { rawLanguageIdentification ->
-                            val languageIdentification = TranscriptLanguageWithScore(
+                        val languageIdentification = mutableListOf<TranscriptLanguageWithScore>()
+                        rawResult.languageIdentification.forEach { rawLanguageIdentification ->
+                            val languageIdentificationInstance = TranscriptLanguageWithScore(
                                 rawLanguageIdentification.languageCode,
                                 rawLanguageIdentification.score
                             )
-                            languageIdentifications.add(languageIdentification)
+                            languageIdentification.add(languageIdentificationInstance)
                         }
                         val result = TranscriptResult(
                             rawResult.resultId,
@@ -296,7 +296,7 @@ class DefaultAudioClientObserver(
                             rawResult.endTimeMs,
                             alternatives.toTypedArray(),
                             rawResult.languageCode,
-                            languageIdentifications.toTypedArray()
+                            languageIdentification.toTypedArray()
                         )
                         results.add(result)
                     }

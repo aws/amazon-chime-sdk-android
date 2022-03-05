@@ -7,7 +7,6 @@
     android:orientation="vertical">
 
     <LinearLayout
-        android:id="@+id/linearLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="2dp"
@@ -20,7 +19,7 @@
             android:layout_height="wrap_content"
             android:text="@string/language_options_list_view"
             android:textSize="20sp"
-            app:layout_constraintBottom_toTopOf="@+id/listViewLanguageOptions"
+            app:layout_constraintBottom_toTopOf="@+id/expandableListViewLanguageOptions"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -34,7 +33,6 @@
             app:layout_constraintTop_toTopOf="@id/textViewLanguageOptions" />
 
         <LinearLayout
-            android:id="@+id/linearLayout1"
             android:layout_width="fill_parent"
             android:layout_height="match_parent"
             android:layout_marginBottom="2dp"
@@ -69,7 +67,7 @@
         </LinearLayout>
 
         <ExpandableListView
-            android:id="@+id/listViewLanguageOptions"
+            android:id="@+id/expandableListViewLanguageOptions"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginBottom="16dp"

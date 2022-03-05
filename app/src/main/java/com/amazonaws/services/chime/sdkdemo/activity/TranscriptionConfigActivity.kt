@@ -73,12 +73,12 @@ class TranscriptionConfigActivity : AppCompatActivity(),
 
     override fun onStartTranscription(
         engine: SpinnerItem,
-        language: SpinnerItem,
+        language: SpinnerItem?,
         region: SpinnerItem,
         partialResultsStability: SpinnerItem,
-        contentIdentificationType: SpinnerItem,
-        contentRedactionType: SpinnerItem,
-        languageModelName: String
+        contentIdentificationType: SpinnerItem?,
+        contentRedactionType: SpinnerItem?,
+        languageModelName: String?,
         identifyLanguage: Boolean,
         languageOptions: String?,
         preferredLanguage: SpinnerItem?
@@ -91,12 +91,12 @@ class TranscriptionConfigActivity : AppCompatActivity(),
                     language?.spinnerText,
                     region.spinnerText,
                     partialResultsStability.spinnerText,
-                    contentIdentificationType.spinnerText,
-                    contentRedactionType.spinnerText,
-                    languageModelName
+                    contentIdentificationType?.spinnerText,
+                    contentRedactionType?.spinnerText,
+                    languageModelName,
                     identifyLanguage,
                     languageOptions,
-                    preferredLanguage?.code
+                    preferredLanguage?.value
                 )
 
             if (response == null) {
@@ -122,7 +122,7 @@ class TranscriptionConfigActivity : AppCompatActivity(),
         preferredLanguage: String?
     ): String? {
         val partialResultsStabilizationEnabled = transcribePartialResultsStabilization != null
-        val isTranscribeMedical = transcribeEngine.equals(TRANSCRIBE_MEDICAL_ENGINE)
+        val isTranscribeMedical = engine.equals(TRANSCRIBE_MEDICAL_ENGINE)
         val transcriptionStreamParams = TranscriptionStreamParams(
             contentIdentificationType = transcribeContentIdentification?.let {
                 if (isTranscribeMedical) TRANSCRIBE_MEDICAL_CONTENT_IDENTIFICATION_TYPE
@@ -138,13 +138,13 @@ class TranscriptionConfigActivity : AppCompatActivity(),
                 if (identification.isEmpty() || isTranscribeMedical) null
                 else identification
             } ?: run { if (transcribeContentRedaction.isNullOrEmpty()) null else transcribeContentRedaction },
-            languageModelName = customLanguageModel.ifEmpty { null },
+            languageModelName = customLanguageModel?.ifEmpty { null },
             identifyLanguage = identifyLanguage,
-            languageOptions = languageOptions.ifEmpty { null },
-            preferredLanguage = preferredLanguage.ifEmpty { null }
+            languageOptions = languageOptions?.ifEmpty { null },
+            preferredLanguage = preferredLanguage?.ifEmpty { null }
         )
         val transcriptionAdditionalParams = gson.toJson(transcriptionStreamParams)
-        val languageCodeParams = if (isTranscribeMedical || (!isTranscribeMedical && identifyLanguage == false)) {
+        val languageCodeParams = if (isTranscribeMedical || (identifyLanguage == false)) {
             "&language=${encodeURLParam(languageCode)}"
         } else ""
         val meetingUrl = if (meetingEndpointUrl.endsWith("/")) meetingEndpointUrl else meetingEndpointUrl.plus("/")

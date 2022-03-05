@@ -35,7 +35,7 @@ data class TranscriptResult(
     val endTimeMs: Long,
     val alternatives: Array<TranscriptAlternative>,
     val languageCode: String?,
-    val languageIdentifications: Array<TranscriptLanguageWithScore>?
+    val languageIdentification: Array<TranscriptLanguageWithScore>?
 ) {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
@@ -45,8 +45,8 @@ data class TranscriptResult(
 
         if (!alternatives.contentEquals(other.alternatives)) return false
 
-        languageIdentifications?.let { thisLanguageIdentification ->
-            if (other.languageIdentifications?.let { thisLanguageIdentification.contentEquals(it) } == false) {
+        languageIdentification?.let { thisLanguageIdentification ->
+            if (other.languageIdentification?.let { thisLanguageIdentification.contentEquals(it) } == false) {
                 return false
             }
         }
@@ -61,7 +61,7 @@ data class TranscriptResult(
         result = 31 * result + endTimeMs.hashCode()
         result = 31 * result + alternatives.contentHashCode()
         result = 31 * result + languageCode.hashCode()
-        languageIdentifications?.let {
+        languageIdentification?.let {
             it -> result = 31 * result + (it.contentHashCode())
         }
         return result

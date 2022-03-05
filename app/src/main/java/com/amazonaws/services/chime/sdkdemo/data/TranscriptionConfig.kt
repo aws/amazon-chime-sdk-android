@@ -9,7 +9,7 @@ data class SpinnerItem(val spinnerText: String?, val value: String) {
 data class TranscribeLanguageOption(
     val languageGroupIndex: Int,
     val languageCodeIndex: Int,
-    val transcribeLanguage: TranscribeLanguage
+    val transcribeLanguage: SpinnerItem
 ) {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
