@@ -59,6 +59,7 @@ data class TranscriptResult(
 
 data class TranscriptAlternative(
     val items: Array<TranscriptItem>,
+    val entities: Array<TranscriptEntity>?,
     val transcript: String
 ) {
     override fun equals(other: Any?): Boolean {
@@ -70,7 +71,11 @@ data class TranscriptAlternative(
         if (!items.contentEquals(other.items)) return false
         if (transcript != other.transcript) return false
 
-        return true
+        return if (entities == null) {
+            other.entities == null
+        } else {
+            other.entities?.let { entities.contentEquals(it) } ?: false
+        }
     }
 
     override fun hashCode(): Int {
@@ -86,7 +91,18 @@ data class TranscriptItem(
     val endTimeMs: Long,
     val attendee: AttendeeInfo,
     val content: String,
-    val vocabularyFilterMatch: Boolean
+    val vocabularyFilterMatch: Boolean,
+    val confidence: Double?,
+    val stable: Boolean?
+)
+
+data class TranscriptEntity(
+    val category: String,
+    val confidence: Double,
+    val content: String,
+    val startTimeMs: Long,
+    val endTimeMs: Long,
+    val type: String?
 )
 
 data class TranscriptionStatus(
