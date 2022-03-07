@@ -313,7 +313,6 @@ class TranscriptionConfigFragment : Fragment() {
                 if (identifyLanguageCheckbox.isChecked) {
                     preferredLanguageSpinner.selectedItem?.let {
                         preferredLanguageSpinner.selectedItem as SpinnerItem } } else null
-
             )
         }
 
@@ -580,6 +579,7 @@ class TranscriptionConfigFragment : Fragment() {
 
     // Enable / Disable additional transcription options based on engine selected.
     private fun displayAdditionalTranscriptionOptions(isTranscribeMedical: Boolean) {
+        identifyLanguageCheckbox.isChecked = false
         piiIdentificationSpinner.setSelection(0, true)
         piiRedactionSpinner.setSelection(0, true)
         partialResultsStabilizationSpinner.setSelection(0, true)
@@ -595,10 +595,12 @@ class TranscriptionConfigFragment : Fragment() {
         partialResultsStabilizationSpinner.visibility = if (isTranscribeMedical) View.GONE else View.VISIBLE
         phiIdentificationCheckBox.visibility = if (isTranscribeMedical) View.VISIBLE else View.GONE
         identifyLanguageCheckbox.visibility = if (isTranscribeMedical) View.GONE else View.VISIBLE
-        languageOptionsTextView.visibility = if (isTranscribeMedical) View.GONE else View.VISIBLE
-        preferredLanguageSpinner.visibility = if (isTranscribeMedical) View.GONE else View.VISIBLE
-        languageSpinner.isEnabled = true
+        languageSpinner.isEnabled = isTranscribeMedical
         phiIdentificationCheckBox.isEnabled = true
+        if (isTranscribeMedical) {
+            languageOptionsTextView.visibility = View.GONE
+            preferredLanguageSpinner.visibility = View.GONE
+        }
     }
 
     private fun showLanguageOptionsAlertDialog(languageOptionDialogBox: CompoundButton) {
@@ -637,7 +639,10 @@ class TranscriptionConfigFragment : Fragment() {
 
         expandLanguageOptionsGroup()
 
+        builder.setView(languageOptionsAlertDialog)
         val alertDialog = builder.create()
+        alertDialog.show()
+
         val saveButton: Button = languageOptionsAlertDialog.findViewById(R.id.buttonSaveLanguageOptions)
         saveButton.setOnClickListener {
             if (validateLanguageOptions(languageGroups, languageOptionsSelected, languageOptionsAlertDialog)) {
@@ -656,8 +661,6 @@ class TranscriptionConfigFragment : Fragment() {
             languageOptionDialogBox.isChecked = false
             alertDialog.dismiss()
         }
-        builder.setView(languageOptionsAlertDialog)
-        alertDialog.show()
     }
 
     private fun expandLanguageOptionsGroup() {

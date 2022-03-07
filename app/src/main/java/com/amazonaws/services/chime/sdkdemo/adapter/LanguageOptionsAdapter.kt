@@ -52,7 +52,8 @@ class LanguageOptionsAdapter(
         val listTitle = getGroup(listPosition) as String
         if (convertView == null) {
             convertView = parent?.inflate(R.layout.row_language_option, false)
-        } else {
+        }
+        if (convertView != null) {
             val listTitleTextView: CheckedTextView = convertView.findViewById(R.id.checkedTextViewLanguageOptionRow)
             listTitleTextView.setTypeface(null, Typeface.BOLD)
             listTitleTextView.checkMarkDrawable = null
@@ -62,12 +63,13 @@ class LanguageOptionsAdapter(
     }
 
     override fun getChildView(listPosition: Int, expandedListPosition: Int, isLastChild: Boolean, convertView_: View?, ViewGroup: ViewGroup?): View? {
-        val expandedListText = (getChild(listPosition, expandedListPosition) as SpinnerItem).spinnerText
+        val expandedListText = (getChild(listPosition, expandedListPosition) as SpinnerItem).value
         var convertView = convertView_
         if (convertView == null) {
             val layoutInflater = context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
             convertView = layoutInflater.inflate(R.layout.row_language_option, null)
-        } else {
+        }
+        if (convertView != null) {
             val textView: CheckedTextView = convertView.findViewById(R.id.checkedTextViewLanguageOptionRow)
             val cell = languageOptions[languageGroups[listPosition]]?.get(expandedListPosition)?.let {
                 TranscribeLanguageOption(listPosition, expandedListPosition, it)

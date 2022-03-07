@@ -45,12 +45,11 @@ data class TranscriptResult(
 
         if (!alternatives.contentEquals(other.alternatives)) return false
 
-        languageIdentification?.let { thisLanguageIdentification ->
-            if (other.languageIdentification?.let { thisLanguageIdentification.contentEquals(it) } == false) {
-                return false
-            }
+        return if (languageIdentification == null) {
+            other.languageIdentification == null
+        } else {
+            other.languageIdentification?.let { languageIdentification.contentEquals(it) } ?: false
         }
-        return true
     }
 
     override fun hashCode(): Int {

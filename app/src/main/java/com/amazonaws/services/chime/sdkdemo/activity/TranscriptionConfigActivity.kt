@@ -96,7 +96,7 @@ class TranscriptionConfigActivity : AppCompatActivity(),
                     languageModelName,
                     identifyLanguage,
                     languageOptions,
-                    preferredLanguage?.value
+                    preferredLanguage?.spinnerText
                 )
 
             if (response == null) {
