@@ -236,7 +236,6 @@ class TranscriptionConfigFragment : Fragment() {
     private lateinit var preferredLanguageSpinner: Spinner
     private lateinit var preferredLanguageAdapter: ArrayAdapter<SpinnerItem>
 
-
     private val TRANSCRIBE_ENGINE_SPINNER_INDEX_KEY = "transcribeEngineSpinnerIndex"
     private val LANGUAGE_SPINNER_INDEX_KEY = "languageSpinnerIndex"
     private val REGION_SPINNER_INDEX_KEY = "regionSpinnerIndex"

@@ -667,7 +667,7 @@ class DefaultAudioClientObserverTest {
                 )
             ),
             null,
-            null,
+            null
         )
 
         val transcriptResultTwo = TranscriptResultInternal(
