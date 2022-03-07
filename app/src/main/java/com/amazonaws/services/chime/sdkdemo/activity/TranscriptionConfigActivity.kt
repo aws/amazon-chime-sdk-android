@@ -139,10 +139,9 @@ class TranscriptionConfigActivity : AppCompatActivity(),
                 else identification
             } ?: run { if (transcribeContentRedaction.isNullOrEmpty()) null else transcribeContentRedaction },
             languageModelName = customLanguageModel?.ifEmpty { null },
-            identifyLanguage = identifyLanguage,
+            identifyLanguage = identifyLanguage?.let { if (it) { true } else null },
             languageOptions = languageOptions?.ifEmpty { null },
             preferredLanguage = preferredLanguage?.ifEmpty { null }
-
         )
         val transcriptionAdditionalParams = gson.toJson(transcriptionStreamParams)
         val languageCodeParams = if (isTranscribeMedical || (identifyLanguage == false)) {
