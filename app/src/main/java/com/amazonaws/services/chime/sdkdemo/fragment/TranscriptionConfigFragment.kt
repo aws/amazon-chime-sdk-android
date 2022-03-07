@@ -608,15 +608,13 @@ class TranscriptionConfigFragment : Fragment() {
             layoutInflater.inflate(R.layout.alert_dialog_language_options, null)
         languageOptionsListView = languageOptionsAlertDialog.findViewById<ExpandableListView>(R.id.expandableListViewLanguageOptions)
 
-        languageOptionsAdapter = LanguageOptionsAdapter(this.requireContext(), languageOptions,
-            languageGroups, languageOptionsSelected)
+        languageOptionsAdapter = LanguageOptionsAdapter(this.requireContext(), languageOptions, languageGroups, languageOptionsSelected)
         languageOptionsListView.setAdapter(languageOptionsAdapter)
         languageOptionsListView.setOnChildClickListener(OnChildClickListener { _, view, groupPosition, childPosition, _ ->
 
             val languageOptionCheck: CheckedTextView = view.findViewById(R.id.checkedTextViewLanguageOptionRow)
             languageOptionCheck.toggle()
-            val languageSelected: SpinnerItem? =
-                languageOptions[languageGroups[groupPosition]]?.get(childPosition)
+            val languageSelected: SpinnerItem? = languageOptions[languageGroups[groupPosition]]?.get(childPosition)
             val selectedCell: TranscribeLanguageOption? =
                 languageSelected?.let { TranscribeLanguageOption(groupPosition, childPosition, it) }
             selectedCell?.let {
