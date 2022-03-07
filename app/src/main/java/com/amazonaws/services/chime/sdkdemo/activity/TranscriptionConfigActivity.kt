@@ -142,6 +142,7 @@ class TranscriptionConfigActivity : AppCompatActivity(),
             identifyLanguage = identifyLanguage,
             languageOptions = languageOptions?.ifEmpty { null },
             preferredLanguage = preferredLanguage?.ifEmpty { null }
+
         )
         val transcriptionAdditionalParams = gson.toJson(transcriptionStreamParams)
         val languageCodeParams = if (isTranscribeMedical || (identifyLanguage == false)) {

@@ -236,6 +236,7 @@ class TranscriptionConfigFragment : Fragment() {
     private lateinit var preferredLanguageSpinner: Spinner
     private lateinit var preferredLanguageAdapter: ArrayAdapter<SpinnerItem>
 
+
     private val TRANSCRIBE_ENGINE_SPINNER_INDEX_KEY = "transcribeEngineSpinnerIndex"
     private val LANGUAGE_SPINNER_INDEX_KEY = "languageSpinnerIndex"
     private val REGION_SPINNER_INDEX_KEY = "regionSpinnerIndex"
@@ -292,6 +293,7 @@ class TranscriptionConfigFragment : Fragment() {
     ): View? {
         val view = inflater.inflate(R.layout.fragment_transcription_config, container, false)
         val context = activity as Context
+
         view.findViewById<Button>(R.id.buttonStartTranscription)?.setOnClickListener {
             listener.onStartTranscription(
                 transcribeEngineSpinner.selectedItem as SpinnerItem,
@@ -311,6 +313,7 @@ class TranscriptionConfigFragment : Fragment() {
                 if (identifyLanguageCheckbox.isChecked) {
                     preferredLanguageSpinner.selectedItem?.let {
                         preferredLanguageSpinner.selectedItem as SpinnerItem } } else null
+
             )
         }
 
@@ -502,7 +505,7 @@ class TranscriptionConfigFragment : Fragment() {
     }
 
     // Reset the redaction spinner when content identification selected.
-    private val onPIIContentIdentificationSelected = object : OnItemSelectedListener {
+    private val onPIIContentIdentificationSelected = object : AdapterView.OnItemSelectedListener {
         override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
             if (position < transcribeIdentificationOptions.size && position > 0) {
                 populateTranscriptionOptions(transcribePiiOptions, transcribeRedactionOptions, piiRedactionAdapter, "Redaction")
@@ -666,8 +669,8 @@ class TranscriptionConfigFragment : Fragment() {
     private fun formatLanguageOptions(): String {
         return if (languageOptionsSelected.isEmpty()) "" else
             languageOptionsSelected.joinToString(",") {
-                languageOptionSelected -> languageOptionSelected.transcribeLanguage.spinnerText.toString()
-        }
+                    languageOptionSelected -> languageOptionSelected.transcribeLanguage.spinnerText.toString()
+            }
     }
 
     private fun validateLanguageOptions(

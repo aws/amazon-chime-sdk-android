@@ -59,13 +59,13 @@
     <string name="partial_stability_spinner">Enable Partial Results Stabilization</string>
     <string name="identification_spinner">Enable PII Content Identification</string>
     <string name="redaction_spinner">Enable PII Content Redaction</string>
+    <string name="phi_identification_checkbox">Enable PHI Content Identification</string>
+    <string name="custom_language_checkbox">Enable Custom Language Model</string>
+    <string name="custom_language_model_text_view">Custom Language Model</string>
     <string name="identify_language_checkbox">Enable Automatic Language Identification</string>
     <string name="language_options_text_title">Language Options: </string>
     <string name="language_options_list_view">Select a minimum of 2 Language Options</string>
     <string name="preferred_language_spinner">Specify one preferred language</string>
-    <string name="phi_identification_checkbox">Enable PHI Content Identification</string>
-    <string name="custom_language_checkbox">Enable Custom Language Model</string>
-    <string name="custom_language_model_text_view">Custom Language Model</string>
     <string name="user_notification_transcription_start_error">There was an error starting meeting transcription. Please try again</string>
     <string name="user_notification_transcription_start_success">Transcription started for meeting</string>
     <string name="user_notification_transcription_stop_error">There was an error stopping meeting transcription. Please try again</string>
