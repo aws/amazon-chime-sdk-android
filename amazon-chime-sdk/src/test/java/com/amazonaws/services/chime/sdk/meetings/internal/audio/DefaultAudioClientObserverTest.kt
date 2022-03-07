@@ -43,6 +43,7 @@ import com.xodee.client.audio.audioclient.transcript.TranscriptEntity as Transcr
 import com.xodee.client.audio.audioclient.transcript.TranscriptEvent as TranscriptEventInternal
 import com.xodee.client.audio.audioclient.transcript.TranscriptItem as TranscriptItemInternal
 import com.xodee.client.audio.audioclient.transcript.TranscriptItemType as TranscriptItemTypeInternal
+import com.xodee.client.audio.audioclient.transcript.TranscriptLanguageWithScore as TranscriptLanguageWithScoreInternal
 import com.xodee.client.audio.audioclient.transcript.TranscriptResult as TranscriptResultInternal
 import com.xodee.client.audio.audioclient.transcript.TranscriptionStatus as TranscriptionStatusInternal
 import com.xodee.client.audio.audioclient.transcript.TranscriptionStatusType as TranscriptionStatusTypeInternal
