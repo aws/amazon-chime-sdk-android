@@ -494,7 +494,8 @@ class MeetingFragment : Fragment(),
             android.R.layout.simple_list_item_1,
             meetingModel.currentMediaDevices,
             audioVideo,
-            audioDeviceManager)
+            audioDeviceManager
+        )
         deviceAlertDialogBuilder = AlertDialog.Builder(activity)
         deviceAlertDialogBuilder.setTitle(R.string.alert_title_choose_audio)
         deviceAlertDialogBuilder.setNegativeButton(R.string.cancel) { dialog, _ ->
@@ -553,7 +554,8 @@ class MeetingFragment : Fragment(),
                 1 -> setVoiceFocusEnabled(!isVoiceFocusEnabled)
                 2 -> toggleLiveTranscription(
                     arguments?.getString(HomeActivity.MEETING_ID_KEY) as String,
-                    arguments?.getString(HomeActivity.MEETING_ENDPOINT_KEY) as String)
+                    arguments?.getString(HomeActivity.MEETING_ENDPOINT_KEY) as String
+                )
                 3 -> toggleFlashlight()
                 4 -> toggleCpuDemoFilter()
                 5 -> toggleGpuDemoFilter()
@@ -1049,32 +1051,26 @@ class MeetingFragment : Fragment(),
     private fun onVideoPageUpdated() {
         val oldList = mutableListOf<VideoCollectionTile>()
         oldList.addAll(meetingModel.videoStatesInCurrentPage)
-
+        val removedList: ArrayList<RemoteVideoSource> = arrayListOf()
+        removedList.addAll(meetingModel.videoSubscriptionInCurrentPage.keys)
+        val removedSources: Array<RemoteVideoSource> = removedList.toTypedArray()
         // Recalculate videos in the current page and notify videoTileAdapter
-        meetingModel.updateVideoStatesInCurrentPage()
+        meetingModel.updateVideoSubscriptionInCurrentPage()
+
         revalidateVideoPageIndex()
 
         val newList = mutableListOf<VideoCollectionTile>()
         newList.addAll(meetingModel.videoStatesInCurrentPage)
+        val updatedSources: MutableMap<RemoteVideoSource, VideoSubscriptionConfiguration> = mutableMapOf()
+        updatedSources.putAll(meetingModel.videoSubscriptionInCurrentPage)
 
         val videoDiffCallback = VideoDiffCallback(oldList, newList)
         val videoDiffResult: DiffUtil.DiffResult = DiffUtil.calculateDiff(videoDiffCallback)
 
         videoDiffResult.dispatchUpdatesTo(videoTileAdapter)
 
-        // Pause/Resume remote videos accordingly based on videoTileState and the tab that user is on
-        meetingModel.remoteVideoTileStates.forEach {
-            // Resume paused videos in the current page if user is on Video tab and it was not manually paused by user
-            if (meetingModel.tabIndex == SubTab.Video.position && meetingModel.videoStatesInCurrentPage.contains(it) && !meetingModel.userPausedVideoTileIds.contains(it.videoTileState.tileId)) {
-                if (it.videoTileState.pauseState == VideoPauseState.PausedByUserRequest) {
-                    audioVideo.resumeRemoteVideoTile(it.videoTileState.tileId)
-                }
-            } else {
-                if (it.videoTileState.pauseState != VideoPauseState.PausedByUserRequest) {
-                    audioVideo.pauseRemoteVideoTile(it.videoTileState.tileId)
-                }
-            }
-        }
+        // subscribe to updated sources with highest priority and unsubscribed sources in prev page
+        audioVideo.updateVideoSourceSubscriptions(updatedSources, removedSources)
 
         // update video pagination control buttons states
         prevVideoPageButton.isEnabled = meetingModel.canGoToPrevVideoPage()
@@ -1354,7 +1350,13 @@ class MeetingFragment : Fragment(),
     }
 
     override fun onRemoteVideoSourceAvailable(sources: List<RemoteVideoSource>) {
-        sources.forEach { meetingModel.remoteVideoSourceConfigurations.put(it, VideoSubscriptionConfiguration(VideoPriority.Medium, VideoResolution.High)) }
+        sources.forEach {
+            meetingModel.remoteVideoSourceConfigurations.put(
+                it,
+                VideoSubscriptionConfiguration(VideoPriority.Medium, VideoResolution.High)
+            )
+        }
+        audioVideo.updateVideoSourceSubscriptions(meetingModel.remoteVideoSourceConfigurations, emptyArray())
         // Use the default auto subscribe behavior
     }
 

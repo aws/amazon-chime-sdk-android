@@ -16,6 +16,7 @@ import com.amazonaws.services.chime.sdk.meetings.audiovideo.AudioVideoFacade
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.RemoteVideoSource
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoPauseState
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoPriority
+import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoResolution
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoScalingType
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoSubscriptionConfiguration
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.capture.CameraCaptureSource
@@ -29,6 +30,7 @@ import com.amazonaws.services.chime.sdkdemo.utils.isLandscapeMode
 import kotlinx.android.synthetic.main.item_video.view.attendee_name
 import kotlinx.android.synthetic.main.item_video.view.on_tile_button
 import kotlinx.android.synthetic.main.item_video.view.poor_connection_message
+import kotlinx.android.synthetic.main.item_video.view.video_config_button
 import kotlinx.android.synthetic.main.item_video.view.video_surface
 
 class VideoAdapter(
@@ -158,11 +160,16 @@ class VideoHolder(
                 showPriorityPopup(view.on_tile_button, attendeeId)
             }
         }
+
+        view.video_config_button.setOnClickListener {
+            val attendeeId = videoCollectionTile.videoTileState.attendeeId
+            showResolutionPopup(view.video_config_button, attendeeId)
+        }
     }
 
     private fun showPriorityPopup(view: View, attendeeId: String) {
         val popup = PopupMenu(context, view)
-        popup.inflate(R.menu.popup_menu)
+        popup.inflate(R.menu.priority_popup_menu)
         popup.setOnMenuItemClickListener { item: MenuItem? ->
             var newPriority = VideoPriority.Highest
             if (item != null) {
@@ -188,6 +195,36 @@ class VideoHolder(
             for ((source, configuration) in remoteVideoSourceConfigurations) {
                 if (source.attendeeId == attendeeId) {
                     configuration.priority = newPriority
+                }
+            }
+            audioVideo.updateVideoSourceSubscriptions(remoteVideoSourceConfigurations, emptyArray())
+            true
+        }
+        popup.show()
+    }
+
+    private fun showResolutionPopup(view: View, attendeeId: String) {
+        val popup = PopupMenu(context, view)
+        popup.inflate(R.menu.resolution_popup_menu)
+        popup.setOnMenuItemClickListener { item: MenuItem? ->
+            var newResolution = VideoResolution.High
+            if (item != null) {
+                when (item.itemId) {
+                    R.id.high -> {
+                        newResolution = VideoResolution.High
+                    }
+                    R.id.medium -> {
+                        newResolution = VideoResolution.Medium
+                    }
+                    R.id.low -> {
+                        newResolution = VideoResolution.Low
+                    }
+                }
+            }
+
+            for ((source, configuration) in remoteVideoSourceConfigurations) {
+                if (source.attendeeId == attendeeId) {
+                    configuration.targetResolution = newResolution
                 }
             }
             audioVideo.updateVideoSourceSubscriptions(remoteVideoSourceConfigurations, emptyArray())

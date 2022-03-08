@@ -8,6 +8,8 @@ package com.amazonaws.services.chime.sdkdemo.model
 import androidx.lifecycle.ViewModel
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.AttendeeInfo
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.RemoteVideoSource
+import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoPriority
+import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoResolution
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoSubscriptionConfiguration
 import com.amazonaws.services.chime.sdk.meetings.device.MediaDevice
 import com.amazonaws.services.chime.sdkdemo.data.Caption
@@ -28,8 +30,11 @@ class MeetingModel : ViewModel() {
     var localVideoTileState: VideoCollectionTile? = null
     val remoteVideoTileStates = mutableListOf<VideoCollectionTile>()
     val videoStatesInCurrentPage = mutableListOf<VideoCollectionTile>()
+    val videoSubscriptionInCurrentPage =
+        mutableMapOf<RemoteVideoSource, VideoSubscriptionConfiguration>()
     val userPausedVideoTileIds = mutableSetOf<Int>()
-    val remoteVideoSourceConfigurations = mutableMapOf<RemoteVideoSource, VideoSubscriptionConfiguration>()
+    val remoteVideoSourceConfigurations =
+        mutableMapOf<RemoteVideoSource, VideoSubscriptionConfiguration>()
     val currentScreenTiles = mutableListOf<VideoCollectionTile>()
     var currentVideoPageIndex = 0
     var currentMediaDevices = listOf<MediaDevice>()
@@ -51,18 +56,35 @@ class MeetingModel : ViewModel() {
     var isUsingGpuVideoProcessor = false
     var isUsingCpuVideoProcessor = false
 
-    fun updateVideoStatesInCurrentPage() {
+    fun updateVideoSubscriptionInCurrentPage() {
         videoStatesInCurrentPage.clear()
 
         if (localVideoTileState != null) {
             videoStatesInCurrentPage.add(localVideoTileState!!)
+            val remoteVideoSource = RemoteVideoSource((localVideoTileState ?: return).attendeeName)
+            val videoSubscriptionConfiguration =
+                VideoSubscriptionConfiguration(VideoPriority.High, VideoResolution.Medium)
+            videoSubscriptionInCurrentPage[remoteVideoSource] = videoSubscriptionConfiguration
         }
 
-        val remoteVideoTileCountPerPage = if (localVideoTileState == null) videoTileCountPerPage else (videoTileCountPerPage - 1)
+        val remoteVideoTileCountPerPage =
+            if (localVideoTileState == null) videoTileCountPerPage else (videoTileCountPerPage - 1)
         val remoteVideoStartIndex = currentVideoPageIndex * remoteVideoTileCountPerPage
-        val remoteVideoEndIndex = min(remoteVideoTileStates.size, remoteVideoStartIndex + remoteVideoTileCountPerPage) - 1
+        val remoteVideoEndIndex =
+            min(remoteVideoTileStates.size, remoteVideoStartIndex + remoteVideoTileCountPerPage) - 1
         if (remoteVideoStartIndex <= remoteVideoEndIndex) {
             videoStatesInCurrentPage.addAll(remoteVideoTileStates.slice(remoteVideoStartIndex..remoteVideoEndIndex))
+        }
+
+        for ((attendeeName) in videoStatesInCurrentPage) {
+            for (remoteVideoSource in remoteVideoSourceConfigurations.keys) {
+                if (remoteVideoSource.attendeeId == attendeeName) {
+                    videoSubscriptionInCurrentPage.put(
+                        remoteVideoSource,
+                        VideoSubscriptionConfiguration(VideoPriority.Highest, VideoResolution.High)
+                    )
+                }
+            }
         }
     }
 
@@ -89,8 +111,10 @@ class MeetingModel : ViewModel() {
     }
 
     fun canGoToNextVideoPage(): Boolean {
-        val remoteVideoTileCountPerPage = if (localVideoTileState == null) videoTileCountPerPage else (videoTileCountPerPage - 1)
-        val maxVideoPageIndex = ceil(remoteVideoTileStates.size.toDouble() / remoteVideoTileCountPerPage).toInt() - 1
+        val remoteVideoTileCountPerPage =
+            if (localVideoTileState == null) videoTileCountPerPage else (videoTileCountPerPage - 1)
+        val maxVideoPageIndex =
+            ceil(remoteVideoTileStates.size.toDouble() / remoteVideoTileCountPerPage).toInt() - 1
         return currentVideoPageIndex < maxVideoPageIndex
     }
 }
