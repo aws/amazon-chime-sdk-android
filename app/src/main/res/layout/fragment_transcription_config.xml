@@ -37,8 +37,8 @@
                 android:layout_marginBottom="16dp"
                 android:contentDescription="@string/transcribe_engine_spinner"
                 android:minHeight="48dp"
-                android:paddingStart="32dp"
-                android:paddingEnd="32dp" />
+                android:paddingLeft="32dp"
+                android:paddingRight="32dp" />
 
             <Spinner
                 android:id="@+id/spinnerLanguage"
@@ -47,8 +47,8 @@
                 android:layout_marginBottom="16dp"
                 android:contentDescription="@string/language_setting_spinner"
                 android:minHeight="48dp"
-                android:paddingStart="32dp"
-                android:paddingEnd="32dp" />
+                android:paddingLeft="32dp"
+                android:paddingRight="32dp" />
 
             <Spinner
                 android:id="@+id/spinnerRegion"
@@ -57,47 +57,8 @@
                 android:layout_marginBottom="16dp"
                 android:contentDescription="@string/region_setting_spinner"
                 android:minHeight="48dp"
-                android:paddingStart="32dp"
-                android:paddingEnd="32dp" />
-
-            <CheckBox
-                android:id="@+id/checkboxIdentifyLanguage"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp"
-                android:button="@null"
-                android:contentDescription="@string/identify_language_checkbox"
-                android:drawableEnd="?android:attr/listChoiceIndicatorMultiple"
-                android:minHeight="48dp"
-                android:paddingStart="40dp"
-                android:paddingEnd="20dp"
-                android:text="@string/identify_language_checkbox"
-                android:textSize="16sp" />
-
-            <TextView
-                android:id="@+id/textViewLanguageOptions"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp"
-                android:enabled="true"
-                android:paddingStart="39dp"
-                android:paddingEnd="32dp"
-                android:textAppearance="@style/TextAppearance.AppCompat.Display1"
-                android:textColor="@color/colorText"
-                android:textSize="16sp"
-                android:visibility="gone" />
-
-            <Spinner
-                android:id="@+id/spinnerPreferredLanguage"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp"
-                android:contentDescription="@string/preferred_language_spinner"
-                android:minHeight="48dp"
-                android:paddingStart="32dp"
-                android:paddingEnd="32dp"
-                android:visibility="gone"
-                />
+                android:paddingLeft="32dp"
+                android:paddingRight="32dp" />
 
             <Spinner
                 android:id="@+id/spinnerPartialResultsStabilization"
@@ -106,8 +67,8 @@
                 android:layout_marginBottom="16dp"
                 android:contentDescription="@string/partial_stability_spinner"
                 android:minHeight="48dp"
-                android:paddingStart="32dp"
-                android:paddingEnd="32dp" />
+                android:paddingLeft="32dp"
+                android:paddingRight="32dp" />
 
             <Spinner
                 android:id="@+id/spinnerPIIContentIdentification"
@@ -116,8 +77,8 @@
                 android:layout_marginBottom="16dp"
                 android:contentDescription="@string/identification_spinner"
                 android:minHeight="48dp"
-                android:paddingStart="32dp"
-                android:paddingEnd="32dp" />
+                android:paddingLeft="32dp"
+                android:paddingRight="32dp" />
 
             <Spinner
                 android:id="@+id/spinnerPIIContentRedaction"
@@ -126,8 +87,8 @@
                 android:layout_marginBottom="16dp"
                 android:contentDescription="@string/redaction_spinner"
                 android:minHeight="48dp"
-                android:paddingStart="32dp"
-                android:paddingEnd="32dp" />
+                android:paddingLeft="32dp"
+                android:paddingRight="32dp" />
 
             <CheckBox
                 android:id="@+id/checkboxPHIContentIdentification"
@@ -182,8 +143,8 @@
                 android:layout_marginTop="20dp"
                 android:layout_marginBottom="16dp"
                 android:contentDescription="@string/start_transcription"
-                android:paddingStart="20dp"
-                android:paddingEnd="20dp"
+                android:paddingLeft="20dp"
+                android:paddingRight="20dp"
                 android:text="@string/start_transcription" />
         </LinearLayout>
     </ScrollView>

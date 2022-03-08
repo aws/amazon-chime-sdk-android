@@ -5,33 +5,23 @@
 
 package com.amazonaws.services.chime.sdkdemo.fragment
 
-import android.app.AlertDialog
 import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
-import android.widget.AdapterView.OnItemSelectedListener
 import android.widget.ArrayAdapter
 import android.widget.Button
 import android.widget.CheckBox
-import android.widget.CheckedTextView
-import android.widget.CompoundButton
 import android.widget.EditText
-import android.widget.ExpandableListAdapter
-import android.widget.ExpandableListView
-import android.widget.ExpandableListView.OnChildClickListener
 import android.widget.Spinner
-import android.widget.TextView
 import androidx.fragment.app.Fragment
 import com.amazonaws.services.chime.sdk.meetings.utils.logger.ConsoleLogger
 import com.amazonaws.services.chime.sdk.meetings.utils.logger.LogLevel
 import com.amazonaws.services.chime.sdkdemo.R
 import com.amazonaws.services.chime.sdkdemo.activity.HomeActivity
-import com.amazonaws.services.chime.sdkdemo.adapter.LanguageOptionsAdapter
 import com.amazonaws.services.chime.sdkdemo.data.SpinnerItem
-import com.amazonaws.services.chime.sdkdemo.data.TranscribeLanguageOption
 import java.lang.ClassCastException
 import kotlinx.android.synthetic.main.fragment_transcription_config.checkboxCustomLanguageModel
 import kotlinx.android.synthetic.main.fragment_transcription_config.checkboxPHIContentIdentification
@@ -44,18 +34,6 @@ class TranscriptionConfigFragment : Fragment() {
     private val uiScope = CoroutineScope(Dispatchers.Main)
     private var languages = mutableListOf<SpinnerItem>()
     private var regions = mutableListOf<SpinnerItem>()
-
-    private val languageGroups = arrayListOf<String>(
-        "English",
-        "Spanish",
-        "French",
-        "Italian",
-        "German",
-        "Portuguese",
-        "Japanese",
-        "Korean",
-        "Chinese"
-    )
 
     private val languagesMap = mapOf<String, String>(
         "en-US" to "US English (en-US)",
@@ -70,21 +48,6 @@ class TranscriptionConfigFragment : Fragment() {
         "ja-JP" to "Japanese (ja-JP)",
         "ko-KR" to "Korean (ko-KR)",
         "zh-CN" to "Mandarin Chinese - Mainland (zh-CN)"
-    )
-
-    private val languageGroupMapping: List<Pair<String, String>> = listOf<Pair<String, String>>(
-        Pair("English", "en-US"),
-        Pair("English", "en-GB"),
-        Pair("English", "en-AU"),
-        Pair("Spanish", "es-US"),
-        Pair("French", "fr-CA"),
-        Pair("French", "fr-FR"),
-        Pair("Italian", "it-IT"),
-        Pair("German", "de-DE"),
-        Pair("Portuguese", "pt-BR"),
-        Pair("Japanese", "ja-JP"),
-        Pair("Korean", "ko-KR"),
-        Pair("Chinese", "zh-CN")
     )
 
     private val regionsMap = mapOf<String, String>(
@@ -168,18 +131,9 @@ class TranscriptionConfigFragment : Fragment() {
         SpinnerItem(it.key, it.value)
     }
 
-    private val transcribePreferredLanguageDefaultOption: List<SpinnerItem> = mapOf<String, String>(
-        "" to "[Optional] Select preferred language"
-    ).map {
-        SpinnerItem(it.key, it.value)
-    }
-
     private val transcribeIdentificationOptions: MutableList<SpinnerItem> = mutableListOf<SpinnerItem>()
     private val transcribeRedactionOptions: MutableList<SpinnerItem> = mutableListOf<SpinnerItem>()
     private val transcribePartialResultStabilizationOptions: MutableList<SpinnerItem> = transcribePartialResultStabilizationValues.toMutableList()
-    private val preferredLanguageOptions: MutableList<SpinnerItem> = mutableListOf<SpinnerItem>()
-    private val languageOptionsSelected: MutableSet<TranscribeLanguageOption> = mutableSetOf<TranscribeLanguageOption>()
-    private val languageOptions: HashMap<String, MutableList<SpinnerItem?>> = HashMap()
 
     private val transcribeMedicalLanguages: List<SpinnerItem> =
         arrayOf("en-US").mapNotNull { l ->
@@ -229,12 +183,6 @@ class TranscriptionConfigFragment : Fragment() {
     private lateinit var phiIdentificationCheckBox: CheckBox
     private lateinit var customLanguageModelCheckbox: CheckBox
     private lateinit var customLanguageModelEditText: EditText
-    private lateinit var identifyLanguageCheckbox: CheckBox
-    private lateinit var languageOptionsListView: ExpandableListView
-    private lateinit var languageOptionsTextView: TextView
-    private lateinit var languageOptionsAdapter: ExpandableListAdapter
-    private lateinit var preferredLanguageSpinner: Spinner
-    private lateinit var preferredLanguageAdapter: ArrayAdapter<SpinnerItem>
 
     private val TRANSCRIBE_ENGINE_SPINNER_INDEX_KEY = "transcribeEngineSpinnerIndex"
     private val LANGUAGE_SPINNER_INDEX_KEY = "languageSpinnerIndex"
@@ -244,8 +192,6 @@ class TranscriptionConfigFragment : Fragment() {
     private val PII_CONTENT_REDACTION_SPINNER_INDEX_KEY = "piiContentRedactionSpinnerIndex"
     private val PHI_CONTENT_IDENTIFICATION_ENABLED_KEY = "phiContentIdentificationEnabled"
     private val CUSTOM_LANGUAGE_MODEL_NAME_KEY = "customLanguageModelName"
-    private val IDENTIFY_LANGUAGE_ENABLED_KEY = "identifyLanguageEnabled"
-    private val PREFERRED_LANGUAGE_INDEX_KEY = "preferredLanguageIndex"
 
     companion object {
         fun newInstance(meetingId: String): TranscriptionConfigFragment {
@@ -262,15 +208,12 @@ class TranscriptionConfigFragment : Fragment() {
     interface TranscriptionConfigurationEventListener {
         fun onStartTranscription(
             engine: SpinnerItem,
-            language: SpinnerItem?,
+            language: SpinnerItem,
             region: SpinnerItem,
             partialResultsStability: SpinnerItem,
-            contentIdentificationType: SpinnerItem?,
-            contentRedactionType: SpinnerItem?,
-            languageModelName: String?,
-            identifyLanguage: Boolean,
-            languageOptions: String?,
-            preferredLanguage: SpinnerItem?
+            contentIdentificationType: SpinnerItem,
+            contentRedactionType: SpinnerItem,
+            languageModelName: String
         )
     }
 
@@ -296,22 +239,12 @@ class TranscriptionConfigFragment : Fragment() {
         view.findViewById<Button>(R.id.buttonStartTranscription)?.setOnClickListener {
             listener.onStartTranscription(
                 transcribeEngineSpinner.selectedItem as SpinnerItem,
-                languageSpinner.selectedItem?.let {
-                    languageSpinner.selectedItem as SpinnerItem },
+                languageSpinner.selectedItem as SpinnerItem,
                 regionSpinner.selectedItem as SpinnerItem,
                 partialResultsStabilizationSpinner.selectedItem as SpinnerItem,
-                if (piiIdentificationSpinner.isEnabled) {
-                    piiIdentificationSpinner.selectedItem as SpinnerItem } else null,
-                if (piiRedactionSpinner.isEnabled) {
-                    piiRedactionSpinner.selectedItem as SpinnerItem } else null,
-                if (customLanguageModelCheckbox.isEnabled) {
-                    customLanguageModelEditText.text.toString() } else null,
-                identifyLanguageCheckbox.isChecked,
-                if (identifyLanguageCheckbox.isChecked) {
-                    formatLanguageOptions() } else null,
-                if (identifyLanguageCheckbox.isChecked) {
-                    preferredLanguageSpinner.selectedItem?.let {
-                        preferredLanguageSpinner.selectedItem as SpinnerItem } } else null
+                piiIdentificationSpinner.selectedItem as SpinnerItem,
+                piiRedactionSpinner.selectedItem as SpinnerItem,
+                customLanguageModelEditText.text.toString()
             )
         }
 
@@ -338,39 +271,6 @@ class TranscriptionConfigFragment : Fragment() {
         regionAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         regionSpinner.adapter = regionAdapter
         regionSpinner.isSelected = false
-
-        identifyLanguageCheckbox = view.findViewById(R.id.checkboxIdentifyLanguage)
-        languageOptionsTextView = view.findViewById(R.id.textViewLanguageOptions)
-        identifyLanguageCheckbox.setOnCheckedChangeListener { languageOptionDialogBox, isChecked ->
-            if (isChecked) {
-                showLanguageOptionsAlertDialog(languageOptionDialogBox)
-                languageSpinner.isEnabled = false
-                piiIdentificationSpinner.isEnabled = false
-                piiRedactionSpinner.isEnabled = false
-                phiIdentificationCheckBox.isEnabled = false
-                preferredLanguageSpinner.visibility = View.VISIBLE
-                languageOptionsTextView.visibility = View.VISIBLE
-                customLanguageModelCheckbox.isEnabled = false
-                customLanguageModelEditText.isEnabled = false
-                customLanguageModelEditText.visibility = View.GONE
-            } else {
-                preferredLanguageSpinner.visibility = View.GONE
-                languageOptionsTextView.isEnabled = false
-                languageSpinner.isEnabled = true
-                piiIdentificationSpinner.isEnabled = true
-                piiRedactionSpinner.isEnabled = true
-                languageOptionsTextView.visibility = View.GONE
-                customLanguageModelCheckbox.isEnabled = true
-                customLanguageModelEditText.isEnabled = true
-                customLanguageModelEditText.visibility = View.VISIBLE
-            }
-        }
-
-        preferredLanguageSpinner = view.findViewById(R.id.spinnerPreferredLanguage)
-        preferredLanguageAdapter = ArrayAdapter(context, android.R.layout.simple_spinner_item, preferredLanguageOptions)
-        preferredLanguageAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-        preferredLanguageSpinner.adapter = preferredLanguageAdapter
-        preferredLanguageSpinner.isSelected = false
 
         partialResultsStabilizationSpinner = view.findViewById(R.id.spinnerPartialResultsStabilization)
         partialResultsStabilizationAdapter = ArrayAdapter(context, android.R.layout.simple_spinner_item, transcribePartialResultStabilizationOptions)
@@ -421,7 +321,6 @@ class TranscriptionConfigFragment : Fragment() {
             populateRegions(transcribeRegions, regions, regionAdapter)
             populateTranscriptionOptions(transcribePiiOptions, transcribeIdentificationOptions, piiIdentificationAdapter, "Identification")
             populateTranscriptionOptions(transcribePiiOptions, transcribeRedactionOptions, piiRedactionAdapter, "Redaction")
-            populateLanguageOptions(languageOptions)
 
             var transcribeEngineSpinnerIndex = 0
             var languageSpinnerIndex = 0
@@ -431,8 +330,6 @@ class TranscriptionConfigFragment : Fragment() {
             var piiContentRedactionSpinnerIndex = 0
             var phiContentIdentificationEnabled = false
             var customLanguageModelName = resources.getString(R.string.custom_language_checkbox)
-            var preferredLanguageSpinnerIndex = 0
-            var identifyLanguageEnabled = false
             if (savedInstanceState != null) {
                 transcribeEngineSpinnerIndex = savedInstanceState.getInt(TRANSCRIBE_ENGINE_SPINNER_INDEX_KEY, 0)
                 languageSpinnerIndex = savedInstanceState.getInt(LANGUAGE_SPINNER_INDEX_KEY, 0)
@@ -442,8 +339,6 @@ class TranscriptionConfigFragment : Fragment() {
                 piiContentRedactionSpinnerIndex = savedInstanceState.getInt(PII_CONTENT_REDACTION_SPINNER_INDEX_KEY, 0)
                 phiContentIdentificationEnabled = savedInstanceState.getBoolean(PHI_CONTENT_IDENTIFICATION_ENABLED_KEY, false)
                 customLanguageModelName = savedInstanceState.getString(CUSTOM_LANGUAGE_MODEL_NAME_KEY, resources.getString(R.string.custom_language_checkbox))
-                identifyLanguageEnabled = savedInstanceState.getBoolean(IDENTIFY_LANGUAGE_ENABLED_KEY, false)
-                preferredLanguageSpinnerIndex = savedInstanceState.getInt(PREFERRED_LANGUAGE_INDEX_KEY, 0)
             }
 
             transcribeEngineSpinner.setSelection(transcribeEngineSpinnerIndex)
@@ -455,8 +350,6 @@ class TranscriptionConfigFragment : Fragment() {
             checkboxPHIContentIdentification.isChecked = phiContentIdentificationEnabled
             checkboxCustomLanguageModel.isChecked = customLanguageModelName != (resources.getString(R.string.custom_language_checkbox))
             checkboxCustomLanguageModel.text = customLanguageModelName
-            identifyLanguageCheckbox.isChecked = identifyLanguageEnabled
-            preferredLanguageSpinner.setSelection(preferredLanguageSpinnerIndex)
         }
 
         return view
@@ -472,11 +365,9 @@ class TranscriptionConfigFragment : Fragment() {
         outState.putInt(PII_CONTENT_REDACTION_SPINNER_INDEX_KEY, piiRedactionSpinner.selectedItemPosition)
         outState.putBoolean(PHI_CONTENT_IDENTIFICATION_ENABLED_KEY, phiIdentificationCheckBox.isChecked)
         outState.putString(CUSTOM_LANGUAGE_MODEL_NAME_KEY, checkboxCustomLanguageModel.text.toString())
-        outState.putInt(PREFERRED_LANGUAGE_INDEX_KEY, preferredLanguageSpinner.selectedItemPosition)
-        outState.putBoolean(IDENTIFY_LANGUAGE_ENABLED_KEY, identifyLanguageCheckbox.isChecked)
     }
 
-    private val onTranscribeEngineSelected = object : OnItemSelectedListener {
+    private val onTranscribeEngineSelected = object : AdapterView.OnItemSelectedListener {
         override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
             if (position < transcribeEngines.size) {
                 populateLanguages(transcribeMedicalLanguages, languages, languageAdapter)
@@ -552,25 +443,6 @@ class TranscriptionConfigFragment : Fragment() {
         adapter.notifyDataSetChanged()
     }
 
-    private fun populateLanguageOptions(languageOptions: HashMap<String, MutableList<SpinnerItem?>>) {
-        for ((locale, variant) in languageGroupMapping) {
-            if (languageOptions.containsKey(locale)) {
-                languageOptions[locale]?.add(languagesMap[variant]?.let {
-                    SpinnerItem(variant, it) })
-            } else {
-                languageOptions[locale] =
-                    mutableListOf(languagesMap[variant]?.let { SpinnerItem(variant, it) })
-            }
-        }
-    }
-
-    private fun populatePreferredLanguage(newList: List<SpinnerItem>, currentList: MutableList<SpinnerItem>, adapter: ArrayAdapter<SpinnerItem>) {
-        currentList.clear()
-        currentList.add(transcribePreferredLanguageDefaultOption[0])
-        currentList.addAll(newList)
-        adapter.notifyDataSetChanged()
-    }
-
     private fun resetSpinner() {
         languageSpinner.setSelection(0, true)
         regionSpinner.setSelection(0, true)
@@ -578,7 +450,6 @@ class TranscriptionConfigFragment : Fragment() {
 
     // Enable / Disable additional transcription options based on engine selected.
     private fun displayAdditionalTranscriptionOptions(isTranscribeMedical: Boolean) {
-        identifyLanguageCheckbox.isChecked = false
         piiIdentificationSpinner.setSelection(0, true)
         piiRedactionSpinner.setSelection(0, true)
         partialResultsStabilizationSpinner.setSelection(0, true)
@@ -593,118 +464,5 @@ class TranscriptionConfigFragment : Fragment() {
         checkboxCustomLanguageModel.visibility = if (isTranscribeMedical) View.GONE else View.VISIBLE
         partialResultsStabilizationSpinner.visibility = if (isTranscribeMedical) View.GONE else View.VISIBLE
         phiIdentificationCheckBox.visibility = if (isTranscribeMedical) View.VISIBLE else View.GONE
-        identifyLanguageCheckbox.visibility = if (isTranscribeMedical) View.GONE else View.VISIBLE
-        languageSpinner.isEnabled = isTranscribeMedical
-        phiIdentificationCheckBox.isEnabled = true
-        if (isTranscribeMedical) {
-            languageOptionsTextView.visibility = View.GONE
-            preferredLanguageSpinner.visibility = View.GONE
-        }
-    }
-
-    private fun showLanguageOptionsAlertDialog(languageOptionDialogBox: CompoundButton) {
-        val builder = AlertDialog.Builder(this.context)
-        val languageOptionsAlertDialog =
-            layoutInflater.inflate(R.layout.alert_dialog_language_options, null)
-        languageOptionsListView = languageOptionsAlertDialog.findViewById<ExpandableListView>(R.id.expandableListViewLanguageOptions)
-
-        languageOptionsAdapter = LanguageOptionsAdapter(this.requireContext(), languageOptions, languageGroups, languageOptionsSelected)
-        languageOptionsListView.setAdapter(languageOptionsAdapter)
-        languageOptionsListView.setOnChildClickListener(OnChildClickListener { _, view, groupPosition, childPosition, _ ->
-
-            val languageOptionCheck: CheckedTextView = view.findViewById(R.id.checkedTextViewLanguageOptionRow)
-            languageOptionCheck.toggle()
-            val languageSelected: SpinnerItem? = languageOptions[languageGroups[groupPosition]]?.get(childPosition)
-            val selectedCell: TranscribeLanguageOption? =
-                languageSelected?.let { TranscribeLanguageOption(groupPosition, childPosition, it) }
-            selectedCell?.let {
-                if (languageOptionsSelected.contains(selectedCell)) {
-                    languageOptionsSelected.remove(selectedCell)
-                } else {
-                    languageOptionsSelected.add(selectedCell)
-                }
-            }
-
-            validateLanguageOptions(
-                languageGroups,
-                languageOptionsSelected,
-                languageOptionsAlertDialog
-            )
-
-            return@OnChildClickListener false
-        })
-
-        expandLanguageOptionsGroup()
-
-        builder.setView(languageOptionsAlertDialog)
-        val alertDialog = builder.create()
-        alertDialog.show()
-
-        val saveButton: Button = languageOptionsAlertDialog.findViewById(R.id.buttonSaveLanguageOptions)
-        saveButton.setOnClickListener {
-            if (validateLanguageOptions(languageGroups, languageOptionsSelected, languageOptionsAlertDialog)) {
-                val languageOptionsSelected: List<SpinnerItem> =
-                    languageOptionsSelected.map { languageOptionSelected -> languageOptionSelected.transcribeLanguage }
-                populatePreferredLanguage(languageOptionsSelected, preferredLanguageOptions, preferredLanguageAdapter)
-                languageOptionsTextView.text = String.format("%s %s", getString(R.string.language_options_text_title),
-                    languageOptionsSelected.joinToString(", "))
-
-                alertDialog.dismiss()
-            }
-        }
-
-        val cancelButton: Button = languageOptionsAlertDialog.findViewById(R.id.buttonCancelLanguageOptions)
-        cancelButton.setOnClickListener {
-            languageOptionDialogBox.isChecked = false
-            alertDialog.dismiss()
-        }
-    }
-
-    private fun expandLanguageOptionsGroup() {
-        for (i in 0 until languageOptionsAdapter.groupCount) {
-            languageOptionsListView.expandGroup(i)
-        }
-    }
-
-    private fun formatLanguageOptions(): String {
-        return if (languageOptionsSelected.isEmpty()) "" else
-            languageOptionsSelected.joinToString(",") {
-                    languageOptionSelected -> languageOptionSelected.transcribeLanguage.spinnerText.toString()
-            }
-    }
-
-    private fun validateLanguageOptions(
-        languageLocales: ArrayList<String>,
-        languageOptionsSelectedSet: MutableSet<TranscribeLanguageOption>,
-        view: View
-    ): Boolean {
-        var isValid = false
-        val duplicateLanguageLocale: HashSet<String> = HashSet<String>()
-        val languageLocaleSelectedSet: HashSet<Int> = HashSet<Int>()
-        for (languageOptionSelected in languageOptionsSelectedSet) {
-            if (languageLocaleSelectedSet.contains(languageOptionSelected.languageGroupIndex) &&
-                !duplicateLanguageLocale.contains(languageLocales[languageOptionSelected.languageGroupIndex])) {
-                duplicateLanguageLocale.add(languageLocales[languageOptionSelected.languageGroupIndex])
-            } else {
-                languageLocaleSelectedSet.add(languageOptionSelected.languageGroupIndex)
-            }
-        }
-
-        val displayErrorMessageText: String = when {
-            duplicateLanguageLocale.size > 0 -> {
-                getString(R.string.user_notification_language_option_invalid_selection,
-                    duplicateLanguageLocale.joinToString(", "))
-            }
-            languageLocaleSelectedSet.size < 2 -> {
-                getString(R.string.user_notification_language_option_missing_selection)
-            }
-            else -> {
-                isValid = true
-                ""
-            }
-        }
-
-        view.findViewById<TextView>(R.id.textViewErrorLanguageOptions).text = displayErrorMessageText
-        return isValid
     }
 }
