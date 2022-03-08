@@ -16,7 +16,6 @@ import com.amazonaws.services.chime.sdk.meetings.audiovideo.SignalStrength
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.SignalUpdate
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.Transcript
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.TranscriptAlternative
-import com.amazonaws.services.chime.sdk.meetings.audiovideo.TranscriptEntity
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.TranscriptEvent
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.TranscriptItem
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.TranscriptItemType
@@ -254,27 +253,12 @@ class DefaultAudioClientObserver(
                                         rawItem.attendee.externalUserId
                                     ),
                                     rawItem.content,
-                                    rawItem.vocabularyFilterMatch,
-                                    rawItem.confidence,
-                                    rawItem.stable
+                                    rawItem.vocabularyFilterMatch
                                 )
                                 items.add(item)
                             }
-                            val entities = rawAlternative.entities?.let {
-                                it.map { rawEntity ->
-                                    TranscriptEntity(
-                                        rawEntity.category,
-                                        rawEntity.confidence,
-                                        rawEntity.content,
-                                        rawEntity.startTimeMs,
-                                        rawEntity.endTimeMs,
-                                        rawEntity.type
-                                    )
-                                }.toTypedArray() ?: run { null }
-                            }
                             val alternative = TranscriptAlternative(
                                 items.toTypedArray(),
-                                entities,
                                 rawAlternative.transcript
                             )
                             alternatives.add(alternative)
