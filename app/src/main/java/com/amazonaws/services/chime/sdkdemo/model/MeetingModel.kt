@@ -61,12 +61,10 @@ class MeetingModel : ViewModel() {
 
         if (localVideoTileState != null) {
             videoStatesInCurrentPage.add(localVideoTileState!!)
-            val remoteVideoSource = RemoteVideoSource((localVideoTileState ?: return).attendeeName)
-            val videoSubscriptionConfiguration =
-                VideoSubscriptionConfiguration(VideoPriority.High, VideoResolution.Medium)
-            videoSubscriptionInCurrentPage[remoteVideoSource] = videoSubscriptionConfiguration
         }
 
+        val videoSubscriptionConfiguration =
+            VideoSubscriptionConfiguration(VideoPriority.Medium, VideoResolution.High)
         val remoteVideoTileCountPerPage =
             if (localVideoTileState == null) videoTileCountPerPage else (videoTileCountPerPage - 1)
         val remoteVideoStartIndex = currentVideoPageIndex * remoteVideoTileCountPerPage
@@ -75,16 +73,9 @@ class MeetingModel : ViewModel() {
         if (remoteVideoStartIndex <= remoteVideoEndIndex) {
             videoStatesInCurrentPage.addAll(remoteVideoTileStates.slice(remoteVideoStartIndex..remoteVideoEndIndex))
         }
-
-        for ((attendeeName) in videoStatesInCurrentPage) {
-            for (remoteVideoSource in remoteVideoSourceConfigurations.keys) {
-                if (remoteVideoSource.attendeeId == attendeeName) {
-                    videoSubscriptionInCurrentPage.put(
-                        remoteVideoSource,
-                        VideoSubscriptionConfiguration(VideoPriority.Highest, VideoResolution.High)
-                    )
-                }
-            }
+        for (videoState in videoStatesInCurrentPage) {
+            videoSubscriptionInCurrentPage[videoState.remoteVideoSource] =
+                videoSubscriptionConfiguration
         }
     }
 

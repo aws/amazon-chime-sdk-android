@@ -6,11 +6,13 @@ package com.amazonaws.services.chime.sdkdemo.data
 
 import androidx.constraintlayout.widget.ConstraintLayout
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.DefaultVideoRenderView
+import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.RemoteVideoSource
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoTileState
 
 data class VideoCollectionTile(
     val attendeeName: String,
-    val videoTileState: VideoTileState
+    val videoTileState: VideoTileState,
+    val remoteVideoSource: RemoteVideoSource
 ) {
     var videoRenderView: DefaultVideoRenderView? = null
     var pauseMessageView: ConstraintLayout? = null
