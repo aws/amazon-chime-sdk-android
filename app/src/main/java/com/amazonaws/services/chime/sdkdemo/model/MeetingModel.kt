@@ -7,10 +7,6 @@ package com.amazonaws.services.chime.sdkdemo.model
 
 import androidx.lifecycle.ViewModel
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.AttendeeInfo
-import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.RemoteVideoSource
-import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoPriority
-import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoResolution
-import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoSubscriptionConfiguration
 import com.amazonaws.services.chime.sdk.meetings.device.MediaDevice
 import com.amazonaws.services.chime.sdkdemo.data.Caption
 import com.amazonaws.services.chime.sdkdemo.data.Message
@@ -29,12 +25,9 @@ class MeetingModel : ViewModel() {
     val currentRoster = mutableMapOf<String, RosterAttendee>()
     var localVideoTileState: VideoCollectionTile? = null
     val remoteVideoTileStates = mutableListOf<VideoCollectionTile>()
+    val remoteVideoSourceStates = mutableListOf<VideoCollectionTile>()
     val videoStatesInCurrentPage = mutableListOf<VideoCollectionTile>()
-    val videoSubscriptionInCurrentPage =
-        mutableMapOf<RemoteVideoSource, VideoSubscriptionConfiguration>()
     val userPausedVideoTileIds = mutableSetOf<Int>()
-    val remoteVideoSourceConfigurations =
-        mutableMapOf<RemoteVideoSource, VideoSubscriptionConfiguration>()
     val currentScreenTiles = mutableListOf<VideoCollectionTile>()
     var currentVideoPageIndex = 0
     var currentMediaDevices = listOf<MediaDevice>()
@@ -56,15 +49,12 @@ class MeetingModel : ViewModel() {
     var isUsingGpuVideoProcessor = false
     var isUsingCpuVideoProcessor = false
 
-    fun updateVideoSubscriptionInCurrentPage() {
+    fun updateVideoStatesInCurrentPage() {
         videoStatesInCurrentPage.clear()
 
         if (localVideoTileState != null) {
             videoStatesInCurrentPage.add(localVideoTileState!!)
         }
-
-        val videoSubscriptionConfiguration =
-            VideoSubscriptionConfiguration(VideoPriority.Medium, VideoResolution.High)
         val remoteVideoTileCountPerPage =
             if (localVideoTileState == null) videoTileCountPerPage else (videoTileCountPerPage - 1)
         val remoteVideoStartIndex = currentVideoPageIndex * remoteVideoTileCountPerPage
@@ -72,10 +62,6 @@ class MeetingModel : ViewModel() {
             min(remoteVideoTileStates.size, remoteVideoStartIndex + remoteVideoTileCountPerPage) - 1
         if (remoteVideoStartIndex <= remoteVideoEndIndex) {
             videoStatesInCurrentPage.addAll(remoteVideoTileStates.slice(remoteVideoStartIndex..remoteVideoEndIndex))
-        }
-        for (videoState in videoStatesInCurrentPage) {
-            videoSubscriptionInCurrentPage[videoState.remoteVideoSource] =
-                videoSubscriptionConfiguration
         }
     }
 

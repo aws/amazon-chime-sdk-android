@@ -36,7 +36,7 @@ import kotlinx.android.synthetic.main.item_video.view.video_surface
 class VideoAdapter(
     private val videoCollectionTiles: Collection<VideoCollectionTile>,
     private val userPausedVideoTileIds: MutableSet<Int>,
-    private val remoteVideoSourceConfigurations: MutableMap<RemoteVideoSource, VideoSubscriptionConfiguration>,
+    private val remoteVideoSourceStates: MutableList<VideoCollectionTile>,
     private val audioVideoFacade: AudioVideoFacade,
     private val cameraCaptureSource: CameraCaptureSource?,
     private val context: Context?,
@@ -53,7 +53,7 @@ class VideoAdapter(
             inflatedView,
             audioVideoFacade,
             userPausedVideoTileIds,
-            remoteVideoSourceConfigurations,
+            remoteVideoSourceStates,
             logger,
             cameraCaptureSource
         )
@@ -88,7 +88,7 @@ class VideoHolder(
     private val view: View,
     private val audioVideo: AudioVideoFacade,
     private val userPausedVideoTileIds: MutableSet<Int>,
-    private val remoteVideoSourceConfigurations: MutableMap<RemoteVideoSource, VideoSubscriptionConfiguration>,
+    private val remoteVideoSourceStates: MutableList<VideoCollectionTile>,
     private val logger: Logger,
     private val cameraCaptureSource: CameraCaptureSource?
 ) : RecyclerView.ViewHolder(view) {
@@ -192,9 +192,20 @@ class VideoHolder(
                 }
             }
 
-            for ((source, configuration) in remoteVideoSourceConfigurations) {
-                if (source.attendeeId == attendeeId) {
-                    configuration.priority = newPriority
+            var remoteVideoSourceConfigurations: MutableMap<RemoteVideoSource, VideoSubscriptionConfiguration> =
+                mutableMapOf()
+
+            for (source in remoteVideoSourceStates) {
+                if (source.remoteVideoSource?.attendeeId == attendeeId) {
+                    source.videoSubscriptionConfiguration?.priority = newPriority
+                }
+                source.remoteVideoSource?.let {
+                    source.videoSubscriptionConfiguration?.let { it1 ->
+                        remoteVideoSourceConfigurations.put(
+                            it,
+                            it1
+                        )
+                    }
                 }
             }
             audioVideo.updateVideoSourceSubscriptions(remoteVideoSourceConfigurations, emptyArray())
@@ -222,11 +233,22 @@ class VideoHolder(
                 }
             }
 
-            for ((source, configuration) in remoteVideoSourceConfigurations) {
-                if (source.attendeeId == attendeeId) {
-                    configuration.targetResolution = newResolution
+            var remoteVideoSourceConfigurations: MutableMap<RemoteVideoSource, VideoSubscriptionConfiguration> =
+                mutableMapOf()
+            for (source in remoteVideoSourceStates) {
+                if (source.remoteVideoSource?.attendeeId == attendeeId) {
+                    source.videoSubscriptionConfiguration?.targetResolution = newResolution
+                }
+                source.remoteVideoSource?.let {
+                    source.videoSubscriptionConfiguration?.let { it1 ->
+                        remoteVideoSourceConfigurations.put(
+                            it,
+                            it1
+                        )
+                    }
                 }
             }
+
             audioVideo.updateVideoSourceSubscriptions(remoteVideoSourceConfigurations, emptyArray())
             true
         }
@@ -235,9 +257,9 @@ class VideoHolder(
 
     private fun updateLocalVideoMirror() {
         view.video_surface.mirror =
-            // If we are using internal source, base mirror state off that device type
+                // If we are using internal source, base mirror state off that device type
             (audioVideo.getActiveCamera()?.type == MediaDeviceType.VIDEO_FRONT_CAMERA ||
-            // Otherwise (audioVideo.getActiveCamera() == null) use the device type of our external/custom camera capture source
-            (audioVideo.getActiveCamera() == null && cameraCaptureSource?.device?.type == MediaDeviceType.VIDEO_FRONT_CAMERA))
+                    // Otherwise (audioVideo.getActiveCamera() == null) use the device type of our external/custom camera capture source
+                    (audioVideo.getActiveCamera() == null && cameraCaptureSource?.device?.type == MediaDeviceType.VIDEO_FRONT_CAMERA))
     }
 }
