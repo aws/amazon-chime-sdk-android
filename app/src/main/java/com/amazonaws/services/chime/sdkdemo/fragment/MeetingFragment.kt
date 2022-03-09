@@ -1395,6 +1395,7 @@ class MeetingFragment : Fragment(),
             )
             meetingModel.remoteVideoSourceStates.add(videoCollectionTile)
         }
+        // Use the default auto subscribe behavior
     }
 
     override fun onRemoteVideoSourceUnavailable(sources: List<RemoteVideoSource>) {

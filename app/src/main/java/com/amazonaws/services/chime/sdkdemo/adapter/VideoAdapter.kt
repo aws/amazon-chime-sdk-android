@@ -257,9 +257,9 @@ class VideoHolder(
 
     private fun updateLocalVideoMirror() {
         view.video_surface.mirror =
-                // If we are using internal source, base mirror state off that device type
+            // If we are using internal source, base mirror state off that device type
             (audioVideo.getActiveCamera()?.type == MediaDeviceType.VIDEO_FRONT_CAMERA ||
-                    // Otherwise (audioVideo.getActiveCamera() == null) use the device type of our external/custom camera capture source
-                    (audioVideo.getActiveCamera() == null && cameraCaptureSource?.device?.type == MediaDeviceType.VIDEO_FRONT_CAMERA))
+            // Otherwise (audioVideo.getActiveCamera() == null) use the device type of our external/custom camera capture source
+            (audioVideo.getActiveCamera() == null && cameraCaptureSource?.device?.type == MediaDeviceType.VIDEO_FRONT_CAMERA))
     }
 }
