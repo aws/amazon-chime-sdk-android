@@ -1391,12 +1391,7 @@ class MeetingFragment : Fragment(),
     }
 
     override fun onRemoteVideoSourceUnavailable(sources: List<RemoteVideoSource>) {
-        for (videoStates in meetingModel.remoteVideoSourceConfigurations) {
-            for (source in sources)
-                if (videoStates.key == source) {
-                    meetingModel.remoteVideoSourceConfigurations.remove(videoStates.key)
-                }
-        }
+        sources.forEach { meetingModel.remoteVideoSourceConfigurations.remove(it) }
     }
 
     override fun onVideoTileAdded(tileState: VideoTileState) {
