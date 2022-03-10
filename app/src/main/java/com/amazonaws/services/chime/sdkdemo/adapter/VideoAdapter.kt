@@ -36,7 +36,7 @@ import kotlinx.android.synthetic.main.item_video.view.video_surface
 class VideoAdapter(
     private val videoCollectionTiles: Collection<VideoCollectionTile>,
     private val userPausedVideoTileIds: MutableSet<Int>,
-    private val remoteVideoSourceStates: MutableList<VideoCollectionTile>,
+    private val remoteVideoSourceConfigurations: MutableMap<RemoteVideoSource, VideoSubscriptionConfiguration>,
     private val audioVideoFacade: AudioVideoFacade,
     private val cameraCaptureSource: CameraCaptureSource?,
     private val context: Context?,
@@ -53,7 +53,7 @@ class VideoAdapter(
             inflatedView,
             audioVideoFacade,
             userPausedVideoTileIds,
-            remoteVideoSourceStates,
+            remoteVideoSourceConfigurations,
             logger,
             cameraCaptureSource
         )
@@ -88,7 +88,7 @@ class VideoHolder(
     private val view: View,
     private val audioVideo: AudioVideoFacade,
     private val userPausedVideoTileIds: MutableSet<Int>,
-    private val remoteVideoSourceStates: MutableList<VideoCollectionTile>,
+    private val remoteVideoSourceConfigurations: MutableMap<RemoteVideoSource, VideoSubscriptionConfiguration>,
     private val logger: Logger,
     private val cameraCaptureSource: CameraCaptureSource?
 ) : RecyclerView.ViewHolder(view) {
@@ -192,20 +192,10 @@ class VideoHolder(
                 }
             }
 
-            var remoteVideoSourceConfigurations: MutableMap<RemoteVideoSource, VideoSubscriptionConfiguration> =
-                mutableMapOf()
-
-            for (source in remoteVideoSourceStates) {
-                if (source.remoteVideoSource?.attendeeId == attendeeId) {
-                    source.videoSubscriptionConfiguration?.priority = newPriority
-                }
-                source.remoteVideoSource?.let {
-                    source.videoSubscriptionConfiguration?.let { it1 ->
-                        remoteVideoSourceConfigurations.put(
-                            it,
-                            it1
-                        )
-                    }
+            for (source in remoteVideoSourceConfigurations) {
+                if (source.key?.attendeeId == attendeeId) {
+                    val resolution: VideoResolution = source.value.targetResolution
+                    source.setValue(VideoSubscriptionConfiguration(newPriority, resolution))
                 }
             }
             audioVideo.updateVideoSourceSubscriptions(remoteVideoSourceConfigurations, emptyArray())
@@ -233,19 +223,10 @@ class VideoHolder(
                 }
             }
 
-            var remoteVideoSourceConfigurations: MutableMap<RemoteVideoSource, VideoSubscriptionConfiguration> =
-                mutableMapOf()
-            for (source in remoteVideoSourceStates) {
-                if (source.remoteVideoSource?.attendeeId == attendeeId) {
-                    source.videoSubscriptionConfiguration?.targetResolution = newResolution
-                }
-                source.remoteVideoSource?.let {
-                    source.videoSubscriptionConfiguration?.let { it1 ->
-                        remoteVideoSourceConfigurations.put(
-                            it,
-                            it1
-                        )
-                    }
+            for (source in remoteVideoSourceConfigurations) {
+                if (source.key.attendeeId == attendeeId) {
+                    val priority: VideoPriority = source.value.priority
+                    source.setValue(VideoSubscriptionConfiguration(priority, newResolution))
                 }
             }
 

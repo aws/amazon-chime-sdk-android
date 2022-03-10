@@ -341,7 +341,7 @@ class MeetingFragment : Fragment(),
         videoTileAdapter = VideoAdapter(
             meetingModel.videoStatesInCurrentPage,
             meetingModel.userPausedVideoTileIds,
-            meetingModel.remoteVideoSourceStates,
+            meetingModel.remoteVideoSourceConfigurations,
             audioVideo,
             cameraCaptureSource,
             context,
@@ -356,7 +356,7 @@ class MeetingFragment : Fragment(),
             VideoAdapter(
                 meetingModel.currentScreenTiles,
                 meetingModel.userPausedVideoTileIds,
-                meetingModel.remoteVideoSourceStates,
+                meetingModel.remoteVideoSourceConfigurations,
                 audioVideo,
                 null,
                 context,
@@ -1073,7 +1073,11 @@ class MeetingFragment : Fragment(),
         oldList.addAll(meetingModel.videoStatesInCurrentPage)
         val removedList: ArrayList<RemoteVideoSource> = arrayListOf()
         for (videoState in oldList) {
-            videoState.remoteVideoSource?.let { removedList.add(it) }
+            for ((key) in meetingModel.remoteVideoSourceConfigurations) {
+                if (videoState.videoTileState.attendeeId == key.attendeeId) {
+                    removedList.add(key)
+                }
+            }
         }
         val removedSources: Array<RemoteVideoSource> = removedList.toTypedArray()
         // Recalculate videos in the current page and notify videoTileAdapter
@@ -1086,12 +1090,9 @@ class MeetingFragment : Fragment(),
         val updatedSources: MutableMap<RemoteVideoSource, VideoSubscriptionConfiguration> =
             mutableMapOf()
         for (videoState in newList) {
-            videoState.remoteVideoSource?.let {
-                videoState.videoSubscriptionConfiguration?.let { it1 ->
-                    updatedSources.put(
-                        it,
-                        it1
-                    )
+            for ((key, value) in meetingModel.remoteVideoSourceConfigurations) {
+                if (videoState.videoTileState.attendeeId == key.attendeeId) {
+                    updatedSources[key] = value
                 }
             }
         }
@@ -1280,9 +1281,7 @@ class MeetingFragment : Fragment(),
     private fun createVideoCollectionTile(tileState: VideoTileState): VideoCollectionTile {
         val attendeeId = tileState.attendeeId
         val attendeeName = meetingModel.currentRoster[attendeeId]?.attendeeName ?: ""
-        val videoCollectionTile = VideoCollectionTile(attendeeName)
-        videoCollectionTile.setTileState(tileState)
-        return videoCollectionTile
+        return VideoCollectionTile(attendeeName, tileState)
     }
 
     override fun onAudioSessionStartedConnecting(reconnecting: Boolean) {
@@ -1385,24 +1384,17 @@ class MeetingFragment : Fragment(),
 
     override fun onRemoteVideoSourceAvailable(sources: List<RemoteVideoSource>) {
         for (source in sources) {
-            var videoCollectionTile = VideoCollectionTile(source.attendeeId)
-            videoCollectionTile.setVideoSource(source)
-            videoCollectionTile.setSubscriptionConfiguration(
-                VideoSubscriptionConfiguration(
-                    VideoPriority.Medium,
-                    VideoResolution.Medium
-                )
-            )
-            meetingModel.remoteVideoSourceStates.add(videoCollectionTile)
+            meetingModel.remoteVideoSourceConfigurations[source] =
+                VideoSubscriptionConfiguration(VideoPriority.Medium, VideoResolution.Medium)
         }
         // Use the default auto subscribe behavior
     }
 
     override fun onRemoteVideoSourceUnavailable(sources: List<RemoteVideoSource>) {
-        for (videoStates in meetingModel.remoteVideoSourceStates) {
+        for (videoStates in meetingModel.remoteVideoSourceConfigurations) {
             for (source in sources)
-                if (videoStates.remoteVideoSource == source) {
-                    meetingModel.remoteVideoSourceStates.remove(videoStates)
+                if (videoStates.key == source) {
+                    meetingModel.remoteVideoSourceConfigurations.remove(videoStates.key)
                 }
         }
     }

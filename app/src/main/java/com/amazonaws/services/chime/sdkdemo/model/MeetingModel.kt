@@ -7,6 +7,8 @@ package com.amazonaws.services.chime.sdkdemo.model
 
 import androidx.lifecycle.ViewModel
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.AttendeeInfo
+import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.RemoteVideoSource
+import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoSubscriptionConfiguration
 import com.amazonaws.services.chime.sdk.meetings.device.MediaDevice
 import com.amazonaws.services.chime.sdkdemo.data.Caption
 import com.amazonaws.services.chime.sdkdemo.data.Message
@@ -25,7 +27,7 @@ class MeetingModel : ViewModel() {
     val currentRoster = mutableMapOf<String, RosterAttendee>()
     var localVideoTileState: VideoCollectionTile? = null
     val remoteVideoTileStates = mutableListOf<VideoCollectionTile>()
-    val remoteVideoSourceStates = mutableListOf<VideoCollectionTile>()
+    val remoteVideoSourceConfigurations = mutableMapOf<RemoteVideoSource, VideoSubscriptionConfiguration>()
     val videoStatesInCurrentPage = mutableListOf<VideoCollectionTile>()
     val userPausedVideoTileIds = mutableSetOf<Int>()
     val currentScreenTiles = mutableListOf<VideoCollectionTile>()
