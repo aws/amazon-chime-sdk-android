@@ -33,7 +33,9 @@ data class TranscriptResult(
     val isPartial: Boolean,
     val startTimeMs: Long,
     val endTimeMs: Long,
-    val alternatives: Array<TranscriptAlternative>
+    val alternatives: Array<TranscriptAlternative>,
+    val languageCode: String?,
+    val languageIdentification: Array<TranscriptLanguageWithScore>?
 ) {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
@@ -43,7 +45,11 @@ data class TranscriptResult(
 
         if (!alternatives.contentEquals(other.alternatives)) return false
 
-        return true
+        return if (languageIdentification == null) {
+            other.languageIdentification == null
+        } else {
+            other.languageIdentification?.let { languageIdentification.contentEquals(it) } ?: false
+        }
     }
 
     override fun hashCode(): Int {
@@ -53,12 +59,17 @@ data class TranscriptResult(
         result = 31 * result + startTimeMs.hashCode()
         result = 31 * result + endTimeMs.hashCode()
         result = 31 * result + alternatives.contentHashCode()
+        result = 31 * result + languageCode.hashCode()
+        languageIdentification?.let {
+            it -> result = 31 * result + (it.contentHashCode())
+        }
         return result
     }
 }
 
 data class TranscriptAlternative(
     val items: Array<TranscriptItem>,
+    val entities: Array<TranscriptEntity>?,
     val transcript: String
 ) {
     override fun equals(other: Any?): Boolean {
@@ -70,7 +81,11 @@ data class TranscriptAlternative(
         if (!items.contentEquals(other.items)) return false
         if (transcript != other.transcript) return false
 
-        return true
+        return if (entities == null) {
+            other.entities == null
+        } else {
+            other.entities?.let { entities.contentEquals(it) } ?: false
+        }
     }
 
     override fun hashCode(): Int {
@@ -86,7 +101,23 @@ data class TranscriptItem(
     val endTimeMs: Long,
     val attendee: AttendeeInfo,
     val content: String,
-    val vocabularyFilterMatch: Boolean
+    val vocabularyFilterMatch: Boolean,
+    val confidence: Double?,
+    val stable: Boolean?
+)
+
+data class TranscriptEntity(
+    val category: String,
+    val confidence: Double,
+    val content: String,
+    val startTimeMs: Long,
+    val endTimeMs: Long,
+    val type: String?
+)
+
+data class TranscriptLanguageWithScore(
+    val languageCode: String,
+    val score: Double
 )
 
 data class TranscriptionStatus(

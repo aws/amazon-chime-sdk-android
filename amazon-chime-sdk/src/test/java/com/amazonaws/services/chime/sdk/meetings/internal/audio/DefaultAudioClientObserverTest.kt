@@ -17,8 +17,10 @@ import com.amazonaws.services.chime.sdk.meetings.audiovideo.SignalStrength
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.SignalUpdate
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.Transcript
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.TranscriptAlternative
+import com.amazonaws.services.chime.sdk.meetings.audiovideo.TranscriptEntity
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.TranscriptItem
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.TranscriptItemType
+import com.amazonaws.services.chime.sdk.meetings.audiovideo.TranscriptLanguageWithScore
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.TranscriptResult
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.TranscriptionStatus
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.TranscriptionStatusType
@@ -37,9 +39,11 @@ import com.xodee.client.audio.audioclient.AttendeeUpdate
 import com.xodee.client.audio.audioclient.AudioClient
 import com.xodee.client.audio.audioclient.transcript.Transcript as TranscriptInternal
 import com.xodee.client.audio.audioclient.transcript.TranscriptAlternative as TranscriptAlternativeInternal
+import com.xodee.client.audio.audioclient.transcript.TranscriptEntity as TranscriptEntityInternal
 import com.xodee.client.audio.audioclient.transcript.TranscriptEvent as TranscriptEventInternal
 import com.xodee.client.audio.audioclient.transcript.TranscriptItem as TranscriptItemInternal
 import com.xodee.client.audio.audioclient.transcript.TranscriptItemType as TranscriptItemTypeInternal
+import com.xodee.client.audio.audioclient.transcript.TranscriptLanguageWithScore as TranscriptLanguageWithScoreInternal
 import com.xodee.client.audio.audioclient.transcript.TranscriptResult as TranscriptResultInternal
 import com.xodee.client.audio.audioclient.transcript.TranscriptionStatus as TranscriptionStatusInternal
 import com.xodee.client.audio.audioclient.transcript.TranscriptionStatusType as TranscriptionStatusTypeInternal
@@ -644,7 +648,9 @@ class DefaultAudioClientObserverTest {
                             timestampMs + 5L,
                             AttendeeInfoInternal(testId1, testId1),
                             "I",
-                            true
+                            true,
+                            true,
+                            0.0
                         ),
                         TranscriptItemInternal(
                             TranscriptItemTypeInternal.TranscriptItemTypePunctuation,
@@ -652,12 +658,17 @@ class DefaultAudioClientObserverTest {
                             timestampMs + 10L,
                             AttendeeInfoInternal(testId2, testId2),
                             "am",
-                            false
+                            false,
+                            true,
+                            0.0
                         )
                     ),
+                    arrayOf(),
                     "I am"
                 )
-            )
+            ),
+            null,
+            null
         )
 
         val transcriptResultTwo = TranscriptResultInternal(
@@ -675,7 +686,9 @@ class DefaultAudioClientObserverTest {
                             timestampMs + 15L,
                             AttendeeInfoInternal(testId2, testId2),
                             "a",
-                            true
+                            true,
+                            true,
+                            0.0
                         ),
                         TranscriptItemInternal(
                             TranscriptItemTypeInternal.TranscriptItemTypePronunciation,
@@ -683,12 +696,17 @@ class DefaultAudioClientObserverTest {
                             timestampMs + 20L,
                             AttendeeInfoInternal(testId1, testId1),
                             "guardian",
-                            false
+                            false,
+                            true,
+                            0.0
                         )
                     ),
+                    arrayOf(),
                     "a guardian"
                 )
-            )
+            ),
+            null,
+            null
         )
 
         val events: Array<TranscriptEventInternal> = arrayOf(
@@ -713,6 +731,8 @@ class DefaultAudioClientObserverTest {
                                     timestampMs + 5L,
                                     AttendeeInfo(testId1, testId1),
                                     "I",
+                                    true,
+                                    0.0,
                                     true
                                 ),
                                 TranscriptItem(
@@ -721,12 +741,17 @@ class DefaultAudioClientObserverTest {
                                     timestampMs + 10L,
                                     AttendeeInfo(testId2, testId2),
                                     "am",
-                                    false
+                                    false,
+                                    0.0,
+                                    true
                                 )
                             ),
+                            arrayOf(),
                             "I am"
                         )
-                    )
+                    ),
+                    null,
+                    null
                 )
             )
         )
@@ -748,6 +773,8 @@ class DefaultAudioClientObserverTest {
                                     timestampMs + 15L,
                                     AttendeeInfo(testId2, testId2),
                                     "a",
+                                    true,
+                                    0.0,
                                     true
                                 ),
                                 TranscriptItem(
@@ -756,12 +783,17 @@ class DefaultAudioClientObserverTest {
                                     timestampMs + 20L,
                                     AttendeeInfo(testId1, testId1),
                                     "guardian",
-                                    false
+                                    false,
+                                    0.0,
+                                    true
                                 )
                             ),
+                            arrayOf(),
                             "a guardian"
                         )
-                    )
+                    ),
+                    null,
+                    null
                 )
             )
         )
@@ -769,6 +801,78 @@ class DefaultAudioClientObserverTest {
         audioClientObserver.onTranscriptEventsReceived(events)
         verify(exactly = 1) { mockTranscriptEventObserver.onTranscriptEventReceived(expectedTranscriptOne) }
         verify(exactly = 1) { mockTranscriptEventObserver.onTranscriptEventReceived(expectedTranscriptTwo) }
+    }
+
+    @Test
+    fun `onTranscriptEventsReceived should send local Transcript with Transcript Entity events as input`() {
+        audioClientObserver.subscribeToTranscriptEvent(mockTranscriptEventObserver)
+
+        val testResultId = "testResultId"
+        val testChannelId = "testChannelId"
+        val isPartial = true
+
+        val transcriptResultItem = TranscriptItemInternal(TranscriptItemTypeInternal.TranscriptItemTypePronunciation,
+            timestampMs, timestampMs + 5L, AttendeeInfoInternal(testId1, testId1), "I", true, true, 0.0)
+
+        val transcriptResultEntity = TranscriptEntityInternal("PII", "NAME", "John Doe", 1.0, timestampMs + 5L, timestampMs + 10L)
+
+        val transcriptResultAlternative = TranscriptAlternativeInternal(arrayOf(transcriptResultItem), arrayOf(transcriptResultEntity), "I am")
+
+        val transcriptResult = TranscriptResultInternal(testResultId, testChannelId, isPartial, timestampMs, timestampMs + 10L, arrayOf(transcriptResultAlternative), null, arrayOf())
+
+        val events: Array<TranscriptEventInternal> = arrayOf(TranscriptInternal(arrayOf(transcriptResult)))
+
+        val expectedTranscriptItem = TranscriptItem(TranscriptItemType.Pronunciation, timestampMs, timestampMs + 5L,
+            AttendeeInfo(testId1, testId1), "I", true, 0.0, true)
+
+        val expectedTranscriptEntity = TranscriptEntity("NAME", 1.0, "John Doe", timestampMs + 5L, timestampMs + 10L, "PII")
+
+        val expectedTranscriptAlternative = TranscriptAlternative(arrayOf(expectedTranscriptItem), arrayOf(expectedTranscriptEntity),
+            "I am")
+
+        val expectedTranscript = Transcript(arrayOf(TranscriptResult(testResultId, testChannelId, isPartial,
+            timestampMs, timestampMs + 10L, arrayOf(expectedTranscriptAlternative), null, arrayOf())))
+
+        audioClientObserver.onTranscriptEventsReceived(events)
+        verify(exactly = 1) { mockTranscriptEventObserver.onTranscriptEventReceived(expectedTranscript) }
+    }
+
+    @Test
+    fun `onTranscriptEventsReceived should send local Transcript with Transcript LanguageWithScore events as input`() {
+        audioClientObserver.subscribeToTranscriptEvent(mockTranscriptEventObserver)
+
+        val testResultId = "testResultId"
+        val testChannelId = "testChannelId"
+        val isPartial = true
+        val languageCode = "en-US"
+
+        val transcriptResultItem = TranscriptItemInternal(TranscriptItemTypeInternal.TranscriptItemTypePronunciation,
+            timestampMs, timestampMs + 5L, AttendeeInfoInternal(testId1, testId1), "I", true, true, 0.0)
+
+        val transcriptLanguageWithScoreOne = TranscriptLanguageWithScoreInternal("en-US", 0.78)
+
+        val transcriptLanguageWithScoreTwo = TranscriptLanguageWithScoreInternal("ja-JP", 0.22)
+
+        val transcriptResultAlternative = TranscriptAlternativeInternal(arrayOf(transcriptResultItem), null, "I am")
+
+        val transcriptResult = TranscriptResultInternal(testResultId, testChannelId, isPartial, timestampMs, timestampMs + 10L, arrayOf(transcriptResultAlternative), languageCode, arrayOf(transcriptLanguageWithScoreOne, transcriptLanguageWithScoreTwo))
+
+        val events: Array<TranscriptEventInternal> = arrayOf(TranscriptInternal(arrayOf(transcriptResult)))
+
+        val expectedTranscriptItem = TranscriptItem(TranscriptItemType.Pronunciation, timestampMs, timestampMs + 5L,
+            AttendeeInfo(testId1, testId1), "I", true, 0.0, true)
+
+        val expectedTranscriptLanguageWithScoreOne = TranscriptLanguageWithScore("en-US", 0.78)
+
+        val expectedTranscriptLanguageWithScoreTwo = TranscriptLanguageWithScore("ja-JP", 0.22)
+
+        val expectedTranscriptAlternative = TranscriptAlternative(arrayOf(expectedTranscriptItem), null, "I am")
+
+        val expectedTranscript = Transcript(arrayOf(TranscriptResult(testResultId, testChannelId, isPartial,
+            timestampMs, timestampMs + 10L, arrayOf(expectedTranscriptAlternative), languageCode, arrayOf(expectedTranscriptLanguageWithScoreOne, expectedTranscriptLanguageWithScoreTwo))))
+
+        audioClientObserver.onTranscriptEventsReceived(events)
+        verify(exactly = 1) { mockTranscriptEventObserver.onTranscriptEventReceived(expectedTranscript) }
     }
 
     @Test

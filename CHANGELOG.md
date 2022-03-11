@@ -1,9 +1,12 @@
-## [Unreleased]
+## [0.15.1] - 2022-03-10
 
 ### Fixed
 * Catch and ignore the exception from rendering one video frame and move on to the next. This helps workaround a openGL error on some Android 12 devices at initial rendering phase.
-
 * [Demo] Added overridden endpoint url capability to live transcription API.
+
+### Added
+* Added support to live transcription for new features including personally identifiable information content identification and redaction, partial results stabilization, custom language models, and language identification for Amazon Transcribe and PHI content identification for Amazon Transcribe Medical.
+* [Demo] Added language identification configuration for live transcription API.
 
 ## [0.15.0] - 2022-02-24
 

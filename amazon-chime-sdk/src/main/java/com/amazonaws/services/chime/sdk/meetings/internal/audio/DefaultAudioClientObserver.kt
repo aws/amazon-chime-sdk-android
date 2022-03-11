@@ -16,9 +16,11 @@ import com.amazonaws.services.chime.sdk.meetings.audiovideo.SignalStrength
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.SignalUpdate
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.Transcript
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.TranscriptAlternative
+import com.amazonaws.services.chime.sdk.meetings.audiovideo.TranscriptEntity
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.TranscriptEvent
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.TranscriptItem
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.TranscriptItemType
+import com.amazonaws.services.chime.sdk.meetings.audiovideo.TranscriptLanguageWithScore
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.TranscriptResult
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.TranscriptionStatus
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.TranscriptionStatusType
@@ -253,15 +255,38 @@ class DefaultAudioClientObserver(
                                         rawItem.attendee.externalUserId
                                     ),
                                     rawItem.content,
-                                    rawItem.vocabularyFilterMatch
+                                    rawItem.vocabularyFilterMatch,
+                                    rawItem.confidence,
+                                    rawItem.stable
                                 )
                                 items.add(item)
                             }
+                            val entities = rawAlternative.entities?.let {
+                                it.map { rawEntity ->
+                                    TranscriptEntity(
+                                        rawEntity.category,
+                                        rawEntity.confidence,
+                                        rawEntity.content,
+                                        rawEntity.startTimeMs,
+                                        rawEntity.endTimeMs,
+                                        rawEntity.type
+                                    )
+                                }.toTypedArray() ?: run { null }
+                            }
                             val alternative = TranscriptAlternative(
                                 items.toTypedArray(),
+                                entities,
                                 rawAlternative.transcript
                             )
                             alternatives.add(alternative)
+                        }
+                        val languageIdentification = rawResult.languageIdentification?.let {
+                            it.map { rawLanguageIdentification ->
+                                TranscriptLanguageWithScore(
+                                    rawLanguageIdentification.languageCode,
+                                    rawLanguageIdentification.score
+                                )
+                            }.toTypedArray() ?: run { null }
                         }
                         val result = TranscriptResult(
                             rawResult.resultId,
@@ -269,7 +294,9 @@ class DefaultAudioClientObserver(
                             rawResult.isPartial,
                             rawResult.startTimeMs,
                             rawResult.endTimeMs,
-                            alternatives.toTypedArray()
+                            alternatives.toTypedArray(),
+                            rawResult.languageCode,
+                            languageIdentification
                         )
                         results.add(result)
                     }

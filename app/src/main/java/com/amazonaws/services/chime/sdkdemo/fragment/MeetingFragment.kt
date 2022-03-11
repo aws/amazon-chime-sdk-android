@@ -1020,6 +1020,7 @@ class MeetingFragment : Fragment(),
                 meetingModel.currentCaptions.add(caption)
             }
             is Transcript -> {
+                val entitySet = mutableSetOf<String>()
                 transcriptEvent.results.forEach { result ->
                     val alternative = result.alternatives.firstOrNull() ?: return
                     // for simplicity and demo purposes, assume each result only contains transcripts from
@@ -1036,8 +1037,16 @@ class MeetingFragment : Fragment(),
                     } else {
                         getAttendeeName(item.attendee.attendeeId, item.attendee.externalUserId)
                     }
-                    val caption = Caption(speakerName, result.isPartial, alternative.transcript)
-
+                    val caption: Caption
+                    val entities = alternative.entities
+                    caption = if (entities == null || result.isPartial) {
+                        Caption(speakerName, result.isPartial, alternative.transcript, alternative.items)
+                    } else {
+                        entities.forEach { entity ->
+                            entitySet.addAll(entity.content.split(" "))
+                        }
+                        Caption(speakerName, result.isPartial, alternative.transcript, alternative.items, entitySet)
+                    }
                     val captionIndex = meetingModel.currentCaptionIndices[result.resultId]
                     if (captionIndex != null) {
                         // update existing (partial) caption if exists
