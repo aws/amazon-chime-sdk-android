@@ -9,6 +9,10 @@
 <br/>
 <h1>VideoSubscriptionConfiguration</h1>
 <code><span class="keyword">class </span><span class="identifier">VideoSubscriptionConfiguration</span></code>
+<p>Configuration for a specific video source.
+The values are intentionally mutable so that a map of all current configurations can be kept and updated as needed.</p>
+<p>VideoSubscriptionConfiguration is used to contain the priority and resolution of
+remote video sources and content share to be received</p>
 <h3>Constructors</h3>
 <table>
 <tbody>
@@ -17,6 +21,8 @@
 <h4><a href="-init-.html">&lt;init&gt;</a></h4>
 </td>
 <td>
+<p>Configuration for a specific video source.
+The values are intentionally mutable so that a map of all current configurations can be kept and updated as needed.</p>
 <code><span class="identifier">VideoSubscriptionConfiguration</span><span class="symbol">(</span><span class="identifier" id="com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoSubscriptionConfiguration$<init>(com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoPriority, com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoResolution)/priority">priority</span><span class="symbol">:</span>&nbsp;<a href="../-video-priority/index.html"><span class="identifier">VideoPriority</span></a><span class="symbol">, </span><span class="identifier" id="com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoSubscriptionConfiguration$<init>(com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoPriority, com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoResolution)/targetResolution">targetResolution</span><span class="symbol">:</span>&nbsp;<a href="../-video-resolution/index.html"><span class="identifier">VideoResolution</span></a><span class="symbol">)</span></code></td>
 </tr>
 </tbody>
@@ -29,6 +35,7 @@
 <h4><a href="priority.html">priority</a></h4>
 </td>
 <td>
+<p>: <a href="../-video-priority/index.html">VideoPriority</a> - Relative priority for the subscription. See <a href="../-video-priority/index.html">VideoPriority</a> for more information.</p>
 <code><span class="keyword">var </span><span class="identifier">priority</span><span class="symbol">: </span><a href="../-video-priority/index.html"><span class="identifier">VideoPriority</span></a></code></td>
 </tr>
 <tr>
@@ -36,6 +43,7 @@
 <h4><a href="target-resolution.html">targetResolution</a></h4>
 </td>
 <td>
+<p>: <a href="../-video-resolution/index.html">VideoResolution</a> - A target resolution for the subscription. The actual receive resolution may vary.</p>
 <code><span class="keyword">var </span><span class="identifier">targetResolution</span><span class="symbol">: </span><a href="../-video-resolution/index.html"><span class="identifier">VideoResolution</span></a></code></td>
 </tr>
 </tbody>

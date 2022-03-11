@@ -9,6 +9,10 @@
 <br/>
 <h1>RemoteVideoSource</h1>
 <code><span class="keyword">class </span><span class="identifier">RemoteVideoSource</span></code>
+<p>A video source available in the current meeting. RemoteVideoSource need to be consistent between <code>remoteVideoSourcesDidBecomeAvailable</code>
+and <code>updateVideoSourceSubscriptions</code> as they are used as keys in maps that may be updated.
+I.e. when setting up a map for <code>updateVideoSourceSubscriptions</code> do not construct RemoteVideoSource yourselves
+or the configuration may or may not be updated.</p>
 <h3>Constructors</h3>
 <table>
 <tbody>
@@ -17,6 +21,10 @@
 <h4><a href="-init-.html">&lt;init&gt;</a></h4>
 </td>
 <td>
+<p>A video source available in the current meeting. RemoteVideoSource need to be consistent between <code>remoteVideoSourcesDidBecomeAvailable</code>
+and <code>updateVideoSourceSubscriptions</code> as they are used as keys in maps that may be updated.
+I.e. when setting up a map for <code>updateVideoSourceSubscriptions</code> do not construct RemoteVideoSource yourselves
+or the configuration may or may not be updated.</p>
 <code><span class="identifier">RemoteVideoSource</span><span class="symbol">(</span><span class="identifier" id="com.amazonaws.services.chime.sdk.meetings.audiovideo.video.RemoteVideoSource$<init>(kotlin.String)/attendeeId">attendeeId</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">)</span></code></td>
 </tr>
 </tbody>
@@ -29,6 +37,7 @@
 <h4><a href="attendee-id.html">attendeeId</a></h4>
 </td>
 <td>
+<p>: <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a> - The attendee ID this video tile belongs to. Note that screen share video will have a suffix of #content</p>
 <code><span class="keyword">val </span><span class="identifier">attendeeId</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a></code></td>
 </tr>
 </tbody>

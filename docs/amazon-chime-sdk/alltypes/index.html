@@ -400,6 +400,10 @@ attendee changes.</p>
 </tr>
 <tr>
 <h5><a href="../com.amazonaws.services.chime.sdk.meetings.audiovideo.video/-remote-video-source/index.html">com.amazonaws.services.chime.sdk.meetings.audiovideo.video.RemoteVideoSource</a></h5>
+<p>A video source available in the current meeting. RemoteVideoSource need to be consistent between <code>remoteVideoSourcesDidBecomeAvailable</code>
+and <code>updateVideoSourceSubscriptions</code> as they are used as keys in maps that may be updated.
+I.e. when setting up a map for <code>updateVideoSourceSubscriptions</code> do not construct RemoteVideoSource yourselves
+or the configuration may or may not be updated.</p>
 </tr>
 <tr>
 <h5><a href="../com.amazonaws.services.chime.sdk.meetings.audiovideo/-signal-strength/index.html">com.amazonaws.services.chime.sdk.meetings.audiovideo.SignalStrength</a></h5>
@@ -439,6 +443,9 @@ to draw any incoming video buffer types to the surface provided by the inherited
 <h5><a href="../com.amazonaws.services.chime.sdk.meetings.audiovideo/-transcript-alternative/index.html">com.amazonaws.services.chime.sdk.meetings.audiovideo.TranscriptAlternative</a></h5>
 </tr>
 <tr>
+<h5><a href="../com.amazonaws.services.chime.sdk.meetings.audiovideo/-transcript-entity/index.html">com.amazonaws.services.chime.sdk.meetings.audiovideo.TranscriptEntity</a></h5>
+</tr>
+<tr>
 <h5><a href="../com.amazonaws.services.chime.sdk.meetings.audiovideo/-transcript-event.html">com.amazonaws.services.chime.sdk.meetings.audiovideo.TranscriptEvent</a></h5>
 </tr>
 <tr>
@@ -456,6 +463,9 @@ to draw any incoming video buffer types to the surface provided by the inherited
 </tr>
 <tr>
 <h5><a href="../com.amazonaws.services.chime.sdk.meetings.audiovideo/-transcript-item-type/index.html">com.amazonaws.services.chime.sdk.meetings.audiovideo.TranscriptItemType</a></h5>
+</tr>
+<tr>
+<h5><a href="../com.amazonaws.services.chime.sdk.meetings.audiovideo/-transcript-language-with-score/index.html">com.amazonaws.services.chime.sdk.meetings.audiovideo.TranscriptLanguageWithScore</a></h5>
 </tr>
 <tr>
 <h5><a href="../com.amazonaws.services.chime.sdk.meetings.audiovideo/-transcript-result/index.html">com.amazonaws.services.chime.sdk.meetings.audiovideo.TranscriptResult</a></h5>
@@ -515,6 +525,8 @@ an OpenGLES texture and related metadata</p>
 </tr>
 <tr>
 <h5><a href="../com.amazonaws.services.chime.sdk.meetings.audiovideo.video/-video-priority/index.html">com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoPriority</a></h5>
+<p>Enum defining video priority for remote video sources. The 'higher' the number the 'higher' the priority for the source when adjusting video quality
+to adapt to variable network conditions, i.e. <code>Highest</code> will be chosen before <code>High</code>, <code>Medium</code>, etc.</p>
 </tr>
 <tr>
 <h5><a href="../com.amazonaws.services.chime.sdk.meetings.audiovideo.video/-video-render-view.html">com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoRenderView</a></h5>
@@ -522,6 +534,7 @@ an OpenGLES texture and related metadata</p>
 </tr>
 <tr>
 <h5><a href="../com.amazonaws.services.chime.sdk.meetings.audiovideo.video/-video-resolution/index.html">com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoResolution</a></h5>
+<p>Customizable video resolution parameters for a remote video source.</p>
 </tr>
 <tr>
 <h5><a href="../com.amazonaws.services.chime.sdk.meetings.audiovideo.video/-video-rotation/index.html">com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoRotation</a></h5>
@@ -548,6 +561,8 @@ participants</p>
 </tr>
 <tr>
 <h5><a href="../com.amazonaws.services.chime.sdk.meetings.audiovideo.video/-video-subscription-configuration/index.html">com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoSubscriptionConfiguration</a></h5>
+<p>Configuration for a specific video source.
+The values are intentionally mutable so that a map of all current configurations can be kept and updated as needed.</p>
 </tr>
 <tr>
 <h5><a href="../com.amazonaws.services.chime.sdk.meetings.audiovideo.video/-video-tile/index.html">com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoTile</a></h5>

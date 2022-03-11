@@ -44,6 +44,10 @@
 <h4><a href="-remote-video-source/index.html">RemoteVideoSource</a></h4>
 </td>
 <td>
+<p>A video source available in the current meeting. RemoteVideoSource need to be consistent between <code>remoteVideoSourcesDidBecomeAvailable</code>
+and <code>updateVideoSourceSubscriptions</code> as they are used as keys in maps that may be updated.
+I.e. when setting up a map for <code>updateVideoSourceSubscriptions</code> do not construct RemoteVideoSource yourselves
+or the configuration may or may not be updated.</p>
 <code><span class="keyword">class </span><span class="identifier">RemoteVideoSource</span></code></td>
 </tr>
 <tr>
@@ -77,6 +81,8 @@ Typically produced via a <a href="-video-source/index.html">VideoSource</a> and 
 <h4><a href="-video-priority/index.html">VideoPriority</a></h4>
 </td>
 <td>
+<p>Enum defining video priority for remote video sources. The 'higher' the number the 'higher' the priority for the source when adjusting video quality
+to adapt to variable network conditions, i.e. <code>Highest</code> will be chosen before <code>High</code>, <code>Medium</code>, etc.</p>
 <code><span class="keyword">enum</span> <span class="keyword">class </span><span class="identifier">VideoPriority</span></code></td>
 </tr>
 <tr>
@@ -92,6 +98,7 @@ Typically produced via a <a href="-video-source/index.html">VideoSource</a> and 
 <h4><a href="-video-resolution/index.html">VideoResolution</a></h4>
 </td>
 <td>
+<p>Customizable video resolution parameters for a remote video source.</p>
 <code><span class="keyword">enum</span> <span class="keyword">class </span><span class="identifier">VideoResolution</span></code></td>
 </tr>
 <tr>
@@ -138,6 +145,8 @@ participants</p>
 <h4><a href="-video-subscription-configuration/index.html">VideoSubscriptionConfiguration</a></h4>
 </td>
 <td>
+<p>Configuration for a specific video source.
+The values are intentionally mutable so that a map of all current configurations can be kept and updated as needed.</p>
 <code><span class="keyword">class </span><span class="identifier">VideoSubscriptionConfiguration</span></code></td>
 </tr>
 <tr>
