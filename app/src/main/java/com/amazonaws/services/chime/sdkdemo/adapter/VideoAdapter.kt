@@ -171,31 +171,31 @@ class VideoHolder(
         val popup = PopupMenu(context, view)
         popup.inflate(R.menu.priority_popup_menu)
         popup.setOnMenuItemClickListener { item: MenuItem? ->
-            var newPriority = VideoPriority.Highest
-            if (item != null) {
-                when (item.itemId) {
-                    R.id.highest -> {
-                        newPriority = VideoPriority.Highest
-                    }
-                    R.id.high -> {
-                        newPriority = VideoPriority.High
-                    }
-                    R.id.medium -> {
-                        newPriority = VideoPriority.Medium
-                    }
-                    R.id.low -> {
-                        newPriority = VideoPriority.Low
-                    }
-                    R.id.lowest -> {
-                        newPriority = VideoPriority.Lowest
-                    }
+            val priority = when (item?.itemId) {
+                R.id.highest -> {
+                    VideoPriority.Highest
+                }
+                R.id.high -> {
+                    VideoPriority.High
+                }
+                R.id.medium -> {
+                    VideoPriority.Medium
+                }
+                R.id.low -> {
+                    VideoPriority.Low
+                }
+                R.id.lowest -> {
+                    VideoPriority.Lowest
+                }
+                else -> {
+                    VideoPriority.Lowest
                 }
             }
 
             for (source in remoteVideoSourceConfigurations) {
                 if (source.key?.attendeeId == attendeeId) {
                     val resolution: VideoResolution = source.value.targetResolution
-                    source.setValue(VideoSubscriptionConfiguration(newPriority, resolution))
+                    source.setValue(VideoSubscriptionConfiguration(priority, resolution))
                 }
             }
             audioVideo.updateVideoSourceSubscriptions(remoteVideoSourceConfigurations, emptyArray())
@@ -208,25 +208,25 @@ class VideoHolder(
         val popup = PopupMenu(context, view)
         popup.inflate(R.menu.resolution_popup_menu)
         popup.setOnMenuItemClickListener { item: MenuItem? ->
-            var newResolution = VideoResolution.High
-            if (item != null) {
-                when (item.itemId) {
-                    R.id.high -> {
-                        newResolution = VideoResolution.High
-                    }
-                    R.id.medium -> {
-                        newResolution = VideoResolution.Medium
-                    }
-                    R.id.low -> {
-                        newResolution = VideoResolution.Low
-                    }
+            var resolution = when (item?.itemId) {
+                R.id.high -> {
+                    VideoResolution.High
+                }
+                R.id.medium -> {
+                    VideoResolution.Medium
+                }
+                R.id.low -> {
+                    VideoResolution.Low
+                }
+                else -> {
+                    VideoResolution.Low
                 }
             }
 
             for (source in remoteVideoSourceConfigurations) {
                 if (source.key.attendeeId == attendeeId) {
                     val priority: VideoPriority = source.value.priority
-                    source.setValue(VideoSubscriptionConfiguration(priority, newResolution))
+                    source.setValue(VideoSubscriptionConfiguration(priority, resolution))
                 }
             }
 

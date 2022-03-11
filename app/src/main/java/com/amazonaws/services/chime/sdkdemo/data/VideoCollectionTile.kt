@@ -12,7 +12,6 @@ data class VideoCollectionTile(
     val attendeeName: String,
     val videoTileState: VideoTileState
 ) {
-
     var videoRenderView: DefaultVideoRenderView? = null
     var pauseMessageView: ConstraintLayout? = null
 
