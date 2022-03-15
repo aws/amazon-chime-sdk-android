@@ -46,6 +46,35 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/titleOverrideEndpoint" />
 
+    <TextView
+        android:id="@+id/titlePrimaryMeetingId"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="31dp"
+        android:layout_marginBottom="20dp"
+        android:text="@string/debug_settings_label_primary_meeting_id"
+        android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+        android:textSize="18sp"
+        app:layout_constraintBottom_toTopOf="@+id/primaryMeetingIdEditText"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.497"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/endpointUrlEditText" />
+
+    <EditText
+        android:id="@+id/primaryMeetingIdEditText"
+        android:layout_width="284dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="63dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="64dp"
+        android:autofillHints=""
+        android:hint="@string/debug_settings_placeholder_primary_meeting_id"
+        android:inputType="textUri|text"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/titlePrimaryMeetingId" />
+
     <Button
         android:id="@+id/saveButton"
         android:layout_width="wrap_content"

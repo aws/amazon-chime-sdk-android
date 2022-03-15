@@ -43,6 +43,7 @@ class MeetingActivity : AppCompatActivity(),
     private val meetingSessionModel: MeetingSessionModel by lazy { ViewModelProvider(this)[MeetingSessionModel::class.java] }
 
     private lateinit var meetingId: String
+    private var primaryExternalMeetingId: String? = null
     private lateinit var name: String
     private lateinit var audioVideoConfig: AudioVideoConfiguration
     private lateinit var meetingEndpointUrl: String
@@ -65,7 +66,7 @@ class MeetingActivity : AppCompatActivity(),
         if (savedInstanceState == null) {
             val meetingResponseJson =
                 intent.extras?.getString(HomeActivity.MEETING_RESPONSE_KEY) as String
-            val sessionConfig = createSessionConfiguration(meetingResponseJson)
+            val sessionConfig = createSessionConfigurationAndExtractPrimaryMeetingInformation(meetingResponseJson)
             val meetingSession = sessionConfig?.let {
                 logger.info(TAG, "Creating meeting session for meeting Id: $meetingId")
 
@@ -90,7 +91,8 @@ class MeetingActivity : AppCompatActivity(),
                 ).show()
                 finish()
             } else {
-                meetingSessionModel.setMeetingSession(meetingSession)
+                meetingSessionModel.meetingSession = meetingSession
+                meetingSessionModel.primaryExternalMeetingId = primaryExternalMeetingId
             }
 
             val surfaceTextureCaptureSourceFactory = DefaultSurfaceTextureCaptureSourceFactory(logger, meetingSessionModel.eglCoreFactory)
@@ -149,6 +151,8 @@ class MeetingActivity : AppCompatActivity(),
 
     fun getMeetingSessionCredentials(): MeetingSessionCredentials = meetingSessionModel.credentials
 
+    fun getPrimaryExternalMeetingId(): String? = meetingSessionModel.primaryExternalMeetingId
+
     fun getCachedDevice(): MediaDevice? = cachedDevice
     fun resetCachedDevice() {
         cachedDevice = null
@@ -173,10 +177,11 @@ class MeetingActivity : AppCompatActivity(),
         return url
     }
 
-    private fun createSessionConfiguration(response: String?): MeetingSessionConfiguration? {
+    private fun createSessionConfigurationAndExtractPrimaryMeetingInformation(response: String?): MeetingSessionConfiguration? {
         if (response.isNullOrBlank()) return null
         return try {
             val joinMeetingResponse = gson.fromJson(response, JoinMeetingResponse::class.java)
+            primaryExternalMeetingId = joinMeetingResponse.joinInfo.primaryExternalMeetingId
             MeetingSessionConfiguration(
                 CreateMeetingResponse(joinMeetingResponse.joinInfo.meetingResponse.meeting),
                 CreateAttendeeResponse(joinMeetingResponse.joinInfo.attendeeResponse.attendee),

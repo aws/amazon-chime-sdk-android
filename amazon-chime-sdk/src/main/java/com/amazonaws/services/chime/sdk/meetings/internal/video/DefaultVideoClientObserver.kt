@@ -7,6 +7,7 @@ package com.amazonaws.services.chime.sdk.meetings.internal.video
 
 import android.content.Context
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.AudioVideoObserver
+import com.amazonaws.services.chime.sdk.meetings.audiovideo.PrimaryMeetingPromotionObserver
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.RemoteVideoSource
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoFrame
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoPauseState
@@ -53,6 +54,8 @@ class DefaultVideoClientObserver(
     // We have designed the SDK API to allow using `RemoteVideoSource` as a key in a map, e.g. for  `updateVideoSourceSubscription`.
     // Therefore we need to map to a consistent set of sources from the internal sources, by using attendeeId as a unique identifier.
     private var cachedRemoveVideoSources = mutableSetOf<RemoteVideoSource>()
+
+    override var primaryMeetingPromotionObserver: PrimaryMeetingPromotionObserver? = null
 
     private val uiScope = CoroutineScope(Dispatchers.Main)
 
@@ -284,6 +287,36 @@ class DefaultVideoClientObserver(
             RemoteVideoSource(internalSource.attendeeId) // This is likely not useful
         }
         forEachVideoClientStateObserver { observer -> observer.onRemoteVideoSourceUnavailable(sources) }
+    }
+
+    override fun onPrimaryMeetingPromotion(status: Int) {
+        logger.info(TAG, "Primary meeting promotion for video completed with status $status")
+        val translatedStatus = when (status) {
+            VideoClient.VIDEO_CLIENT_OK -> MeetingSessionStatusCode.OK
+            VideoClient.VIDEO_CLIENT_ERR_PRIMARY_MEETING_JOIN_AT_CAPACITY -> MeetingSessionStatusCode.AudioCallAtCapacity
+            VideoClient.VIDEO_CLIENT_ERR_PRIMARY_MEETING_JOIN_AUTHENTICATION_FAILED -> MeetingSessionStatusCode.AudioAuthenticationRejected
+            else -> MeetingSessionStatusCode.AudioInternalServerError
+        }
+        primaryMeetingPromotionObserver?.onPrimaryMeetingPromotion(MeetingSessionStatus(translatedStatus))
+            ?: run {
+            logger.info(TAG, "Primary meeting promotion completed from video but no primary meeting promotion callback is set")
+        }
+    }
+
+    override fun onPrimaryMeetingDemotion(status: Int) {
+        logger.info(TAG, "Primary meeting demotion for video occurred with status $status")
+        val translatedStatus = when (status) {
+            VideoClient.VIDEO_CLIENT_OK -> MeetingSessionStatusCode.OK
+            VideoClient.VIDEO_CLIENT_ERR_PRIMARY_MEETING_JOIN_AT_CAPACITY -> MeetingSessionStatusCode.AudioCallAtCapacity
+            VideoClient.VIDEO_CLIENT_ERR_PRIMARY_MEETING_JOIN_AUTHENTICATION_FAILED -> MeetingSessionStatusCode.AudioAuthenticationRejected
+            else -> MeetingSessionStatusCode.AudioInternalServerError
+        }
+        primaryMeetingPromotionObserver?.let {
+            it.onPrimaryMeetingDemotion(MeetingSessionStatus(translatedStatus))
+            primaryMeetingPromotionObserver = null
+        } ?: run {
+            logger.info(TAG, "Primary meeting demotion occurred from video but no primary meeting demotion callback is set")
+        }
     }
 
     override fun subscribeToVideoClientStateChange(observer: AudioVideoObserver) {

@@ -14,8 +14,10 @@ import com.amazonaws.services.chime.sdk.meetings.analytics.EventAnalyticsControl
 import com.amazonaws.services.chime.sdk.meetings.analytics.EventAttributeName
 import com.amazonaws.services.chime.sdk.meetings.analytics.EventName
 import com.amazonaws.services.chime.sdk.meetings.analytics.MeetingStatsCollector
+import com.amazonaws.services.chime.sdk.meetings.audiovideo.PrimaryMeetingPromotionObserver
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.audio.AudioMode
 import com.amazonaws.services.chime.sdk.meetings.internal.utils.AppInfoUtil
+import com.amazonaws.services.chime.sdk.meetings.session.MeetingSessionCredentials
 import com.amazonaws.services.chime.sdk.meetings.session.MeetingSessionStatus
 import com.amazonaws.services.chime.sdk.meetings.session.MeetingSessionStatusCode
 import com.amazonaws.services.chime.sdk.meetings.utils.logger.Logger
@@ -272,5 +274,24 @@ class DefaultAudioClientController(
             )
             return false
         }
+    }
+
+    override fun promoteToPrimaryMeeting(
+        credentials: MeetingSessionCredentials,
+        observer: PrimaryMeetingPromotionObserver
+    ) {
+        if (audioClientState != AudioClientState.STARTED) {
+            observer.onPrimaryMeetingPromotion(MeetingSessionStatus(MeetingSessionStatusCode.AudioServiceUnavailable))
+            return
+        }
+        audioClientObserver.primaryMeetingPromotionObserver = observer
+        audioClient.promoteToPrimaryMeeting(credentials.attendeeId, credentials.externalUserId, credentials.joinToken)
+    }
+
+    override fun demoteFromPrimaryMeeting() {
+        if (audioClientState != AudioClientState.STARTED) {
+            return
+        }
+        audioClient.demoteFromPrimaryMeeting()
     }
 }

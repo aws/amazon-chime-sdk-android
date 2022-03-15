@@ -6,6 +6,7 @@
 package com.amazonaws.services.chime.sdk.meetings.internal.video
 
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.AudioVideoObserver
+import com.amazonaws.services.chime.sdk.meetings.audiovideo.PrimaryMeetingPromotionObserver
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoTileController
 import com.amazonaws.services.chime.sdk.meetings.realtime.datamessage.DataMessageObserver
 import com.xodee.client.video.VideoClientDataMessageListener
@@ -67,4 +68,9 @@ interface VideoClientObserver : VideoClientDelegate, VideoClientLogListener,
      * @param topic: String - The topic to unsubscribe from events with.
      */
     fun unsubscribeFromReceiveDataMessage(topic: String)
+
+    /**
+     * Use to set single use callback for primary meeting promotion.
+     */
+    var primaryMeetingPromotionObserver: PrimaryMeetingPromotionObserver?
 }

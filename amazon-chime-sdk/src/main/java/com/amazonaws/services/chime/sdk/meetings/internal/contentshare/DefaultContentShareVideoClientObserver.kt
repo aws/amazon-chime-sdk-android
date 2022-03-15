@@ -170,8 +170,18 @@ class DefaultContentShareVideoClientObserver(
     }
 
     override fun onRemoteVideoSourceAvailable(sources: Array<RemoteVideoSourceInternal>?) {
+        // Content is receive only
     }
 
     override fun onRemoteVideoSourceUnavailable(sources: Array<RemoteVideoSourceInternal>?) {
+        // Content is receive only
+    }
+
+    override fun onPrimaryMeetingPromotion(status: Int) {
+        // Not relevant, content for promoted attendees is automatically promoted itself
+    }
+
+    override fun onPrimaryMeetingDemotion(status: Int) {
+        // Not relevant, content for promoted attendees can rely on main attendee's callback
     }
 }

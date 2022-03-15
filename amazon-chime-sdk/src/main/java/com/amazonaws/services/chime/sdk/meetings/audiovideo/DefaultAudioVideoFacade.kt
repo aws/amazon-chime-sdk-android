@@ -36,6 +36,7 @@ import com.amazonaws.services.chime.sdk.meetings.realtime.RealtimeControllerFaca
 import com.amazonaws.services.chime.sdk.meetings.realtime.RealtimeObserver
 import com.amazonaws.services.chime.sdk.meetings.realtime.TranscriptEventObserver
 import com.amazonaws.services.chime.sdk.meetings.realtime.datamessage.DataMessageObserver
+import com.amazonaws.services.chime.sdk.meetings.session.MeetingSessionCredentials
 
 class DefaultAudioVideoFacade(
     private val context: Context,
@@ -122,6 +123,17 @@ class DefaultAudioVideoFacade(
         removed: Array<RemoteVideoSource>
     ) {
         audioVideoController.updateVideoSourceSubscriptions(addedOrUpdated, removed)
+    }
+
+    override fun promoteToPrimaryMeeting(
+        credentials: MeetingSessionCredentials,
+        observer: PrimaryMeetingPromotionObserver
+    ) {
+        audioVideoController.promoteToPrimaryMeeting(credentials, observer)
+    }
+
+    override fun demoteFromPrimaryMeeting() {
+        audioVideoController.demoteFromPrimaryMeeting()
     }
 
     override fun realtimeLocalMute(): Boolean {

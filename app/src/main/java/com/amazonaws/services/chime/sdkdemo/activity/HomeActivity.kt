@@ -164,7 +164,9 @@ class HomeActivity : AppCompatActivity() {
                 showToast(getString(R.string.user_notification_meeting_url_error))
             } else {
                 authenticationProgressBar?.visibility = View.VISIBLE
-                val meetingResponseJson: String? = joinMeeting(meetingUrl, meetingId, attendeeName)
+
+                val primaryMeetingId = debugSettingsViewModel.primaryMeetingId.value
+                val meetingResponseJson: String? = joinMeeting(meetingUrl, meetingId, attendeeName, primaryMeetingId)
 
                 authenticationProgressBar?.visibility = View.INVISIBLE
 
@@ -190,11 +192,15 @@ class HomeActivity : AppCompatActivity() {
     private suspend fun joinMeeting(
         meetingUrl: String,
         meetingId: String?,
-        attendeeName: String?
+        attendeeName: String?,
+        primaryMeetingId: String?
     ): String? {
         val meetingServerUrl = if (meetingUrl.endsWith("/")) meetingUrl else "$meetingUrl/"
-        val url = "${meetingServerUrl}join?title=${encodeURLParam(meetingId)}&name=${encodeURLParam(
+        var url = "${meetingServerUrl}join?title=${encodeURLParam(meetingId)}&name=${encodeURLParam(
             attendeeName)}&region=${encodeURLParam(MEETING_REGION)}"
+        if (!primaryMeetingId.isNullOrEmpty()) {
+            url += "&primaryExternalMeetingId=${encodeURLParam(primaryMeetingId)}"
+        }
         val response = HttpUtils.post(URL(url), "", DefaultBackOffRetry(), logger)
         return if (response.httpException == null) {
             response.data

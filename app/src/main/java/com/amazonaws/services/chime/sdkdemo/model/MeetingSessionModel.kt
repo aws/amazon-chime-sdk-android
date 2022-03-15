@@ -18,11 +18,7 @@ import com.amazonaws.services.chime.sdkdemo.utils.CpuVideoProcessor
 import com.amazonaws.services.chime.sdkdemo.utils.GpuVideoProcessor
 
 class MeetingSessionModel : ViewModel() {
-    private lateinit var meetingSession: MeetingSession
-
-    fun setMeetingSession(meetingSession: MeetingSession) {
-        this.meetingSession = meetingSession
-    }
+    lateinit var meetingSession: MeetingSession
 
     val credentials: MeetingSessionCredentials
         get() = meetingSession.configuration.credentials
@@ -41,4 +37,7 @@ class MeetingSessionModel : ViewModel() {
 
     // Source for screen capture and share, will be set only if created in call
     var screenShareManager: ScreenShareManager? = null
+
+    // For use with replica promotions, null if not a replica meeting
+    var primaryExternalMeetingId: String? = null
 }

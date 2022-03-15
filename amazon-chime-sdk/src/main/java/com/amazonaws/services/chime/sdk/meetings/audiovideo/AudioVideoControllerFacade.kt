@@ -11,6 +11,7 @@ import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoFrame
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoSource
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoSubscriptionConfiguration
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.capture.DefaultCameraCaptureSource
+import com.amazonaws.services.chime.sdk.meetings.session.MeetingSessionCredentials
 
 /**
  * [AudioVideoControllerFacade] manages the signaling and peer connections.
@@ -130,4 +131,41 @@ interface AudioVideoControllerFacade {
      * @param removed: [Array] - video sources to remove.
      */
     fun updateVideoSourceSubscriptions(addedOrUpdated: Map<RemoteVideoSource, VideoSubscriptionConfiguration>, removed: Array<RemoteVideoSource>)
+
+    /**
+     * Allows an attendee in a Replica meeting to immediately transition to a Primary meeting attendee
+     * without need for reconnection.
+     *
+     *  [PrimaryMeetingPromotionObserver.onPrimaryMeetingPromotion] will be called exactly once on `observer` for each call. If
+     *  the promotion is successful,  [PrimaryMeetingPromotionObserver.onPrimaryMeetingDemotion] will be called exactly once
+     *  if/when the attendee is demoted. See the observer documentation for possible status codes.
+     *
+     * Application code may also receive a callback on `AudioVideoObserver.onVideoSessionStarted` without
+     * [MeetingSessionStatusCode.VideoAtCapacityViewOnly] to indicate they can begin to share video.
+     *
+     * `chime::DeleteAttendee` on the Primary meeting attendee will result in [PrimaryMeetingPromotionObserver.onPrimaryMeetingDemotion]
+     * being called on `observer` to indicate the attendee is no longer able to share.
+     *
+     * Any disconnection will trigger an automatic demotion to avoid unexpected or unwanted promotion state on reconnection.
+     * This will also call [PrimaryMeetingPromotionObserver.onPrimaryMeetingDemotion];  if the attendee still needs to be
+     * an interactive participant in the Primary meeting, [promoteToPrimaryMeeting] should be called again with the same credentials.
+     *
+     * Note that given the asynchronous nature of this function, this should not be called a second time before
+     * [PrimaryMeetingPromotionObserver.onPrimaryMeetingPromotion] is called for the first time. Doing so may result in unexpected
+     * behavior.
+     *
+     * @param credentials The credentials for the primary meeting.  This needs to be obtained out of band.
+     * @param observer Function to be called on promotion and possibly demotion; see note above.
+     */
+    fun promoteToPrimaryMeeting(credentials: MeetingSessionCredentials, observer: PrimaryMeetingPromotionObserver)
+
+    /**
+     * Remove the promoted attendee from the Primary meeting. This client will stop sharing audio, video, and data messages.
+     * This will revert the end-user to precisely the state they were before a call to [promoteToPrimaryMeeting]
+     *
+     * This will have no effect if there was no previous successful call to [promoteToPrimaryMeeting]. This
+     * may result in [PrimaryMeetingPromotionObserver.onPrimaryMeetingDemotion] but there is no need to wait for that callback
+     * to revert UX, etc.
+     */
+    fun demoteFromPrimaryMeeting()
 }

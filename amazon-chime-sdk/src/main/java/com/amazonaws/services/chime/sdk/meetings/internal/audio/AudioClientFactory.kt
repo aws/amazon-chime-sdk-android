@@ -26,6 +26,7 @@ class AudioClientFactory private constructor(
             audioClientObserver,
             audioClientObserver,
             audioClientObserver,
+            audioClientObserver,
             0
         )
     }

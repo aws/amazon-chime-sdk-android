@@ -31,12 +31,14 @@ class DebugSettingsFragment : DialogFragment() {
         super.onViewCreated(view, savedInstanceState)
         debugSettingsViewModel = ViewModelProvider(requireActivity()).get(DebugSettingsViewModel::class.java)
         view.endpointUrlEditText.setText(debugSettingsViewModel.endpointUrl.value)
+        view.primaryMeetingIdEditText.setText(debugSettingsViewModel.primaryMeetingId.value)
         setupClickListeners(view)
     }
 
     private fun setupClickListeners(view: View) {
         view.saveButton.setOnClickListener {
             debugSettingsViewModel.sendEndpointUrl(view.endpointUrlEditText.text.toString())
+            debugSettingsViewModel.sendPrimaryMeetingId(view.primaryMeetingIdEditText.text.toString())
             dismiss()
         }
     }
