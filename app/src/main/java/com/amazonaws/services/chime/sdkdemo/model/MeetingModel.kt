@@ -27,9 +27,9 @@ class MeetingModel : ViewModel() {
     val currentRoster = mutableMapOf<String, RosterAttendee>()
     var localVideoTileState: VideoCollectionTile? = null
     val remoteVideoTileStates = mutableListOf<VideoCollectionTile>()
+    val remoteVideoSourceConfigurations = mutableMapOf<RemoteVideoSource, VideoSubscriptionConfiguration>()
     val videoStatesInCurrentPage = mutableListOf<VideoCollectionTile>()
     val userPausedVideoTileIds = mutableSetOf<Int>()
-    val remoteVideoSourceConfigurations = mutableMapOf<RemoteVideoSource, VideoSubscriptionConfiguration>()
     val currentScreenTiles = mutableListOf<VideoCollectionTile>()
     var currentVideoPageIndex = 0
     var currentMediaDevices = listOf<MediaDevice>()
@@ -57,10 +57,11 @@ class MeetingModel : ViewModel() {
         if (localVideoTileState != null) {
             videoStatesInCurrentPage.add(localVideoTileState!!)
         }
-
-        val remoteVideoTileCountPerPage = if (localVideoTileState == null) videoTileCountPerPage else (videoTileCountPerPage - 1)
+        val remoteVideoTileCountPerPage =
+            if (localVideoTileState == null) videoTileCountPerPage else (videoTileCountPerPage - 1)
         val remoteVideoStartIndex = currentVideoPageIndex * remoteVideoTileCountPerPage
-        val remoteVideoEndIndex = min(remoteVideoTileStates.size, remoteVideoStartIndex + remoteVideoTileCountPerPage) - 1
+        val remoteVideoEndIndex =
+            min(remoteVideoTileStates.size, remoteVideoStartIndex + remoteVideoTileCountPerPage) - 1
         if (remoteVideoStartIndex <= remoteVideoEndIndex) {
             videoStatesInCurrentPage.addAll(remoteVideoTileStates.slice(remoteVideoStartIndex..remoteVideoEndIndex))
         }
@@ -89,8 +90,10 @@ class MeetingModel : ViewModel() {
     }
 
     fun canGoToNextVideoPage(): Boolean {
-        val remoteVideoTileCountPerPage = if (localVideoTileState == null) videoTileCountPerPage else (videoTileCountPerPage - 1)
-        val maxVideoPageIndex = ceil(remoteVideoTileStates.size.toDouble() / remoteVideoTileCountPerPage).toInt() - 1
+        val remoteVideoTileCountPerPage =
+            if (localVideoTileState == null) videoTileCountPerPage else (videoTileCountPerPage - 1)
+        val maxVideoPageIndex =
+            ceil(remoteVideoTileStates.size.toDouble() / remoteVideoTileCountPerPage).toInt() - 1
         return currentVideoPageIndex < maxVideoPageIndex
     }
 }

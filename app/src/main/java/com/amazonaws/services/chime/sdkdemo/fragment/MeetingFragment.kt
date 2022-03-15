@@ -211,7 +211,11 @@ class MeetingFragment : Fragment(),
     private lateinit var audioDeviceManager: AudioDeviceManager
 
     companion object {
-        fun newInstance(meetingId: String, audioVideoConfig: AudioVideoConfiguration, meetingEndpointUrl: String): MeetingFragment {
+        fun newInstance(
+            meetingId: String,
+            audioVideoConfig: AudioVideoConfiguration,
+            meetingEndpointUrl: String
+        ): MeetingFragment {
             val fragment = MeetingFragment()
 
             fragment.arguments = bundleOf(
@@ -256,6 +260,7 @@ class MeetingFragment : Fragment(),
         screenShareManager = activity.getScreenShareManager()
         audioDeviceManager = AudioDeviceManager(audioVideo)
         demoUrl = if (getString(R.string.test_url).endsWith("/")) getString(R.string.test_url) else "${getString(R.string.test_url)}/"
+
         postLogger = PostLogger(
             appName,
             activity.getMeetingSessionConfiguration(),
@@ -263,7 +268,8 @@ class MeetingFragment : Fragment(),
             LogLevel.INFO
         )
 
-        mediaProjectionManager = activity.getSystemService(Context.MEDIA_PROJECTION_SERVICE) as MediaProjectionManager
+        mediaProjectionManager =
+            activity.getSystemService(Context.MEDIA_PROJECTION_SERVICE) as MediaProjectionManager
         powerManager = activity.getSystemService(Context.POWER_SERVICE) as PowerManager
 
         view.findViewById<TextView>(R.id.textViewMeetingId)?.text = arguments?.getString(
@@ -527,7 +533,8 @@ class MeetingFragment : Fragment(),
             android.R.layout.simple_list_item_1,
             meetingModel.currentMediaDevices,
             audioVideo,
-            audioDeviceManager)
+            audioDeviceManager
+        )
         deviceAlertDialogBuilder = AlertDialog.Builder(activity)
         deviceAlertDialogBuilder.setTitle(R.string.alert_title_choose_audio)
         deviceAlertDialogBuilder.setNegativeButton(R.string.cancel) { dialog, _ ->
@@ -600,7 +607,8 @@ class MeetingFragment : Fragment(),
                 1 -> setVoiceFocusEnabled(!isVoiceFocusEnabled)
                 2 -> toggleLiveTranscription(
                     arguments?.getString(HomeActivity.MEETING_ID_KEY) as String,
-                    arguments?.getString(HomeActivity.MEETING_ENDPOINT_KEY) as String)
+                    arguments?.getString(HomeActivity.MEETING_ENDPOINT_KEY) as String
+                )
                 3 -> toggleFlashlight()
                 4 -> toggleCpuDemoFilter()
                 5 -> toggleGpuDemoFilter()
@@ -827,16 +835,22 @@ class MeetingFragment : Fragment(),
         )
     }
 
-    private fun onAttendeesJoinedWithStatus(attendeeInfo: Array<AttendeeInfo>, status: AttendeeStatus) {
+    private fun onAttendeesJoinedWithStatus(
+        attendeeInfo: Array<AttendeeInfo>,
+        status: AttendeeStatus
+    ) {
         uiScope.launch {
             mutex.withLock {
                 attendeeInfo.forEach { (attendeeId, externalUserId) ->
                     if (DefaultModality(attendeeId).hasModality(ModalityType.Content) &&
-                            !isSelfAttendee(attendeeId) &&
-                            meetingModel.isSharingContent) {
+                        !isSelfAttendee(attendeeId) &&
+                        meetingModel.isSharingContent
+                    ) {
                         audioVideo.stopContentShare()
                         screenShareManager?.stop()
-                        val name = meetingModel.currentRoster[DefaultModality(attendeeId).base()]?.attendeeName ?: ""
+                        val name =
+                            meetingModel.currentRoster[DefaultModality(attendeeId).base()]?.attendeeName
+                                ?: ""
                         notifyHandler("$name took over the screen share")
                     }
                     meetingModel.currentRoster.getOrPut(
@@ -881,7 +895,8 @@ class MeetingFragment : Fragment(),
     }
 
     private fun toggleSpeaker() {
-        meetingModel.currentMediaDevices = audioVideo.listAudioDevices().filter { it.type != MediaDeviceType.OTHER }
+        meetingModel.currentMediaDevices =
+            audioVideo.listAudioDevices().filter { it.type != MediaDeviceType.OTHER }
         deviceListAdapter.clear()
         deviceListAdapter.addAll(meetingModel.currentMediaDevices)
         deviceListAdapter.notifyDataSetChanged()
@@ -905,7 +920,8 @@ class MeetingFragment : Fragment(),
     private fun toggleLiveTranscription(meetingId: String, meetingEndpointUrl: String) {
         if (meetingModel.isLiveTranscriptionEnabled) {
             uiScope.launch {
-                val transcriptionResponseJson: String? = disableMeetingTranscription(meetingId, meetingEndpointUrl)
+                val transcriptionResponseJson: String? =
+                    disableMeetingTranscription(meetingId, meetingEndpointUrl)
 
                 if (transcriptionResponseJson == null) {
                     notifyHandler(getString(R.string.user_notification_transcription_stop_error))
@@ -1155,8 +1171,12 @@ class MeetingFragment : Fragment(),
         }
     }
 
-    private suspend fun disableMeetingTranscription(meetingId: String?, meetingEndpointUrl: String): String? {
-        val meetingUrl = if (meetingEndpointUrl.endsWith("/")) meetingEndpointUrl else meetingEndpointUrl.plus("/")
+    private suspend fun disableMeetingTranscription(
+        meetingId: String?,
+        meetingEndpointUrl: String
+    ): String? {
+        val meetingUrl =
+            if (meetingEndpointUrl.endsWith("/")) meetingEndpointUrl else meetingEndpointUrl.plus("/")
         val url = "${meetingUrl}stop_transcription?title=${encodeURLParam(meetingId)}"
         val response = HttpUtils.post(URL(url), "", DefaultBackOffRetry(), logger)
         return if (response.httpException == null) {
@@ -1170,32 +1190,39 @@ class MeetingFragment : Fragment(),
     private fun onVideoPageUpdated() {
         val oldList = mutableListOf<VideoCollectionTile>()
         oldList.addAll(meetingModel.videoStatesInCurrentPage)
-
+        val removedList: ArrayList<RemoteVideoSource> = arrayListOf()
+        for (videoState in oldList) {
+            for ((key) in meetingModel.remoteVideoSourceConfigurations) {
+                if (videoState.videoTileState.attendeeId == key.attendeeId) {
+                    removedList.add(key)
+                }
+            }
+        }
+        val removedSources: Array<RemoteVideoSource> = removedList.toTypedArray()
         // Recalculate videos in the current page and notify videoTileAdapter
         meetingModel.updateVideoStatesInCurrentPage()
+
         revalidateVideoPageIndex()
 
         val newList = mutableListOf<VideoCollectionTile>()
         newList.addAll(meetingModel.videoStatesInCurrentPage)
+        val updatedSources: MutableMap<RemoteVideoSource, VideoSubscriptionConfiguration> =
+            mutableMapOf()
+        for (videoState in newList) {
+            for ((key, value) in meetingModel.remoteVideoSourceConfigurations) {
+                if (videoState.videoTileState.attendeeId == key.attendeeId) {
+                    updatedSources[key] = value
+                }
+            }
+        }
 
         val videoDiffCallback = VideoDiffCallback(oldList, newList)
         val videoDiffResult: DiffUtil.DiffResult = DiffUtil.calculateDiff(videoDiffCallback)
 
         videoDiffResult.dispatchUpdatesTo(videoTileAdapter)
 
-        // Pause/Resume remote videos accordingly based on videoTileState and the tab that user is on
-        meetingModel.remoteVideoTileStates.forEach {
-            // Resume paused videos in the current page if user is on Video tab and it was not manually paused by user
-            if (meetingModel.tabIndex == SubTab.Video.position && meetingModel.videoStatesInCurrentPage.contains(it) && !meetingModel.userPausedVideoTileIds.contains(it.videoTileState.tileId)) {
-                if (it.videoTileState.pauseState == VideoPauseState.PausedByUserRequest) {
-                    audioVideo.resumeRemoteVideoTile(it.videoTileState.tileId)
-                }
-            } else {
-                if (it.videoTileState.pauseState != VideoPauseState.PausedByUserRequest) {
-                    audioVideo.pauseRemoteVideoTile(it.videoTileState.tileId)
-                }
-            }
-        }
+        // subscribe to updated sources with highest priority and unsubscribed sources in prev page
+        audioVideo.updateVideoSourceSubscriptions(updatedSources, removedSources)
 
         // update video pagination control buttons states
         prevVideoPageButton.isEnabled = meetingModel.canGoToPrevVideoPage()
@@ -1479,7 +1506,10 @@ class MeetingFragment : Fragment(),
     }
 
     override fun onRemoteVideoSourceAvailable(sources: List<RemoteVideoSource>) {
-        sources.forEach { meetingModel.remoteVideoSourceConfigurations.put(it, VideoSubscriptionConfiguration(VideoPriority.Medium, VideoResolution.High)) }
+        for (source in sources) {
+            meetingModel.remoteVideoSourceConfigurations[source] =
+                VideoSubscriptionConfiguration(VideoPriority.Medium, VideoResolution.Medium)
+        }
         // Use the default auto subscribe behavior
     }
 
@@ -1533,7 +1563,8 @@ class MeetingFragment : Fragment(),
 
     override fun onVideoTilePaused(tileState: VideoTileState) {
         if (tileState.pauseState == VideoPauseState.PausedForPoorConnection) {
-            val collection = if (tileState.isContent) meetingModel.currentScreenTiles else meetingModel.remoteVideoTileStates
+            val collection =
+                if (tileState.isContent) meetingModel.currentScreenTiles else meetingModel.remoteVideoTileStates
             collection.find { it.videoTileState.tileId == tileState.tileId }.apply {
                 this?.setPauseMessageVisibility(View.VISIBLE)
             }
@@ -1547,7 +1578,8 @@ class MeetingFragment : Fragment(),
     }
 
     override fun onVideoTileResumed(tileState: VideoTileState) {
-        val collection = if (tileState.isContent) meetingModel.currentScreenTiles else meetingModel.remoteVideoTileStates
+        val collection =
+            if (tileState.isContent) meetingModel.currentScreenTiles else meetingModel.remoteVideoTileStates
         collection.find { it.videoTileState.tileId == tileState.tileId }.apply {
             this?.setPauseMessageVisibility(View.INVISIBLE)
         }
@@ -1732,15 +1764,22 @@ class MeetingFragment : Fragment(),
     override fun onEventReceived(name: EventName, attributes: EventAttributes) {
         // Store the logs
         attributes.putAll(audioVideo.getCommonEventAttributes())
-        postLogger.info(TAG, gson.toJson(mutableMapOf(
-            "name" to name,
-            "attributes" to attributes
-        )))
+        postLogger.info(
+            TAG, gson.toJson(
+                mutableMapOf(
+                    "name" to name,
+                    "attributes" to attributes
+                )
+            )
+        )
 
         logger.info(TAG, "$name ${attributes.toJsonString()}")
         when (name) {
             EventName.meetingStartSucceeded ->
-                logger.info(TAG, "Meeting started on : ${audioVideo.getCommonEventAttributes().toJsonString()}")
+                logger.info(
+                    TAG,
+                    "Meeting started on : ${audioVideo.getCommonEventAttributes().toJsonString()}"
+                )
             EventName.meetingEnded, EventName.meetingFailed -> {
                 logger.info(TAG, "Meeting history: ${gson.toJson(audioVideo.getMeetingHistory())}")
                 postLogger.publishLog(TAG)
