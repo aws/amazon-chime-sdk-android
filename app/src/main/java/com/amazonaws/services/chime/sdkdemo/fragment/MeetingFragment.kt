@@ -153,7 +153,6 @@ class MeetingFragment : Fragment(),
     private lateinit var gpuVideoProcessor: GpuVideoProcessor
     private lateinit var cpuVideoProcessor: CpuVideoProcessor
     private lateinit var eglCoreFactory: EglCoreFactory
-    private lateinit var demoUrl: String
     private lateinit var listener: RosterViewEventListener
     private lateinit var postLogger: PostLogger
 
@@ -261,12 +260,12 @@ class MeetingFragment : Fragment(),
         cpuVideoProcessor = activity.getCpuVideoProcessor()
         screenShareManager = activity.getScreenShareManager()
         audioDeviceManager = AudioDeviceManager(audioVideo)
-        demoUrl = if (getString(R.string.test_url).endsWith("/")) getString(R.string.test_url) else "${getString(R.string.test_url)}/"
 
+        val meetingEndpointUrl = arguments?.getString(HomeActivity.MEETING_ENDPOINT_KEY) as String
         postLogger = PostLogger(
             appName,
             activity.getMeetingSessionConfiguration(),
-            "${demoUrl}log_meeting_event",
+            "${meetingEndpointUrl}log_meeting_event",
             LogLevel.INFO
         )
 
@@ -632,7 +631,8 @@ class MeetingFragment : Fragment(),
     }
 
     private suspend fun getJoinResponseForPrimaryMeeting(): MeetingSessionCredentials? {
-        var url = if (demoUrl.endsWith("/")) demoUrl else "$demoUrl/"
+        val meetingEndpointUrl = arguments?.getString(HomeActivity.MEETING_ENDPOINT_KEY) as String
+        var url = if (meetingEndpointUrl.endsWith("/")) meetingEndpointUrl else "$meetingEndpointUrl/"
         val attendeeName = getAttendeeName(credentials.attendeeId, credentials.externalUserId)
         url = "${url}join?title=${encodeURLParam(primaryExternalMeetingId)}&name=promoted-${encodeURLParam(attendeeName)}"
         url += "&region=region"
