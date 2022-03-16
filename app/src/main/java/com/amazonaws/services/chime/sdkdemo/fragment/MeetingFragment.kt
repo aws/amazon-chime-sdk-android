@@ -146,6 +146,8 @@ class MeetingFragment : Fragment(),
     private lateinit var mediaProjectionManager: MediaProjectionManager
     private lateinit var powerManager: PowerManager
     private lateinit var credentials: MeetingSessionCredentials
+    // Cached for reuse and making sure we don't immediately stop content share
+    private var primaryMeetingCredentials: MeetingSessionCredentials? = null
     private lateinit var audioVideo: AudioVideoFacade
     private lateinit var cameraCaptureSource: CameraCaptureSource
     private lateinit var gpuVideoProcessor: GpuVideoProcessor
@@ -619,10 +621,12 @@ class MeetingFragment : Fragment(),
     }
 
     private fun promoteToPrimaryMeeting() {
-        val primaryMeetingCredentials = runBlocking { getJoinResponseForPrimaryMeeting() }
-        if (primaryMeetingCredentials != null) {
-            audioVideo.promoteToPrimaryMeeting(primaryMeetingCredentials, this)
-        } else {
+        if (primaryMeetingCredentials == null) {
+            primaryMeetingCredentials = runBlocking { getJoinResponseForPrimaryMeeting() }
+        }
+        primaryMeetingCredentials?.let {
+            audioVideo.promoteToPrimaryMeeting(it, this)
+        } ?: run {
             logger.error(TAG, "Could not retrieve primary meeting credentials")
         }
     }
@@ -1665,7 +1669,7 @@ class MeetingFragment : Fragment(),
     }
 
     private fun isSelfAttendee(attendeeId: String): Boolean {
-        return DefaultModality(attendeeId).base() == credentials.attendeeId
+        return DefaultModality(attendeeId).base() == credentials.attendeeId || DefaultModality(attendeeId).base() == primaryMeetingCredentials?.attendeeId
     }
 
     private fun notifyHandler(
