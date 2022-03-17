@@ -133,6 +133,7 @@ class DefaultAudioVideoFacade(
     }
 
     override fun demoteFromPrimaryMeeting() {
+        contentShareController.stopContentShare()
         audioVideoController.demoteFromPrimaryMeeting()
     }
 
