@@ -94,6 +94,9 @@ class DefaultVideoClientController(
 
     override fun stopAndDestroy() {
         GlobalScope.launch {
+            // So it doesn't call it spuriously
+            videoClientObserver.primaryMeetingPromotionObserver = null
+
             videoClientStateController.stop()
 
             eglCore?.release()
