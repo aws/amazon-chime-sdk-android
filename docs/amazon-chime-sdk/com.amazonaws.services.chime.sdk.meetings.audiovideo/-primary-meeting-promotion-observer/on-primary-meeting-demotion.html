@@ -1,0 +1,28 @@
+<HTML>
+<HEAD>
+<meta charset="UTF-8">
+<title>PrimaryMeetingPromotionObserver.onPrimaryMeetingDemotion - amazon-chime-sdk</title>
+<link rel="stylesheet" href="../../../style.css">
+</HEAD>
+<BODY>
+<a href="../../index.html">amazon-chime-sdk</a>&nbsp;/&nbsp;<a href="../index.html">com.amazonaws.services.chime.sdk.meetings.audiovideo</a>&nbsp;/&nbsp;<a href="index.html">PrimaryMeetingPromotionObserver</a>&nbsp;/&nbsp;<a href="./on-primary-meeting-demotion.html">onPrimaryMeetingDemotion</a><br/>
+<br/>
+<h1>onPrimaryMeetingDemotion</h1>
+<a name="com.amazonaws.services.chime.sdk.meetings.audiovideo.PrimaryMeetingPromotionObserver$onPrimaryMeetingDemotion(com.amazonaws.services.chime.sdk.meetings.session.MeetingSessionStatus)"></a>
+<code><span class="keyword">open</span> <span class="keyword">fun </span><span class="identifier">onPrimaryMeetingDemotion</span><span class="symbol">(</span><span class="identifier" id="com.amazonaws.services.chime.sdk.meetings.audiovideo.PrimaryMeetingPromotionObserver$onPrimaryMeetingDemotion(com.amazonaws.services.chime.sdk.meetings.session.MeetingSessionStatus)/status">status</span><span class="symbol">:</span>&nbsp;<a href="../../com.amazonaws.services.chime.sdk.meetings.session/-meeting-session-status/index.html"><span class="identifier">MeetingSessionStatus</span></a><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code>
+<p>This observer callback will only be called for attendees in Replica meetings that have
+been promoted to the Primary meeting via <a href="../-audio-video-controller-facade/promote-to-primary-meeting.html">AudioVideoFacade.promoteToPrimaryMeeting</a>.</p>
+<p>Indicates that the client is no longer authenticated to the Primary meeting
+and can no longer share media. <code>status</code> will contain a <a href="#">MeetingSessionStatusCode</a> of the following:</p>
+<ul><li><a href="#">MeetingSessionStatusCode.OK</a>: <a href="../-audio-video-controller-facade/demote-from-primary-meeting.html">AudioVideoFacade.demoteFromPrimaryMeeting</a> was used to remove the attendee.</li>
+<li><a href="#">MeetingSessionStatusCode.AudioAuthenticationRejected</a>: <code>chime::DeleteAttendee</code> was called on the Primary
+meeting attendee used in <a href="../-audio-video-controller-facade/promote-to-primary-meeting.html">AudioVideoFacade.promoteToPrimaryMeeting</a>.</li>
+<li><a href="#">MeetingSessionStatusCode.AudioInternalServerError</a>: Other failure, possibly due to disconnect
+or timeout. These failures are likely retryable. Any disconnection will trigger an automatic
+demotion to avoid unexpected or unwanted promotion state on reconnection.</li>
+</ul>
+<h3>Parameters</h3>
+<p><a name="status"></a>
+<code>status</code> - : <a href="../../com.amazonaws.services.chime.sdk.meetings.session/-meeting-session-status/index.html">MeetingSessionStatus</a> - Reason for demotion, see notes above</p>
+</BODY>
+</HTML>
