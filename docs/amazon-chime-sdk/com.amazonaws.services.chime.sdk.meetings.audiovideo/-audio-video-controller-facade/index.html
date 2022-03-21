@@ -31,6 +31,24 @@
 </tr>
 <tr>
 <td>
+<h4><a href="demote-from-primary-meeting.html">demoteFromPrimaryMeeting</a></h4>
+</td>
+<td>
+<p>Remove the promoted attendee from the Primary meeting. This client will stop sharing audio, video, and data messages.
+This will revert the end-user to precisely the state they were before a call to <a href="promote-to-primary-meeting.html">promoteToPrimaryMeeting</a></p>
+<code><span class="keyword">abstract</span> <span class="keyword">fun </span><span class="identifier">demoteFromPrimaryMeeting</span><span class="symbol">(</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="promote-to-primary-meeting.html">promoteToPrimaryMeeting</a></h4>
+</td>
+<td>
+<p>Allows an attendee in a Replica meeting to immediately transition to a Primary meeting attendee
+without need for reconnection.</p>
+<code><span class="keyword">abstract</span> <span class="keyword">fun </span><span class="identifier">promoteToPrimaryMeeting</span><span class="symbol">(</span><span class="identifier" id="com.amazonaws.services.chime.sdk.meetings.audiovideo.AudioVideoControllerFacade$promoteToPrimaryMeeting(com.amazonaws.services.chime.sdk.meetings.session.MeetingSessionCredentials, com.amazonaws.services.chime.sdk.meetings.audiovideo.PrimaryMeetingPromotionObserver)/credentials">credentials</span><span class="symbol">:</span>&nbsp;<a href="../../com.amazonaws.services.chime.sdk.meetings.session/-meeting-session-credentials/index.html"><span class="identifier">MeetingSessionCredentials</span></a><span class="symbol">, </span><span class="identifier" id="com.amazonaws.services.chime.sdk.meetings.audiovideo.AudioVideoControllerFacade$promoteToPrimaryMeeting(com.amazonaws.services.chime.sdk.meetings.session.MeetingSessionCredentials, com.amazonaws.services.chime.sdk.meetings.audiovideo.PrimaryMeetingPromotionObserver)/observer">observer</span><span class="symbol">:</span>&nbsp;<a href="../-primary-meeting-promotion-observer/index.html"><span class="identifier">PrimaryMeetingPromotionObserver</span></a><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code></td>
+</tr>
+<tr>
+<td>
 <h4><a href="remove-audio-video-observer.html">removeAudioVideoObserver</a></h4>
 </td>
 <td>

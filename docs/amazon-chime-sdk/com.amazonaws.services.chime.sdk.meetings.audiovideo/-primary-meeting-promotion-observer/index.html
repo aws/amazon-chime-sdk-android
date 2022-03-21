@@ -1,0 +1,39 @@
+<HTML>
+<HEAD>
+<meta charset="UTF-8">
+<title>PrimaryMeetingPromotionObserver - amazon-chime-sdk</title>
+<link rel="stylesheet" href="../../../style.css">
+</HEAD>
+<BODY>
+<a href="../../index.html">amazon-chime-sdk</a>&nbsp;/&nbsp;<a href="../index.html">com.amazonaws.services.chime.sdk.meetings.audiovideo</a>&nbsp;/&nbsp;<a href="./index.html">PrimaryMeetingPromotionObserver</a><br/>
+<br/>
+<h1>PrimaryMeetingPromotionObserver</h1>
+<code><span class="keyword">interface </span><span class="identifier">PrimaryMeetingPromotionObserver</span></code>
+<p><a href="./index.html">PrimaryMeetingPromotionObserver</a> handles events related to the promotion and demotion
+of attendees initially in replica meetings.</p>
+<p>Note: all callbacks will be called on main thread.</p>
+<h3>Functions</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<h4><a href="on-primary-meeting-demotion.html">onPrimaryMeetingDemotion</a></h4>
+</td>
+<td>
+<p>This observer callback will only be called for attendees in Replica meetings that have
+been promoted to the Primary meeting via <a href="../-audio-video-controller-facade/promote-to-primary-meeting.html">AudioVideoFacade.promoteToPrimaryMeeting</a>.</p>
+<code><span class="keyword">open</span> <span class="keyword">fun </span><span class="identifier">onPrimaryMeetingDemotion</span><span class="symbol">(</span><span class="identifier" id="com.amazonaws.services.chime.sdk.meetings.audiovideo.PrimaryMeetingPromotionObserver$onPrimaryMeetingDemotion(com.amazonaws.services.chime.sdk.meetings.session.MeetingSessionStatus)/status">status</span><span class="symbol">:</span>&nbsp;<a href="../../com.amazonaws.services.chime.sdk.meetings.session/-meeting-session-status/index.html"><span class="identifier">MeetingSessionStatus</span></a><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="on-primary-meeting-promotion.html">onPrimaryMeetingPromotion</a></h4>
+</td>
+<td>
+<p>Upon success/failure of <a href="../-audio-video-controller-facade/promote-to-primary-meeting.html">AudioVideoFacade.promoteToPrimaryMeeting</a> the following observer
+will return a <a href="../../com.amazonaws.services.chime.sdk.meetings.session/-meeting-session-status/index.html">MeetingSessionStatus</a> that will contain a <a href="#">MeetingSessionStatusCode</a> of the following:</p>
+<code><span class="keyword">open</span> <span class="keyword">fun </span><span class="identifier">onPrimaryMeetingPromotion</span><span class="symbol">(</span><span class="identifier" id="com.amazonaws.services.chime.sdk.meetings.audiovideo.PrimaryMeetingPromotionObserver$onPrimaryMeetingPromotion(com.amazonaws.services.chime.sdk.meetings.session.MeetingSessionStatus)/status">status</span><span class="symbol">:</span>&nbsp;<a href="../../com.amazonaws.services.chime.sdk.meetings.session/-meeting-session-status/index.html"><span class="identifier">MeetingSessionStatus</span></a><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code></td>
+</tr>
+</tbody>
+</table>
+</BODY>
+</HTML>

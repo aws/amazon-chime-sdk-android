@@ -1,9 +1,15 @@
 ## [Unreleased]
 
 ### Added
+* Added [replicated meeting guide](https://github.com/aws/amazon-chime-sdk-android/blob/master/guides/replicated_meetings.md) for more details.
 
-* Added support for use of replicated meetings to extend meeting sizes to up to 10k view only participants with glareless promotion ability. See the Chime Developer Guide and the [iOS guide](https://github.com/aws/amazon-chime-sdk-android/blob/master/guides/replicated_meetings.md) for more details.
+### Fixed
+* Added proper call of demotion callback on audio or video disconnection.
 
+## [0.15.2] - 2022-03-21
+
+### Added
+* Added support for media replication to link multiple WebRTC media sessions together to reach larger and global audiences. Participants connected to a replica session can be granted access to join the primary session and can switch sessions with their existing WebRTC connection.
 
 ## [0.15.1] - 2022-03-10
 

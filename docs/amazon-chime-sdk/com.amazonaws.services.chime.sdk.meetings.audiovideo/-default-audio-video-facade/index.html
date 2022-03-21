@@ -124,6 +124,15 @@ after the completion of this API.</p>
 </tr>
 <tr>
 <td>
+<h4><a href="demote-from-primary-meeting.html">demoteFromPrimaryMeeting</a></h4>
+</td>
+<td>
+<p>Remove the promoted attendee from the Primary meeting. This client will stop sharing audio, video, and data messages.
+This will revert the end-user to precisely the state they were before a call to <a href="../-audio-video-controller-facade/promote-to-primary-meeting.html">promoteToPrimaryMeeting</a></p>
+<code><span class="keyword">fun </span><span class="identifier">demoteFromPrimaryMeeting</span><span class="symbol">(</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code></td>
+</tr>
+<tr>
+<td>
 <h4><a href="get-active-audio-device.html">getActiveAudioDevice</a></h4>
 </td>
 <td>
@@ -170,6 +179,15 @@ e.g. one passed in via <a href="../-audio-video-controller-facade/start-local-vi
 <td>
 <p>Pauses the specified remote video tile. Ignores the tileId if it belongs to the local video tile.</p>
 <code><span class="keyword">fun </span><span class="identifier">pauseRemoteVideoTile</span><span class="symbol">(</span><span class="identifier" id="com.amazonaws.services.chime.sdk.meetings.audiovideo.DefaultAudioVideoFacade$pauseRemoteVideoTile(kotlin.Int)/tileId">tileId</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html"><span class="identifier">Int</span></a><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="promote-to-primary-meeting.html">promoteToPrimaryMeeting</a></h4>
+</td>
+<td>
+<p>Allows an attendee in a Replica meeting to immediately transition to a Primary meeting attendee
+without need for reconnection.</p>
+<code><span class="keyword">fun </span><span class="identifier">promoteToPrimaryMeeting</span><span class="symbol">(</span><span class="identifier" id="com.amazonaws.services.chime.sdk.meetings.audiovideo.DefaultAudioVideoFacade$promoteToPrimaryMeeting(com.amazonaws.services.chime.sdk.meetings.session.MeetingSessionCredentials, com.amazonaws.services.chime.sdk.meetings.audiovideo.PrimaryMeetingPromotionObserver)/credentials">credentials</span><span class="symbol">:</span>&nbsp;<a href="../../com.amazonaws.services.chime.sdk.meetings.session/-meeting-session-credentials/index.html"><span class="identifier">MeetingSessionCredentials</span></a><span class="symbol">, </span><span class="identifier" id="com.amazonaws.services.chime.sdk.meetings.audiovideo.DefaultAudioVideoFacade$promoteToPrimaryMeeting(com.amazonaws.services.chime.sdk.meetings.session.MeetingSessionCredentials, com.amazonaws.services.chime.sdk.meetings.audiovideo.PrimaryMeetingPromotionObserver)/observer">observer</span><span class="symbol">:</span>&nbsp;<a href="../-primary-meeting-promotion-observer/index.html"><span class="identifier">PrimaryMeetingPromotionObserver</span></a><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code></td>
 </tr>
 <tr>
 <td>
