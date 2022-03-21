@@ -1,0 +1,34 @@
+<HTML>
+<HEAD>
+<meta charset="UTF-8">
+<title>DefaultAudioVideoFacade.promoteToPrimaryMeeting - amazon-chime-sdk</title>
+<link rel="stylesheet" href="../../../style.css">
+</HEAD>
+<BODY>
+<a href="../../index.html">amazon-chime-sdk</a>&nbsp;/&nbsp;<a href="../index.html">com.amazonaws.services.chime.sdk.meetings.audiovideo</a>&nbsp;/&nbsp;<a href="index.html">DefaultAudioVideoFacade</a>&nbsp;/&nbsp;<a href="./promote-to-primary-meeting.html">promoteToPrimaryMeeting</a><br/>
+<br/>
+<h1>promoteToPrimaryMeeting</h1>
+<a name="com.amazonaws.services.chime.sdk.meetings.audiovideo.DefaultAudioVideoFacade$promoteToPrimaryMeeting(com.amazonaws.services.chime.sdk.meetings.session.MeetingSessionCredentials, com.amazonaws.services.chime.sdk.meetings.audiovideo.PrimaryMeetingPromotionObserver)"></a>
+<code><span class="keyword">fun </span><span class="identifier">promoteToPrimaryMeeting</span><span class="symbol">(</span><span class="identifier" id="com.amazonaws.services.chime.sdk.meetings.audiovideo.DefaultAudioVideoFacade$promoteToPrimaryMeeting(com.amazonaws.services.chime.sdk.meetings.session.MeetingSessionCredentials, com.amazonaws.services.chime.sdk.meetings.audiovideo.PrimaryMeetingPromotionObserver)/credentials">credentials</span><span class="symbol">:</span>&nbsp;<a href="../../com.amazonaws.services.chime.sdk.meetings.session/-meeting-session-credentials/index.html"><span class="identifier">MeetingSessionCredentials</span></a><span class="symbol">, </span><span class="identifier" id="com.amazonaws.services.chime.sdk.meetings.audiovideo.DefaultAudioVideoFacade$promoteToPrimaryMeeting(com.amazonaws.services.chime.sdk.meetings.session.MeetingSessionCredentials, com.amazonaws.services.chime.sdk.meetings.audiovideo.PrimaryMeetingPromotionObserver)/observer">observer</span><span class="symbol">:</span>&nbsp;<a href="../-primary-meeting-promotion-observer/index.html"><span class="identifier">PrimaryMeetingPromotionObserver</span></a><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code>
+<p>Allows an attendee in a Replica meeting to immediately transition to a Primary meeting attendee
+without need for reconnection.</p>
+<p><a href="../-primary-meeting-promotion-observer/on-primary-meeting-promotion.html">PrimaryMeetingPromotionObserver.onPrimaryMeetingPromotion</a> will be called exactly once on <code>observer</code> for each call. If
+the promotion is successful,  <a href="../-primary-meeting-promotion-observer/on-primary-meeting-demotion.html">PrimaryMeetingPromotionObserver.onPrimaryMeetingDemotion</a> will be called exactly once
+if/when the attendee is demoted. See the observer documentation for possible status codes.</p>
+<p>Application code may also receive a callback on <code>AudioVideoObserver.onVideoSessionStarted</code> without
+<a href="#">MeetingSessionStatusCode.VideoAtCapacityViewOnly</a> to indicate they can begin to share video.</p>
+<p><code>chime::DeleteAttendee</code> on the Primary meeting attendee will result in <a href="../-primary-meeting-promotion-observer/on-primary-meeting-demotion.html">PrimaryMeetingPromotionObserver.onPrimaryMeetingDemotion</a>
+being called on <code>observer</code> to indicate the attendee is no longer able to share.</p>
+<p>Any disconnection will trigger an automatic demotion to avoid unexpected or unwanted promotion state on reconnection.
+This will also call <a href="../-primary-meeting-promotion-observer/on-primary-meeting-demotion.html">PrimaryMeetingPromotionObserver.onPrimaryMeetingDemotion</a>;  if the attendee still needs to be
+an interactive participant in the Primary meeting, <a href="../-audio-video-controller-facade/promote-to-primary-meeting.html">promoteToPrimaryMeeting</a> should be called again with the same credentials.</p>
+<p>Note that given the asynchronous nature of this function, this should not be called a second time before
+<a href="../-primary-meeting-promotion-observer/on-primary-meeting-promotion.html">PrimaryMeetingPromotionObserver.onPrimaryMeetingPromotion</a> is called for the first time. Doing so may result in unexpected
+behavior.</p>
+<h3>Parameters</h3>
+<p><a name="credentials"></a>
+<code>credentials</code> - The credentials for the primary meeting.  This needs to be obtained out of band.</p>
+<p><a name="observer"></a>
+<code>observer</code> - Function to be called on promotion and possibly demotion; see note above.</p>
+</BODY>
+</HTML>

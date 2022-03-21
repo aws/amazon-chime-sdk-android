@@ -1,0 +1,19 @@
+<HTML>
+<HEAD>
+<meta charset="UTF-8">
+<title>DefaultAudioVideoController.demoteFromPrimaryMeeting - amazon-chime-sdk</title>
+<link rel="stylesheet" href="../../../style.css">
+</HEAD>
+<BODY>
+<a href="../../index.html">amazon-chime-sdk</a>&nbsp;/&nbsp;<a href="../index.html">com.amazonaws.services.chime.sdk.meetings.audiovideo</a>&nbsp;/&nbsp;<a href="index.html">DefaultAudioVideoController</a>&nbsp;/&nbsp;<a href="./demote-from-primary-meeting.html">demoteFromPrimaryMeeting</a><br/>
+<br/>
+<h1>demoteFromPrimaryMeeting</h1>
+<a name="com.amazonaws.services.chime.sdk.meetings.audiovideo.DefaultAudioVideoController$demoteFromPrimaryMeeting()"></a>
+<code><span class="keyword">fun </span><span class="identifier">demoteFromPrimaryMeeting</span><span class="symbol">(</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code>
+<p>Remove the promoted attendee from the Primary meeting. This client will stop sharing audio, video, and data messages.
+This will revert the end-user to precisely the state they were before a call to <a href="../-audio-video-controller-facade/promote-to-primary-meeting.html">promoteToPrimaryMeeting</a></p>
+<p>This will have no effect if there was no previous successful call to <a href="../-audio-video-controller-facade/promote-to-primary-meeting.html">promoteToPrimaryMeeting</a>. This
+may result in <a href="../-primary-meeting-promotion-observer/on-primary-meeting-demotion.html">PrimaryMeetingPromotionObserver.onPrimaryMeetingDemotion</a> but there is no need to wait for that callback
+to revert UX, etc.</p>
+</BODY>
+</HTML>
