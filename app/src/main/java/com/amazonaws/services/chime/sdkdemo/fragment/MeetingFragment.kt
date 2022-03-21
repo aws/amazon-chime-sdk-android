@@ -282,8 +282,7 @@ class MeetingFragment : Fragment(),
         setupAudioDeviceSelectionDialog()
         setupAdditionalOptionsDialog()
 
-        if (!primaryExternalMeetingId.isNullOrEmpty()) {
-            toggleMute() // Toggle off by default
+        if (inReplicaMeeting()) {
             updateUiForPromotionStatus(false)
         }
 
@@ -319,6 +318,10 @@ class MeetingFragment : Fragment(),
 
         view.findViewById<ImageButton>(R.id.buttonLeave)
             ?.setOnClickListener { endMeeting() }
+    }
+
+    private fun inReplicaMeeting(): Boolean {
+        return !primaryExternalMeetingId.isNullOrEmpty()
     }
 
     private fun updateUiForPromotionStatus(promoted: Boolean) {
@@ -577,7 +580,7 @@ class MeetingFragment : Fragment(),
     }
 
     private fun refreshAdditionalOptionsDialogItems() {
-        if (!primaryExternalMeetingId.isNullOrEmpty() && !hasJoinedPrimaryMeeting) {
+        if (inReplicaMeeting() && !hasJoinedPrimaryMeeting) {
             val additionalToggles = arrayOf(
                 context?.getString(R.string.promote_to_primary_meeting)
             )
@@ -598,7 +601,7 @@ class MeetingFragment : Fragment(),
             context?.getString(if (meetingModel.isUsingGpuVideoProcessor) R.string.disable_gpu_filter else R.string.enable_gpu_filter),
             context?.getString(if (meetingModel.isUsingCameraCaptureSource) R.string.disable_custom_capture_source else R.string.enable_custom_capture_source)
         )
-        if (!primaryExternalMeetingId.isNullOrEmpty()) {
+        if (inReplicaMeeting()) {
             additionalToggles.add(context?.getString(R.string.demote_from_primary_meeting))
         } else {
             additionalToggles.add(context?.getString(if (meetingModel.isLiveTranscriptionEnabled) R.string.disable_live_transcription else R.string.enable_live_transcription))
@@ -613,7 +616,7 @@ class MeetingFragment : Fragment(),
                 4 -> toggleGpuDemoFilter()
                 5 -> toggleCustomCaptureSource()
                 6 -> { // May not be accessible
-                    if (!primaryExternalMeetingId.isNullOrEmpty()) {
+                    if (inReplicaMeeting()) {
                         demoteFromPrimaryMeeting()
                     } else {
                         toggleLiveTranscription(
@@ -634,6 +637,9 @@ class MeetingFragment : Fragment(),
             audioVideo.promoteToPrimaryMeeting(it, this)
         } ?: run {
             logger.error(TAG, "Could not retrieve primary meeting credentials")
+        }
+        if (inReplicaMeeting()) {
+            toggleMute() // Start muted in case we promote and don't want to be unmuted
         }
     }
 
