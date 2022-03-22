@@ -1,7 +1,7 @@
 ## [Unreleased]
 
 ### Added
-* Added [replicated meeting guide](https://github.com/aws/amazon-chime-sdk-android/blob/master/guides/replicated_meetings.md) for more details.
+* Added [replicated meeting guide](https://github.com/aws/amazon-chime-sdk-android/blob/master/guides/replicated_meetings.md).
 
 ### Fixed
 * Added proper call of demotion callback on audio or video disconnection.
