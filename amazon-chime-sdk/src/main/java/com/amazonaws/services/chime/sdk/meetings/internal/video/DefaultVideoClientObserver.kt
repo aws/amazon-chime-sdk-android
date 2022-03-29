@@ -108,6 +108,12 @@ class DefaultVideoClientObserver(
                 )
             )
         }
+
+        // Benign to be null on actual stop
+        primaryMeetingPromotionObserver?.let {
+            it.onPrimaryMeetingDemotion(MeetingSessionStatus(MeetingSessionStatusCode.AudioInternalServerError))
+            primaryMeetingPromotionObserver = null
+        }
     }
 
     override fun cameraSendIsAvailable(client: VideoClient?, available: Boolean) {

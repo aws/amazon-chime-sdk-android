@@ -282,7 +282,7 @@ class MeetingFragment : Fragment(),
         setupAudioDeviceSelectionDialog()
         setupAdditionalOptionsDialog()
 
-        if (!primaryExternalMeetingId.isNullOrEmpty()) {
+        if (inReplicaMeeting()) {
             updateUiForPromotionStatus(false)
         }
 
@@ -318,6 +318,10 @@ class MeetingFragment : Fragment(),
 
         view.findViewById<ImageButton>(R.id.buttonLeave)
             ?.setOnClickListener { endMeeting() }
+    }
+
+    private fun inReplicaMeeting(): Boolean {
+        return !primaryExternalMeetingId.isNullOrEmpty()
     }
 
     private fun updateUiForPromotionStatus(promoted: Boolean) {
@@ -576,7 +580,7 @@ class MeetingFragment : Fragment(),
     }
 
     private fun refreshAdditionalOptionsDialogItems() {
-        if (!primaryExternalMeetingId.isNullOrEmpty() && !hasJoinedPrimaryMeeting) {
+        if (inReplicaMeeting() && !hasJoinedPrimaryMeeting) {
             val additionalToggles = arrayOf(
                 context?.getString(R.string.promote_to_primary_meeting)
             )
@@ -592,29 +596,35 @@ class MeetingFragment : Fragment(),
         val additionalToggles = mutableListOf(
             context?.getString(if (meetingModel.isSharingContent) R.string.disable_screen_capture_source else R.string.enable_screen_capture_source),
             context?.getString(if (isVoiceFocusEnabled) R.string.disable_voice_focus else R.string.enable_voice_focus),
-            context?.getString(if (meetingModel.isLiveTranscriptionEnabled) R.string.disable_live_transcription else R.string.enable_live_transcription),
             context?.getString(if (cameraCaptureSource.torchEnabled) R.string.disable_flashlight else R.string.enable_flashlight),
             context?.getString(if (meetingModel.isUsingCpuVideoProcessor) R.string.disable_cpu_filter else R.string.enable_cpu_filter),
             context?.getString(if (meetingModel.isUsingGpuVideoProcessor) R.string.disable_gpu_filter else R.string.enable_gpu_filter),
             context?.getString(if (meetingModel.isUsingCameraCaptureSource) R.string.disable_custom_capture_source else R.string.enable_custom_capture_source)
         )
-        if (!primaryExternalMeetingId.isNullOrEmpty()) {
+        if (inReplicaMeeting()) {
             additionalToggles.add(context?.getString(R.string.demote_from_primary_meeting))
+        } else {
+            additionalToggles.add(context?.getString(if (meetingModel.isLiveTranscriptionEnabled) R.string.disable_live_transcription else R.string.enable_live_transcription))
         }
 
         additionalOptionsAlertDialogBuilder.setItems(additionalToggles.toTypedArray()) { _, which ->
             when (which) {
                 0 -> toggleScreenCapture()
                 1 -> setVoiceFocusEnabled(!isVoiceFocusEnabled)
-                2 -> toggleLiveTranscription(
-                    arguments?.getString(HomeActivity.MEETING_ID_KEY) as String,
-                    arguments?.getString(HomeActivity.MEETING_ENDPOINT_KEY) as String
-                )
-                3 -> toggleFlashlight()
-                4 -> toggleCpuDemoFilter()
-                5 -> toggleGpuDemoFilter()
-                6 -> toggleCustomCaptureSource()
-                7 -> demoteFromPrimaryMeeting() // May not be accessible
+                2 -> toggleFlashlight()
+                3 -> toggleCpuDemoFilter()
+                4 -> toggleGpuDemoFilter()
+                5 -> toggleCustomCaptureSource()
+                6 -> { // May not be accessible
+                    if (inReplicaMeeting()) {
+                        demoteFromPrimaryMeeting()
+                    } else {
+                        toggleLiveTranscription(
+                            arguments?.getString(HomeActivity.MEETING_ID_KEY) as String,
+                            arguments?.getString(HomeActivity.MEETING_ENDPOINT_KEY) as String
+                        )
+                    }
+                }
             }
         }
     }
@@ -627,6 +637,9 @@ class MeetingFragment : Fragment(),
             audioVideo.promoteToPrimaryMeeting(it, this)
         } ?: run {
             logger.error(TAG, "Could not retrieve primary meeting credentials")
+        }
+        if (inReplicaMeeting()) {
+            toggleMute() // Start muted in case we promote and don't want to be unmuted
         }
     }
 

@@ -110,7 +110,14 @@ class DefaultAudioClientObserver(
                             MeetingHistoryEventName.meetingReconnected
                         )
                         notifyStartSucceeded()
-                        notifyAudioClientObserver { observer -> observer.onAudioSessionStarted(true) }
+                        notifyAudioClientObserver {
+                            observer -> observer.onAudioSessionStarted(true)
+                            primaryMeetingPromotionObserver?.onPrimaryMeetingDemotion(MeetingSessionStatus(MeetingSessionStatusCode.AudioInternalServerError))
+                                ?: run {
+                                    logger.info(TAG, "Primary meeting demotion occurred from audio (on reconnect) but no primary meeting demotion callback is set")
+                                }
+                            primaryMeetingPromotionObserver = null
+                        }
                     }
                     SessionStateControllerAction.FinishConnecting ->
                         when (newAudioStatus) {
@@ -467,6 +474,7 @@ class DefaultAudioClientObserver(
                     ?: run {
                         logger.info(TAG, "Primary meeting demotion occurred from audio but no primary meeting demotion callback is set")
                 }
+                primaryMeetingPromotionObserver = null
             }
         }
     }
