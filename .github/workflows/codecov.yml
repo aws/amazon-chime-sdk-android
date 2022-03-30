@@ -52,7 +52,7 @@ jobs:
       - uses: nttld/setup-ndk@v1
         with:
           ndk-version: 20
-      - run: ndk-build NDK_PROJECT_PATH=. APP_BUILD_SCRIPT=./Android.mk NDK_APPLICATION_MK=./Application.mk
+#       - runs: ndk-build NDK_PROJECT_PATH=. APP_BUILD_SCRIPT=./Android.mk NDK_APPLICATION_MK=./Application.mk
       
       - name: AWS S3 Github Action
         run: |
