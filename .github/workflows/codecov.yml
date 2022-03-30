@@ -1,0 +1,108 @@
+# This is a basic workflow to help you get started with Actions
+
+name: CI
+
+# Controls when the workflow will run
+on:
+  # Triggers the workflow on push or pull request events but only for the codecov branch
+  push:
+    branches: [ '**' ]
+  pull_request:
+    branches: [ '**' ]
+    
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  # This workflow contains a single job called "build"
+  build:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+
+#     steps:
+#       - uses: actions/checkout@master
+#       - uses: codecov/codecov-action@v2
+#         with:
+#           token: 638a0de1-dfa2-424f-b2cf-8e0e9e5bf8fa # not required for public repos
+#           files: ./coverage1.xml,./coverage2.xml # optional
+#           flags: unittests # optional
+#           name: codecov-umbrella # optional
+#           fail_ci_if_error: true # optional (default = false)
+#           verbose: true # optional (default = false)
+
+#     steps:
+#       - uses: actions/checkout@v2
+#       - name: Run tests
+#         run:  ./gradlew clean build
+#       - name: Coverage Report
+#         run:  ./gradlew jacocoTestReport
+#       - name: Upload coverage to Codecov
+#         uses: codecov/codecov-action@v2
+#         with:
+#           fail_ci_if_error: false
+  
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v2
+      
+      - name: AWS S3 Github Action
+        run: |
+          aws configure set aws_access_key_id ${{ secrets.AWS_ACCESS_KEY_ID }} --profile jenkins-automated-test
+          aws configure set aws_secret_access_key ${{ secrets.AWS_SECRET_ACCESS_KEY }} --profile jenkins-automated-test
+          aws \
+            --profile jenkins-automated-test \
+            s3api get-object \
+            --bucket amazon-chime-sdk-android-internal \
+            --key master/media/latest/amazon-chime-sdk-media.tar.gz \
+            amazon-chime-sdk-media.tar.gz
+          tar -xzf amazon-chime-sdk-media.tar.gz
+          mkdir -p ./amazon-chime-sdk/libs
+          mv amazon-chime-sdk-media.aar ./amazon-chime-sdk/libs
+
+       # Execute unit tests
+      - name: Unit Test with Android Emulator Runner
+        uses: ReactiveCircus/android-emulator-runner@v2
+        
+        with: 
+            target: google_apis
+            api-level: 30
+#             arch: arm64-v8a
+#             arch: x86_64
+#             script: ./gradlew testDebugUnitTest --stacktrace
+            script: ./gradlew clean build --stacktrace
+#             script: ./gradlew connectedCheck --stacktrace
+      
+#       - name: Unit Test   
+#         run: ./gradlew jacocoTestReport --stacktrace
+       
+
+      - name: generate report
+        uses: actions/upload-artifact@v2
+        with:
+          name: report 
+          path: amazon-chime-sdk/build/reports/coverage/debug
+          
+      - name: Download Test Reports Folder
+        uses: actions/download-artifact@v2
+        with:
+          name: report
+          path: amazon-chime-sdk/build/reports/coverage/debug
+          
+#       - name: Upload coverage to Codecov
+#         uses: codecov/codecov-action@v2
+#         with:
+#           token: ${{ secrets.CODECOV_TOKEN }}
+#           directory: ./coverage/reports/
+#           env_vars: OS,PYTHON
+#           fail_ci_if_error: true
+#           files: ./coverage1.xml,./coverage2.xml
+#           flags: unittests
+#           name: codecov-umbrella
+#           path_to_write_report: ./coverage/codecov_report.txt
+#           verbose: true
+      - name: Upload Test Report
+        run:  bash <(curl -s https://codecov.io/bash) -f "amazon-chime-sdk/build/reports/coverage/debug/report.xml"
+
