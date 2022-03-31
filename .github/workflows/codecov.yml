@@ -71,6 +71,7 @@ jobs:
 #             script: ./gradlew testDebugUnitTest --stacktrace
             script: |
               ./gradlew amazon-chime-sdk:connectedCheck --stacktrace
+              ./gradlew amazon-chime-sdk:testDebugUnitTest --stacktrace
               ./gradlew amazon-chime-sdk:jacocoTestReport --stacktrace
 #             script: ./gradlew connectedCheck --stacktrace
       
