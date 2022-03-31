@@ -39,16 +39,11 @@ jobs:
 
       - name: Install NDK
         uses: nttld/setup-ndk@v1
-        id: setup-ndk
         with:
-          ndk-version: r21e
-          add-to-path: false
+          ndk-version: 20
       
-      - name: Install NDK  path  
-        run: ./build.sh
-        env:
-          ANDROID_NDK_HOME: ${{ steps.setup-ndk.outputs.ndk-path }}
-#       - runs: ndk-build NDK_PROJECT_PATH=. APP_BUILD_SCRIPT=./Android.mk NDK_APPLICATION_MK=./Application.mk
+      - name: Install NDK path  
+        run: ndk-build NDK_PROJECT_PATH=. APP_BUILD_SCRIPT=./Android.mk NDK_APPLICATION_MK=./Application.mk
       
       - name: AWS S3 Github Action
         run: |
