@@ -40,7 +40,7 @@ jobs:
       - name: Install NDK
         uses: nttld/setup-ndk@v1
         with:
-          ndk-version: r20e
+          ndk-version: r21e
       
       - name: Install NDK path  
         run: ndk-build NDK_PROJECT_PATH=. APP_BUILD_SCRIPT=./Android.mk NDK_APPLICATION_MK=./Application.mk
