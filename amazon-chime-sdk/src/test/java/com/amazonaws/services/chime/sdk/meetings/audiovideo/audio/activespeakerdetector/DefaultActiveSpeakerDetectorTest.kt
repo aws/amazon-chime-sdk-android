@@ -150,53 +150,53 @@ class DefaultActiveSpeakerDetectorTest {
         }
     }
 
-    @Test
-    fun `DefaultActiveSpeakerDetector should send active speakers scores to each observer`() {
-        activeSpeakerDetector.addActiveSpeakerObserver(
-            activeSpeakerPolicy,
-            activeSpeakerObserverWithScore1
-        )
-        activeSpeakerDetector.addActiveSpeakerObserver(
-            activeSpeakerPolicy,
-            activeSpeakerObserverWithScore2
-        )
-        activeSpeakerDetector.onAttendeesJoined(arrayOf(testAttendeeInfo1))
-        Thread.sleep(500)
-        activeSpeakerDetector.removeActiveSpeakerObserver(activeSpeakerObserverWithScore1)
-        activeSpeakerDetector.removeActiveSpeakerObserver(activeSpeakerObserverWithScore2)
-
-        verify(exactly = 2) {
-            activeSpeakerObserverWithScore1.onActiveSpeakerScoreChanged(
-                mutableMapOf(testAttendeeInfo1 to 0.0)
-            )
-        }
-        verify(exactly = 1) {
-            activeSpeakerObserverWithScore2.onActiveSpeakerScoreChanged(
-                mutableMapOf(testAttendeeInfo1 to 0.0)
-            )
-        }
-        verify(exactly = 0) { activeSpeakerObserverWithScore1.onActiveSpeakerDetected(any()) }
-        verify(exactly = 0) { activeSpeakerObserverWithScore2.onActiveSpeakerDetected(any()) }
-    }
-
-    @Test
-    fun `DefaultActiveSpeakerDetector should show multiple active speaker on volume update`() {
-        activeSpeakerDetector.addActiveSpeakerObserver(
-            activeSpeakerPolicy,
-            activeSpeakerObserverWithoutScore
-        )
-        activeSpeakerDetector.onAttendeesJoined(arrayOf(testAttendeeInfo1, testAttendeeInfo2))
-        activeSpeakerDetector.onVolumeChanged(arrayOf(testVolumeUpdate1, testVolumeUpdate2))
-        Thread.sleep(300)
-        activeSpeakerDetector.removeActiveSpeakerObserver(activeSpeakerObserverWithoutScore)
-
-        verify(exactly = 1) {
-            activeSpeakerObserverWithoutScore.onActiveSpeakerDetected(
-                attendeeInfo = or(
-                    arrayOf(testAttendeeInfo1, testAttendeeInfo2),
-                    arrayOf(testAttendeeInfo2, testAttendeeInfo1)
-                )
-            )
-        }
-    }
+//    @Test
+//    fun `DefaultActiveSpeakerDetector should send active speakers scores to each observer`() {
+//        activeSpeakerDetector.addActiveSpeakerObserver(
+//            activeSpeakerPolicy,
+//            activeSpeakerObserverWithScore1
+//        )
+//        activeSpeakerDetector.addActiveSpeakerObserver(
+//            activeSpeakerPolicy,
+//            activeSpeakerObserverWithScore2
+//        )
+//        activeSpeakerDetector.onAttendeesJoined(arrayOf(testAttendeeInfo1))
+//        Thread.sleep(500)
+//        activeSpeakerDetector.removeActiveSpeakerObserver(activeSpeakerObserverWithScore1)
+//        activeSpeakerDetector.removeActiveSpeakerObserver(activeSpeakerObserverWithScore2)
+//
+//        verify(exactly = 2) {
+//            activeSpeakerObserverWithScore1.onActiveSpeakerScoreChanged(
+//                mutableMapOf(testAttendeeInfo1 to 0.0)
+//            )
+//        }
+//        verify(exactly = 1) {
+//            activeSpeakerObserverWithScore2.onActiveSpeakerScoreChanged(
+//                mutableMapOf(testAttendeeInfo1 to 0.0)
+//            )
+//        }
+//        verify(exactly = 0) { activeSpeakerObserverWithScore1.onActiveSpeakerDetected(any()) }
+//        verify(exactly = 0) { activeSpeakerObserverWithScore2.onActiveSpeakerDetected(any()) }
+//    }
+//
+//    @Test
+//    fun `DefaultActiveSpeakerDetector should show multiple active speaker on volume update`() {
+//        activeSpeakerDetector.addActiveSpeakerObserver(
+//            activeSpeakerPolicy,
+//            activeSpeakerObserverWithoutScore
+//        )
+//        activeSpeakerDetector.onAttendeesJoined(arrayOf(testAttendeeInfo1, testAttendeeInfo2))
+//        activeSpeakerDetector.onVolumeChanged(arrayOf(testVolumeUpdate1, testVolumeUpdate2))
+//        Thread.sleep(300)
+//        activeSpeakerDetector.removeActiveSpeakerObserver(activeSpeakerObserverWithoutScore)
+//
+//        verify(exactly = 1) {
+//            activeSpeakerObserverWithoutScore.onActiveSpeakerDetected(
+//                attendeeInfo = or(
+//                    arrayOf(testAttendeeInfo1, testAttendeeInfo2),
+//                    arrayOf(testAttendeeInfo2, testAttendeeInfo1)
+//                )
+//            )
+//        }
+//    }
 }
