@@ -22,17 +22,6 @@ jobs:
     runs-on: macos-latest
 
 #     steps:
-#       - uses: actions/checkout@master
-#       - uses: codecov/codecov-action@v2
-#         with:
-#           token: 638a0de1-dfa2-424f-b2cf-8e0e9e5bf8fa # not required for public repos
-#           files: ./coverage1.xml,./coverage2.xml # optional
-#           flags: unittests # optional
-#           name: codecov-umbrella # optional
-#           fail_ci_if_error: true # optional (default = false)
-#           verbose: true # optional (default = false)
-
-#     steps:
 #       - uses: actions/checkout@v2
 #       - name: Run tests
 #         run:  ./gradlew clean build
@@ -50,8 +39,13 @@ jobs:
 
       - name: Install NDK
       - uses: nttld/setup-ndk@v1
+        id: setup-ndk
         with:
-          ndk-version: 20
+          ndk-version: r21e
+          add-to-path: false
+      - run: ./build.sh
+        env:
+          ANDROID_NDK_HOME: ${{ steps.setup-ndk.outputs.ndk-path }}
 #       - runs: ndk-build NDK_PROJECT_PATH=. APP_BUILD_SCRIPT=./Android.mk NDK_APPLICATION_MK=./Application.mk
       
       - name: AWS S3 Github Action
