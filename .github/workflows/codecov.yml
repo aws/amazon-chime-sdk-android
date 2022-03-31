@@ -83,7 +83,9 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: report 
-          path: amazon-chime-sdk/build/reports/coverage/debug
+          path: amazon-chime-sdk/build/reports/jacoco/test
+#             amazon-chime-sdk/build/reports/coverage/debug
+            
           
       - name: Download Test Reports Folder
         uses: actions/download-artifact@v2
