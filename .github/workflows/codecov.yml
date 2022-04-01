@@ -80,7 +80,7 @@ jobs:
        
       - name: ls
         run: |
-          cd ./amazon-chime-sdk/build/reports/jacoco
+          cd ./amazon-chime-sdk/build/reports/jacoco/jacocoTestReport
           ls
           cd ./amazon-chime-sdk/build/reports/coverage
           ls
