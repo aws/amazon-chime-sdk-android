@@ -80,7 +80,11 @@ jobs:
        
       - name: ls
         run: |
-          cd ./amazon-chime-sdk/build/reports
+          cd ./amazon-chime-sdk/build/reports/jacoco
+          ls
+          cd ./amazon-chime-sdk/build/reports/coverage
+          ls
+          cd ./amazon-chime-sdk/build/reports/tests
           ls
 
       - name: generate report
