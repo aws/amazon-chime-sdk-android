@@ -78,14 +78,14 @@ jobs:
 #       - name: Unit Test   
 #         run: ./gradlew amazon-chime-sdk:jacocoTestReport --stacktrace
        
-#       - name: ls
-#         run: |
-#           cd ./amazon-chime-sdk/build/reports/jacoco/jacocoTestReport
-#           ls
-#           cd ./amazon-chime-sdk/build/reports/coverage
-#           ls
-#           cd ./amazon-chime-sdk/build/reports/tests
-#           ls
+      - name: ls
+        run: |
+          cd ./amazon-chime-sdk/build/reports/jacoco/
+          ls
+          cd ./amazon-chime-sdk/build/reports
+          ls
+          cd ./amazon-chime-sdk/build/reports/tests
+          ls
 
       - name: generate report
         uses: actions/upload-artifact@v2
