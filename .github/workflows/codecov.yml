@@ -82,9 +82,9 @@ jobs:
         run: |
           cd ./amazon-chime-sdk/build/reports/jacoco/
           ls
-          cd ./amazon-chime-sdk/build/reports
+          cd ../coverage
           ls
-          cd ./amazon-chime-sdk/build/reports/tests
+          cd ../tests
           ls
 
       - name: generate report
