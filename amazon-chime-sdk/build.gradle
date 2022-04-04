@@ -46,7 +46,7 @@ android {
         debug {
             buildConfigField("long", "VERSION_CODE", "${defaultConfig.versionCode}")
             buildConfigField("String","VERSION_NAME","\"${defaultConfig.versionName}\"")
-            testCoverageEnabled true
+            testCoverageEnabled false
         }
         release {
             buildConfigField("long", "VERSION_CODE", "${defaultConfig.versionCode}")
