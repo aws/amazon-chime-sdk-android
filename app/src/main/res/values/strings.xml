@@ -35,6 +35,7 @@
     <string name="next_video_page">Next Page &gt;&gt;</string>
     <string name="prev_video_page">&lt;&lt; Prev Page</string>
     <string name="switch_camera">Switch Camera</string>
+    <string name="video_filters">Video Filters</string>
     <string name="poor_connection_message">Poor local connection. \nVideo will resume \nwhen your connection improves.</string>
 
     <!-- device selection -->
@@ -94,6 +95,10 @@
     <string name="disable_custom_capture_source">Turn off custom capture source</string>
     <string name="promote_to_primary_meeting">Promote to primary meeting</string>
     <string name="demote_from_primary_meeting">Demote from primary meeting</string>
+    <string name="enable_background_blur">Turn on background blur </string>
+    <string name="disable_background_blur">Turn off background blur</string>
+    <string name="enable_background_replacement">Turn on background replacement </string>
+    <string name="disable_background_replacement">Turn off background replacement</string>
 
     <!-- Alert -->
     <string name="cancel">Cancel</string>
@@ -113,6 +118,8 @@
     <string name="user_notification_flashlight_unavailable_error">Flashlight not available on current device</string>
     <string name="user_notification_flashlight_custom_source_error">Cannot toggle flashlight without using custom camera capture source</string>
     <string name="user_notification_filter_custom_source_error">Cannot toggle filters without using custom camera capture source</string>
+    <string name="user_notification_background_blur_custom_source_error">Cannot toggle background blur filter when other filter is enabled.</string>
+    <string name="user_notification_background_replacement_custom_source_error">Cannot toggle background replacement filter when other filter is enabled.</string>
     <string name="user_notification_filter_both_enabled_error">Cannot toggle both filters on at same time</string>
     <string name="user_notification_meeting_url_error">Your url is invalid</string>
     <string name="user_notification_meeting_start_error">There was an error starting the meeting. Please try again</string>

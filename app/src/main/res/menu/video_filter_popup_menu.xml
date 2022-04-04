@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+  ~ SPDX-License-Identifier: Apache-2.0
+  -->
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:id="@+id/backgroundBlur"
+        android:title="@string/enable_background_blur" />
+    <item android:id="@+id/backgroundReplacement"
+        android:title="@string/enable_background_replacement" />
+</menu>

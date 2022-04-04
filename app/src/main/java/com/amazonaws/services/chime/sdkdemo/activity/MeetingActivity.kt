@@ -12,6 +12,9 @@ import androidx.lifecycle.ViewModelProvider
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.AudioVideoConfiguration
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.AudioVideoFacade
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.audio.AudioMode
+import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.backgroundfilter.backgroundblur.BackgroundBlurConfiguration
+import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.backgroundfilter.backgroundblur.BackgroundBlurVideoFrameProcessor
+import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.backgroundfilter.backgroundreplacement.BackgroundReplacementVideoFrameProcessor
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.capture.CameraCaptureSource
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.capture.DefaultCameraCaptureSource
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.capture.DefaultSurfaceTextureCaptureSourceFactory
@@ -66,7 +69,8 @@ class MeetingActivity : AppCompatActivity(),
         if (savedInstanceState == null) {
             val meetingResponseJson =
                 intent.extras?.getString(HomeActivity.MEETING_RESPONSE_KEY) as String
-            val sessionConfig = createSessionConfigurationAndExtractPrimaryMeetingInformation(meetingResponseJson)
+            val sessionConfig =
+                createSessionConfigurationAndExtractPrimaryMeetingInformation(meetingResponseJson)
             val meetingSession = sessionConfig?.let {
                 logger.info(TAG, "Creating meeting session for meeting Id: $meetingId")
 
@@ -95,14 +99,38 @@ class MeetingActivity : AppCompatActivity(),
                 meetingSessionModel.primaryExternalMeetingId = primaryExternalMeetingId
             }
 
-            val surfaceTextureCaptureSourceFactory = DefaultSurfaceTextureCaptureSourceFactory(logger, meetingSessionModel.eglCoreFactory)
-            meetingSessionModel.cameraCaptureSource = DefaultCameraCaptureSource(applicationContext, logger, surfaceTextureCaptureSourceFactory).apply {
+            val surfaceTextureCaptureSourceFactory = DefaultSurfaceTextureCaptureSourceFactory(
+                logger,
+                meetingSessionModel.eglCoreFactory
+            )
+            meetingSessionModel.cameraCaptureSource = DefaultCameraCaptureSource(
+                applicationContext,
+                logger,
+                surfaceTextureCaptureSourceFactory
+            ).apply {
                 eventAnalyticsController = meetingSession?.eventAnalyticsController
             }
-            meetingSessionModel.cpuVideoProcessor = CpuVideoProcessor(logger, meetingSessionModel.eglCoreFactory)
-            meetingSessionModel.gpuVideoProcessor = GpuVideoProcessor(logger, meetingSessionModel.eglCoreFactory)
+            meetingSessionModel.cpuVideoProcessor =
+                CpuVideoProcessor(logger, meetingSessionModel.eglCoreFactory)
+            meetingSessionModel.gpuVideoProcessor =
+                GpuVideoProcessor(logger, meetingSessionModel.eglCoreFactory)
+            meetingSessionModel.backgroundBlurVideoFrameProcessor =
+                BackgroundBlurVideoFrameProcessor(
+                    logger,
+                    meetingSessionModel.eglCoreFactory,
+                    applicationContext,
+                    BackgroundBlurConfiguration()
+                )
+            meetingSessionModel.backgroundReplacementVideoFrameProcessor =
+                BackgroundReplacementVideoFrameProcessor(
+                    logger,
+                    meetingSessionModel.eglCoreFactory,
+                    applicationContext,
+                    null
+                )
 
-            val deviceManagementFragment = DeviceManagementFragment.newInstance(meetingId, name, audioVideoConfig)
+            val deviceManagementFragment =
+                DeviceManagementFragment.newInstance(meetingId, name, audioVideoConfig)
             supportFragmentManager
                 .beginTransaction()
                 .add(R.id.root_layout, deviceManagementFragment, "deviceManagement")
@@ -111,7 +139,8 @@ class MeetingActivity : AppCompatActivity(),
     }
 
     override fun onJoinMeetingClicked() {
-        val rosterViewFragment = MeetingFragment.newInstance(meetingId, audioVideoConfig, meetingEndpointUrl)
+        val rosterViewFragment =
+            MeetingFragment.newInstance(meetingId, audioVideoConfig, meetingEndpointUrl)
         supportFragmentManager
             .beginTransaction()
             .replace(R.id.root_layout, rosterViewFragment, "rosterViewFragment")
@@ -141,13 +170,16 @@ class MeetingActivity : AppCompatActivity(),
         meetingSessionModel.cameraCaptureSource.stop()
         meetingSessionModel.gpuVideoProcessor.release()
         meetingSessionModel.cpuVideoProcessor.release()
+        meetingSessionModel.backgroundBlurVideoFrameProcessor.release()
+        meetingSessionModel.backgroundReplacementVideoFrameProcessor.release()
         meetingSessionModel.screenShareManager?.stop()
         meetingSessionModel.screenShareManager?.release()
     }
 
     fun getAudioVideo(): AudioVideoFacade = meetingSessionModel.audioVideo
 
-    fun getMeetingSessionConfiguration(): MeetingSessionConfiguration = meetingSessionModel.configuration
+    fun getMeetingSessionConfiguration(): MeetingSessionConfiguration =
+        meetingSessionModel.configuration
 
     fun getMeetingSessionCredentials(): MeetingSessionCredentials = meetingSessionModel.credentials
 
@@ -165,6 +197,12 @@ class MeetingActivity : AppCompatActivity(),
     fun getGpuVideoProcessor(): GpuVideoProcessor = meetingSessionModel.gpuVideoProcessor
 
     fun getCpuVideoProcessor(): CpuVideoProcessor = meetingSessionModel.cpuVideoProcessor
+
+    fun getBackgroundBlurVideoFrameProcessor(): BackgroundBlurVideoFrameProcessor =
+        meetingSessionModel.backgroundBlurVideoFrameProcessor
+
+    fun getBackgroundReplacementVideoFrameProcessor(): BackgroundReplacementVideoFrameProcessor =
+        meetingSessionModel.backgroundReplacementVideoFrameProcessor
 
     fun getScreenShareManager(): ScreenShareManager? = meetingSessionModel.screenShareManager
 
