@@ -86,12 +86,15 @@ jobs:
           ls
           cd ../../tests
           ls
+          
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v1.2.1
 
-      - name: generate report
-        uses: actions/upload-artifact@v2
-        with:
-          name: report 
-          path: amazon-chime-sdk/build/reports/jacoco/jacocoTestReport/jacocoTestReport.xml
+#       - name: generate report
+#         uses: actions/upload-artifact@v2
+#         with:
+#           name: report 
+#           path: amazon-chime-sdk/build/reports/jacoco/jacocoTestReport/jacocoTestReport.xml
 #             amazon-chime-sdk/build/reports/coverage/debug
             
           
@@ -112,8 +115,8 @@ jobs:
 #           flags: unittests
 #           name: codecov-umbrella
 #           path_to_write_report: ./coverage/codecov_report.txt
-#           verbose: true
-      - name: Upload Test Report
-        run:  bash <(curl -s https://codecov.io/bash) -f "amazon-chime-sdk/build/reports/jacoco/jacocoTestReport/jacocoTestReport.xml"
+# #           verbose: true
+#       - name: Upload Test Report
+#         run:  bash <(curl -s https://codecov.io/bash) -f "amazon-chime-sdk/build/reports/jacoco/jacocoTestReport/jacocoTestReport.xml"
 #         run:  bash <(curl -s https://codecov.io/bash) -f "amazon-chime-sdk/build/reports/coverage/debug/report.xml"
 
