@@ -46,7 +46,7 @@ android {
         debug {
             buildConfigField("long", "VERSION_CODE", "${defaultConfig.versionCode}")
             buildConfigField("String","VERSION_NAME","\"${defaultConfig.versionName}\"")
-            testCoverageEnabled true
+            testCoverageEnabled false
         }
         release {
             buildConfigField("long", "VERSION_CODE", "${defaultConfig.versionCode}")
@@ -95,7 +95,14 @@ android {
     }
 }
 
-task jacocoTestReport(type: JacocoReport, dependsOn: ['testDebugUnitTest', 'createDebugCoverageReport']) {
+tasks.withType(Test) {
+    jacoco {
+        includeNoLocationClasses = true
+        excludes = ['jdk.internal.*'] // Allows it to run on Java 11
+    }
+}
+
+task jacocoTestReport(type: JacocoReport, dependsOn: ['testDebugUnitTest']) {
 
     reports {
         xml.enabled = true
@@ -105,18 +112,16 @@ task jacocoTestReport(type: JacocoReport, dependsOn: ['testDebugUnitTest', 'crea
     def fileFilter = ['**/R.class', '**/R$*.class', '**/BuildConfig.*', '**/Manifest*.*', '**/*Test*.*', 'android/**/*.*']
 //    def debugTree = fileTree(dir: "${buildDir}/intermediates/classes/debug", excludes: fileFilter)
     //java compiled classes
-    def javaTree = fileTree(dir: "$project.buildDir/intermediates/javac/debug/classes", excludes: fileFilter)
+//    def javaTree = fileTree(dir: "$project.buildDir/intermediates/javac/debug/classes", excludes: fileFilter)
     //kotlin compiled classes
     def kotlinTree = fileTree(dir: "$project.buildDir/tmp/kotlin-classes/debug", excludes: fileFilter)
 
-    classDirectories.from = files([javaTree, kotlinTree])
-    def mainSrc = "${project.projectDir}/src/main/java"
+    def mainSrc = "src/main/java"
 
     sourceDirectories.setFrom(files([mainSrc]))
-//    classDirectories.setFrom(files([debugTree]))
+    classDirectories.setFrom(files([kotlinTree]))
     executionData.setFrom(fileTree(dir: "$buildDir", includes: [
-            "jacoco/testDebugUnitTest.exec",
-            "outputs/code-coverage/connected/*coverage.ec"
+            "jacoco/testDebugUnitTest.exec"
     ]))
 }
 
