@@ -1,0 +1,12 @@
+comment:                  # this is a top-level key
+  layout: "reach, diff, flags, files"
+  behavior: default
+
+coverage:
+  status:
+    project:
+      default:
+        # basic
+        target: auto
+        threshold: 0%
+        base: auto 
