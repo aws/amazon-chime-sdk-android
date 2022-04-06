@@ -78,14 +78,14 @@ jobs:
 #       - name: Unit Test   
 #         run: ./gradlew amazon-chime-sdk:jacocoTestReport --stacktrace
        
-      - name: ls
-        run: |
-          cd ./amazon-chime-sdk/build/reports/jacoco/
-          ls
-          cd ../coverage/debug
-          ls
-          cd ../../tests
-          ls
+#       - name: ls
+#         run: |
+#           cd ./amazon-chime-sdk/build/reports/jacoco/
+#           ls
+#           cd ../coverage/debug
+#           ls
+#           cd ../../tests
+#           ls
           
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v1.2.1
