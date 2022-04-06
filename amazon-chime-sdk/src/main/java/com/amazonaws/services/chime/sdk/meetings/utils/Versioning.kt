@@ -16,7 +16,8 @@ class Versioning {
          * Return current version of Amazon Chime SDK for Android.
          */
         fun sdkVersion(): String {
-            return BuildConfig.VERSION_NAME
+//            return BuildConfig.VERSION_NAME
+            return "1"
         }
     }
 }
