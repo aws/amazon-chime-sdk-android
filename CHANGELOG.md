@@ -1,4 +1,4 @@
-## [Unreleased]
+## [0.15.3] - 2022-04-07
 
 ### Added
 * Added [replicated meeting guide](https://github.com/aws/amazon-chime-sdk-android/blob/master/guides/replicated_meetings.md).
