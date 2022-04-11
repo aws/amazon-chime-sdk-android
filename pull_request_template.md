@@ -1,36 +1,33 @@
-### Issue #, if available:
+## ℹ️ Description
+*provide a summary of the changes and the related issue, relevant motivation and context*
 
-### Description of changes:
+### Issue #, if available
 
-### Testing done:
-#### Unit test coverage
+### Type of change
+- [ ] Bug fix (non-breaking change which fixes an issue)
+- [ ] New feature (non-breaking change which adds functionality)
+- [ ] Breaking change (fix or feature that would cause existing functionality to not work as expected)
+- [ ] This change requires a documentation update
+    - [ ] README update
+    - [ ] CHANGELOG update
+    - [ ] guildes update
+- [ ] This change requires a dependency update
+    - [ ] Amazon Chime SDK Media
+    - [ ] Other (update corresonding legal documents)
+
+## 🧪 How Has This Been Tested?
+*describe the tests that you ran to verify your changes, any relevant details for your test configuration*
+
+### Unit test coverage
 * Class coverage: 
 * Line coverage: 
 
-#### Manual test cases (add more as needed):
-* [ ] Join meeting
-* [ ] Leave meeting
-* [ ] Rejoin meeting
-* [ ] Send audio
-* [ ] Receive audio
-* [ ] See active speaker indicator when speaking
-* [ ] Mute/Unmute self
-* [ ] See local mute indicator when muted
-* [ ] See remote mute indicator when other is muted
-* [ ] See audio video events
-* [ ] See signal strength changes
-* [ ] See media metrics received
-* [ ] See roster updates when remote attendees join / leave the meeting
-* [ ] Enable local video
-* [ ] See local video tile
-* [ ] See remote video tile
-* [ ] Switch camera
-* [ ] See remote screen sharing content with attendee name
-* [ ] Pause remote video tile
-* [ ] Resume remote video tile
-* [ ] First time audio permissions
-* [ ] First time video permissions
+### Additional Manual Test
+- [ ] Pause and resume remote video
+- [ ] Switch local camera
+- [ ] Rotate screen back and forth
 
-#### Screenshots, if available:
+## 📱 Screenshots, if available
+*provide screenshots/video record if there's a UI change in demo app*
 
 By submitting this pull request, I confirm that you can use, modify, copy, and redistribute this contribution, under the terms of your choice.
