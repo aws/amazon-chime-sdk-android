@@ -50,7 +50,8 @@ class DefaultAudioVideoController(
             meetingId = configuration.meetingId,
             attendeeId = configuration.credentials.attendeeId,
             joinToken = configuration.credentials.joinToken,
-            audioMode = audioVideoConfiguration.audioMode
+            audioMode = audioVideoConfiguration.audioMode,
+            audioStream = audioVideoConfiguration.audioStream
         )
         videoClientController.start()
     }
