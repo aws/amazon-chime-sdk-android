@@ -7,6 +7,7 @@ package com.amazonaws.services.chime.sdk.meetings.internal.audio
 
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.PrimaryMeetingPromotionObserver
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.audio.AudioMode
+import com.amazonaws.services.chime.sdk.meetings.audiovideo.audio.AudioStream
 import com.amazonaws.services.chime.sdk.meetings.session.MeetingSessionCredentials
 
 /**
@@ -25,7 +26,8 @@ interface AudioClientController {
         meetingId: String,
         attendeeId: String,
         joinToken: String,
-        audioMode: AudioMode
+        audioMode: AudioMode,
+        audioStream: AudioStream
     )
 
     fun stop()
