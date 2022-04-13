@@ -162,7 +162,9 @@ Start a session with custom configurations:
 meetingSession.audioVideo.start(audioVideoConfiguration)
 ```
 
-There are 2 configurations available in `audioVideoConfiguration`: `audioMode` and `audioStream`.
+There are 2 configurations available in `audioVideoConfiguration`: 
+- `audioMode`
+- `audioStream`
 
 AudioMode: The default audio format is Stereo/48KHz i.e Stereo Audio with 48KHz sampling rate (Stereo48K). Other supported audio formats include Mono/48KHz (Mono48K) or Mono/16KHz (Mono16K). You can specify a non-default audio mode in `AudioVideoConfiguration`, and then start the meeting session.
 

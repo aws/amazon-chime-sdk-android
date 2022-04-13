@@ -177,25 +177,27 @@ class DefaultAudioClientController(
             }
 
             var audioStreamType = when (audioStream) {
-                AudioStream.VoiceCall -> AudioClient.AudioStream.VOICE_CALL
-                AudioStream.Music -> AudioClient.AudioStream.MUSIC
+                AudioStream.VoiceCall -> AudioClient.AudioStreamType.VOICE_CALL
+                AudioStream.Music -> AudioClient.AudioStreamType.MUSIC
             }
 
-            val config = AudioClientConfig(
-                    AudioClient.XTL_DEFAULT_TRANSPORT,
-                    host,
-                    port,
-                    joinToken,
-                    meetingId,
-                    attendeeId,
-                    muteMicAndSpeaker,
-                    muteMicAndSpeaker,
-                    DEFAULT_PRESENTER,
-                    audioFallbackUrl,
-                    null,
-                    appInfo,
-                    audioModeInternal,
-                    audioStreamType)
+            var config = AudioClientConfig.Builder(
+                host,
+                port,
+                joinToken,
+                meetingId,
+                attendeeId,
+                audioFallbackUrl,
+                appInfo,
+                audioModeInternal,
+                audioStreamType
+            ).withTransportMode(AudioClient.XTL_DEFAULT_TRANSPORT)
+                .withMicMute(muteMicAndSpeaker)
+                .withSpkMute(muteMicAndSpeaker)
+                .withPresenter(DEFAULT_PRESENTER)
+                .withProxyConfig(null)
+                .build()
+
             val res = audioClient.startSession(config)
 
             if (res != AUDIO_CLIENT_RESULT_SUCCESS) {

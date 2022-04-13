@@ -19,7 +19,7 @@ enum class AudioStream {
     /**
      * Equivalent of AudioManager.STREAM_MUSIC
      * https://developer.android.com/reference/android/media/AudioManager#STREAM_MUSIC
-     * Not that the meeting session volume cannot be adjusted by the volume button with [Music]
+     * Note that the meeting session volume cannot be adjusted by the volume button with [Music]
      * except for Oculus Quest 2.
      */
     Music
