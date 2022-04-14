@@ -164,11 +164,11 @@ meetingSession.audioVideo.start(audioVideoConfiguration)
 
 There are 2 configurations available in `audioVideoConfiguration`: 
 - `audioMode`
-- `audioStream`
+- `audioStreamType`
 
 AudioMode: The default audio format is Stereo/48KHz i.e Stereo Audio with 48KHz sampling rate (Stereo48K). Other supported audio formats include Mono/48KHz (Mono48K) or Mono/16KHz (Mono16K). You can specify a non-default audio mode in `AudioVideoConfiguration`, and then start the meeting session.
 
-AudioStream: The default audio stream is ```VoiceCall```. The available options are ```VoiceCall``` and ```Music```, they are equivalent of `STREAM_VOICE_CALL` and `STREAM_MUSIC` respectively in [AudioManager](https://developer.android.com/reference/android/media/AudioManager). This configuration is for addressing the audio volume [issue](https://github.com/aws/amazon-chime-sdk-android/issues/296) on Oculus Quest 2. If you don't know what it is, you probably don't need to worry about it. For more information, please refer to Android documentation: [STREAM_VOICE_CALL](https://developer.android.com/reference/android/media/AudioManager#STREAM_VOICE_CALL), [STREAM_MUSIC](https://developer.android.com/reference/android/media/AudioManager#STREAM_MUSIC).
+AudioStreamType: The default value is ```VoiceCall```. The available options are ```VoiceCall``` and ```Music```, they are equivalent of `STREAM_VOICE_CALL` and `STREAM_MUSIC` respectively in [AudioManager](https://developer.android.com/reference/android/media/AudioManager). This configuration is for addressing the audio volume [issue](https://github.com/aws/amazon-chime-sdk-android/issues/296) on Oculus Quest 2. If you don't know what it is, you probably don't need to worry about it. For more information, please refer to Android documentation: [STREAM_VOICE_CALL](https://developer.android.com/reference/android/media/AudioManager#STREAM_VOICE_CALL), [STREAM_MUSIC](https://developer.android.com/reference/android/media/AudioManager#STREAM_MUSIC).
 
 > Note: Even though there are more available stream options in Android, currently only *STREAM_VOICE_CALL* and *STREAM_MUSIC* are supported in Chime Android SDK.
 
@@ -291,7 +291,7 @@ override fun onAudioDeviceChanged(freshAudioDeviceList: List<MediaDevice>) {
 > When joining a meeting, *Stereo/48KHz* and *VoiceCall* will be set as the default audio mode and stream if not explicitly specified when starting the audio session.
 > 
 > Supported AudioMode options: *Mono/16KHz*, *Mono/48KHz*, and *Stereo/48KHz*.
-> Supproted AudioStream options: *VoiceCall* and *Music*.
+> Supported AudioStreamType options: *VoiceCall* and *Music*.
 
 ```kotlin
 meetingSession.audioVideo.start() // starts the audio video session with Stereo/48KHz and VoiceCall

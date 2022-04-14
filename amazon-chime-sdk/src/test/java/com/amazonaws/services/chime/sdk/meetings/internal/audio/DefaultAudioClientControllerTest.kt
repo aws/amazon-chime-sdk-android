@@ -16,7 +16,7 @@ import com.amazonaws.services.chime.sdk.meetings.analytics.EventAnalyticsControl
 import com.amazonaws.services.chime.sdk.meetings.analytics.EventName
 import com.amazonaws.services.chime.sdk.meetings.analytics.MeetingStatsCollector
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.audio.AudioMode
-import com.amazonaws.services.chime.sdk.meetings.audiovideo.audio.AudioStream
+import com.amazonaws.services.chime.sdk.meetings.audiovideo.audio.AudioStreamType
 import com.amazonaws.services.chime.sdk.meetings.internal.utils.AppInfoUtil
 import com.amazonaws.services.chime.sdk.meetings.utils.logger.Logger
 import com.xodee.client.audio.audioclient.AppInfo
@@ -283,7 +283,7 @@ class DefaultAudioClientControllerTest {
             testAttendeeId,
             testJoinToken,
             AudioMode.Stereo48K,
-            AudioStream.VoiceCall
+            AudioStreamType.VoiceCall
         )
 
         verify {
@@ -304,7 +304,7 @@ class DefaultAudioClientControllerTest {
                 testAttendeeId,
                 testJoinToken,
                 AudioMode.Mono16K,
-                AudioStream.VoiceCall
+                AudioStreamType.VoiceCall
         )
 
         verify {
@@ -327,7 +327,7 @@ class DefaultAudioClientControllerTest {
                 testAttendeeId,
                 testJoinToken,
                 AudioMode.Mono48K,
-                AudioStream.VoiceCall
+                AudioStreamType.VoiceCall
         )
 
         verify {
@@ -350,7 +350,7 @@ class DefaultAudioClientControllerTest {
             testAttendeeId,
             testJoinToken,
             AudioMode.Mono48K,
-            AudioStream.VoiceCall
+            AudioStreamType.VoiceCall
         )
 
         verify {
@@ -371,7 +371,7 @@ class DefaultAudioClientControllerTest {
             testAttendeeId,
             testJoinToken,
             AudioMode.Mono48K,
-            AudioStream.Music
+            AudioStreamType.Music
         )
 
         verify {
@@ -392,7 +392,7 @@ class DefaultAudioClientControllerTest {
                 testAttendeeId,
                 testJoinToken,
                 AudioMode.Stereo48K,
-                AudioStream.VoiceCall
+                AudioStreamType.VoiceCall
         )
 
         verify {
@@ -411,7 +411,7 @@ class DefaultAudioClientControllerTest {
             testAttendeeId,
             testJoinToken,
             AudioMode.Stereo48K,
-            AudioStream.VoiceCall
+            AudioStreamType.VoiceCall
         )
 
         verify(exactly = 1) { mockAudioClientObserver.notifyAudioClientObserver(any()) }
@@ -427,7 +427,7 @@ class DefaultAudioClientControllerTest {
             testAttendeeId,
             testJoinToken,
             AudioMode.Stereo48K,
-            AudioStream.VoiceCall
+            AudioStreamType.VoiceCall
         )
 
         verify(exactly = 1) { mockEventAnalyticsController.publishEvent(EventName.meetingStartRequested, any()) }
@@ -453,7 +453,7 @@ class DefaultAudioClientControllerTest {
             testAttendeeId,
             testJoinToken,
             AudioMode.Stereo48K,
-            AudioStream.VoiceCall
+            AudioStreamType.VoiceCall
         )
         every { mockAudioClient.stopSession() } returns testAudioClientSuccessCode
 
@@ -472,7 +472,7 @@ class DefaultAudioClientControllerTest {
             testAttendeeId,
             testJoinToken,
             AudioMode.Stereo48K,
-            AudioStream.VoiceCall
+            AudioStreamType.VoiceCall
         )
         every { mockAudioClient.stopSession() } returns testAudioClientSuccessCode
 
@@ -495,7 +495,7 @@ class DefaultAudioClientControllerTest {
             testAttendeeId,
             testJoinToken,
             AudioMode.Stereo48K,
-            AudioStream.VoiceCall
+            AudioStreamType.VoiceCall
         )
 
         val enableOutput: Boolean = audioClientController.setVoiceFocusEnabled(true)
@@ -530,7 +530,7 @@ class DefaultAudioClientControllerTest {
             testAttendeeId,
             testJoinToken,
             AudioMode.Stereo48K,
-            AudioStream.VoiceCall
+            AudioStreamType.VoiceCall
         )
 
         audioClientController.isVoiceFocusEnabled()
