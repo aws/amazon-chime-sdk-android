@@ -6,9 +6,10 @@
 package com.amazonaws.services.chime.sdk.meetings.audiovideo.audio
 
 /**
- * [AudioStream] describes the audio stream in which the audio client should operate during a meeting session.
+ * [AudioStreamType] describes the audio stream type in which the audio client should operate
+ * during a meeting session.
  */
-enum class AudioStream {
+enum class AudioStreamType {
 
     /**
      * Equivalent of AudioManager.STREAM_VOICE_CALL

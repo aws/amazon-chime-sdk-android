@@ -1,3 +1,8 @@
+## Unreleased
+
+### Added
+* Added `audioStreamType` in `AudioVideoConfiguration` for supporting audio stream configuration.
+
 ## [0.15.4] - 2022-04-21
 
 ## [0.15.3] - 2022-04-07

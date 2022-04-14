@@ -16,7 +16,7 @@ import com.amazonaws.services.chime.sdk.meetings.analytics.EventName
 import com.amazonaws.services.chime.sdk.meetings.analytics.MeetingStatsCollector
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.PrimaryMeetingPromotionObserver
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.audio.AudioMode
-import com.amazonaws.services.chime.sdk.meetings.audiovideo.audio.AudioStream
+import com.amazonaws.services.chime.sdk.meetings.audiovideo.audio.AudioStreamType
 import com.amazonaws.services.chime.sdk.meetings.internal.utils.AppInfoUtil
 import com.amazonaws.services.chime.sdk.meetings.session.MeetingSessionCredentials
 import com.amazonaws.services.chime.sdk.meetings.session.MeetingSessionStatus
@@ -125,7 +125,7 @@ class DefaultAudioClientController(
         attendeeId: String,
         joinToken: String,
         audioMode: AudioMode,
-        audioStream: AudioStream
+        audioStreamType: AudioStreamType
     ) {
         // Validate audio client state
         if (audioClientState != AudioClientState.INITIALIZED &&
@@ -176,9 +176,9 @@ class DefaultAudioClientController(
                 AudioMode.NoDevice -> AudioModeInternal.NO_DEVICE
             }
 
-            var audioStreamType = when (audioStream) {
-                AudioStream.VoiceCall -> AudioClient.AudioStreamType.VOICE_CALL
-                AudioStream.Music -> AudioClient.AudioStreamType.MUSIC
+            var audioStreamTypeInternal = when (audioStreamType) {
+                AudioStreamType.VoiceCall -> AudioClient.AudioStreamType.VOICE_CALL
+                AudioStreamType.Music -> AudioClient.AudioStreamType.MUSIC
             }
 
             var config = AudioClientConfig.Builder(
@@ -190,7 +190,7 @@ class DefaultAudioClientController(
                 audioFallbackUrl,
                 appInfo,
                 audioModeInternal,
-                audioStreamType
+                audioStreamTypeInternal
             ).withTransportMode(AudioClient.XTL_DEFAULT_TRANSPORT)
                 .withMicMute(muteMicAndSpeaker)
                 .withSpkMute(muteMicAndSpeaker)
