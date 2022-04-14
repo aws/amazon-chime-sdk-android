@@ -340,7 +340,7 @@ class DefaultAudioClientControllerTest {
     }
 
     @Test
-    fun `start() with voice call stream should call startSession(AudioClientConfig) with AudioStream VOICE_CALL`() {
+    fun `start() with voice call stream should call startSession(AudioClientConfig) with AudioStreamType VOICE_CALL`() {
         setupStartTests()
 
         audioClientController.start(
@@ -355,13 +355,13 @@ class DefaultAudioClientControllerTest {
 
         verify {
             mockAudioClient.startSession(withArg {
-                assertEquals(AudioClient.AudioStream.VOICE_CALL, it.audioStream)
+                assertEquals(AudioClient.AudioStreamType.VOICE_CALL, it.audioStreamType)
             })
         }
     }
 
     @Test
-    fun `start() with music stream should call startSession(AudioClientConfig) with AudioStream MUSIC`() {
+    fun `start() with music stream should call startSession(AudioClientConfig) with AudioStreamType MUSIC`() {
         setupStartTests()
 
         audioClientController.start(
@@ -376,7 +376,7 @@ class DefaultAudioClientControllerTest {
 
         verify {
             mockAudioClient.startSession(withArg {
-                assertEquals(AudioClient.AudioStream.MUSIC, it.audioStream)
+                assertEquals(AudioClient.AudioStreamType.MUSIC, it.audioStreamType)
             })
         }
     }
