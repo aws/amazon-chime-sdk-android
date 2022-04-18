@@ -112,26 +112,26 @@ class DefaultActiveSpeakerDetectorTest {
             )
         }
     }
-//
-//    @Test
-//    fun `DefaultActiveSpeakerDetector should show active speaker on volume update`() {
-//        activeSpeakerDetector.addActiveSpeakerObserver(
-//            activeSpeakerPolicy,
-//            activeSpeakerObserverWithoutScore
-//        )
-//        activeSpeakerDetector.onAttendeesJoined(arrayOf(testAttendeeInfo1))
-//        activeSpeakerDetector.onVolumeChanged(arrayOf(testVolumeUpdate1))
-//        Thread.sleep(300)
-//        activeSpeakerDetector.removeActiveSpeakerObserver(activeSpeakerObserverWithoutScore)
-//
-//        verify(exactly = 1) {
-//            activeSpeakerObserverWithoutScore.onActiveSpeakerDetected(
-//                arrayOf(
-//                    testAttendeeInfo1
-//                )
-//            )
-//        }
-//    }
+
+    @Test
+    fun `DefaultActiveSpeakerDetector should show active speaker on volume update`() {
+        activeSpeakerDetector.addActiveSpeakerObserver(
+            activeSpeakerPolicy,
+            activeSpeakerObserverWithoutScore
+        )
+        activeSpeakerDetector.onAttendeesJoined(arrayOf(testAttendeeInfo1))
+        activeSpeakerDetector.onVolumeChanged(arrayOf(testVolumeUpdate1))
+        Thread.sleep(300)
+        activeSpeakerDetector.removeActiveSpeakerObserver(activeSpeakerObserverWithoutScore)
+
+        verify(exactly = 1) {
+            activeSpeakerObserverWithoutScore.onActiveSpeakerDetected(
+                arrayOf(
+                    testAttendeeInfo1
+                )
+            )
+        }
+    }
 //
 //    @Test
 //    fun `DefaultActiveSpeakerDetector should show active speakers scores`() {
