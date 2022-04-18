@@ -121,7 +121,7 @@ class DefaultActiveSpeakerDetectorTest {
         )
         activeSpeakerDetector.onAttendeesJoined(arrayOf(testAttendeeInfo1))
         activeSpeakerDetector.onVolumeChanged(arrayOf(testVolumeUpdate1))
-        Thread.sleep(300)
+        Thread.sleep(3000)
         activeSpeakerDetector.removeActiveSpeakerObserver(activeSpeakerObserverWithoutScore)
 
         verify(exactly = 1) {
