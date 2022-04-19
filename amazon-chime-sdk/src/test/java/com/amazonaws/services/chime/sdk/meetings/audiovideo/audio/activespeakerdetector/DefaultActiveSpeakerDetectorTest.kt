@@ -121,7 +121,7 @@ class DefaultActiveSpeakerDetectorTest {
         )
         activeSpeakerDetector.onAttendeesJoined(arrayOf(testAttendeeInfo1))
         activeSpeakerDetector.onVolumeChanged(arrayOf(testVolumeUpdate1))
-        Thread.sleep(500)
+        Thread.sleep(1000)
         activeSpeakerDetector.removeActiveSpeakerObserver(activeSpeakerObserverWithoutScore)
 
         verify(exactly = 1) {
@@ -140,7 +140,7 @@ class DefaultActiveSpeakerDetectorTest {
             activeSpeakerObserverWithScore1
         )
         activeSpeakerDetector.onAttendeesJoined(arrayOf(testAttendeeInfo1))
-        Thread.sleep(500)
+        Thread.sleep(1000)
         activeSpeakerDetector.removeActiveSpeakerObserver(activeSpeakerObserverWithScore1)
 
         verify(exactly = 2) {
@@ -161,7 +161,7 @@ class DefaultActiveSpeakerDetectorTest {
             activeSpeakerObserverWithScore2
         )
         activeSpeakerDetector.onAttendeesJoined(arrayOf(testAttendeeInfo1))
-        Thread.sleep(500)
+        Thread.sleep(1000)
         activeSpeakerDetector.removeActiveSpeakerObserver(activeSpeakerObserverWithScore1)
         activeSpeakerDetector.removeActiveSpeakerObserver(activeSpeakerObserverWithScore2)
 
@@ -187,7 +187,7 @@ class DefaultActiveSpeakerDetectorTest {
         )
         activeSpeakerDetector.onAttendeesJoined(arrayOf(testAttendeeInfo1, testAttendeeInfo2))
         activeSpeakerDetector.onVolumeChanged(arrayOf(testVolumeUpdate1, testVolumeUpdate2))
-        Thread.sleep(500)
+        Thread.sleep(1000)
         activeSpeakerDetector.removeActiveSpeakerObserver(activeSpeakerObserverWithoutScore)
 
         verify(exactly = 1) {
