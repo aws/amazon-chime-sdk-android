@@ -20,5 +20,5 @@ import com.amazonaws.services.chime.sdk.meetings.audiovideo.audio.AudioStreamTyp
  */
 data class AudioVideoConfiguration @JvmOverloads constructor(
     val audioMode: AudioMode = AudioMode.Stereo48K,
-    val audioStreamType: AudioStreamType = AudioStreamType.VoiceCall
+    val audioStreamType: AudioStreamType = AudioStreamType.Music
 )
