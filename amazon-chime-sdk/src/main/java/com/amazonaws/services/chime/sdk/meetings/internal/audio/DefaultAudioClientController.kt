@@ -24,7 +24,7 @@ import com.amazonaws.services.chime.sdk.meetings.session.MeetingSessionStatusCod
 import com.amazonaws.services.chime.sdk.meetings.utils.logger.Logger
 import com.xodee.client.audio.audioclient.AudioClient
 import com.xodee.client.audio.audioclient.AudioClient.AudioModeInternal
-import com.xodee.client.audio.audioclient.AudioClientConfig
+import com.xodee.client.audio.audioclient.AudioClientSessionConfig
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
@@ -181,7 +181,7 @@ class DefaultAudioClientController(
                 AudioStreamType.Music -> AudioClient.AudioStreamType.MUSIC
             }
 
-            var config = AudioClientConfig.Builder(
+            var config = AudioClientSessionConfig.Builder(
                 host,
                 port,
                 joinToken,
