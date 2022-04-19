@@ -113,7 +113,7 @@ class DefaultAudioVideoControllerTest {
                 attendeeId,
                 joinToken,
                 AudioMode.Stereo48K,
-                AudioStreamType.VoiceCall
+                AudioStreamType.Music
             )
         }
     }
@@ -130,7 +130,7 @@ class DefaultAudioVideoControllerTest {
                     attendeeId,
                     joinToken,
                     AudioMode.Mono16K,
-                    AudioStreamType.VoiceCall
+                    AudioStreamType.Music
             )
         }
     }
@@ -147,7 +147,7 @@ class DefaultAudioVideoControllerTest {
                     attendeeId,
                     joinToken,
                     AudioMode.Mono48K,
-                    AudioStreamType.VoiceCall
+                    AudioStreamType.Music
             )
         }
     }
@@ -164,7 +164,7 @@ class DefaultAudioVideoControllerTest {
                     attendeeId,
                     joinToken,
                     AudioMode.Stereo48K,
-                    AudioStreamType.VoiceCall
+                    AudioStreamType.Music
             )
         }
     }
@@ -215,7 +215,7 @@ class DefaultAudioVideoControllerTest {
                 attendeeId,
                 joinToken,
                 AudioMode.NoDevice,
-                AudioStreamType.VoiceCall
+                AudioStreamType.Music
             )
         }
     }
