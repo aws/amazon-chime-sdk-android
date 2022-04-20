@@ -294,7 +294,7 @@ class DefaultAudioClientControllerTest {
     }
 
     @Test
-    fun `start with Mono 16KHz should call AudioClient startSessionV2 with Mono 16KHz and mute mic and speaker as false`() {
+    fun `start with Mono 16KHz should call AudioClient startSession with Mono 16KHz and mute mic and speaker as false`() {
         setupStartTests()
 
         audioClientController.start(
