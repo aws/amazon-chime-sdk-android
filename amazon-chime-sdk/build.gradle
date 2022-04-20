@@ -115,9 +115,7 @@ task jacocoTestReport(type: JacocoReport, dependsOn: ['testDebugUnitTest']) {
 
     sourceDirectories.setFrom(files([mainSrc]))
     classDirectories.setFrom(files([kotlinTree]))
-    executionData.setFrom(fileTree(dir: "$buildDir", includes: [
-            "jacoco/testDebugUnitTest.exec"
-    ]))
+    executionData.setFrom(fileTree(dir: "$buildDir", includes: ["jacoco/testDebugUnitTest.exec"]))
 }
 
 private Integer generateVersionCode() {
