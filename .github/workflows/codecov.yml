@@ -21,30 +21,16 @@ jobs:
     # The type of runner that the job will run on
     runs-on: macos-latest
 
-#     steps:
-#       - uses: actions/checkout@v2
-#       - name: Run tests
-#         run:  ./gradlew clean build
-#       - name: Coverage Report
-#         run:  ./gradlew jacocoTestReport
-#       - name: Upload coverage to Codecov
-#         uses: codecov/codecov-action@v2
-#         with:
-#           fail_ci_if_error: false
-  
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
 
-      - name: Install NDK
-        uses: nttld/setup-ndk@v1
-        with:
-          ndk-version: r20b
-      
-#       - name: Install NDK path  
-#         run: ndk-build NDK_PROJECT_PATH=. APP_BUILD_SCRIPT=./Android.mk NDK_APPLICATION_MK=./Application.mk
-      
+#       - name: Install NDK
+#         uses: nttld/setup-ndk@v1
+#         with:
+#           ndk-version: r20b
+           
       - name: AWS S3 Github Action
         run: |
           aws configure set aws_access_key_id ${{ secrets.AWS_ACCESS_KEY_ID }} --profile jenkins-automated-test
@@ -75,48 +61,6 @@ jobs:
 #               ./gradlew amazon-chime-sdk:jacocoTestReport --stacktrace
 #             script: ./gradlew connectedCheck --stacktrace
       
-#       - name: Unit Test   
-#         run: ./gradlew amazon-chime-sdk:jacocoTestReport --stacktrace
-       
-#       - name: ls
-#         run: |
-#           cd ./amazon-chime-sdk/build/reports/jacoco/
-#           ls
-#           cd ../coverage/debug
-#           ls
-#           cd ../../tests
-#           ls
           
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v1.2.1
-
-#       - name: generate report
-#         uses: actions/upload-artifact@v2
-#         with:
-#           name: report 
-#           path: amazon-chime-sdk/build/reports/jacoco/jacocoTestReport/jacocoTestReport.xml
-#             amazon-chime-sdk/build/reports/coverage/debug
-            
-          
-#       - name: Download Test Reports Folder
-#         uses: actions/download-artifact@v2
-#         with:
-#           name: report
-#           path: amazon-chime-sdk/build/reports/jacoco/jacocoTestReport/jacocoTestReport.xml
-          
-#       - name: Upload coverage to Codecov
-#         uses: codecov/codecov-action@v2
-#         with:
-#           token: ${{ secrets.CODECOV_TOKEN }}
-#           directory: ./coverage/reports/
-#           env_vars: OS,PYTHON
-#           fail_ci_if_error: true
-#           files: ./coverage1.xml,./coverage2.xml
-#           flags: unittests
-#           name: codecov-umbrella
-#           path_to_write_report: ./coverage/codecov_report.txt
-# #           verbose: true
-#       - name: Upload Test Report
-#         run:  bash <(curl -s https://codecov.io/bash) -f "amazon-chime-sdk/build/reports/jacoco/jacocoTestReport/jacocoTestReport.xml"
-#         run:  bash <(curl -s https://codecov.io/bash) -f "amazon-chime-sdk/build/reports/coverage/debug/report.xml"
-
