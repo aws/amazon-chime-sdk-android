@@ -45,12 +45,13 @@ android {
     buildTypes {
         debug {
             buildConfigField("long", "VERSION_CODE", "${defaultConfig.versionCode}")
-            buildConfigField("String","VERSION_NAME","\"${defaultConfig.versionName}\"")
+            buildConfigField("String", "VERSION_NAME", "\"${defaultConfig.versionName}\"")
+            // Note: We had seen this problem from other engineers as well - setting this to true will somehow discard the coverage, instead setting to false will get the right coverage number.
             testCoverageEnabled false
         }
         release {
             buildConfigField("long", "VERSION_CODE", "${defaultConfig.versionCode}")
-            buildConfigField("String","VERSION_NAME","\"${defaultConfig.versionName}\"")
+            buildConfigField("String", "VERSION_NAME", "\"${defaultConfig.versionName}\"")
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
