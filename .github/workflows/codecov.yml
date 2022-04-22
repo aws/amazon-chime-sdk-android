@@ -1,0 +1,49 @@
+name: Code Coverage Check
+
+on:
+  push:
+    branches: [ '**' ]
+  pull_request:
+    branches: [ '**' ]
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  # This workflow contains a single job called "build"
+  build:
+    # The type of runner that the job will run on
+    runs-on: macos-latest
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v2
+
+      # Download amazon-chime-sdk-media binary from AWS S3
+      - name: Get Media binary from AWS S3
+        run: |
+          aws configure set aws_access_key_id ${{ secrets.AWS_ACCESS_KEY_ID }} --profile jenkins-automated-test
+          aws configure set aws_secret_access_key ${{ secrets.AWS_SECRET_ACCESS_KEY }} --profile jenkins-automated-test
+          aws \
+            --profile jenkins-automated-test \
+            s3api get-object \
+            --bucket amazon-chime-sdk-android-internal \
+            --key master/media/latest/amazon-chime-sdk-media.tar.gz \
+            amazon-chime-sdk-media.tar.gz
+          tar -xzf amazon-chime-sdk-media.tar.gz
+          mkdir -p ./amazon-chime-sdk/libs
+          mv amazon-chime-sdk-media.aar ./amazon-chime-sdk/libs
+          
+      # Execute unit tests
+      - name: Unit Test with Android Emulator Runner
+        uses: ReactiveCircus/android-emulator-runner@v2
+        with:
+          target: google_apis
+          api-level: 30
+          script: ./gradlew jacocoTestReport --stacktrace
+
+      # Upload code coverage report to codecov to process data
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v1.2.1

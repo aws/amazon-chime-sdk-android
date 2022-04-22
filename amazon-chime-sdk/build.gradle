@@ -8,6 +8,7 @@ apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'org.jetbrains.dokka'
+apply plugin: 'jacoco'
 
 def versionFile = new File(getProjectDir(), "version.properties")
 Properties versionProperties = new Properties()
@@ -42,18 +43,36 @@ android {
     }
 
     buildTypes {
+        debug {
+            buildConfigField("long", "VERSION_CODE", "${defaultConfig.versionCode}")
+            buildConfigField("String", "VERSION_NAME", "\"${defaultConfig.versionName}\"")
+            // Note: We had seen this problem from other engineers as well - setting this to true will somehow discard the coverage, instead setting to false will get the right coverage number.
+            testCoverageEnabled false
+        }
         release {
+            buildConfigField("long", "VERSION_CODE", "${defaultConfig.versionCode}")
+            buildConfigField("String", "VERSION_NAME", "\"${defaultConfig.versionName}\"")
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
 
     testOptions {
+        unitTests.all {
+            jacoco {
+                includeNoLocationClasses = true
+            }
+        }
         // This causes system calls to return default (i.e. null or zero) values rather then
         // immediately throwing exceptions.  Without this, tests covering anything with significant OpenGLES or
         // EGL calls requires the unit test to basically mock every single line of the original file which is excessive
         // In return, unit tests should account for these null or 0 values and still mock where appropriate
         unitTests.returnDefaultValues = true
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
     }
 
     dokka {
@@ -75,6 +94,29 @@ android {
     defaultConfig {
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
+}
+
+tasks.withType(Test) {
+    jacoco {
+        includeNoLocationClasses = true
+        excludes = ['jdk.internal.*'] // Allows it to run on Java 11
+    }
+}
+
+task jacocoTestReport(type: JacocoReport, dependsOn: ['testDebugUnitTest']) {
+
+    reports {
+        xml.enabled = true
+        html.enabled = true
+    }
+
+    def fileFilter = ['**/R.class', '**/R$*.class', '**/BuildConfig.*', '**/Manifest*.*', '**/*Test*.*', 'android/**/*.*']
+    def kotlinTree = fileTree(dir: "$project.buildDir/tmp/kotlin-classes/debug", excludes: fileFilter)
+    def mainSrc = "src/main/java"
+
+    sourceDirectories.setFrom(files([mainSrc]))
+    classDirectories.setFrom(files([kotlinTree]))
+    executionData.setFrom(fileTree(dir: "$buildDir", includes: ["jacoco/testDebugUnitTest.exec"]))
 }
 
 private Integer generateVersionCode() {
