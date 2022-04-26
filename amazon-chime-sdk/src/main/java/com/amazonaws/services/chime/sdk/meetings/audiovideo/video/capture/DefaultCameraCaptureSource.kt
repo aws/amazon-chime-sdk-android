@@ -195,7 +195,7 @@ class DefaultCameraCaptureSource @JvmOverloads constructor(
             handleCameraCaptureFail(CaptureSourceError.PermissionError)
             throw SecurityException("Missing necessary camera permissions")
         }
-
+        stop()
         logger.info(TAG, "Camera capture start requested with device: $device")
         val device = device ?: run {
             logger.info(TAG, "Cannot start camera capture with null device")
