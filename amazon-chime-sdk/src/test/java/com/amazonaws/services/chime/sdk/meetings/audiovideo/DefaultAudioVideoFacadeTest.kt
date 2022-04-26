@@ -149,11 +149,11 @@ class DefaultAudioVideoFacadeTest {
         verify { eventAnalyticsController.removeEventAnalyticsObserver(mockEventAnalyticsObserver) }
     }
 
-    @Test
-    fun `removeMetricsObserver should call audioVideoController removeMetricsObserver with given observer`() {
-        audioVideoFacade.removeMetricsObserver(mockMetricsObserver)
-        verify { audioVideoController.removeMetricsObserver(mockMetricsObserver) }
-    }
+//    @Test
+//    fun `removeMetricsObserver should call audioVideoController removeMetricsObserver with given observer`() {
+//        audioVideoFacade.removeMetricsObserver(mockMetricsObserver)
+//        verify { audioVideoController.removeMetricsObserver(mockMetricsObserver) }
+//    }
 
     @Test
     fun `start should call audioVideoController start when the required permissions are granted`() {
