@@ -16,6 +16,7 @@ import com.amazonaws.services.chime.sdk.meetings.analytics.EventName
 import com.amazonaws.services.chime.sdk.meetings.analytics.MeetingStatsCollector
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.PrimaryMeetingPromotionObserver
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.audio.AudioMode
+import com.amazonaws.services.chime.sdk.meetings.audiovideo.audio.AudioStreamType
 import com.amazonaws.services.chime.sdk.meetings.internal.utils.AppInfoUtil
 import com.amazonaws.services.chime.sdk.meetings.session.MeetingSessionCredentials
 import com.amazonaws.services.chime.sdk.meetings.session.MeetingSessionStatus
@@ -23,6 +24,7 @@ import com.amazonaws.services.chime.sdk.meetings.session.MeetingSessionStatusCod
 import com.amazonaws.services.chime.sdk.meetings.utils.logger.Logger
 import com.xodee.client.audio.audioclient.AudioClient
 import com.xodee.client.audio.audioclient.AudioClient.AudioModeInternal
+import com.xodee.client.audio.audioclient.AudioClientSessionConfig
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
@@ -122,7 +124,8 @@ class DefaultAudioClientController(
         meetingId: String,
         attendeeId: String,
         joinToken: String,
-        audioMode: AudioMode
+        audioMode: AudioMode,
+        audioStreamType: AudioStreamType
     ) {
         // Validate audio client state
         if (audioClientState != AudioClientState.INITIALIZED &&
@@ -172,21 +175,30 @@ class DefaultAudioClientController(
                 AudioMode.Stereo48K -> AudioModeInternal.STEREO_48K
                 AudioMode.NoDevice -> AudioModeInternal.NO_DEVICE
             }
-            val res = audioClient.startSessionV2(
-                AudioClient.XTL_DEFAULT_TRANSPORT,
+
+            var audioStreamTypeInternal = when (audioStreamType) {
+                AudioStreamType.VoiceCall -> AudioClient.AudioStreamType.VOICE_CALL
+                AudioStreamType.Music -> AudioClient.AudioStreamType.MUSIC
+            }
+
+            var config = AudioClientSessionConfig.Builder(
                 host,
                 port,
                 joinToken,
                 meetingId,
                 attendeeId,
-                muteMicAndSpeaker,
-                muteMicAndSpeaker,
-                DEFAULT_PRESENTER,
                 audioFallbackUrl,
-                null,
                 appInfo,
-                audioModeInternal
-            )
+                audioModeInternal,
+                audioStreamTypeInternal
+            ).withTransportMode(AudioClient.XTL_DEFAULT_TRANSPORT)
+                .withMicMute(muteMicAndSpeaker)
+                .withSpkMute(muteMicAndSpeaker)
+                .withPresenter(DEFAULT_PRESENTER)
+                .withProxyConfig(null)
+                .build()
+
+            val res = audioClient.startSession(config)
 
             if (res != AUDIO_CLIENT_RESULT_SUCCESS) {
                 logger.error(TAG, "Failed to start audio session. Response code: $res")

@@ -35,6 +35,7 @@ class DefaultActiveSpeakerDetectorTest {
 
     private lateinit var activeSpeakerPolicy: DefaultActiveSpeakerPolicy
 
+    private val timeout = 1000L
     private val testId1 = "aliceId"
     private val testAttendeeInfo1 =
         AttendeeInfo(testId1, testId1)
@@ -121,7 +122,7 @@ class DefaultActiveSpeakerDetectorTest {
         )
         activeSpeakerDetector.onAttendeesJoined(arrayOf(testAttendeeInfo1))
         activeSpeakerDetector.onVolumeChanged(arrayOf(testVolumeUpdate1))
-        Thread.sleep(300)
+        Thread.sleep(timeout)
         activeSpeakerDetector.removeActiveSpeakerObserver(activeSpeakerObserverWithoutScore)
 
         verify(exactly = 1) {
@@ -187,7 +188,7 @@ class DefaultActiveSpeakerDetectorTest {
         )
         activeSpeakerDetector.onAttendeesJoined(arrayOf(testAttendeeInfo1, testAttendeeInfo2))
         activeSpeakerDetector.onVolumeChanged(arrayOf(testVolumeUpdate1, testVolumeUpdate2))
-        Thread.sleep(300)
+        Thread.sleep(timeout)
         activeSpeakerDetector.removeActiveSpeakerObserver(activeSpeakerObserverWithoutScore)
 
         verify(exactly = 1) {

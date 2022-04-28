@@ -6,6 +6,7 @@
 package com.amazonaws.services.chime.sdk.meetings.audiovideo
 
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.audio.AudioMode
+import com.amazonaws.services.chime.sdk.meetings.audiovideo.audio.AudioStreamType
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.metric.MetricsObserver
 import com.amazonaws.services.chime.sdk.meetings.internal.audio.AudioClientController
 import com.amazonaws.services.chime.sdk.meetings.internal.audio.AudioClientObserver
@@ -111,7 +112,8 @@ class DefaultAudioVideoControllerTest {
                 meetingId,
                 attendeeId,
                 joinToken,
-                AudioMode.Stereo48K
+                AudioMode.Stereo48K,
+                AudioStreamType.VoiceCall
             )
         }
     }
@@ -127,7 +129,8 @@ class DefaultAudioVideoControllerTest {
                     meetingId,
                     attendeeId,
                     joinToken,
-                    AudioMode.Mono16K
+                    AudioMode.Mono16K,
+                    AudioStreamType.VoiceCall
             )
         }
     }
@@ -143,7 +146,8 @@ class DefaultAudioVideoControllerTest {
                     meetingId,
                     attendeeId,
                     joinToken,
-                    AudioMode.Mono48K
+                    AudioMode.Mono48K,
+                    AudioStreamType.VoiceCall
             )
         }
     }
@@ -159,7 +163,42 @@ class DefaultAudioVideoControllerTest {
                     meetingId,
                     attendeeId,
                     joinToken,
-                    AudioMode.Stereo48K
+                    AudioMode.Stereo48K,
+                    AudioStreamType.VoiceCall
+            )
+        }
+    }
+
+    @Test
+    fun `start() with voice call stream should call audioClientController start() with AudioStreamType VoiceCall`() {
+        val testAudioVideoConfiguration = AudioVideoConfiguration(audioStreamType = AudioStreamType.VoiceCall)
+        audioVideoController.start(testAudioVideoConfiguration)
+        verify {
+            audioClientController.start(
+                audioFallbackURL,
+                audioHostURL,
+                meetingId,
+                attendeeId,
+                joinToken,
+                AudioMode.Stereo48K,
+                AudioStreamType.VoiceCall
+            )
+        }
+    }
+
+    @Test
+    fun `start() with music stream should call audioClientController start() with AudioStreamType Music`() {
+        val testAudioVideoConfiguration = AudioVideoConfiguration(audioStreamType = AudioStreamType.Music)
+        audioVideoController.start(testAudioVideoConfiguration)
+        verify {
+            audioClientController.start(
+                audioFallbackURL,
+                audioHostURL,
+                meetingId,
+                attendeeId,
+                joinToken,
+                AudioMode.Stereo48K,
+                AudioStreamType.Music
             )
         }
     }
@@ -175,7 +214,8 @@ class DefaultAudioVideoControllerTest {
                 meetingId,
                 attendeeId,
                 joinToken,
-                AudioMode.NoDevice
+                AudioMode.NoDevice,
+                AudioStreamType.VoiceCall
             )
         }
     }

@@ -16,6 +16,7 @@ import com.amazonaws.services.chime.sdk.meetings.analytics.EventAnalyticsControl
 import com.amazonaws.services.chime.sdk.meetings.analytics.EventName
 import com.amazonaws.services.chime.sdk.meetings.analytics.MeetingStatsCollector
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.audio.AudioMode
+import com.amazonaws.services.chime.sdk.meetings.audiovideo.audio.AudioStreamType
 import com.amazonaws.services.chime.sdk.meetings.internal.utils.AppInfoUtil
 import com.amazonaws.services.chime.sdk.meetings.utils.logger.Logger
 import com.xodee.client.audio.audioclient.AppInfo
@@ -36,6 +37,7 @@ import kotlinx.coroutines.test.TestCoroutineDispatcher
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.setMain
 import org.junit.After
+import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
 import org.junit.Before
@@ -126,21 +128,7 @@ class DefaultAudioClientControllerTest {
     private fun setupStartTests() {
         every { mockAudioClient.sendMessage(any(), any()) } returns testAudioClientSuccessCode
         every {
-            mockAudioClient.startSessionV2(
-                any(),
-                any(),
-                any(),
-                any(),
-                any(),
-                any(),
-                any(),
-                any(),
-                any(),
-                any(),
-                any(),
-                any(),
-                any()
-            )
+            mockAudioClient.startSession(any())
         } returns testAudioClientSuccessCode
         every { mockAudioClient.setVoiceFocusNoiseSuppression(any()) } returns AudioClient.AUDIO_CLIENT_OK
         every { mockAudioClient.getVoiceFocusNoiseSuppression() } returns true
@@ -285,7 +273,7 @@ class DefaultAudioClientControllerTest {
     }
 
     @Test
-    fun `start with Stereo 48KHz should call AudioClient startSessionV2 with Stereo 48KHz and mute mic and speaker as false`() {
+    fun `start with Stereo 48KHz should call AudioClient startSession with Stereo 48KHz and mute mic and speaker as false`() {
         setupStartTests()
 
         audioClientController.start(
@@ -294,30 +282,19 @@ class DefaultAudioClientControllerTest {
             testMeetingId,
             testAttendeeId,
             testJoinToken,
-            AudioMode.Stereo48K
+            AudioMode.Stereo48K,
+            AudioStreamType.VoiceCall
         )
 
         verify {
-            mockAudioClient.startSessionV2(
-                any(),
-                any(),
-                any(),
-                any(),
-                any(),
-                any(),
-                false,
-                false,
-                any(),
-                any(),
-                any(),
-                any(),
-                AudioModeInternal.STEREO_48K
-            )
+            mockAudioClient.startSession(withArg {
+                assertEquals(AudioModeInternal.STEREO_48K, it.audioMode)
+            })
         }
     }
 
     @Test
-    fun `start with Mono 16KHz should call AudioClient startSessionV2 with Mono 16KHz and mute mic and speaker as false`() {
+    fun `start with Mono 16KHz should call AudioClient startSession with Mono 16KHz and mute mic and speaker as false`() {
         setupStartTests()
 
         audioClientController.start(
@@ -326,30 +303,21 @@ class DefaultAudioClientControllerTest {
                 testMeetingId,
                 testAttendeeId,
                 testJoinToken,
-                AudioMode.Mono16K
+                AudioMode.Mono16K,
+                AudioStreamType.VoiceCall
         )
 
         verify {
-            mockAudioClient.startSessionV2(
-                    any(),
-                    any(),
-                    any(),
-                    any(),
-                    any(),
-                    any(),
-                    false,
-                    false,
-                    any(),
-                    any(),
-                    any(),
-                    any(),
-                    AudioModeInternal.MONO_16K
-            )
+            mockAudioClient.startSession(withArg {
+                assertFalse(it.micMute)
+                assertFalse(it.spkMute)
+                assertEquals(AudioModeInternal.MONO_16K, it.audioMode)
+            })
         }
     }
 
     @Test
-    fun `start with Mono 48KHz should call AudioClient startSessionV2 with Mono 48KHz and mute mic and speaker as false`() {
+    fun `start with Mono 48KHz should call AudioClient startSession with Mono 48KHz and mute mic and speaker as false`() {
         setupStartTests()
 
         audioClientController.start(
@@ -358,25 +326,58 @@ class DefaultAudioClientControllerTest {
                 testMeetingId,
                 testAttendeeId,
                 testJoinToken,
-                AudioMode.Mono48K
+                AudioMode.Mono48K,
+                AudioStreamType.VoiceCall
         )
 
         verify {
-            mockAudioClient.startSessionV2(
-                    any(),
-                    any(),
-                    any(),
-                    any(),
-                    any(),
-                    any(),
-                    false,
-                    false,
-                    any(),
-                    any(),
-                    any(),
-                    any(),
-                    AudioModeInternal.MONO_48K
-            )
+            mockAudioClient.startSession(withArg {
+                assertFalse(it.micMute)
+                assertFalse(it.spkMute)
+                assertEquals(AudioModeInternal.MONO_48K, it.audioMode)
+            })
+        }
+    }
+
+    @Test
+    fun `start() with voice call stream should call startSession(AudioClientSessionConfig) with AudioStreamType VOICE_CALL`() {
+        setupStartTests()
+
+        audioClientController.start(
+            testAudioFallbackUrl,
+            testAudioHostUrl,
+            testMeetingId,
+            testAttendeeId,
+            testJoinToken,
+            AudioMode.Mono48K,
+            AudioStreamType.VoiceCall
+        )
+
+        verify {
+            mockAudioClient.startSession(withArg {
+                assertEquals(AudioClient.AudioStreamType.VOICE_CALL, it.audioStreamType)
+            })
+        }
+    }
+
+    @Test
+    fun `start() with music stream should call startSession(AudioClientSessionConfig) with AudioStreamType MUSIC`() {
+        setupStartTests()
+
+        audioClientController.start(
+            testAudioFallbackUrl,
+            testAudioHostUrl,
+            testMeetingId,
+            testAttendeeId,
+            testJoinToken,
+            AudioMode.Mono48K,
+            AudioStreamType.Music
+        )
+
+        verify {
+            mockAudioClient.startSession(withArg {
+                assertEquals(AudioClient.AudioStreamType.MUSIC, it.audioStreamType)
+            })
         }
     }
 
@@ -390,7 +391,8 @@ class DefaultAudioClientControllerTest {
                 testMeetingId,
                 testAttendeeId,
                 testJoinToken,
-                AudioMode.Stereo48K
+                AudioMode.Stereo48K,
+                AudioStreamType.VoiceCall
         )
 
         verify {
@@ -408,7 +410,8 @@ class DefaultAudioClientControllerTest {
             testMeetingId,
             testAttendeeId,
             testJoinToken,
-            AudioMode.Stereo48K
+            AudioMode.Stereo48K,
+            AudioStreamType.VoiceCall
         )
 
         verify(exactly = 1) { mockAudioClientObserver.notifyAudioClientObserver(any()) }
@@ -423,7 +426,8 @@ class DefaultAudioClientControllerTest {
             testMeetingId,
             testAttendeeId,
             testJoinToken,
-            AudioMode.Stereo48K
+            AudioMode.Stereo48K,
+            AudioStreamType.VoiceCall
         )
 
         verify(exactly = 1) { mockEventAnalyticsController.publishEvent(EventName.meetingStartRequested, any()) }
@@ -448,7 +452,8 @@ class DefaultAudioClientControllerTest {
             testMeetingId,
             testAttendeeId,
             testJoinToken,
-            AudioMode.Stereo48K
+            AudioMode.Stereo48K,
+            AudioStreamType.VoiceCall
         )
         every { mockAudioClient.stopSession() } returns testAudioClientSuccessCode
 
@@ -466,7 +471,8 @@ class DefaultAudioClientControllerTest {
             testMeetingId,
             testAttendeeId,
             testJoinToken,
-            AudioMode.Stereo48K
+            AudioMode.Stereo48K,
+            AudioStreamType.VoiceCall
         )
         every { mockAudioClient.stopSession() } returns testAudioClientSuccessCode
 
@@ -488,7 +494,8 @@ class DefaultAudioClientControllerTest {
             testMeetingId,
             testAttendeeId,
             testJoinToken,
-            AudioMode.Stereo48K
+            AudioMode.Stereo48K,
+            AudioStreamType.VoiceCall
         )
 
         val enableOutput: Boolean = audioClientController.setVoiceFocusEnabled(true)
@@ -522,7 +529,8 @@ class DefaultAudioClientControllerTest {
             testMeetingId,
             testAttendeeId,
             testJoinToken,
-            AudioMode.Stereo48K
+            AudioMode.Stereo48K,
+            AudioStreamType.VoiceCall
         )
 
         audioClientController.isVoiceFocusEnabled()
