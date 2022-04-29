@@ -46,8 +46,7 @@ android {
         debug {
             buildConfigField("long", "VERSION_CODE", "${defaultConfig.versionCode}")
             buildConfigField("String", "VERSION_NAME", "\"${defaultConfig.versionName}\"")
-            // Note: We had seen this problem from other engineers as well - setting this to true will somehow discard the coverage, instead setting to false will get the right coverage number.
-            testCoverageEnabled false
+            testCoverageEnabled true
         }
         release {
             buildConfigField("long", "VERSION_CODE", "${defaultConfig.versionCode}")
@@ -103,7 +102,9 @@ tasks.withType(Test) {
     }
 }
 
-task jacocoTestReport(type: JacocoReport, dependsOn: ['testDebugUnitTest']) {
+task jacocoTestReport(type: JacocoReport, dependsOn: ['testDebugUnitTest','createDebugCoverageReport']) {
+    group = "Reporting"
+    description = "Generate Jacoco coverage reports after running tests."
 
     reports {
         xml.enabled = true
@@ -116,7 +117,9 @@ task jacocoTestReport(type: JacocoReport, dependsOn: ['testDebugUnitTest']) {
 
     sourceDirectories.setFrom(files([mainSrc]))
     classDirectories.setFrom(files([kotlinTree]))
-    executionData.setFrom(fileTree(dir: "$buildDir", includes: ["jacoco/testDebugUnitTest.exec"]))
+    executionData.setFrom(files([fileTree(dir: "$buildDir", includes: [
+            "jacoco/testDebugUnitTest.exec",
+            "outputs/code_coverage/debugAndroidTest/connected/**ec"]), "jacoco.exec"]))
 }
 
 tasks.withType(Test) {
