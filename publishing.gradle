@@ -19,7 +19,6 @@ if (versionFile.exists()) {
 }
 version = versionProperties.getProperty('VERSION')
 def media_version = versionProperties.getProperty('MEDIA_VERSION')
-def machineLearningVersion = versionProperties.getProperty('MACHINE_LEARNING_VERSION')
 
 signing {
     if (!project.hasProperty('signing.key') || !project.hasProperty('signing.password') || !project.hasProperty('signing.keyId')) {
@@ -100,38 +99,6 @@ project.afterEvaluate {
                     }
                 }
             }
-            publishChimeSDKMachineLearning(MavenPublication) {
-                groupId = GROUP
-                version = machineLearningVersion
-                artifactId = ARTIFACT_ID_SDK_MACHINE_LEARNING
-                artifact("$buildDir/../libs/amazon-chime-sdk-machine-learning.aar")
-
-                pom {
-                    name = POM_SDK_MACHINE_LEARNING_NAME
-                    description = POM_DESCRIPTION_SDK_MACHINE_LEARNING
-                    url = POM_URL
-                    licenses {
-                        license {
-                            name = POM_LICENCE_NAME
-                            url = POM_LICENCE_URL
-                            distribution = POM_LICENCE_DIST
-                        }
-                    }
-                    scm {
-                        url = POM_SCM_URL
-                        connection = POM_SCM_CONNECTION
-                        developerConnection = POM_SCM_DEV_CONNECTION
-                    }
-                    developers {
-                        developer {
-                            id = POM_DEVELOPER_ID
-                            organization = POM_DEVELOPER_ORGANIZATION
-                            organizationUrl = POM_DEVELOPER_ORGANIZATION_URL
-                        }
-                    }
-                }
-            }
-
         }
 
         repositories {
