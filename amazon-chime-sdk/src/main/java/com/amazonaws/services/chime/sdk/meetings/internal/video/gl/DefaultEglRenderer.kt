@@ -30,15 +30,14 @@ class DefaultEglRenderer(private val logger: Logger) : EglRenderer {
     private var surface: Any? = null
 
     // This handler is protected from onVideoFrameReceived calls during init and release cycles
-    // by being synchronized on pendingFrameLock
+    // by being synchronized on [ShareEglLock.Lock]
     private var renderHandler: Handler? = null
 
     // Cached matrix for draw command
     private val drawMatrix: Matrix = Matrix()
 
-    // Pending frame to render. Serves as a queue with size 1. Synchronized on pendingFrameLock.
+    // Pending frame to render. Serves as a queue with size 1. Synchronized on [ShareEglLock.Lock].
     private var pendingFrame: VideoFrame? = null
-    private val pendingFrameLock = Any()
 
     // If true, mirrors the video stream horizontally. Publicly accessible
     override var mirror = false
@@ -47,7 +46,7 @@ class DefaultEglRenderer(private val logger: Logger) : EglRenderer {
     // is or is not running
     override var aspectRatio = 0f
         set(value) {
-            synchronized(aspectRatio) {
+            synchronized(ShareEglLock.Lock) {
                 logger.info(TAG, "Setting aspect ratio from $field to $value")
                 field = value
             }
@@ -88,7 +87,7 @@ class DefaultEglRenderer(private val logger: Logger) : EglRenderer {
             eglCore = null
         }
 
-        synchronized(pendingFrameLock) {
+        synchronized(ShareEglLock.Lock) {
             pendingFrame?.release()
             pendingFrame = null
 
@@ -122,7 +121,7 @@ class DefaultEglRenderer(private val logger: Logger) : EglRenderer {
             }
 
             // Discard any old frame
-            synchronized(pendingFrameLock) {
+            synchronized(ShareEglLock.Lock) {
                 pendingFrame?.release()
                 pendingFrame = null
             }
@@ -148,7 +147,7 @@ class DefaultEglRenderer(private val logger: Logger) : EglRenderer {
 
     override fun onVideoFrameReceived(frame: VideoFrame) {
         // Set pending frame from this thread and trigger a request to render
-        synchronized(pendingFrameLock) {
+        synchronized(ShareEglLock.Lock) {
             // Release any current frame before setting to the latest
             if (pendingFrame != null) {
                 pendingFrame?.release()
@@ -179,58 +178,58 @@ class DefaultEglRenderer(private val logger: Logger) : EglRenderer {
 
         // Fetch pending frame
         var frame: VideoFrame
-        synchronized(pendingFrameLock) {
+        synchronized(ShareEglLock.Lock) {
             if (pendingFrame == null) {
                 logger.verbose(TAG, "Skipping frame render, no pending frame to render")
                 return
             }
             frame = pendingFrame as VideoFrame
             pendingFrame = null
-        }
 
-        // Setup draw matrix transformations
-        val frameAspectRatio = frame.getRotatedWidth().toFloat() / frame.getRotatedHeight()
-        var drawnAspectRatio = frameAspectRatio
-        synchronized(aspectRatio) {
-            if (aspectRatio != 0f) {
-                drawnAspectRatio = aspectRatio
+            // Setup draw matrix transformations
+            val frameAspectRatio = frame.getRotatedWidth().toFloat() / frame.getRotatedHeight()
+            var drawnAspectRatio = frameAspectRatio
+            synchronized(aspectRatio) {
+                if (aspectRatio != 0f) {
+                    drawnAspectRatio = aspectRatio
+                }
             }
-        }
-        val scaleX: Float
-        val scaleY: Float
-        if (frameAspectRatio > drawnAspectRatio) {
-            scaleX = drawnAspectRatio / frameAspectRatio
-            scaleY = 1f
-        } else {
-            scaleX = 1f
-            scaleY = frameAspectRatio / drawnAspectRatio
-        }
-        drawMatrix.reset()
-        drawMatrix.preTranslate(0.5f, 0.5f)
-        drawMatrix.preScale(if (mirror) -1f else 1f, 1f)
-        drawMatrix.preScale(scaleX, scaleY)
-        drawMatrix.preTranslate(-0.5f, -0.5f)
+            val scaleX: Float
+            val scaleY: Float
+            if (frameAspectRatio > drawnAspectRatio) {
+                scaleX = drawnAspectRatio / frameAspectRatio
+                scaleY = 1f
+            } else {
+                scaleX = 1f
+                scaleY = frameAspectRatio / drawnAspectRatio
+            }
+            drawMatrix.reset()
+            drawMatrix.preTranslate(0.5f, 0.5f)
+            drawMatrix.preScale(if (mirror) -1f else 1f, 1f)
+            drawMatrix.preScale(scaleX, scaleY)
+            drawMatrix.preTranslate(-0.5f, -0.5f)
 
-        // Get current surface size so we can set viewport correctly
-        val widthArray = IntArray(1)
-        EGL14.eglQuerySurface(
+            // Get current surface size so we can set viewport correctly
+            val widthArray = IntArray(1)
+            EGL14.eglQuerySurface(
                 eglCore?.eglDisplay, eglCore?.eglSurface,
                 EGL14.EGL_WIDTH, widthArray, 0
-        )
-        val heightArray = IntArray(1)
-        EGL14.eglQuerySurface(
+            )
+            val heightArray = IntArray(1)
+            EGL14.eglQuerySurface(
                 eglCore?.eglDisplay, eglCore?.eglSurface,
                 EGL14.EGL_HEIGHT, heightArray, 0
-        )
+            )
 
-        try {
-            // Draw frame and swap buffers, which will make it visible
-            frameDrawer.drawFrame(frame, 0, 0, widthArray[0], heightArray[0], drawMatrix)
-            EGL14.eglSwapBuffers(eglCore?.eglDisplay, eglCore?.eglSurface)
-        } catch (e: Throwable) {
-            logger.verbose(TAG, "Failed to draw frame, ignore...")
+            try {
+                // Draw frame and swap buffers, which will make it visible
+                frameDrawer.drawFrame(frame, 0, 0, widthArray[0], heightArray[0], drawMatrix)
+                EGL14.eglSwapBuffers(eglCore?.eglDisplay, eglCore?.eglSurface)
+            } catch (e: Throwable) {
+                logger.verbose(TAG, "Failed to draw frame, ignore...")
+            }
+
+            frame.release()
         }
-
-        frame.release()
     }
 }

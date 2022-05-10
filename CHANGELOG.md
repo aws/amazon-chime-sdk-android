@@ -1,3 +1,8 @@
+## Unrelease
+
+### Fixed
+* Fixed crash from openGL due to potential race condition.
+
 ## [0.17.1] - 2022-06-03
 
 ## [0.17.0] - 2022-05-18
