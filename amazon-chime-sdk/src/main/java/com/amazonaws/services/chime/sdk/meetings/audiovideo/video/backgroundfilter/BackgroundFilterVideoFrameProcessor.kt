@@ -5,7 +5,6 @@
 
 package com.amazonaws.services.chime.sdk.meetings.audiovideo.video.backgroundfilter
 
-import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.Canvas
@@ -14,7 +13,6 @@ import android.graphics.Paint
 import android.graphics.PorterDuff
 import android.graphics.PorterDuffXfermode
 import android.opengl.GLES20
-import android.util.Log
 import com.amazonaws.services.chime.cwt.ModelState
 import com.amazonaws.services.chime.cwt.PredictResult
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoFrame
@@ -56,22 +54,6 @@ class BackgroundFilterVideoFrameProcessor(
     private val defaultInputModelShape = ModelShape()
     private val channels = defaultInputModelShape.channels
     private val bitmapConfig = Bitmap.Config.ARGB_8888
-
-    @SuppressLint("LongLogTag")
-    companion object {
-        init {
-            try {
-                System.loadLibrary("amazon-chime-sdk-machine-learning_jni")
-            } catch (e: UnsatisfiedLinkError) {
-                Log.e(
-                    "BackgroundFilterVideoFrameProcessor",
-                    "Unable to load Machine Learning Library. " +
-                            "Use `implementation(name: 'amazon-chime-sdk-machine-learning', ext: 'aar')`" +
-                            " under dependencies in build.gradle file."
-                )
-            }
-        }
-    }
 
     fun getInputBitmap(frame: VideoFrame): Bitmap {
         val rgbaData = this.getByteBufferFromInputVideoFrame(frame)
