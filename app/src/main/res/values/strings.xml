@@ -95,9 +95,9 @@
     <string name="disable_custom_capture_source">Turn off custom capture source</string>
     <string name="promote_to_primary_meeting">Promote to primary meeting</string>
     <string name="demote_from_primary_meeting">Demote from primary meeting</string>
-    <string name="enable_background_blur">Turn on background blur </string>
+    <string name="enable_background_blur">Turn on background blur</string>
     <string name="disable_background_blur">Turn off background blur</string>
-    <string name="enable_background_replacement">Turn on background replacement </string>
+    <string name="enable_background_replacement">Turn on background replacement</string>
     <string name="disable_background_replacement">Turn off background replacement</string>
 
     <!-- Alert -->

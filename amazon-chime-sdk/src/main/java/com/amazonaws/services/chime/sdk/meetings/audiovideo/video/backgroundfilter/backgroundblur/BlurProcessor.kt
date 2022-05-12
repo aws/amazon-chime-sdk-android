@@ -53,14 +53,14 @@ internal class BlurProcessor(rs: RenderScript) {
     }
 
     fun release() {
-            blurScript?.destroy()
-            blurScript = null
+        blurScript?.destroy()
+        blurScript = null
 
-            inAllocation?.destroy()
-            inAllocation = null
+        inAllocation?.destroy()
+        inAllocation = null
 
-            outAllocation?.destroy()
-            outAllocation = null
+        outAllocation?.destroy()
+        outAllocation = null
     }
 
     /**
