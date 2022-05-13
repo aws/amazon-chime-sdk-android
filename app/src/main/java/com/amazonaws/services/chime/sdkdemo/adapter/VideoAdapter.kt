@@ -19,6 +19,7 @@ import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoPriority
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoResolution
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoScalingType
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoSubscriptionConfiguration
+import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.backgroundfilter.SegmentationProcessor
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.backgroundfilter.backgroundblur.BackgroundBlurVideoFrameProcessor
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.backgroundfilter.backgroundreplacement.BackgroundReplacementVideoFrameProcessor
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.capture.CameraCaptureSource
@@ -124,8 +125,12 @@ class VideoHolder(
             view.attendee_name.visibility = View.GONE
             view.on_tile_button.visibility = View.VISIBLE
 
-            view.video_filter_button.setImageResource(R.drawable.button_more)
-            view.video_filter_button.visibility = View.VISIBLE
+            if (SegmentationProcessor.isMachineLearningLibraryLoaded) {
+                view.video_filter_button.setImageResource(R.drawable.button_more)
+                view.video_filter_button.visibility = View.VISIBLE
+            } else {
+                view.video_filter_button.visibility = View.INVISIBLE
+            }
             // To facilitate demoing and testing both use cases, we account for both our external
             // camera and the camera managed by the facade. Actual applications should
             // only use one or the other
@@ -138,8 +143,10 @@ class VideoHolder(
                 }
                 updateLocalVideoMirror()
             }
-            view.video_filter_button.setOnClickListener {
-                showVideoFilterPopup(view.video_filter_button)
+            if (SegmentationProcessor.isMachineLearningLibraryLoaded) {
+                view.video_filter_button.setOnClickListener {
+                    showVideoFilterPopup(view.video_filter_button)
+                }
             }
         } else {
             view.video_surface.mirror = false
