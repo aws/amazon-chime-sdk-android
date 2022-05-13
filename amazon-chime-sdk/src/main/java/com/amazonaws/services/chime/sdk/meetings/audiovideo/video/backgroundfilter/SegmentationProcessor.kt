@@ -26,7 +26,7 @@ class SegmentationProcessor(val context: Context) {
      * Initialize and load the tensorflow model.
      */
     fun initialize(width: Int, height: Int, modelShape: ModelShape) {
-        if (isMachineLearningLibraryLoaded) {
+        if (isMLlibraryLoaded) {
             segmentationModel = TfLiteModel()
             bytes = context.assets.open("selfie_segmentation_landscape.tflite").readBytes()
             val config = InputModelConfig(height, width, modelShape.channels, modelShape.modelRangeMin, modelShape.modelRangeMax)
@@ -59,11 +59,11 @@ class SegmentationProcessor(val context: Context) {
 
     @SuppressLint("LongLogTag")
     companion object {
-        var isMachineLearningLibraryLoaded = false
+        var isMLlibraryLoaded = false
         init {
             try {
                 System.loadLibrary("amazon-chime-sdk-machine-learning_jni")
-                isMachineLearningLibraryLoaded = true
+                isMLlibraryLoaded = true
             } catch (e: UnsatisfiedLinkError) {
                 Log.e(
                     "BackgroundFilterVideoFrameProcessor",
