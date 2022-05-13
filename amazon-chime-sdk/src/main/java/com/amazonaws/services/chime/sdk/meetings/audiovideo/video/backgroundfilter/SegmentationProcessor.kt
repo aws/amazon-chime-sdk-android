@@ -20,8 +20,7 @@ import java.nio.ByteBuffer
 class SegmentationProcessor(val context: Context) {
     private lateinit var segmentationModel: TfLiteModel
     lateinit var modelState: ModelState
-    private val bytes: ByteArray =
-        context.assets.open("selfie_segmentation_landscape.tflite").readBytes()
+    private lateinit var bytes: ByteArray
 
     /**
      * Initialize and load the tensorflow model.
@@ -29,9 +28,10 @@ class SegmentationProcessor(val context: Context) {
     fun initialize(width: Int, height: Int, modelShape: ModelShape) {
         if (isMLlibraryLoaded) {
             segmentationModel = TfLiteModel()
+            bytes = context.assets.open("selfie_segmentation_landscape.tflite").readBytes()
+            val config = InputModelConfig(height, width, modelShape.channels, modelShape.modelRangeMin, modelShape.modelRangeMax)
+            modelState = segmentationModel.loadModelBytes(bytes, config)
         }
-        val config = InputModelConfig(height, width, modelShape.channels, modelShape.modelRangeMin, modelShape.modelRangeMax)
-        modelState = segmentationModel.loadModelBytes(bytes, config)
     }
 
     /**
