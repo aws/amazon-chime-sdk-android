@@ -27,7 +27,8 @@ class MeetingModel : ViewModel() {
     val currentRoster = mutableMapOf<String, RosterAttendee>()
     var localVideoTileState: VideoCollectionTile? = null
     val remoteVideoTileStates = mutableListOf<VideoCollectionTile>()
-    val remoteVideoSourceConfigurations = mutableMapOf<RemoteVideoSource, VideoSubscriptionConfiguration>()
+    val remoteVideoSourceConfigurations =
+        mutableMapOf<RemoteVideoSource, VideoSubscriptionConfiguration>()
     val videoStatesInCurrentPage = mutableListOf<VideoCollectionTile>()
     val userPausedVideoTileIds = mutableSetOf<Int>()
     val currentScreenTiles = mutableListOf<VideoCollectionTile>()
@@ -50,6 +51,8 @@ class MeetingModel : ViewModel() {
     var wasLocalVideoStarted = false
     var isUsingGpuVideoProcessor = false
     var isUsingCpuVideoProcessor = false
+    var isUsingBackgroundBlur = false
+    var isUsingBackgroundReplacement = false
 
     fun updateVideoStatesInCurrentPage() {
         videoStatesInCurrentPage.clear()

@@ -64,6 +64,8 @@ import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoResolutio
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoSubscriptionConfiguration
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoTileObserver
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoTileState
+import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.backgroundfilter.backgroundblur.BackgroundBlurVideoFrameProcessor
+import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.backgroundfilter.backgroundreplacement.BackgroundReplacementVideoFrameProcessor
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.capture.CameraCaptureSource
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.capture.CaptureSourceError
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.capture.CaptureSourceObserver
@@ -131,7 +133,8 @@ import kotlinx.coroutines.sync.withLock
 class MeetingFragment : Fragment(),
     RealtimeObserver, AudioVideoObserver, VideoTileObserver,
     MetricsObserver, ActiveSpeakerObserver, DeviceChangeObserver, DataMessageObserver,
-    ContentShareObserver, EventAnalyticsObserver, TranscriptEventObserver, PrimaryMeetingPromotionObserver {
+    ContentShareObserver, EventAnalyticsObserver, TranscriptEventObserver,
+    PrimaryMeetingPromotionObserver {
     private val logger = ConsoleLogger(LogLevel.DEBUG)
     private val mutex = Mutex()
     private val uiScope = CoroutineScope(Dispatchers.Main)
@@ -146,12 +149,15 @@ class MeetingFragment : Fragment(),
     private lateinit var mediaProjectionManager: MediaProjectionManager
     private lateinit var powerManager: PowerManager
     private lateinit var credentials: MeetingSessionCredentials
+
     // Cached for reuse and making sure we don't immediately stop content share
     private var primaryMeetingCredentials: MeetingSessionCredentials? = null
     private lateinit var audioVideo: AudioVideoFacade
     private lateinit var cameraCaptureSource: CameraCaptureSource
     private lateinit var gpuVideoProcessor: GpuVideoProcessor
     private lateinit var cpuVideoProcessor: CpuVideoProcessor
+    private lateinit var backgroundBlurVideoFrameProcessor: BackgroundBlurVideoFrameProcessor
+    private lateinit var backgroundReplacementVideoFrameProcessor: BackgroundReplacementVideoFrameProcessor
     private lateinit var eglCoreFactory: EglCoreFactory
     private lateinit var listener: RosterViewEventListener
     private lateinit var postLogger: PostLogger
@@ -258,6 +264,9 @@ class MeetingFragment : Fragment(),
         cameraCaptureSource = activity.getCameraCaptureSource()
         gpuVideoProcessor = activity.getGpuVideoProcessor()
         cpuVideoProcessor = activity.getCpuVideoProcessor()
+        backgroundBlurVideoFrameProcessor = activity.getBackgroundBlurVideoFrameProcessor()
+        backgroundReplacementVideoFrameProcessor =
+            activity.getBackgroundReplacementVideoFrameProcessor()
         screenShareManager = activity.getScreenShareManager()
         audioDeviceManager = AudioDeviceManager(audioVideo)
 
@@ -375,10 +384,11 @@ class MeetingFragment : Fragment(),
         recyclerViewVideoCollection.layoutManager = createLinearLayoutManagerForOrientation()
         videoTileAdapter = VideoAdapter(
             meetingModel.videoStatesInCurrentPage,
-            meetingModel.userPausedVideoTileIds,
-            meetingModel.remoteVideoSourceConfigurations,
+            meetingModel,
             audioVideo,
             cameraCaptureSource,
+            backgroundBlurVideoFrameProcessor,
+            backgroundReplacementVideoFrameProcessor,
             context,
             logger
         )
@@ -390,9 +400,10 @@ class MeetingFragment : Fragment(),
         screenTileAdapter =
             VideoAdapter(
                 meetingModel.currentScreenTiles,
-                meetingModel.userPausedVideoTileIds,
-                meetingModel.remoteVideoSourceConfigurations,
+                meetingModel,
                 audioVideo,
+                null,
+                null,
                 null,
                 context,
                 logger
@@ -645,15 +656,21 @@ class MeetingFragment : Fragment(),
 
     private suspend fun getJoinResponseForPrimaryMeeting(): MeetingSessionCredentials? {
         val meetingEndpointUrl = arguments?.getString(HomeActivity.MEETING_ENDPOINT_KEY) as String
-        var url = if (meetingEndpointUrl.endsWith("/")) meetingEndpointUrl else "$meetingEndpointUrl/"
+        var url =
+            if (meetingEndpointUrl.endsWith("/")) meetingEndpointUrl else "$meetingEndpointUrl/"
         val attendeeName = getAttendeeName(credentials.attendeeId, credentials.externalUserId)
-        url = "${url}join?title=${encodeURLParam(primaryExternalMeetingId)}&name=promoted-${encodeURLParam(attendeeName)}"
+        url = "${url}join?title=${encodeURLParam(primaryExternalMeetingId)}&name=promoted-${
+            encodeURLParam(attendeeName)
+        }"
         url += "&region=region"
         val response = HttpUtils.post(URL(url), "", DefaultBackOffRetry(), logger)
         val responseData = if (response.httpException == null) {
             response.data
         } else {
-            logger.error(TAG, "Unable to request primary meeting attendee credentials. ${response.httpException}")
+            logger.error(
+                TAG,
+                "Unable to request primary meeting attendee credentials. ${response.httpException}"
+            )
             null
         }
         return try {
@@ -1008,7 +1025,7 @@ class MeetingFragment : Fragment(),
             ).show()
             return
         }
-        if (meetingModel.isUsingGpuVideoProcessor) {
+        if (meetingModel.isUsingGpuVideoProcessor || meetingModel.isUsingBackgroundBlur || meetingModel.isUsingBackgroundReplacement) {
             logger.warn(TAG, "Cannot toggle filter when other filter is enabled")
             Toast.makeText(
                 context,
@@ -1037,7 +1054,7 @@ class MeetingFragment : Fragment(),
             ).show()
             return
         }
-        if (meetingModel.isUsingCpuVideoProcessor) {
+        if (meetingModel.isUsingCpuVideoProcessor || meetingModel.isUsingBackgroundBlur || meetingModel.isUsingBackgroundReplacement) {
             logger.warn(TAG, "Cannot toggle filter when other filter is enabled")
             Toast.makeText(
                 context,
@@ -1112,6 +1129,12 @@ class MeetingFragment : Fragment(),
             } else if (meetingModel.isUsingCpuVideoProcessor) {
                 cameraCaptureSource.addVideoSink(cpuVideoProcessor)
                 audioVideo.startLocalVideo(cpuVideoProcessor)
+            } else if (meetingModel.isUsingBackgroundBlur) {
+                cameraCaptureSource.addVideoSink(backgroundBlurVideoFrameProcessor)
+                audioVideo.startLocalVideo(backgroundBlurVideoFrameProcessor)
+            } else if (meetingModel.isUsingBackgroundReplacement) {
+                cameraCaptureSource.addVideoSink(backgroundReplacementVideoFrameProcessor)
+                audioVideo.startLocalVideo(backgroundReplacementVideoFrameProcessor)
             } else {
                 audioVideo.startLocalVideo(cameraCaptureSource)
             }
@@ -1167,12 +1190,23 @@ class MeetingFragment : Fragment(),
                     val caption: Caption
                     val entities = alternative.entities
                     caption = if (entities == null || result.isPartial) {
-                        Caption(speakerName, result.isPartial, alternative.transcript, alternative.items)
+                        Caption(
+                            speakerName,
+                            result.isPartial,
+                            alternative.transcript,
+                            alternative.items
+                        )
                     } else {
                         entities.forEach { entity ->
                             entitySet.addAll(entity.content.split(" "))
                         }
-                        Caption(speakerName, result.isPartial, alternative.transcript, alternative.items, entitySet)
+                        Caption(
+                            speakerName,
+                            result.isPartial,
+                            alternative.transcript,
+                            alternative.items,
+                            entitySet
+                        )
                     }
                     val captionIndex = meetingModel.currentCaptionIndices[result.resultId]
                     if (captionIndex != null) {
@@ -1682,7 +1716,9 @@ class MeetingFragment : Fragment(),
     }
 
     private fun isSelfAttendee(attendeeId: String): Boolean {
-        return DefaultModality(attendeeId).base() == credentials.attendeeId || DefaultModality(attendeeId).base() == primaryMeetingCredentials?.attendeeId
+        return DefaultModality(attendeeId).base() == credentials.attendeeId || DefaultModality(
+            attendeeId
+        ).base() == primaryMeetingCredentials?.attendeeId
     }
 
     private fun notifyHandler(

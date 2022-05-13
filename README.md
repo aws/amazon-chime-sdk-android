@@ -68,6 +68,8 @@ To include the SDK binaries in your own project, follow these steps.
 
 Download `amazon-chime-sdk` and `amazon-chime-sdk-media` binaries from the latest [release](https://github.com/aws/amazon-chime-sdk-android/releases/latest).
 
+If you like to use more machine learning features, e.g. background blur/replacement, also download the `amazon-chime-sdk-machine-learning` binary from the latest [release](https://github.com/aws/amazon-chime-sdk-android/releases/latest). Otherwise, you can ignore all references to `amazon-chime-sdk-machine-learning` in the instructions below.
+
 Unzip them and copy the aar files to `root/app/libs`
 
 #### 2. Update gradle files
@@ -90,6 +92,12 @@ Update `build.gradle` in `root/app` and add the following under `dependencies`:
 ```
 implementation(name: 'amazon-chime-sdk', ext: 'aar')
 implementation(name: 'amazon-chime-sdk-media', ext: 'aar')
+```
+
+If you are using `amazon-chime-sdk-machine-learning` library, then add below statement as well under `dependencies`:
+
+```
+implementation(name: 'amazon-chime-sdk-machine-learning', ext: 'aar')
 ```
 
 Update `build.gradle` in `root/app` under `compileOptions`:
@@ -119,6 +127,8 @@ Provide `https://xxxxx.xxxxx.xxx.com/Prod/` for mobile demo app.
 
 Download `amazon-chime-sdk-media` binary from the latest [release](https://github.com/aws/amazon-chime-sdk-android/releases/latest).
 
+Download `amazon-chime-sdk-machine-learning` binary for machine learning features.
+
 Unzip and copy the aar files to `amazon-chime-sdk-android/amazon-chime-sdk/libs`
 
 ### 3. Update demo app
@@ -144,6 +154,7 @@ If you discover a potential security issue in this project we ask that you notif
   - [Stopping a session](#stopping-a-session)
   - [Amazon Voice Focus](#amazon-voice-focus)
   - [Custom Video Source](#custom-video-source)
+  - [Background Blur and Replacement](#background-blur-and-replacement)
 
 ### Starting a session
 
@@ -637,6 +648,10 @@ val disabled = meetingSession.audioVideo.realtimeSetVoiceFocusEnabled(false) // 
 
 Custom video source allows you to control the video, such as applying a video filter. For more details, see [Custom Video](https://github.com/aws/amazon-chime-sdk-android/blob/master/guides/custom_video.md).
 
+### Background Blur and Replacement
+
+Background Blur/Replacement allows you to apply blur on or replace background of your video with an image. For more details, see [BackgroundFilter](guides/background_video_filters.md).
+
 ## Frequently Asked Questions
 
 Refer to [General FAQ](https://aws.github.io/amazon-chime-sdk-js/modules/faqs.html) for Amazon Chime SDK.
@@ -649,6 +664,9 @@ Applications can get logs from Chime SDK by passing instances of Logger when cre
 val logger = ConsoleLogger(LogLevel.VERBOSE)
 ```
 
+## Notice
+
+The use of background replacement is subject to additional notice. You and your end users are responsible for all Content (including any images) uploaded for use with background replacement, and must ensure that such Content does not violate the law, infringe or misappropriate the rights of any third party, or otherwise violate a material term of your agreement with Amazon (including the documentation, the AWS Service Terms, or the Acceptable Use Policy).
 
 ---
 

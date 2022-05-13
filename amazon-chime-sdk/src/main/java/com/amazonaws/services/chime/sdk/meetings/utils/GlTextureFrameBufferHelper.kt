@@ -3,24 +3,25 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-package com.amazonaws.services.chime.sdkdemo.utils
+package com.amazonaws.services.chime.sdk.meetings.utils
 
 import android.opengl.GLES20
 import com.amazonaws.services.chime.sdk.meetings.internal.video.gl.GlUtil
 
 /**
- * [GlTextureFrameBufferHelper] is a helper class for handling OpenGL framebuffer with only color attachment and no depth or stencil buffer
+ * [GlTextureFrameBufferHelper] is a helper class for handling OpenGL framebuffer with only color
+ * attachment and no depth or stencil buffer.
  */
 class GlTextureFrameBufferHelper(
     private val pixelFormat: Int = 0
 ) {
-    // Gets the OpenGL frame buffer id. This value is only valid after setSize() has been called
+    // Gets the OpenGL frame buffer id. This value is only valid after setSize() has been called.
     var frameBufferId = 0
 
-    // Gets the OpenGL texture id. This value is only valid after setSize() has been called
+    // Gets the OpenGL texture id. This value is only valid after setSize() has been called.
     var textureId = 0
 
-    // Current size, this object can be reallocated
+    // Current size, this object can be reallocated.
     var width: Int = 0
     var height: Int = 0
 

@@ -32,6 +32,8 @@ android {
         versionCode generateVersionCode()
         versionName generateVersionName()
         consumerProguardFiles 'consumer-rules.pro'
+        renderscriptTargetApi 21
+        renderscriptSupportModeEnabled true
         ndk {
             abiFilters 'armeabi-v7a', 'arm64-v8a'
         }
@@ -141,6 +143,7 @@ dependencies {
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.3.3'
     implementation 'androidx.core:core-ktx:1.2.0'
     api(name: 'amazon-chime-sdk-media', ext: 'aar') { transitive = true }
+    api(name: 'amazon-chime-sdk-machine-learning', ext: 'aar') { transitive = true }
     implementation 'com.google.code.gson:gson:2.8.6'
     testImplementation 'org.jetbrains.kotlinx:kotlinx-coroutines-test:1.3.3'
     testImplementation 'junit:junit:4.12'
@@ -149,5 +152,6 @@ dependencies {
     androidTestImplementation 'androidx.test:core:1.3.0'
     androidTestImplementation 'androidx.test:runner:1.3.0'
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
+    androidTestImplementation 'io.mockk:mockk-android:1.10.0'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.1.0'
 }
