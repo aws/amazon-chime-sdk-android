@@ -56,7 +56,9 @@ jobs:
         uses: ReactiveCircus/android-emulator-runner@v2
         with:
           target: google_apis
-          api-level: 27 # Using lower api level due to mockk bug https://github.com/mockk/mockk/issues/297
+          arch: arm64-v8a
+          # TODO: Using lower api level 27 due to mockk bug https://github.com/mockk/mockk/issues/297
+          api-level: 30
           script: ./gradlew jacocoTestReport --stacktrace
 
       # Upload code coverage report to codecov to process data
