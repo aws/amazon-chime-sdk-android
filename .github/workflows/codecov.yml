@@ -14,18 +14,13 @@ jobs:
   # This workflow contains a single job called "build"
   build:
     # The type of runner that the job will run on
-    runs-on: ubuntu-18.04
+    runs-on: macos-latest
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
-      - uses: uraimo/run-on-arch-action@v2
-        name: Build artifact
-        id: build
-        with:
-          arch: aarch64
-          distro: ubuntu18.04
+
       # Download amazon-chime-sdk-media binary from AWS S3
       - name: Get Media binary from AWS S3
         run: |
@@ -67,13 +62,13 @@ jobs:
           path: |
             ~/.android/avd/*
             ~/.android/adb*
-          key: avd-30
+          key: avd-27
 
       - name: Create AVD and generate snapshot for caching
         if: steps.avd-cache.outputs.cache-hit != 'true'
         uses: ReactiveCircus/android-emulator-runner@v2
         with:
-          api-level: 30
+          api-level: 27
           target: google_apis
           arch: arm64-v8a
           force-avd-creation: false
@@ -87,7 +82,7 @@ jobs:
         with:
           target: google_apis
           arch: arm64-v8a
-          api-level: 30
+          api-level: 27
           force-avd-creation: false
           emulator-options: -no-snapshot-save -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
           disable-animations: true
