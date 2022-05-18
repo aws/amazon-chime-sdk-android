@@ -88,7 +88,6 @@ jobs:
           target: google_apis
           arch: x86_64
           api-level: 30
-          emulator-build: 7425822 # https://github.com/ReactiveCircus/android-emulator-runner/issues/161#issuecomment-868614089
           force-avd-creation: false
           emulator-options: -no-snapshot-save -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
           disable-animations: true
