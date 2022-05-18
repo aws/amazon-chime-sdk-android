@@ -62,15 +62,15 @@ jobs:
           path: |
             ~/.android/avd/*
             ~/.android/adb*
-          key: avd-27
+          key: avd-30
 
       - name: Create AVD and generate snapshot for caching
         if: steps.avd-cache.outputs.cache-hit != 'true'
         uses: ReactiveCircus/android-emulator-runner@v2
         with:
-          api-level: 27
+          api-level: 30
           target: google_apis
-          arch: arm64-v8a
+          arch: x86_64
           force-avd-creation: false
           emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
           disable-animations: true
@@ -81,8 +81,8 @@ jobs:
         uses: ReactiveCircus/android-emulator-runner@v2
         with:
           target: google_apis
-          arch: arm64-v8a
-          api-level: 27
+          arch: x86_64
+          api-level: 30
           emulator-build: 7425822 # https://github.com/ReactiveCircus/android-emulator-runner/issues/161#issuecomment-868614089
           force-avd-creation: false
           emulator-options: -no-snapshot-save -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
