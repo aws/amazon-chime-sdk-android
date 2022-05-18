@@ -21,6 +21,11 @@ jobs:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
 
+      # Modify build.gradle file to build for x86_64
+      - name: Add x86_64 in gradle build
+        run: |
+          sed -i '' "s/abiFilters 'armeabi-v7a', 'arm64-v8a'/abiFilters 'armeabi-v7a', 'arm64-v8a', 'x86_64'/" $GITHUB_WORKSPACE/amazon-chime-sdk/build.gradle
+
       # Download amazon-chime-sdk-media binary from AWS S3
       - name: Get Media binary from AWS S3
         run: |
@@ -51,12 +56,41 @@ jobs:
           mkdir -p ./amazon-chime-sdk/libs
           mv amazon-chime-sdk-machine-learning.aar ./amazon-chime-sdk/libs
 
+      # Setup gradle caching to reduce AVD start-up time
+      - name: Gradle cache
+        uses: gradle/gradle-build-action@v2
+
+      - name: AVD cache
+        uses: actions/cache@v3
+        id: avd-cache
+        with:
+          path: |
+            ~/.android/avd/*
+            ~/.android/adb*
+          key: avd-30
+
+      - name: Create AVD and generate snapshot for caching
+        if: steps.avd-cache.outputs.cache-hit != 'true'
+        uses: ReactiveCircus/android-emulator-runner@v2
+        with:
+          api-level: 30
+          target: google_apis
+          arch: x86_64
+          force-avd-creation: false
+          emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
+          disable-animations: true
+          script: echo "Generated AVD snapshot for caching."
+
       # Execute unit tests
       - name: Unit Test with Android Emulator Runner
         uses: ReactiveCircus/android-emulator-runner@v2
         with:
           target: google_apis
-          api-level: 27 # Using lower api level due to mockk bug https://github.com/mockk/mockk/issues/297
+          arch: x86_64
+          api-level: 30
+          force-avd-creation: false
+          emulator-options: -no-snapshot-save -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
+          disable-animations: true
           script: ./gradlew jacocoTestReport --stacktrace
 
       # Upload code coverage report to codecov to process data
