@@ -54,6 +54,29 @@ meeting session.</p>
 <p><a href="../com.amazonaws.services.chime.sdk.meetings.audiovideo/-audio-video-observer/index.html">AudioVideoObserver</a> handles audio / video session events.</p>
 </tr>
 <tr>
+<h5><a href="../com.amazonaws.services.chime.sdk.meetings.audiovideo.video.backgroundfilter.backgroundblur/-background-blur-configuration/index.html">com.amazonaws.services.chime.sdk.meetings.audiovideo.video.backgroundfilter.backgroundblur.BackgroundBlurConfiguration</a></h5>
+<p>A set of options that can be supplied when creating a background blur video frame processor.</p>
+</tr>
+<tr>
+<h5><a href="../com.amazonaws.services.chime.sdk.meetings.audiovideo.video.backgroundfilter.backgroundblur/-background-blur-video-frame-processor/index.html">com.amazonaws.services.chime.sdk.meetings.audiovideo.video.backgroundfilter.backgroundblur.BackgroundBlurVideoFrameProcessor</a></h5>
+<p><a href="../com.amazonaws.services.chime.sdk.meetings.audiovideo.video.backgroundfilter.backgroundblur/-background-blur-video-frame-processor/index.html">BackgroundBlurVideoFrameProcessor</a> Draws frames to RGBA, converts to CPU, identifies the
+foreground person and blurs the background of a video frame.</p>
+</tr>
+<tr>
+<h5><a href="../com.amazonaws.services.chime.sdk.meetings.audiovideo.video.backgroundfilter/-background-filter-video-frame-processor/index.html">com.amazonaws.services.chime.sdk.meetings.audiovideo.video.backgroundfilter.BackgroundFilterVideoFrameProcessor</a></h5>
+<p><a href="../com.amazonaws.services.chime.sdk.meetings.audiovideo.video.backgroundfilter/-background-filter-video-frame-processor/index.html">BackgroundFilterVideoFrameProcessor</a> Draws frames to RGBA, converts to CPU, identifies the
+foreground person and applies filter (blur or replacement) to a video frame.</p>
+</tr>
+<tr>
+<h5><a href="../com.amazonaws.services.chime.sdk.meetings.audiovideo.video.backgroundfilter.backgroundreplacement/-background-replacement-configuration/index.html">com.amazonaws.services.chime.sdk.meetings.audiovideo.video.backgroundfilter.backgroundreplacement.BackgroundReplacementConfiguration</a></h5>
+<p>A set of options that can be supplied when creating a background replacement video frame processor.</p>
+</tr>
+<tr>
+<h5><a href="../com.amazonaws.services.chime.sdk.meetings.audiovideo.video.backgroundfilter.backgroundreplacement/-background-replacement-video-frame-processor/index.html">com.amazonaws.services.chime.sdk.meetings.audiovideo.video.backgroundfilter.backgroundreplacement.BackgroundReplacementVideoFrameProcessor</a></h5>
+<p><a href="../com.amazonaws.services.chime.sdk.meetings.audiovideo.video.backgroundfilter.backgroundreplacement/-background-replacement-video-frame-processor/index.html">BackgroundReplacementVideoFrameProcessor</a> Draws frames to RGBA, converts to CPU, identifies the foreground person
+and replaces the background of a video frame.</p>
+</tr>
+<tr>
 <h5><a href="../com.amazonaws.services.chime.sdk.meetings.audiovideo.video.capture/-camera-capture-source/index.html">com.amazonaws.services.chime.sdk.meetings.audiovideo.video.capture.CameraCaptureSource</a></h5>
 <p><a href="../com.amazonaws.services.chime.sdk.meetings.audiovideo.video.capture/-camera-capture-source/index.html">CameraCaptureSource</a> is an interface for camera capture sources with additional features
 not covered by <a href="../com.amazonaws.services.chime.sdk.meetings.audiovideo.video.capture/-video-capture-source/index.html">VideoCaptureSource</a>.</p>
@@ -283,6 +306,11 @@ sent to the server.</p>
 <p><a href="../com.amazonaws.services.chime.sdk.meetings.ingestion/-event-sender/index.html">EventSender</a> is responsible for sending <a href="../com.amazonaws.services.chime.sdk.meetings.ingestion/-ingestion-record/index.html">IngestionRecord</a>.</p>
 </tr>
 <tr>
+<h5><a href="../com.amazonaws.services.chime.sdk.meetings.utils/-gl-texture-frame-buffer-helper/index.html">com.amazonaws.services.chime.sdk.meetings.utils.GlTextureFrameBufferHelper</a></h5>
+<p><a href="../com.amazonaws.services.chime.sdk.meetings.utils/-gl-texture-frame-buffer-helper/index.html">GlTextureFrameBufferHelper</a> is a helper class for handling OpenGL framebuffer with only color
+attachment and no depth or stencil buffer.</p>
+</tr>
+<tr>
 <h5><a href="../com.amazonaws.services.chime.sdk.meetings.ingestion/-ingestion-configuration/index.html">com.amazonaws.services.chime.sdk.meetings.ingestion.IngestionConfiguration</a></h5>
 <p><a href="../com.amazonaws.services.chime.sdk.meetings.ingestion/-ingestion-configuration/index.html">IngestionConfiguration</a> defines the configuration that can customize <a href="../com.amazonaws.services.chime.sdk.meetings.ingestion/-default-event-reporter/index.html">DefaultEventReporter</a>.</p>
 </tr>
@@ -375,6 +403,11 @@ meeting service.</p>
 <h5><a href="../com.amazonaws.services.chime.sdk.meetings.utils/-modality-type/index.html">com.amazonaws.services.chime.sdk.meetings.utils.ModalityType</a></h5>
 </tr>
 <tr>
+<h5><a href="../com.amazonaws.services.chime.sdk.meetings.audiovideo.video.backgroundfilter/-model-shape/index.html">com.amazonaws.services.chime.sdk.meetings.audiovideo.video.backgroundfilter.ModelShape</a></h5>
+<p><a href="../com.amazonaws.services.chime.sdk.meetings.audiovideo.video.backgroundfilter/-model-shape/index.html">ModelShape</a> Defines the shape of an ML model. This can be used to define the input and
+output shape of an ML model.</p>
+</tr>
+<tr>
  (extensions in package com.amazonaws.services.chime.sdk.meetings.analytics)
 <h5><a href="../com.amazonaws.services.chime.sdk.meetings.analytics/kotlin.collections.-mutable-map/index.html">kotlin.collections.MutableMap</a></h5>
 </tr>
@@ -414,6 +447,10 @@ attendee changes.</p>
 and <code>updateVideoSourceSubscriptions</code> as they are used as keys in maps that may be updated.
 I.e. when setting up a map for <code>updateVideoSourceSubscriptions</code> do not construct RemoteVideoSource yourselves
 or the configuration may or may not be updated.</p>
+</tr>
+<tr>
+<h5><a href="../com.amazonaws.services.chime.sdk.meetings.audiovideo.video.backgroundfilter/-segmentation-processor/index.html">com.amazonaws.services.chime.sdk.meetings.audiovideo.video.backgroundfilter.SegmentationProcessor</a></h5>
+<p><a href="../com.amazonaws.services.chime.sdk.meetings.audiovideo.video.backgroundfilter/-segmentation-processor/index.html">SegmentationProcessor</a> predicts foreground mask for an image.</p>
 </tr>
 <tr>
 <h5><a href="../com.amazonaws.services.chime.sdk.meetings.audiovideo/-signal-strength/index.html">com.amazonaws.services.chime.sdk.meetings.audiovideo.SignalStrength</a></h5>

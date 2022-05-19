@@ -1,0 +1,107 @@
+<HTML>
+<HEAD>
+<meta charset="UTF-8">
+<title>BackgroundBlurVideoFrameProcessor - amazon-chime-sdk</title>
+<link rel="stylesheet" href="../../../style.css">
+</HEAD>
+<BODY>
+<a href="../../index.html">amazon-chime-sdk</a>&nbsp;/&nbsp;<a href="../index.html">com.amazonaws.services.chime.sdk.meetings.audiovideo.video.backgroundfilter.backgroundblur</a>&nbsp;/&nbsp;<a href="./index.html">BackgroundBlurVideoFrameProcessor</a><br/>
+<br/>
+<h1>BackgroundBlurVideoFrameProcessor</h1>
+<code><span class="keyword">class </span><span class="identifier">BackgroundBlurVideoFrameProcessor</span>&nbsp;<span class="symbol">:</span>&nbsp;<a href="../../com.amazonaws.services.chime.sdk.meetings.audiovideo.video/-video-source/index.html"><span class="identifier">VideoSource</span></a><span class="symbol">, </span><a href="../../com.amazonaws.services.chime.sdk.meetings.audiovideo.video/-video-sink/index.html"><span class="identifier">VideoSink</span></a></code>
+<p><a href="./index.html">BackgroundBlurVideoFrameProcessor</a> Draws frames to RGBA, converts to CPU, identifies the
+foreground person and blurs the background of a video frame.</p>
+<h3>Parameters</h3>
+<p><a name="logger"></a>
+<code>logger</code> - : <a href="../../com.amazonaws.services.chime.sdk.meetings.utils.logger/-logger/index.html">Logger</a> - Logger to log the data.</p>
+<p><a name="eglCoreFactory"></a>
+<code>eglCoreFactory</code> - : <a href="../../com.amazonaws.services.chime.sdk.meetings.audiovideo.video.gl/-egl-core-factory/index.html">EglCoreFactory</a> - Factory to create <a href="../../com.amazonaws.services.chime.sdk.meetings.audiovideo.video.gl/-egl-core/index.html">EglCore</a> objects to hold EGL state.</p>
+<p><a name="context"></a>
+<code>context</code> - : <a href="https://developer.android.com/reference/android/content/Context.html">Context</a> - Context to create blur and segmentation processor.</p>
+<p><a name="configurations"></a>
+<code>configurations</code> - : <a href="../-background-blur-configuration/index.html">BackgroundBlurConfiguration</a> - BlurStrength - how much blur to apply to a frame. It
+specifies blurValue that corresponds to blur radius used in gaussian blur. It
+accepts a float value from 0 to 25, where higher the number more blurrier the image will be.</p>
+<h3>Constructors</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<h4><a href="-init-.html">&lt;init&gt;</a></h4>
+</td>
+<td>
+<p><a href="./index.html">BackgroundBlurVideoFrameProcessor</a> Draws frames to RGBA, converts to CPU, identifies the
+foreground person and blurs the background of a video frame.</p>
+<code><span class="identifier">BackgroundBlurVideoFrameProcessor</span><span class="symbol">(</span><span class="identifier" id="com.amazonaws.services.chime.sdk.meetings.audiovideo.video.backgroundfilter.backgroundblur.BackgroundBlurVideoFrameProcessor$<init>(com.amazonaws.services.chime.sdk.meetings.utils.logger.Logger, com.amazonaws.services.chime.sdk.meetings.audiovideo.video.gl.EglCoreFactory, android.content.Context, com.amazonaws.services.chime.sdk.meetings.audiovideo.video.backgroundfilter.backgroundblur.BackgroundBlurConfiguration)/logger">logger</span><span class="symbol">:</span>&nbsp;<a href="../../com.amazonaws.services.chime.sdk.meetings.utils.logger/-logger/index.html"><span class="identifier">Logger</span></a><span class="symbol">, </span><span class="identifier" id="com.amazonaws.services.chime.sdk.meetings.audiovideo.video.backgroundfilter.backgroundblur.BackgroundBlurVideoFrameProcessor$<init>(com.amazonaws.services.chime.sdk.meetings.utils.logger.Logger, com.amazonaws.services.chime.sdk.meetings.audiovideo.video.gl.EglCoreFactory, android.content.Context, com.amazonaws.services.chime.sdk.meetings.audiovideo.video.backgroundfilter.backgroundblur.BackgroundBlurConfiguration)/eglCoreFactory">eglCoreFactory</span><span class="symbol">:</span>&nbsp;<a href="../../com.amazonaws.services.chime.sdk.meetings.audiovideo.video.gl/-egl-core-factory/index.html"><span class="identifier">EglCoreFactory</span></a><span class="symbol">, </span><span class="identifier" id="com.amazonaws.services.chime.sdk.meetings.audiovideo.video.backgroundfilter.backgroundblur.BackgroundBlurVideoFrameProcessor$<init>(com.amazonaws.services.chime.sdk.meetings.utils.logger.Logger, com.amazonaws.services.chime.sdk.meetings.audiovideo.video.gl.EglCoreFactory, android.content.Context, com.amazonaws.services.chime.sdk.meetings.audiovideo.video.backgroundfilter.backgroundblur.BackgroundBlurConfiguration)/context">context</span><span class="symbol">:</span>&nbsp;<a href="https://developer.android.com/reference/android/content/Context.html"><span class="identifier">Context</span></a><span class="symbol">, </span><span class="identifier" id="com.amazonaws.services.chime.sdk.meetings.audiovideo.video.backgroundfilter.backgroundblur.BackgroundBlurVideoFrameProcessor$<init>(com.amazonaws.services.chime.sdk.meetings.utils.logger.Logger, com.amazonaws.services.chime.sdk.meetings.audiovideo.video.gl.EglCoreFactory, android.content.Context, com.amazonaws.services.chime.sdk.meetings.audiovideo.video.backgroundfilter.backgroundblur.BackgroundBlurConfiguration)/configurations">configurations</span><span class="symbol">:</span>&nbsp;<a href="../-background-blur-configuration/index.html"><span class="identifier">BackgroundBlurConfiguration</span></a><span class="symbol">?</span><span class="symbol">)</span></code></td>
+</tr>
+</tbody>
+</table>
+<h3>Properties</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<h4><a href="configurations.html">configurations</a></h4>
+</td>
+<td>
+<p>: <a href="../-background-blur-configuration/index.html">BackgroundBlurConfiguration</a> - BlurStrength - how much blur to apply to a frame. It
+specifies blurValue that corresponds to blur radius used in gaussian blur. It
+accepts a float value from 0 to 25, where higher the number more blurrier the image will be.</p>
+<code><span class="keyword">var </span><span class="identifier">configurations</span><span class="symbol">: </span><a href="../-background-blur-configuration/index.html"><span class="identifier">BackgroundBlurConfiguration</span></a><span class="symbol">?</span></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="content-hint.html">contentHint</a></h4>
+</td>
+<td>
+<p>Content hint for downstream processing</p>
+<code><span class="keyword">val </span><span class="identifier">contentHint</span><span class="symbol">: </span><a href="../../com.amazonaws.services.chime.sdk.meetings.audiovideo.video/-video-content-hint/index.html"><span class="identifier">VideoContentHint</span></a></code></td>
+</tr>
+</tbody>
+</table>
+<h3>Functions</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<h4><a href="add-video-sink.html">addVideoSink</a></h4>
+</td>
+<td>
+<p>Add a video sink which will immediately begin to receive new frames.</p>
+<code><span class="keyword">fun </span><span class="identifier">addVideoSink</span><span class="symbol">(</span><span class="identifier" id="com.amazonaws.services.chime.sdk.meetings.audiovideo.video.backgroundfilter.backgroundblur.BackgroundBlurVideoFrameProcessor$addVideoSink(com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoSink)/sink">sink</span><span class="symbol">:</span>&nbsp;<a href="../../com.amazonaws.services.chime.sdk.meetings.audiovideo.video/-video-sink/index.html"><span class="identifier">VideoSink</span></a><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="get-background-blurred-bitmap.html">getBackgroundBlurredBitmap</a></h4>
+</td>
+<td>
+<code><span class="keyword">fun </span><span class="identifier">getBackgroundBlurredBitmap</span><span class="symbol">(</span><span class="identifier" id="com.amazonaws.services.chime.sdk.meetings.audiovideo.video.backgroundfilter.backgroundblur.BackgroundBlurVideoFrameProcessor$getBackgroundBlurredBitmap(android.graphics.Bitmap, com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoFrame)/inputBitmap">inputBitmap</span><span class="symbol">:</span>&nbsp;<a href="https://developer.android.com/reference/android/graphics/Bitmap.html"><span class="identifier">Bitmap</span></a><span class="symbol">, </span><span class="identifier" id="com.amazonaws.services.chime.sdk.meetings.audiovideo.video.backgroundfilter.backgroundblur.BackgroundBlurVideoFrameProcessor$getBackgroundBlurredBitmap(android.graphics.Bitmap, com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoFrame)/frame">frame</span><span class="symbol">:</span>&nbsp;<a href="../../com.amazonaws.services.chime.sdk.meetings.audiovideo.video/-video-frame/index.html"><span class="identifier">VideoFrame</span></a><span class="symbol">)</span><span class="symbol">: </span><a href="https://developer.android.com/reference/android/graphics/Bitmap.html"><span class="identifier">Bitmap</span></a><span class="symbol">?</span></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="on-video-frame-received.html">onVideoFrameReceived</a></h4>
+</td>
+<td>
+<p>Receive a video frame from some upstream source.
+The <a href="../../com.amazonaws.services.chime.sdk.meetings.audiovideo.video/-video-sink/index.html">VideoSink</a> may render, store, process, and forward the frame, among other applications.</p>
+<code><span class="keyword">fun </span><span class="identifier">onVideoFrameReceived</span><span class="symbol">(</span><span class="identifier" id="com.amazonaws.services.chime.sdk.meetings.audiovideo.video.backgroundfilter.backgroundblur.BackgroundBlurVideoFrameProcessor$onVideoFrameReceived(com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoFrame)/frame">frame</span><span class="symbol">:</span>&nbsp;<a href="../../com.amazonaws.services.chime.sdk.meetings.audiovideo.video/-video-frame/index.html"><span class="identifier">VideoFrame</span></a><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="release.html">release</a></h4>
+</td>
+<td>
+<code><span class="keyword">fun </span><span class="identifier">release</span><span class="symbol">(</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="remove-video-sink.html">removeVideoSink</a></h4>
+</td>
+<td>
+<p>Remove a video sink which will no longer receive new frames on return</p>
+<code><span class="keyword">fun </span><span class="identifier">removeVideoSink</span><span class="symbol">(</span><span class="identifier" id="com.amazonaws.services.chime.sdk.meetings.audiovideo.video.backgroundfilter.backgroundblur.BackgroundBlurVideoFrameProcessor$removeVideoSink(com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoSink)/sink">sink</span><span class="symbol">:</span>&nbsp;<a href="../../com.amazonaws.services.chime.sdk.meetings.audiovideo.video/-video-sink/index.html"><span class="identifier">VideoSink</span></a><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code></td>
+</tr>
+</tbody>
+</table>
+</BODY>
+</HTML>
