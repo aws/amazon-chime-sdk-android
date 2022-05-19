@@ -9,6 +9,9 @@ com.amazonaws.services.chime.sdk.meetings.audiovideo.audio.activespeakerpolicy
 com.amazonaws.services.chime.sdk.meetings.audiovideo.contentshare
 com.amazonaws.services.chime.sdk.meetings.audiovideo.metric
 com.amazonaws.services.chime.sdk.meetings.audiovideo.video
+com.amazonaws.services.chime.sdk.meetings.audiovideo.video.backgroundfilter
+com.amazonaws.services.chime.sdk.meetings.audiovideo.video.backgroundfilter.backgroundblur
+com.amazonaws.services.chime.sdk.meetings.audiovideo.video.backgroundfilter.backgroundreplacement
 com.amazonaws.services.chime.sdk.meetings.audiovideo.video.buffer
 com.amazonaws.services.chime.sdk.meetings.audiovideo.video.capture
 com.amazonaws.services.chime.sdk.meetings.audiovideo.video.gl

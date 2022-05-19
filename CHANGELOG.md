@@ -1,9 +1,14 @@
+## [0.17.0] - 2022-05-18
+
+### Added
+* Added support for background blur and replacement video filter processor. See [background video filters](https://github.com/aws/amazon-chime-sdk-android/blob/master/guides/background_video_filters.md) for more details.
+* [Demo] Adder two new video filters - background blur and replacement.
+
 ## [0.16.0] - 2022-05-11
 
 ### Added
 * Added `audioStreamType` in `AudioVideoConfiguration` for supporting audio stream configuration.
-* Added support for background blur and replacement video filter processor.
-* [Demo] Adder two new video filters - background blur and replacement.
+
 ### Fixed
 * Fixed calling start multiple times without stop crashes video in some phones. (Issue #356)
 
