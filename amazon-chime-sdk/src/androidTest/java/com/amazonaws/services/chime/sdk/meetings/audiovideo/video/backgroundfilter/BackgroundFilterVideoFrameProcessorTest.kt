@@ -99,7 +99,7 @@ class BackgroundFilterVideoFrameProcessorTest {
         frame = VideoFrame(1L, mockVideFrameBuffer, VideoRotation.Rotation270)
         scaledBitmap = Bitmap.createScaledBitmap(bitmap, 720, 1280, false)
         scaledBlurredImageBitmap = Bitmap.createScaledBitmap(blurredImageBitmap, 144, 256, false)
-        scaledReplacedImageBitmap = Bitmap.createScaledBitmap(blurredImageBitmap, 144, 256, false)
+        scaledReplacedImageBitmap = Bitmap.createScaledBitmap(replacedImageBitmap, 144, 256, false)
         rgbaData = ByteBuffer.allocateDirect(scaledBitmap.width * scaledBitmap.height * 4)
         scaledBitmap.copyPixelsToBuffer(rgbaData)
         every { mockVideFrameBuffer.height } returns scaledBitmap.height
