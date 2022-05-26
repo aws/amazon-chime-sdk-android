@@ -26,18 +26,15 @@ import io.mockk.MockKAnnotations
 import io.mockk.every
 import io.mockk.impl.annotations.MockK
 import io.mockk.verify
-import java.io.ByteArrayOutputStream
 import java.nio.ByteBuffer
-import java.security.MessageDigest
+import kotlin.math.abs
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
 import org.junit.Before
-import org.junit.Ignore
 import org.junit.Test
 import org.junit.runner.RunWith
 
 @RunWith(AndroidJUnit4::class)
-@Ignore("Works on real device, seeing issue when run on emulator")
 class BackgroundFilterVideoFrameProcessorTest {
 
     private lateinit var testBackgroundFilterVideoFrameProcessor: BackgroundFilterVideoFrameProcessor
@@ -46,16 +43,49 @@ class BackgroundFilterVideoFrameProcessorTest {
     private lateinit var frame: VideoFrame
     private lateinit var rgbaData: ByteBuffer
     private lateinit var scaledBitmap: Bitmap
+    private lateinit var scaledBlurredImageBitmap: Bitmap
+    private lateinit var scaledReplacedImageBitmap: Bitmap
 
     private val logger = ConsoleLogger(LogLevel.INFO)
     private val context = InstrumentationRegistry.getInstrumentation().targetContext
     private val eglCoreFactory: EglCoreFactory = DefaultEglCoreFactory()
     private val bitmap =
         BitmapFactory.decodeResource(context.resources, R.raw.background_ml_test_image)
-    private val BACKGROUND_BLURRED_IMAGE_HASH =
-        "a7a466655377225e391828357b5b4aa69b15ce0a56790f778180e806e3c0ad21"
-    private val BACKGROUND_REPLACED_IMAGE_HASH =
-        "767553ffe7945101e9beae609f33970e68648037bba9fe2e149e6ec4a06528c6"
+    private val blurredImageBitmap =
+        BitmapFactory.decodeResource(context.resources, R.raw.background_blurred_image)
+    private val replacedImageBitmap =
+        BitmapFactory.decodeResource(context.resources, R.raw.background_replaced_image)
+    private val staticImageWidth = 144
+    private val staticImageHeight = 256
+
+    private fun checkImageSimilarity(staticImage: Bitmap, testImage: Bitmap): Boolean {
+        val differenceThreshold = 10
+        var difference: Int
+        var differentPixels = 0
+        for (row in 0 until staticImageHeight) {
+            for (col in 0 until staticImageWidth) {
+                val staticImageRgb = staticImage.getColor(col, row)
+                val testImageRgb = testImage.getColor(col, row)
+                // Extracting individual float represented colors and
+                // converting them to integer represented colors
+                val staticImageRed = (staticImageRgb.red() * 255).toInt()
+                val staticImageGreen = (staticImageRgb.green() * 255).toInt()
+                val staticImageBlue = (staticImageRgb.blue() * 255).toInt()
+                val testImageRed = (testImageRgb.red() * 255).toInt()
+                val testImageGreen = (testImageRgb.green() * 255).toInt()
+                val testImageBlue = (testImageRgb.blue() * 255).toInt()
+                difference = abs(staticImageRed - testImageRed)
+                difference += abs(staticImageGreen - testImageGreen)
+                difference += abs(staticImageBlue - testImageBlue)
+                difference /= 3
+                if (difference > differenceThreshold) differentPixels++
+            }
+        }
+        val totalPixels = staticImageWidth * staticImageHeight
+        val errorRate = differentPixels / totalPixels
+        val errorThreshold = 0.01
+        return errorRate <= errorThreshold
+    }
 
     @MockK
     private lateinit var mockVideFrameBuffer: VideoFrameRGBABuffer
@@ -70,6 +100,8 @@ class BackgroundFilterVideoFrameProcessorTest {
         )
         frame = VideoFrame(1L, mockVideFrameBuffer, VideoRotation.Rotation270)
         scaledBitmap = Bitmap.createScaledBitmap(bitmap, 720, 1280, false)
+        scaledBlurredImageBitmap = Bitmap.createScaledBitmap(blurredImageBitmap, staticImageWidth, staticImageHeight, false)
+        scaledReplacedImageBitmap = Bitmap.createScaledBitmap(replacedImageBitmap, staticImageWidth, staticImageHeight, false)
         rgbaData = ByteBuffer.allocateDirect(scaledBitmap.width * scaledBitmap.height * 4)
         scaledBitmap.copyPixelsToBuffer(rgbaData)
         every { mockVideFrameBuffer.height } returns scaledBitmap.height
@@ -122,11 +154,9 @@ class BackgroundFilterVideoFrameProcessorTest {
         val backgroundBlurredBitmap =
             testBackgroundBlurVideoFrameProcessor.getBackgroundBlurredBitmap(scaledBitmap, frame)
 
-        val byteArrayOutputStream = ByteArrayOutputStream()
-        backgroundBlurredBitmap?.compress(Bitmap.CompressFormat.JPEG, 100, byteArrayOutputStream)
-        val bitmapBytes = byteArrayOutputStream.toByteArray()
-        val hashString = getHexString(bitmapBytes)
-        assertEquals(BACKGROUND_BLURRED_IMAGE_HASH, hashString)
+        val similarity =
+            backgroundBlurredBitmap?.let { checkImageSimilarity(scaledBlurredImageBitmap, it) }
+        assertEquals(similarity, true)
     }
 
     @Test
@@ -143,28 +173,8 @@ class BackgroundFilterVideoFrameProcessorTest {
                 frame
             )
 
-        val byteArrayOutputStream = ByteArrayOutputStream()
-        backgroundReplacedBitmap?.compress(Bitmap.CompressFormat.JPEG, 100, byteArrayOutputStream)
-        val bitmapBytes = byteArrayOutputStream.toByteArray()
-        val hashString = getHexString(bitmapBytes)
-
-        assertEquals(BACKGROUND_REPLACED_IMAGE_HASH, hashString)
-    }
-
-    private fun getHexString(byteArray: ByteArray?): String {
-        // Generate checksum of the test file content.
-        val digester = MessageDigest.getInstance("SHA-256")
-        digester.update(byteArray)
-        val hash = digester.digest()
-
-        // Create Hex String.
-        val hexString: StringBuilder = StringBuilder()
-        for (byte: Byte in hash) {
-            var str: String = Integer.toHexString(0xFF and byte.toInt())
-            while (str.length < 2)
-                str = "0$str"
-            hexString.append(str)
-        }
-        return hexString.toString()
+        val similarity =
+            backgroundReplacedBitmap?.let { checkImageSimilarity(scaledReplacedImageBitmap, it) }
+        assertEquals(similarity, true)
     }
 }
