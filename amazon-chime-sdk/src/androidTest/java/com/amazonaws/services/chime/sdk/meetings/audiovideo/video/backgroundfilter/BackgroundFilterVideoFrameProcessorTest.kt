@@ -55,16 +55,17 @@ class BackgroundFilterVideoFrameProcessorTest {
         BitmapFactory.decodeResource(context.resources, R.raw.background_blurred_image)
     private val replacedImageBitmap =
         BitmapFactory.decodeResource(context.resources, R.raw.background_replaced_image)
+    private val staticImageWidth = 144
+    private val staticImageHeight = 256
 
     private fun checkImageSimilarity(staticImage: Bitmap, testImage: Bitmap): Boolean {
-        val staticImageWidth = staticImage.width
-        val staticImageHeight: Int = staticImage.height
+        val differenceThreshold = 10
         var difference: Int
         var differentPixels = 0
-        for (i in 0 until staticImageHeight) {
-            for (j in 0 until staticImageWidth) {
-                val staticImageRgb = staticImage.getColor(j, i)
-                val testImageRgb = testImage.getColor(j, i)
+        for (row in 0 until staticImageHeight) {
+            for (col in 0 until staticImageWidth) {
+                val staticImageRgb = staticImage.getColor(col, row)
+                val testImageRgb = testImage.getColor(col, row)
                 // Extracting individual float represented colors and
                 // converting them to integer represented colors
                 val staticImageRed = (staticImageRgb.red() * 255).toInt()
@@ -77,12 +78,13 @@ class BackgroundFilterVideoFrameProcessorTest {
                 difference += abs(staticImageGreen - testImageGreen)
                 difference += abs(staticImageBlue - testImageBlue)
                 difference /= 3
-                if (difference > 10) differentPixels++
+                if (difference > differenceThreshold) differentPixels++
             }
         }
         val totalPixels = staticImageWidth * staticImageHeight
-        val errorRate = (differentPixels / totalPixels) * 100
-        return errorRate <= 1.0
+        val errorRate = differentPixels / totalPixels
+        val errorThreshold = 0.01
+        return errorRate <= errorThreshold
     }
 
     @MockK
@@ -98,8 +100,8 @@ class BackgroundFilterVideoFrameProcessorTest {
         )
         frame = VideoFrame(1L, mockVideFrameBuffer, VideoRotation.Rotation270)
         scaledBitmap = Bitmap.createScaledBitmap(bitmap, 720, 1280, false)
-        scaledBlurredImageBitmap = Bitmap.createScaledBitmap(blurredImageBitmap, 144, 256, false)
-        scaledReplacedImageBitmap = Bitmap.createScaledBitmap(replacedImageBitmap, 144, 256, false)
+        scaledBlurredImageBitmap = Bitmap.createScaledBitmap(blurredImageBitmap, staticImageWidth, staticImageHeight, false)
+        scaledReplacedImageBitmap = Bitmap.createScaledBitmap(replacedImageBitmap, staticImageWidth, staticImageHeight, false)
         rgbaData = ByteBuffer.allocateDirect(scaledBitmap.width * scaledBitmap.height * 4)
         scaledBitmap.copyPixelsToBuffer(rgbaData)
         every { mockVideFrameBuffer.height } returns scaledBitmap.height
