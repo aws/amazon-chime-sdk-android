@@ -213,10 +213,12 @@ class VideoHolder(
                 }
             }
 
+            val updatedSource = mutableMapOf<RemoteVideoSource, VideoSubscriptionConfiguration>()
             for (source in meetingModel.remoteVideoSourceConfigurations) {
                 if (source.key?.attendeeId == attendeeId) {
                     val resolution: VideoResolution = source.value.targetResolution
                     source.setValue(VideoSubscriptionConfiguration(priority, resolution))
+                    updatedSource[source.key] = source.value
                 }
             }
             audioVideo.updateVideoSourceSubscriptions(
@@ -247,15 +249,17 @@ class VideoHolder(
                 }
             }
 
+            val updatedSource = mutableMapOf<RemoteVideoSource, VideoSubscriptionConfiguration>()
             for (source in meetingModel.remoteVideoSourceConfigurations) {
                 if (source.key.attendeeId == attendeeId) {
                     val priority: VideoPriority = source.value.priority
                     source.setValue(VideoSubscriptionConfiguration(priority, resolution))
+                    updatedSource[source.key] = source.value
                 }
             }
 
             audioVideo.updateVideoSourceSubscriptions(
-                meetingModel.remoteVideoSourceConfigurations,
+                updatedSource,
                 emptyArray()
             )
             true
