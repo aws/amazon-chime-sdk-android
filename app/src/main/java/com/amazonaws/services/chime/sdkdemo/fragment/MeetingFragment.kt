@@ -471,7 +471,6 @@ class MeetingFragment : Fragment(),
 
             override fun onTabUnselected(tab: TabLayout.Tab?) {
                 if (tab?.position == SubTab.Video.position) {
-                    // pauseAllRemoteVideos()
                     unsubscribeAllRemoteVideos()
                     setVideoSurfaceViewsVisibility(View.GONE)
                 } else if (tab?.position == SubTab.Screen.position) {
@@ -511,7 +510,6 @@ class MeetingFragment : Fragment(),
             SubTab.Video.position -> {
                 viewVideo.visibility = View.VISIBLE
                 setVideoSurfaceViewsVisibility(View.VISIBLE)
-                // onVideoPageUpdated()
                 subscribeRemoteVideo()
             }
             SubTab.Screen.position -> {
@@ -1352,7 +1350,6 @@ class MeetingFragment : Fragment(),
 
     private fun pauseAllContentShares() {
         meetingModel.currentScreenTiles.forEach {
-            // audioVideo.pauseRemoteVideoTile(it.videoTileState.tileId)
             unsubscribeRemoteVideoByTileState(it.videoTileState)
         }
     }
@@ -1487,7 +1484,6 @@ class MeetingFragment : Fragment(),
 
             // Currently not in the Screen tab, no need to render the video tile
             if (meetingModel.tabIndex != SubTab.Screen.position) {
-                // audioVideo.pauseRemoteVideoTile(tileState.tileId)
                 unsubscribeRemoteVideoByTileState(tileState)
             }
         } else {
@@ -1502,7 +1498,6 @@ class MeetingFragment : Fragment(),
 
                 // Currently not in the Video tab, no need to render the video tile
                 if (meetingModel.tabIndex != SubTab.Video.position) {
-                    // audioVideo.pauseRemoteVideoTile(tileState.tileId)
                     unsubscribeRemoteVideoByTileState(tileState)
                 }
             }
