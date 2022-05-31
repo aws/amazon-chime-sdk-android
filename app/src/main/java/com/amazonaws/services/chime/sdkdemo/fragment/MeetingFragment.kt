@@ -853,7 +853,7 @@ class MeetingFragment : Fragment(),
 
                 if (needUpdate) {
                     meetingModel.updateRemoteVideoStatesBasedOnActiveSpeakers(attendeeInfo)
-                    // onVideoPageUpdated()
+                    onVideoPageUpdated()
                     subscribeRemoteVideo()
 
                     rosterAdapter.notifyDataSetChanged()
@@ -1305,6 +1305,7 @@ class MeetingFragment : Fragment(),
     private fun resumeAllContentSharesExceptUserPausedVideos() {
         meetingModel.currentScreenTiles.forEach {
             if (!meetingModel.userPausedVideoTileIds.contains(it.videoTileState.tileId) && it.videoTileState.pauseState == VideoPauseState.PausedByUserRequest) {
+                subscribeRemoteVideoByTileState(it.videoTileState)
                 audioVideo.resumeRemoteVideoTile(it.videoTileState.tileId)
             }
         }
@@ -1314,6 +1315,17 @@ class MeetingFragment : Fragment(),
         meetingModel.remoteVideoTileStates.forEach {
             audioVideo.pauseRemoteVideoTile(it.videoTileState.tileId)
         }
+    }
+
+    private fun subscribeRemoteVideoByTileState(tileSate: VideoTileState) {
+        val updatedSources: MutableMap<RemoteVideoSource, VideoSubscriptionConfiguration> =
+            mutableMapOf()
+        meetingModel.remoteVideoSourceConfigurations.forEach {
+            if (it.key.attendeeId == tileSate.attendeeId) {
+                updatedSources[it.key] = it.value
+            }
+        }
+        audioVideo.updateVideoSourceSubscriptions(updatedSources, emptyArray())
     }
 
     private fun unsubscribeRemoteVideoByTileState(tileState: VideoTileState) {
@@ -1481,6 +1493,7 @@ class MeetingFragment : Fragment(),
         } else {
             if (tileState.isLocalTile) {
                 meetingModel.localVideoTileState = videoCollectionTile
+                onVideoPageUpdated()
                 subscribeRemoteVideo()
             } else {
                 meetingModel.remoteVideoTileStates.add(videoCollectionTile)
@@ -1650,6 +1663,7 @@ class MeetingFragment : Fragment(),
                 screenTileAdapter.notifyDataSetChanged()
             } else {
                 if (meetingModel.localVideoTileState?.videoTileState?.tileId == tileId) {
+                    meetingModel.remoteVideoTileStates.removeAll { it.videoTileState.tileId == tileId }
                     meetingModel.localVideoTileState = null
                 } else {
                     meetingModel.remoteVideoTileStates.removeAll { it.videoTileState.tileId == tileId }
