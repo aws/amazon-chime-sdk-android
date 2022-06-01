@@ -1535,7 +1535,6 @@ class MeetingFragment : Fragment(),
         when (sessionStatus.statusCode) {
             MeetingSessionStatusCode.VideoAtCapacityViewOnly -> {
                 notifyHandler("Currently cannot enable video in meeting")
-                stopLocalVideo()
                 meetingModel.isCameraOn = !meetingModel.isCameraOn
                 refreshNoVideosOrScreenShareAvailableText()
             }
