@@ -106,8 +106,9 @@ class BackgroundReplacementVideoFrameProcessor @JvmOverloads constructor(
     fun getBackgroundReplacedBitmap(inputBitmap: Bitmap, frame: VideoFrame): Bitmap? {
         val scaledInputBitmap =
             backgroundFilterVideoFrameProcessor.getScaledInputBitmap(frame, inputBitmap)
-        val outputBitmap =
+        val maskedBitmap =
             backgroundFilterVideoFrameProcessor.getSegmentationMask(scaledInputBitmap)
+        val upScaledMaskedBitmap = maskedBitmap?.let { Bitmap.createScaledBitmap(it, frame.getRotatedWidth(), frame.getRotatedHeight(), false) }
 
         val replacementBitmap = configurations?.image?.let {
             Bitmap.createScaledBitmap(
@@ -119,8 +120,8 @@ class BackgroundReplacementVideoFrameProcessor @JvmOverloads constructor(
         }
 
         return backgroundFilterVideoFrameProcessor.drawImageWithMask(
-            scaledInputBitmap,
-            outputBitmap,
+            inputBitmap,
+            upScaledMaskedBitmap,
             replacementBitmap
         )
     }
