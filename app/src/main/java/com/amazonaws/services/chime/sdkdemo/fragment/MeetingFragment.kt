@@ -1242,15 +1242,14 @@ class MeetingFragment : Fragment(),
     private fun onVideoPageUpdated() {
         val oldList = mutableListOf<VideoCollectionTile>()
         oldList.addAll(meetingModel.videoStatesInCurrentPage)
-        val removedList: ArrayList<RemoteVideoSource> = arrayListOf()
+        val potentialRemovedList: ArrayList<RemoteVideoSource> = arrayListOf()
         for (videoState in oldList) {
             for ((key) in meetingModel.remoteVideoSourceConfigurations) {
                 if (videoState.videoTileState.attendeeId == key.attendeeId) {
-                    removedList.add(key)
+                    potentialRemovedList.add(key)
                 }
             }
         }
-        val removedSources: Array<RemoteVideoSource> = removedList.toTypedArray()
         // Recalculate videos in the current page and notify videoTileAdapter
         meetingModel.updateVideoStatesInCurrentPage()
 
@@ -1261,6 +1260,8 @@ class MeetingFragment : Fragment(),
         val updatedSources: MutableMap<RemoteVideoSource, VideoSubscriptionConfiguration> =
             mutableMapOf()
         for (videoState in newList) {
+            // TODO: This seems to be needed for demo application to show all tiles.
+            audioVideo.resumeRemoteVideoTile(videoState.videoTileState.tileId)
             for ((key, value) in meetingModel.remoteVideoSourceConfigurations) {
                 if (videoState.videoTileState.attendeeId == key.attendeeId) {
                     updatedSources[key] = value
@@ -1268,13 +1269,22 @@ class MeetingFragment : Fragment(),
             }
         }
 
+        // This is to handle case where we are on same page and page updates.
+        val removedList = mutableListOf<RemoteVideoSource>()
+        for (removed in potentialRemovedList) {
+            if (!updatedSources.containsKey(removed)) {
+                removedList.add(removed)
+            }
+        }
+
         val videoDiffCallback = VideoDiffCallback(oldList, newList)
         val videoDiffResult: DiffUtil.DiffResult = DiffUtil.calculateDiff(videoDiffCallback)
+
+        audioVideo.updateVideoSourceSubscriptions(updatedSources, removedList.toTypedArray())
 
         videoDiffResult.dispatchUpdatesTo(videoTileAdapter)
 
         // subscribe to updated sources with highest priority and unsubscribed sources in prev page
-        audioVideo.updateVideoSourceSubscriptions(updatedSources, removedSources)
 
         // update video pagination control buttons states
         prevVideoPageButton.isEnabled = meetingModel.canGoToPrevVideoPage()
@@ -1306,12 +1316,6 @@ class MeetingFragment : Fragment(),
                 subscribeRemoteVideoByTileState(it.videoTileState)
                 audioVideo.resumeRemoteVideoTile(it.videoTileState.tileId)
             }
-        }
-    }
-
-    private fun pauseAllRemoteVideos() {
-        meetingModel.remoteVideoTileStates.forEach {
-            audioVideo.pauseRemoteVideoTile(it.videoTileState.tileId)
         }
     }
 
@@ -1672,7 +1676,7 @@ class MeetingFragment : Fragment(),
     override fun onVideoTilePaused(tileState: VideoTileState) {
         if (tileState.pauseState == VideoPauseState.PausedForPoorConnection) {
             val collection =
-                if (tileState.isContent) meetingModel.currentScreenTiles else meetingModel.remoteVideoTileStates
+                if (tileState.isContent) meetingModel.currentScreenTiles else meetingModel.videoStatesInCurrentPage
             collection.find { it.videoTileState.tileId == tileState.tileId }.apply {
                 this?.setPauseMessageVisibility(View.VISIBLE)
             }

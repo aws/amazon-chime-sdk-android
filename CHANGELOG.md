@@ -7,9 +7,9 @@
 * Fixed crash from openGL due to potential race condition.
 * [Demo] Fixed videos paused when change from other tabs to video tab and reopen app from background
 * [Demo] Fixed screen sharing is unavailable to present videos
+* [Demo] Fixed demo application not subscribing remote videos properly
 
 ## [0.17.1] - 2022-06-03
-
 
 ## [0.17.0] - 2022-05-18
 

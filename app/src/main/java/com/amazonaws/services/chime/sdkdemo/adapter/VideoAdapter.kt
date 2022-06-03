@@ -216,7 +216,7 @@ class VideoHolder(
 
             val updatedSource = mutableMapOf<RemoteVideoSource, VideoSubscriptionConfiguration>()
             for (source in meetingModel.remoteVideoSourceConfigurations) {
-                if (source.key?.attendeeId == attendeeId) {
+                if (source.key.attendeeId == attendeeId) {
                     val resolution: VideoResolution = source.value.targetResolution
                     source.setValue(VideoSubscriptionConfiguration(priority, resolution))
                     updatedSource[source.key] = source.value
@@ -235,7 +235,7 @@ class VideoHolder(
         val popup = PopupMenu(context, view)
         popup.inflate(R.menu.resolution_popup_menu)
         popup.setOnMenuItemClickListener { item: MenuItem? ->
-            var resolution = when (item?.itemId) {
+            val resolution = when (item?.itemId) {
                 R.id.high -> {
                     VideoResolution.High
                 }
