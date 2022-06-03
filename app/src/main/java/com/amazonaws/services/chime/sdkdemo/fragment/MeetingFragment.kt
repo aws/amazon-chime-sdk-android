@@ -510,7 +510,7 @@ class MeetingFragment : Fragment(),
             SubTab.Video.position -> {
                 viewVideo.visibility = View.VISIBLE
                 setVideoSurfaceViewsVisibility(View.VISIBLE)
-                subscribeRemoteVideo()
+                subscribeToRemoteVideosInCurrentPage()
             }
             SubTab.Screen.position -> {
                 recyclerViewScreenShareCollection.visibility = View.VISIBLE
@@ -852,7 +852,7 @@ class MeetingFragment : Fragment(),
                 if (needUpdate) {
                     meetingModel.updateRemoteVideoStatesBasedOnActiveSpeakers(attendeeInfo)
                     onVideoPageUpdated()
-                    subscribeRemoteVideo()
+                    subscribeToRemoteVideosInCurrentPage()
 
                     rosterAdapter.notifyDataSetChanged()
                 }
@@ -1281,7 +1281,7 @@ class MeetingFragment : Fragment(),
         nextVideoPageButton.isEnabled = meetingModel.canGoToNextVideoPage()
     }
 
-    private fun subscribeRemoteVideo() {
+    private fun subscribeToRemoteVideosInCurrentPage() {
         meetingModel.updateVideoStatesInCurrentPage()
 
         revalidateVideoPageIndex()
@@ -1490,11 +1490,11 @@ class MeetingFragment : Fragment(),
             if (tileState.isLocalTile) {
                 meetingModel.localVideoTileState = videoCollectionTile
                 onVideoPageUpdated()
-                subscribeRemoteVideo()
+                subscribeToRemoteVideosInCurrentPage()
             } else {
                 meetingModel.remoteVideoTileStates.add(videoCollectionTile)
                 onVideoPageUpdated()
-                subscribeRemoteVideo()
+                subscribeToRemoteVideosInCurrentPage()
 
                 // Currently not in the Video tab, no need to render the video tile
                 if (meetingModel.tabIndex != SubTab.Video.position) {
