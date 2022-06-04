@@ -122,7 +122,8 @@ class BackgroundBlurVideoFrameProcessor @JvmOverloads constructor(
             backgroundFilterVideoFrameProcessor.getScaledInputBitmap(frame, inputBitmap)
         val maskedBitmap =
             backgroundFilterVideoFrameProcessor.getSegmentationMask(scaledInputBitmap)
-        val upScaledMaskedBitmap = maskedBitmap?.let { Bitmap.createScaledBitmap(it, width, height, false) }
+        // When creating scaled bitmap, we set filter to true as it provides better image quality with smooth edges around persons boundary.
+        val upScaledMaskedBitmap = maskedBitmap?.let { Bitmap.createScaledBitmap(it, width, height, true) }
 
         val downScaledInputBitmap = Bitmap.createScaledBitmap(inputBitmap, width / scaleFactor, height / scaleFactor, false)
 
@@ -135,6 +136,7 @@ class BackgroundBlurVideoFrameProcessor @JvmOverloads constructor(
             )
         }
         val blurredBitmap = blurProcessor.process(downScaledInputBitmap)
+        // When creating scaled bitmap, we set filter to false as it does not add much value to blurred image quality and decreases performance when enabled
         val upScaledBlurredBitmap = blurredBitmap?.let { Bitmap.createScaledBitmap(it, width, height, false) }
 
         return backgroundFilterVideoFrameProcessor.drawImageWithMask(

@@ -49,6 +49,8 @@ class BackgroundFilterVideoFrameProcessor(
     private var modelStateMsg: String? = null
     private var predictMsg: String? = null
 
+    private var cachedWidth: Int = 0
+    private var cachedHeight: Int = 0
     private lateinit var filteredByteBuffer: ByteBuffer
 
     private val defaultInputModelShape = ModelShape()
@@ -126,16 +128,9 @@ class BackgroundFilterVideoFrameProcessor(
             // Display original frame when there is an error getting segmentation mask and/or blurring.
             filteredByteBuffer = rgbaData
         } else {
-            val scaledOutputBitmap = Bitmap.createScaledBitmap(
-                filteredBitmap,
-                frame.getRotatedWidth(),
-                frame.getRotatedHeight(),
-                false
-            )
-
             filteredByteBuffer =
-                JniUtil.nativeAllocateByteBuffer(frame.width * frame.height * channels)
-            scaledOutputBitmap.copyPixelsToBuffer(filteredByteBuffer)
+                JniUtil.nativeAllocateByteBuffer(frame.getRotatedWidth() * frame.getRotatedHeight() * channels)
+            filteredBitmap.copyPixelsToBuffer(filteredByteBuffer)
         }
         val rgbaBuffer =
             VideoFrameRGBABuffer(
@@ -150,24 +145,29 @@ class BackgroundFilterVideoFrameProcessor(
     fun getSegmentationMask(
         scaledInputBitmap: Bitmap
     ): Bitmap? {
-        // Load model.
-        segmentationProcessor.initialize(
-            scaledInputBitmap.width,
-            scaledInputBitmap.height,
-            defaultInputModelShape
-        )
-        val modelState = segmentationProcessor.modelState
-        // Logs the error or info message only the first time model is loaded to avoid exploding logs for every frame.
-        if (modelState != ModelState.LOADING && modelState != ModelState.LOADED && modelStateMsg == null) {
-            modelStateMsg = "Failed to load model with model state $modelState"
-            modelStateMsg?.let {
-                logger.error(TAG, it)
-            }
-        } else {
-            if (modelStateMsg == null) {
-                modelStateMsg = "Model State $modelState"
+        // Load model only when previous frame dimensions does not match new frame dimensions.
+        if (scaledInputBitmap.width != cachedWidth || scaledInputBitmap.height != cachedHeight) {
+            cachedWidth = scaledInputBitmap.width
+            cachedHeight = scaledInputBitmap.height
+            // Load model.
+            segmentationProcessor.initialize(
+                scaledInputBitmap.width,
+                scaledInputBitmap.height,
+                defaultInputModelShape
+            )
+            val modelState = segmentationProcessor.modelState
+            // Logs the error or info message only the first time model is loaded to avoid exploding logs for every frame.
+            if (modelState != ModelState.LOADING && modelState != ModelState.LOADED && modelStateMsg == null) {
+                modelStateMsg = "Failed to load model with model state $modelState"
                 modelStateMsg?.let {
-                    logger.info(TAG, it)
+                    logger.error(TAG, it)
+                }
+            } else {
+                if (modelStateMsg == null) {
+                    modelStateMsg = "Model State $modelState"
+                    modelStateMsg?.let {
+                        logger.info(TAG, it)
+                    }
                 }
             }
         }
