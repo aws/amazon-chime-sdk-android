@@ -93,16 +93,29 @@ configurations: BackgroundReplacementConfiguration
 val eglCoreFactory = DefaultEglCoreFactory()
 ```
 - Application Context
-- BackgroundReplacementConfiguration - an image to replace video background with. Defaults to shaded blue colored image. See `BackgroundReplacementConfiguration` for more information.
+- BackgroundReplacementConfiguration - an image Bitmap to replace video background with. Defaults to shaded blue colored image. See `BackgroundReplacementConfiguration` for more information. The below code provides an example on how to load an image Bitmap from a URL string.
 
 ```kotlin
+fun loadBackgroundReplacementVideoFrameProcessorWithImage(processor: BackgroundReplacementVideoFrameProcessor, imageUrl: String) {
+    GlobalScope.launch(Dispatchers.IO) {
+        val image: Bitmap = try {
+            val url = URL(imageUrl)
+            BitmapFactory.decodeStream(url.openConnection().getInputStream())
+        } catch (exception: Exception) {
+            throw exception
+        }
+        processor.configurations = BackgroundReplacementConfiguration(image)
+    }
+}
+
+// Use the default until the image is loaded asynchronously.
 val backgroundReplacementVideoFrameProcessor = BackgroundReplacementVideoFrameProcessor(
     ConsoleLogger(LogLevel.DEBUG),
     eglCoreFactory,
     applicationContext,
-    BackgroundReplacementConfiguration(12.5f)
+    BackgroundReplacementConfiguration()
 )
-
+loadBackgroundReplacementVideoFrameProcessorWithImage(backgroundReplacementVideoFrameProcessor, "https://...")
 ```
 3. Add the background replacement processor as sink to the video source (e.g. `DefaultCameraCaptureSource`)
 
