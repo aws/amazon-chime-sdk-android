@@ -5,6 +5,9 @@
 * Updated unit tests according to above fix
 * Load model only when frame dimensions change
 
+## [0.17.1] - 2022-06-03
+
+
 ## [0.17.0] - 2022-05-18
 
 ### Added

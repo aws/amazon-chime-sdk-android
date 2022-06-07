@@ -38,6 +38,7 @@ And review the following guides:
 * [Meeting Events](guides/meeting_events.md)
 * [Event Ingestion](guides/event_ingestion.md)
 * [Configuring Remote Video Subscription](guides/configuring_remote_video_subscription.md)
+* [Background Video Filters](guides/background_video_filters.md)
 
 ## Setup
 
