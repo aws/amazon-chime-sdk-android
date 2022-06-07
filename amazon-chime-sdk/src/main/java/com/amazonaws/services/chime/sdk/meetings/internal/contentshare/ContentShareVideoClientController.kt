@@ -6,6 +6,7 @@
 package com.amazonaws.services.chime.sdk.meetings.internal.contentshare
 
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.contentshare.ContentShareObserver
+import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.LocalVideoConfiguration
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoFrame
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoSource
 
@@ -25,6 +26,20 @@ interface ContentShareVideoClientController {
      * @param videoSource: [VideoSource] - The source of video frames to be sent to other clients.
      */
     fun startVideoShare(videoSource: VideoSource)
+
+    /**
+     * Start to share video with configuration and a provided custom [VideoSource] which can be
+     * used to provide custom [VideoFrame]s to be transmitted to remote clients.
+     * This will call [VideoSource.addVideoSink] on the provided source
+     * and [VideoSource.removeVideoSink] on the previously provided source.
+     *
+     * Calling this function repeatedly will replace the previous [VideoSource] as the one being
+     * transmitted, will update the content share configuration, e.g. maxBitRateKbps.
+     *
+     * @param videoSource: [VideoSource] - The source of video frames to be sent to other clients.
+     * @param config: [LocalVideoConfiguration] - The configuration of emitted video stream, e.g. maxBitRateKbps
+     */
+    fun startVideoShare(videoSource: VideoSource, config: LocalVideoConfiguration)
 
     /**
      * Stop sending video to remote clients.

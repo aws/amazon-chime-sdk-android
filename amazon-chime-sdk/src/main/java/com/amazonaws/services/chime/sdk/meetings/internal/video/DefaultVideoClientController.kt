@@ -8,6 +8,7 @@ package com.amazonaws.services.chime.sdk.meetings.internal.video
 import android.content.Context
 import com.amazonaws.services.chime.sdk.meetings.analytics.EventAnalyticsController
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.PrimaryMeetingPromotionObserver
+import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.LocalVideoConfiguration
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.RemoteVideoSource
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoSource
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoSubscriptionConfiguration
@@ -105,6 +106,11 @@ class DefaultVideoClientController(
     }
 
     override fun startLocalVideo() {
+        val config = LocalVideoConfiguration()
+        startLocalVideo(config)
+    }
+
+    override fun startLocalVideo(config: LocalVideoConfiguration) {
         if (!videoClientStateController.canAct(VideoClientState.INITIALIZED)) return
 
         videoSourceAdapter.source = cameraCaptureSource
@@ -114,9 +120,17 @@ class DefaultVideoClientController(
 
         cameraCaptureSource.start()
         isUsingInternalCaptureSource = true
+        config.maxBitRateKbps.toInt().let {
+            if (it > 0) videoClient?.setMaxBitRateKbps(it)
+        }
     }
 
     override fun startLocalVideo(source: VideoSource) {
+        val config = LocalVideoConfiguration()
+        startLocalVideo(source, config)
+    }
+
+    override fun startLocalVideo(source: VideoSource, config: LocalVideoConfiguration) {
         if (!videoClientStateController.canAct(VideoClientState.INITIALIZED)) return
 
         stopInternalCaptureSourceIfRunning()
@@ -125,6 +139,9 @@ class DefaultVideoClientController(
         logger.info(TAG, "Setting external video source in media client to custom source")
         videoClient?.setExternalVideoSource(videoSourceAdapter, eglCore?.eglContext)
         videoClient?.setSending(true)
+        config.maxBitRateKbps.toInt().let {
+            if (it > 0) videoClient?.setMaxBitRateKbps(it)
+        }
     }
 
     override fun stopLocalVideo() {

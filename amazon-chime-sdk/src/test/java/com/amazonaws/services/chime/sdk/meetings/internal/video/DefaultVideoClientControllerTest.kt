@@ -14,6 +14,7 @@ import android.os.Looper
 import android.util.Log
 import com.amazonaws.services.chime.sdk.meetings.TestConstant
 import com.amazonaws.services.chime.sdk.meetings.analytics.EventAnalyticsController
+import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.LocalVideoConfiguration
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoSource
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.capture.DefaultCameraCaptureSource
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.gl.EglCore
@@ -136,7 +137,7 @@ class DefaultVideoClientControllerTest {
     }
 
     @Test
-    fun `startLocalVideo without source should start camera capture and then video client`() {
+    fun `startLocalVideo should start camera capture and then video client`() {
         every { mockVideoClientStateController.canAct(any()) } returns true
 
         testVideoClientController.startLocalVideo()
@@ -147,7 +148,20 @@ class DefaultVideoClientControllerTest {
     }
 
     @Test
-    fun `startLocalVideo with source should not start camera capture and then video client`() {
+    fun `startLocalVideo should start camera capture and setMaxBitRateKbps with given video config`() {
+        every { mockVideoClientStateController.canAct(any()) } returns true
+        val localVideoConfig = LocalVideoConfiguration(600U)
+
+        testVideoClientController.startLocalVideo(localVideoConfig)
+
+        verify { anyConstructed<DefaultCameraCaptureSource>().start() }
+        verify { mockVideoClient.setExternalVideoSource(any(), any()) }
+        verify { mockVideoClient.setSending(true) }
+        verify { mockVideoClient.setMaxBitRateKbps(600) }
+    }
+
+    @Test
+    fun `startLocalVideo should not start camera capture and then video client`() {
         every { mockVideoClientStateController.canAct(any()) } returns true
 
         testVideoClientController.startLocalVideo(mockVideoSource)
@@ -155,6 +169,19 @@ class DefaultVideoClientControllerTest {
         verify(exactly = 0) { anyConstructed<DefaultCameraCaptureSource>().start() }
         verify { mockVideoClient.setExternalVideoSource(any(), any()) }
         verify { mockVideoClient.setSending(true) }
+    }
+
+    @Test
+    fun `startLocalVideo should not start camera capture and setMaxBitRateKbps with given video config`() {
+        every { mockVideoClientStateController.canAct(any()) } returns true
+        val localVideoConfig = LocalVideoConfiguration(600U)
+
+        testVideoClientController.startLocalVideo(mockVideoSource, localVideoConfig)
+
+        verify(exactly = 0) { anyConstructed<DefaultCameraCaptureSource>().start() }
+        verify { mockVideoClient.setExternalVideoSource(any(), any()) }
+        verify { mockVideoClient.setSending(true) }
+        verify { mockVideoClient.setMaxBitRateKbps(600) }
     }
 
     @Test

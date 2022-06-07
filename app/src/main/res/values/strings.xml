@@ -47,6 +47,7 @@
     <string name="video_device_spinner">Video Device Spinner</string>
     <string name="video_format_title">Video Format</string>
     <string name="video_format_spinner">Video Format Spinner</string>
+    <string name="video_max_bit_rate_hint">Video Max Bit Rate in kbps</string>
     <string name="video_preview_title">Video Preview</string>
     <string name="video_preview_view">Video Preview View</string>
     <string name="meeting_join">Join</string>
@@ -99,6 +100,7 @@
     <string name="disable_background_blur">Turn off background blur</string>
     <string name="enable_background_replacement">Turn on background replacement</string>
     <string name="disable_background_replacement">Turn off background replacement</string>
+    <string name="video_configuration">Video Configuration</string>
 
     <!-- Alert -->
     <string name="cancel">Cancel</string>

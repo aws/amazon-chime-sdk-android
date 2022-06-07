@@ -23,6 +23,7 @@ import com.amazonaws.services.chime.sdk.meetings.audiovideo.contentshare.Content
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.contentshare.ContentShareObserver
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.contentshare.ContentShareSource
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.metric.MetricsObserver
+import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.LocalVideoConfiguration
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.RemoteVideoSource
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoRenderView
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoSource
@@ -102,8 +103,16 @@ class DefaultAudioVideoFacade(
         audioVideoController.startLocalVideo()
     }
 
+    override fun startLocalVideo(config: LocalVideoConfiguration) {
+        audioVideoController.startLocalVideo(config)
+    }
+
     override fun startLocalVideo(source: VideoSource) {
         audioVideoController.startLocalVideo(source)
+    }
+
+    override fun startLocalVideo(source: VideoSource, config: LocalVideoConfiguration) {
+        audioVideoController.startLocalVideo(source, config)
     }
 
     override fun stopLocalVideo() {
@@ -239,6 +248,10 @@ class DefaultAudioVideoFacade(
 
     override fun startContentShare(source: ContentShareSource) {
         contentShareController.startContentShare(source)
+    }
+
+    override fun startContentShare(source: ContentShareSource, config: LocalVideoConfiguration) {
+        contentShareController.startContentShare(source, config)
     }
 
     override fun stopContentShare() {

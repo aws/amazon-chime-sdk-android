@@ -90,6 +90,12 @@ audioVideo.startContentShare(contentShareSource)
 audioVideo.stopContentShare()
 ```
 
+Additionally, you can set configuration for content share, e.g. maxBitRateKbps. Actual quality achieved may vary throughout the call depending on what system and network can provide.
+```kotlin
+val contentShareConfig = LocalVideoConfiguration(200)
+meetingSession.audioVideo.startContentShare(contentShareSource, contentShareConfig)
+```
+
 Note that the content share APIs do not manage the source and only provide a sink to transmit captured frames to remote participants, builders will be responsible to take care of its lifecycle including stopping and releasing the capture sources internal resources.
 
 ### Receiving content share events

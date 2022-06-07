@@ -15,6 +15,8 @@ import com.amazonaws.services.chime.sdk.meetings.audiovideo.contentshare.Content
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.contentshare.ContentShareObserver
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.contentshare.ContentShareSource
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.metric.MetricsObserver
+import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.LocalVideoConfiguration
+import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoSource
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoTileController
 import com.amazonaws.services.chime.sdk.meetings.device.DeviceChangeObserver
 import com.amazonaws.services.chime.sdk.meetings.device.DeviceController
@@ -48,6 +50,7 @@ class DefaultAudioVideoFacadeTest {
     private val messageTopic = "topic"
     private val messageData = "data"
     private val messageLifetimeMs = 3000
+    private val localVideoConfig = LocalVideoConfiguration()
 
     @MockK
     private lateinit var mockAudioVideoObserver: AudioVideoObserver
@@ -96,6 +99,9 @@ class DefaultAudioVideoFacadeTest {
 
     @MockK
     private lateinit var contentShareController: ContentShareController
+
+    @MockK
+    private lateinit var mockVideoSource: VideoSource
 
     @InjectMockKs
     private lateinit var audioVideoFacade: DefaultAudioVideoFacade
@@ -294,6 +300,24 @@ class DefaultAudioVideoFacadeTest {
     fun `startLocalVideo should call audioVideoController startLocalVideo`() {
         audioVideoFacade.startLocalVideo()
         verify { audioVideoController.startLocalVideo() }
+    }
+
+    @Test
+    fun `startLocalVideo should call audioVideoController startLocalVideo with given video config`() {
+        audioVideoFacade.startLocalVideo(localVideoConfig)
+        verify { audioVideoController.startLocalVideo(localVideoConfig) }
+    }
+
+    @Test
+    fun `startLocalVideo should call audioVideoController startLocalVideo with given video source`() {
+        audioVideoFacade.startLocalVideo(mockVideoSource)
+        verify { audioVideoController.startLocalVideo(mockVideoSource) }
+    }
+
+    @Test
+    fun `startLocalVideo should call audioVideoController startLocalVideo with given video source and config)`() {
+        audioVideoFacade.startLocalVideo(mockVideoSource, localVideoConfig)
+        verify { audioVideoController.startLocalVideo(mockVideoSource, localVideoConfig) }
     }
 
     @Test
