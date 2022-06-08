@@ -106,8 +106,10 @@ class BackgroundReplacementVideoFrameProcessor @JvmOverloads constructor(
     fun getBackgroundReplacedBitmap(inputBitmap: Bitmap, frame: VideoFrame): Bitmap? {
         val scaledInputBitmap =
             backgroundFilterVideoFrameProcessor.getScaledInputBitmap(frame, inputBitmap)
-        val outputBitmap =
+        val maskedBitmap =
             backgroundFilterVideoFrameProcessor.getSegmentationMask(scaledInputBitmap)
+        // When creating scaled bitmap, we set filter to true as it provides better image quality with smooth edges around persons boundary.
+        val upScaledMaskedBitmap = maskedBitmap?.let { Bitmap.createScaledBitmap(it, frame.getRotatedWidth(), frame.getRotatedHeight(), true) }
 
         val replacementBitmap = configurations?.image?.let {
             Bitmap.createScaledBitmap(
@@ -119,8 +121,8 @@ class BackgroundReplacementVideoFrameProcessor @JvmOverloads constructor(
         }
 
         return backgroundFilterVideoFrameProcessor.drawImageWithMask(
-            scaledInputBitmap,
-            outputBitmap,
+            inputBitmap,
+            upScaledMaskedBitmap,
             replacementBitmap
         )
     }

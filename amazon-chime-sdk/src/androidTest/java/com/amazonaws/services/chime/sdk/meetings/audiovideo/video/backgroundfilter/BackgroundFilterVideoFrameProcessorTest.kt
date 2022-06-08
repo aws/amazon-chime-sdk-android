@@ -55,15 +55,15 @@ class BackgroundFilterVideoFrameProcessorTest {
         BitmapFactory.decodeResource(context.resources, R.raw.background_blurred_image)
     private val replacedImageBitmap =
         BitmapFactory.decodeResource(context.resources, R.raw.background_replaced_image)
-    private val staticImageWidth = 144
-    private val staticImageHeight = 256
+    private val staticImageWidth = 720
+    private val staticImageHeight = 1280
 
     private fun checkImageSimilarity(staticImage: Bitmap, testImage: Bitmap): Boolean {
         val differenceThreshold = 10
         var difference: Int
         var differentPixels = 0
-        for (row in 0 until staticImageHeight) {
-            for (col in 0 until staticImageWidth) {
+        for (row in 0 until testImage.height) {
+            for (col in 0 until testImage.width) {
                 val staticImageRgb = staticImage.getColor(col, row)
                 val testImageRgb = testImage.getColor(col, row)
                 // Extracting individual float represented colors and
@@ -81,7 +81,7 @@ class BackgroundFilterVideoFrameProcessorTest {
                 if (difference > differenceThreshold) differentPixels++
             }
         }
-        val totalPixels = staticImageWidth * staticImageHeight
+        val totalPixels = testImage.width * testImage.height
         val errorRate = differentPixels / totalPixels
         val errorThreshold = 0.01
         return errorRate <= errorThreshold
@@ -145,6 +145,12 @@ class BackgroundFilterVideoFrameProcessorTest {
 
     @Test
     fun getBackgroundBlurredBitmap() {
+        // By default input VideoFrame has width > height irrespective of device orientation. Rotated
+        // height/weight gives correct dimensions depending on Rotation value. Since input image is
+        // portrait (height > width), for testing purpose I flip frames height and width to get
+        // correct rotated height based on rotation value.
+        every { mockVideFrameBuffer.height } returns scaledBitmap.width
+        every { mockVideFrameBuffer.width } returns scaledBitmap.height
         testBackgroundBlurVideoFrameProcessor = BackgroundBlurVideoFrameProcessor(
             logger,
             eglCoreFactory,
@@ -161,6 +167,13 @@ class BackgroundFilterVideoFrameProcessorTest {
 
     @Test
     fun getBackgroundReplacedBitmap() {
+        // By default input VideoFrame has width > height irrespective of device orientation. Rotated
+        // height/weight gives correct dimensions depending on Rotation value. Since input image is
+        // portrait (height > width), for testing purpose I flip frames height and width to get
+        // correct rotated height based on rotation value.
+        every { mockVideFrameBuffer.height } returns scaledBitmap.width
+        every { mockVideFrameBuffer.width } returns scaledBitmap.height
+
         testBackgroundReplacementVideoFrameProcessor = BackgroundReplacementVideoFrameProcessor(
             logger,
             eglCoreFactory,
