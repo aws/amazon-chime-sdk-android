@@ -471,7 +471,7 @@ class MeetingFragment : Fragment(),
 
             override fun onTabUnselected(tab: TabLayout.Tab?) {
                 if (tab?.position == SubTab.Video.position) {
-                    pauseAllRemoteVideos()
+                    unsubscribeAllRemoteVideos()
                     setVideoSurfaceViewsVisibility(View.GONE)
                 } else if (tab?.position == SubTab.Screen.position) {
                     pauseAllContentShares()
@@ -510,7 +510,7 @@ class MeetingFragment : Fragment(),
             SubTab.Video.position -> {
                 viewVideo.visibility = View.VISIBLE
                 setVideoSurfaceViewsVisibility(View.VISIBLE)
-                onVideoPageUpdated()
+                subscribeToRemoteVideosInCurrentPage()
             }
             SubTab.Screen.position -> {
                 recyclerViewScreenShareCollection.visibility = View.VISIBLE
@@ -852,6 +852,7 @@ class MeetingFragment : Fragment(),
                 if (needUpdate) {
                     meetingModel.updateRemoteVideoStatesBasedOnActiveSpeakers(attendeeInfo)
                     onVideoPageUpdated()
+                    subscribeToRemoteVideosInCurrentPage()
 
                     rosterAdapter.notifyDataSetChanged()
                 }
@@ -1280,9 +1281,29 @@ class MeetingFragment : Fragment(),
         nextVideoPageButton.isEnabled = meetingModel.canGoToNextVideoPage()
     }
 
+    private fun subscribeToRemoteVideosInCurrentPage() {
+        meetingModel.updateVideoStatesInCurrentPage()
+
+        revalidateVideoPageIndex()
+
+        val newList = mutableListOf<VideoCollectionTile>()
+        newList.addAll(meetingModel.videoStatesInCurrentPage)
+        val updatedSources: MutableMap<RemoteVideoSource, VideoSubscriptionConfiguration> =
+            mutableMapOf()
+        for (videoState in newList) {
+            for ((key, value) in meetingModel.remoteVideoSourceConfigurations) {
+                if (videoState.videoTileState.attendeeId == key.attendeeId) {
+                    updatedSources[key] = value
+                }
+            }
+        }
+        audioVideo.updateVideoSourceSubscriptions(updatedSources, emptyArray())
+    }
+
     private fun resumeAllContentSharesExceptUserPausedVideos() {
         meetingModel.currentScreenTiles.forEach {
             if (!meetingModel.userPausedVideoTileIds.contains(it.videoTileState.tileId) && it.videoTileState.pauseState == VideoPauseState.PausedByUserRequest) {
+                subscribeRemoteVideoByTileState(it.videoTileState)
                 audioVideo.resumeRemoteVideoTile(it.videoTileState.tileId)
             }
         }
@@ -1294,9 +1315,42 @@ class MeetingFragment : Fragment(),
         }
     }
 
+    private fun subscribeRemoteVideoByTileState(tileSate: VideoTileState) {
+        val updatedSources: MutableMap<RemoteVideoSource, VideoSubscriptionConfiguration> =
+            mutableMapOf()
+        meetingModel.remoteVideoSourceConfigurations.forEach {
+            if (it.key.attendeeId == tileSate.attendeeId) {
+                updatedSources[it.key] = it.value
+            }
+        }
+        audioVideo.updateVideoSourceSubscriptions(updatedSources, emptyArray())
+    }
+
+    private fun unsubscribeRemoteVideoByTileState(tileState: VideoTileState) {
+        val removedList: ArrayList<RemoteVideoSource> = arrayListOf()
+        meetingModel.remoteVideoSourceConfigurations.forEach {
+            if (it.key.attendeeId == tileState.attendeeId) {
+                removedList.add(it.key)
+            }
+        }
+        audioVideo.updateVideoSourceSubscriptions(emptyMap(), removedList.toTypedArray())
+    }
+
+    private fun unsubscribeAllRemoteVideos() {
+        val removedList: ArrayList<RemoteVideoSource> = arrayListOf()
+        meetingModel.remoteVideoTileStates.forEach {
+            for ((key) in meetingModel.remoteVideoSourceConfigurations) {
+                if (key.attendeeId == it.videoTileState.attendeeId) {
+                    removedList.add(key)
+                }
+            }
+        }
+        audioVideo.updateVideoSourceSubscriptions(emptyMap(), removedList.toTypedArray())
+    }
+
     private fun pauseAllContentShares() {
         meetingModel.currentScreenTiles.forEach {
-            audioVideo.pauseRemoteVideoTile(it.videoTileState.tileId)
+            unsubscribeRemoteVideoByTileState(it.videoTileState)
         }
     }
 
@@ -1430,19 +1484,21 @@ class MeetingFragment : Fragment(),
 
             // Currently not in the Screen tab, no need to render the video tile
             if (meetingModel.tabIndex != SubTab.Screen.position) {
-                audioVideo.pauseRemoteVideoTile(tileState.tileId)
+                unsubscribeRemoteVideoByTileState(tileState)
             }
         } else {
             if (tileState.isLocalTile) {
                 meetingModel.localVideoTileState = videoCollectionTile
                 onVideoPageUpdated()
+                subscribeToRemoteVideosInCurrentPage()
             } else {
                 meetingModel.remoteVideoTileStates.add(videoCollectionTile)
                 onVideoPageUpdated()
+                subscribeToRemoteVideosInCurrentPage()
 
                 // Currently not in the Video tab, no need to render the video tile
                 if (meetingModel.tabIndex != SubTab.Video.position) {
-                    audioVideo.pauseRemoteVideoTile(tileState.tileId)
+                    unsubscribeRemoteVideoByTileState(tileState)
                 }
             }
         }
@@ -1602,6 +1658,7 @@ class MeetingFragment : Fragment(),
                 screenTileAdapter.notifyDataSetChanged()
             } else {
                 if (meetingModel.localVideoTileState?.videoTileState?.tileId == tileId) {
+                    meetingModel.remoteVideoTileStates.removeAll { it.videoTileState.tileId == tileId }
                     meetingModel.localVideoTileState = null
                 } else {
                     meetingModel.remoteVideoTileStates.removeAll { it.videoTileState.tileId == tileId }

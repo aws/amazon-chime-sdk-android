@@ -4,6 +4,7 @@
 * Fixed background blur and replacement pixelated video on desktop. (Issue https://github.com/aws-samples/amazon-chime-react-native-demo/issues/145)
 * Updated unit tests according to above fix
 * Load model only when frame dimensions change
+* Fixed crash from openGL due to potential race condition.
 
 ## [0.17.1] - 2022-06-03
 
