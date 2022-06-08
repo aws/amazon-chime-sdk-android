@@ -14,6 +14,7 @@ import android.widget.Toast
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.RecyclerView
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.AudioVideoFacade
+import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.RemoteVideoSource
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoPauseState
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoPriority
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoResolution
@@ -213,10 +214,12 @@ class VideoHolder(
                 }
             }
 
+            val updatedSource = mutableMapOf<RemoteVideoSource, VideoSubscriptionConfiguration>()
             for (source in meetingModel.remoteVideoSourceConfigurations) {
                 if (source.key?.attendeeId == attendeeId) {
                     val resolution: VideoResolution = source.value.targetResolution
                     source.setValue(VideoSubscriptionConfiguration(priority, resolution))
+                    updatedSource[source.key] = source.value
                 }
             }
             audioVideo.updateVideoSourceSubscriptions(
@@ -247,15 +250,17 @@ class VideoHolder(
                 }
             }
 
+            val updatedSource = mutableMapOf<RemoteVideoSource, VideoSubscriptionConfiguration>()
             for (source in meetingModel.remoteVideoSourceConfigurations) {
                 if (source.key.attendeeId == attendeeId) {
                     val priority: VideoPriority = source.value.priority
                     source.setValue(VideoSubscriptionConfiguration(priority, resolution))
+                    updatedSource[source.key] = source.value
                 }
             }
 
             audioVideo.updateVideoSourceSubscriptions(
-                meetingModel.remoteVideoSourceConfigurations,
+                updatedSource,
                 emptyArray()
             )
             true
