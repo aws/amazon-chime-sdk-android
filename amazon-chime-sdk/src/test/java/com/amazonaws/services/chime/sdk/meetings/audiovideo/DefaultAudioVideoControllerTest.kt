@@ -8,6 +8,9 @@ package com.amazonaws.services.chime.sdk.meetings.audiovideo
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.audio.AudioMode
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.audio.AudioStreamType
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.metric.MetricsObserver
+import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.RemoteVideoSource
+import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoSource
+import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoSubscriptionConfiguration
 import com.amazonaws.services.chime.sdk.meetings.internal.audio.AudioClientController
 import com.amazonaws.services.chime.sdk.meetings.internal.audio.AudioClientObserver
 import com.amazonaws.services.chime.sdk.meetings.internal.metric.ClientMetricsCollector
@@ -82,6 +85,9 @@ class DefaultAudioVideoControllerTest {
 
     @MockK
     private lateinit var mockTimer: Timer
+
+    @MockK
+    private lateinit var videoSource: VideoSource
 
     @ExperimentalCoroutinesApi
     private val testDispatcher = TestCoroutineDispatcher()
@@ -292,6 +298,13 @@ class DefaultAudioVideoControllerTest {
     }
 
     @Test
+    fun `startLocalVideo should call videoClientController startLocalVideo with given video source`() {
+        audioVideoController.startLocalVideo(videoSource)
+
+        verify { videoClientController.startLocalVideo(videoSource) }
+    }
+
+    @Test
     fun `stopLocalVideo should call videoClientController stopLocalVideo`() {
         audioVideoController.stopLocalVideo()
 
@@ -310,6 +323,16 @@ class DefaultAudioVideoControllerTest {
         audioVideoController.stopRemoteVideo()
 
         verify { videoClientController.stopRemoteVideo() }
+    }
+
+    @Test
+    fun `updateVideoSourceSubscriptions should call videoClientController updateVideoSourceSubscriptions`() {
+        val addedOrUpdated = emptyMap<RemoteVideoSource, VideoSubscriptionConfiguration>()
+        val removed = emptyArray<RemoteVideoSource>()
+
+        audioVideoController.updateVideoSourceSubscriptions(addedOrUpdated, removed)
+
+        verify { videoClientController.updateVideoSourceSubscriptions(addedOrUpdated, removed) }
     }
 
     @Test

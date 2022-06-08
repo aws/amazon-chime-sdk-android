@@ -7,6 +7,7 @@ package com.amazonaws.services.chime.sdk.meetings.audiovideo.video.gl
 
 import android.opengl.EGL14
 import android.opengl.EGLContext
+import com.amazonaws.services.chime.sdk.meetings.internal.video.gl.ShareEglLock
 import com.amazonaws.services.chime.sdk.meetings.utils.RefCountDelegate
 
 /**
@@ -15,12 +16,11 @@ import com.amazonaws.services.chime.sdk.meetings.utils.RefCountDelegate
  */
 class DefaultEglCoreFactory(private var sharedContext: EGLContext = EGL14.EGL_NO_CONTEXT) :
     EglCoreFactory {
-    private var rootEglCoreLock = Any()
     private var rootEglCore: EglCore? = null
     private var refCountDelegate: RefCountDelegate? = null
 
     override fun createEglCore(): EglCore {
-        synchronized(rootEglCoreLock) {
+        synchronized(ShareEglLock.Lock) {
             if (rootEglCore == null && sharedContext == EGL14.EGL_NO_CONTEXT) {
                 refCountDelegate = RefCountDelegate(Runnable { release() })
                 rootEglCore = DefaultEglCore().also {
@@ -38,7 +38,7 @@ class DefaultEglCoreFactory(private var sharedContext: EGLContext = EGL14.EGL_NO
     }
 
     private fun release() {
-        synchronized(rootEglCoreLock) {
+        synchronized(ShareEglLock.Lock) {
             if (rootEglCore != null) {
                 rootEglCore?.release()
                 rootEglCore = null
