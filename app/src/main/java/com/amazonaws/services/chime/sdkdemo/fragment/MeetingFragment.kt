@@ -1260,7 +1260,7 @@ class MeetingFragment : Fragment(),
         val updatedSources: MutableMap<RemoteVideoSource, VideoSubscriptionConfiguration> =
             mutableMapOf()
         for (videoState in newList) {
-            // TODO: This seems to be needed for demo application to show all tiles.
+            // This seems to be needed for demo application to show all tiles. Sometimes, it gets paused
             audioVideo.resumeRemoteVideoTile(videoState.videoTileState.tileId)
             for ((key, value) in meetingModel.remoteVideoSourceConfigurations) {
                 if (videoState.videoTileState.attendeeId == key.attendeeId) {
@@ -1269,7 +1269,8 @@ class MeetingFragment : Fragment(),
             }
         }
 
-        // This is to handle case where we are on same page and page updates.
+        // This is to handle case where this function is called without page changes
+        // which could lead to having same removed and updated.
         val removedList = mutableListOf<RemoteVideoSource>()
         for (removed in potentialRemovedList) {
             if (!updatedSources.containsKey(removed)) {
@@ -1280,11 +1281,10 @@ class MeetingFragment : Fragment(),
         val videoDiffCallback = VideoDiffCallback(oldList, newList)
         val videoDiffResult: DiffUtil.DiffResult = DiffUtil.calculateDiff(videoDiffCallback)
 
-        audioVideo.updateVideoSourceSubscriptions(updatedSources, removedList.toTypedArray())
-
         videoDiffResult.dispatchUpdatesTo(videoTileAdapter)
 
         // subscribe to updated sources with highest priority and unsubscribed sources in prev page
+        audioVideo.updateVideoSourceSubscriptions(updatedSources, removedList.toTypedArray())
 
         // update video pagination control buttons states
         prevVideoPageButton.isEnabled = meetingModel.canGoToPrevVideoPage()
