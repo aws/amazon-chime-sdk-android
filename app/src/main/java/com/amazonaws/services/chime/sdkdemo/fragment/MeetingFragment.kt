@@ -474,7 +474,6 @@ class MeetingFragment : Fragment(),
                     unsubscribeAllRemoteVideos()
                     setVideoSurfaceViewsVisibility(View.GONE)
                 } else if (tab?.position == SubTab.Screen.position) {
-                    pauseAllContentShares()
                     setScreenSurfaceViewsVisibility(View.GONE)
                 }
             }
