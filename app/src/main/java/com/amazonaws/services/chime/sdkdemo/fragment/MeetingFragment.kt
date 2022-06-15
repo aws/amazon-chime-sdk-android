@@ -474,7 +474,6 @@ class MeetingFragment : Fragment(),
                     unsubscribeAllRemoteVideos()
                     setVideoSurfaceViewsVisibility(View.GONE)
                 } else if (tab?.position == SubTab.Screen.position) {
-                    pauseAllContentShares()
                     setScreenSurfaceViewsVisibility(View.GONE)
                 }
             }
@@ -515,7 +514,6 @@ class MeetingFragment : Fragment(),
             SubTab.Screen.position -> {
                 recyclerViewScreenShareCollection.visibility = View.VISIBLE
                 setScreenSurfaceViewsVisibility(View.VISIBLE)
-                resumeAllContentSharesExceptUserPausedVideos()
             }
             SubTab.Captions.position -> {
                 recyclerViewCaptions.visibility = View.VISIBLE
@@ -1310,15 +1308,6 @@ class MeetingFragment : Fragment(),
         audioVideo.updateVideoSourceSubscriptions(updatedSources, emptyArray())
     }
 
-    private fun resumeAllContentSharesExceptUserPausedVideos() {
-        meetingModel.currentScreenTiles.forEach {
-            if (!meetingModel.userPausedVideoTileIds.contains(it.videoTileState.tileId) && it.videoTileState.pauseState == VideoPauseState.PausedByUserRequest) {
-                subscribeRemoteVideoByTileState(it.videoTileState)
-                audioVideo.resumeRemoteVideoTile(it.videoTileState.tileId)
-            }
-        }
-    }
-
     private fun subscribeRemoteVideoByTileState(tileSate: VideoTileState) {
         val updatedSources: MutableMap<RemoteVideoSource, VideoSubscriptionConfiguration> =
             mutableMapOf()
@@ -1485,6 +1474,10 @@ class MeetingFragment : Fragment(),
         if (tileState.isContent) {
             meetingModel.currentScreenTiles.add(videoCollectionTile)
             screenTileAdapter.notifyDataSetChanged()
+            meetingModel.currentScreenTiles.forEach {
+                subscribeRemoteVideoByTileState(it.videoTileState)
+                audioVideo.resumeRemoteVideoTile(it.videoTileState.tileId)
+            }
 
             // Currently not in the Screen tab, no need to render the video tile
             if (meetingModel.tabIndex != SubTab.Screen.position) {
