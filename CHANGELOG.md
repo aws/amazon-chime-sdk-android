@@ -1,4 +1,4 @@
-## [Unreleased]
+## [0.17.2] - 2022-06-17
 
 ### Fixed
 * Fixed background blur and replacement pixelated video on desktop. (Issue https://github.com/aws-samples/amazon-chime-react-native-demo/issues/145)
