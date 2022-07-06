@@ -1,3 +1,8 @@
+## [Unreleased]
+
+### Changed
+* Changed `listSupportedVideoCaptureFormats` to find max fps from device
+
 ## [0.17.3] - 2022-07-14
 
 ## [0.17.2] - 2022-06-17

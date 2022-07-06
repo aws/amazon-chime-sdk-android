@@ -5,14 +5,10 @@
 
 package com.amazonaws.services.chime.sdk.meetings.device
 
-import android.graphics.SurfaceTexture
 import android.hardware.camera2.CameraCharacteristics
 import android.hardware.camera2.CameraManager
 import android.hardware.camera2.CameraMetadata
-import android.hardware.camera2.params.StreamConfigurationMap
 import android.media.AudioDeviceInfo
-import android.util.Size
-import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.capture.VideoCaptureFormat
 import io.mockk.MockKAnnotations
 import io.mockk.clearAllMocks
 import io.mockk.every
@@ -34,15 +30,6 @@ class MediaDeviceTest {
 
     @MockK
     private lateinit var mockOtherCameraCharacteristics: CameraCharacteristics
-
-    @MockK
-    private lateinit var mockStreamMap: StreamConfigurationMap
-
-    @MockK
-    private lateinit var mockSize1: Size
-
-    @MockK
-    private lateinit var mockSize2: Size
 
     @Before
     fun setUp() {
@@ -112,26 +99,5 @@ class MediaDeviceTest {
         assertEquals(devices[0].type, MediaDeviceType.VIDEO_FRONT_CAMERA)
         assertEquals(devices[1].type, MediaDeviceType.VIDEO_BACK_CAMERA)
         assertEquals(devices[2].type, MediaDeviceType.OTHER)
-    }
-
-    @Test
-    fun `listSupportedVideoCaptureFormats converts from formats provided from CameraManager`() {
-        every { mockCameraManager.getCameraCharacteristics("0") } returns mockFrontCameraCharacteristics
-        every { mockFrontCameraCharacteristics.get(CameraCharacteristics.SCALER_STREAM_CONFIGURATION_MAP) } returns mockStreamMap
-        every { mockStreamMap.getOutputSizes(SurfaceTexture::class.java) } returns arrayOf(mockSize1, mockSize2)
-        every { mockStreamMap.getOutputMinFrameDuration(SurfaceTexture::class.java, any()) } returns (1.0e9 / 15).toLong()
-        every { mockSize1.width } returns 1
-        every { mockSize1.height } returns 2
-        every { mockSize2.width } returns 3
-        every { mockSize2.height } returns 4
-
-        val formats = MediaDevice.listSupportedVideoCaptureFormats(
-                mockCameraManager,
-                MediaDevice("testLabel", MediaDeviceType.VIDEO_FRONT_CAMERA, "0")
-        )
-
-        assertEquals(formats.size, 2)
-        assertEquals(VideoCaptureFormat(1, 2, 15), formats[0])
-        assertEquals(VideoCaptureFormat(3, 4, 15), formats[1])
     }
 }
