@@ -128,8 +128,8 @@ class DefaultAudioClientController(
     ): AudioClient.AudioRecordingPreset {
         var recordingPreset = AudioClient.AudioRecordingPreset.CAMCORDER
         logger.info(TAG, "No RecordingPresetOverride provided, assigning default presets")
+        logger.info(TAG, "Low latency audio supported? $supportsLowLatency")
         if (supportsLowLatency) {
-            logger.info(TAG, "Low latency audio is supported")
             recordingPreset = AudioClient.AudioRecordingPreset.VOICE_RECOGNITION
         } else {
             if (audioMode == AudioMode.Mono16K || audioMode == AudioMode.Mono48K) {
@@ -212,6 +212,8 @@ class DefaultAudioClientController(
                 AudioRecordingPresetOverride.VoiceRecognition -> AudioClient.AudioRecordingPreset.VOICE_RECOGNITION
                 AudioRecordingPresetOverride.VoiceCommunication -> AudioClient.AudioRecordingPreset.VOICE_COMMUNICATION
             }
+
+            logger.info(TAG, "Recording preset before start session is $audioRecordingPresetInternal")
 
             var config = AudioClientSessionConfig.Builder(
                 host,
