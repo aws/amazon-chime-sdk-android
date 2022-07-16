@@ -17,6 +17,7 @@ import com.amazonaws.services.chime.sdk.meetings.analytics.EventName
 import com.amazonaws.services.chime.sdk.meetings.analytics.MeetingStatsCollector
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.PrimaryMeetingPromotionObserver
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.audio.AudioMode
+import com.amazonaws.services.chime.sdk.meetings.audiovideo.audio.AudioRecordingPresetOverride
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.audio.AudioStreamType
 import com.amazonaws.services.chime.sdk.meetings.internal.utils.AppInfoUtil
 import com.amazonaws.services.chime.sdk.meetings.session.MeetingSessionCredentials
@@ -122,24 +123,19 @@ class DefaultAudioClientController(
         return audioClient.setRoute(route) == AUDIO_CLIENT_RESULT_SUCCESS
     }
 
-    private fun setupRecordingPreset(presetOverride: AudioRecordingPresetOverride): AudioRecordingPresetOverride {
-        val recordingPreset = presetOverride
-        if (recordingPreset == AudioRecordingPresetOverride.None) {
-            logger.info(TAG, "No RecordingPresetOverride provided, assigning default presets")
-            if (supportsLowLatency) {
-                logger.info(TAG, "Low latency audio is supported")
-                recordingPreset = AudioRecordingPresetOverride.VoiceRecognition
-            } else {
-                if (audioMode == AudioMode.Mono16K || audioMode == AudioMode.Mono48K) {
-                    recordingPreset = AudioRecordingPresetOverride.VoiceCommunication
-                } else {
-                    recordingPreset = AudioRecordingPresetOverride.Camcorder
-                }
-            }
+    private fun setupDefaultRecordingPreset(
+        audioMode: AudioMode
+    ): AudioClient.AudioRecordingPreset {
+        var recordingPreset = AudioClient.AudioRecordingPreset.CAMCORDER
+        logger.info(TAG, "No RecordingPresetOverride provided, assigning default presets")
+        if (supportsLowLatency) {
+            logger.info(TAG, "Low latency audio is supported")
+            recordingPreset = AudioClient.AudioRecordingPreset.VOICE_RECOGNITION
         } else {
-            logger.info(TAG, "RecordingPresetOverride provided")
+            if (audioMode == AudioMode.Mono16K || audioMode == AudioMode.Mono48K) {
+                recordingPreset = AudioClient.AudioRecordingPreset.VOICE_COMMUNICATION
+            }
         }
-        logger.info(TAG, "Using recording preset $recordingPreset")
         return recordingPreset
     }
 
@@ -207,9 +203,10 @@ class DefaultAudioClientController(
                 AudioStreamType.Music -> AudioClient.AudioStreamType.MUSIC
             }
 
-            val recordingPreset = setupRecordingPreset(audioRecordingPresetOverride)
+            // val recordingPreset = setupRecordingPreset(audioRecordingPresetOverride, audioMode)
 
-            var audioRecordingPresetInternal = when (recordingPreset) {
+            var audioRecordingPresetInternal = when (audioRecordingPresetOverride) {
+                AudioRecordingPresetOverride.None -> setupDefaultRecordingPreset(audioMode)
                 AudioRecordingPresetOverride.Generic -> AudioClient.AudioRecordingPreset.GENERIC
                 AudioRecordingPresetOverride.Camcorder -> AudioClient.AudioRecordingPreset.CAMCORDER
                 AudioRecordingPresetOverride.VoiceRecognition -> AudioClient.AudioRecordingPreset.VOICE_RECOGNITION
