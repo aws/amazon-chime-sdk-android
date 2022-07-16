@@ -16,6 +16,7 @@ import com.amazonaws.services.chime.sdk.meetings.analytics.EventAnalyticsControl
 import com.amazonaws.services.chime.sdk.meetings.analytics.EventName
 import com.amazonaws.services.chime.sdk.meetings.analytics.MeetingStatsCollector
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.audio.AudioMode
+import com.amazonaws.services.chime.sdk.meetings.audiovideo.audio.AudioRecordingPresetOverride
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.audio.AudioStreamType
 import com.amazonaws.services.chime.sdk.meetings.internal.utils.AppInfoUtil
 import com.amazonaws.services.chime.sdk.meetings.utils.logger.Logger
@@ -283,7 +284,8 @@ class DefaultAudioClientControllerTest {
             testAttendeeId,
             testJoinToken,
             AudioMode.Stereo48K,
-            AudioStreamType.VoiceCall
+            AudioStreamType.VoiceCall,
+            AudioRecordingPresetOverride.None
         )
 
         verify {
@@ -304,7 +306,8 @@ class DefaultAudioClientControllerTest {
                 testAttendeeId,
                 testJoinToken,
                 AudioMode.Mono16K,
-                AudioStreamType.VoiceCall
+                AudioStreamType.VoiceCall,
+                AudioRecordingPresetOverride.None
         )
 
         verify {
@@ -327,7 +330,8 @@ class DefaultAudioClientControllerTest {
                 testAttendeeId,
                 testJoinToken,
                 AudioMode.Mono48K,
-                AudioStreamType.VoiceCall
+                AudioStreamType.VoiceCall,
+                AudioRecordingPresetOverride.None
         )
 
         verify {
@@ -350,7 +354,8 @@ class DefaultAudioClientControllerTest {
             testAttendeeId,
             testJoinToken,
             AudioMode.Mono48K,
-            AudioStreamType.VoiceCall
+            AudioStreamType.VoiceCall,
+            AudioRecordingPresetOverride.None
         )
 
         verify {
@@ -371,7 +376,8 @@ class DefaultAudioClientControllerTest {
             testAttendeeId,
             testJoinToken,
             AudioMode.Mono48K,
-            AudioStreamType.Music
+            AudioStreamType.Music,
+            AudioRecordingPresetOverride.None
         )
 
         verify {
@@ -392,7 +398,8 @@ class DefaultAudioClientControllerTest {
                 testAttendeeId,
                 testJoinToken,
                 AudioMode.Stereo48K,
-                AudioStreamType.VoiceCall
+                AudioStreamType.VoiceCall,
+                AudioRecordingPresetOverride.None
         )
 
         verify {
@@ -411,7 +418,8 @@ class DefaultAudioClientControllerTest {
             testAttendeeId,
             testJoinToken,
             AudioMode.Stereo48K,
-            AudioStreamType.VoiceCall
+            AudioStreamType.VoiceCall,
+            AudioRecordingPresetOverride.None
         )
 
         verify(exactly = 1) { mockAudioClientObserver.notifyAudioClientObserver(any()) }
@@ -427,7 +435,8 @@ class DefaultAudioClientControllerTest {
             testAttendeeId,
             testJoinToken,
             AudioMode.Stereo48K,
-            AudioStreamType.VoiceCall
+            AudioStreamType.VoiceCall,
+            AudioRecordingPresetOverride.None
         )
 
         verify(exactly = 1) { mockEventAnalyticsController.publishEvent(EventName.meetingStartRequested, any()) }
@@ -453,7 +462,8 @@ class DefaultAudioClientControllerTest {
             testAttendeeId,
             testJoinToken,
             AudioMode.Stereo48K,
-            AudioStreamType.VoiceCall
+            AudioStreamType.VoiceCall,
+            AudioRecordingPresetOverride.None
         )
         every { mockAudioClient.stopSession() } returns testAudioClientSuccessCode
 
@@ -472,7 +482,8 @@ class DefaultAudioClientControllerTest {
             testAttendeeId,
             testJoinToken,
             AudioMode.Stereo48K,
-            AudioStreamType.VoiceCall
+            AudioStreamType.VoiceCall,
+            AudioRecordingPresetOverride.None
         )
         every { mockAudioClient.stopSession() } returns testAudioClientSuccessCode
 
@@ -495,7 +506,8 @@ class DefaultAudioClientControllerTest {
             testAttendeeId,
             testJoinToken,
             AudioMode.Stereo48K,
-            AudioStreamType.VoiceCall
+            AudioStreamType.VoiceCall,
+            AudioRecordingPresetOverride.None
         )
 
         val enableOutput: Boolean = audioClientController.setVoiceFocusEnabled(true)
@@ -530,7 +542,8 @@ class DefaultAudioClientControllerTest {
             testAttendeeId,
             testJoinToken,
             AudioMode.Stereo48K,
-            AudioStreamType.VoiceCall
+            AudioStreamType.VoiceCall,
+            AudioRecordingPresetOverride.None
         )
 
         audioClientController.isVoiceFocusEnabled()
