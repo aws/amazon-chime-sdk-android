@@ -6,6 +6,7 @@
 package com.amazonaws.services.chime.sdk.meetings.audiovideo
 
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.audio.AudioMode
+import com.amazonaws.services.chime.sdk.meetings.audiovideo.audio.AudioRecordingPresetOverride
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.audio.AudioStreamType
 
 /**
@@ -20,5 +21,6 @@ import com.amazonaws.services.chime.sdk.meetings.audiovideo.audio.AudioStreamTyp
  */
 data class AudioVideoConfiguration @JvmOverloads constructor(
     val audioMode: AudioMode = AudioMode.Stereo48K,
-    val audioStreamType: AudioStreamType = AudioStreamType.VoiceCall
+    val audioStreamType: AudioStreamType = AudioStreamType.VoiceCall,
+    val audioRecordingPresetOverride: AudioRecordingPresetOverride = AudioRecordingPresetOverride.None
 )

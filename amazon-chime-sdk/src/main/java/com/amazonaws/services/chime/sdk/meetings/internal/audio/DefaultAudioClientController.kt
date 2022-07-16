@@ -6,6 +6,7 @@
 package com.amazonaws.services.chime.sdk.meetings.internal.audio
 
 import android.content.Context
+import android.content.pm.PackageManager
 import android.media.AudioFormat
 import android.media.AudioManager
 import android.media.AudioRecord
@@ -50,6 +51,9 @@ class DefaultAudioClientController(
         context.getSystemService(Context.AUDIO_SERVICE) as AudioManager
     private var audioModePreCall: Int = audioManager.mode
     private var speakerphoneStatePreCall: Boolean = audioManager.isSpeakerphoneOn
+    private val packageManager: PackageManager = context.packageManager
+    private val supportsLowLatency: Boolean =
+        packageManager.hasSystemFeature(PackageManager.FEATURE_AUDIO_LOW_LATENCY)
 
     companion object {
         var audioClientState = AudioClientState.INITIALIZED
@@ -118,6 +122,27 @@ class DefaultAudioClientController(
         return audioClient.setRoute(route) == AUDIO_CLIENT_RESULT_SUCCESS
     }
 
+    private fun setupRecordingPreset(presetOverride: AudioRecordingPresetOverride): AudioRecordingPresetOverride {
+        val recordingPreset = presetOverride
+        if (recordingPreset == AudioRecordingPresetOverride.None) {
+            logger.info(TAG, "No RecordingPresetOverride provided, assigning default presets")
+            if (supportsLowLatency) {
+                logger.info(TAG, "Low latency audio is supported")
+                recordingPreset = AudioRecordingPresetOverride.VoiceRecognition
+            } else {
+                if (audioMode == AudioMode.Mono16K || audioMode == AudioMode.Mono48K) {
+                    recordingPreset = AudioRecordingPresetOverride.VoiceCommunication
+                } else {
+                    recordingPreset = AudioRecordingPresetOverride.Camcorder
+                }
+            }
+        } else {
+            logger.info(TAG, "RecordingPresetOverride provided")
+        }
+        logger.info(TAG, "Using recording preset $recordingPreset")
+        return recordingPreset
+    }
+
     override fun start(
         audioFallbackUrl: String,
         audioHostUrl: String,
@@ -125,7 +150,8 @@ class DefaultAudioClientController(
         attendeeId: String,
         joinToken: String,
         audioMode: AudioMode,
-        audioStreamType: AudioStreamType
+        audioStreamType: AudioStreamType,
+        audioRecordingPresetOverride: AudioRecordingPresetOverride
     ) {
         // Validate audio client state
         if (audioClientState != AudioClientState.INITIALIZED &&
@@ -181,6 +207,15 @@ class DefaultAudioClientController(
                 AudioStreamType.Music -> AudioClient.AudioStreamType.MUSIC
             }
 
+            val recordingPreset = setupRecordingPreset(audioRecordingPresetOverride)
+
+            var audioRecordingPresetInternal = when (recordingPreset) {
+                AudioRecordingPresetOverride.Generic -> AudioClient.AudioRecordingPreset.GENERIC
+                AudioRecordingPresetOverride.Camcorder -> AudioClient.AudioRecordingPreset.CAMCORDER
+                AudioRecordingPresetOverride.VoiceRecognition -> AudioClient.AudioRecordingPreset.VOICE_RECOGNITION
+                AudioRecordingPresetOverride.VoiceCommunication -> AudioClient.AudioRecordingPreset.VOICE_COMMUNICATION
+            }
+
             var config = AudioClientSessionConfig.Builder(
                 host,
                 port,
@@ -190,7 +225,8 @@ class DefaultAudioClientController(
                 audioFallbackUrl,
                 appInfo,
                 audioModeInternal,
-                audioStreamTypeInternal
+                audioStreamTypeInternal,
+                audioRecordingPresetInternal
             ).withTransportMode(AudioClient.XTL_DEFAULT_TRANSPORT)
                 .withMicMute(muteMicAndSpeaker)
                 .withSpkMute(muteMicAndSpeaker)
