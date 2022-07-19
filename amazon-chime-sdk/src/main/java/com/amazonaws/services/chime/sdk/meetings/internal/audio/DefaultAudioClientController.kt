@@ -123,19 +123,19 @@ class DefaultAudioClientController(
         return audioClient.setRoute(route) == AUDIO_CLIENT_RESULT_SUCCESS
     }
 
-    private fun setupDefaultRecordingPreset(
-        audioMode: AudioMode
-    ): AudioClient.AudioRecordingPreset {
+    private fun getDefaultRecordingPreset(): AudioClient.AudioRecordingPreset {
         var recordingPreset = AudioClient.AudioRecordingPreset.CAMCORDER
-        logger.info(TAG, "No RecordingPresetOverride provided, assigning default presets")
+        logger.info(TAG, "No AudioRecordingPresetOverride provided, assigning default presets")
         logger.info(TAG, "Low latency audio supported? $supportsLowLatency")
         if (supportsLowLatency) {
             recordingPreset = AudioClient.AudioRecordingPreset.VOICE_RECOGNITION
         } else {
-            if (audioMode == AudioMode.Mono16K || audioMode == AudioMode.Mono48K) {
-                recordingPreset = AudioClient.AudioRecordingPreset.VOICE_COMMUNICATION
-            }
+            recordingPreset = AudioClient.AudioRecordingPreset.CAMCORDER
+            // if (audioMode == AudioMode.Mono16K || audioMode == AudioMode.Mono48K) {
+            //     recordingPreset = AudioClient.AudioRecordingPreset.VOICE_COMMUNICATION
+            // }
         }
+        logger.info(TAG, "Using recording preset $recordingPreset")
         return recordingPreset
     }
 
@@ -203,17 +203,13 @@ class DefaultAudioClientController(
                 AudioStreamType.Music -> AudioClient.AudioStreamType.MUSIC
             }
 
-            // val recordingPreset = setupRecordingPreset(audioRecordingPresetOverride, audioMode)
-
             var audioRecordingPresetInternal = when (audioRecordingPresetOverride) {
-                AudioRecordingPresetOverride.None -> setupDefaultRecordingPreset(audioMode)
+                AudioRecordingPresetOverride.None -> getDefaultRecordingPreset()
                 AudioRecordingPresetOverride.Generic -> AudioClient.AudioRecordingPreset.GENERIC
                 AudioRecordingPresetOverride.Camcorder -> AudioClient.AudioRecordingPreset.CAMCORDER
                 AudioRecordingPresetOverride.VoiceRecognition -> AudioClient.AudioRecordingPreset.VOICE_RECOGNITION
                 AudioRecordingPresetOverride.VoiceCommunication -> AudioClient.AudioRecordingPreset.VOICE_COMMUNICATION
             }
-
-            logger.info(TAG, "Recording preset before start session is $audioRecordingPresetInternal")
 
             var config = AudioClientSessionConfig.Builder(
                 host,
