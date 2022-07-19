@@ -124,19 +124,17 @@ class DefaultAudioClientController(
     }
 
     private fun getDefaultRecordingPreset(): AudioClient.AudioRecordingPreset {
-        var recordingPreset = AudioClient.AudioRecordingPreset.CAMCORDER
-        logger.info(TAG, "No AudioRecordingPresetOverride provided, assigning default presets")
-        logger.info(TAG, "Low latency audio supported? $supportsLowLatency")
-        if (supportsLowLatency) {
-            recordingPreset = AudioClient.AudioRecordingPreset.VOICE_RECOGNITION
-        } else {
-            recordingPreset = AudioClient.AudioRecordingPreset.CAMCORDER
-            // if (audioMode == AudioMode.Mono16K || audioMode == AudioMode.Mono48K) {
-            //     recordingPreset = AudioClient.AudioRecordingPreset.VOICE_COMMUNICATION
-            // }
-        }
-        logger.info(TAG, "Using recording preset $recordingPreset")
-        return recordingPreset
+        return AudioClient.AudioRecordingPreset.VOICE_COMMUNICATION
+        // var recordingPreset = AudioClient.AudioRecordingPreset.CAMCORDER
+        // logger.info(TAG, "No AudioRecordingPresetOverride provided, assigning default presets")
+        // logger.info(TAG, "Low latency audio supported? $supportsLowLatency")
+        // if (supportsLowLatency) {
+        //     recordingPreset = AudioClient.AudioRecordingPreset.VOICE_RECOGNITION
+        // } else {
+        //     recordingPreset = AudioClient.AudioRecordingPreset.CAMCORDER
+        // }
+        // logger.info(TAG, "Using recording preset $recordingPreset")
+        // return recordingPreset
     }
 
     override fun start(
