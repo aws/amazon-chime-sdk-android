@@ -6,7 +6,6 @@
 package com.amazonaws.services.chime.sdk.meetings.internal.audio
 
 import android.content.Context
-import android.content.pm.PackageManager
 import android.media.AudioFormat
 import android.media.AudioManager
 import android.media.AudioRecord
@@ -52,9 +51,6 @@ class DefaultAudioClientController(
         context.getSystemService(Context.AUDIO_SERVICE) as AudioManager
     private var audioModePreCall: Int = audioManager.mode
     private var speakerphoneStatePreCall: Boolean = audioManager.isSpeakerphoneOn
-    private val packageManager: PackageManager = context.packageManager
-    private val supportsLowLatency: Boolean =
-        packageManager.hasSystemFeature(PackageManager.FEATURE_AUDIO_LOW_LATENCY)
 
     companion object {
         var audioClientState = AudioClientState.INITIALIZED
@@ -124,17 +120,9 @@ class DefaultAudioClientController(
     }
 
     private fun getDefaultRecordingPreset(): AudioClient.AudioRecordingPreset {
-        return AudioClient.AudioRecordingPreset.VOICE_COMMUNICATION
-        // var recordingPreset = AudioClient.AudioRecordingPreset.CAMCORDER
-        // logger.info(TAG, "No AudioRecordingPresetOverride provided, assigning default presets")
-        // logger.info(TAG, "Low latency audio supported? $supportsLowLatency")
-        // if (supportsLowLatency) {
-        //     recordingPreset = AudioClient.AudioRecordingPreset.VOICE_RECOGNITION
-        // } else {
-        //     recordingPreset = AudioClient.AudioRecordingPreset.CAMCORDER
-        // }
-        // logger.info(TAG, "Using recording preset $recordingPreset")
-        // return recordingPreset
+        val recordingPreset = AudioClient.AudioRecordingPreset.VOICE_COMMUNICATION
+        logger.info(TAG, "Using recording preset $recordingPreset")
+        return recordingPreset
     }
 
     override fun start(

@@ -6,7 +6,6 @@
 package com.amazonaws.services.chime.sdk.meetings.internal.audio
 
 import android.content.Context
-import android.content.pm.PackageManager
 import android.media.AudioDeviceInfo
 import android.media.AudioManager
 import android.media.AudioRecord
@@ -67,8 +66,6 @@ class DefaultAudioClientControllerTest {
 
     private lateinit var audioManager: AudioManager
 
-    private lateinit var packageManager: PackageManager
-
     private lateinit var audioClientController: DefaultAudioClientController
 
     private val testDispatcher = TestCoroutineDispatcher()
@@ -122,9 +119,6 @@ class DefaultAudioClientControllerTest {
         every { audioManager.setMode(any()) } just runs
         every { audioManager.setSpeakerphoneOn(any()) } just runs
         every { context.getSystemService(any()) } returns audioManager
-        packageManager = mockkClass(PackageManager::class)
-        every { context.packageManager } returns packageManager
-        every { packageManager.hasSystemFeature(any()) } returns true
     }
 
     private fun setupRouteTests(audioClientStatusCode: Int) {
