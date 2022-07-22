@@ -121,7 +121,7 @@ class DefaultAudioClientController(
 
     private fun getDefaultRecordingPreset(): AudioClient.AudioRecordingPreset {
         val recordingPreset = AudioClient.AudioRecordingPreset.VOICE_COMMUNICATION
-        logger.info(TAG, "Using recording preset $recordingPreset")
+        logger.info(TAG, "No AudioRecordingPreseOverride provided, using recording preset $recordingPreset")
         return recordingPreset
     }
 

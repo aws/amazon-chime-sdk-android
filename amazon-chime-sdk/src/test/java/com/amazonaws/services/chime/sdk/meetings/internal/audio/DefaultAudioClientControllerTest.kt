@@ -23,6 +23,7 @@ import com.amazonaws.services.chime.sdk.meetings.utils.logger.Logger
 import com.xodee.client.audio.audioclient.AppInfo
 import com.xodee.client.audio.audioclient.AudioClient
 import com.xodee.client.audio.audioclient.AudioClient.AudioModeInternal
+import com.xodee.client.audio.audioclient.AudioClient.AudioRecordingPreset
 import io.mockk.MockKAnnotations
 import io.mockk.every
 import io.mockk.impl.annotations.MockK
@@ -556,5 +557,115 @@ class DefaultAudioClientControllerTest {
 
         audioClientController.isVoiceFocusEnabled()
         verify(exactly = 0) { mockAudioClient.getVoiceFocusNoiseSuppression() }
+    }
+
+    @Test
+    fun `start with default recording preset when no override provided`() {
+        setupStartTests()
+
+        audioClientController.start(
+                testAudioFallbackUrl,
+                testAudioHostUrl,
+                testMeetingId,
+                testAttendeeId,
+                testJoinToken,
+                AudioMode.Mono16K,
+                AudioStreamType.VoiceCall,
+                AudioRecordingPresetOverride.None
+        )
+
+        verify {
+            mockAudioClient.startSession(withArg {
+                assertEquals(AudioRecordingPreset.VOICE_COMMUNICATION, it.audioRecordingPreset)
+            })
+        }
+    }
+
+    @Test
+    fun `start with recording preset of GENERIC if provided by builder`() {
+        setupStartTests()
+
+        audioClientController.start(
+                testAudioFallbackUrl,
+                testAudioHostUrl,
+                testMeetingId,
+                testAttendeeId,
+                testJoinToken,
+                AudioMode.Mono16K,
+                AudioStreamType.VoiceCall,
+                AudioRecordingPresetOverride.Generic
+        )
+
+        verify {
+            mockAudioClient.startSession(withArg {
+                assertEquals(AudioRecordingPreset.GENERIC, it.audioRecordingPreset)
+            })
+        }
+    }
+
+    @Test
+    fun `start with recording preset of CAMCORDER if provided by builder`() {
+        setupStartTests()
+
+        audioClientController.start(
+                testAudioFallbackUrl,
+                testAudioHostUrl,
+                testMeetingId,
+                testAttendeeId,
+                testJoinToken,
+                AudioMode.Mono16K,
+                AudioStreamType.VoiceCall,
+                AudioRecordingPresetOverride.Camcorder
+        )
+
+        verify {
+            mockAudioClient.startSession(withArg {
+                assertEquals(AudioRecordingPreset.CAMCORDER, it.audioRecordingPreset)
+            })
+        }
+    }
+
+    @Test
+    fun `start with recording preset of VOICE_RECOGNITION if provided by builder`() {
+        setupStartTests()
+
+        audioClientController.start(
+                testAudioFallbackUrl,
+                testAudioHostUrl,
+                testMeetingId,
+                testAttendeeId,
+                testJoinToken,
+                AudioMode.Mono16K,
+                AudioStreamType.VoiceCall,
+                AudioRecordingPresetOverride.VoiceRecognition
+        )
+
+        verify {
+            mockAudioClient.startSession(withArg {
+                assertEquals(AudioRecordingPreset.VOICE_RECOGNITION, it.audioRecordingPreset)
+            })
+        }
+    }
+
+    @Test
+    fun `start with recording preset of VOICE_COMMUNICATION if provided by builder`() {
+        setupStartTests()
+
+        audioClientController.start(
+                testAudioFallbackUrl,
+                testAudioHostUrl,
+                testMeetingId,
+                testAttendeeId,
+                testJoinToken,
+                AudioMode.Mono16K,
+                AudioStreamType.VoiceCall,
+                AudioRecordingPresetOverride.VoiceCommunication
+        )
+
+        verify {
+            mockAudioClient.startSession(withArg {
+                assertEquals(AudioRecordingPreset.VOICE_COMMUNICATION, it.audioRecordingPreset)
+            })
+        }
     }
 }
