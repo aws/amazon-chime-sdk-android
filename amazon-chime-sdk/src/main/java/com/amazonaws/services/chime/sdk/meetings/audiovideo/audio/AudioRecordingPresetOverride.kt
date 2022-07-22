@@ -6,9 +6,9 @@
 package com.amazonaws.services.chime.sdk.meetings.audiovideo.audio
 
 /**
- * [AudioRecordingPresetType] describes the audio recording preset in which
+ * [AudioRecordingPresetOverride] describes the audio recording preset in which
  * the audio client should operate during a meeting session.
- * The values below directly map to the values defined in:
+ * The values below (except None) directly map to the values defined in:
  * https://github.com/ricardoquesada/android-ndk/blob/master/usr/include/SLES/OpenSLES_AndroidConfiguration.h
  */
 enum class AudioRecordingPresetOverride {
