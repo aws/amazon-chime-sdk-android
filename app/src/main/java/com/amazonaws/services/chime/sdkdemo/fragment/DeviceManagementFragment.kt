@@ -68,7 +68,7 @@ class DeviceManagementFragment : Fragment(), DeviceChangeObserver {
     private val VIDEO_FORMAT_SPINNER_INDEX_KEY = "videoFormatSpinnerIndex"
 
     private val MAX_VIDEO_FORMAT_HEIGHT = 800
-    private val MAX_VIDEO_FORMAT_FPS = 15
+    private val MAX_VIDEO_FORMAT_FPS = 30
 
     companion object {
         fun newInstance(meetingId: String, name: String, audioVideoConfig: AudioVideoConfiguration): DeviceManagementFragment {
@@ -267,11 +267,13 @@ class DeviceManagementFragment : Fragment(), DeviceChangeObserver {
     private fun populateVideoFormatList(freshVideoCaptureFormatList: List<VideoCaptureFormat>) {
         videoFormats.clear()
 
-        val filteredFormats = freshVideoCaptureFormatList.filter { it.height <= MAX_VIDEO_FORMAT_HEIGHT }
+        val filteredFormats = freshVideoCaptureFormatList.filter {
+            it.height <= MAX_VIDEO_FORMAT_HEIGHT
+            it.maxFps <= MAX_VIDEO_FORMAT_FPS
+        }
 
         for (format in filteredFormats) {
-            // AmazonChimeSDKMedia library doesn't yet support 30FPS so anything above will lead to frame drops
-            videoFormats.add(VideoCaptureFormat(format.width, format.height, MAX_VIDEO_FORMAT_FPS))
+            videoFormats.add(VideoCaptureFormat(format.width, format.height, format.maxFps))
         }
         videoFormatArrayAdapter.notifyDataSetChanged()
     }

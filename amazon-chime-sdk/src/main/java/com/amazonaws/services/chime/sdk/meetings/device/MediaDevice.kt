@@ -10,9 +10,7 @@ import android.hardware.camera2.CameraCharacteristics
 import android.hardware.camera2.CameraManager
 import android.hardware.camera2.CameraMetadata
 import android.media.AudioDeviceInfo
-import android.util.Size
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.capture.VideoCaptureFormat
-import kotlin.math.roundToInt
 
 /**
  * Media device with its info.
@@ -41,7 +39,8 @@ data class MediaDevice(
     override fun toString(): String = label
 
     companion object {
-        private val NANO_SECONDS_PER_SECOND = 1.0e9
+
+        private val DEFAULT_MAX_VIDEO_FORMAT_FPS = 30
 
         /**
          * Lists currently available video devices.
@@ -66,14 +65,18 @@ data class MediaDevice(
          *
          * @param cameraManager: [CameraManager] - Camera manager to use for enumeration
          * @param mediaDevice: [MediaDevice] - Media device to inspect
-         *
+         * @param maxVideoFps: Int - Desired max fps
          * @return [List<VideoCaptureFormat>] - A list of supported formats for the given device
          */
         fun listSupportedVideoCaptureFormats(
             cameraManager: CameraManager,
-            mediaDevice: MediaDevice
+            mediaDevice: MediaDevice,
+            maxVideoFps: Int = DEFAULT_MAX_VIDEO_FORMAT_FPS
         ): List<VideoCaptureFormat> {
             val characteristics = cameraManager.getCameraCharacteristics(mediaDevice.id ?: return emptyList())
+            val fps = characteristics.get(
+                CameraCharacteristics.CONTROL_AE_AVAILABLE_TARGET_FPS_RANGES
+            )?.map { it.upper }?.filter { it <= maxVideoFps }?.max() ?: DEFAULT_MAX_VIDEO_FORMAT_FPS
 
             val streamMap =
                     characteristics.get(CameraCharacteristics.SCALER_STREAM_CONFIGURATION_MAP)
@@ -81,17 +84,7 @@ data class MediaDevice(
             val nativeSizes = streamMap.getOutputSizes(SurfaceTexture::class.java)
                     ?: return emptyList()
 
-            return nativeSizes.map { size ->
-                val minFrameDurationNs = streamMap.getOutputMinFrameDuration(
-                    SurfaceTexture::class.java, Size(size.width, size.height)
-                )
-                val maxFps = (NANO_SECONDS_PER_SECOND / minFrameDurationNs).roundToInt()
-                VideoCaptureFormat(
-                    size.width,
-                    size.height,
-                    maxFps
-                )
-            }
+            return nativeSizes.map { size -> VideoCaptureFormat(size.width, size.height, fps) }
         }
     }
 }

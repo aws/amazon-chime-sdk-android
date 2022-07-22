@@ -41,7 +41,6 @@ import com.amazonaws.services.chime.sdk.meetings.internal.utils.ConcurrentSet
 import com.amazonaws.services.chime.sdk.meetings.internal.utils.ObserverUtils
 import com.amazonaws.services.chime.sdk.meetings.utils.logger.Logger
 import kotlin.math.abs
-import kotlin.math.min
 import kotlinx.coroutines.Runnable
 import kotlinx.coroutines.android.asCoroutineDispatcher
 import kotlinx.coroutines.runBlocking
@@ -87,8 +86,7 @@ class DefaultCameraCaptureSource @JvmOverloads constructor(
 
     override val contentHint = VideoContentHint.Motion
 
-    private val MAX_INTERNAL_SUPPORTED_FPS = 15
-    private val DESIRED_CAPTURE_FORMAT = VideoCaptureFormat(960, 720, MAX_INTERNAL_SUPPORTED_FPS)
+    private val DESIRED_CAPTURE_FORMAT = VideoCaptureFormat(960, 720, 30)
     private val ROTATION_360_DEGREES = 360
 
     private val TAG = "DefaultCameraCaptureSource"
@@ -169,15 +167,7 @@ class DefaultCameraCaptureSource @JvmOverloads constructor(
                 return
             }
 
-            if (value.maxFps > MAX_INTERNAL_SUPPORTED_FPS) {
-                logger.info(TAG, "Limiting capture to 15 FPS to avoid frame drops")
-            }
-            field = VideoCaptureFormat(
-                value.width, value.height, min(
-                    value.maxFps,
-                    MAX_INTERNAL_SUPPORTED_FPS
-                )
-            )
+            field = VideoCaptureFormat(value.width, value.height, value.maxFps)
 
             // Restart capture if already running (i.e. we have a valid surface texture source)
             surfaceTextureSource?.let {
