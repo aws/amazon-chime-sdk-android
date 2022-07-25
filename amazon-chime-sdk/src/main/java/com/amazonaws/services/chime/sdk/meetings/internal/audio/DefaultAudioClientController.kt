@@ -16,6 +16,7 @@ import com.amazonaws.services.chime.sdk.meetings.analytics.EventName
 import com.amazonaws.services.chime.sdk.meetings.analytics.MeetingStatsCollector
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.PrimaryMeetingPromotionObserver
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.audio.AudioMode
+import com.amazonaws.services.chime.sdk.meetings.audiovideo.audio.AudioRecordingPresetOverride
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.audio.AudioStreamType
 import com.amazonaws.services.chime.sdk.meetings.internal.utils.AppInfoUtil
 import com.amazonaws.services.chime.sdk.meetings.session.MeetingSessionCredentials
@@ -118,6 +119,12 @@ class DefaultAudioClientController(
         return audioClient.setRoute(route) == AUDIO_CLIENT_RESULT_SUCCESS
     }
 
+    private fun getDefaultRecordingPreset(): AudioClient.AudioRecordingPreset {
+        val recordingPreset = AudioClient.AudioRecordingPreset.VOICE_COMMUNICATION
+        logger.info(TAG, "No AudioRecordingPreseOverride provided, using recording preset $recordingPreset")
+        return recordingPreset
+    }
+
     override fun start(
         audioFallbackUrl: String,
         audioHostUrl: String,
@@ -125,7 +132,8 @@ class DefaultAudioClientController(
         attendeeId: String,
         joinToken: String,
         audioMode: AudioMode,
-        audioStreamType: AudioStreamType
+        audioStreamType: AudioStreamType,
+        audioRecordingPresetOverride: AudioRecordingPresetOverride
     ) {
         // Validate audio client state
         if (audioClientState != AudioClientState.INITIALIZED &&
@@ -181,6 +189,14 @@ class DefaultAudioClientController(
                 AudioStreamType.Music -> AudioClient.AudioStreamType.MUSIC
             }
 
+            var audioRecordingPresetInternal = when (audioRecordingPresetOverride) {
+                AudioRecordingPresetOverride.None -> getDefaultRecordingPreset()
+                AudioRecordingPresetOverride.Generic -> AudioClient.AudioRecordingPreset.GENERIC
+                AudioRecordingPresetOverride.Camcorder -> AudioClient.AudioRecordingPreset.CAMCORDER
+                AudioRecordingPresetOverride.VoiceRecognition -> AudioClient.AudioRecordingPreset.VOICE_RECOGNITION
+                AudioRecordingPresetOverride.VoiceCommunication -> AudioClient.AudioRecordingPreset.VOICE_COMMUNICATION
+            }
+
             var config = AudioClientSessionConfig.Builder(
                 host,
                 port,
@@ -190,7 +206,8 @@ class DefaultAudioClientController(
                 audioFallbackUrl,
                 appInfo,
                 audioModeInternal,
-                audioStreamTypeInternal
+                audioStreamTypeInternal,
+                audioRecordingPresetInternal
             ).withTransportMode(AudioClient.XTL_DEFAULT_TRANSPORT)
                 .withMicMute(muteMicAndSpeaker)
                 .withSpkMute(muteMicAndSpeaker)

@@ -51,7 +51,8 @@ class DefaultAudioVideoController(
             attendeeId = configuration.credentials.attendeeId,
             joinToken = configuration.credentials.joinToken,
             audioMode = audioVideoConfiguration.audioMode,
-            audioStreamType = audioVideoConfiguration.audioStreamType
+            audioStreamType = audioVideoConfiguration.audioStreamType,
+            audioRecordingPresetOverride = audioVideoConfiguration.audioRecordingPresetOverride
         )
         videoClientController.start()
     }
