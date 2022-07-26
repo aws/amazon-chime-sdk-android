@@ -51,6 +51,7 @@ import com.amazonaws.services.chime.sdk.meetings.audiovideo.TranscriptionStatus
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.TranscriptionStatusType
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.VolumeUpdate
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.audio.AudioMode
+import com.amazonaws.services.chime.sdk.meetings.audiovideo.audio.AudioRecordingPresetOverride
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.audio.activespeakerdetector.ActiveSpeakerObserver
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.audio.activespeakerpolicy.DefaultActiveSpeakerPolicy
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.contentshare.ContentShareObserver
@@ -303,7 +304,9 @@ class MeetingFragment : Fragment(),
         val audioMode = arguments?.getInt(HomeActivity.AUDIO_MODE_KEY)?.let { intValue ->
             AudioMode.from(intValue, defaultAudioMode = AudioMode.Stereo48K)
         } ?: AudioMode.Stereo48K
-        val audioVideoConfig = AudioVideoConfiguration(audioMode = audioMode)
+        val audioVideoConfig = AudioVideoConfiguration(
+            audioMode = audioMode,
+            audioRecordingPresetOverride = AudioRecordingPresetOverride.Generic)
         // Start Audio Video
         audioVideo.start(audioVideoConfig)
         audioVideo.startRemoteVideo()
