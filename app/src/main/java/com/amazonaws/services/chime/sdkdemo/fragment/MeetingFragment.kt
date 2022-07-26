@@ -306,7 +306,7 @@ class MeetingFragment : Fragment(),
         } ?: AudioMode.Stereo48K
         val audioVideoConfig = AudioVideoConfiguration(
             audioMode = audioMode,
-            audioRecordingPresetOverride = AudioRecordingPresetOverride.Generic)
+            audioRecordingPresetOverride = AudioRecordingPresetOverride.Camcorder)
         // Start Audio Video
         audioVideo.start(audioVideoConfig)
         audioVideo.startRemoteVideo()
