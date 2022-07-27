@@ -665,15 +665,6 @@ Applications can get logs from Chime SDK by passing instances of Logger when cre
 val logger = ConsoleLogger(LogLevel.VERBOSE)
 ```
 
-#### Remote attendees cannot hear my audio, what do I do?
-The SDK uses [OpenSL ES](https://developer.android.com/ndk/guides/audio/opensl/opensl-for-android) underneath which requires the setting of recording presets while opening the connection to the microphone device. We have discovered that there isn't a specific preset value that works well on all possible android devices. The SDK uses a default preset of `VoiceCommunication` which we have arrived at after running some tests on the devices in our possession. If this default preset does not work and is leading to the remote party not being able to hear you, please try starting the session with a different recording preset by specifying `audioRecordingPresetOverride` in the `AudioVideoConfiguration` that is passed into the start API.
-```kotlin
-// Creating a config where the preset is overriden with Generic (for example)
-val audioVideoConfig = AudioVideoConfiguration(audioRecordingPresetOverride = AudioRecordingPresetOverride.Generic)
-// Start Audio Video
-audioVideo.start(audioVideoConfig)
-```
-
 ## Notice
 
 The use of background replacement is subject to additional notice. You and your end users are responsible for all Content (including any images) uploaded for use with background replacement, and must ensure that such Content does not violate the law, infringe or misappropriate the rights of any third party, or otherwise violate a material term of your agreement with Amazon (including the documentation, the AWS Service Terms, or the Acceptable Use Policy).

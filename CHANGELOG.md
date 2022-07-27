@@ -2,7 +2,6 @@
 
 ### Changed
 * Changed `listSupportedVideoCaptureFormats` to find max fps from device
-* Added `AudioRecordingPresetOverride` to allow builders to pass in openSL ES recording preset configuration incase the default used by us does not work for some android devices.
 
 ## [0.17.3] - 2022-07-14
 

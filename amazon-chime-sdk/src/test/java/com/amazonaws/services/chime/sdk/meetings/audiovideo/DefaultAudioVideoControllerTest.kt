@@ -6,7 +6,6 @@
 package com.amazonaws.services.chime.sdk.meetings.audiovideo
 
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.audio.AudioMode
-import com.amazonaws.services.chime.sdk.meetings.audiovideo.audio.AudioRecordingPresetOverride
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.audio.AudioStreamType
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.metric.MetricsObserver
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.RemoteVideoSource
@@ -120,8 +119,7 @@ class DefaultAudioVideoControllerTest {
                 attendeeId,
                 joinToken,
                 AudioMode.Stereo48K,
-                AudioStreamType.VoiceCall,
-                AudioRecordingPresetOverride.None
+                AudioStreamType.VoiceCall
             )
         }
     }
@@ -138,8 +136,7 @@ class DefaultAudioVideoControllerTest {
                     attendeeId,
                     joinToken,
                     AudioMode.Mono16K,
-                    AudioStreamType.VoiceCall,
-                    AudioRecordingPresetOverride.None
+                    AudioStreamType.VoiceCall
             )
         }
     }
@@ -156,8 +153,7 @@ class DefaultAudioVideoControllerTest {
                     attendeeId,
                     joinToken,
                     AudioMode.Mono48K,
-                    AudioStreamType.VoiceCall,
-                    AudioRecordingPresetOverride.None
+                    AudioStreamType.VoiceCall
             )
         }
     }
@@ -174,8 +170,7 @@ class DefaultAudioVideoControllerTest {
                     attendeeId,
                     joinToken,
                     AudioMode.Stereo48K,
-                    AudioStreamType.VoiceCall,
-                    AudioRecordingPresetOverride.None
+                    AudioStreamType.VoiceCall
             )
         }
     }
@@ -192,8 +187,7 @@ class DefaultAudioVideoControllerTest {
                 attendeeId,
                 joinToken,
                 AudioMode.Stereo48K,
-                AudioStreamType.VoiceCall,
-                AudioRecordingPresetOverride.None
+                AudioStreamType.VoiceCall
             )
         }
     }
@@ -210,8 +204,7 @@ class DefaultAudioVideoControllerTest {
                 attendeeId,
                 joinToken,
                 AudioMode.Stereo48K,
-                AudioStreamType.Music,
-                AudioRecordingPresetOverride.None
+                AudioStreamType.Music
             )
         }
     }
@@ -228,8 +221,7 @@ class DefaultAudioVideoControllerTest {
                 attendeeId,
                 joinToken,
                 AudioMode.NoDevice,
-                AudioStreamType.VoiceCall,
-                AudioRecordingPresetOverride.None
+                AudioStreamType.VoiceCall
             )
         }
     }
