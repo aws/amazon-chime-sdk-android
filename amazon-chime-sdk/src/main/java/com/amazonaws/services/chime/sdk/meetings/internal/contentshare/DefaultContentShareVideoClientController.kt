@@ -38,6 +38,7 @@ class DefaultContentShareVideoClientController(
 
     private val TAG = "DefaultContentShareVideoClientController"
 
+    private val VIDEO_CLIENT_FLAG_ENABLE_UNIFIED_PLAN = 1 shl 3
     private val VIDEO_CLIENT_FLAG_ENABLE_SEND_SIDE_BWE = 1 shl 5
     private val VIDEO_CLIENT_FLAG_ENABLE_USE_HW_DECODE_AND_RENDER = 1 shl 6
     private val VIDEO_CLIENT_FLAG_ENABLE_TWO_SIMULCAST_STREAMS = 1 shl 12
@@ -45,6 +46,7 @@ class DefaultContentShareVideoClientController(
     private val VIDEO_CLIENT_FLAG_DISABLE_CAPTURER = 1 shl 20
     private val VIDEO_CLIENT_FLAG_IS_CONTENT = 1 shl 23
     private val VIDEO_CLIENT_FLAG_ENABLE_INBAND_TURN_CREDS = 1 shl 26
+    private val VIDEO_CLIENT_FLAG_ENABLE_NEW_SIGNALING_CLIENT = 1 shl 28
 
     override fun startVideoShare(videoSource: VideoSource) {
         // Start the given content share source
@@ -99,6 +101,8 @@ class DefaultContentShareVideoClientController(
         flag = flag or VIDEO_CLIENT_FLAG_DISABLE_CAPTURER
         flag = flag or VIDEO_CLIENT_FLAG_IS_CONTENT
         flag = flag or VIDEO_CLIENT_FLAG_ENABLE_INBAND_TURN_CREDS
+        flag = flag or VIDEO_CLIENT_FLAG_ENABLE_UNIFIED_PLAN
+        flag = flag or VIDEO_CLIENT_FLAG_ENABLE_NEW_SIGNALING_CLIENT
 
         val videoClientConfig: VideoClientConfig = VideoClientConfigBuilder()
             .setMeetingId(configuration.meetingId)
