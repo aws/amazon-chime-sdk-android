@@ -217,7 +217,7 @@ The video tile state is represented by a [VideoPauseState](https://aws.github.io
 ### 8e. Binding a video tile to a video view
 
 To display video, you will also need to bind a video view to a video tile. Create a 
-[VideoRenderView](https://aws.github.io/amazon-chime-sdk-android/amazon-chime-sdk/com.amazonaws.services.chime.sdk.meetings.audiovideo.video/-video-render-view/index.html) and bind that view to the video tile in VideoTileObserver's `onVideoTileAdded` 
+[VideoRenderView](https://aws.github.io/amazon-chime-sdk-android/amazon-chime-sdk/com.amazonaws.services.chime.sdk.meetings.audiovideo.video/-video-render-view.html) and bind that view to the video tile in VideoTileObserver's `onVideoTileAdded` 
 method. You can use [DefaultVideoRenderView](https://aws.github.io/amazon-chime-sdk-android/amazon-chime-sdk/com.amazonaws.services.chime.sdk.meetings.audiovideo.video/-default-video-render-view/index.html) or customize the behavior by implementing the
 VideoRenderView interface.
 
