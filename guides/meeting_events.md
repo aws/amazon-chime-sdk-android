@@ -217,7 +217,7 @@ This section includes sample code for the [Monitoring and troubleshooting with A
 3. The next step uses [Gson](https://github.com/google/gson) as a dependency to convert meeting events to JSON. Add it to your Gradle build.
     ```
     dependencies {
-      implementation 'com.google.code.gson:gson:2.8.6'
+      implementation 'com.google.code.gson:gson:2.9.0'
     }
     ```
 4. When a meeting ends, upload meeting events to the endpoint that you created in Step 1. Set the endpoint to the **MeetingEventApiEndpoint** value from the **Outputs** tab of the AWS CloudFormation console
