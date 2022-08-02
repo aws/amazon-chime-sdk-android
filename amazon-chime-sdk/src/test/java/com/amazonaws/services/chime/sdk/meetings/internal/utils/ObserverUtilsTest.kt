@@ -10,10 +10,14 @@ import io.mockk.mockk
 import io.mockk.mockkStatic
 import io.mockk.verify
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.TestCoroutineDispatcher
 import kotlinx.coroutines.test.resetMain
+import kotlinx.coroutines.test.runBlockingTest
 import kotlinx.coroutines.test.setMain
 import org.junit.After
+import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
 
@@ -27,7 +31,7 @@ class ObserverUtilsTest {
     }
 
     private val testDispatcher = TestCoroutineDispatcher()
-    private val mockObservers = mutableSetOf<MockObserver>()
+    private val mockObservers = ConcurrentSet.createConcurrentSet<MockObserver>()
 
     @Before
     fun setUp() {
@@ -48,5 +52,30 @@ class ObserverUtilsTest {
         ObserverUtils.notifyObserverOnMainThread(mockObservers) { it.mockFn() }
 
         verify { mockObserver.mockFn() }
+    }
+
+    @Test
+    fun `forEachObserver should call for each observer that is added concurrently`() = runBlockingTest {
+        launch {
+            for (index in 0..49) {
+                val mockObserver: MockObserver = mockk(relaxed = true)
+                mockObservers.add(mockObserver)
+            }
+        }
+        val deferred = async {
+            for (index in 0..48) {
+                val mockObserver: MockObserver = mockk(relaxed = true)
+                mockObservers.add(mockObserver)
+            }
+        }
+        deferred.await()
+        ObserverUtils.notifyObserverOnMainThread(mockObservers) { it.mockFn() }
+
+        assertEquals(mockObservers.size, 100)
+        verify {
+            for (observer in mockObservers) {
+                observer.mockFn()
+            }
+        }
     }
 }
