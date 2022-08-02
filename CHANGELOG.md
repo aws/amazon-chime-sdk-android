@@ -1,3 +1,8 @@
+## unreleased
+
+### Fixed
+* Use thread safe mutableSet for observers
+
 ## [0.17.4] - 2022-07-28
 
 ### Changed

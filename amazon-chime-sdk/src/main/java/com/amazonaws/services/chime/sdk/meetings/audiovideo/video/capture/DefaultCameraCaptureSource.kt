@@ -78,7 +78,7 @@ class DefaultCameraCaptureSource @JvmOverloads constructor(
     // create a new one
     private var surfaceTextureSource: SurfaceTextureCaptureSource? = null
 
-    private val observers = mutableSetOf<CaptureSourceObserver>()
+    private val observers = ConcurrentSet.createConcurrentSet<CaptureSourceObserver>()
 
     // Concurrency modification could happen when sink gets
     // added/removed from another thread while sending frames

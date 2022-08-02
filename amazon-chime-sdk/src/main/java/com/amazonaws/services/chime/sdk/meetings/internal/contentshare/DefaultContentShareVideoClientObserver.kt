@@ -10,6 +10,7 @@ import com.amazonaws.services.chime.sdk.meetings.audiovideo.contentshare.Content
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.contentshare.ContentShareStatus
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.contentshare.ContentShareStatusCode
 import com.amazonaws.services.chime.sdk.meetings.internal.metric.ClientMetricsCollector
+import com.amazonaws.services.chime.sdk.meetings.internal.utils.ConcurrentSet
 import com.amazonaws.services.chime.sdk.meetings.internal.utils.DNSServerUtils
 import com.amazonaws.services.chime.sdk.meetings.internal.utils.ObserverUtils
 import com.amazonaws.services.chime.sdk.meetings.internal.utils.TURNRequestUtils
@@ -33,7 +34,7 @@ class DefaultContentShareVideoClientObserver(
 ) : ContentShareVideoClientObserver {
     private val TAG = "DefaultContentShareVideoClientObserver"
 
-    private val contentShareObservers = mutableSetOf<ContentShareObserver>()
+    private val contentShareObservers = ConcurrentSet.createConcurrentSet<ContentShareObserver>()
 
     private val uiScope = CoroutineScope(Dispatchers.Main)
 

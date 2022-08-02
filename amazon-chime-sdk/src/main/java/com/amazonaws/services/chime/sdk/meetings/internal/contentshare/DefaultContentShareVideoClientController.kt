@@ -13,6 +13,7 @@ import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoSource
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.gl.EglCore
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.gl.EglCoreFactory
 import com.amazonaws.services.chime.sdk.meetings.internal.utils.AppInfoUtil
+import com.amazonaws.services.chime.sdk.meetings.internal.utils.ConcurrentSet
 import com.amazonaws.services.chime.sdk.meetings.internal.utils.ObserverUtils
 import com.amazonaws.services.chime.sdk.meetings.internal.video.VideoClientFactory
 import com.amazonaws.services.chime.sdk.meetings.internal.video.VideoSourceAdapter
@@ -30,7 +31,7 @@ class DefaultContentShareVideoClientController(
     private val videoClientFactory: VideoClientFactory,
     private val eglCoreFactory: EglCoreFactory
 ) : ContentShareVideoClientController {
-    private val observers = mutableSetOf<ContentShareObserver>()
+    private val observers = ConcurrentSet.createConcurrentSet<ContentShareObserver>()
     private val videoSourceAdapter = VideoSourceAdapter()
     private var videoClient: VideoClient? = null
     private var eglCore: EglCore? = null

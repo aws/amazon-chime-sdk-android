@@ -7,6 +7,7 @@ package com.amazonaws.services.chime.sdk.meetings.analytics
 
 import com.amazonaws.services.chime.sdk.meetings.ingestion.EventReporter
 import com.amazonaws.services.chime.sdk.meetings.internal.ingestion.SDKEvent
+import com.amazonaws.services.chime.sdk.meetings.internal.utils.ConcurrentSet
 import com.amazonaws.services.chime.sdk.meetings.internal.utils.EventAttributesUtils
 import com.amazonaws.services.chime.sdk.meetings.internal.utils.ObserverUtils
 import com.amazonaws.services.chime.sdk.meetings.session.MeetingSessionConfiguration
@@ -19,7 +20,7 @@ class DefaultEventAnalyticsController(
     private val meetingStatsCollector: MeetingStatsCollector,
     private val eventReporter: EventReporter? = null
 ) : EventAnalyticsController {
-    private var eventAnalyticsObservers: MutableSet<EventAnalyticsObserver> = mutableSetOf()
+    private var eventAnalyticsObservers = ConcurrentSet.createConcurrentSet<EventAnalyticsObserver>()
 
     override fun publishEvent(name: EventName, attributes: EventAttributes?) {
         val now = Calendar.getInstance().timeInMillis

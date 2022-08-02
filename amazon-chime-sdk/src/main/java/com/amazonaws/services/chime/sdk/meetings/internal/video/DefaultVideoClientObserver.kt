@@ -17,6 +17,7 @@ import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.buffer.VideoFr
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.buffer.VideoFrameI420Buffer
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.buffer.VideoFrameTextureBuffer
 import com.amazonaws.services.chime.sdk.meetings.internal.metric.ClientMetricsCollector
+import com.amazonaws.services.chime.sdk.meetings.internal.utils.ConcurrentSet
 import com.amazonaws.services.chime.sdk.meetings.internal.utils.DNSServerUtils
 import com.amazonaws.services.chime.sdk.meetings.internal.utils.ObserverUtils
 import com.amazonaws.services.chime.sdk.meetings.internal.utils.TURNRequestUtils
@@ -48,12 +49,12 @@ class DefaultVideoClientObserver(
 ) : VideoClientObserver {
     private val TAG = "DefaultVideoClientObserver"
 
-    private var videoClientStateObservers = mutableSetOf<AudioVideoObserver>()
-    private var videoClientTileObservers = mutableSetOf<VideoTileController>()
+    private var videoClientStateObservers = ConcurrentSet.createConcurrentSet<AudioVideoObserver>()
+    private var videoClientTileObservers = ConcurrentSet.createConcurrentSet<VideoTileController>()
     private var dataMessageObserversByTopic = mutableMapOf<String, MutableSet<DataMessageObserver>>()
     // We have designed the SDK API to allow using `RemoteVideoSource` as a key in a map, e.g. for  `updateVideoSourceSubscription`.
     // Therefore we need to map to a consistent set of sources from the internal sources, by using attendeeId as a unique identifier.
-    private var cachedRemoveVideoSources = mutableSetOf<RemoteVideoSource>()
+    private var cachedRemoveVideoSources = ConcurrentSet.createConcurrentSet<RemoteVideoSource>()
 
     override var primaryMeetingPromotionObserver: PrimaryMeetingPromotionObserver? = null
 

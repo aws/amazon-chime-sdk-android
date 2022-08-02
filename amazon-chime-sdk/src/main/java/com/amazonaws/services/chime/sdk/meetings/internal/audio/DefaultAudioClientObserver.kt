@@ -30,6 +30,7 @@ import com.amazonaws.services.chime.sdk.meetings.audiovideo.VolumeUpdate
 import com.amazonaws.services.chime.sdk.meetings.internal.AttendeeStatus
 import com.amazonaws.services.chime.sdk.meetings.internal.SessionStateControllerAction
 import com.amazonaws.services.chime.sdk.meetings.internal.metric.ClientMetricsCollector
+import com.amazonaws.services.chime.sdk.meetings.internal.utils.ConcurrentSet
 import com.amazonaws.services.chime.sdk.meetings.internal.utils.ObserverUtils
 import com.amazonaws.services.chime.sdk.meetings.realtime.RealtimeObserver
 import com.amazonaws.services.chime.sdk.meetings.realtime.TranscriptEventObserver
@@ -67,9 +68,9 @@ class DefaultAudioClientObserver(
     private var currentAudioState = SessionStateControllerAction.Init
     private var currentAudioStatus: MeetingSessionStatusCode? = MeetingSessionStatusCode.OK
 
-    private var audioClientStateObservers = mutableSetOf<AudioVideoObserver>()
-    private var realtimeEventObservers = mutableSetOf<RealtimeObserver>()
-    private var transcriptEventObservers = mutableSetOf<TranscriptEventObserver>()
+    private var audioClientStateObservers = ConcurrentSet.createConcurrentSet<AudioVideoObserver>()
+    private var realtimeEventObservers = ConcurrentSet.createConcurrentSet<RealtimeObserver>()
+    private var transcriptEventObservers = ConcurrentSet.createConcurrentSet<TranscriptEventObserver>()
 
     /**
      * Volume state change can be used to figure out the meeting's current attendees.

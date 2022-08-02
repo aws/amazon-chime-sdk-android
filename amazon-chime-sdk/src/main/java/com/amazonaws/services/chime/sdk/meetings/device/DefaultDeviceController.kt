@@ -22,6 +22,7 @@ import com.amazonaws.services.chime.sdk.meetings.analytics.MeetingHistoryEventNa
 import com.amazonaws.services.chime.sdk.meetings.internal.audio.AudioClientController
 import com.amazonaws.services.chime.sdk.meetings.internal.audio.AudioClientState
 import com.amazonaws.services.chime.sdk.meetings.internal.audio.DefaultAudioClientController
+import com.amazonaws.services.chime.sdk.meetings.internal.utils.ConcurrentSet
 import com.amazonaws.services.chime.sdk.meetings.internal.utils.ObserverUtils
 import com.amazonaws.services.chime.sdk.meetings.internal.video.VideoClientController
 import com.xodee.client.audio.audioclient.AudioClient
@@ -34,7 +35,7 @@ class DefaultDeviceController(
     private val audioManager: AudioManager = context.getSystemService(Context.AUDIO_SERVICE) as AudioManager,
     private val buildVersion: Int = Build.VERSION.SDK_INT
 ) : DeviceController {
-    private val deviceChangeObservers = mutableSetOf<DeviceChangeObserver>()
+    private val deviceChangeObservers = ConcurrentSet.createConcurrentSet<DeviceChangeObserver>()
 
     // TODO: remove code blocks for lower API level after the minimum SDK version becomes 23
     private val AUDIO_MANAGER_API_LEVEL = 23

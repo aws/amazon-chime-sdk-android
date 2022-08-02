@@ -8,6 +8,7 @@ package com.amazonaws.services.chime.sdk.meetings.audiovideo.video
 import com.amazonaws.services.chime.sdk.meetings.analytics.MeetingStatsCollector
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.gl.EglCoreFactory
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.gl.EglVideoRenderView
+import com.amazonaws.services.chime.sdk.meetings.internal.utils.ConcurrentSet
 import com.amazonaws.services.chime.sdk.meetings.internal.utils.ObserverUtils
 import com.amazonaws.services.chime.sdk.meetings.internal.video.VideoClientController
 import com.amazonaws.services.chime.sdk.meetings.utils.logger.Logger
@@ -25,7 +26,7 @@ class DefaultVideoTileController(
     private val renderViewToBoundVideoTileMap = mutableMapOf<VideoRenderView, VideoTile>()
     private val TAG = "DefaultVideoTileController"
 
-    private var videoTileObservers = mutableSetOf<VideoTileObserver>()
+    private var videoTileObservers = ConcurrentSet.createConcurrentSet<VideoTileObserver>()
 
     override fun onReceiveFrame(
         frame: VideoFrame?,
