@@ -49,8 +49,7 @@ class DefaultContentShareVideoClientController(
     private val VIDEO_CLIENT_FLAG_ENABLE_INBAND_TURN_CREDS = 1 shl 26
 
     override fun startVideoShare(videoSource: VideoSource) {
-        val localVideoConfig = LocalVideoConfiguration()
-        startVideoShare(videoSource, localVideoConfig)
+        startVideoShare(videoSource, LocalVideoConfiguration())
     }
 
     override fun startVideoShare(videoSource: VideoSource, config: LocalVideoConfiguration) {
@@ -84,7 +83,7 @@ class DefaultContentShareVideoClientController(
         logger.debug(TAG, "Setting sending to true")
         videoClient?.setSending(true)
         isSharing = true
-        config.maxBitRateKbps.toInt().let {
+        config.safeMaxBitRateKbps.let {
             if (it > 0) videoClient?.setMaxBitRateKbps(it)
         }
     }

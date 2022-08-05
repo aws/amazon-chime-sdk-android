@@ -462,7 +462,7 @@ meetingSession.audioVideo.startLocalVideo(localVideoConfig)
 // You can switch camera to change the video input device
 meetingSession.audioVideo.switchCamera()
 
-// Or you can inject custom video source for local video, see [custom video guide](https://github.com/aws/amazon-chime-sdk-android/blob/master/guides/custom_video.md)
+// Or you can inject custom video source for local video, see custom video guide
 ```
 
 #### Use case 16. Stop sharing your video.

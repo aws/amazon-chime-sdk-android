@@ -150,7 +150,7 @@ class DefaultVideoClientControllerTest {
     @Test
     fun `startLocalVideo should start camera capture and setMaxBitRateKbps with given video config`() {
         every { mockVideoClientStateController.canAct(any()) } returns true
-        val localVideoConfig = LocalVideoConfiguration(600U)
+        val localVideoConfig = LocalVideoConfiguration(600)
 
         testVideoClientController.startLocalVideo(localVideoConfig)
 
@@ -174,7 +174,7 @@ class DefaultVideoClientControllerTest {
     @Test
     fun `startLocalVideo should not start camera capture and setMaxBitRateKbps with given video config`() {
         every { mockVideoClientStateController.canAct(any()) } returns true
-        val localVideoConfig = LocalVideoConfiguration(600U)
+        val localVideoConfig = LocalVideoConfiguration(600)
 
         testVideoClientController.startLocalVideo(mockVideoSource, localVideoConfig)
 

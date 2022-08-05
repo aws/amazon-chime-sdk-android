@@ -1114,7 +1114,7 @@ class MeetingFragment : Fragment(),
 
         videoConfigDialogBuilder.setView(maxBitRateInput)
         videoConfigDialogBuilder.setPositiveButton("Done", DialogInterface.OnClickListener { dialog, which ->
-            meetingModel.localVideoMaxBitRateKbps = maxBitRateInput.text.toString().toUIntOrNull() ?: 0U
+            meetingModel.localVideoMaxBitRateKbps = maxBitRateInput.text.toString().toIntOrNull() ?: 0
             // If local video is started, restart
             if (meetingModel.isLocalVideoStarted) {
                 startLocalVideo()
