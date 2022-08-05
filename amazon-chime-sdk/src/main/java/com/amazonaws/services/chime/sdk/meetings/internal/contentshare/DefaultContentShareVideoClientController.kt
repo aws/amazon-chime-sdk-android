@@ -9,6 +9,7 @@ import android.content.Context
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.contentshare.ContentShareObserver
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.contentshare.ContentShareStatus
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.contentshare.ContentShareStatusCode
+import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.LocalVideoConfiguration
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoSource
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.gl.EglCore
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.gl.EglCoreFactory
@@ -48,6 +49,10 @@ class DefaultContentShareVideoClientController(
     private val VIDEO_CLIENT_FLAG_ENABLE_INBAND_TURN_CREDS = 1 shl 26
 
     override fun startVideoShare(videoSource: VideoSource) {
+        startVideoShare(videoSource, LocalVideoConfiguration())
+    }
+
+    override fun startVideoShare(videoSource: VideoSource, config: LocalVideoConfiguration) {
         // Start the given content share source
         if (eglCore == null) {
             logger.debug(TAG, "Creating EGL core")
@@ -78,6 +83,9 @@ class DefaultContentShareVideoClientController(
         logger.debug(TAG, "Setting sending to true")
         videoClient?.setSending(true)
         isSharing = true
+        config.safeMaxBitRateKbps.let {
+            if (it > 0) videoClient?.setMaxBitRateKbps(it)
+        }
     }
 
     private fun initializeVideoClient() {

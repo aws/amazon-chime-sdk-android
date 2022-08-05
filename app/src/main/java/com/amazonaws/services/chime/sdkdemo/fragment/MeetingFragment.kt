@@ -9,6 +9,7 @@ import android.app.Activity
 import android.app.AlertDialog
 import android.content.ComponentName
 import android.content.Context
+import android.content.DialogInterface
 import android.content.Intent
 import android.content.ServiceConnection
 import android.content.pm.PackageManager
@@ -18,6 +19,7 @@ import android.os.Handler
 import android.os.IBinder
 import android.os.Looper
 import android.os.PowerManager
+import android.text.InputType
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -57,6 +59,7 @@ import com.amazonaws.services.chime.sdk.meetings.audiovideo.contentshare.Content
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.contentshare.ContentShareStatus
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.metric.MetricsObserver
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.metric.ObservableMetric
+import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.LocalVideoConfiguration
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.RemoteVideoSource
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoPauseState
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoPriority
@@ -608,7 +611,8 @@ class MeetingFragment : Fragment(),
             context?.getString(if (cameraCaptureSource.torchEnabled) R.string.disable_flashlight else R.string.enable_flashlight),
             context?.getString(if (meetingModel.isUsingCpuVideoProcessor) R.string.disable_cpu_filter else R.string.enable_cpu_filter),
             context?.getString(if (meetingModel.isUsingGpuVideoProcessor) R.string.disable_gpu_filter else R.string.enable_gpu_filter),
-            context?.getString(if (meetingModel.isUsingCameraCaptureSource) R.string.disable_custom_capture_source else R.string.enable_custom_capture_source)
+            context?.getString(if (meetingModel.isUsingCameraCaptureSource) R.string.disable_custom_capture_source else R.string.enable_custom_capture_source),
+            context?.getString(R.string.video_configuration)
         )
         if (inReplicaMeeting()) {
             additionalToggles.add(context?.getString(R.string.demote_from_primary_meeting))
@@ -624,7 +628,8 @@ class MeetingFragment : Fragment(),
                 3 -> toggleCpuDemoFilter()
                 4 -> toggleGpuDemoFilter()
                 5 -> toggleCustomCaptureSource()
-                6 -> { // May not be accessible
+                6 -> presentVideoConfigDialog()
+                7 -> { // May not be accessible
                     if (inReplicaMeeting()) {
                         demoteFromPrimaryMeeting()
                     } else {
@@ -1099,6 +1104,25 @@ class MeetingFragment : Fragment(),
         }
     }
 
+    private fun presentVideoConfigDialog() {
+        val videoConfigDialogBuilder = AlertDialog.Builder(activity)
+        videoConfigDialogBuilder.setTitle(R.string.video_configuration)
+
+        val maxBitRateInput = EditText(activity)
+        maxBitRateInput.setHint(getString(R.string.video_max_bit_rate_hint))
+        maxBitRateInput.inputType = InputType.TYPE_CLASS_NUMBER
+
+        videoConfigDialogBuilder.setView(maxBitRateInput)
+        videoConfigDialogBuilder.setPositiveButton("Done", DialogInterface.OnClickListener { dialog, which ->
+            meetingModel.localVideoMaxBitRateKbps = maxBitRateInput.text.toString().toIntOrNull() ?: 0
+            // If local video is started, restart
+            if (meetingModel.isLocalVideoStarted) {
+                startLocalVideo()
+            }
+        })
+        videoConfigDialogBuilder.show()
+    }
+
     private fun refreshNoVideosOrScreenShareAvailableText() {
         if (meetingModel.tabIndex == SubTab.Video.position) {
             if (meetingModel.videoStatesInCurrentPage.isNotEmpty()) {
@@ -1121,25 +1145,26 @@ class MeetingFragment : Fragment(),
 
     private fun startLocalVideo() {
         meetingModel.isLocalVideoStarted = true
+        val localVideoConfig = LocalVideoConfiguration(meetingModel.localVideoMaxBitRateKbps)
         if (meetingModel.isUsingCameraCaptureSource) {
             if (meetingModel.isUsingGpuVideoProcessor) {
                 cameraCaptureSource.addVideoSink(gpuVideoProcessor)
-                audioVideo.startLocalVideo(gpuVideoProcessor)
+                audioVideo.startLocalVideo(gpuVideoProcessor, localVideoConfig)
             } else if (meetingModel.isUsingCpuVideoProcessor) {
                 cameraCaptureSource.addVideoSink(cpuVideoProcessor)
-                audioVideo.startLocalVideo(cpuVideoProcessor)
+                audioVideo.startLocalVideo(cpuVideoProcessor, localVideoConfig)
             } else if (meetingModel.isUsingBackgroundBlur) {
                 cameraCaptureSource.addVideoSink(backgroundBlurVideoFrameProcessor)
-                audioVideo.startLocalVideo(backgroundBlurVideoFrameProcessor)
+                audioVideo.startLocalVideo(backgroundBlurVideoFrameProcessor, localVideoConfig)
             } else if (meetingModel.isUsingBackgroundReplacement) {
                 cameraCaptureSource.addVideoSink(backgroundReplacementVideoFrameProcessor)
-                audioVideo.startLocalVideo(backgroundReplacementVideoFrameProcessor)
+                audioVideo.startLocalVideo(backgroundReplacementVideoFrameProcessor, localVideoConfig)
             } else {
-                audioVideo.startLocalVideo(cameraCaptureSource)
+                audioVideo.startLocalVideo(cameraCaptureSource, localVideoConfig)
             }
             cameraCaptureSource.start()
         } else {
-            audioVideo.startLocalVideo()
+            audioVideo.startLocalVideo(localVideoConfig)
         }
         buttonCamera.setImageResource(R.drawable.button_camera_on)
     }

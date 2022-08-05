@@ -53,6 +53,7 @@ class MeetingModel : ViewModel() {
     var isUsingCpuVideoProcessor = false
     var isUsingBackgroundBlur = false
     var isUsingBackgroundReplacement = false
+    var localVideoMaxBitRateKbps = 0
 
     fun updateVideoStatesInCurrentPage() {
         videoStatesInCurrentPage.clear()

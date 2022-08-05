@@ -5,6 +5,7 @@
 
 package com.amazonaws.services.chime.sdk.meetings.audiovideo.contentshare
 
+import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.LocalVideoConfiguration
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoSource
 
 /**
@@ -30,6 +31,24 @@ interface ContentShareController {
      * @param source: [ContentShareSource] - The source of content to be shared.
      */
     fun startContentShare(source: ContentShareSource)
+
+    /**
+     * Start sharing the content of a given [ContentShareSource] with configuration.
+     *
+     * Once sharing has started successfully, [ContentShareObserver.onContentShareStarted] will
+     * be invoked. If sharing fails or stops, [ContentShareObserver.onContentShareStopped]
+     * will be invoked with [ContentShareStatus] as the cause.
+     *
+     * This will call [VideoSource.addVideoSink] on the provided source
+     * and [VideoSource.removeVideoSink] on the previously provided source.
+     *
+     * Calling this function repeatedly will replace the previous [ContentShareSource] as the one being
+     * transmitted, will update the content share configuration, e.g. maxBitRateKbps.
+     *
+     * @param source: [ContentShareSource] - The source of content to be shared.
+     * @param config: [LocalVideoConfiguration] - The configuration of emitted video stream, e.g. maxBitRateKbps
+     */
+    fun startContentShare(source: ContentShareSource, config: LocalVideoConfiguration)
 
     /**
      * Stop sharing the content of a [ContentShareSource] that previously started.

@@ -174,6 +174,10 @@ Video permissions are required for sending the local attendee's video.
 
 To start sending the local attendee's video, call meetingSession.audioVideo.[startLocalVideo()](https://aws.github.io/amazon-chime-sdk-android/amazon-chime-sdk/com.amazonaws.services.chime.sdk.meetings.audiovideo/-audio-video-controller-facade/start-local-video.html).
 
+To start sending video with a local video configuration, call meetingSession.audioVideo.startLocalVideo(config).
+
+To start sending video with a provided custom `VideoSource`, call meetingSession.audioVideo.startLocalVideo(source). 
+
 To stop sending the local attendee's video, call meetingSession.audioVideo.[stopLocalVideo()](https://aws.github.io/amazon-chime-sdk-android/amazon-chime-sdk/com.amazonaws.services.chime.sdk.meetings.audiovideo/-audio-video-controller-facade/stop-local-video.html).
 
 ### 8b. Getting and switching video device

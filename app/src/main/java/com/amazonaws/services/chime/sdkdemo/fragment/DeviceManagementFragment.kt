@@ -268,7 +268,7 @@ class DeviceManagementFragment : Fragment(), DeviceChangeObserver {
         videoFormats.clear()
 
         val filteredFormats = freshVideoCaptureFormatList.filter {
-            it.height <= MAX_VIDEO_FORMAT_HEIGHT
+            it.height <= MAX_VIDEO_FORMAT_HEIGHT &&
             it.maxFps <= MAX_VIDEO_FORMAT_FPS
         }
 

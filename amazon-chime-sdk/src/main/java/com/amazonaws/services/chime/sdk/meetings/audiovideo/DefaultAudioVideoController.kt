@@ -6,6 +6,7 @@
 package com.amazonaws.services.chime.sdk.meetings.audiovideo
 
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.metric.MetricsObserver
+import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.LocalVideoConfiguration
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.RemoteVideoSource
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoSource
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoSubscriptionConfiguration
@@ -66,8 +67,16 @@ class DefaultAudioVideoController(
         videoClientController.startLocalVideo()
     }
 
+    override fun startLocalVideo(config: LocalVideoConfiguration) {
+        videoClientController.startLocalVideo(config)
+    }
+
     override fun startLocalVideo(source: VideoSource) {
         videoClientController.startLocalVideo(source)
+    }
+
+    override fun startLocalVideo(source: VideoSource, config: LocalVideoConfiguration) {
+        videoClientController.startLocalVideo(source, config)
     }
 
     override fun stopLocalVideo() {

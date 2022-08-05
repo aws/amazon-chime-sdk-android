@@ -1,5 +1,9 @@
 ## unreleased
 
+### Added
+* Added support to set max bit rate for local video and content share
+* [Demo] Add video configuration options to set max bit rate for local video in meeting
+
 ### Fixed
 * Use thread safe mutableSet for observers
 
