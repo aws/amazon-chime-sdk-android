@@ -32,6 +32,9 @@ class DirtyEventSQLiteDaoTests {
     @MockK
     private lateinit var logger: Logger
 
+    @MockK
+    private lateinit var eventTypeConverter: EventTypeConverters
+
     private val uuid = "38400000-8cf0-11bd-b23e-10b96e4ef00d"
 
     private val mockEvent = SDKEvent(
@@ -58,8 +61,10 @@ class DirtyEventSQLiteDaoTests {
                 "ttl" to 1242312412424
             )
         )
+        every { eventTypeConverter.fromMeetingEvent(any()) } returns ""
+        every { eventTypeConverter.toMeetingEvent(any()) } returns mockEvent
 
-        dirtyEventDao = DirtyEventSQLiteDao(databaseManager, logger)
+        dirtyEventDao = DirtyEventSQLiteDao(databaseManager, logger, eventTypeConverter)
     }
 
     @Test
@@ -117,7 +122,7 @@ class DirtyEventSQLiteDaoTests {
 
     @Test
     fun `constructor should invoke database manager createTable`() {
-        dirtyEventDao = DirtyEventSQLiteDao(databaseManager, logger)
+        dirtyEventDao = DirtyEventSQLiteDao(databaseManager, logger, eventTypeConverter)
 
         verify { databaseManager.createTable(dirtyEventDao) }
     }

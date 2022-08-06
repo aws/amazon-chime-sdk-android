@@ -139,13 +139,14 @@ class DefaultMeetingEventBuffer @JvmOverloads constructor(
             // 2. If failed to send, check ttl and delete
             // 3. If succeeded, remove dirtyEvents
 
-            var dirtyEvents =
-                dirtyEventDao.listDirtyMeetingEventItems(ingestionConfiguration.flushSize)
-            var ingestionRecord =
-                IngestionEventConverter.fromDirtyMeetingEventItems(dirtyEvents, ingestionConfiguration)
-
-            var isSentSuccessful = true
             try {
+                var dirtyEvents =
+                    dirtyEventDao.listDirtyMeetingEventItems(ingestionConfiguration.flushSize)
+                var ingestionRecord =
+                    IngestionEventConverter.fromDirtyMeetingEventItems(dirtyEvents, ingestionConfiguration)
+
+                var isSentSuccessful = true
+
                 while (ingestionRecord.events.isNotEmpty() && isSentSuccessful) {
                     isSentSuccessful = eventSender.sendRecord(ingestionRecord)
                     // Find the ids that will be removed based on success status

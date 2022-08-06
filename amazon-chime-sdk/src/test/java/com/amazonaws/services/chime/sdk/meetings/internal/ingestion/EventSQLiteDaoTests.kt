@@ -32,6 +32,9 @@ class EventSQLiteDaoTests {
     @MockK
     private lateinit var logger: Logger
 
+    @MockK
+    private lateinit var eventTypeConverter: EventTypeConverters
+
     private val uuid = "38400000-8cf0-11bd-b23e-10b96e4ef00d"
 
     private val mockEvent = SDKEvent(
@@ -57,11 +60,14 @@ class EventSQLiteDaoTests {
                 "data" to gson.toJson(mockEvent)
             )
         )
+        every { eventTypeConverter.fromMeetingEvent(any()) } returns ""
+        every { eventTypeConverter.toMeetingEvent(any()) } returns mockEvent
 
         eventDao =
             EventSQLiteDao(
                 databaseManager,
-                logger
+                logger,
+                eventTypeConverter
             )
     }
 
@@ -113,7 +119,8 @@ class EventSQLiteDaoTests {
         eventDao =
             EventSQLiteDao(
                 databaseManager,
-                logger
+                logger,
+                eventTypeConverter
             )
 
         verify { databaseManager.createTable(eventDao) }

@@ -138,7 +138,7 @@ object IngestionEventConverter {
     private fun toIngestionPayload(event: MeetingEventItem): IngestionPayload {
         val payload = mutableMapOf(
             NAME_KEY to event.data.name,
-            TIMESTAMP_KEY to (event.data.eventAttributes[EventAttributeName.timestampMs] as Double).toLong(),
+            TIMESTAMP_KEY to (event.data.eventAttributes[EventAttributeName.timestampMs] as? Double ?: 0.0).toLong(),
             ID_KEY to event.id
         )
         // Filter out meeting id and attendee id since this is not needed for payload
@@ -154,7 +154,7 @@ object IngestionEventConverter {
         val payload = mutableMapOf(
             NAME_KEY to dirtyEvent.data.name,
             TTL_KEY to dirtyEvent.ttl,
-            TIMESTAMP_KEY to (dirtyEvent.data.eventAttributes[EventAttributeName.timestampMs] as Double).toLong(),
+            TIMESTAMP_KEY to (dirtyEvent.data.eventAttributes[EventAttributeName.timestampMs] as? Double ?: 0.0).toLong(),
             ID_KEY to dirtyEvent.id
         )
         dirtyEvent.data.eventAttributes.filterNot { attributesToFilter.contains(it.key) }
