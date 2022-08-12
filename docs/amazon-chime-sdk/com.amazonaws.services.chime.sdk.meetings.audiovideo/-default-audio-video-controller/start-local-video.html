@@ -14,6 +14,17 @@
 <a href="../-audio-video-controller-facade/stop-local-video.html">stopLocalVideo</a> will stop the internal capture source if being used.</p>
 <p>Calling this after passing in a custom <a href="../../com.amazonaws.services.chime.sdk.meetings.audiovideo.video/-video-source/index.html">VideoSource</a> will replace it with the internal capture source.</p>
 <p>This function will only have effect if <a href="../-audio-video-controller-facade/start.html">start</a> has already been called</p>
+<a name="com.amazonaws.services.chime.sdk.meetings.audiovideo.DefaultAudioVideoController$startLocalVideo(com.amazonaws.services.chime.sdk.meetings.audiovideo.video.LocalVideoConfiguration)"></a>
+<code><span class="keyword">fun </span><span class="identifier">startLocalVideo</span><span class="symbol">(</span><span class="identifier" id="com.amazonaws.services.chime.sdk.meetings.audiovideo.DefaultAudioVideoController$startLocalVideo(com.amazonaws.services.chime.sdk.meetings.audiovideo.video.LocalVideoConfiguration)/config">config</span><span class="symbol">:</span>&nbsp;<a href="../../com.amazonaws.services.chime.sdk.meetings.audiovideo.video/-local-video-configuration/index.html"><span class="identifier">LocalVideoConfiguration</span></a><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code>
+<p>Start local video with configuration and begin transmitting frames from an internally held <a href="../../com.amazonaws.services.chime.sdk.meetings.audiovideo.video.capture/-default-camera-capture-source/index.html">DefaultCameraCaptureSource</a>.
+<a href="../-audio-video-controller-facade/stop-local-video.html">stopLocalVideo</a> will stop the internal capture source if being used.</p>
+<p>Calling this after passing in a custom <a href="../../com.amazonaws.services.chime.sdk.meetings.audiovideo.video/-video-source/index.html">VideoSource</a> will replace it with the internal capture source.</p>
+<p>This function will only have effect if <a href="../-audio-video-controller-facade/start.html">start</a> has already been called.
+Calling this function repeatedly will update configuration of local video.
+If maxBitRateKbps is not set, it will be self adjusted depending on number of users and videos in the meeting</p>
+<h3>Parameters</h3>
+<p><a name="config"></a>
+<code>config</code> - : <a href="../../com.amazonaws.services.chime.sdk.meetings.audiovideo.video/-local-video-configuration/index.html">LocalVideoConfiguration</a> - The configuration of emitted video stream, e.g. maxBitRateKbps</p>
 <a name="com.amazonaws.services.chime.sdk.meetings.audiovideo.DefaultAudioVideoController$startLocalVideo(com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoSource)"></a>
 <code><span class="keyword">fun </span><span class="identifier">startLocalVideo</span><span class="symbol">(</span><span class="identifier" id="com.amazonaws.services.chime.sdk.meetings.audiovideo.DefaultAudioVideoController$startLocalVideo(com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoSource)/source">source</span><span class="symbol">:</span>&nbsp;<a href="../../com.amazonaws.services.chime.sdk.meetings.audiovideo.video/-video-source/index.html"><span class="identifier">VideoSource</span></a><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code>
 <p>Start local video with a provided custom <a href="../../com.amazonaws.services.chime.sdk.meetings.audiovideo.video/-video-source/index.html">VideoSource</a> which can be used to provide custom
@@ -25,5 +36,19 @@ was called with no arguments.</p>
 <h3>Parameters</h3>
 <p><a name="source"></a>
 <code>source</code> - : <a href="../../com.amazonaws.services.chime.sdk.meetings.audiovideo.video/-video-source/index.html">VideoSource</a> - The source of video frames to be sent to other clients</p>
+<a name="com.amazonaws.services.chime.sdk.meetings.audiovideo.DefaultAudioVideoController$startLocalVideo(com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoSource, com.amazonaws.services.chime.sdk.meetings.audiovideo.video.LocalVideoConfiguration)"></a>
+<code><span class="keyword">fun </span><span class="identifier">startLocalVideo</span><span class="symbol">(</span><span class="identifier" id="com.amazonaws.services.chime.sdk.meetings.audiovideo.DefaultAudioVideoController$startLocalVideo(com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoSource, com.amazonaws.services.chime.sdk.meetings.audiovideo.video.LocalVideoConfiguration)/source">source</span><span class="symbol">:</span>&nbsp;<a href="../../com.amazonaws.services.chime.sdk.meetings.audiovideo.video/-video-source/index.html"><span class="identifier">VideoSource</span></a><span class="symbol">, </span><span class="identifier" id="com.amazonaws.services.chime.sdk.meetings.audiovideo.DefaultAudioVideoController$startLocalVideo(com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoSource, com.amazonaws.services.chime.sdk.meetings.audiovideo.video.LocalVideoConfiguration)/config">config</span><span class="symbol">:</span>&nbsp;<a href="../../com.amazonaws.services.chime.sdk.meetings.audiovideo.video/-local-video-configuration/index.html"><span class="identifier">LocalVideoConfiguration</span></a><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code>
+<p>Start local video with with configuration and a provided custom <a href="../../com.amazonaws.services.chime.sdk.meetings.audiovideo.video/-video-source/index.html">VideoSource</a> which can be used to provide custom
+<a href="../../com.amazonaws.services.chime.sdk.meetings.audiovideo.video/-video-frame/index.html">VideoFrame</a> objects to be transmitted to remote clients</p>
+<p>Calling this function repeatedly will replace the previous <a href="../../com.amazonaws.services.chime.sdk.meetings.audiovideo.video/-video-source/index.html">VideoSource</a> as the one being
+transmitted. It will update configuration of local video. It will also stop and replace the internal capture source
+if <a href="../-audio-video-controller-facade/start-local-video.html">startLocalVideo</a> was called with no arguments.
+If maxBitRateKbps is not set, it will be self adjusted depending on number of users and videos in the meeting</p>
+<p>Read <a href="https://github.com/aws/amazon-chime-sdk-android/blob/master/guides/custom_video.md">custom video guide</a> for details.</p>
+<h3>Parameters</h3>
+<p><a name="source"></a>
+<code>source</code> - : <a href="../../com.amazonaws.services.chime.sdk.meetings.audiovideo.video/-video-source/index.html">VideoSource</a> - The source of video frames to be sent to other clients</p>
+<p><a name="config"></a>
+<code>config</code> - : <a href="../../com.amazonaws.services.chime.sdk.meetings.audiovideo.video/-local-video-configuration/index.html">LocalVideoConfiguration</a> - The configuration of emitted video stream, e.g. maxBitRateKbps</p>
 </BODY>
 </HTML>
