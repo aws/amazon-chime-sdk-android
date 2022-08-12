@@ -21,5 +21,20 @@ transmitted.</p>
 <h3>Parameters</h3>
 <p><a name="source"></a>
 <code>source</code> - : <a href="../-content-share-source/index.html">ContentShareSource</a> - The source of content to be shared.</p>
+<a name="com.amazonaws.services.chime.sdk.meetings.audiovideo.contentshare.DefaultContentShareController$startContentShare(com.amazonaws.services.chime.sdk.meetings.audiovideo.contentshare.ContentShareSource, com.amazonaws.services.chime.sdk.meetings.audiovideo.video.LocalVideoConfiguration)"></a>
+<code><span class="keyword">fun </span><span class="identifier">startContentShare</span><span class="symbol">(</span><span class="identifier" id="com.amazonaws.services.chime.sdk.meetings.audiovideo.contentshare.DefaultContentShareController$startContentShare(com.amazonaws.services.chime.sdk.meetings.audiovideo.contentshare.ContentShareSource, com.amazonaws.services.chime.sdk.meetings.audiovideo.video.LocalVideoConfiguration)/source">source</span><span class="symbol">:</span>&nbsp;<a href="../-content-share-source/index.html"><span class="identifier">ContentShareSource</span></a><span class="symbol">, </span><span class="identifier" id="com.amazonaws.services.chime.sdk.meetings.audiovideo.contentshare.DefaultContentShareController$startContentShare(com.amazonaws.services.chime.sdk.meetings.audiovideo.contentshare.ContentShareSource, com.amazonaws.services.chime.sdk.meetings.audiovideo.video.LocalVideoConfiguration)/config">config</span><span class="symbol">:</span>&nbsp;<a href="../../com.amazonaws.services.chime.sdk.meetings.audiovideo.video/-local-video-configuration/index.html"><span class="identifier">LocalVideoConfiguration</span></a><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code>
+<p>Start sharing the content of a given <a href="../-content-share-source/index.html">ContentShareSource</a> with configuration.</p>
+<p>Once sharing has started successfully, <a href="../-content-share-observer/on-content-share-started.html">ContentShareObserver.onContentShareStarted</a> will
+be invoked. If sharing fails or stops, <a href="../-content-share-observer/on-content-share-stopped.html">ContentShareObserver.onContentShareStopped</a>
+will be invoked with <a href="../-content-share-status/index.html">ContentShareStatus</a> as the cause.</p>
+<p>This will call <a href="../../com.amazonaws.services.chime.sdk.meetings.audiovideo.video/-video-source/add-video-sink.html">VideoSource.addVideoSink</a> on the provided source
+and <a href="../../com.amazonaws.services.chime.sdk.meetings.audiovideo.video/-video-source/remove-video-sink.html">VideoSource.removeVideoSink</a> on the previously provided source.</p>
+<p>Calling this function repeatedly will replace the previous <a href="../-content-share-source/index.html">ContentShareSource</a> as the one being
+transmitted, will update the content share configuration, e.g. maxBitRateKbps.</p>
+<h3>Parameters</h3>
+<p><a name="source"></a>
+<code>source</code> - : <a href="../-content-share-source/index.html">ContentShareSource</a> - The source of content to be shared.</p>
+<p><a name="config"></a>
+<code>config</code> - : <a href="../../com.amazonaws.services.chime.sdk.meetings.audiovideo.video/-local-video-configuration/index.html">LocalVideoConfiguration</a> - The configuration of emitted video stream, e.g. maxBitRateKbps</p>
 </BODY>
 </HTML>
