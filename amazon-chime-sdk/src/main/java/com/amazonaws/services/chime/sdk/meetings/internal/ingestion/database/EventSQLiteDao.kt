@@ -13,7 +13,8 @@ import com.amazonaws.services.chime.sdk.meetings.utils.logger.Logger
 
 class EventSQLiteDao(
     private val databaseManager: DatabaseManager,
-    private val logger: Logger
+    private val logger: Logger,
+    private val eventTypeConverter: EventTypeConverters
 ) : EventDao, DatabaseTable {
     override val tableName = "Events"
     override val columns: Map<String, String>
@@ -39,7 +40,7 @@ class EventSQLiteDao(
         return retrievedDataList.map { retrievedData ->
             MeetingEventItem(
                 retrievedData[idColumnName] as String,
-                EventTypeConverters.toMeetingEvent(retrievedData[dataColumnName] as String)
+                eventTypeConverter.toMeetingEvent(retrievedData[dataColumnName] as String)
             )
         }
     }
@@ -47,7 +48,7 @@ class EventSQLiteDao(
     override fun insertMeetingEvent(event: MeetingEventItem): Boolean {
         val values = ContentValues().apply {
             put(idColumnName, event.id)
-            put(dataColumnName, EventTypeConverters.fromMeetingEvent(event.data))
+            put(dataColumnName, eventTypeConverter.fromMeetingEvent(event.data))
         }
 
         return databaseManager.insert(tableName, listOf(values))

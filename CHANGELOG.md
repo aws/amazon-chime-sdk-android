@@ -1,3 +1,8 @@
+## unreleased
+
+### Fixed
+* Gracefully deserialize malformed ingestion events JSON data in local database to prevent crashes.
+
 ## [0.17.5] - 2022-08-12
 
 ### Added

@@ -23,12 +23,15 @@ import io.mockk.every
 import io.mockk.impl.annotations.MockK
 import io.mockk.mockkObject
 import io.mockk.mockkStatic
+import io.mockk.slot
+import io.mockk.unmockkObject
 import io.mockk.verify
 import java.util.Calendar
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.TestCoroutineScope
 import kotlinx.coroutines.test.runBlockingTest
+import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
 
@@ -130,6 +133,40 @@ class DefaultMeetingEventBufferTests {
     }
 
     @Test
+    fun `defaultMeetingEventBuffer should filtered out invalid dirty events when sendRecord`() {
+        val expiredEventId = "newId"
+        val ttl = 100L
+        val recordSlot = slot<IngestionRecord>()
+        coEvery { eventSender.sendRecord(record = capture(recordSlot)) } returns false
+        every { calendar.timeInMillis } returns 101L
+        unmockkObject(IngestionEventConverter)
+        every { dirtyEventDao.listDirtyMeetingEventItems(any()) } returns listOf(
+            dirtyMeetingEventItem,
+            DirtyMeetingEventItem(expiredEventId, SDKEvent("test", mutableMapOf(
+                EventAttributeName.deviceName to "test",
+                EventAttributeName.sdkVersion to 123
+            )), ttl),
+            DirtyMeetingEventItem(expiredEventId, SDKEvent("test1", mutableMapOf(
+                EventAttributeName.deviceName to "test",
+                EventAttributeName.sdkVersion to 123,
+                EventAttributeName.timestampMs to 123.0
+            )), ttl)
+        )
+
+        DefaultMeetingEventBuffer(
+            ingestionConfiguration,
+            eventDao,
+            dirtyEventDao,
+            eventSender,
+            logger,
+            eventScope
+        )
+
+        println(recordSlot.captured.events)
+        assertEquals(recordSlot.captured.events.count(), 1)
+    }
+
+    @Test
     fun `add should invoke EventDao insertMeetingEvent`() {
         defaultMeetingEventBuffer.add(meetingEvent)
 
@@ -159,6 +196,7 @@ class DefaultMeetingEventBufferTests {
     @Test
     fun `add should not send immediately if it is not meeting failed`() {
         coEvery { eventSender.sendRecord(any()) } returns true
+        every { dirtyEventDao.listDirtyMeetingEventItems(any()) } returns emptyList()
         every { IngestionEventConverter.fromMeetingEventItems(any(), any()) }.returns(
             ingestionRecord
         )

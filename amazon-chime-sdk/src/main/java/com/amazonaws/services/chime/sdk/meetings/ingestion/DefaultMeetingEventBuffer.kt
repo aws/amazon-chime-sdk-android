@@ -139,15 +139,24 @@ class DefaultMeetingEventBuffer @JvmOverloads constructor(
             // 2. If failed to send, check ttl and delete
             // 3. If succeeded, remove dirtyEvents
 
-            var dirtyEvents =
-                dirtyEventDao.listDirtyMeetingEventItems(ingestionConfiguration.flushSize)
-            var ingestionRecord =
-                IngestionEventConverter.fromDirtyMeetingEventItems(dirtyEvents, ingestionConfiguration)
-
-            var isSentSuccessful = true
             try {
-                while (ingestionRecord.events.isNotEmpty() && isSentSuccessful) {
+                var dirtyEvents =
+                    dirtyEventDao.listDirtyMeetingEventItems(ingestionConfiguration.flushSize)
+
+                var isSentSuccessful = true
+
+                // There is an known issue with .isNotEmpty() in Mockk in 1.10.0,
+                // it has been fixed in new version, however, SDK unit tests fails with new version
+                // Will use dirtyEvents.size instead for now
+                while (dirtyEvents.size > 0 && isSentSuccessful) {
+                    val validEvents = dirtyEvents.filter {
+                        it.data.eventAttributes.isNotEmpty() &&
+                            it.data.eventAttributes[EventAttributeName.timestampMs] != null
+                    }
+                    val ingestionRecord =
+                        IngestionEventConverter.fromDirtyMeetingEventItems(validEvents, ingestionConfiguration)
                     isSentSuccessful = eventSender.sendRecord(ingestionRecord)
+
                     // Find the ids that will be removed based on success status
                     val idsToRemove: List<String> = if (!isSentSuccessful) {
                         val currentTime = Calendar.getInstance().timeInMillis
@@ -159,10 +168,6 @@ class DefaultMeetingEventBuffer @JvmOverloads constructor(
                     dirtyEvents = dirtyEventDao.listDirtyMeetingEventItems(
                         ingestionConfiguration.flushSize
                     )
-                    ingestionRecord =
-                        IngestionEventConverter.fromDirtyMeetingEventItems(
-                            dirtyEvents, ingestionConfiguration
-                        )
                 }
             } catch (exception: Exception) {
                 logger.error(TAG, "Unable to create URL $exception")

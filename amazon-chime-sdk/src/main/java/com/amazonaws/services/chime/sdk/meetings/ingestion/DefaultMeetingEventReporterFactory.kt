@@ -6,6 +6,7 @@
 package com.amazonaws.services.chime.sdk.meetings.ingestion
 
 import android.content.Context
+import com.amazonaws.services.chime.sdk.meetings.internal.ingestion.EventTypeConverters
 import com.amazonaws.services.chime.sdk.meetings.internal.ingestion.database.DirtyEventSQLiteDao
 import com.amazonaws.services.chime.sdk.meetings.internal.ingestion.database.EventSQLiteDao
 import com.amazonaws.services.chime.sdk.meetings.internal.ingestion.database.SQLiteDatabaseManager
@@ -29,15 +30,21 @@ class DefaultMeetingEventReporterFactory(
                 context,
                 logger
             )
+
+        val eventTypeConverter = EventTypeConverters(logger)
+
         val eventDao =
             EventSQLiteDao(
                 sqliteManager,
-                logger
+                logger,
+                eventTypeConverter
             )
+
         val dirtyEventDao =
             DirtyEventSQLiteDao(
                 sqliteManager,
-                logger
+                logger,
+                eventTypeConverter
             )
 
         val eventBuffer = DefaultMeetingEventBuffer(
