@@ -1144,29 +1144,34 @@ class MeetingFragment : Fragment(),
     }
 
     private fun startLocalVideo() {
-        meetingModel.isLocalVideoStarted = true
-        val localVideoConfig = LocalVideoConfiguration(meetingModel.localVideoMaxBitRateKbps)
-        if (meetingModel.isUsingCameraCaptureSource) {
-            if (meetingModel.isUsingGpuVideoProcessor) {
-                cameraCaptureSource.addVideoSink(gpuVideoProcessor)
-                audioVideo.startLocalVideo(gpuVideoProcessor, localVideoConfig)
-            } else if (meetingModel.isUsingCpuVideoProcessor) {
-                cameraCaptureSource.addVideoSink(cpuVideoProcessor)
-                audioVideo.startLocalVideo(cpuVideoProcessor, localVideoConfig)
-            } else if (meetingModel.isUsingBackgroundBlur) {
-                cameraCaptureSource.addVideoSink(backgroundBlurVideoFrameProcessor)
-                audioVideo.startLocalVideo(backgroundBlurVideoFrameProcessor, localVideoConfig)
-            } else if (meetingModel.isUsingBackgroundReplacement) {
-                cameraCaptureSource.addVideoSink(backgroundReplacementVideoFrameProcessor)
-                audioVideo.startLocalVideo(backgroundReplacementVideoFrameProcessor, localVideoConfig)
+        if (meetingModel.isCameraSendAvailable) {
+            meetingModel.isLocalVideoStarted = true
+            val localVideoConfig = LocalVideoConfiguration(meetingModel.localVideoMaxBitRateKbps)
+            if (meetingModel.isUsingCameraCaptureSource) {
+                if (meetingModel.isUsingGpuVideoProcessor) {
+                    cameraCaptureSource.addVideoSink(gpuVideoProcessor)
+                    audioVideo.startLocalVideo(gpuVideoProcessor, localVideoConfig)
+                } else if (meetingModel.isUsingCpuVideoProcessor) {
+                    cameraCaptureSource.addVideoSink(cpuVideoProcessor)
+                    audioVideo.startLocalVideo(cpuVideoProcessor, localVideoConfig)
+                } else if (meetingModel.isUsingBackgroundBlur) {
+                    cameraCaptureSource.addVideoSink(backgroundBlurVideoFrameProcessor)
+                    audioVideo.startLocalVideo(backgroundBlurVideoFrameProcessor, localVideoConfig)
+                } else if (meetingModel.isUsingBackgroundReplacement) {
+                    cameraCaptureSource.addVideoSink(backgroundReplacementVideoFrameProcessor)
+                    audioVideo.startLocalVideo(
+                        backgroundReplacementVideoFrameProcessor,
+                        localVideoConfig
+                    )
+                } else {
+                    audioVideo.startLocalVideo(cameraCaptureSource, localVideoConfig)
+                }
+                cameraCaptureSource.start()
             } else {
-                audioVideo.startLocalVideo(cameraCaptureSource, localVideoConfig)
+                audioVideo.startLocalVideo(localVideoConfig)
             }
-            cameraCaptureSource.start()
-        } else {
-            audioVideo.startLocalVideo(localVideoConfig)
+            buttonCamera.setImageResource(R.drawable.button_camera_on)
         }
-        buttonCamera.setImageResource(R.drawable.button_camera_on)
     }
 
     private fun stopLocalVideo() {
@@ -1621,6 +1626,20 @@ class MeetingFragment : Fragment(),
         logWithFunctionName(
             object {}.javaClass.enclosingMethod?.name,
             "${sessionStatus.statusCode}"
+        )
+    }
+
+    override fun onCameraSendAvailabilityUpdated(available: Boolean) {
+        if (available) {
+            meetingModel.isCameraSendAvailable = true
+        } else {
+            meetingModel.isCameraSendAvailable = false
+            notifyHandler("Currently cannot enable video in meeting")
+            refreshNoVideosOrScreenShareAvailableText()
+        }
+        logWithFunctionName(
+            object {}.javaClass.enclosingMethod?.name,
+            "Camera Send Available: $available"
         )
     }
 

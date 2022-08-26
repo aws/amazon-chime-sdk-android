@@ -123,4 +123,11 @@ interface AudioVideoObserver {
      * @param sources: [List] - List of RemoteVideoSource objects.
      */
     fun onRemoteVideoSourceAvailable(sources: List<RemoteVideoSource>)
+
+    /**
+     * Called when video capacity status is added or removed.
+     *
+     * Note: this callback will be called on main thread.
+     */
+    fun onCameraSendAvailabilityUpdated(available: Boolean)
 }
