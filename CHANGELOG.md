@@ -1,3 +1,9 @@
+## Unreleased
+
+### Fixed
+* Fixed bugs that occured at video capacity
+* [Demo] Updated demo to use new functionality to prevent camera from toggling at video limit
+
 ## [0.17.6] - 2022-08-25
 
 ### Fixed
