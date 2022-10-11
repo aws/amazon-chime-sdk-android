@@ -131,6 +131,7 @@ class BackgroundFilterVideoFrameProcessor(
             filteredByteBuffer =
                 JniUtil.nativeAllocateByteBuffer(frame.getRotatedWidth() * frame.getRotatedHeight() * channels)
             filteredBitmap.copyPixelsToBuffer(filteredByteBuffer)
+            filteredByteBuffer.position(0)
         }
         val rgbaBuffer =
             VideoFrameRGBABuffer(

@@ -25,6 +25,7 @@ import com.xodee.client.video.JniUtil
 import io.mockk.MockKAnnotations
 import io.mockk.every
 import io.mockk.impl.annotations.MockK
+import io.mockk.mockkStatic
 import io.mockk.verify
 import java.nio.ByteBuffer
 import kotlin.math.abs
@@ -42,6 +43,7 @@ class BackgroundFilterVideoFrameProcessorTest {
     private lateinit var testBackgroundReplacementVideoFrameProcessor: BackgroundReplacementVideoFrameProcessor
     private lateinit var frame: VideoFrame
     private lateinit var rgbaData: ByteBuffer
+    private lateinit var filteredByteBuffer: ByteBuffer
     private lateinit var scaledBitmap: Bitmap
     private lateinit var scaledBlurredImageBitmap: Bitmap
     private lateinit var scaledReplacedImageBitmap: Bitmap
@@ -103,6 +105,8 @@ class BackgroundFilterVideoFrameProcessorTest {
         scaledBlurredImageBitmap = Bitmap.createScaledBitmap(blurredImageBitmap, staticImageWidth, staticImageHeight, false)
         scaledReplacedImageBitmap = Bitmap.createScaledBitmap(replacedImageBitmap, staticImageWidth, staticImageHeight, false)
         rgbaData = ByteBuffer.allocateDirect(scaledBitmap.width * scaledBitmap.height * 4)
+        filteredByteBuffer = ByteBuffer.allocateDirect(scaledBitmap.width * scaledBitmap.height * 4)
+
         scaledBitmap.copyPixelsToBuffer(rgbaData)
         every { mockVideFrameBuffer.height } returns scaledBitmap.height
         every { mockVideFrameBuffer.width } returns scaledBitmap.width
@@ -117,6 +121,23 @@ class BackgroundFilterVideoFrameProcessorTest {
                 frame.getRotatedWidth(),
                 frame.getRotatedHeight(),
                 rgbaData,
+                frame.getRotatedWidth() * 4,
+                Runnable { JniUtil.nativeFreeByteBuffer(null) })
+        }
+    }
+
+    @Test
+    fun returnInputFrameWhenFilteredBitmapIsNotNull() {
+        mockkStatic(JniUtil::class)
+        every { JniUtil.nativeAllocateByteBuffer(any()) } returns filteredByteBuffer
+
+        testBackgroundFilterVideoFrameProcessor.getProcessedFrame(frame, scaledBitmap, rgbaData)
+
+        verify(atLeast = 1) {
+            VideoFrameRGBABuffer(
+                frame.getRotatedWidth(),
+                frame.getRotatedHeight(),
+                filteredByteBuffer,
                 frame.getRotatedWidth() * 4,
                 Runnable { JniUtil.nativeFreeByteBuffer(null) })
         }

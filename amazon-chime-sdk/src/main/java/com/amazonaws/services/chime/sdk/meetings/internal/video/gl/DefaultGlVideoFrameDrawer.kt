@@ -142,10 +142,9 @@ class DefaultGlVideoFrameDrawer() : GlVideoFrameDrawer {
                 copyBuffer = ByteBuffer.allocateDirect(copyCapacityNeeded)
             }
 
-            // Make sure YUV textures are allocated.
-            val textureId =
-                if (textureId == 0) GlUtil.generateTexture(GLES20.GL_TEXTURE_2D) else textureId
-
+            if (textureId == 0) {
+                textureId = GlUtil.generateTexture(GLES20.GL_TEXTURE_2D)
+            }
             GLES20.glActiveTexture(GLES20.GL_TEXTURE0)
             GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, textureId)
 
