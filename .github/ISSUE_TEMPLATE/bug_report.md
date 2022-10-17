@@ -33,6 +33,8 @@ If applicable, add screenshots to help explain your problem.
  - Version amazon-chime-sdk-media: [e.g. 0.4.0]
  - Can you reproduce this in the demo app?
 If you are reporting a crash:
+ - How often is this crash occurring? Is it reproducible?
+ - What is occurring in the app when the crash occurs? Are there metrics on CPU or memory use at the time?
  - Please provide full crash logs.
 
 **Additional context**
