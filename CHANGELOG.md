@@ -1,3 +1,11 @@
+## [0.17.7] - 2022-10-20
+
+### Fixed
+* Fixed bugs that occured at video capacity
+* [Demo] Updated demo to use new functionality to prevent camera from toggling at video limit
+* Fixed background filtered video rendering before joining a meeting session
+* Fixed memory leak issue in rgba video rendering
+
 ## [0.17.6] - 2022-08-25
 
 ### Fixed

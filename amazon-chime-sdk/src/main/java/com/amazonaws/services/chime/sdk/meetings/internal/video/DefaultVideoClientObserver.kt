@@ -119,6 +119,9 @@ class DefaultVideoClientObserver(
 
     override fun cameraSendIsAvailable(client: VideoClient?, available: Boolean) {
         logger.debug(TAG, "cameraSendIsAvailable: $available")
+        forEachVideoClientStateObserver {
+            it.onCameraSendAvailabilityUpdated(available)
+        }
     }
 
     override fun pauseRemoteVideo(client: VideoClient?, display_id: Int, pause: Boolean) {

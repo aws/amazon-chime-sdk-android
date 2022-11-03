@@ -54,6 +54,7 @@ class MeetingModel : ViewModel() {
     var isUsingBackgroundBlur = false
     var isUsingBackgroundReplacement = false
     var localVideoMaxBitRateKbps = 0
+    var isCameraSendAvailable = false
 
     fun updateVideoStatesInCurrentPage() {
         videoStatesInCurrentPage.clear()

@@ -364,4 +364,18 @@ class DefaultVideoClientObserverTest {
         verify(exactly = 3) { mockDefaultUrlRewriter(any()) }
         assert(outUris.equals(turnUris))
     }
+
+    @Test
+    fun `cameraSendIsAvailable should notify onCameraSendAvailabilityUpdated of available is false`() {
+        testVideoClientObserver.cameraSendIsAvailable(mockVideoClient, false)
+
+        verify { mockAudioVideoObserver.onCameraSendAvailabilityUpdated(false) }
+    }
+
+    @Test
+    fun `cameraSendIsAvailable should notify onCameraSendAvailabilityUpdated of available is true`() {
+        testVideoClientObserver.cameraSendIsAvailable(mockVideoClient, true)
+
+        verify { mockAudioVideoObserver.onCameraSendAvailabilityUpdated(true) }
+    }
 }
