@@ -184,13 +184,13 @@ class MeetingModel : ViewModel() {
         // remote video sources in current page
         result.putAll(getRemoteVideoSources(videoStatesInCurrentPage))
 
-        var numVideoSourcesFromPending = videoTileCountPerPage - videoStatesInCurrentPage.size
+        var numVideoSourcesNeededFromPending = videoTileCountPerPage - videoStatesInCurrentPage.size
         for (pendingVideoSourceEntry in pendingVideoSourceConfigurations.entries.iterator()) {
-            if (numVideoSourcesFromPending == 0) {
+            if (numVideoSourcesNeededFromPending == 0) {
                 break
             }
             result[pendingVideoSourceEntry.key] = pendingVideoSourceEntry.value
-            numVideoSourcesFromPending--
+            numVideoSourcesNeededFromPending--
         }
         return result
     }
@@ -198,17 +198,8 @@ class MeetingModel : ViewModel() {
     // A helper function for retrieving all remote video sources from
     // remoteVideoSourceConfigurations which are not in current page
     private fun remoteVideoSourcesNotInCurrentPage(): Set<RemoteVideoSource> {
-        val result = mutableSetOf<RemoteVideoSource>()
-        val attendeeIdsInCurrentPage = getRemoteVideoSourcesInCurrentPage()
-            .map { it.key.attendeeId }
-            .toHashSet()
-
-        for (remoteVideoSource in remoteVideoSourceConfigurations.keys) {
-            if (!attendeeIdsInCurrentPage.contains(remoteVideoSource.attendeeId)) {
-                result.add(remoteVideoSource)
-            }
-        }
-        return result
+        val keysToRemove = getRemoteVideoSourcesInCurrentPage().keys
+        return remoteVideoSourceConfigurations.minus(keysToRemove).keys
     }
 
     // Based on tabIndex, calculate the videos sources need to be:

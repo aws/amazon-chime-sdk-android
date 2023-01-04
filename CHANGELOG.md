@@ -1,7 +1,7 @@
 ## Unreleased
 
 ### Fixed
-* [Demo]Fixed the remote video render delay
+* [Demo] Fixed the remote video render delay
 
 ## [0.17.9] - 2022-12-02
 

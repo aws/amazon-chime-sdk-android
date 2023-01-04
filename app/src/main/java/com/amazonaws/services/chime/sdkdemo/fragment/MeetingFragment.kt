@@ -1644,9 +1644,6 @@ class MeetingFragment : Fragment(),
     }
 
     override fun onRemoteVideoSourceAvailable(sources: List<RemoteVideoSource>) {
-        // Note that the logic below is not needed unless managing video subscriptions by calling
-        // audioVideo.updateVideoSourceSubscriptions(addedOrUpdated, removed), please refer to the
-        // document for details: https://github.com/aws/amazon-chime-sdk-ios/blob/master/AmazonChimeSDK/AmazonChimeSDK/audiovideo/AudioVideoControllerFacade.swift#L139
         for (source in sources) {
             val config = VideoSubscriptionConfiguration(VideoPriority.Medium, VideoResolution.Medium)
             meetingModel.addVideoSource(source, config)
@@ -1659,7 +1656,6 @@ class MeetingFragment : Fragment(),
         // Please note sources listed in `remoteVideoSourcesDidBecomeUnavailable` do not need to be
         // removed(by calling AudioVideo.updateVideoSourceSubscriptions()), as they will be
         // automatically unsubscribed in SDK.
-        logger.info(TAG, "test - onRemoteVideoSourceUnavailable called")
         // The tracking sources still need to be removed in demo app
         sources.forEach { meetingModel.removeVideoSource(it) }
     }
