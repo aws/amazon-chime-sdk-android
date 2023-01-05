@@ -3,6 +3,10 @@
 ### Added
 * Added additional session statuses for audio device I/O timeouts.
 
+### Fixed
+* [Demo] Fixed the remote video render delay
+
+
 ## [0.17.9] - 2022-12-02
 
 ## [0.17.8] - 2022-11-16

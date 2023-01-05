@@ -92,7 +92,6 @@ import com.amazonaws.services.chime.sdk.meetings.session.MeetingSessionCredentia
 import com.amazonaws.services.chime.sdk.meetings.session.MeetingSessionStatus
 import com.amazonaws.services.chime.sdk.meetings.session.MeetingSessionStatusCode
 import com.amazonaws.services.chime.sdk.meetings.utils.DefaultModality
-import com.amazonaws.services.chime.sdk.meetings.utils.ModalityType
 import com.amazonaws.services.chime.sdk.meetings.utils.logger.ConsoleLogger
 import com.amazonaws.services.chime.sdk.meetings.utils.logger.LogLevel
 import com.amazonaws.services.chime.sdkdemo.R
@@ -121,6 +120,7 @@ import com.amazonaws.services.chime.sdkdemo.utils.GpuVideoProcessor
 import com.amazonaws.services.chime.sdkdemo.utils.PostLogger
 import com.amazonaws.services.chime.sdkdemo.utils.encodeURLParam
 import com.amazonaws.services.chime.sdkdemo.utils.formatTimestamp
+import com.amazonaws.services.chime.sdkdemo.utils.isContentShare
 import com.amazonaws.services.chime.sdkdemo.utils.isLandscapeMode
 import com.google.android.material.tabs.TabLayout
 import com.google.gson.Gson
@@ -485,7 +485,7 @@ class MeetingFragment : Fragment(),
 
     private fun setVideoSurfaceViewsVisibility(visibility: Int) {
         meetingModel.localVideoTileState?.setRenderViewVisibility(visibility)
-        meetingModel.remoteVideoTileStates.forEach { it.setRenderViewVisibility(visibility) }
+        meetingModel.getRemoteVideoTileStates().forEach { it.setRenderViewVisibility(visibility) }
     }
 
     private fun setScreenSurfaceViewsVisibility(visibility: Int) {
@@ -880,7 +880,7 @@ class MeetingFragment : Fragment(),
         uiScope.launch {
             mutex.withLock {
                 attendeeInfo.forEach { (attendeeId, externalUserId) ->
-                    if (DefaultModality(attendeeId).hasModality(ModalityType.Content) &&
+                    if (attendeeId.isContentShare() &&
                         !isSelfAttendee(attendeeId) &&
                         meetingModel.isSharingContent
                     ) {
@@ -914,7 +914,7 @@ class MeetingFragment : Fragment(),
         }
         val attendeeName = if (externalUserId.contains('#')) externalUserId.split('#')[1] else externalUserId
 
-        return if (DefaultModality(attendeeId).hasModality(ModalityType.Content)) {
+        return if (attendeeId.isContentShare()) {
             "$attendeeName $CONTENT_NAME_SUFFIX"
         } else {
             attendeeName
@@ -1272,7 +1272,7 @@ class MeetingFragment : Fragment(),
         oldList.addAll(meetingModel.videoStatesInCurrentPage)
         val potentialRemovedList: ArrayList<RemoteVideoSource> = arrayListOf()
         for (videoState in oldList) {
-            for ((key) in meetingModel.remoteVideoSourceConfigurations) {
+            for ((key) in meetingModel.getRemoteVideoSourceConfigurations()) {
                 if (videoState.videoTileState.attendeeId == key.attendeeId) {
                     potentialRemovedList.add(key)
                 }
@@ -1290,7 +1290,7 @@ class MeetingFragment : Fragment(),
         for (videoState in newList) {
             // This seems to be needed for demo application to show all tiles. Sometimes, it gets paused
             audioVideo.resumeRemoteVideoTile(videoState.videoTileState.tileId)
-            for ((key, value) in meetingModel.remoteVideoSourceConfigurations) {
+            for ((key, value) in meetingModel.getRemoteVideoSourceConfigurations()) {
                 if (videoState.videoTileState.attendeeId == key.attendeeId) {
                     updatedSources[key] = value
                 }
@@ -1324,24 +1324,14 @@ class MeetingFragment : Fragment(),
 
         revalidateVideoPageIndex()
 
-        val newList = mutableListOf<VideoCollectionTile>()
-        newList.addAll(meetingModel.videoStatesInCurrentPage)
-        val updatedSources: MutableMap<RemoteVideoSource, VideoSubscriptionConfiguration> =
-            mutableMapOf()
-        for (videoState in newList) {
-            for ((key, value) in meetingModel.remoteVideoSourceConfigurations) {
-                if (videoState.videoTileState.attendeeId == key.attendeeId) {
-                    updatedSources[key] = value
-                }
-            }
-        }
-        audioVideo.updateVideoSourceSubscriptions(updatedSources, emptyArray())
+        val videoSourcesInCurrentPage = meetingModel.getRemoteVideoSourcesInCurrentPage()
+        audioVideo.updateVideoSourceSubscriptions(videoSourcesInCurrentPage, emptyArray())
     }
 
     private fun subscribeRemoteVideoByTileState(tileSate: VideoTileState) {
         val updatedSources: MutableMap<RemoteVideoSource, VideoSubscriptionConfiguration> =
             mutableMapOf()
-        meetingModel.remoteVideoSourceConfigurations.forEach {
+        meetingModel.getRemoteVideoSourceConfigurations().forEach {
             if (it.key.attendeeId == tileSate.attendeeId) {
                 updatedSources[it.key] = it.value
             }
@@ -1351,7 +1341,7 @@ class MeetingFragment : Fragment(),
 
     private fun unsubscribeRemoteVideoByTileState(tileState: VideoTileState) {
         val removedList: ArrayList<RemoteVideoSource> = arrayListOf()
-        meetingModel.remoteVideoSourceConfigurations.forEach {
+        meetingModel.getRemoteVideoSourceConfigurations().forEach {
             if (it.key.attendeeId == tileState.attendeeId) {
                 removedList.add(it.key)
             }
@@ -1361,8 +1351,8 @@ class MeetingFragment : Fragment(),
 
     private fun unsubscribeAllRemoteVideos() {
         val removedList: ArrayList<RemoteVideoSource> = arrayListOf()
-        meetingModel.remoteVideoTileStates.forEach {
-            for ((key) in meetingModel.remoteVideoSourceConfigurations) {
+        meetingModel.getRemoteVideoTileStates().forEach {
+            for ((key) in meetingModel.getRemoteVideoSourceConfigurations()) {
                 if (key.attendeeId == it.videoTileState.attendeeId) {
                     removedList.add(key)
                 }
@@ -1519,7 +1509,7 @@ class MeetingFragment : Fragment(),
                 onVideoPageUpdated()
                 subscribeToRemoteVideosInCurrentPage()
             } else {
-                meetingModel.remoteVideoTileStates.add(videoCollectionTile)
+                meetingModel.addRemoteVideoTileState(videoCollectionTile)
                 onVideoPageUpdated()
                 subscribeToRemoteVideosInCurrentPage()
 
@@ -1655,14 +1645,19 @@ class MeetingFragment : Fragment(),
 
     override fun onRemoteVideoSourceAvailable(sources: List<RemoteVideoSource>) {
         for (source in sources) {
-            meetingModel.remoteVideoSourceConfigurations[source] =
-                VideoSubscriptionConfiguration(VideoPriority.Medium, VideoResolution.Medium)
+            val config = VideoSubscriptionConfiguration(VideoPriority.Medium, VideoResolution.Medium)
+            meetingModel.addVideoSource(source, config)
         }
-        // Use the default auto subscribe behavior
+        meetingModel.updateRemoteVideoSourceSelection()
+        meetingModel.updateRemoteVideoSourceSubscription(audioVideo)
     }
 
     override fun onRemoteVideoSourceUnavailable(sources: List<RemoteVideoSource>) {
-        sources.forEach { meetingModel.remoteVideoSourceConfigurations.remove(it) }
+        // Please note sources listed in `remoteVideoSourcesDidBecomeUnavailable` do not need to be
+        // removed(by calling AudioVideo.updateVideoSourceSubscriptions()), as they will be
+        // automatically unsubscribed in SDK.
+        // The tracking sources still need to be removed in demo app
+        sources.forEach { meetingModel.removeVideoSource(it) }
     }
 
     override fun onVideoTileAdded(tileState: VideoTileState) {
@@ -1677,7 +1672,7 @@ class MeetingFragment : Fragment(),
             } else {
                 if (tileState.isLocalTile) {
                     showVideoTile(tileState)
-                } else if (meetingModel.remoteVideoTileStates.none { it.videoTileState.tileId == tileState.tileId }) {
+                } else if (meetingModel.getRemoteVideoTileStates().none { it.videoTileState.tileId == tileState.tileId }) {
                     showVideoTile(tileState)
                 }
             }
@@ -1699,11 +1694,9 @@ class MeetingFragment : Fragment(),
                 screenTileAdapter.notifyDataSetChanged()
             } else {
                 if (meetingModel.localVideoTileState?.videoTileState?.tileId == tileId) {
-                    meetingModel.remoteVideoTileStates.removeAll { it.videoTileState.tileId == tileId }
                     meetingModel.localVideoTileState = null
-                } else {
-                    meetingModel.remoteVideoTileStates.removeAll { it.videoTileState.tileId == tileId }
                 }
+                meetingModel.removeRemoteVideoTileState(tileId)
                 onVideoPageUpdated()
             }
             refreshNoVideosOrScreenShareAvailableText()
@@ -1728,7 +1721,7 @@ class MeetingFragment : Fragment(),
 
     override fun onVideoTileResumed(tileState: VideoTileState) {
         val collection =
-            if (tileState.isContent) meetingModel.currentScreenTiles else meetingModel.remoteVideoTileStates
+            if (tileState.isContent) meetingModel.currentScreenTiles else meetingModel.getRemoteVideoTileStates()
         collection.find { it.videoTileState.tileId == tileState.tileId }.apply {
             this?.setPauseMessageVisibility(View.INVISIBLE)
         }
@@ -1870,7 +1863,7 @@ class MeetingFragment : Fragment(),
         if (meetingModel.localVideoTileState != null) {
             audioVideo.unbindVideoView(meetingModel.localTileId)
         }
-        meetingModel.remoteVideoTileStates.forEach {
+        meetingModel.getRemoteVideoTileStates().forEach {
             audioVideo.unbindVideoView(it.videoTileState.tileId)
         }
         meetingModel.currentScreenTiles.forEach {
