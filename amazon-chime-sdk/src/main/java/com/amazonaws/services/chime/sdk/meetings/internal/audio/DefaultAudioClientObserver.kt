@@ -536,6 +536,8 @@ class DefaultAudioClientObserver(
             AudioClient.AUDIO_CLIENT_ERR_SERVICE_UNAVAILABLE -> MeetingSessionStatusCode.AudioServiceUnavailable
             AudioClient.AUDIO_CLIENT_ERR_SHOULD_DISCONNECT_AUDIO -> MeetingSessionStatusCode.AudioDisconnectAudio
             AudioClient.AUDIO_CLIENT_ERR_CALL_ENDED -> MeetingSessionStatusCode.AudioCallEnded
+            AudioClient.AUDIO_CLIENT_ERR_INPUT_DEVICE_NOT_RESPONDING -> MeetingSessionStatusCode.AudioInputDeviceNotResponding
+            AudioClient.AUDIO_CLIENT_ERR_OUTPUT_DEVICE_NOT_RESPONDING -> MeetingSessionStatusCode.AudioOutputDeviceNotResponding
             else -> null
         }
     }

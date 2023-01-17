@@ -32,6 +32,7 @@ import com.amazonaws.services.chime.sdk.meetings.internal.metric.ClientMetricsCo
 import com.amazonaws.services.chime.sdk.meetings.realtime.RealtimeObserver
 import com.amazonaws.services.chime.sdk.meetings.realtime.TranscriptEventObserver
 import com.amazonaws.services.chime.sdk.meetings.session.MeetingSessionConfiguration
+import com.amazonaws.services.chime.sdk.meetings.session.MeetingSessionStatus
 import com.amazonaws.services.chime.sdk.meetings.session.MeetingSessionStatusCode
 import com.amazonaws.services.chime.sdk.meetings.utils.logger.Logger
 import com.xodee.client.audio.audioclient.AttendeeInfo as AttendeeInfoInternal
@@ -1142,6 +1143,48 @@ class DefaultAudioClientObserverTest {
             )
         }
         coVerify(exactly = 1, timeout = TestConstant.globalScopeTimeoutMs) { mockAudioVideoObserver.onAudioSessionStopped(any()) }
+        verify(exactly = 1, timeout = TestConstant.globalScopeTimeoutMs) { mockAudioClient.stopSession() }
+    }
+
+    @Test
+    fun `onAudioClientStateChange should stop session and notify of session stop event when input device is not responding`() {
+        every { mockAudioClient.stopSession() } returns 0
+
+        runBlockingTest {
+            audioClientObserver.onAudioClientStateChange(
+                AudioClient.AUDIO_CLIENT_STATE_RECONNECTING,
+                AudioClient.AUDIO_CLIENT_OK
+            )
+
+            audioClientObserver.onAudioClientStateChange(
+                AudioClient.AUDIO_CLIENT_STATE_DISCONNECTED_ABNORMAL,
+                AudioClient.AUDIO_CLIENT_ERR_INPUT_DEVICE_NOT_RESPONDING
+            )
+        }
+        coVerify(exactly = 1, timeout = TestConstant.globalScopeTimeoutMs) { mockAudioVideoObserver.onAudioSessionStopped(
+            MeetingSessionStatus(MeetingSessionStatusCode.AudioInputDeviceNotResponding)
+        ) }
+        verify(exactly = 1, timeout = TestConstant.globalScopeTimeoutMs) { mockAudioClient.stopSession() }
+    }
+
+    @Test
+    fun `onAudioClientStateChange should stop session and notify of session stop event when output device is not responding`() {
+        every { mockAudioClient.stopSession() } returns 0
+
+        runBlockingTest {
+            audioClientObserver.onAudioClientStateChange(
+                AudioClient.AUDIO_CLIENT_STATE_RECONNECTING,
+                AudioClient.AUDIO_CLIENT_OK
+            )
+
+            audioClientObserver.onAudioClientStateChange(
+                AudioClient.AUDIO_CLIENT_STATE_DISCONNECTED_ABNORMAL,
+                AudioClient.AUDIO_CLIENT_ERR_OUTPUT_DEVICE_NOT_RESPONDING
+            )
+        }
+        coVerify(exactly = 1, timeout = TestConstant.globalScopeTimeoutMs) { mockAudioVideoObserver.onAudioSessionStopped(
+            MeetingSessionStatus(MeetingSessionStatusCode.AudioOutputDeviceNotResponding)
+        ) }
         verify(exactly = 1, timeout = TestConstant.globalScopeTimeoutMs) { mockAudioClient.stopSession() }
     }
 

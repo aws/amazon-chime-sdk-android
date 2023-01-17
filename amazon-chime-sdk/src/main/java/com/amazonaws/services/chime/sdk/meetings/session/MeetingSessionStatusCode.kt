@@ -80,7 +80,17 @@ enum class MeetingSessionStatusCode(val value: Int) {
      * The video client has tried to send video but was unable to do so due to capacity reached.
      * However, the video client can still receive remote video streams.
      */
-    VideoAtCapacityViewOnly(13);
+    VideoAtCapacityViewOnly(13),
+
+    /**
+     * Designated output device is not responding and timed out.
+     */
+    AudioOutputDeviceNotResponding(14),
+
+    /**
+     * Designated input device is not responding and timed out.
+     */
+    AudioInputDeviceNotResponding(15);
 
     companion object {
         fun from(intValue: Int): MeetingSessionStatusCode? = values().find { it.value == intValue }
