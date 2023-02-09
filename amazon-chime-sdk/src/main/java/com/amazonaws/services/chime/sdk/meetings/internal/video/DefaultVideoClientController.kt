@@ -121,6 +121,7 @@ class DefaultVideoClientController(
         cameraCaptureSource.start()
         isUsingInternalCaptureSource = true
         config.safeMaxBitRateKbps.let {
+            logger.info(TAG, "Setting max bitrate kbps in video client")
             if (it > 0) videoClient?.setMaxBitRateKbps(it)
         }
     }
@@ -140,6 +141,7 @@ class DefaultVideoClientController(
         videoClient?.setExternalVideoSource(videoSourceAdapter, eglCore?.eglContext)
         videoClient?.setSending(true)
         config.safeMaxBitRateKbps.let {
+            logger.info(TAG, "Setting max bitrate kbps in video client")
             if (it > 0) videoClient?.setMaxBitRateKbps(it)
         }
     }

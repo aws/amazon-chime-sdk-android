@@ -200,7 +200,7 @@ class DefaultVideoClientObserver(
         if (logLevel == AudioClient.L_ERROR || logLevel == AudioClient.L_FATAL) {
             logger.error(TAG, message)
         } else {
-            logger.verbose(TAG, message)
+            logger.debug(TAG, message)
         }
     }
 
