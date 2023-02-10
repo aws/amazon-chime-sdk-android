@@ -8,6 +8,7 @@ package com.amazonaws.services.chime.sdk.meetings.audiovideo
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.metric.MetricsObserver
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.LocalVideoConfiguration
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.RemoteVideoSource
+import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoCodecPreference
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoFrame
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoSource
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoSubscriptionConfiguration
@@ -199,4 +200,18 @@ interface AudioVideoControllerFacade {
      * to revert UX, etc.
      */
     fun demoteFromPrimaryMeeting()
+
+    /**
+     * Set codec preferences for this clients send stream in order of most preferred to least preferred. The controller will
+     * fallback for one of two reasons
+     * - The codec is not supported by the browser
+     * - Another client that has joined the conference does not support receiving the video. Note that if another client does not support
+     *   any of the codecs provided the sender will not fallback, and that client will not be able to receive from this sender.
+     *
+     * If there is no overlap between what is passed in and what is supported by the browser, this function
+     * may not have any effect, and the default set of codecs for this browser will be used.
+     *
+     * @param videoCodecPreference list of VideoCodecCapability in order of preference
+     */
+    fun setVideoCodecSendPreferences(videoCodecPreference: List<VideoCodecPreference>)
 }

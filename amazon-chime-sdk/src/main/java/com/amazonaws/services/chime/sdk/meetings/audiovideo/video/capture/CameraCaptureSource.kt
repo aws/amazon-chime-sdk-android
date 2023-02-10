@@ -6,6 +6,7 @@
 package com.amazonaws.services.chime.sdk.meetings.audiovideo.video.capture
 
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.AudioVideoFacade
+import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoCodecPreference
 import com.amazonaws.services.chime.sdk.meetings.device.MediaDevice
 
 /**
@@ -15,6 +16,13 @@ import com.amazonaws.services.chime.sdk.meetings.device.MediaDevice
  * All the APIs here can be called regardless of whether the [AudioVideoFacade] is started or not.
  */
 interface CameraCaptureSource : VideoCaptureSource {
+
+    /**
+     * List of video codec capability in order of preference, specified in
+     * AudioVideoControllerFacade.setVideoCodecSendPreferences()
+     */
+    var codecPreferences: List<VideoCodecPreference>
+
     /**
      * Current camera device. This is only null if the phone/device doesn't have any cameras
      * May be called regardless of whether [start] or [stop] has been called.
