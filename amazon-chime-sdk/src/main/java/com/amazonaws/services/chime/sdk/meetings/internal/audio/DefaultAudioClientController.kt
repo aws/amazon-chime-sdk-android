@@ -113,10 +113,11 @@ class DefaultAudioClientController(
     }
 
     override fun setRoute(route: Int): Boolean {
-        if (getRoute() == route) return true
-        logger.info(TAG, "Setting route to $route")
+        // if (getRoute() == route) return true
+        // logger.info(TAG, "Setting route to $route")
 
-        return audioClient.setRoute(route) == AUDIO_CLIENT_RESULT_SUCCESS
+        // return audioClient.setRoute(route) == AUDIO_CLIENT_RESULT_SUCCESS
+        return true
     }
 
     private fun getDefaultRecordingPreset(): AudioClient.AudioRecordingPreset {
