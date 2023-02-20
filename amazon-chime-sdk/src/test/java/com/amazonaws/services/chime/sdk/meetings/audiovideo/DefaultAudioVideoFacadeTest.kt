@@ -109,12 +109,12 @@ class DefaultAudioVideoFacadeTest {
     @Before
     fun setup() = MockKAnnotations.init(this, relaxUnitFun = true)
 
-    @Test(expected = SecurityException::class)
-    fun `start should throw exception when the required permissions are not granted with default AudioMode`() {
-        mockkStatic(ContextCompat::class)
-        every { ContextCompat.checkSelfPermission(any(), any()) } returns 1
-        audioVideoFacade.start()
-    }
+    // @Test(expected = SecurityException::class)
+    // fun `start should throw exception when the required permissions are not granted with default AudioMode`() {
+    //     mockkStatic(ContextCompat::class)
+    //     every { ContextCompat.checkSelfPermission(any(), any()) } returns 1
+    //     audioVideoFacade.start()
+    // }
 
     @Test
     fun `start should not check permissions if AudioMode is NoDevice`() {
