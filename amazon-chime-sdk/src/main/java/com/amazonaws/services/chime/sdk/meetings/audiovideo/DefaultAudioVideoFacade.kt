@@ -7,15 +7,15 @@ package com.amazonaws.services.chime.sdk.meetings.audiovideo
 
 import android.Manifest
 import android.content.Context
-import android.content.pm.PackageManager
+// import android.content.pm.PackageManager
 import android.os.Build
 import androidx.annotation.RequiresApi
-import androidx.core.content.ContextCompat
+// import androidx.core.content.ContextCompat
 import com.amazonaws.services.chime.sdk.meetings.analytics.EventAnalyticsController
 import com.amazonaws.services.chime.sdk.meetings.analytics.EventAnalyticsObserver
 import com.amazonaws.services.chime.sdk.meetings.analytics.EventAttributes
 import com.amazonaws.services.chime.sdk.meetings.analytics.MeetingHistoryEvent
-import com.amazonaws.services.chime.sdk.meetings.audiovideo.audio.AudioMode
+// import com.amazonaws.services.chime.sdk.meetings.audiovideo.audio.AudioMode
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.audio.activespeakerdetector.ActiveSpeakerDetectorFacade
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.audio.activespeakerdetector.ActiveSpeakerObserver
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.audio.activespeakerpolicy.ActiveSpeakerPolicy
@@ -60,22 +60,22 @@ class DefaultAudioVideoFacade(
     }
 
     override fun start(audioVideoConfiguration: AudioVideoConfiguration) {
-        if (audioVideoConfiguration.audioMode != AudioMode.NoDevice) {
-            val hasPermission: Boolean = permissions.all {
-                ContextCompat.checkSelfPermission(context, it) == PackageManager.PERMISSION_GRANTED
-            }
-            if (!hasPermission) {
-                throw SecurityException(
-                    "Missing necessary permissions for WebRTC: ${
-                        permissions.joinToString(
-                            separator = ", ",
-                            prefix = "",
-                            postfix = ""
-                        )
-                    }"
-                )
-            }
-        }
+        // if (audioVideoConfiguration.audioMode != AudioMode.NoDevice) {
+        //     val hasPermission: Boolean = permissions.all {
+        //         ContextCompat.checkSelfPermission(context, it) == PackageManager.PERMISSION_GRANTED
+        //     }
+        //     if (!hasPermission) {
+        //         throw SecurityException(
+        //             "Missing necessary permissions for WebRTC: ${
+        //                 permissions.joinToString(
+        //                     separator = ", ",
+        //                     prefix = "",
+        //                     postfix = ""
+        //                 )
+        //             }"
+        //         )
+        //     }
+        // }
         audioVideoController.start(audioVideoConfiguration)
     }
 
