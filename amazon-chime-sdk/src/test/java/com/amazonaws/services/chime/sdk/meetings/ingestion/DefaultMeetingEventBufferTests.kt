@@ -5,9 +5,6 @@
 
 package com.amazonaws.services.chime.sdk.meetings.ingestion
 
-import com.amazonaws.services.chime.sdk.meetings.analytics.EventAttributeName
-import com.amazonaws.services.chime.sdk.meetings.analytics.EventAttributes
-import com.amazonaws.services.chime.sdk.meetings.analytics.EventName
 import com.amazonaws.services.chime.sdk.meetings.internal.ingestion.DirtyEventDao
 import com.amazonaws.services.chime.sdk.meetings.internal.ingestion.DirtyMeetingEventItem
 import com.amazonaws.services.chime.sdk.meetings.internal.ingestion.EventDao
@@ -23,15 +20,12 @@ import io.mockk.every
 import io.mockk.impl.annotations.MockK
 import io.mockk.mockkObject
 import io.mockk.mockkStatic
-import io.mockk.slot
-import io.mockk.unmockkObject
 import io.mockk.verify
 import java.util.Calendar
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.TestCoroutineScope
 import kotlinx.coroutines.test.runBlockingTest
-import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
 
@@ -55,29 +49,26 @@ class DefaultMeetingEventBufferTests {
     @MockK
     private lateinit var calendar: Calendar
 
+    @MockK
+    private lateinit var ingestionRecord: IngestionRecord
+
     @ExperimentalCoroutinesApi
     private val eventScope: CoroutineScope = TestCoroutineScope()
 
     private lateinit var defaultMeetingEventBuffer: EventBuffer
 
-    private val id = "id"
-    private val attendeeId = "attendeeId"
-    private val meetingId = "meetingId"
-    private val meetingEvent = SDKEvent(EventName.meetingFailed, mutableMapOf())
-    private val meetingEventItem = MeetingEventItem(id, meetingEvent)
-    private val dirtyMeetingEventItem = DirtyMeetingEventItem(id, meetingEvent, 1214124L)
-    private val ingestionRecord = IngestionRecord(
-        mutableMapOf(), listOf(
-            IngestionEvent(
-                EventClientType.Meet, mutableMapOf(), listOf(
-                    mutableMapOf(
-                        "status" to "ok",
-                        "id" to id
-                    )
-                )
-            )
-        )
-    )
+    private val currentTimestampMs = 100L
+    private val futureTtl = 101L
+    private val expiredTtl = 99L
+    private val expiredDirtyEventId = "expired-event-id"
+    private val malformedDirtyEventId = "malformed-event-id"
+    private val validSDKEvent = SDKEvent(name = "event-name", eventAttributes = mapOf("timestampMs" to 1000))
+    private val malformedSDKEvent = SDKEvent(name = "event-name", eventAttributes = mapOf("blah" to 1000))
+    private val expiredDirtyEventItem = DirtyMeetingEventItem(id = expiredDirtyEventId, data = validSDKEvent, ttl = expiredTtl)
+    private val malformedDirtyEventItem = DirtyMeetingEventItem(id = malformedDirtyEventId, data = malformedSDKEvent, ttl = futureTtl)
+    private val event = SDKEvent(name = "non-urgent-event", eventAttributes = emptyMap())
+    private val urgentEvent = SDKEvent(name = "meetingFailed", eventAttributes = mapOf("meetingStatus" to MeetingSessionStatusCode.AudioAuthenticationRejected))
+    private val eventItem = MeetingEventItem(id = "event-id", data = event)
     private val flushSize = 5
 
     @Before
@@ -85,15 +76,18 @@ class DefaultMeetingEventBufferTests {
         MockKAnnotations.init(this, relaxed = true)
         mockkObject(IngestionEventConverter)
         every { ingestionConfiguration.flushSize } returns flushSize
-        every { calendar.timeInMillis } returns 100L
+        every { calendar.timeInMillis } returns currentTimestampMs
         mockkStatic(Calendar::class)
         every { Calendar.getInstance() } returns calendar
-        every { ingestionConfiguration.clientConfiguration } returns MeetingEventClientConfiguration(
-            "joinToken",
-            meetingId,
-            attendeeId
-        )
+        every { IngestionEventConverter.fromDirtyMeetingEventItems(any(), any()) } returns ingestionRecord
+        every { IngestionEventConverter.fromMeetingEventItems(any(), any()) } returns ingestionRecord
 
+        every { eventDao.listMeetingEventItems(any()) } returns listOf(eventItem)
+        every { dirtyEventDao.listDirtyMeetingEventItems(any()) } returns emptyList()
+        coEvery { eventSender.sendRecord(any()) } returns true
+    }
+
+    private fun construct() {
         defaultMeetingEventBuffer = DefaultMeetingEventBuffer(
             ingestionConfiguration,
             eventDao,
@@ -105,87 +99,45 @@ class DefaultMeetingEventBufferTests {
     }
 
     @Test
-    fun `defaultMeetingEventBuffer should process expired dirtyEvents if send failed`() {
-        val expiredEventId = "newId"
-        val ttl = 100L
-        coEvery { eventSender.sendRecord(any()) } returns false
-        every { calendar.timeInMillis } returns 101L
-        every { IngestionEventConverter.fromDirtyMeetingEventItems(any(), any()) }.returns(
-            ingestionRecord
-        )
-        every { dirtyEventDao.listDirtyMeetingEventItems(any()) } returns listOf(
-            dirtyMeetingEventItem,
-            DirtyMeetingEventItem(expiredEventId, meetingEvent, ttl)
-        )
+    fun `should delete expired events when process the dirty events`() {
+        every { dirtyEventDao.listDirtyMeetingEventItems(any()) } returns
+                listOf(expiredDirtyEventItem)
 
-        DefaultMeetingEventBuffer(
-            ingestionConfiguration,
-            eventDao,
-            dirtyEventDao,
-            eventSender,
-            logger,
-            eventScope
-        )
+        construct()
 
         runBlockingTest {
-            verify { dirtyEventDao.deleteDirtyEventsByIds(listOf(expiredEventId)) }
+            verify(exactly = 1) { dirtyEventDao.deleteDirtyEventsByIds(listOf(expiredDirtyEventId)) }
+            coVerify(exactly = 0) { eventSender.sendRecord(any()) }
         }
     }
 
     @Test
-    fun `defaultMeetingEventBuffer should filtered out invalid dirty events when sendRecord`() {
-        val expiredEventId = "newId"
-        val ttl = 100L
-        val recordSlot = slot<IngestionRecord>()
-        coEvery { eventSender.sendRecord(record = capture(recordSlot)) } returns false
-        every { calendar.timeInMillis } returns 101L
-        unmockkObject(IngestionEventConverter)
-        every { dirtyEventDao.listDirtyMeetingEventItems(any()) } returns listOf(
-            dirtyMeetingEventItem,
-            DirtyMeetingEventItem(expiredEventId, SDKEvent("test", mutableMapOf(
-                EventAttributeName.deviceName to "test",
-                EventAttributeName.sdkVersion to 123
-            )), ttl),
-            DirtyMeetingEventItem(expiredEventId, SDKEvent("test1", mutableMapOf(
-                EventAttributeName.deviceName to "test",
-                EventAttributeName.sdkVersion to 123,
-                EventAttributeName.timestampMs to 123.0
-            )), ttl)
-        )
+    fun `should delete malformed events when process the dirty events`() {
+        every { dirtyEventDao.listDirtyMeetingEventItems(any()) } returns
+                listOf(malformedDirtyEventItem)
 
-        DefaultMeetingEventBuffer(
-            ingestionConfiguration,
-            eventDao,
-            dirtyEventDao,
-            eventSender,
-            logger,
-            eventScope
-        )
+        construct()
 
-        println(recordSlot.captured.events)
-        assertEquals(recordSlot.captured.events.count(), 1)
+        runBlockingTest {
+            verify(exactly = 1) { dirtyEventDao.deleteDirtyEventsByIds(listOf(malformedDirtyEventId)) }
+            coVerify(exactly = 0) { eventSender.sendRecord(any()) }
+        }
     }
 
     @Test
-    fun `add should invoke EventDao insertMeetingEvent`() {
-        defaultMeetingEventBuffer.add(meetingEvent)
+    fun `add should insert event to EventDao`() {
+        construct()
+
+        defaultMeetingEventBuffer.add(event)
 
         verify(exactly = 1) { eventDao.insertMeetingEvent(any()) }
     }
 
     @Test
-    fun `add should send immediately if it is meeting failed`() {
-        coEvery { eventSender.sendRecord(any()) } returns true
-        every { IngestionEventConverter.fromMeetingEventItems(any(), any()) }.returns(
-            ingestionRecord
-        )
+    fun `add should send immediately if it is urgent event`() {
+        construct()
 
-        val currentMeetingEvent = SDKEvent(
-            EventName.meetingFailed, mapOf(
-                EventAttributeName.meetingStatus to MeetingSessionStatusCode.AudioInternalServerError
-            ) as EventAttributes
-        )
-        defaultMeetingEventBuffer.add(currentMeetingEvent)
+        defaultMeetingEventBuffer.add(urgentEvent)
 
         runBlockingTest {
             verify(exactly = 1) { eventDao.insertMeetingEvent(any()) }
@@ -194,27 +146,20 @@ class DefaultMeetingEventBufferTests {
     }
 
     @Test
-    fun `add should not send immediately if it is not meeting failed`() {
-        coEvery { eventSender.sendRecord(any()) } returns true
-        every { dirtyEventDao.listDirtyMeetingEventItems(any()) } returns emptyList()
-        every { IngestionEventConverter.fromMeetingEventItems(any(), any()) }.returns(
-            ingestionRecord
-        )
+    fun `add should not send immediately if it is not urgent event`() {
+        construct()
 
-        val currentMeetingEvent = SDKEvent(
-            EventName.meetingStartSucceeded, mapOf(
-                EventAttributeName.meetingStatus to MeetingSessionStatusCode.OK
-            ) as EventAttributes
-        )
-        defaultMeetingEventBuffer.add(currentMeetingEvent)
+        defaultMeetingEventBuffer.add(event)
 
         runBlockingTest {
+            verify(exactly = 1) { eventDao.insertMeetingEvent(any()) }
             coVerify(exactly = 0) { eventSender.sendRecord(any()) }
         }
     }
 
     @Test
-    fun `process should not invoke eventSender sendRecord when there is no stored events`() {
+    fun `process should not send events when there is no stored events`() {
+        construct()
         every { eventDao.listMeetingEventItems(any()) } returns emptyList()
 
         runBlockingTest {
@@ -225,58 +170,35 @@ class DefaultMeetingEventBufferTests {
     }
 
     @Test
-    fun `process should invoke eventSender sendRecord when there is stored events`() {
-        every { eventDao.listMeetingEventItems(any()) } returns listOf(meetingEventItem)
-        every { IngestionEventConverter.fromMeetingEventItems(any(), any()) }.returns(
-            ingestionRecord
-        )
-        coEvery { eventSender.sendRecord(any()) } returns true
+    fun `process should send events when there is stored events`() {
+        construct()
 
         runBlockingTest {
             defaultMeetingEventBuffer.process()
 
             coVerify(exactly = 1) { eventSender.sendRecord(any()) }
-            verify(exactly = 1) { eventDao.listMeetingEventItems(any()) }
-            verify(exactly = 1) { eventDao.deleteMeetingEventsByIds(any()) }
         }
     }
 
     @Test
-    fun `process should remove processed ids when sent succeeded`() {
-        every { eventDao.listMeetingEventItems(any()) } returns listOf(meetingEventItem)
-        every { IngestionEventConverter.fromMeetingEventItems(any(), any()) }.returns(
-            ingestionRecord
-        )
-        coEvery { eventSender.sendRecord(any()) } returns true
+    fun `process should remove processed event items`() {
+        construct()
 
         runBlockingTest {
+            // send successfully
+            coEvery { eventSender.sendRecord(any()) } returns true
+            defaultMeetingEventBuffer.process()
+            // send failed
+            coEvery { eventSender.sendRecord(any()) } returns false
             defaultMeetingEventBuffer.process()
 
-            verify(exactly = 1) { eventDao.deleteMeetingEventsByIds(listOf(id)) }
-        }
-    }
-
-    @Test
-    fun `process should remove processed ids when sent failed`() {
-        every { eventDao.listMeetingEventItems(any()) } returns listOf(meetingEventItem)
-        every { IngestionEventConverter.fromMeetingEventItems(any(), any()) }.returns(
-            ingestionRecord
-        )
-        coEvery { eventSender.sendRecord(any()) } returns false
-
-        runBlockingTest {
-            defaultMeetingEventBuffer.process()
-
-            verify(exactly = 1) { eventDao.deleteMeetingEventsByIds(listOf(id)) }
+            verify(exactly = 2) { eventDao.deleteMeetingEventsByIds(listOf(eventItem.id)) }
         }
     }
 
     @Test
     fun `process should insert events as dirtyEvents when failed to send`() {
-        every { eventDao.listMeetingEventItems(any()) } returns listOf(meetingEventItem)
-        every { IngestionEventConverter.fromMeetingEventItems(any(), any()) }.returns(
-            ingestionRecord
-        )
+        construct()
         coEvery { eventSender.sendRecord(any()) } returns false
 
         runBlockingTest {

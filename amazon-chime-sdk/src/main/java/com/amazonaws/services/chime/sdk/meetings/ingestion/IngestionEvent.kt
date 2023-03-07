@@ -17,7 +17,7 @@ typealias IngestionPayload = Map<String, Any>
  * @property version: [Int] - version of this event. If the format changes, it will have different version.
  */
 data class IngestionEvent(
-    val type: EventClientType,
+    val type: String,
     val metadata: IngestionMetadata,
     val payloads: List<IngestionPayload>,
     @SerializedName("v")

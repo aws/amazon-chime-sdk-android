@@ -5,7 +5,6 @@
 
 package com.amazonaws.services.chime.sdk.meetings.ingestion
 
-import com.amazonaws.services.chime.sdk.meetings.analytics.EventAttributeName
 import com.amazonaws.services.chime.sdk.meetings.internal.ingestion.SDKEvent
 import com.amazonaws.services.chime.sdk.meetings.utils.logger.Logger
 import java.util.Timer
@@ -27,35 +26,30 @@ class DefaultEventReporter constructor(
     }
 
     override fun report(event: SDKEvent) {
-        // Add meeting id and attendee id are meta data that changes
-        // from meeting to meeting. Therefore, we would need to store these
-        // value just in case it was not be able to be sent.
-        when (ingestionConfiguration.clientConfiguration) {
-            is MeetingEventClientConfiguration -> {
-                event.eventAttributes.putAll(
-                    mutableMapOf(
-                        EventAttributeName.meetingId to ingestionConfiguration.clientConfiguration.meetingId,
-                        EventAttributeName.attendeeId to ingestionConfiguration.clientConfiguration.attendeeId
-                    )
-                )
-            }
-        }
+        val updatedEvent = event.putAttributes(ingestionConfiguration.clientConfiguration.metadataAttributes)
 
-        eventBuffer.add(event)
+        eventBuffer.add(updatedEvent)
     }
 
     override fun start() {
-        if (isStarted) {
+        if (isStarted || ingestionConfiguration.disabled) {
             return
         }
 
-        timer.scheduleAtFixedRate(
-            object : TimerTask() {
-                override fun run() = eventBuffer.process()
-            },
-            ingestionConfiguration.flushIntervalMs,
-            ingestionConfiguration.flushIntervalMs
-        )
+        isStarted = true
+
+        try {
+            timer.scheduleAtFixedRate(
+                object : TimerTask() {
+                    override fun run() = eventBuffer.process()
+                },
+                ingestionConfiguration.flushIntervalMs,
+                ingestionConfiguration.flushIntervalMs
+            )
+        } catch (error: Error) {
+            logger.error(TAG, "Failed to start timer for event buffer to process")
+            isStarted = false
+        }
     }
 
     override fun stop() {
@@ -64,5 +58,7 @@ class DefaultEventReporter constructor(
         }
 
         timer.cancel()
+
+        isStarted = false
     }
 }

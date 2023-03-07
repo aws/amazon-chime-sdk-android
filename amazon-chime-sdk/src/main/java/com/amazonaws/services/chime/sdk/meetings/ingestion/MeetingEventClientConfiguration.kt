@@ -5,6 +5,8 @@
 
 package com.amazonaws.services.chime.sdk.meetings.ingestion
 
+import com.amazonaws.services.chime.sdk.meetings.analytics.EventAttributeName
+
 /**
  * [MeetingEventClientConfiguration] defines one type of [EventClientConfiguration]
  * that is needed for [DefaultEventReporter]
@@ -19,4 +21,11 @@ data class MeetingEventClientConfiguration(
     val attendeeId: String
 ) : EventClientConfiguration {
     override val type: EventClientType = EventClientType.Meet
+
+    override val tag: String = "Meet"
+    override val metadataAttributes: Map<String, Any> =
+        mapOf(
+            EventAttributeName.meetingId.name to meetingId,
+            EventAttributeName.attendeeId.name to attendeeId
+        )
 }

@@ -46,7 +46,10 @@ class DefaultEventSender(
                     AUTHORIZATION_HEADER to "$BEARER ${ingestionConfiguration.clientConfiguration.eventClientJoinToken}"
                 )
             )
-            response.httpException == null
+            if (response.httpException != null) {
+                logger.error(TAG, "Failed to send ingestion record: $response")
+                false
+            } else { true }
         } catch (err: Exception) {
             logger.error(
                 TAG,

@@ -29,4 +29,14 @@ interface EventClientConfiguration {
      * eventClientJoinToken: [String] - authentication token needed for ingestion url
      */
     val eventClientJoinToken: String
+
+    /**
+     * tag: [String] - tagging the source of the events, which will be translated to Type for Ingestion Event
+     */
+    val tag: String
+
+    /**
+     * metadataAttributes: [Map<String, Any>] - the attributes that will be sent to Ingestion Service as metadata
+     */
+    val metadataAttributes: Map<String, Any>
 }

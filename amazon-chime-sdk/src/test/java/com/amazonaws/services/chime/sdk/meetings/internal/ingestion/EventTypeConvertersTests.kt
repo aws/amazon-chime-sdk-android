@@ -27,16 +27,16 @@ class EventTypeConvertersTests {
     fun `toMeetingEvent should convert json string to object`() {
 
         val nameValue = "test name"
-        val deviceNameKey = EventAttributeName.deviceName.toString()
+        val deviceNameKey = EventAttributeName.deviceName.name
         val deviceNameValue = "test device"
-        val tsKey = EventAttributeName.timestampMs.toString()
+        val tsKey = EventAttributeName.timestampMs.name
         val tsValue = 1659759236803
         val data = "{\"name\":\"$nameValue\", \"eventAttributes\":{\"$deviceNameKey\":\"$deviceNameValue\", \"$tsKey\":$tsValue}}"
         val event = eventTypeConverters.toMeetingEvent(data)
 
-        assertEquals(event.name, nameValue)
-        assertEquals(event.eventAttributes[EventAttributeName.deviceName] as? String, deviceNameValue)
-        assertEquals((event.eventAttributes[EventAttributeName.timestampMs] as? Double ?: 0.0).toLong(), tsValue)
+        assertEquals(nameValue, event.name)
+        assertEquals(deviceNameValue, event.eventAttributes[EventAttributeName.deviceName.name] as? String)
+        assertEquals(tsValue, (event.eventAttributes[EventAttributeName.timestampMs.name] as? Double ?: 0.0).toLong())
     }
 
     @Test
@@ -45,7 +45,7 @@ class EventTypeConvertersTests {
         val data = "{\"name\":null, \"eventAttributes\":{}}"
         val event = eventTypeConverters.toMeetingEvent(data)
 
-        assertEquals(event.name, "")
+        assertEquals("", event.name)
     }
 
     @Test
@@ -56,7 +56,7 @@ class EventTypeConvertersTests {
 
         verify(exactly = 1) { logger.error(any(), any()) }
 
-        assertEquals(event.name, "")
+        assertEquals("", event.name)
     }
 
     @Test
@@ -66,7 +66,7 @@ class EventTypeConvertersTests {
         val data = "{\"name\":\"$nameValue\", \"eventAttributes\":null}"
         val event = eventTypeConverters.toMeetingEvent(data)
 
-        assertEquals(event.eventAttributes.count(), 0)
+        assertEquals(0, event.eventAttributes.count())
     }
 
     @Test
@@ -78,7 +78,7 @@ class EventTypeConvertersTests {
 
         verify(exactly = 1) { logger.error(any(), any()) }
 
-        assertEquals(event.eventAttributes.count(), 0)
+        assertEquals(0, event.eventAttributes.count())
     }
 
     @Test
@@ -90,12 +90,12 @@ class EventTypeConvertersTests {
         val tsKey = EventAttributeName.timestampMs.toString()
         val tsValue = 1659759236803
         val mockEvent = SDKEvent(nameValue, mutableMapOf(
-            EventAttributeName.deviceName to deviceNameValue,
-            EventAttributeName.timestampMs to tsValue
+            EventAttributeName.deviceName.name to deviceNameValue,
+            EventAttributeName.timestampMs.name to tsValue
         ))
         val result = eventTypeConverters.fromMeetingEvent(mockEvent)
 
         val jsonString = "{\"name\":\"test name\",\"eventAttributes\":{\"$deviceNameKey\":\"$deviceNameValue\",\"$tsKey\":$tsValue}}"
-        assertEquals(result, jsonString)
+        assertEquals(jsonString, result)
     }
 }

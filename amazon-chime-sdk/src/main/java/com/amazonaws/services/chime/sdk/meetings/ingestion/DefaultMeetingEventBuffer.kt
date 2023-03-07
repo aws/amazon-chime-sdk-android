@@ -89,7 +89,7 @@ class DefaultMeetingEventBuffer @JvmOverloads constructor(
             val isSuccess = eventSender.sendRecord(eventRecord)
 
             if (!isSuccess) {
-                logger.info(
+                logger.warn(
                     TAG,
                     "Unable to publish data to ingestion service. Putting it in the dirtyMeetingEvent"
                 )
@@ -126,51 +126,55 @@ class DefaultMeetingEventBuffer @JvmOverloads constructor(
         val eventAttributes = event.eventAttributes
 
         return (eventName == EventName.meetingFailed.name &&
-                eventAttributes[EventAttributeName.meetingStatus] == MeetingSessionStatusCode.AudioAuthenticationRejected ||
-                eventAttributes[EventAttributeName.meetingStatus] == MeetingSessionStatusCode.AudioInternalServerError ||
-                eventAttributes[EventAttributeName.meetingStatus] == MeetingSessionStatusCode.AudioServiceUnavailable ||
-                eventAttributes[EventAttributeName.meetingStatus] == MeetingSessionStatusCode.AudioDisconnected)
+                eventAttributes[EventAttributeName.meetingStatus.name] == MeetingSessionStatusCode.AudioAuthenticationRejected ||
+                eventAttributes[EventAttributeName.meetingStatus.name] == MeetingSessionStatusCode.AudioInternalServerError ||
+                eventAttributes[EventAttributeName.meetingStatus.name] == MeetingSessionStatusCode.AudioServiceUnavailable ||
+                eventAttributes[EventAttributeName.meetingStatus.name] == MeetingSessionStatusCode.AudioDisconnected)
     }
 
     private fun processDirtyEvents() {
         eventScope.launch {
-            // This logic will do following
-            // 1. Send dirty data events
-            // 2. If failed to send, check ttl and delete
-            // 3. If succeeded, remove dirtyEvents
-
             try {
-                var dirtyEvents =
+                // Get all dirty events, filter out valid events
+                val dirtyEvents =
                     dirtyEventDao.listDirtyMeetingEventItems(ingestionConfiguration.flushSize)
+                val validEvents = mutableListOf<DirtyMeetingEventItem>()
+                val invalidEventIds = mutableListOf<String>()
 
+                val currentTime = Calendar.getInstance().timeInMillis
+                for (event in dirtyEvents) {
+                    if (event.ttl > currentTime &&
+                        event.data.eventAttributes.isNotEmpty() &&
+                        event.data.eventAttributes[EventAttributeName.timestampMs.name] != null) {
+                        validEvents.add(event)
+                    } else {
+                        invalidEventIds.add(event.id)
+                    }
+                }
+                // Delete invalid / expired events before processing
+                dirtyEventDao.deleteDirtyEventsByIds(invalidEventIds)
+
+                // Send valid events
                 var isSentSuccessful = true
-
                 // There is an known issue with .isNotEmpty() in Mockk in 1.10.0,
                 // it has been fixed in new version, however, SDK unit tests fails with new version
                 // Will use dirtyEvents.size instead for now
-                while (dirtyEvents.size > 0 && isSentSuccessful) {
-                    val validEvents = dirtyEvents.filter {
-                        it.data.eventAttributes.isNotEmpty() &&
-                            it.data.eventAttributes[EventAttributeName.timestampMs] != null
-                    }
+                while (validEvents.size > 0 && isSentSuccessful) {
                     val ingestionRecord =
                         IngestionEventConverter.fromDirtyMeetingEventItems(validEvents, ingestionConfiguration)
                     isSentSuccessful = eventSender.sendRecord(ingestionRecord)
 
                     // Find the ids that will be removed based on success status
-                    val idsToRemove: List<String> = if (!isSentSuccessful) {
-                        val currentTime = Calendar.getInstance().timeInMillis
-                        dirtyEvents.filter { it.ttl <= currentTime }.map { it.id }
-                    } else {
-                        dirtyEvents.map { it.id }
+                    if (isSentSuccessful) {
+                        dirtyEventDao.deleteDirtyEventsByIds(validEvents.map { it.id })
                     }
-                    dirtyEventDao.deleteDirtyEventsByIds(idsToRemove)
-                    dirtyEvents = dirtyEventDao.listDirtyMeetingEventItems(
+                    validEvents.clear()
+                    validEvents.addAll(dirtyEventDao.listDirtyMeetingEventItems(
                         ingestionConfiguration.flushSize
-                    )
+                    ))
                 }
             } catch (exception: Exception) {
-                logger.error(TAG, "Unable to create URL $exception")
+                logger.error(TAG, "Unable to process dirty events $exception")
             }
         }
     }
