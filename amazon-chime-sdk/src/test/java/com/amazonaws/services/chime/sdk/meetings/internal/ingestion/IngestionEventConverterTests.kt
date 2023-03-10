@@ -6,6 +6,8 @@ import com.amazonaws.services.chime.sdk.meetings.ingestion.IngestionConfiguratio
 import com.amazonaws.services.chime.sdk.meetings.internal.utils.EventAttributesUtils
 import io.mockk.every
 import io.mockk.mockkObject
+import io.mockk.unmockkObject
+import org.junit.After
 import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
@@ -52,6 +54,11 @@ class IngestionEventConverterTests {
     @Before
     fun setUp() {
         mockkObject(EventAttributesUtils)
+    }
+
+    @After
+    fun cleanUp() {
+        unmockkObject(EventAttributesUtils)
     }
 
     @Test

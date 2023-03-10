@@ -82,7 +82,6 @@ class DefaultMeetingEventBufferTests {
         every { IngestionEventConverter.fromDirtyMeetingEventItems(any(), any()) } returns ingestionRecord
         every { IngestionEventConverter.fromMeetingEventItems(any(), any()) } returns ingestionRecord
 
-        every { eventDao.listMeetingEventItems(any()) } returns listOf(eventItem)
         every { dirtyEventDao.listDirtyMeetingEventItems(any()) } returns emptyList()
         coEvery { eventSender.sendRecord(any()) } returns true
     }
@@ -172,6 +171,7 @@ class DefaultMeetingEventBufferTests {
     @Test
     fun `process should send events when there is stored events`() {
         construct()
+        every { eventDao.listMeetingEventItems(any()) } returns listOf(eventItem)
 
         runBlockingTest {
             defaultMeetingEventBuffer.process()
@@ -183,6 +183,7 @@ class DefaultMeetingEventBufferTests {
     @Test
     fun `process should remove processed event items`() {
         construct()
+        every { eventDao.listMeetingEventItems(any()) } returns listOf(eventItem)
 
         runBlockingTest {
             // send successfully
@@ -199,6 +200,7 @@ class DefaultMeetingEventBufferTests {
     @Test
     fun `process should insert events as dirtyEvents when failed to send`() {
         construct()
+        every { eventDao.listMeetingEventItems(any()) } returns listOf(eventItem)
         coEvery { eventSender.sendRecord(any()) } returns false
 
         runBlockingTest {
