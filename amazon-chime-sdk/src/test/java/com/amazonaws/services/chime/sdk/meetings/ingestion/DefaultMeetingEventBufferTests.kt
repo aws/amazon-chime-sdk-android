@@ -82,7 +82,6 @@ class DefaultMeetingEventBufferTests {
         every { IngestionEventConverter.fromDirtyMeetingEventItems(any(), any()) } returns ingestionRecord
         every { IngestionEventConverter.fromMeetingEventItems(any(), any()) } returns ingestionRecord
 
-        every { dirtyEventDao.listDirtyMeetingEventItems(any()) } returns emptyList()
         coEvery { eventSender.sendRecord(any()) } returns true
     }
 

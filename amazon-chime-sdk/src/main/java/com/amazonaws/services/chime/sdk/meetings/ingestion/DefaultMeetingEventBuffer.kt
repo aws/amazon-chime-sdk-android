@@ -135,25 +135,7 @@ class DefaultMeetingEventBuffer @JvmOverloads constructor(
     private fun processDirtyEvents() {
         eventScope.launch {
             try {
-                // Get all dirty events, filter out valid events
-                val dirtyEvents =
-                    dirtyEventDao.listDirtyMeetingEventItems(ingestionConfiguration.flushSize)
-                val validEvents = mutableListOf<DirtyMeetingEventItem>()
-                val invalidEventIds = mutableListOf<String>()
-
-                val currentTime = Calendar.getInstance().timeInMillis
-                for (event in dirtyEvents) {
-                    if (event.ttl > currentTime &&
-                        event.data.eventAttributes.isNotEmpty() &&
-                        event.data.eventAttributes[EventAttributeName.timestampMs.name] != null) {
-                        validEvents.add(event)
-                    } else {
-                        invalidEventIds.add(event.id)
-                    }
-                }
-                // Delete invalid / expired events before processing
-                dirtyEventDao.deleteDirtyEventsByIds(invalidEventIds)
-
+                val validEvents = getValidDirtyEvents().toMutableList()
                 // Send valid events
                 var isSentSuccessful = true
                 // There is an known issue with .isNotEmpty() in Mockk in 1.10.0,
@@ -169,13 +151,35 @@ class DefaultMeetingEventBuffer @JvmOverloads constructor(
                         dirtyEventDao.deleteDirtyEventsByIds(validEvents.map { it.id })
                     }
                     validEvents.clear()
-                    validEvents.addAll(dirtyEventDao.listDirtyMeetingEventItems(
-                        ingestionConfiguration.flushSize
-                    ))
+                    validEvents.addAll(getValidDirtyEvents())
                 }
             } catch (exception: Exception) {
                 logger.error(TAG, "Unable to process dirty events $exception")
             }
         }
+    }
+
+    private fun getValidDirtyEvents(): List<DirtyMeetingEventItem> {
+        // Get next batch of dirty events
+        val dirtyEvents =
+            dirtyEventDao.listDirtyMeetingEventItems(ingestionConfiguration.flushSize)
+        val validEvents = mutableListOf<DirtyMeetingEventItem>()
+        val invalidEventIds = mutableListOf<String>()
+
+        // Filter valid events
+        val currentTime = Calendar.getInstance().timeInMillis
+        for (event in dirtyEvents) {
+            if (event.ttl > currentTime &&
+                event.data.eventAttributes.isNotEmpty() &&
+                event.data.eventAttributes[EventAttributeName.timestampMs.name] != null) {
+                validEvents.add(event)
+            } else {
+                invalidEventIds.add(event.id)
+            }
+        }
+        // Delete invalid / expired events
+        dirtyEventDao.deleteDirtyEventsByIds(invalidEventIds)
+
+        return validEvents
     }
 }
