@@ -6,15 +6,14 @@
 package com.amazonaws.services.chime.sdk.meetings.ingestion
 
 import com.amazonaws.services.chime.sdk.meetings.analytics.EventAttributeName
-import com.amazonaws.services.chime.sdk.meetings.analytics.EventAttributes
 import com.google.gson.Gson
 import org.junit.Assert
 import org.junit.Test
 
 class IngestionEventTests {
     private val metadata = mapOf(
-        EventAttributeName.meetingId to "eeeeeeieei"
-    ) as EventAttributes
+        EventAttributeName.meetingId.name to "eeeeeeieei"
+    )
     private val payloads = listOf(mapOf(
         "1" to "2",
         "hello" to 5
@@ -22,7 +21,7 @@ class IngestionEventTests {
 
     @Test
     fun `IngestionEvent version should be encoded as v`() {
-        val ingestionEvent = IngestionEvent(EventClientType.Meet, metadata, payloads)
+        val ingestionEvent = IngestionEvent(EventClientType.Meet.name, metadata, payloads)
         val gson = Gson()
 
         val ingestionEventJson = gson.toJson(ingestionEvent)

@@ -99,8 +99,8 @@ class DirtyEventSQLiteDaoTests {
         Assert.assertEquals(1, dirtyMeetingItems.size)
         Assert.assertEquals(mockEvent.name, dirtyMeetingItems[0].data.name)
         Assert.assertEquals(
-            mockEvent.eventAttributes[EventAttributeName.meetingErrorMessage],
-            dirtyMeetingItems[0].data.eventAttributes[EventAttributeName.meetingErrorMessage]
+            mockEvent.eventAttributes[EventAttributeName.meetingErrorMessage.name],
+            dirtyMeetingItems[0].data.eventAttributes[EventAttributeName.meetingErrorMessage.name]
         )
     }
 

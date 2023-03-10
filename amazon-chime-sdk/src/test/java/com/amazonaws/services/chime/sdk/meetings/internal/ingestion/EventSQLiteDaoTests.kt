@@ -93,8 +93,8 @@ class EventSQLiteDaoTests {
 
         Assert.assertEquals(1, meetingItems.size)
         Assert.assertEquals(
-            mockEvent.eventAttributes[EventAttributeName.meetingErrorMessage],
-            meetingItems[0].data.eventAttributes[EventAttributeName.meetingErrorMessage]
+            mockEvent.eventAttributes[EventAttributeName.meetingErrorMessage.name],
+            meetingItems[0].data.eventAttributes[EventAttributeName.meetingErrorMessage.name]
         )
     }
 

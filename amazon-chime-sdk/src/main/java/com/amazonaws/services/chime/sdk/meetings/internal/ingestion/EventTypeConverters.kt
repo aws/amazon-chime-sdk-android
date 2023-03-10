@@ -5,7 +5,6 @@
 
 package com.amazonaws.services.chime.sdk.meetings.internal.ingestion
 
-import com.amazonaws.services.chime.sdk.meetings.analytics.EventAttributes
 import com.amazonaws.services.chime.sdk.meetings.utils.logger.Logger
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
@@ -25,7 +24,7 @@ class EventTypeConverters(private val logger: Logger) {
                 val jsonObject = json.asJsonObject
 
                 var name = ""
-                var eventAttributes: EventAttributes? = null
+                var attributes: Map<String, Any>? = null
 
                 try {
                     name = jsonObject["name"].asString
@@ -34,12 +33,12 @@ class EventTypeConverters(private val logger: Logger) {
                 }
 
                 try {
-                    val eventAttributeType = object : TypeToken<EventAttributes>() {}.type
-                    eventAttributes = Gson().fromJson(jsonObject["eventAttributes"], eventAttributeType)
+                    val attributeType = object : TypeToken<Map<String, Any>>() {}.type
+                    attributes = Gson().fromJson(jsonObject["eventAttributes"], attributeType)
                 } catch (exception: Exception) {
                     logger.error(TAG, "Unable to deserialize eventAttributes $exception")
                 }
-                SDKEvent(name, eventAttributes ?: mutableMapOf())
+                SDKEvent(name, attributes ?: mapOf())
             }
 
         val gsonBuilder = GsonBuilder()

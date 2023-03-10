@@ -1,3 +1,10 @@
+## Unreleased
+
+### Changed
+* **Breaking** Updated the Ingestion related APIs / classes to support generic attributes, no changes required if not using custom `EventClientConfiguration` and the following classes.
+  * Changed `SDKEvent.eventAttributes` from `EventAttributes` to String-keyed map
+  * Added `tag`, `metadataAttributes` to `EventClientConfiguration`
+
 ## [0.17.10] - 2023-01-26
 
 ### Added

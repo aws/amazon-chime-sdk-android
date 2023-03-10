@@ -20,3 +20,5 @@ typealias EventAttributes = MutableMap<EventAttributeName, Any>
 fun EventAttributes.toJsonString(): String {
     return JsonUtils.marshal(this)
 }
+
+fun EventAttributes.toStringKeyMap(): Map<String, Any> = this.map { (k, v) -> k.name to v }.toMap()

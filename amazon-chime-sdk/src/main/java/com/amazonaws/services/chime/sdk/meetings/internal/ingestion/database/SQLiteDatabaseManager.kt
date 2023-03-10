@@ -100,6 +100,7 @@ class SQLiteDatabaseManager(
         tableName: String,
         contentValues: List<ContentValues>
     ): Boolean {
+        logger.debug(TAG, "Inserting table $tableName with contentValues: ${contentValues.joinToString(",")}")
         if (contentValues.isEmpty()) return true
 
         // Handle multiple
@@ -123,6 +124,7 @@ class SQLiteDatabaseManager(
     }
 
     override fun delete(tableName: String, keyName: String, ids: List<String>): Int {
+        logger.debug(TAG, "Deleting items from table $tableName with ids: ${ids.joinToString(",")}")
         if (ids.isEmpty()) return 0
 
         val idsString = ids.toTypedArray()

@@ -5,8 +5,6 @@
 
 package com.amazonaws.services.chime.sdk.meetings.ingestion
 
-import com.amazonaws.services.chime.sdk.meetings.analytics.EventAttributes
-
 /**
  * A record that contains batch of [IngestionEvent] to send.
  * This contains metadata that is shared among events.
@@ -54,6 +52,6 @@ import com.amazonaws.services.chime.sdk.meetings.analytics.EventAttributes
  *  ]
  * }
  */
-typealias IngestionMetadata = EventAttributes
+typealias IngestionMetadata = Map<String, Any>
 
 data class IngestionRecord(val metadata: IngestionMetadata, val events: List<IngestionEvent>)
