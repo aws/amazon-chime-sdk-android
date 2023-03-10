@@ -132,6 +132,10 @@ class DefaultMeetingEventBuffer @JvmOverloads constructor(
                 eventAttributes[EventAttributeName.meetingStatus.name] == MeetingSessionStatusCode.AudioDisconnected)
     }
 
+    // TODO: fix the logic for process dirty events
+    // - validEvents can be empty because of that batch of dirty events are all invalid,
+    // but there are still dirty events in db
+    // - if exception thrown for processing one event, all other events won't be processed
     private fun processDirtyEvents() {
         eventScope.launch {
             try {
