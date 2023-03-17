@@ -1,4 +1,4 @@
-## Unreleased
+## [0.18.0] - 2023-03-16
 
 ### Changed
 * **Breaking** Updated the Ingestion related APIs / classes to support generic attributes, no changes required if not using custom `EventClientConfiguration` and the following classes.
