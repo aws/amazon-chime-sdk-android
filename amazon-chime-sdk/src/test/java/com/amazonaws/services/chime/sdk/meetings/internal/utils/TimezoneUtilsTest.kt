@@ -11,7 +11,12 @@ import org.junit.Test
 
 class TimezoneUtilsTest {
     @Test
-    fun `getUtcOffset should return correctly formatted Utc offset`() {
+    fun `getUtcOffset should return correctly formatted positive Utc offset`() {
         Assert.assertEquals("+05:30", TimezoneUtils.getUtcOffset(TimeZone.getTimeZone("Asia/Calcutta")))
+    }
+
+    @Test
+    fun `getUtcOffset should return correctly formatted negative Utc offset`() {
+        Assert.assertEquals("-06:00", TimezoneUtils.getUtcOffset(TimeZone.getTimeZone("America/Costa_Rica")))
     }
 }
