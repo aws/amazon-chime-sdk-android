@@ -12,7 +12,7 @@ class TimezoneUtils {
     companion object {
 
         /**
-         * Return utc offset from timezone in +- hh:mm format.
+         * Return utc offset from timezone in +-hh:mm format.
          * E.g Asia/Calcutta timezone is returned as +05:30 UTC offset
          */
         fun getUtcOffset(timezone: TimeZone): String {
