@@ -148,7 +148,8 @@ class DefaultAudioClientControllerTest {
             "model",
             "version",
             "amazon-chime-sdk",
-            "sdkVersion"
+            "sdkVersion",
+            "-07:00"
         )
 
         mockkObject(AppInfoUtil)

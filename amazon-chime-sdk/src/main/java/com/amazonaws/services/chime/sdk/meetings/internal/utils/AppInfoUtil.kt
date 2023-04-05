@@ -8,6 +8,7 @@ package com.amazonaws.services.chime.sdk.meetings.internal.utils
 import android.content.Context
 import com.xodee.client.audio.audioclient.AppInfo
 import com.xodee.client.video.VideoClient
+import java.util.TimeZone
 
 object AppInfoUtil {
     private lateinit var manufacturer: String
@@ -17,6 +18,7 @@ object AppInfoUtil {
     private lateinit var appCode: String
     private const val clientSource = "amazon-chime-sdk"
     private lateinit var sdkVersion: String
+    private lateinit var clientUtcOffset: String
 
     private fun initializeAppInfo(context: Context) {
         manufacturer = DeviceUtils.deviceManufacturer
@@ -27,6 +29,8 @@ object AppInfoUtil {
         appName = String.format("Android %s", packageInfo.versionName)
         appCode = packageInfo.versionCode.toString()
         sdkVersion = DeviceUtils.sdkVersion
+        val deviceTimezone = TimeZone.getDefault()
+        clientUtcOffset = TimezoneUtils.getUtcOffset(deviceTimezone)
     }
 
     fun initializeVideoClientAppDetailedInfo(context: Context) {
@@ -39,7 +43,8 @@ object AppInfoUtil {
             manufacturer,
             osVersion,
             clientSource,
-            sdkVersion
+            sdkVersion,
+            clientUtcOffset
         )
     }
 
@@ -53,7 +58,8 @@ object AppInfoUtil {
             model,
             osVersion,
             clientSource,
-            sdkVersion
+            sdkVersion,
+            clientUtcOffset
         )
     }
 }
