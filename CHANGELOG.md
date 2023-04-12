@@ -1,7 +1,7 @@
 ## Unreleased
 
 ### Added
-* Pass client UTC offset to audio and video client for metrics.
+* **Breaking** Pass client UTC offset to audio and video client for metrics.
 
 ### Changed
 
