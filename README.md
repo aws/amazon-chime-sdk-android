@@ -71,6 +71,8 @@ Download `amazon-chime-sdk` and `amazon-chime-sdk-media` binaries from the lates
 
 If you like to use more machine learning features, e.g. background blur/replacement, also download the `amazon-chime-sdk-machine-learning` binary from the latest [release](https://github.com/aws/amazon-chime-sdk-android/releases/latest). Otherwise, you can ignore all references to `amazon-chime-sdk-machine-learning` in the instructions below.
 
+**NOTE: We do not support mixing and matching binaries from different releases.**
+
 Unzip them and copy the aar files to `root/app/libs`
 
 #### 2. Update gradle files
