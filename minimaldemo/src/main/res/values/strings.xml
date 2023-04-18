@@ -7,22 +7,18 @@
     <string name="app_name">Minimal Demo</string>
     <string name="action_settings">Settings</string>
     <!-- Strings used for fragments for navigation -->
-    <string name="first_fragment_label">First Fragment</string>
-    <string name="second_fragment_label">Second Fragment</string>
     <string name="next">Next</string>
     <string name="previous">Previous</string>
     <string name="demo_url"></string>
     <string name="demo_region">us-east-1</string>
     <string name="meeting_leave">Leave Meeting</string>
+    <string name="attendee_title">Attendees</string>
 
     <!-- video -->
     <string name="video_view">Video Collection</string>
     <string name="no_screen_share_available">No screen share available</string>
     <string name="no_videos_available">No videos available</string>
-    <string name="next_video_page">Next Page &gt;&gt;</string>
-    <string name="prev_video_page">&lt;&lt; Prev Page</string>
     <string name="switch_camera">Switch Camera</string>
-    <string name="video_filters">Video Filters</string>
     <string name="poor_connection_message">Poor local connection. \nVideo will resume \nwhen your connection improves.</string>
 
     <!-- toggle tab -->

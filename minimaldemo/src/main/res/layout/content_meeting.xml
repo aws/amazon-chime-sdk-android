@@ -22,16 +22,27 @@
             android:layout_height="match_parent" />
     </FrameLayout>
 
-    <FrameLayout
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="0.3">
+        android:layout_weight="0.3"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/attendee_view_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:contentDescription="@string/attendee_title"
+            android:text="@string/attendee_title"
+            android:textColor="@color/black"
+            android:textSize="16sp"
+            android:textStyle="bold" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/roster_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
-    </FrameLayout>
+    </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -50,7 +61,7 @@
             android:paddingLeft="8dp"
             android:paddingRight="8dp"
             android:src="@drawable/button_mute"
-            app:tint="?android:attr/textColorPrimary" />
+            app:tint="@color/black" />
 
         <ImageButton
             android:id="@+id/buttonCamera"
@@ -62,7 +73,7 @@
             android:paddingLeft="8dp"
             android:paddingRight="8dp"
             android:src="@drawable/button_camera"
-            app:tint="?android:attr/textColorPrimary" />
+            app:tint="@color/black" />
 
         <ImageButton
             android:id="@+id/buttonLeave"

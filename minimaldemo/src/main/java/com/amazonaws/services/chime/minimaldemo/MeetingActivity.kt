@@ -405,6 +405,7 @@ class MeetingActivity : AppCompatActivity(), AudioVideoObserver, RealtimeObserve
             )
             meetingModel.unbindVideoView(tileId)
             meetingModel.videos.removeAll { it.videoTileState.tileId == tileId }
+            videoAdapter.notifyDataSetChanged()
         }
     }
 

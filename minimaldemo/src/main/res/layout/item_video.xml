@@ -72,35 +72,6 @@
         app:layout_constraintRight_toRightOf="parent"
         app:tint="@color/white" />
 
-    <ImageButton
-        android:id="@+id/video_filter_button"
-        android:layout_width="48dp"
-        android:layout_height="48dp"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentBottom="true"
-        android:background="@null"
-        android:contentDescription="@string/video_filters"
-        android:paddingLeft="8dp"
-        android:paddingRight="8dp"
-        android:scaleType="fitCenter"
-        android:src="@drawable/button_more"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/on_tile_button"
-        app:tint="@color/white" />
-
-    <ImageButton
-        android:id="@+id/video_config_button"
-        android:layout_width="48dp"
-        android:layout_height="48dp"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentBottom="true"
-        android:background="@null"
-        android:src="@drawable/button_up"
-        android:scaleType="fitCenter"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:tint="@color/white" />
-
     <TextView
         android:id="@+id/video_attendee_name"
         android:layout_width="match_parent"

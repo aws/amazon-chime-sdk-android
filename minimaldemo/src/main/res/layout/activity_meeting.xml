@@ -9,9 +9,11 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/white"
     tools:context=".MeetingActivity">
 
-    <include android:id="@+id/content_meeting"
+    <include
+        android:id="@+id/content_meeting"
         layout="@layout/content_meeting" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

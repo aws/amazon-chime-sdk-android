@@ -28,6 +28,7 @@
             android:gravity="center_horizontal"
             android:text="@string/meeting_title"
             android:textAppearance="@style/TextAppearance.AppCompat.Display2"
+            android:textColor="@color/black"
             android:textStyle="bold" />
 
         <TextView
@@ -37,6 +38,7 @@
             android:contentDescription="@string/meeting_description"
             android:text="@string/meeting_description"
             android:textAlignment="center"
+            android:textColor="@color/black"
             android:textSize="17sp" />
 
         <LinearLayout
@@ -53,16 +55,22 @@
                 android:layout_gravity="center_horizontal|center_vertical"
                 android:layout_weight="0.3"
                 android:gravity="center"
-                android:text="@string/meeting_id" />
+                android:text="@string/meeting_id"
+                android:textColor="@color/black" />
 
             <EditText
                 android:id="@+id/meeting_id_input"
                 android:layout_width="wrap_content"
                 android:layout_height="48dp"
                 android:layout_weight="0.7"
+                android:backgroundTint="#C6C6C8"
                 android:editable="true"
                 android:ems="10"
-                android:inputType="text" />
+                android:inputType="text"
+                android:textColor="@color/black"
+                android:textColorHighlight="#007AFF "
+                android:textColorLink="#007AFF "
+                android:textCursorDrawable="@null" />
         </LinearLayout>
 
         <LinearLayout
@@ -77,16 +85,23 @@
                 android:layout_gravity="center_horizontal|center_vertical"
                 android:layout_weight="0.3"
                 android:gravity="center"
-                android:text="@string/your_name" />
+                android:text="@string/your_name"
+                android:textColor="@color/black" />
 
             <EditText
                 android:id="@+id/attendee_name_input"
                 android:layout_width="wrap_content"
                 android:layout_height="48dp"
                 android:layout_weight="0.7"
+                android:backgroundTint="#C6C6C8 "
                 android:editable="true"
                 android:ems="10"
-                android:inputType="text" />
+                android:inputType="text"
+                android:textColor="@color/black"
+                android:textColorHighlight="#007AFF "
+                android:textColorHint="@color/black"
+                android:textColorLink="#007AFF "
+                android:textCursorDrawable="@null" />
 
         </LinearLayout>
 

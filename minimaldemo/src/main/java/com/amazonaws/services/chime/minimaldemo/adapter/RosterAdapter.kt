@@ -5,6 +5,7 @@
 
 package com.amazonaws.services.chime.minimaldemo.adapter
 
+import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -47,6 +48,7 @@ class RosterHolder(inflatedView: View) :
 
     fun bindAttendee(attendee: RosterAttendee) {
         attendeeName.text = attendee.attendeeName
+        attendeeName.setTextColor(Color.BLACK)
         attendeeName.contentDescription = attendee.attendeeName
         activeSpeakerIndicator.visibility = if (attendee.isActiveSpeaker) View.VISIBLE else View.INVISIBLE
         activeSpeakerIndicator.contentDescription = if (attendee.isActiveSpeaker) "${attendee.attendeeName} Active" else ""
