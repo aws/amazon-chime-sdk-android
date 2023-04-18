@@ -10,17 +10,26 @@
     android:id="@+id/tile_container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:layout_marginStart="5dp"
+    android:layout_marginTop="15dp"
     android:gravity="center_horizontal">
 
-    <com.amazonaws.services.chime.sdk.meetings.audiovideo.video.DefaultVideoRenderView
-        android:id="@+id/video_surface"
-        android:layout_width="wrap_content"
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cardView2"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:cardCornerRadius="15dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <com.amazonaws.services.chime.sdk.meetings.audiovideo.video.DefaultVideoRenderView
+            android:id="@+id/video_surface"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center" />
+    </androidx.cardview.widget.CardView>
 
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -30,15 +39,15 @@
         android:background="@android:color/transparent"
         android:visibility="invisible"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" >
+        app:layout_constraintStart_toStartOf="parent">
 
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/ic_connection_problem"
+            app:layout_constraintBottom_toTopOf="@id/poor_connection_text"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintBottom_toTopOf="@id/poor_connection_text" />
+            app:layout_constraintStart_toStartOf="parent" />
 
         <TextView
             android:id="@+id/poor_connection_text"
@@ -65,26 +74,36 @@
         android:layout_alignParentBottom="true"
         android:background="@null"
         android:contentDescription="@string/switch_camera"
+        android:scaleType="fitCenter"
         android:src="@drawable/button_switch_camera"
         android:visibility="invisible"
-        android:scaleType="fitCenter"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:tint="@color/white" />
 
-    <TextView
-        android:id="@+id/video_attendee_name"
-        android:layout_width="match_parent"
+    <androidx.cardview.widget.CardView
+        android:layout_width="56dp"
         android:layout_height="wrap_content"
-        android:padding="5dp"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentBottom="true"
-        android:maxLines="1"
-        android:ellipsize="end"
-        android:textColor="@color/white"
-        android:textSize="12sp"
-        android:visibility="invisible"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent" />
+        android:layout_marginLeft="5dp"
+        android:layout_marginBottom="5dp"
+        android:alpha="65"
+        app:cardBackgroundColor="#595959"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent">
+
+        <TextView
+            android:id="@+id/video_attendee_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="false"
+            android:layout_alignParentBottom="false"
+            android:ellipsize="end"
+            android:gravity="center"
+            android:maxLines="1"
+            android:padding="5dp"
+            android:textColor="@color/white"
+            android:textSize="12sp"
+            android:visibility="invisible" />
+    </androidx.cardview.widget.CardView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

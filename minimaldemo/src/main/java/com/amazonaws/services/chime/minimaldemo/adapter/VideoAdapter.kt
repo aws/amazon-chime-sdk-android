@@ -5,6 +5,7 @@
 
 package com.amazonaws.services.chime.minimaldemo.adapter
 
+import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -41,7 +42,15 @@ class VideoAdapter(
     override fun onBindViewHolder(holder: VideoHolder, position: Int) {
         val videoCollectionTile = videoCollectionTiles.elementAt(position)
         holder.bindVideoTile(videoCollectionTile)
-        holder.videoSurface.scalingType = VideoScalingType.AspectFit
+
+        holder.tileContainer.layoutParams.width = getDp(holder.itemView.context, 170)
+        holder.tileContainer.layoutParams.height = getDp(holder.itemView.context, 160)
+        holder.videoSurface.scalingType = VideoScalingType.AspectBalanced
+    }
+
+    private fun getDp(context: Context, dp: Int): Int {
+        val scale = context.resources.displayMetrics.density
+        return (dp * scale + 0.5f).toInt()
     }
 }
 
