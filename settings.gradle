@@ -3,5 +3,5 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-include ':app', ':amazon-chime-sdk'
+include ':minimaldemo'
 rootProject.name='amazon-chime-sdk-android'

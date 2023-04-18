@@ -6,18 +6,18 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 
 buildscript {
-    ext.kotlin_version = '1.3.50'
+    ext.kotlin_version = '1.7.21'
     ext.dokka_version = '0.10.1'
     ext.jacocoVersion = '0.8.8'
 
     repositories {
         maven { url "https://plugins.gradle.org/m2/" }
         google()
-        jcenter()
+        mavenCentral()
     }
 
     dependencies {
-        classpath 'com.android.tools.build:gradle:4.1.1'
+        classpath 'com.android.tools.build:gradle:4.1.3'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
         classpath "io.gitlab.arturbosch.detekt:detekt-gradle-plugin:1.3.1"
         classpath("org.jlleitschuh.gradle:ktlint-gradle:9.1.1")
@@ -28,6 +28,7 @@ buildscript {
 plugins {
     id "io.gitlab.arturbosch.detekt" version "1.3.1"
     id "org.jlleitschuh.gradle.ktlint" version "9.1.1"
+    id 'org.jetbrains.kotlin.android' version '1.7.21' apply false
 }
 
 apply plugin: 'io.gitlab.arturbosch.detekt'
@@ -52,8 +53,8 @@ allprojects {
     project.ext {
         chimeBuildToolsVersion = "29.0.2"
         chimeMinSdkVersion = 21
-        chimeTargetSdkVersion = 30
-        chimeCompileSdkVersion = 30
+        chimeTargetSdkVersion = 33
+        chimeCompileSdkVersion = 33
         sdkDir = localProperties.getProperty('sdk.dir')
         ndkDir = localProperties.getProperty('ndk.dir')
     }
@@ -77,4 +78,4 @@ tasks.withType(Test) {
     exclude '**/DefaultActiveSpeakerDetectorTest'
 }
 
-tasks.getByPath(':app:preBuild').dependsOn installGitHook
+//tasks.getByPath(':app:preBuild').dependsOn installGitHook
