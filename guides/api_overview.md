@@ -14,13 +14,16 @@ session.
 You can utilize the [ConsoleLogger](https://aws.github.io/amazon-chime-sdk-android/amazon-chime-sdk/com.amazonaws.services.chime.sdk.meetings.utils.logger/-console-logger/index.html) to write logs with Android's [Log](https://developer.android.com/reference/android/util/Log). You can also implement 
 the Logger interface to customize the logging behavior.
 
-```
-val logger = ConsoleLogger(LogLevel.DEBUG) 
+```kotlin
+import com.amazonaws.services.chime.sdk.meetings.utils.logger.ConsoleLogger
+import com.amazonaws.services.chime.sdk.meetings.utils.logger.LogLevel
+
+val logger = ConsoleLogger(level = LogLevel.DEBUG)
 ```
 
 ### 1b. Create a meeting session configuration
 
-Create a [MeetingSessionConfiguration](https://aws.github.io/amazon-chime-sdk-android/amazon-chime-sdk/com.amazonaws.services.chime.sdk.meetings.session/-meeting-session-configuration/index.html) object with the responses to [chime:CreateMeeting](https://docs.aws.amazon.com/chime/latest/APIReference/API_CreateMeeting.html) and 
+Create a [MeetingSessionConfiguration](https://aws.github.io/amazon-chime-sdk-android/amazon-chime-sdk/com.amazonaws.services.chime.sdk.meetings.session/-meeting-session-configuration/index.html) object `sessionConfig` with the responses to [chime:CreateMeeting](https://docs.aws.amazon.com/chime/latest/APIReference/API_CreateMeeting.html) and 
 [chime:CreateAttendee](https://docs.aws.amazon.com/chime/latest/APIReference/API_CreateAttendee.html). Your server application should make these API calls and securely pass the 
 meeting and attendee responses to the client application.
 
@@ -28,8 +31,14 @@ meeting and attendee responses to the client application.
 
 Using the above objects and an application context, create a [DefaultMeetingSession](https://aws.github.io/amazon-chime-sdk-android/amazon-chime-sdk/com.amazonaws.services.chime.sdk.meetings.session/-default-meeting-session/index.html).
 
-```
-val meetingSession = DefaultMeetingSession(sessionConfig, logger, applicationContext)
+```kotlin
+import com.amazonaws.services.chime.sdk.meetings.session.DefaultMeetingSession
+
+val meetingSession = DefaultMeetingSession(
+    configuration = sessionConfig,
+    logger = logger,
+    context = applicationContext
+)
 ```
 
 ## 2. Configure the session
@@ -56,21 +65,7 @@ A DeviceChangeObserver has the following method:
 * [onAudioDeviceChanged](https://aws.github.io/amazon-chime-sdk-android/amazon-chime-sdk/com.amazonaws.services.chime.sdk.meetings.device/-device-change-observer/on-audio-device-changed.html): called when audio devices are changed
 
 ## 3. Request permissions for audio and video
-
-Before starting audio or video, you will need to request permissions from the user and verify that
-they are granted. Otherwise, the API will throw a `SecurityException`. Amazon Chime SDK for Android 
-already declares these permissions in its manifest file.
-
-Audio permissions:
-```
-Manifest.permission.MODIFY_AUDIO_SETTINGS,
-Manifest.permission.RECORD_AUDIO
-```
-
-Video permissions:
-```
-Manifest.permission.CAMERA
-```
+SDK requires [MODIFY_AUDIO_SETTINGS](https://developer.android.com/reference/android/Manifest.permission#MODIFY_AUDIO_SETTINGS), [RECORD_AUDIO](https://developer.android.com/reference/android/Manifest.permission#RECORD_AUDIO) permission for audio, and [CAMERA](https://developer.android.com/reference/android/Manifest.permission#CAMERA) permission for video from the appliction to start the audio and video. Follow the Android developer [guide](https://developer.android.com/training/permissions/requesting) for requesting the rumtime permissions.
 
 ## 4. Register an audio video observer 
 
@@ -321,7 +316,7 @@ Note that if you want to share music or background sounds with others in the cal
 
 ## 12. Using a custom video source, sink or processing step (optional)
 
-Builders using the Amazon Chime SDK for video can produce, modify, and consume raw video frames transmitted or received during the call. You can allow the facade to manage its own camera capture source, provide your own custom source, or use a provided SDK capture source as the first step in a video processing pipeline which modifies frames before transmission. See the [Custom Video Sources, Processors, and Sinks](custom_video.md) guide for more information.
+Builders using the Amazon Chime SDK for video can produce, modify, and consume raw video frames transmitted or received during the call. You can allow the facade to manage its own camera capture source, provide your own custom source, or use a provided SDK capture source as the first step in a video processing pipeline which modifies frames before transmission. See the [Custom Video Sources, Processors, and Sinks](/guides/custom_video.md) guide for more information.
 
 ## 13. Share screen and other content (optional)
 
@@ -351,10 +346,10 @@ You can implement the following callbacks:
 
 ### 13c. Collect content share metrics
 
-You will receive content share metrics if you registered a metric observer by [9.Receiving metrics (optional)](https://github.com/aws/amazon-chime-sdk-android/blob/master/guides/api_overview.md#9-receiving-metrics-optional).
+You will receive content share metrics if you registered a metric observer by [9.Receiving metrics (optional)](/guides/api_overview.md#9-receiving-metrics-optional).
 
 Content share metrics will be prefixed by `contentShare`. Or you can use the [isContentShareMetric()](https://aws.github.io/amazon-chime-sdk-android/amazon-chime-sdk/com.amazonaws.services.chime.sdk.meetings.audiovideo.metric/-observable-metric/is-content-share-metric.html) to help identify a content share metric.
 
 ## 14. Configuring Remote Video Subscriptions (optional)
 
-Amazon Chime SDK allows builders to have complete control over the remote videos received by each of their application’s end-users. This can be accomplished using the API [AudioVideoFacade.updateVideoSourceSubscriptions](https://aws.github.io/amazon-chime-sdk-android/amazon-chime-sdk/com.amazonaws.services.chime.sdk.meetings.audiovideo/-default-audio-video-facade/update-video-source-subscriptions.html). See [Configuring Remote Video Subscriptions](guides/configuring_remote_video_subscription.md) for more information.
+Amazon Chime SDK allows builders to have complete control over the remote videos received by each of their application’s end-users. This can be accomplished using the API [AudioVideoFacade.updateVideoSourceSubscriptions](https://aws.github.io/amazon-chime-sdk-android/amazon-chime-sdk/com.amazonaws.services.chime.sdk.meetings.audiovideo/-default-audio-video-facade/update-video-source-subscriptions.html). See [Configuring Remote Video Subscriptions](/guides/configuring_remote_video_subscription.md) for more information.

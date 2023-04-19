@@ -44,68 +44,32 @@ And review the following guides:
 
 > NOTE: If you just want to run demo application, skip to [Running the demo app](#running-the-demo-app)
 
-The Mobile SDKs for Android could be downloaded from the Maven Central repository, by integrated into your Android project's Gradle files, or you can be directly embedded via .aar files.
+The SDK and Media SDK for Android could be downloaded from the Maven Central repository, by integrated into your Android project's Gradle files, or you can be [directly embedded via AAR files](#manually-download-sdk-binaries).
 
 For the purpose of setup, your project's root folder will be referred to as `root`.
 
-### From Maven
+### Use Gradle
 
-To obtain the dependencies from Maven, add the dependencies to your app's (module-level) `build.gradle`.
-
-Update `build.gradle` in `root/app` and add the following under `dependencies`:
-
-```
+To obtain the dependencies from Maven, add the dependencies to your app's (module-level) `build.gradle` and add the following under dependencies:
+```gradle
 dependencies {
-    implementation 'software.aws.chimesdk:amazon-chime-sdk-media:$MEDIA_VERSION'
+    // ...
     implementation 'software.aws.chimesdk:amazon-chime-sdk:$SDK_VERSION'
 }
 ```
-The version numbers could be obtained from the latest [release](https://github.com/aws/amazon-chime-sdk-android/releases/latest).
-
-### Manually download SDK binaries
-To include the SDK binaries in your own project, follow these steps.
-
-#### 1. Download binaries
-
-Download `amazon-chime-sdk` and `amazon-chime-sdk-media` binaries from the latest [release](https://github.com/aws/amazon-chime-sdk-android/releases/latest).
-
-If you like to use more machine learning features, e.g. background blur/replacement, also download the `amazon-chime-sdk-machine-learning` binary from the latest [release](https://github.com/aws/amazon-chime-sdk-android/releases/latest). Otherwise, you can ignore all references to `amazon-chime-sdk-machine-learning` in the instructions below.
-
-**NOTE: We do not support mixing and matching binaries from different releases.**
-
-Unzip them and copy the aar files to `root/app/libs`
-
-#### 2. Update gradle files
-
-Update `build.gradle` in `root` by adding the following under `repositories` in `allprojects`:
-
-```
-allprojects {
-   repositories {
-      jcenter()
-      flatDir {
-        dirs 'libs'
-      }
-   }
+Media SDK will be downloaded as transitive dependency of the SDK. If you build the SDK from the source and add the Media SDK from gradle, add the following instead:
+```gradle
+dependencies {
+    // ...
+    implementation 'software.aws.chimesdk:amazon-chime-sdk-media:$MEDIA_VERSION'
 }
 ```
 
-Update `build.gradle` in `root/app` and add the following under `dependencies`:
-
-```
-implementation(name: 'amazon-chime-sdk', ext: 'aar')
-implementation(name: 'amazon-chime-sdk-media', ext: 'aar')
-```
-
-If you are using `amazon-chime-sdk-machine-learning` library, then add below statement as well under `dependencies`:
-
-```
-implementation(name: 'amazon-chime-sdk-machine-learning', ext: 'aar')
-```
+The version numbers could be obtained from the latest [release](https://github.com/aws/amazon-chime-sdk-android/releases/latest).
 
 Update `build.gradle` in `root/app` under `compileOptions`:
 
-```
+```gradle
 compileOptions {
     sourceCompatibility JavaVersion.VERSION_1_8
     targetCompatibility JavaVersion.VERSION_1_8
@@ -114,7 +78,7 @@ compileOptions {
 
 ## Running the demo app
 
-> NOTE: This is just to run demo application and use SDK as code instead of aar library.
+> NOTE: This is just to run demo application and use SDK as code.
 
 To run the demo application, follow these steps.
 
@@ -122,9 +86,7 @@ To run the demo application, follow these steps.
 
 ### 1. Deploy serverless demo
 
-Deploy the serverless demo from [amazon-chime-sdk-js](https://github.com/aws/amazon-chime-sdk-js), which returns `https://xxxxx.xxxxx.xxx.com/Prod/`
-
-Provide `https://xxxxx.xxxxx.xxx.com/Prod/` for mobile demo app.
+Deploy the serverless demo by following the [guide](https://github.com/aws/amazon-chime-sdk-js/blob/main/demos/serverless/README.md). It generates a meeting server endpoint, which format follows `https://xxxxx.xxxxx.xxx.com/Prod/`. Keep note for later use.
 
 ### 2. Download binary
 
@@ -139,7 +101,6 @@ Unzip and copy the aar files to `amazon-chime-sdk-android/amazon-chime-sdk/libs`
 Update `test_url` in `strings.xml` at the path `amazon-chime-sdk-android/app/src/main/res/values`
 with the URL of the serverless demo deployed in Step 1.
 
-> NOTE: use `https://xxxxx.xxxxx.xxx.com/Prod/`
 
 ## Reporting a suspected vulnerability
 
@@ -687,6 +648,48 @@ val audioVideoConfig = AudioVideoConfiguration(audioRecordingPresetOverride = Au
 // Start Audio Video
 audioVideo.start(audioVideoConfig)
 ```
+
+## More
+### Manually download SDK binaries
+To include the SDK binaries in your own project, follow these steps.
+
+#### 1. Download binaries
+
+Download `amazon-chime-sdk` and `amazon-chime-sdk-media` binaries from the latest [release](https://github.com/aws/amazon-chime-sdk-android/releases/latest).
+
+If you like to use more machine learning features, e.g. background blur/replacement, also download the `amazon-chime-sdk-machine-learning` binary from the latest [release](https://github.com/aws/amazon-chime-sdk-android/releases/latest). Otherwise, you can ignore all references to `amazon-chime-sdk-machine-learning` in the instructions below.
+
+Unzip them and copy the aar files to `root/app/libs`
+
+#### 2. Update gradle files
+
+Update `build.gradle` in `root` by adding the following under `repositories` in `allprojects`:
+
+```gradle
+allprojects {
+   repositories {
+      // ...
+      flatDir {
+        dirs 'libs'
+      }
+   }
+   // ...
+}
+```
+
+Update `build.gradle` in `root/app` and add the following under `dependencies`:
+
+```gradle
+implementation(name: 'amazon-chime-sdk', ext: 'aar')
+implementation(name: 'amazon-chime-sdk-media', ext: 'aar')
+```
+
+If you are using `amazon-chime-sdk-machine-learning` library, then add below statement as well under `dependencies`:
+
+```gradle
+implementation(name: 'amazon-chime-sdk-machine-learning', ext: 'aar')
+```
+
 
 ## Notice
 
