@@ -14,15 +14,6 @@ data class JoinMeetingResponse(
 )
 
 data class MeetingInfo(
-    @SerializedName("Meeting") val meetingResponse: MeetingResponse,
-    @SerializedName("Attendee") val attendeeResponse: AttendeeResponse,
-    @SerializedName("PrimaryExternalMeetingId") val primaryExternalMeetingId: String
-)
-
-data class MeetingResponse(
-    @SerializedName("Meeting") val meeting: Meeting
-)
-
-data class AttendeeResponse(
-    @SerializedName("Attendee") val attendee: Attendee
+    @SerializedName("Meeting") val meetingResponse: Meeting,
+    @SerializedName("Attendee") val attendeeResponse: Attendee
 )

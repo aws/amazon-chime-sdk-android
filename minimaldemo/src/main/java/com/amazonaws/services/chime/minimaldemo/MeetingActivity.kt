@@ -163,8 +163,8 @@ class MeetingActivity : AppCompatActivity(), AudioVideoObserver, RealtimeObserve
         return try {
             val joinMeetingResponse = gson.fromJson(response, JoinMeetingResponse::class.java)
             MeetingSessionConfiguration(
-                CreateMeetingResponse(joinMeetingResponse.joinInfo.meetingResponse.meeting),
-                CreateAttendeeResponse(joinMeetingResponse.joinInfo.attendeeResponse.attendee)
+                CreateMeetingResponse(joinMeetingResponse.joinInfo.meetingResponse),
+                CreateAttendeeResponse(joinMeetingResponse.joinInfo.attendeeResponse)
             )
         } catch (exception: Exception) {
             logger.error(
