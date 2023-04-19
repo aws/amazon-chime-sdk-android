@@ -42,7 +42,7 @@ class MeetingViewModel(val meetingSession: MeetingSession) : ViewModel() {
     }
 
     fun selectAudioDevice() {
-        meetingSession.audioVideo.chooseAudioDevice(meetingSession.audioVideo.listAudioDevices().first())
+        meetingSession.audioVideo.chooseAudioDevice(meetingSession.audioVideo.listAudioDevices().sortedBy { it.order }.first())
     }
 
     fun enableVoiceFocus() {

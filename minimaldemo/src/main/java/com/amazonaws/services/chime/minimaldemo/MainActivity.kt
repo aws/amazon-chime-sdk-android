@@ -124,7 +124,7 @@ class MainActivity : AppCompatActivity() {
                             MEETING_RESPONSE_KEY to result,
                             MEETING_ID_KEY to meetingId,
                             NAME_KEY to attendeeName,
-                            AUDIO_MODE_KEY to AudioMode.Stereo48K
+                            AUDIO_MODE_KEY to AudioMode.Stereo48K.value
                         )
                     )
                 }
