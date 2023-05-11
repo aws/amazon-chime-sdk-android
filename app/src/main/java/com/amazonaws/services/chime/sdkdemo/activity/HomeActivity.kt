@@ -59,7 +59,7 @@ class HomeActivity : AppCompatActivity() {
     private var meetingID: String? = null
     private var yourName: String? = null
     private var testUrl: String = ""
-    private var audioModes = listOf("Stereo/48KHz Audio", "Mono/48KHz Audio", "Mono/16KHz Audio")
+    private var audioModes = listOf("Stereo/48KHz Audio", "Mono/48KHz Audio", "Mono/16KHz Audio", "NoDevice", "NoMic")
     private lateinit var audioVideoConfig: AudioVideoConfiguration
     private lateinit var debugSettingsViewModel: DebugSettingsViewModel
 
