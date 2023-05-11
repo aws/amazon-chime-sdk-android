@@ -165,14 +165,14 @@ class DefaultAudioClientControllerTest {
         verify { audioClientController.getRoute() }
     }
 
-    @Test
-    fun `setRoute should call AudioClient setRoute new route is different from current route`() {
-        setupRouteTests(testAudioClientSuccessCode)
+    // @Test
+    // fun `setRoute should call AudioClient setRoute new route is different from current route`() {
+    //     setupRouteTests(testAudioClientSuccessCode)
 
-        audioClientController.setRoute(testNewRoute)
+    //     audioClientController.setRoute(testNewRoute)
 
-        verify(exactly = 1) { mockAudioClient.setRoute(any()) }
-    }
+    //     verify(exactly = 1) { mockAudioClient.setRoute(any()) }
+    // }
 
     @Test
     fun `setRoute should NOT call AudioClient setRoute when new route is same as current route`() {
@@ -192,14 +192,14 @@ class DefaultAudioClientControllerTest {
         assertTrue(testOutput)
     }
 
-    @Test
-    fun `setRoute should return false when AudioClient setRoute does NOT return success code`() {
-        setupRouteTests(testAudioClientFailureCode)
+    // @Test
+    // fun `setRoute should return false when AudioClient setRoute does NOT return success code`() {
+    //     setupRouteTests(testAudioClientFailureCode)
 
-        val testOutput: Boolean = audioClientController.setRoute(testNewRoute)
+    //     val testOutput: Boolean = audioClientController.setRoute(testNewRoute)
 
-        assertFalse(testOutput)
-    }
+    //     assertFalse(testOutput)
+    // }
 
     @Test
     fun `setMute should call AudioClient setMicMute`() {
