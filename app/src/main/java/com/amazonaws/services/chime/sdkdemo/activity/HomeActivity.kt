@@ -128,13 +128,18 @@ class HomeActivity : AppCompatActivity() {
     }
 
     private fun hasPermissionsAlready(): Boolean {
-        if (audioVideoConfig.audioMode == AudioMode.NoDevice ||
-            audioVideoConfig.audioMode == AudioMode.NoMic) {
-            return true
+        for (perm in WEBRTC_PERM) {
+            if (perm == Manifest.permission.RECORD_AUDIO) {
+                if (audioVideoConfig.audioMode == AudioMode.NoDevice ||
+                    audioVideoConfig.audioMode == AudioMode.NoMic) {
+                    continue
+                }
+            }
+            if (ContextCompat.checkSelfPermission(this, perm) != PackageManager.PERMISSION_GRANTED) {
+                return false
+            }
         }
-        return WEBRTC_PERM.all {
-            ContextCompat.checkSelfPermission(this, it) == PackageManager.PERMISSION_GRANTED
-        }
+        return true
     }
 
     override fun onRequestPermissionsResult(
