@@ -25,7 +25,17 @@ enum class AudioMode(val value: Int) {
      */
     Stereo48K(3),
 
-    NoDevice(4);
+    /**
+     * Microphone and speaker device connections are not opened.
+     * Muted packets are sent to the server.
+     */
+    NoDevice(4),
+
+    /**
+     * Microphone device connection is not opened.
+     * Muted packets are sent to the server.
+     */
+    NoMic(5);
 
     companion object {
         fun from(intValue: Int): AudioMode? = values().find { it.value == intValue }
