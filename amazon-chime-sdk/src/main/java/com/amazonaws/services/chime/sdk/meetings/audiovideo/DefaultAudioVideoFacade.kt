@@ -60,7 +60,7 @@ class DefaultAudioVideoFacade(
     }
 
     override fun start(audioVideoConfiguration: AudioVideoConfiguration) {
-        if (audioVideoConfiguration.audioMode != AudioMode.NoDevice ||
+        if (audioVideoConfiguration.audioMode != AudioMode.NoDevice &&
             audioVideoConfiguration.audioMode != AudioMode.NoMic) {
             val hasPermission: Boolean = permissions.all {
                 ContextCompat.checkSelfPermission(context, it) == PackageManager.PERMISSION_GRANTED
