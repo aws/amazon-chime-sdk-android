@@ -10,6 +10,7 @@ class AudioModeTest {
         Assert.assertEquals(AudioMode.from(2), AudioMode.Mono48K)
         Assert.assertEquals(AudioMode.from(3), AudioMode.Stereo48K)
         Assert.assertEquals(AudioMode.from(4), AudioMode.NoDevice)
+        Assert.assertEquals(AudioMode.from(5), AudioMode.NoMic)
     }
 
     @Test

@@ -59,7 +59,7 @@ class HomeActivity : AppCompatActivity() {
     private var meetingID: String? = null
     private var yourName: String? = null
     private var testUrl: String = ""
-    private var audioModes = listOf("Stereo/48KHz Audio", "Mono/48KHz Audio", "Mono/16KHz Audio")
+    private var audioModes = listOf("Stereo/48KHz Audio", "Mono/48KHz Audio", "Mono/16KHz Audio", "NoDevice", "NoMic")
     private lateinit var audioVideoConfig: AudioVideoConfiguration
     private lateinit var debugSettingsViewModel: DebugSettingsViewModel
 
@@ -115,7 +115,15 @@ class HomeActivity : AppCompatActivity() {
             if (hasPermissionsAlready()) {
                 authenticate(testUrl, meetingID, yourName)
             } else {
-                ActivityCompat.requestPermissions(this, WEBRTC_PERM, WEBRTC_PERMISSION_REQUEST_CODE)
+                var perms = WEBRTC_PERM
+                if (audioVideoConfig.audioMode == AudioMode.NoDevice ||
+                    audioVideoConfig.audioMode == AudioMode.NoMic) {
+                    perms = arrayOf(
+                        Manifest.permission.MODIFY_AUDIO_SETTINGS,
+                        Manifest.permission.CAMERA
+                    )
+                }
+                ActivityCompat.requestPermissions(this, perms, WEBRTC_PERMISSION_REQUEST_CODE)
             }
         }
     }
@@ -126,7 +134,15 @@ class HomeActivity : AppCompatActivity() {
     }
 
     private fun hasPermissionsAlready(): Boolean {
-        return WEBRTC_PERM.all {
+        var perms = WEBRTC_PERM
+        if (audioVideoConfig.audioMode == AudioMode.NoDevice ||
+            audioVideoConfig.audioMode == AudioMode.NoMic) {
+            perms = arrayOf(
+                Manifest.permission.MODIFY_AUDIO_SETTINGS,
+                Manifest.permission.CAMERA
+            )
+        }
+        return perms.all {
             ContextCompat.checkSelfPermission(this, it) == PackageManager.PERMISSION_GRANTED
         }
     }
