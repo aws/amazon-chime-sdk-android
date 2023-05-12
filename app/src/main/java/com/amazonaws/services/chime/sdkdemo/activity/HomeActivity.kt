@@ -117,7 +117,7 @@ class HomeActivity : AppCompatActivity() {
             if (hasPermissionsAlready()) {
                 authenticate(testUrl, meetingID, yourName)
             } else {
-                val perms = WEBRTC_PERM
+                var perms = WEBRTC_PERM
                 if (audioVideoConfig.audioMode == AudioMode.NoDevice ||
                     audioVideoConfig.audioMode == AudioMode.NoMic) {
                     perms = arrayOf(
