@@ -184,7 +184,7 @@ class DefaultAudioClientController(
                 AudioMode.Mono48K -> AudioModeInternal.MONO_48K
                 AudioMode.Stereo48K -> AudioModeInternal.STEREO_48K
                 AudioMode.NoDevice -> AudioModeInternal.NO_DEVICE
-                AudioMode.NoDevice -> AudioModeInternal.NO_MIC
+                AudioMode.NoMic -> AudioModeInternal.NO_MIC
             }
 
             var audioStreamTypeInternal = when (audioStreamType) {
