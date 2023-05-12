@@ -101,6 +101,8 @@ class HomeActivity : AppCompatActivity() {
             0 -> audioVideoConfig = AudioVideoConfiguration(audioMode = AudioMode.Stereo48K)
             1 -> audioVideoConfig = AudioVideoConfiguration(audioMode = AudioMode.Mono48K)
             2 -> audioVideoConfig = AudioVideoConfiguration(audioMode = AudioMode.Mono16K)
+            3 -> audioVideoConfig = AudioVideoConfiguration(audioMode = AudioMode.NoDevice)
+            4 -> audioVideoConfig = AudioVideoConfiguration(audioMode = AudioMode.NoMic)
         }
 
         meetingID = meetingEditText?.text.toString().trim().replace("\\s+".toRegex(), "+")
