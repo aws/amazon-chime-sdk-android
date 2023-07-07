@@ -132,6 +132,46 @@ class DefaultScreenCaptureSource(
         return number and maxIntAlignedBy16
     }
 
+    private fun computeTargetSize(displayWidth: Int, displayHeight: Int): Pair<Int, Int> {
+        val displayResolutionMin = min(displayWidth, displayHeight)
+        val displayResolutionMax = max(displayWidth, displayHeight)
+        val targetMinVal = 1080
+        val targetMaxVal = 1920
+        val scaledWidth: Int
+        val scaledHeight: Int
+        if (displayResolutionMin > targetMinVal || displayResolutionMax > targetMaxVal) {
+            val resolutionMinScale: Double = displayResolutionMin.toDouble() / targetMinVal.toDouble()
+            val resolutionMaxScale: Double = displayResolutionMax.toDouble() / targetMaxVal.toDouble()
+            if (resolutionMinScale > resolutionMaxScale) {
+                if (displayResolutionMin == displayWidth) {
+                    scaledWidth = targetMinVal
+                    scaledHeight = (displayHeight.toDouble() / resolutionMinScale.toDouble()).toInt()
+                } else {
+                    scaledHeight = targetMinVal;
+                    scaledWidth = (displayWidth.toDouble() / resolutionMinScale.toDouble()).toInt()
+                }
+            } else {
+                if (displayResolutionMax == displayWidth) {
+                    scaledWidth = targetMaxVal;
+                    scaledHeight = (displayHeight.toDouble() / resolutionMaxScale.toDouble()).toInt()
+                } else {
+                    scaledHeight = targetMaxVal;
+                    scaledWidth = (displayWidth.toDouble() / resolutionMaxScale.toDouble()).toInt()
+                }
+            }
+        } else {
+            scaledWidth = displayWidth
+            scaledHeight = displayHeight
+        }
+
+        var mask: Int = 1
+        // align width and height to 2-byte
+        var alignedWidth: Int = scaledWidth and mask.inv()
+        var alignedHeight: Int = scaledHeight and mask.inv()
+
+        return Pair(alignedWidth, alignedHeight)
+    }
+
     // Separate internal function since only some logic is shared between external calls
     // and internal restarts; must be called on handler
     private fun startInternal(): Boolean {
@@ -171,42 +211,8 @@ class DefaultScreenCaptureSource(
         val rotation = display.rotation
         isOrientationInPortrait = rotation == Surface.ROTATION_0 || rotation == Surface.ROTATION_180
 
-        val displayWidth = displayMetrics.widthPixels
-        val displayHeight = displayMetrics.heightPixels
-        val minVal = min(displayWidth, displayHeight)
-        val maxVal = max(displayWidth, displayHeight)
-        val targetMinVal = 1080
-        val targetMaxVal = 1920
-        val scaledWidth: Int
-        val scaledHeight: Int
-        if (minVal > targetMinVal || maxVal > targetMaxVal) {
-            val minScale: Double = minVal.toDouble() / targetMinVal.toDouble()
-            val maxScale: Double = maxVal.toDouble() / targetMaxVal.toDouble()
-            if (minScale > maxScale) {
-                if (minVal == displayWidth) {
-                    scaledWidth = targetMinVal
-                    scaledHeight = (displayHeight.toDouble() / minScale.toDouble()).toInt()
-                } else {
-                    scaledHeight = targetMinVal;
-                    scaledWidth = (displayWidth.toDouble() / minScale.toDouble()).toInt()
-                }
-            } else {
-                if (maxVal == displayWidth) {
-                    scaledWidth = targetMaxVal;
-                    scaledHeight = (displayHeight.toDouble() / maxScale.toDouble()).toInt()
-                } else {
-                    scaledHeight = targetMaxVal;
-                    scaledWidth = (displayWidth.toDouble() / maxScale.toDouble()).toInt()
-                }
-            }
-        } else {
-            scaledWidth = displayWidth
-            scaledHeight = displayHeight
-        }
-
-        var mask: Int = 1
-        var alignedWidth: Int = scaledWidth and mask.inv()
-        var alignedHeight: Int = scaledHeight and mask.inv()
+        // compute targetWidth and targetHeight with alignment
+        val (alignedWidth, alignedHeight) = computeTargetSize(displayMetrics.widthPixels, displayMetrics.heightPixels)
 
         // Sometimes, Android changes displayMetrics widthPixels and heightPixels
         // and return inconsistent height and width for surfaceTextureSource VS virtualDisplay
