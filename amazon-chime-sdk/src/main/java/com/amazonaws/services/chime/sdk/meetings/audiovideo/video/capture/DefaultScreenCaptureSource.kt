@@ -20,6 +20,7 @@ import android.os.HandlerThread
 import android.util.DisplayMetrics
 import android.view.Display
 import android.view.Surface
+import android.util.Size
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoContentHint
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoFrame
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoSink
@@ -132,7 +133,19 @@ class DefaultScreenCaptureSource(
         return number and maxIntAlignedBy16
     }
 
-    private fun computeTargetSize(displayWidth: Int, displayHeight: Int): Pair<Int, Int> {
+    // compute target resolution with constraint (targetMinVal, targetMaxVal)
+    // high-level description:
+    // 1. target resolution constraint is defined by (targetMinVal, targetMaxVal)
+    // 2. get min and max display resolution
+    // 3. if both min and max display resolutions are within target resolution constraint,
+    //    then target resolution is same as display resolution
+    // 4. otherwise, we compute target resolution with following steps
+    // 4.1. compute resolutionMinScale --> scale factor from displayResolutionMin to targetResolutionMin
+    // 4.2. compute resolutionMaxScale --> scale factor from displayResolutionMax to targetResolutionMax
+    // 4.3. scale the original image using the larger scale (resolutionMinScale or resolutionMaxScale)
+    // 4.4. scaled image should maintain the same sample aspect ratio and both resolutions should be within target resolution constraint
+    // 5. After calculation of scaledWidth and scaledHeight, 2-byte alignment is done (to handle 420 color space conversion)
+    private fun computeTargetSize(displayWidth: Int, displayHeight: Int): Size {
         val displayResolutionMin = min(displayWidth, displayHeight)
         val displayResolutionMax = max(displayWidth, displayHeight)
         val targetMinVal = 1080
@@ -169,7 +182,7 @@ class DefaultScreenCaptureSource(
         var alignedWidth: Int = scaledWidth and mask.inv()
         var alignedHeight: Int = scaledHeight and mask.inv()
 
-        return Pair(alignedWidth, alignedHeight)
+        return Size(alignedWidth, alignedHeight)
     }
 
     // Separate internal function since only some logic is shared between external calls
@@ -212,7 +225,9 @@ class DefaultScreenCaptureSource(
         isOrientationInPortrait = rotation == Surface.ROTATION_0 || rotation == Surface.ROTATION_180
 
         // compute targetWidth and targetHeight with alignment
-        val (alignedWidth, alignedHeight) = computeTargetSize(displayMetrics.widthPixels, displayMetrics.heightPixels)
+        val targetSize: Size = computeTargetSize(displayMetrics.widthPixels, displayMetrics.heightPixels)
+        var alignedWidth: Int = targetSize.width
+        var alignedHeight: Int = targetSize.height
 
         // Sometimes, Android changes displayMetrics widthPixels and heightPixels
         // and return inconsistent height and width for surfaceTextureSource VS virtualDisplay

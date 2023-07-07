@@ -83,7 +83,7 @@ data class MediaDevice(
                             ?: return emptyList()
             val nativeSizes = streamMap.getOutputSizes(SurfaceTexture::class.java)
                     ?: return emptyList()
-            var filterList = nativeSizes.filter{it.width <= 1280 && it.height <= 720}
+            val filterList = nativeSizes.filter{it.width <= 1280 && it.height <= 720}
 
             return filterList.map { size -> VideoCaptureFormat(size.width, size.height, fps) }
         }
