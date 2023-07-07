@@ -27,6 +27,8 @@ import com.amazonaws.services.chime.sdk.meetings.internal.utils.ConcurrentSet
 import com.amazonaws.services.chime.sdk.meetings.internal.utils.ObserverUtils
 import com.amazonaws.services.chime.sdk.meetings.utils.logger.Logger
 import kotlin.math.ceil
+import kotlin.math.min
+import kotlin.math.max
 import kotlinx.coroutines.android.asCoroutineDispatcher
 import kotlinx.coroutines.runBlocking
 
@@ -169,10 +171,45 @@ class DefaultScreenCaptureSource(
         val rotation = display.rotation
         isOrientationInPortrait = rotation == Surface.ROTATION_0 || rotation == Surface.ROTATION_180
 
+        val displayWidth = displayMetrics.widthPixels
+        val displayHeight = displayMetrics.heightPixels
+        val minVal = min(displayWidth, displayHeight)
+        val maxVal = max(displayWidth, displayHeight)
+        val targetMinVal = 1080
+        val targetMaxVal = 1920
+        val scaledWidth: Int
+        val scaledHeight: Int
+        if (minVal > targetMinVal || maxVal > targetMaxVal) {
+            val minScale: Double = minVal.toDouble() / targetMinVal.toDouble()
+            val maxScale: Double = maxVal.toDouble() / targetMaxVal.toDouble()
+            if (minScale > maxScale) {
+                if (minVal == displayWidth) {
+                    scaledWidth = targetMinVal
+                    scaledHeight = (displayHeight.toDouble() / minScale.toDouble()).toInt()
+                } else {
+                    scaledHeight = targetMinVal;
+                    scaledWidth = (displayWidth.toDouble() / minScale.toDouble()).toInt()
+                }
+            } else {
+                if (maxVal == displayWidth) {
+                    scaledWidth = targetMaxVal;
+                    scaledHeight = (displayHeight.toDouble() / maxScale.toDouble()).toInt()
+                } else {
+                    scaledHeight = targetMaxVal;
+                    scaledWidth = (displayWidth.toDouble() / maxScale.toDouble()).toInt()
+                }
+            }
+        } else {
+            scaledWidth = displayWidth
+            scaledHeight = displayHeight
+        }
+
+        var mask: Int = 1
+        var alignedWidth: Int = scaledWidth and mask.inv()
+        var alignedHeight: Int = scaledHeight and mask.inv()
+
         // Sometimes, Android changes displayMetrics widthPixels and heightPixels
         // and return inconsistent height and width for surfaceTextureSource VS virtualDisplay
-        val width = displayMetrics.widthPixels
-        val height = displayMetrics.heightPixels
 
         // Note that in landscape, for some reason `getRealMetrics` doesn't account for the status bar correctly
         // so we try to account for it with a manual adjustment to the surface size to avoid letterboxes
@@ -180,8 +217,8 @@ class DefaultScreenCaptureSource(
         // so screenCapture surface size is aligned manually to avoid the issue
         surfaceTextureSource =
             surfaceTextureCaptureSourceFactory.createSurfaceTextureCaptureSource(
-                alignNumberBy16(width - (if (isOrientationInPortrait) 0 else getStatusBarHeight())),
-                alignNumberBy16(height),
+                alignNumberBy16(alignedWidth - (if (isOrientationInPortrait) 0 else getStatusBarHeight())),
+                alignNumberBy16(alignedHeight),
                 contentHint
             )
         surfaceTextureSource?.minFps = MIN_FPS
@@ -191,8 +228,8 @@ class DefaultScreenCaptureSource(
 
         virtualDisplay = mediaProjection?.createVirtualDisplay(
             TAG,
-            width,
-            height,
+            alignedWidth,
+            alignedHeight,
             displayMetrics.densityDpi,
             DisplayManager.VIRTUAL_DISPLAY_FLAG_AUTO_MIRROR,
             surfaceTextureSource?.surface,
