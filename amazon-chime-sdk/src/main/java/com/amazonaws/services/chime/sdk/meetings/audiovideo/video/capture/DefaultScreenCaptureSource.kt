@@ -18,9 +18,9 @@ import android.os.Build.VERSION_CODES
 import android.os.Handler
 import android.os.HandlerThread
 import android.util.DisplayMetrics
+import android.util.Size
 import android.view.Display
 import android.view.Surface
-import android.util.Size
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoContentHint
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoFrame
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoSink
@@ -28,8 +28,8 @@ import com.amazonaws.services.chime.sdk.meetings.internal.utils.ConcurrentSet
 import com.amazonaws.services.chime.sdk.meetings.internal.utils.ObserverUtils
 import com.amazonaws.services.chime.sdk.meetings.utils.logger.Logger
 import kotlin.math.ceil
-import kotlin.math.min
 import kotlin.math.max
+import kotlin.math.min
 import kotlinx.coroutines.android.asCoroutineDispatcher
 import kotlinx.coroutines.runBlocking
 
@@ -160,15 +160,15 @@ class DefaultScreenCaptureSource(
                     scaledWidth = targetMinVal
                     scaledHeight = (displayHeight.toDouble() / resolutionMinScale.toDouble()).toInt()
                 } else {
-                    scaledHeight = targetMinVal;
+                    scaledHeight = targetMinVal
                     scaledWidth = (displayWidth.toDouble() / resolutionMinScale.toDouble()).toInt()
                 }
             } else {
                 if (displayResolutionMax == displayWidth) {
-                    scaledWidth = targetMaxVal;
+                    scaledWidth = targetMaxVal
                     scaledHeight = (displayHeight.toDouble() / resolutionMaxScale.toDouble()).toInt()
                 } else {
-                    scaledHeight = targetMaxVal;
+                    scaledHeight = targetMaxVal
                     scaledWidth = (displayWidth.toDouble() / resolutionMaxScale.toDouble()).toInt()
                 }
             }
