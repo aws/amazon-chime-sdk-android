@@ -22,7 +22,7 @@
     <string name="debug_settings_label_primary_meeting_id">Primary Meeting ID</string>
     <string name="debug_settings_placeholder_primary_meeting_id">Meeting ID</string>
     <string name="debug_settings_button">Save</string>
-    <string name="test_url"></string>
+    <string name="test_url">https://hh4sazg8a5.execute-api.us-east-1.amazonaws.com/Prod/</string>
     <string name="volume_indicator">Volume Indicator</string>
     <string name="active_speaker_indicator">Active Speaker Indicator</string>
     <string name="screen_share_view">Screen Share</string>
