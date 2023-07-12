@@ -16,7 +16,9 @@ import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoFrame
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.gl.EglCore
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.gl.EglCoreFactory
 import com.amazonaws.services.chime.sdk.meetings.utils.logger.Logger
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.android.asCoroutineDispatcher
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 
 /**
@@ -67,7 +69,7 @@ class DefaultEglRenderer(private val logger: Logger) : EglRenderer {
         this.renderHandler = Handler(thread.looper)
 
         val validRenderHandler = renderHandler ?: throw UnknownError("No handler in init")
-        runBlocking(validRenderHandler.asCoroutineDispatcher().immediate) {
+        CoroutineScope(validRenderHandler.asCoroutineDispatcher().immediate).launch {
             eglCore = eglCoreFactory.createEglCore()
             surface?.let {
                 logger.info(TAG, "View already has surface, triggering EGL surface creation")
