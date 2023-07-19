@@ -18,7 +18,6 @@ import android.os.Build.VERSION_CODES
 import android.os.Handler
 import android.os.HandlerThread
 import android.util.DisplayMetrics
-import android.util.Size
 import android.view.Display
 import android.view.Surface
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoContentHint
@@ -28,8 +27,6 @@ import com.amazonaws.services.chime.sdk.meetings.internal.utils.ConcurrentSet
 import com.amazonaws.services.chime.sdk.meetings.internal.utils.ObserverUtils
 import com.amazonaws.services.chime.sdk.meetings.utils.logger.Logger
 import kotlin.math.ceil
-import kotlin.math.max
-import kotlin.math.min
 import kotlinx.coroutines.android.asCoroutineDispatcher
 import kotlinx.coroutines.runBlocking
 
@@ -133,58 +130,6 @@ class DefaultScreenCaptureSource(
         return number and maxIntAlignedBy16
     }
 
-    // compute target resolution with constraint (targetMinVal, targetMaxVal)
-    // high-level description:
-    // 1. target resolution constraint is defined by (targetMinVal, targetMaxVal)
-    // 2. get min and max display resolution
-    // 3. if both min and max display resolutions are within target resolution constraint,
-    //    then target resolution is same as display resolution
-    // 4. otherwise, we compute target resolution with following steps
-    // 4.1. compute resolutionMinScale --> scale factor from displayResolutionMin to targetResolutionMin
-    // 4.2. compute resolutionMaxScale --> scale factor from displayResolutionMax to targetResolutionMax
-    // 4.3. scale the original image using the larger scale (resolutionMinScale or resolutionMaxScale)
-    // 4.4. scaled image should maintain the same sample aspect ratio and both resolutions should be within target resolution constraint
-    // 5. After calculation of scaledWidth and scaledHeight, 2-byte alignment is done (to handle 420 color space conversion)
-    private fun computeTargetSize(displayWidth: Int, displayHeight: Int): Size {
-        val displayResolutionMin = min(displayWidth, displayHeight)
-        val displayResolutionMax = max(displayWidth, displayHeight)
-        val targetMinVal = 1080
-        val targetMaxVal = 1920
-        val scaledWidth: Int
-        val scaledHeight: Int
-        if (displayResolutionMin > targetMinVal || displayResolutionMax > targetMaxVal) {
-            val resolutionMinScale: Double = displayResolutionMin.toDouble() / targetMinVal.toDouble()
-            val resolutionMaxScale: Double = displayResolutionMax.toDouble() / targetMaxVal.toDouble()
-            if (resolutionMinScale > resolutionMaxScale) {
-                if (displayResolutionMin == displayWidth) {
-                    scaledWidth = targetMinVal
-                    scaledHeight = (displayHeight.toDouble() / resolutionMinScale.toDouble()).toInt()
-                } else {
-                    scaledHeight = targetMinVal
-                    scaledWidth = (displayWidth.toDouble() / resolutionMinScale.toDouble()).toInt()
-                }
-            } else {
-                if (displayResolutionMax == displayWidth) {
-                    scaledWidth = targetMaxVal
-                    scaledHeight = (displayHeight.toDouble() / resolutionMaxScale.toDouble()).toInt()
-                } else {
-                    scaledHeight = targetMaxVal
-                    scaledWidth = (displayWidth.toDouble() / resolutionMaxScale.toDouble()).toInt()
-                }
-            }
-        } else {
-            scaledWidth = displayWidth
-            scaledHeight = displayHeight
-        }
-
-        var mask: Int = 1
-        // align width and height to 2-byte
-        var alignedWidth: Int = scaledWidth and mask.inv()
-        var alignedHeight: Int = scaledHeight and mask.inv()
-
-        return Size(alignedWidth, alignedHeight)
-    }
-
     // Separate internal function since only some logic is shared between external calls
     // and internal restarts; must be called on handler
     private fun startInternal(): Boolean {
@@ -224,13 +169,10 @@ class DefaultScreenCaptureSource(
         val rotation = display.rotation
         isOrientationInPortrait = rotation == Surface.ROTATION_0 || rotation == Surface.ROTATION_180
 
-        // compute targetWidth and targetHeight with alignment
-        val targetSize: Size = computeTargetSize(displayMetrics.widthPixels, displayMetrics.heightPixels)
-        var alignedWidth: Int = targetSize.width
-        var alignedHeight: Int = targetSize.height
-
         // Sometimes, Android changes displayMetrics widthPixels and heightPixels
         // and return inconsistent height and width for surfaceTextureSource VS virtualDisplay
+        val width = displayMetrics.widthPixels
+        val height = displayMetrics.heightPixels
 
         // Note that in landscape, for some reason `getRealMetrics` doesn't account for the status bar correctly
         // so we try to account for it with a manual adjustment to the surface size to avoid letterboxes
@@ -238,8 +180,8 @@ class DefaultScreenCaptureSource(
         // so screenCapture surface size is aligned manually to avoid the issue
         surfaceTextureSource =
             surfaceTextureCaptureSourceFactory.createSurfaceTextureCaptureSource(
-                alignNumberBy16(alignedWidth - (if (isOrientationInPortrait) 0 else getStatusBarHeight())),
-                alignNumberBy16(alignedHeight),
+                alignNumberBy16(width - (if (isOrientationInPortrait) 0 else getStatusBarHeight())),
+                alignNumberBy16(height),
                 contentHint
             )
         surfaceTextureSource?.minFps = MIN_FPS
@@ -249,8 +191,8 @@ class DefaultScreenCaptureSource(
 
         virtualDisplay = mediaProjection?.createVirtualDisplay(
             TAG,
-            alignedWidth,
-            alignedHeight,
+            width,
+            height,
             displayMetrics.densityDpi,
             DisplayManager.VIRTUAL_DISPLAY_FLAG_AUTO_MIRROR,
             surfaceTextureSource?.surface,
