@@ -175,8 +175,8 @@ class DefaultScreenCaptureSource(
 
         // compute targetWidth and targetHeight with alignment
         val targetSize: Int = screenCaptureResolutionCalculator.computeTargetSize(displayMetrics.widthPixels, displayMetrics.heightPixels)
-        var alignedWidth: Int = targetSize and 0xffff
-        var alignedHeight: Int = ((targetSize shr 16) and 0xffff)
+        val alignedWidth: Int = targetSize and 0xffff
+        val alignedHeight: Int = ((targetSize shr 16) and 0xffff)
 
         // Sometimes, Android changes displayMetrics widthPixels and heightPixels
         // and return inconsistent height and width for surfaceTextureSource VS virtualDisplay
