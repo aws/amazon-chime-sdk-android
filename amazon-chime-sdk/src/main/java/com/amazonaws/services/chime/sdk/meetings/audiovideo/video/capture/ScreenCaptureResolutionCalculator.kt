@@ -28,7 +28,8 @@ class ScreenCaptureResolutionCalculator(
         val displayResolutionMax = max(displayWidth, displayHeight)
         val scaledWidth: Int
         val scaledHeight: Int
-        if (displayResolutionMin > targetMinVal || displayResolutionMax > targetMaxVal) {
+        val resolutionOverConstraint: Boolean = (displayResolutionMin > targetMinVal || displayResolutionMax > targetMaxVal)
+        if (resolutionOverConstraint) {
             val resolutionMinScale: Double = displayResolutionMin.toDouble() / targetMinVal.toDouble()
             val resolutionMaxScale: Double = displayResolutionMax.toDouble() / targetMaxVal.toDouble()
             if (resolutionMinScale > resolutionMaxScale) {
