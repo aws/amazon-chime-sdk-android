@@ -175,6 +175,11 @@ class MeetingFragment : Fragment(),
     private val CONTENT_NAME_SUFFIX = "<<Content>>"
 
     private val DATA_MESSAGE_TOPIC = "chat"
+
+    // Assumes single content share
+    private val DATA_MESSAGE_CONTENT_TOPIC = "content"
+    private val DATA_MESSAGE_CONTENT_PAUSE = "pause"
+    private val DATA_MESSAGE_CONTENT_RESUME = "resume"
     private val DATA_MESSAGE_LIFETIME_MS = 300000
 
     private var screenshareServiceConnection: ServiceConnection? = null
@@ -620,6 +625,8 @@ class MeetingFragment : Fragment(),
             additionalToggles.add(context?.getString(if (meetingModel.isLiveTranscriptionEnabled) R.string.disable_live_transcription else R.string.enable_live_transcription))
         }
 
+        additionalToggles.add(context?.getString(R.string.toggle_screen_capture_source_pause))
+
         additionalOptionsAlertDialogBuilder.setItems(additionalToggles.toTypedArray()) { _, which ->
             when (which) {
                 0 -> toggleScreenCapture()
@@ -639,6 +646,7 @@ class MeetingFragment : Fragment(),
                         )
                     }
                 }
+                8 -> toggleScreenCapturePause()
             }
         }
     }
@@ -1096,10 +1104,28 @@ class MeetingFragment : Fragment(),
         if (meetingModel.isSharingContent) {
             audioVideo.stopContentShare()
             screenShareManager?.stop(isBound)
+            meetingModel.isPausingContent = false
         } else {
             startActivityForResult(
                 mediaProjectionManager.createScreenCaptureIntent(),
                 SCREEN_CAPTURE_REQUEST_CODE
+            )
+        }
+    }
+
+    private fun toggleScreenCapturePause() {
+        if (meetingModel.isSharingContent) {
+            meetingModel.isPausingContent = !meetingModel.isPausingContent
+            if (meetingModel.isPausingContent) {
+                screenShareManager?.pause()
+            } else {
+                screenShareManager?.start()
+            }
+
+            audioVideo.realtimeSendDataMessage(
+                DATA_MESSAGE_CONTENT_TOPIC,
+                if (meetingModel.isPausingContent) DATA_MESSAGE_CONTENT_PAUSE else DATA_MESSAGE_CONTENT_RESUME,
+                DATA_MESSAGE_LIFETIME_MS
             )
         }
     }
@@ -1470,6 +1496,8 @@ class MeetingFragment : Fragment(),
                     )
                 }
             })
+
+        meetingModel.isPausingContent = false
     }
 
     override fun onContentShareStarted() {
@@ -1524,7 +1552,7 @@ class MeetingFragment : Fragment(),
     private fun createVideoCollectionTile(tileState: VideoTileState): VideoCollectionTile {
         val attendeeId = tileState.attendeeId
         val attendeeName = meetingModel.currentRoster[attendeeId]?.attendeeName ?: ""
-        return VideoCollectionTile(attendeeName, tileState)
+        return VideoCollectionTile(attendeeName, tileState, false)
     }
 
     override fun onAudioSessionStartedConnecting(reconnecting: Boolean) {
@@ -1775,22 +1803,42 @@ class MeetingFragment : Fragment(),
         )
     }
 
-    override fun onDataMessageReceived(dataMessage: DataMessage) {
-        if (!dataMessage.throttled) {
-            if (dataMessage.timestampMs <= meetingModel.lastReceivedMessageTimestamp) return
-            meetingModel.lastReceivedMessageTimestamp = dataMessage.timestampMs
-            meetingModel.currentMessages.add(
-                Message(
-                    getAttendeeName(dataMessage.senderAttendeeId, dataMessage.senderExternalUserId),
-                    dataMessage.timestampMs,
-                    dataMessage.text(),
-                    isSelfAttendee(dataMessage.senderAttendeeId)
-                )
+    private fun onChatDataMessageReceived(dataMessage: DataMessage) {
+        if (dataMessage.timestampMs <= meetingModel.lastReceivedMessageTimestamp) return
+        meetingModel.lastReceivedMessageTimestamp = dataMessage.timestampMs
+        meetingModel.currentMessages.add(
+            Message(
+                getAttendeeName(dataMessage.senderAttendeeId, dataMessage.senderExternalUserId),
+                dataMessage.timestampMs,
+                dataMessage.text(),
+                isSelfAttendee(dataMessage.senderAttendeeId)
             )
-            messageAdapter.notifyItemInserted(meetingModel.currentMessages.size - 1)
-            scrollToLastMessage()
-        } else {
+        )
+        messageAdapter.notifyItemInserted(meetingModel.currentMessages.size - 1)
+        scrollToLastMessage()
+    }
+
+    private fun onContentDataMessageReceived(dataMessage: DataMessage) {
+        val paused = dataMessage.text() == DATA_MESSAGE_CONTENT_PAUSE
+        logger.debug(TAG, "Received data message for content share. New value is: $paused")
+
+        // Should store this for cases where attendee joins after screen share started and paused
+        val newCollection = meetingModel.currentScreenTiles.map { it.copy(contentPaused = paused) }
+        meetingModel.currentScreenTiles.clear()
+        newCollection.forEach { meetingModel.currentScreenTiles.add(it) }
+        screenTileAdapter.notifyDataSetChanged()
+    }
+
+    override fun onDataMessageReceived(dataMessage: DataMessage) {
+        if (dataMessage.throttled) {
             notifyHandler("Message is throttled. Please resend")
+            return
+        }
+
+        if (DATA_MESSAGE_TOPIC == dataMessage.topic) {
+            onChatDataMessageReceived(dataMessage)
+        } else {
+            onContentDataMessageReceived(dataMessage)
         }
     }
 
@@ -1840,6 +1888,7 @@ class MeetingFragment : Fragment(),
         audioVideo.addMetricsObserver(this)
         audioVideo.addRealtimeObserver(this)
         audioVideo.addRealtimeDataMessageObserver(DATA_MESSAGE_TOPIC, this)
+        audioVideo.addRealtimeDataMessageObserver(DATA_MESSAGE_CONTENT_TOPIC, this)
         audioVideo.addVideoTileObserver(this)
         audioVideo.addActiveSpeakerObserver(DefaultActiveSpeakerPolicy(), this)
         audioVideo.addContentShareObserver(this)
@@ -1853,6 +1902,7 @@ class MeetingFragment : Fragment(),
         audioVideo.removeMetricsObserver(this)
         audioVideo.removeRealtimeObserver(this)
         audioVideo.removeRealtimeDataMessageObserverFromTopic(DATA_MESSAGE_TOPIC)
+        audioVideo.removeRealtimeDataMessageObserverFromTopic(DATA_MESSAGE_CONTENT_TOPIC)
         audioVideo.removeVideoTileObserver(this)
         audioVideo.removeActiveSpeakerObserver(this)
         audioVideo.removeContentShareObserver(this)

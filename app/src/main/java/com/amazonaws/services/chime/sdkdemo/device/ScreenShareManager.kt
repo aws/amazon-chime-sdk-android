@@ -39,6 +39,10 @@ class ScreenShareManager(
         }
     }
 
+    fun pause() {
+        screenCaptureSource.stop()
+    }
+
     fun release() = screenCaptureSource.release()
 
     fun addObserver(observer: CaptureSourceObserver) = screenCaptureSource.addCaptureSourceObserver(observer)

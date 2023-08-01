@@ -33,6 +33,7 @@ import com.amazonaws.services.chime.sdkdemo.model.MeetingModel
 import com.amazonaws.services.chime.sdkdemo.utils.inflate
 import com.amazonaws.services.chime.sdkdemo.utils.isLandscapeMode
 import kotlinx.android.synthetic.main.item_video.view.attendee_name
+import kotlinx.android.synthetic.main.item_video.view.content_shared_paused_message
 import kotlinx.android.synthetic.main.item_video.view.on_tile_button
 import kotlinx.android.synthetic.main.item_video.view.poor_connection_message
 import kotlinx.android.synthetic.main.item_video.view.video_config_button
@@ -163,6 +164,9 @@ class VideoHolder(
                 VideoPauseState.PausedForPoorConnection ->
                     view.poor_connection_message.visibility = View.VISIBLE
             }
+
+            view.content_shared_paused_message.visibility =
+                if (videoCollectionTile.contentPaused) View.VISIBLE else View.INVISIBLE
 
             view.on_tile_button.setOnClickListener {
                 val tileId = videoCollectionTile.videoTileState.tileId

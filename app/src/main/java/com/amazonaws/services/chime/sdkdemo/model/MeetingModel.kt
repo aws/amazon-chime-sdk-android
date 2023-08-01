@@ -66,6 +66,7 @@ class MeetingModel : ViewModel() {
     var isDeviceListDialogOn = false
     var isAdditionalOptionsDialogOn = false
     var isSharingContent = false
+    var isPausingContent = false
     var isLiveTranscriptionEnabled = false
     var lastReceivedMessageTimestamp = 0L
     var tabIndex = 0

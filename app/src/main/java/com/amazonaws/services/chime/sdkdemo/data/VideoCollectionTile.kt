@@ -10,7 +10,8 @@ import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoTileState
 
 data class VideoCollectionTile(
     val attendeeName: String,
-    val videoTileState: VideoTileState
+    val videoTileState: VideoTileState,
+    val contentPaused: Boolean
 ) {
     var videoRenderView: DefaultVideoRenderView? = null
     var pauseMessageView: ConstraintLayout? = null

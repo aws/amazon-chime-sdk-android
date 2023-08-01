@@ -37,6 +37,7 @@
     <string name="switch_camera">Switch Camera</string>
     <string name="video_filters">Video Filters</string>
     <string name="poor_connection_message">Poor local connection. \nVideo will resume \nwhen your connection improves.</string>
+    <string name="content_share_paused_message">Content share is currently paused.</string>
 
     <!-- device selection -->
     <string name="device_management_title">Select devices</string>
@@ -82,6 +83,7 @@
     <string name="toggle_mute">Toggle Mute</string>
     <string name="enable_screen_capture_source">Share screen</string>
     <string name="disable_screen_capture_source">Stop sharing screen</string>
+    <string name="toggle_screen_capture_source_pause">Toggle screen share pause</string>
     <string name="enable_voice_focus">Turn on Voice Focus (noise suppression)</string>
     <string name="disable_voice_focus">Turn off Voice Focus (noise suppression)</string>
     <string name="enable_live_transcription">Turn on Live Transcription</string>
