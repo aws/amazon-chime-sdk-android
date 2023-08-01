@@ -5,7 +5,6 @@
 
 package com.amazonaws.services.chime.sdk.meetings.audiovideo.video.capture
 
-import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.capture.ScreenCaptureResolutionCalculator
 import kotlin.math.max
 import kotlin.math.min
 import org.junit.After

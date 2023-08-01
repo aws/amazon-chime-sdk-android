@@ -18,10 +18,8 @@ import android.os.Build.VERSION_CODES
 import android.os.Handler
 import android.os.HandlerThread
 import android.util.DisplayMetrics
-import android.util.Size
 import android.view.Display
 import android.view.Surface
-import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.capture.ScreenCaptureResolutionCalculator
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoContentHint
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoFrame
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoSink
