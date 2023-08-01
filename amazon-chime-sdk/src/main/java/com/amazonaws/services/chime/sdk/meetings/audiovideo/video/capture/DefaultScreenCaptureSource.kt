@@ -21,6 +21,7 @@ import android.util.DisplayMetrics
 import android.util.Size
 import android.view.Display
 import android.view.Surface
+import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.capture.ScreenCaptureResolutionCalculator
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoContentHint
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoFrame
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoSink
@@ -28,8 +29,6 @@ import com.amazonaws.services.chime.sdk.meetings.internal.utils.ConcurrentSet
 import com.amazonaws.services.chime.sdk.meetings.internal.utils.ObserverUtils
 import com.amazonaws.services.chime.sdk.meetings.utils.logger.Logger
 import kotlin.math.ceil
-import kotlin.math.max
-import kotlin.math.min
 import kotlinx.coroutines.android.asCoroutineDispatcher
 import kotlinx.coroutines.runBlocking
 
@@ -83,6 +82,10 @@ class DefaultScreenCaptureSource(
 
     private val observers = mutableSetOf<CaptureSourceObserver>()
 
+    private val targetMinVal: Int = 1080
+    private val targetMaxVal: Int = 1920
+    private var screenCaptureResolutionCalculator: ScreenCaptureResolutionCalculator? = null
+
     // Concurrency modification could happen when sink gets
     // added/removed from another thread while sending frames
     private val sinks = ConcurrentSet.createConcurrentSet<VideoSink>()
@@ -105,6 +108,7 @@ class DefaultScreenCaptureSource(
 
     init {
         val thread = HandlerThread(TAG)
+        screenCaptureResolutionCalculator = ScreenCaptureResolutionCalculator(this.targetMinVal, this.targetMaxVal)
         thread.start()
         handler = Handler(thread.looper)
     }
@@ -131,58 +135,6 @@ class DefaultScreenCaptureSource(
     private fun alignNumberBy16(number: Int): Int {
         val maxIntAlignedBy16 = 0x7FFFFFF0
         return number and maxIntAlignedBy16
-    }
-
-    // compute target resolution with constraint (targetMinVal, targetMaxVal)
-    // high-level description:
-    // 1. target resolution constraint is defined by (targetMinVal, targetMaxVal)
-    // 2. get min and max display resolution
-    // 3. if both min and max display resolutions are within target resolution constraint,
-    //    then target resolution is same as display resolution
-    // 4. otherwise, we compute target resolution with following steps
-    // 4.1. compute resolutionMinScale --> scale factor from displayResolutionMin to targetResolutionMin
-    // 4.2. compute resolutionMaxScale --> scale factor from displayResolutionMax to targetResolutionMax
-    // 4.3. scale the original image using the larger scale (resolutionMinScale or resolutionMaxScale)
-    // 4.4. scaled image should maintain the same sample aspect ratio and both resolutions should be within target resolution constraint
-    // 5. After calculation of scaledWidth and scaledHeight, 2-byte alignment is done (to handle 420 color space conversion)
-    private fun computeTargetSize(displayWidth: Int, displayHeight: Int): Size {
-        val displayResolutionMin = min(displayWidth, displayHeight)
-        val displayResolutionMax = max(displayWidth, displayHeight)
-        val targetMinVal = 1080
-        val targetMaxVal = 1920
-        val scaledWidth: Int
-        val scaledHeight: Int
-        if (displayResolutionMin > targetMinVal || displayResolutionMax > targetMaxVal) {
-            val resolutionMinScale: Double = displayResolutionMin.toDouble() / targetMinVal.toDouble()
-            val resolutionMaxScale: Double = displayResolutionMax.toDouble() / targetMaxVal.toDouble()
-            if (resolutionMinScale > resolutionMaxScale) {
-                if (displayResolutionMin == displayWidth) {
-                    scaledWidth = targetMinVal
-                    scaledHeight = (displayHeight.toDouble() / resolutionMinScale.toDouble()).toInt()
-                } else {
-                    scaledHeight = targetMinVal
-                    scaledWidth = (displayWidth.toDouble() / resolutionMinScale.toDouble()).toInt()
-                }
-            } else {
-                if (displayResolutionMax == displayWidth) {
-                    scaledWidth = targetMaxVal
-                    scaledHeight = (displayHeight.toDouble() / resolutionMaxScale.toDouble()).toInt()
-                } else {
-                    scaledHeight = targetMaxVal
-                    scaledWidth = (displayWidth.toDouble() / resolutionMaxScale.toDouble()).toInt()
-                }
-            }
-        } else {
-            scaledWidth = displayWidth
-            scaledHeight = displayHeight
-        }
-
-        var mask: Int = 1
-        // align width and height to 2-byte
-        var alignedWidth: Int = scaledWidth and mask.inv()
-        var alignedHeight: Int = scaledHeight and mask.inv()
-
-        return Size(alignedWidth, alignedHeight)
     }
 
     // Separate internal function since only some logic is shared between external calls
@@ -225,9 +177,9 @@ class DefaultScreenCaptureSource(
         isOrientationInPortrait = rotation == Surface.ROTATION_0 || rotation == Surface.ROTATION_180
 
         // compute targetWidth and targetHeight with alignment
-        val targetSize: Size = computeTargetSize(displayMetrics.widthPixels, displayMetrics.heightPixels)
-        var alignedWidth: Int = targetSize.width
-        var alignedHeight: Int = targetSize.height
+        val targetSize: Int = screenCaptureResolutionCalculator!!.computeTargetSize(displayMetrics.widthPixels, displayMetrics.heightPixels)
+        var alignedWidth: Int = targetSize and 0xffff
+        var alignedHeight: Int = ((targetSize shr 16) and 0xffff)
 
         // Sometimes, Android changes displayMetrics widthPixels and heightPixels
         // and return inconsistent height and width for surfaceTextureSource VS virtualDisplay
