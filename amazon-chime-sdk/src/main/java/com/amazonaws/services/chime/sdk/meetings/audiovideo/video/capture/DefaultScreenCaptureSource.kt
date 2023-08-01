@@ -84,7 +84,7 @@ class DefaultScreenCaptureSource(
 
     private val targetMinVal: Int = 1080
     private val targetMaxVal: Int = 1920
-    private var screenCaptureResolutionCalculator: ScreenCaptureResolutionCalculator? = null
+    private val screenCaptureResolutionCalculator: ScreenCaptureResolutionCalculator = ScreenCaptureResolutionCalculator(this.targetMinVal, this.targetMaxVal)
 
     // Concurrency modification could happen when sink gets
     // added/removed from another thread while sending frames
@@ -108,7 +108,6 @@ class DefaultScreenCaptureSource(
 
     init {
         val thread = HandlerThread(TAG)
-        screenCaptureResolutionCalculator = ScreenCaptureResolutionCalculator(this.targetMinVal, this.targetMaxVal)
         thread.start()
         handler = Handler(thread.looper)
     }

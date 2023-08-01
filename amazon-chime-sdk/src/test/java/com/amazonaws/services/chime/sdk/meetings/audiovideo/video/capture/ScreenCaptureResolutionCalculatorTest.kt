@@ -17,14 +17,10 @@ class ScreenCaptureResolutionCalculatorTest {
 
     private val targetMinVal: Int = 1080
     private val targetMaxVal: Int = 1920
-    private var screenCaptureResolutionCalculator: ScreenCaptureResolutionCalculator? = null
+    private val screenCaptureResolutionCalculator: ScreenCaptureResolutionCalculator = ScreenCaptureResolutionCalculator(this.targetMinVal, this.targetMaxVal)
 
     @Before
     fun setUp() {
-        if (screenCaptureResolutionCalculator == null) {
-            screenCaptureResolutionCalculator =
-                ScreenCaptureResolutionCalculator(targetMinVal, targetMaxVal)
-        }
     }
 
     @After
