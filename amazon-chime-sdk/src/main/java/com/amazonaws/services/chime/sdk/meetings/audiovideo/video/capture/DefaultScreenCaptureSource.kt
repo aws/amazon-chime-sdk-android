@@ -176,7 +176,7 @@ class DefaultScreenCaptureSource(
         isOrientationInPortrait = rotation == Surface.ROTATION_0 || rotation == Surface.ROTATION_180
 
         // compute targetWidth and targetHeight with alignment
-        val targetSize: Int = screenCaptureResolutionCalculator!!.computeTargetSize(displayMetrics.widthPixels, displayMetrics.heightPixels)
+        val targetSize: Int = screenCaptureResolutionCalculator.computeTargetSize(displayMetrics.widthPixels, displayMetrics.heightPixels)
         var alignedWidth: Int = targetSize and 0xffff
         var alignedHeight: Int = ((targetSize shr 16) and 0xffff)
 

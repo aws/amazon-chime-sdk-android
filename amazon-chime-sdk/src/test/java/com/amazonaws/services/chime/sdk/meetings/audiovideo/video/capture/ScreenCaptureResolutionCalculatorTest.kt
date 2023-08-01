@@ -28,11 +28,11 @@ class ScreenCaptureResolutionCalculatorTest {
     }
 
     @Test
-    fun `calculate resolution below target`() {
+    fun `Original resolution should be returned when it is below resolution constraint`() {
         // compute targetWidth and targetHeight with alignment
         val width: Int = 1280
         val height: Int = 720
-        val targetSize: Int = screenCaptureResolutionCalculator!!.computeTargetSize(width, height)
+        val targetSize: Int = screenCaptureResolutionCalculator.computeTargetSize(width, height)
         val alignedWidth: Int = targetSize and 0xffff
         val alignedHeight: Int = targetSize shr 16
 
@@ -40,11 +40,11 @@ class ScreenCaptureResolutionCalculatorTest {
     }
 
     @Test
-    fun `calculate resolution above target (both dimensions)`() {
+    fun `Resolution should be scaled when both dimensions are above resolution constraint`() {
         // compute targetWidth and targetHeight with alignment
         val width: Int = 3840
         val height: Int = 2160
-        val targetSize: Int = screenCaptureResolutionCalculator!!.computeTargetSize(width, height)
+        val targetSize: Int = screenCaptureResolutionCalculator.computeTargetSize(width, height)
         val alignedWidth: Int = targetSize and 0xffff
         val alignedHeight: Int = targetSize shr 16
         val maxVal: Int = max(alignedWidth, alignedHeight)
@@ -53,11 +53,11 @@ class ScreenCaptureResolutionCalculatorTest {
     }
 
     @Test
-    fun `calculate resolution above target (maxVal over limit)`() {
+    fun `Resolution should be scaled when maxVal is above resolution constraint`() {
         // compute targetWidth and targetHeight with alignment
         val width: Int = 3840
         val height: Int = 720
-        val targetSize: Int = screenCaptureResolutionCalculator!!.computeTargetSize(width, height)
+        val targetSize: Int = screenCaptureResolutionCalculator.computeTargetSize(width, height)
         val alignedWidth: Int = targetSize and 0xffff
         val alignedHeight: Int = targetSize shr 16
         val maxVal: Int = max(alignedWidth, alignedHeight)
@@ -66,11 +66,11 @@ class ScreenCaptureResolutionCalculatorTest {
     }
 
     @Test
-    fun `calculate resolution above target (minVal over limit)`() {
+    fun `Resolution should be scaled when minVal is above resolution constraint`() {
         // compute targetWidth and targetHeight with alignment
         val width: Int = 1920
         val height: Int = 1280
-        val targetSize: Int = screenCaptureResolutionCalculator!!.computeTargetSize(width, height)
+        val targetSize: Int = screenCaptureResolutionCalculator.computeTargetSize(width, height)
         val alignedWidth: Int = targetSize and 0xffff
         val alignedHeight: Int = targetSize shr 16
         val maxVal: Int = max(alignedWidth, alignedHeight)
