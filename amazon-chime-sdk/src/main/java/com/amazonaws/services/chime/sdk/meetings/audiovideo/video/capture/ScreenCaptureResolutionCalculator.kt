@@ -11,6 +11,10 @@ class ScreenCaptureResolutionCalculator(
     private val targetMinVal: Int,
     private val targetMaxVal: Int
 ) {
+    fun alignToEven(anyNumber: Int): Int {
+        return anyNumber and 1.inv()
+    }
+
     // compute target resolution with constraint (targetMinVal, targetMaxVal)
     // high-level description:
     // 1. target resolution constraint is defined by (targetMinVal, targetMaxVal)
@@ -55,11 +59,9 @@ class ScreenCaptureResolutionCalculator(
         }
 
         // align width and height to 2-byte
-        val alignedWidth: Int = scaledWidth and 1.inv()
-        val alignedHeight: Int = scaledHeight and 1.inv()
         val resolutions = IntArray(2)
-        resolutions[0] = alignedWidth
-        resolutions[1] = alignedHeight
+        resolutions[0] = scaledWidth
+        resolutions[1] = scaledHeight
         return resolutions
     }
 }

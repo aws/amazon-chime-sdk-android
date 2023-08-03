@@ -175,8 +175,8 @@ class DefaultScreenCaptureSource(
 
         // compute targetWidth and targetHeight with alignment
         val targetSize:IntArray = screenCaptureResolutionCalculator.computeTargetSize(displayMetrics.widthPixels, displayMetrics.heightPixels)
-        val alignedWidth: Int = targetSize[0]
-        val alignedHeight: Int = targetSize[1]
+        val alignedWidth: Int = screenCaptureResolutionCalculator.alignToEven(targetSize[0])
+        val alignedHeight: Int = screenCaptureResolutionCalculator.alignToEven(targetSize[1])
 
         // Sometimes, Android changes displayMetrics widthPixels and heightPixels
         // and return inconsistent height and width for surfaceTextureSource VS virtualDisplay
@@ -216,7 +216,7 @@ class DefaultScreenCaptureSource(
             handler
         )
 
-        logger.info(TAG, "Media projection adapter activity succeeded, virtual display created")
+        logger.info(TAG, "Media projection adapter activity succeeded, virtual display created, original resolution ${displayMetrics.widthPixels} x ${displayMetrics.heightPixels}, final resolution ${alignedWidth} x ${alignedHeight}, portraint: ${isOrientationInPortrait}")
         return true
     }
 
