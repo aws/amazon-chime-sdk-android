@@ -174,9 +174,9 @@ class DefaultScreenCaptureSource(
         isOrientationInPortrait = rotation == Surface.ROTATION_0 || rotation == Surface.ROTATION_180
 
         // compute targetWidth and targetHeight with alignment
-        val targetSize: Int = screenCaptureResolutionCalculator.computeTargetSize(displayMetrics.widthPixels, displayMetrics.heightPixels)
-        val alignedWidth: Int = targetSize and 0xffff
-        val alignedHeight: Int = ((targetSize shr 16) and 0xffff)
+        val targetSize:IntArray = screenCaptureResolutionCalculator.computeTargetSize(displayMetrics.widthPixels, displayMetrics.heightPixels)
+        val alignedWidth: Int = targetSize[0]
+        val alignedHeight: Int = targetSize[1]
 
         // Sometimes, Android changes displayMetrics widthPixels and heightPixels
         // and return inconsistent height and width for surfaceTextureSource VS virtualDisplay

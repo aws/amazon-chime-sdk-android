@@ -23,7 +23,7 @@ class ScreenCaptureResolutionCalculator(
     // 4.3. scale the original image using the larger scale (resolutionMinScale or resolutionMaxScale)
     // 4.4. scaled image should maintain the same sample aspect ratio and both resolutions should be within target resolution constraint
     // 5. After calculation of scaledWidth and scaledHeight, 2-byte alignment is done (to handle 420 color space conversion)
-    fun computeTargetSize(displayWidth: Int, displayHeight: Int): Int {
+    fun computeTargetSize(displayWidth: Int, displayHeight: Int): IntArray {
         val displayResolutionMin = min(displayWidth, displayHeight)
         val displayResolutionMax = max(displayWidth, displayHeight)
         val scaledWidth: Int
@@ -35,18 +35,18 @@ class ScreenCaptureResolutionCalculator(
             if (resolutionMinScale > resolutionMaxScale) {
                 if (displayResolutionMin == displayWidth) {
                     scaledWidth = targetMinVal
-                    scaledHeight = (displayHeight.toDouble() / resolutionMinScale.toDouble()).toInt()
+                    scaledHeight = (displayHeight.toDouble() / resolutionMinScale).toInt()
                 } else {
                     scaledHeight = targetMinVal
-                    scaledWidth = (displayWidth.toDouble() / resolutionMinScale.toDouble()).toInt()
+                    scaledWidth = (displayWidth.toDouble() / resolutionMinScale).toInt()
                 }
             } else {
                 if (displayResolutionMax == displayWidth) {
                     scaledWidth = targetMaxVal
-                    scaledHeight = (displayHeight.toDouble() / resolutionMaxScale.toDouble()).toInt()
+                    scaledHeight = (displayHeight.toDouble() / resolutionMaxScale).toInt()
                 } else {
                     scaledHeight = targetMaxVal
-                    scaledWidth = (displayWidth.toDouble() / resolutionMaxScale.toDouble()).toInt()
+                    scaledWidth = (displayWidth.toDouble() / resolutionMaxScale).toInt()
                 }
             }
         } else {
@@ -54,11 +54,12 @@ class ScreenCaptureResolutionCalculator(
             scaledHeight = displayHeight
         }
 
-        val mask: Int = 1
         // align width and height to 2-byte
-        val alignedWidth: Int = scaledWidth and mask.inv()
-        val alignedHeight: Int = scaledHeight and mask.inv()
-        val resolution: Int = ((alignedHeight shl 16) or (alignedWidth and 0xffff))
-        return resolution
+        val alignedWidth: Int = scaledWidth and 1.inv()
+        val alignedHeight: Int = scaledHeight and 1.inv()
+        val resolutions = IntArray(2)
+        resolutions[0] = alignedWidth
+        resolutions[1] = alignedHeight
+        return resolutions
     }
 }

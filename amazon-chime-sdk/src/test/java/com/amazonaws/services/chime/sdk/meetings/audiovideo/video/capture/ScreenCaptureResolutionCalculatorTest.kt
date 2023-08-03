@@ -13,6 +13,7 @@ import org.junit.Test
 
 class ScreenCaptureResolutionCalculatorTest {
 
+    private val aspectRatioDiffThreshold: Int = 12
     private val targetMinVal: Int = 1080
     private val targetMaxVal: Int = 1920
     private val screenCaptureResolutionCalculator: ScreenCaptureResolutionCalculator = ScreenCaptureResolutionCalculator(this.targetMinVal, this.targetMaxVal)
@@ -22,9 +23,9 @@ class ScreenCaptureResolutionCalculatorTest {
         // compute targetWidth and targetHeight with alignment
         val width: Int = 1280
         val height: Int = 720
-        val targetSize: Int = screenCaptureResolutionCalculator.computeTargetSize(width, height)
-        val alignedWidth: Int = targetSize and 0xffff
-        val alignedHeight: Int = targetSize shr 16
+        val targetSize = screenCaptureResolutionCalculator.computeTargetSize(width, height)
+        val alignedWidth: Int = targetSize[0]
+        val alignedHeight: Int = targetSize[1]
         val originalAlignedWidth: Int = width and 1.inv()
         val originalAlignedHeight: Int = height and 1.inv()
         assertTrue(alignedWidth == originalAlignedWidth && alignedHeight == originalAlignedHeight)
@@ -35,9 +36,9 @@ class ScreenCaptureResolutionCalculatorTest {
         // compute targetWidth and targetHeight with alignment
         val width: Int = 1920
         val height: Int = 719
-        val targetSize: Int = screenCaptureResolutionCalculator.computeTargetSize(width, height)
-        val alignedWidth: Int = targetSize and 0xffff
-        val alignedHeight: Int = targetSize shr 16
+        val targetSize = screenCaptureResolutionCalculator.computeTargetSize(width, height)
+        val alignedWidth: Int = targetSize[0]
+        val alignedHeight: Int = targetSize[1]
         val originalAlignedWidth: Int = width and 1.inv()
         val originalAlignedHeight: Int = height and 1.inv()
         assertTrue(alignedWidth == originalAlignedWidth && alignedHeight == originalAlignedHeight)
@@ -48,9 +49,9 @@ class ScreenCaptureResolutionCalculatorTest {
         // compute targetWidth and targetHeight with alignment
         val width: Int = 1280
         val height: Int = 1080
-        val targetSize: Int = screenCaptureResolutionCalculator.computeTargetSize(width, height)
-        val alignedWidth: Int = targetSize and 0xffff
-        val alignedHeight: Int = targetSize shr 16
+        val targetSize = screenCaptureResolutionCalculator.computeTargetSize(width, height)
+        val alignedWidth: Int = targetSize[0]
+        val alignedHeight: Int = targetSize[1]
         val originalAlignedWidth: Int = width and 1.inv()
         val originalAlignedHeight: Int = height and 1.inv()
         assertTrue(alignedWidth == originalAlignedWidth && alignedHeight == originalAlignedHeight)
@@ -61,9 +62,9 @@ class ScreenCaptureResolutionCalculatorTest {
         // compute targetWidth and targetHeight with alignment
         val width: Int = 1920
         val height: Int = 1080
-        val targetSize: Int = screenCaptureResolutionCalculator.computeTargetSize(width, height)
-        val alignedWidth: Int = targetSize and 0xffff
-        val alignedHeight: Int = targetSize shr 16
+        val targetSize = screenCaptureResolutionCalculator.computeTargetSize(width, height)
+        val alignedWidth: Int = targetSize[0]
+        val alignedHeight: Int = targetSize[1]
         val originalAlignedWidth: Int = width and 1.inv()
         val originalAlignedHeight: Int = height and 1.inv()
         assertTrue(alignedWidth == originalAlignedWidth && alignedHeight == originalAlignedHeight)
@@ -74,15 +75,15 @@ class ScreenCaptureResolutionCalculatorTest {
         // compute targetWidth and targetHeight with alignment
         val width: Int = 3840
         val height: Int = 1423
-        val targetSize: Int = screenCaptureResolutionCalculator.computeTargetSize(width, height)
-        val alignedWidth: Int = targetSize and 0xffff
-        val alignedHeight: Int = targetSize shr 16
+        val targetSize = screenCaptureResolutionCalculator.computeTargetSize(width, height)
+        val alignedWidth: Int = targetSize[0]
+        val alignedHeight: Int = targetSize[1]
         val maxVal: Int = max(alignedWidth, alignedHeight)
         val minVal: Int = min(alignedWidth, alignedHeight)
         val originalAspectRatio: Int = (1000 * width.toDouble() / height.toDouble()).toInt()
         val scaledAspectRatio: Int = (1000 * alignedWidth.toDouble() / alignedHeight.toDouble()).toInt()
         val aspectRatioDiff: Int = abs(scaledAspectRatio - originalAspectRatio)
-        assert(minVal <= targetMinVal && maxVal <= targetMaxVal && aspectRatioDiff < 20)
+        assert(minVal <= targetMinVal && maxVal <= targetMaxVal && aspectRatioDiff < aspectRatioDiffThreshold)
     }
 
     @Test
@@ -90,15 +91,15 @@ class ScreenCaptureResolutionCalculatorTest {
         // compute targetWidth and targetHeight with alignment
         val width: Int = 3840
         val height: Int = 720
-        val targetSize: Int = screenCaptureResolutionCalculator.computeTargetSize(width, height)
-        val alignedWidth: Int = targetSize and 0xffff
-        val alignedHeight: Int = targetSize shr 16
+        val targetSize = screenCaptureResolutionCalculator.computeTargetSize(width, height)
+        val alignedWidth: Int = targetSize[0]
+        val alignedHeight: Int = targetSize[1]
         val maxVal: Int = max(alignedWidth, alignedHeight)
         val minVal: Int = min(alignedWidth, alignedHeight)
         val originalAspectRatio: Int = (1000 * width.toDouble() / height.toDouble()).toInt()
         val scaledAspectRatio: Int = (1000 * alignedWidth.toDouble() / alignedHeight.toDouble()).toInt()
         val aspectRatioDiff: Int = abs(scaledAspectRatio - originalAspectRatio)
-        assert(minVal <= targetMinVal && maxVal <= targetMaxVal && aspectRatioDiff < 20)
+        assert(minVal <= targetMinVal && maxVal <= targetMaxVal && aspectRatioDiff < aspectRatioDiffThreshold)
     }
 
     @Test
@@ -106,15 +107,15 @@ class ScreenCaptureResolutionCalculatorTest {
         // compute targetWidth and targetHeight with alignment
         val width: Int = 3840
         val height: Int = 1080
-        val targetSize: Int = screenCaptureResolutionCalculator.computeTargetSize(width, height)
-        val alignedWidth: Int = targetSize and 0xffff
-        val alignedHeight: Int = targetSize shr 16
+        val targetSize = screenCaptureResolutionCalculator.computeTargetSize(width, height)
+        val alignedWidth: Int = targetSize[0]
+        val alignedHeight: Int = targetSize[1]
         val maxVal: Int = max(alignedWidth, alignedHeight)
         val minVal: Int = min(alignedWidth, alignedHeight)
         val originalAspectRatio: Int = (1000 * width.toDouble() / height.toDouble()).toInt()
         val scaledAspectRatio: Int = (1000 * alignedWidth.toDouble() / alignedHeight.toDouble()).toInt()
         val aspectRatioDiff: Int = abs(scaledAspectRatio - originalAspectRatio)
-        assert(minVal <= targetMinVal && maxVal <= targetMaxVal && aspectRatioDiff < 20)
+        assert(minVal <= targetMinVal && maxVal <= targetMaxVal && aspectRatioDiff < aspectRatioDiffThreshold)
     }
 
     @Test
@@ -122,15 +123,15 @@ class ScreenCaptureResolutionCalculatorTest {
         // compute targetWidth and targetHeight with alignment
         val width: Int = 1920
         val height: Int = 1280
-        val targetSize: Int = screenCaptureResolutionCalculator.computeTargetSize(width, height)
-        val alignedWidth: Int = targetSize and 0xffff
-        val alignedHeight: Int = targetSize shr 16
+        val targetSize = screenCaptureResolutionCalculator.computeTargetSize(width, height)
+        val alignedWidth: Int = targetSize[0]
+        val alignedHeight: Int = targetSize[1]
         val maxVal: Int = max(alignedWidth, alignedHeight)
         val minVal: Int = min(alignedWidth, alignedHeight)
         val originalAspectRatio: Int = (1000 * width.toDouble() / height.toDouble()).toInt()
         val scaledAspectRatio: Int = (1000 * alignedWidth.toDouble() / alignedHeight.toDouble()).toInt()
         val aspectRatioDiff: Int = abs(scaledAspectRatio - originalAspectRatio)
-        assert(minVal <= targetMinVal && maxVal <= targetMaxVal && aspectRatioDiff < 20)
+        assert(minVal <= targetMinVal && maxVal <= targetMaxVal && aspectRatioDiff < aspectRatioDiffThreshold)
     }
 
     @Test
@@ -138,15 +139,15 @@ class ScreenCaptureResolutionCalculatorTest {
         // compute targetWidth and targetHeight with alignment
         val width: Int = 1600
         val height: Int = 1280
-        val targetSize: Int = screenCaptureResolutionCalculator.computeTargetSize(width, height)
-        val alignedWidth: Int = targetSize and 0xffff
-        val alignedHeight: Int = targetSize shr 16
+        val targetSize = screenCaptureResolutionCalculator.computeTargetSize(width, height)
+        val alignedWidth: Int = targetSize[0]
+        val alignedHeight: Int = targetSize[1]
         val maxVal: Int = max(alignedWidth, alignedHeight)
         val minVal: Int = min(alignedWidth, alignedHeight)
         val originalAspectRatio: Int = (1000 * width.toDouble() / height.toDouble()).toInt()
         val scaledAspectRatio: Int = (1000 * alignedWidth.toDouble() / alignedHeight.toDouble()).toInt()
         val aspectRatioDiff: Int = abs(scaledAspectRatio - originalAspectRatio)
-        assert(minVal <= targetMinVal && maxVal <= targetMaxVal && aspectRatioDiff < 20)
+        assert(minVal <= targetMinVal && maxVal <= targetMaxVal && aspectRatioDiff < aspectRatioDiffThreshold)
     }
 
 
@@ -156,9 +157,9 @@ class ScreenCaptureResolutionCalculatorTest {
         // compute targetWidth and targetHeight with alignment
         val width: Int = 720
         val height: Int = 1280
-        val targetSize: Int = screenCaptureResolutionCalculator.computeTargetSize(width, height)
-        val alignedWidth: Int = targetSize and 0xffff
-        val alignedHeight: Int = targetSize shr 16
+        val targetSize = screenCaptureResolutionCalculator.computeTargetSize(width, height)
+        val alignedWidth: Int = targetSize[0]
+        val alignedHeight: Int = targetSize[1]
         val originalAlignedWidth: Int = width and 1.inv()
         val originalAlignedHeight: Int = height and 1.inv()
         assertTrue(alignedWidth == originalAlignedWidth && alignedHeight == originalAlignedHeight)
@@ -169,9 +170,9 @@ class ScreenCaptureResolutionCalculatorTest {
         // compute targetWidth and targetHeight with alignment
         val width: Int = 719
         val height: Int = 1920
-        val targetSize: Int = screenCaptureResolutionCalculator.computeTargetSize(width, height)
-        val alignedWidth: Int = targetSize and 0xffff
-        val alignedHeight: Int = targetSize shr 16
+        val targetSize = screenCaptureResolutionCalculator.computeTargetSize(width, height)
+        val alignedWidth: Int = targetSize[0]
+        val alignedHeight: Int = targetSize[1]
         val originalAlignedWidth: Int = width and 1.inv()
         val originalAlignedHeight: Int = height and 1.inv()
         assertTrue(alignedWidth == originalAlignedWidth && alignedHeight == originalAlignedHeight)
@@ -182,9 +183,9 @@ class ScreenCaptureResolutionCalculatorTest {
         // compute targetWidth and targetHeight with alignment
         val width: Int = 1080
         val height: Int = 1280
-        val targetSize: Int = screenCaptureResolutionCalculator.computeTargetSize(width, height)
-        val alignedWidth: Int = targetSize and 0xffff
-        val alignedHeight: Int = targetSize shr 16
+        val targetSize = screenCaptureResolutionCalculator.computeTargetSize(width, height)
+        val alignedWidth: Int = targetSize[0]
+        val alignedHeight: Int = targetSize[1]
         val originalAlignedWidth: Int = width and 1.inv()
         val originalAlignedHeight: Int = height and 1.inv()
         assertTrue(alignedWidth == originalAlignedWidth && alignedHeight == originalAlignedHeight)
@@ -195,9 +196,9 @@ class ScreenCaptureResolutionCalculatorTest {
         // compute targetWidth and targetHeight with alignment
         val width: Int = 1080
         val height: Int = 1920
-        val targetSize: Int = screenCaptureResolutionCalculator.computeTargetSize(width, height)
-        val alignedWidth: Int = targetSize and 0xffff
-        val alignedHeight: Int = targetSize shr 16
+        val targetSize = screenCaptureResolutionCalculator.computeTargetSize(width, height)
+        val alignedWidth: Int = targetSize[0]
+        val alignedHeight: Int = targetSize[1]
         val originalAlignedWidth: Int = width and 1.inv()
         val originalAlignedHeight: Int = height and 1.inv()
         assertTrue(alignedWidth == originalAlignedWidth && alignedHeight == originalAlignedHeight)
@@ -208,15 +209,15 @@ class ScreenCaptureResolutionCalculatorTest {
         // compute targetWidth and targetHeight with alignment
         val width: Int = 1423
         val height: Int = 3840
-        val targetSize: Int = screenCaptureResolutionCalculator.computeTargetSize(width, height)
-        val alignedWidth: Int = targetSize and 0xffff
-        val alignedHeight: Int = targetSize shr 16
+        val targetSize = screenCaptureResolutionCalculator.computeTargetSize(width, height)
+        val alignedWidth: Int = targetSize[0]
+        val alignedHeight: Int = targetSize[1]
         val maxVal: Int = max(alignedWidth, alignedHeight)
         val minVal: Int = min(alignedWidth, alignedHeight)
         val originalAspectRatio: Int = (1000 * width.toDouble() / height.toDouble()).toInt()
         val scaledAspectRatio: Int = (1000 * alignedWidth.toDouble() / alignedHeight.toDouble()).toInt()
         val aspectRatioDiff: Int = abs(scaledAspectRatio - originalAspectRatio)
-        assert(minVal <= targetMinVal && maxVal <= targetMaxVal && aspectRatioDiff < 20)
+        assert(minVal <= targetMinVal && maxVal <= targetMaxVal && aspectRatioDiff < aspectRatioDiffThreshold)
     }
 
     @Test
@@ -224,15 +225,15 @@ class ScreenCaptureResolutionCalculatorTest {
         // compute targetWidth and targetHeight with alignment
         val width: Int = 720
         val height: Int = 3840
-        val targetSize: Int = screenCaptureResolutionCalculator.computeTargetSize(width, height)
-        val alignedWidth: Int = targetSize and 0xffff
-        val alignedHeight: Int = targetSize shr 16
+        val targetSize = screenCaptureResolutionCalculator.computeTargetSize(width, height)
+        val alignedWidth: Int = targetSize[0]
+        val alignedHeight: Int = targetSize[1]
         val maxVal: Int = max(alignedWidth, alignedHeight)
         val minVal: Int = min(alignedWidth, alignedHeight)
         val originalAspectRatio: Int = (1000 * width.toDouble() / height.toDouble()).toInt()
         val scaledAspectRatio: Int = (1000 * alignedWidth.toDouble() / alignedHeight.toDouble()).toInt()
         val aspectRatioDiff: Int = abs(scaledAspectRatio - originalAspectRatio)
-        assert(minVal <= targetMinVal && maxVal <= targetMaxVal && aspectRatioDiff < 20)
+        assert(minVal <= targetMinVal && maxVal <= targetMaxVal && aspectRatioDiff < aspectRatioDiffThreshold)
     }
 
     @Test
@@ -240,15 +241,15 @@ class ScreenCaptureResolutionCalculatorTest {
         // compute targetWidth and targetHeight with alignment
         val width: Int = 1080
         val height: Int = 3840
-        val targetSize: Int = screenCaptureResolutionCalculator.computeTargetSize(width, height)
-        val alignedWidth: Int = targetSize and 0xffff
-        val alignedHeight: Int = targetSize shr 16
+        val targetSize = screenCaptureResolutionCalculator.computeTargetSize(width, height)
+        val alignedWidth: Int = targetSize[0]
+        val alignedHeight: Int = targetSize[1]
         val maxVal: Int = max(alignedWidth, alignedHeight)
         val minVal: Int = min(alignedWidth, alignedHeight)
         val originalAspectRatio: Int = (1000 * width.toDouble() / height.toDouble()).toInt()
         val scaledAspectRatio: Int = (1000 * alignedWidth.toDouble() / alignedHeight.toDouble()).toInt()
         val aspectRatioDiff: Int = abs(scaledAspectRatio - originalAspectRatio)
-        assert(minVal <= targetMinVal && maxVal <= targetMaxVal && aspectRatioDiff < 20)
+        assert(minVal <= targetMinVal && maxVal <= targetMaxVal && aspectRatioDiff < aspectRatioDiffThreshold)
     }
 
     @Test
@@ -256,15 +257,15 @@ class ScreenCaptureResolutionCalculatorTest {
         // compute targetWidth and targetHeight with alignment
         val width: Int = 1280
         val height: Int = 1920
-        val targetSize: Int = screenCaptureResolutionCalculator.computeTargetSize(width, height)
-        val alignedWidth: Int = targetSize and 0xffff
-        val alignedHeight: Int = targetSize shr 16
+        val targetSize = screenCaptureResolutionCalculator.computeTargetSize(width, height)
+        val alignedWidth: Int = targetSize[0]
+        val alignedHeight: Int = targetSize[1]
         val maxVal: Int = max(alignedWidth, alignedHeight)
         val minVal: Int = min(alignedWidth, alignedHeight)
         val originalAspectRatio: Int = (1000 * width.toDouble() / height.toDouble()).toInt()
         val scaledAspectRatio: Int = (1000 * alignedWidth.toDouble() / alignedHeight.toDouble()).toInt()
         val aspectRatioDiff: Int = abs(scaledAspectRatio - originalAspectRatio)
-        assert(minVal <= targetMinVal && maxVal <= targetMaxVal && aspectRatioDiff < 20)
+        assert(minVal <= targetMinVal && maxVal <= targetMaxVal && aspectRatioDiff < aspectRatioDiffThreshold)
     }
 
     @Test
@@ -272,14 +273,14 @@ class ScreenCaptureResolutionCalculatorTest {
         // compute targetWidth and targetHeight with alignment
         val width: Int = 1280
         val height: Int = 1600
-        val targetSize: Int = screenCaptureResolutionCalculator.computeTargetSize(width, height)
-        val alignedWidth: Int = targetSize and 0xffff
-        val alignedHeight: Int = targetSize shr 16
+        val targetSize = screenCaptureResolutionCalculator.computeTargetSize(width, height)
+        val alignedWidth: Int = targetSize[0]
+        val alignedHeight: Int = targetSize[1]
         val maxVal: Int = max(alignedWidth, alignedHeight)
         val minVal: Int = min(alignedWidth, alignedHeight)
         val originalAspectRatio: Int = (1000 * width.toDouble() / height.toDouble()).toInt()
         val scaledAspectRatio: Int = (1000 * alignedWidth.toDouble() / alignedHeight.toDouble()).toInt()
         val aspectRatioDiff: Int = abs(scaledAspectRatio - originalAspectRatio)
-        assert(minVal <= targetMinVal && maxVal <= targetMaxVal && aspectRatioDiff < 20)
+        assert(minVal <= targetMinVal && maxVal <= targetMaxVal && aspectRatioDiff < aspectRatioDiffThreshold)
     }
 }
