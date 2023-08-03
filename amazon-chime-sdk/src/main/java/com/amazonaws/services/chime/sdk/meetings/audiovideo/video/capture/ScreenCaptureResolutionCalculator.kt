@@ -11,6 +11,7 @@ class ScreenCaptureResolutionCalculator(
     private val targetMinVal: Int,
     private val targetMaxVal: Int
 ) {
+    // align a positive integer to even number
     fun alignToEven(anyNumber: Int): Int {
         return anyNumber and 1.inv()
     }
