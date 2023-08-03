@@ -19,7 +19,6 @@ import com.amazonaws.services.chime.sdk.meetings.utils.logger.Logger
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.android.asCoroutineDispatcher
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
 
 /**
  * [DefaultEglRenderer] uses EGL14 to support all functions in [EglRenderer]. It uses a single frame queue to render
@@ -84,7 +83,7 @@ class DefaultEglRenderer(private val logger: Logger) : EglRenderer {
             logger.warn(TAG, "Already released")
             return
         }
-        runBlocking(validRenderHandler.asCoroutineDispatcher().immediate) {
+        CoroutineScope(validRenderHandler.asCoroutineDispatcher().immediate).launch {
             eglCore?.release()
             eglCore = null
         }
@@ -133,7 +132,7 @@ class DefaultEglRenderer(private val logger: Logger) : EglRenderer {
     override fun releaseEglSurface() {
         surface = null // Can occur outside of init/release cycle
         val validRenderHandler = this.renderHandler ?: return
-        runBlocking(validRenderHandler.asCoroutineDispatcher().immediate) {
+        CoroutineScope(validRenderHandler.asCoroutineDispatcher().immediate).launch {
             logger.info(TAG, "Releasing EGL surface")
             // Release frame drawer while we have a valid current context
             frameDrawer.release()
