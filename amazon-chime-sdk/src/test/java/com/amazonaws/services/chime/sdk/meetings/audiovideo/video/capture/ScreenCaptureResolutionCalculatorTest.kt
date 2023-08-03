@@ -40,7 +40,7 @@ class ScreenCaptureResolutionCalculatorTest {
         val targetSize = screenCaptureResolutionCalculator.computeTargetSize(width, height)
         val scaledWidth: Int = targetSize[0]
         val scaledHeight: Int = targetSize[1]
-        assertTrue(scaledWidth == scaledWidth && scaledHeight == scaledHeight)
+        assertTrue(width == scaledWidth && height == scaledHeight)
     }
 
     @Test
@@ -51,7 +51,7 @@ class ScreenCaptureResolutionCalculatorTest {
         val targetSize = screenCaptureResolutionCalculator.computeTargetSize(width, height)
         val scaledWidth: Int = targetSize[0]
         val scaledHeight: Int = targetSize[1]
-        assertTrue(scaledWidth == scaledWidth && scaledHeight == scaledHeight)
+        assertTrue(width == scaledWidth && height == scaledHeight)
     }
 
     @Test
@@ -62,7 +62,7 @@ class ScreenCaptureResolutionCalculatorTest {
         val targetSize = screenCaptureResolutionCalculator.computeTargetSize(width, height)
         val scaledWidth: Int = targetSize[0]
         val scaledHeight: Int = targetSize[1]
-        assertTrue(scaledWidth == scaledWidth && scaledHeight == scaledHeight)
+        assertTrue(width == scaledWidth && height == scaledHeight)
     }
 
     @Test
@@ -73,7 +73,7 @@ class ScreenCaptureResolutionCalculatorTest {
         val targetSize = screenCaptureResolutionCalculator.computeTargetSize(width, height)
         val scaledWidth: Int = targetSize[0]
         val scaledHeight: Int = targetSize[1]
-        assertTrue(scaledWidth == scaledWidth && scaledHeight == scaledHeight)
+        assertTrue(width == scaledWidth && height == scaledHeight)
     }
 
     @Test
@@ -196,7 +196,7 @@ class ScreenCaptureResolutionCalculatorTest {
         val targetSize = screenCaptureResolutionCalculator.computeTargetSize(width, height)
         val scaledWidth: Int = targetSize[0]
         val scaledHeight: Int = targetSize[1]
-        assertTrue(scaledWidth == scaledWidth && scaledHeight == scaledHeight)
+        assertTrue(width == scaledWidth && height == scaledHeight)
     }
 
     @Test
@@ -207,7 +207,7 @@ class ScreenCaptureResolutionCalculatorTest {
         val targetSize = screenCaptureResolutionCalculator.computeTargetSize(width, height)
         val scaledWidth: Int = targetSize[0]
         val scaledHeight: Int = targetSize[1]
-        assertTrue(scaledWidth == scaledWidth && scaledHeight == scaledHeight)
+        assertTrue(width == scaledWidth && height == scaledHeight)
     }
 
     @Test
@@ -218,7 +218,7 @@ class ScreenCaptureResolutionCalculatorTest {
         val targetSize = screenCaptureResolutionCalculator.computeTargetSize(width, height)
         val scaledWidth: Int = targetSize[0]
         val scaledHeight: Int = targetSize[1]
-        assertTrue(scaledWidth == scaledWidth && scaledHeight == scaledHeight)
+        assertTrue(width == scaledWidth && height == scaledHeight)
     }
 
     @Test
@@ -229,7 +229,7 @@ class ScreenCaptureResolutionCalculatorTest {
         val targetSize = screenCaptureResolutionCalculator.computeTargetSize(width, height)
         val scaledWidth: Int = targetSize[0]
         val scaledHeight: Int = targetSize[1]
-        assertTrue(scaledWidth == scaledWidth && scaledHeight == scaledHeight)
+        assertTrue(width == scaledWidth && height == scaledHeight)
     }
 
     @Test
