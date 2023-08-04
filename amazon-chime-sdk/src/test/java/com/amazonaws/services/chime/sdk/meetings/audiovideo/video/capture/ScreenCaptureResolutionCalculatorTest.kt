@@ -32,283 +32,122 @@ class ScreenCaptureResolutionCalculatorTest {
         assertTrue(origNumber == alignedNumber+1)
     }
 
-    @Test
-    fun `ScreenCaptureResolutionCalculator (landscape) should return original resolution when max(width, height) is below targetMaxVal and min(width, height) is below targetMinVal`() {
-        // compute targetWidth and targetHeight with alignment
-        val width: Int = 1280
-        val height: Int = 720
+    fun nonScaleTest(width: Int, height: Int) {
         val targetSize = screenCaptureResolutionCalculator.computeTargetSize(width, height)
         val scaledWidth: Int = targetSize[0]
         val scaledHeight: Int = targetSize[1]
         assertTrue(width == scaledWidth && height == scaledHeight)
+    }
+
+    fun scaleTest(width: Int, height: Int) {
+        val targetSize = screenCaptureResolutionCalculator.computeTargetSize(width, height)
+        val scaledWidth: Int = targetSize[0]
+        val scaledHeight: Int = targetSize[1]
+        val maxVal: Int = max(scaledWidth, scaledHeight)
+        val minVal: Int = min(scaledWidth, scaledHeight)
+        val originalAspectRatio: Int = (1000 * width.toDouble() / height.toDouble()).toInt()
+        val scaledAspectRatio: Int = (1000 * scaledWidth.toDouble() / scaledHeight.toDouble()).toInt()
+        val aspectRatioDiff: Int = abs(scaledAspectRatio - originalAspectRatio)
+        assert(minVal <= targetMinVal && maxVal <= targetMaxVal && aspectRatioDiff < aspectRatioDiffThreshold)
+    }
+
+    @Test
+    fun `ScreenCaptureResolutionCalculator (landscape) should return original resolution when max(width, height) is below targetMaxVal and min(width, height) is below targetMinVal`() {
+        nonScaleTest(1280, 720)
     }
 
     @Test
     fun `ScreenCaptureResolutionCalculator (landscape) should return original resolution when max(width, height) is equal targetMaxVal and min(width, height) is below targetMinVal`() {
-        // compute targetWidth and targetHeight with alignment
-        val width: Int = 1920
-        val height: Int = 719
-        val targetSize = screenCaptureResolutionCalculator.computeTargetSize(width, height)
-        val scaledWidth: Int = targetSize[0]
-        val scaledHeight: Int = targetSize[1]
-        assertTrue(width == scaledWidth && height == scaledHeight)
+        nonScaleTest(1920, 719)
     }
 
     @Test
     fun `ScreenCaptureResolutionCalculator (landscape) should return original resolution when max(width, height) is below targetMaxVal and min(width, height) is equal targetMinVal`() {
-        // compute targetWidth and targetHeight with alignment
-        val width: Int = 1280
-        val height: Int = 1080
-        val targetSize = screenCaptureResolutionCalculator.computeTargetSize(width, height)
-        val scaledWidth: Int = targetSize[0]
-        val scaledHeight: Int = targetSize[1]
-        assertTrue(width == scaledWidth && height == scaledHeight)
+        nonScaleTest(1280, 1080)
     }
 
     @Test
     fun `ScreenCaptureResolutionCalculator (landscape) should return original resolution when max(width, height) is equal targetMaxVal and min(width, height) is equal targetMinVal`() {
-        // compute targetWidth and targetHeight with alignment
-        val width: Int = 1920
-        val height: Int = 1080
-        val targetSize = screenCaptureResolutionCalculator.computeTargetSize(width, height)
-        val scaledWidth: Int = targetSize[0]
-        val scaledHeight: Int = targetSize[1]
-        assertTrue(width == scaledWidth && height == scaledHeight)
+        nonScaleTest(1920, 1080)
     }
 
     @Test
     fun `ScreenCaptureResolutionCalculator (weird number) should return scaled resolution when max(width, height) is above targetMaxVal and min(width, height) is above targetMinVal`() {
-        // compute targetWidth and targetHeight with alignment
-        val width: Int = 7139
-        val height: Int = 3217
-        val targetSize = screenCaptureResolutionCalculator.computeTargetSize(width, height)
-        val scaledWidth: Int = targetSize[0]
-        val scaledHeight: Int = targetSize[1]
-        val maxVal: Int = max(scaledWidth, scaledHeight)
-        val minVal: Int = min(scaledWidth, scaledHeight)
-        val originalAspectRatio: Int = (1000 * width.toDouble() / height.toDouble()).toInt()
-        val scaledAspectRatio: Int = (1000 * scaledWidth.toDouble() / scaledHeight.toDouble()).toInt()
-        val aspectRatioDiff: Int = abs(scaledAspectRatio - originalAspectRatio)
-        assert(minVal <= targetMinVal && maxVal <= targetMaxVal && aspectRatioDiff < aspectRatioDiffThreshold)
+        scaleTest(7139, 3217)
     }
 
     @Test
     fun `ScreenCaptureResolutionCalculator (extra large number) should return scaled resolution when max(width, height) is above targetMaxVal and min(width, height) is above targetMinVal`() {
-        // compute targetWidth and targetHeight with alignment
-        val width: Int =  93215327
-        val height: Int = 32171121
-        val targetSize = screenCaptureResolutionCalculator.computeTargetSize(width, height)
-        val scaledWidth: Int = targetSize[0]
-        val scaledHeight: Int = targetSize[1]
-        val maxVal: Int = max(scaledWidth, scaledHeight)
-        val minVal: Int = min(scaledWidth, scaledHeight)
-        val originalAspectRatio: Int = (1000 * width.toDouble() / height.toDouble()).toInt()
-        val scaledAspectRatio: Int = (1000 * scaledWidth.toDouble() / scaledHeight.toDouble()).toInt()
-        val aspectRatioDiff: Int = abs(scaledAspectRatio - originalAspectRatio)
-        assert(minVal <= targetMinVal && maxVal <= targetMaxVal && aspectRatioDiff < aspectRatioDiffThreshold)
+        scaleTest(93215327, 32171121)
     }
 
     @Test
     fun `ScreenCaptureResolutionCalculator (landscape) should return scaled resolution when max(width, height) is above targetMaxVal and min(width, height) is above targetMinVal`() {
-        // compute targetWidth and targetHeight with alignment
-        val width: Int = 3840
-        val height: Int = 1423
-        val targetSize = screenCaptureResolutionCalculator.computeTargetSize(width, height)
-        val scaledWidth: Int = targetSize[0]
-        val scaledHeight: Int = targetSize[1]
-        val maxVal: Int = max(scaledWidth, scaledHeight)
-        val minVal: Int = min(scaledWidth, scaledHeight)
-        val originalAspectRatio: Int = (1000 * width.toDouble() / height.toDouble()).toInt()
-        val scaledAspectRatio: Int = (1000 * scaledWidth.toDouble() / scaledHeight.toDouble()).toInt()
-        val aspectRatioDiff: Int = abs(scaledAspectRatio - originalAspectRatio)
-        assert(minVal <= targetMinVal && maxVal <= targetMaxVal && aspectRatioDiff < aspectRatioDiffThreshold)
+        scaleTest(3840, 1423)
     }
 
     @Test
     fun `ScreenCaptureResolutionCalculator (landscape) should return scaled resolution when max(width, height) is above targetMaxVal and min(width, height) is below targetMinVal`() {
-        // compute targetWidth and targetHeight with alignment
-        val width: Int = 3840
-        val height: Int = 720
-        val targetSize = screenCaptureResolutionCalculator.computeTargetSize(width, height)
-        val scaledWidth: Int = targetSize[0]
-        val scaledHeight: Int = targetSize[1]
-        val maxVal: Int = max(scaledWidth, scaledHeight)
-        val minVal: Int = min(scaledWidth, scaledHeight)
-        val originalAspectRatio: Int = (1000 * width.toDouble() / height.toDouble()).toInt()
-        val scaledAspectRatio: Int = (1000 * scaledWidth.toDouble() / scaledHeight.toDouble()).toInt()
-        val aspectRatioDiff: Int = abs(scaledAspectRatio - originalAspectRatio)
-        assert(minVal <= targetMinVal && maxVal <= targetMaxVal && aspectRatioDiff < aspectRatioDiffThreshold)
+        scaleTest(3840, 720)
     }
 
     @Test
     fun `ScreenCaptureResolutionCalculator (landscape) should return scaled resolution when max(width, height) is above targetMaxVal and min(width, height) is equal targetMinVal`() {
-        // compute targetWidth and targetHeight with alignment
-        val width: Int = 3840
-        val height: Int = 1080
-        val targetSize = screenCaptureResolutionCalculator.computeTargetSize(width, height)
-        val scaledWidth: Int = targetSize[0]
-        val scaledHeight: Int = targetSize[1]
-        val maxVal: Int = max(scaledWidth, scaledHeight)
-        val minVal: Int = min(scaledWidth, scaledHeight)
-        val originalAspectRatio: Int = (1000 * width.toDouble() / height.toDouble()).toInt()
-        val scaledAspectRatio: Int = (1000 * scaledWidth.toDouble() / scaledHeight.toDouble()).toInt()
-        val aspectRatioDiff: Int = abs(scaledAspectRatio - originalAspectRatio)
-        assert(minVal <= targetMinVal && maxVal <= targetMaxVal && aspectRatioDiff < aspectRatioDiffThreshold)
+        scaleTest(3840, 1080)
     }
 
     @Test
     fun `ScreenCaptureResolutionCalculator (landscape) should return scaled resolution when max(width, height) is equal targetMaxVal and min(width, height) is above targetMinVal`() {
-        // compute targetWidth and targetHeight with alignment
-        val width: Int = 1920
-        val height: Int = 1280
-        val targetSize = screenCaptureResolutionCalculator.computeTargetSize(width, height)
-        val scaledWidth: Int = targetSize[0]
-        val scaledHeight: Int = targetSize[1]
-        val maxVal: Int = max(scaledWidth, scaledHeight)
-        val minVal: Int = min(scaledWidth, scaledHeight)
-        val originalAspectRatio: Int = (1000 * width.toDouble() / height.toDouble()).toInt()
-        val scaledAspectRatio: Int = (1000 * scaledWidth.toDouble() / scaledHeight.toDouble()).toInt()
-        val aspectRatioDiff: Int = abs(scaledAspectRatio - originalAspectRatio)
-        assert(minVal <= targetMinVal && maxVal <= targetMaxVal && aspectRatioDiff < aspectRatioDiffThreshold)
+        scaleTest(1920, 1280)
     }
 
     @Test
     fun `ScreenCaptureResolutionCalculator (landscape) should return scaled resolution when max(width, height) is below targetMaxVal and min(width, height) is above targetMinVal`() {
-        // compute targetWidth and targetHeight with alignment
-        val width: Int = 1600
-        val height: Int = 1280
-        val targetSize = screenCaptureResolutionCalculator.computeTargetSize(width, height)
-        val scaledWidth: Int = targetSize[0]
-        val scaledHeight: Int = targetSize[1]
-        val maxVal: Int = max(scaledWidth, scaledHeight)
-        val minVal: Int = min(scaledWidth, scaledHeight)
-        val originalAspectRatio: Int = (1000 * width.toDouble() / height.toDouble()).toInt()
-        val scaledAspectRatio: Int = (1000 * scaledWidth.toDouble() / scaledHeight.toDouble()).toInt()
-        val aspectRatioDiff: Int = abs(scaledAspectRatio - originalAspectRatio)
-        assert(minVal <= targetMinVal && maxVal <= targetMaxVal && aspectRatioDiff < aspectRatioDiffThreshold)
+        scaleTest(1600, 1280)
     }
 
     @Test
     fun `ScreenCaptureResolutionCalculator (portrait) should return original resolution when max(width, height) is below targetMaxVal and min(width, height) is below targetMinVal`() {
-        // compute targetWidth and targetHeight with alignment
-        val width: Int = 720
-        val height: Int = 1280
-        val targetSize = screenCaptureResolutionCalculator.computeTargetSize(width, height)
-        val scaledWidth: Int = targetSize[0]
-        val scaledHeight: Int = targetSize[1]
-        assertTrue(width == scaledWidth && height == scaledHeight)
+        nonScaleTest(720, 1280)
     }
 
     @Test
     fun `ScreenCaptureResolutionCalculator (portrait) should return original resolution when max(width, height) is equal targetMaxVal and min(width, height) is below targetMinVal`() {
-        // compute targetWidth and targetHeight with alignment
-        val width: Int = 719
-        val height: Int = 1920
-        val targetSize = screenCaptureResolutionCalculator.computeTargetSize(width, height)
-        val scaledWidth: Int = targetSize[0]
-        val scaledHeight: Int = targetSize[1]
-        assertTrue(width == scaledWidth && height == scaledHeight)
+        nonScaleTest(719, 1920)
     }
 
     @Test
     fun `ScreenCaptureResolutionCalculator (portrait) should return original resolution when max(width, height) is below targetMaxVal and min(width, height) is equal targetMinVal`() {
-        // compute targetWidth and targetHeight with alignment
-        val width: Int = 1080
-        val height: Int = 1280
-        val targetSize = screenCaptureResolutionCalculator.computeTargetSize(width, height)
-        val scaledWidth: Int = targetSize[0]
-        val scaledHeight: Int = targetSize[1]
-        assertTrue(width == scaledWidth && height == scaledHeight)
+        nonScaleTest(1080, 1280)
     }
 
     @Test
     fun `ScreenCaptureResolutionCalculator (portrait) should return original resolution when max(width, height) is equal targetMaxVal and min(width, height) is equal targetMinVal`() {
-        // compute targetWidth and targetHeight with alignment
-        val width: Int = 1080
-        val height: Int = 1920
-        val targetSize = screenCaptureResolutionCalculator.computeTargetSize(width, height)
-        val scaledWidth: Int = targetSize[0]
-        val scaledHeight: Int = targetSize[1]
-        assertTrue(width == scaledWidth && height == scaledHeight)
+        nonScaleTest(1080, 1920)
     }
 
     @Test
     fun `ScreenCaptureResolutionCalculator (portrait) should return scaled resolution when max(width, height) is above targetMaxVal and min(width, height) is above targetMinVal`() {
-        // compute targetWidth and targetHeight with alignment
-        val width: Int = 1423
-        val height: Int = 3840
-        val targetSize = screenCaptureResolutionCalculator.computeTargetSize(width, height)
-        val scaledWidth: Int = targetSize[0]
-        val scaledHeight: Int = targetSize[1]
-        val maxVal: Int = max(scaledWidth, scaledHeight)
-        val minVal: Int = min(scaledWidth, scaledHeight)
-        val originalAspectRatio: Int = (1000 * width.toDouble() / height.toDouble()).toInt()
-        val scaledAspectRatio: Int = (1000 * scaledWidth.toDouble() / scaledHeight.toDouble()).toInt()
-        val aspectRatioDiff: Int = abs(scaledAspectRatio - originalAspectRatio)
-        assert(minVal <= targetMinVal && maxVal <= targetMaxVal && aspectRatioDiff < aspectRatioDiffThreshold)
+        scaleTest(1423, 3840)
     }
 
     @Test
     fun `ScreenCaptureResolutionCalculator (portrait) should return scaled resolution when max(width, height) is above targetMaxVal and min(width, height) is below targetMinVal`() {
-        // compute targetWidth and targetHeight with alignment
-        val width: Int = 720
-        val height: Int = 3840
-        val targetSize = screenCaptureResolutionCalculator.computeTargetSize(width, height)
-        val scaledWidth: Int = targetSize[0]
-        val scaledHeight: Int = targetSize[1]
-        val maxVal: Int = max(scaledWidth, scaledHeight)
-        val minVal: Int = min(scaledWidth, scaledHeight)
-        val originalAspectRatio: Int = (1000 * width.toDouble() / height.toDouble()).toInt()
-        val scaledAspectRatio: Int = (1000 * scaledWidth.toDouble() / scaledHeight.toDouble()).toInt()
-        val aspectRatioDiff: Int = abs(scaledAspectRatio - originalAspectRatio)
-        assert(minVal <= targetMinVal && maxVal <= targetMaxVal && aspectRatioDiff < aspectRatioDiffThreshold)
+        scaleTest(720, 3840)
     }
 
     @Test
     fun `ScreenCaptureResolutionCalculator (portrait) should return scaled resolution when max(width, height) is above targetMaxVal and min(width, height) is equal targetMinVal`() {
-        // compute targetWidth and targetHeight with alignment
-        val width: Int = 1080
-        val height: Int = 3840
-        val targetSize = screenCaptureResolutionCalculator.computeTargetSize(width, height)
-        val scaledWidth: Int = targetSize[0]
-        val scaledHeight: Int = targetSize[1]
-        val maxVal: Int = max(scaledWidth, scaledHeight)
-        val minVal: Int = min(scaledWidth, scaledHeight)
-        val originalAspectRatio: Int = (1000 * width.toDouble() / height.toDouble()).toInt()
-        val scaledAspectRatio: Int = (1000 * scaledWidth.toDouble() / scaledHeight.toDouble()).toInt()
-        val aspectRatioDiff: Int = abs(scaledAspectRatio - originalAspectRatio)
-        assert(minVal <= targetMinVal && maxVal <= targetMaxVal && aspectRatioDiff < aspectRatioDiffThreshold)
+        scaleTest(1080, 3840)
     }
 
     @Test
     fun `ScreenCaptureResolutionCalculator (portrait) should return scaled resolution when max(width, height) is equal targetMaxVal and min(width, height) is above targetMinVal`() {
-        // compute targetWidth and targetHeight with alignment
-        val width: Int = 1280
-        val height: Int = 1920
-        val targetSize = screenCaptureResolutionCalculator.computeTargetSize(width, height)
-        val scaledWidth: Int = targetSize[0]
-        val scaledHeight: Int = targetSize[1]
-        val maxVal: Int = max(scaledWidth, scaledHeight)
-        val minVal: Int = min(scaledWidth, scaledHeight)
-        val originalAspectRatio: Int = (1000 * width.toDouble() / height.toDouble()).toInt()
-        val scaledAspectRatio: Int = (1000 * scaledWidth.toDouble() / scaledHeight.toDouble()).toInt()
-        val aspectRatioDiff: Int = abs(scaledAspectRatio - originalAspectRatio)
-        assert(minVal <= targetMinVal && maxVal <= targetMaxVal && aspectRatioDiff < aspectRatioDiffThreshold)
+        scaleTest(1280, 1920)
     }
 
     @Test
     fun `ScreenCaptureResolutionCalculator (portrait) should return scaled resolution when max(width, height) is below targetMaxVal and min(width, height) is above targetMinVal`() {
-        // compute targetWidth and targetHeight with alignment
-        val width: Int = 1280
-        val height: Int = 1600
-        val targetSize = screenCaptureResolutionCalculator.computeTargetSize(width, height)
-        val scaledWidth: Int = targetSize[0]
-        val scaledHeight: Int = targetSize[1]
-        val maxVal: Int = max(scaledWidth, scaledHeight)
-        val minVal: Int = min(scaledWidth, scaledHeight)
-        val originalAspectRatio: Int = (1000 * width.toDouble() / height.toDouble()).toInt()
-        val scaledAspectRatio: Int = (1000 * scaledWidth.toDouble() / scaledHeight.toDouble()).toInt()
-        val aspectRatioDiff: Int = abs(scaledAspectRatio - originalAspectRatio)
-        assert(minVal <= targetMinVal && maxVal <= targetMaxVal && aspectRatioDiff < aspectRatioDiffThreshold)
+        scaleTest(1280, 1600)
     }
 }
