@@ -133,7 +133,8 @@ class DefaultAudioClientController(
         joinToken: String,
         audioMode: AudioMode,
         audioStreamType: AudioStreamType,
-        audioRecordingPresetOverride: AudioRecordingPresetOverride
+        audioRecordingPresetOverride: AudioRecordingPresetOverride,
+        enableAudioRedundancy: Boolean
     ) {
         // Validate audio client state
         if (audioClientState != AudioClientState.INITIALIZED &&
@@ -207,7 +208,8 @@ class DefaultAudioClientController(
                 appInfo,
                 audioModeInternal,
                 audioStreamTypeInternal,
-                audioRecordingPresetInternal
+                audioRecordingPresetInternal,
+                enableAudioRedundancy
             ).withTransportMode(AudioClient.XTL_DEFAULT_TRANSPORT)
                 .withMicMute(muteMicAndSpeaker)
                 .withSpkMute(muteMicAndSpeaker)

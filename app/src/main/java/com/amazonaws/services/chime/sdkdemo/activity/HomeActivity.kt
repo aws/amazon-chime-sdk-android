@@ -39,7 +39,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 class HomeActivity : AppCompatActivity() {
-    private val logger = ConsoleLogger(LogLevel.INFO)
+    private val logger = ConsoleLogger(LogLevel.VERBOSE)
     private val uiScope = CoroutineScope(Dispatchers.Main)
 
     private val MEETING_REGION = "us-east-1"
@@ -55,11 +55,13 @@ class HomeActivity : AppCompatActivity() {
     private var meetingEditText: EditText? = null
     private var nameEditText: EditText? = null
     private var audioMode: AppCompatSpinner? = null
+    private var audioRedundancy: AppCompatSpinner? = null
     private var authenticationProgressBar: ProgressBar? = null
     private var meetingID: String? = null
     private var yourName: String? = null
     private var testUrl: String = ""
     private var audioModes = listOf("Stereo/48KHz Audio", "Mono/48KHz Audio", "Mono/16KHz Audio")
+    private var audioRedundancyModes = listOf("Enable Audio Redundancy", "Disable Audio Redundancy")
     private lateinit var audioVideoConfig: AudioVideoConfiguration
     private lateinit var debugSettingsViewModel: DebugSettingsViewModel
 
@@ -78,10 +80,12 @@ class HomeActivity : AppCompatActivity() {
         meetingEditText = findViewById(R.id.editMeetingId)
         nameEditText = findViewById(R.id.editName)
         audioMode = findViewById(R.id.audioModeSpinner)
+        audioRedundancy = findViewById(R.id.audioRedundancySpinner)
         authenticationProgressBar = findViewById(R.id.progressAuthentication)
         debugSettingsViewModel = ViewModelProvider(this).get(DebugSettingsViewModel::class.java)
 
         audioMode?.adapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, audioModes)
+        audioRedundancy?.adapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, audioRedundancyModes)
         findViewById<Button>(R.id.buttonContinue)?.setOnClickListener {
             joinMeeting()
         }
@@ -97,11 +101,20 @@ class HomeActivity : AppCompatActivity() {
     }
 
     private fun joinMeeting() {
+        var mode = AudioMode.Stereo48K
         when (audioMode?.selectedItemPosition ?: 0) {
-            0 -> audioVideoConfig = AudioVideoConfiguration(audioMode = AudioMode.Stereo48K)
-            1 -> audioVideoConfig = AudioVideoConfiguration(audioMode = AudioMode.Mono48K)
-            2 -> audioVideoConfig = AudioVideoConfiguration(audioMode = AudioMode.Mono16K)
+            0 -> mode = AudioMode.Stereo48K
+            1 -> mode = AudioMode.Mono48K
+            2 -> mode = AudioMode.Mono16K
         }
+
+        var redundancyEnabled = true
+        when (audioRedundancy?.selectedItemPosition ?: 0) {
+            0 -> redundancyEnabled = true
+            1 -> redundancyEnabled = false
+        }
+
+        audioVideoConfig = AudioVideoConfiguration(audioMode = mode, enableAudioRedundancy = redundancyEnabled)
 
         meetingID = meetingEditText?.text.toString().trim().replace("\\s+".toRegex(), "+")
         yourName = nameEditText?.text.toString().trim().replace("\\s+".toRegex(), "+")
