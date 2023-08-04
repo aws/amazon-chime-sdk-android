@@ -123,7 +123,8 @@ class DefaultAudioVideoControllerTest {
                 joinToken,
                 AudioMode.Stereo48K,
                 AudioStreamType.VoiceCall,
-                AudioRecordingPresetOverride.None
+                AudioRecordingPresetOverride.None,
+                true
             )
         }
     }
@@ -141,7 +142,8 @@ class DefaultAudioVideoControllerTest {
                     joinToken,
                     AudioMode.Mono16K,
                     AudioStreamType.VoiceCall,
-                    AudioRecordingPresetOverride.None
+                    AudioRecordingPresetOverride.None,
+                    true
             )
         }
     }
@@ -159,7 +161,8 @@ class DefaultAudioVideoControllerTest {
                     joinToken,
                     AudioMode.Mono48K,
                     AudioStreamType.VoiceCall,
-                    AudioRecordingPresetOverride.None
+                    AudioRecordingPresetOverride.None,
+                    true
             )
         }
     }
@@ -177,7 +180,8 @@ class DefaultAudioVideoControllerTest {
                     joinToken,
                     AudioMode.Stereo48K,
                     AudioStreamType.VoiceCall,
-                    AudioRecordingPresetOverride.None
+                    AudioRecordingPresetOverride.None,
+                    true
             )
         }
     }
@@ -195,7 +199,8 @@ class DefaultAudioVideoControllerTest {
                 joinToken,
                 AudioMode.Stereo48K,
                 AudioStreamType.VoiceCall,
-                AudioRecordingPresetOverride.None
+                AudioRecordingPresetOverride.None,
+                true
             )
         }
     }
@@ -213,7 +218,8 @@ class DefaultAudioVideoControllerTest {
                 joinToken,
                 AudioMode.Stereo48K,
                 AudioStreamType.Music,
-                AudioRecordingPresetOverride.None
+                AudioRecordingPresetOverride.None,
+                true
             )
         }
     }
@@ -231,7 +237,27 @@ class DefaultAudioVideoControllerTest {
                 joinToken,
                 AudioMode.NoDevice,
                 AudioStreamType.VoiceCall,
-                AudioRecordingPresetOverride.None
+                AudioRecordingPresetOverride.None,
+                true
+            )
+        }
+    }
+
+    @Test
+    fun `start with enableAudioRedundancy as false should call audioClientController start with the parameters in configuration and enableAudioRedundancy set to false`() {
+        val testAudioVideoConfiguration = AudioVideoConfiguration(enableAudioRedundancy = false)
+        audioVideoController.start(testAudioVideoConfiguration)
+        verify {
+            audioClientController.start(
+                audioFallbackURL,
+                audioHostURL,
+                meetingId,
+                attendeeId,
+                joinToken,
+                AudioMode.Stereo48K,
+                AudioStreamType.VoiceCall,
+                AudioRecordingPresetOverride.None,
+                false
             )
         }
     }
