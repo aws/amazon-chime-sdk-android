@@ -71,6 +71,7 @@ class HomeActivity : AppCompatActivity() {
         const val NAME_KEY = "NAME"
         const val MEETING_ENDPOINT_KEY = "MEETING_ENDPOINT_URL"
         const val AUDIO_MODE_KEY = "AUDIO_MODE"
+        const val ENABLE_AUDIO_REDUNDANCY_KEY = "ENABLE_AUDIO_REDUNDANCY"
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -193,7 +194,8 @@ class HomeActivity : AppCompatActivity() {
                                 MEETING_ID_KEY to meetingId,
                                 NAME_KEY to attendeeName,
                                 MEETING_ENDPOINT_KEY to meetingUrl,
-                                AUDIO_MODE_KEY to audioVideoConfig.audioMode.value
+                                AUDIO_MODE_KEY to audioVideoConfig.audioMode.value,
+                                ENABLE_AUDIO_REDUNDANCY_KEY to audioVideoConfig.enableAudioRedundancy
                             )
                         )
                     }
