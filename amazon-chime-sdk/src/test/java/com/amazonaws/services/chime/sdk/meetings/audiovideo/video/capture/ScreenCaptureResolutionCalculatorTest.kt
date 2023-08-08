@@ -13,6 +13,7 @@ import org.junit.Test
 
 class ScreenCaptureResolutionCalculatorTest {
 
+    // this threshold is from our tests (max aspect ratio difference in the tests is 8 and we set the threshold to 12 here)
     private val aspectRatioDiffThreshold: Int = 12
     private val targetMinVal: Int = 1080
     private val targetMaxVal: Int = 1920
