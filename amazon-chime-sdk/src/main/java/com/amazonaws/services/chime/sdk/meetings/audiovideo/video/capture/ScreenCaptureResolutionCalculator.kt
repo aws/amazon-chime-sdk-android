@@ -12,8 +12,8 @@ class ScreenCaptureResolutionCalculator(
     private val targetMaxVal: Int
 ) {
     // align a positive integer to even number
-    fun alignToEven(anyNumber: Int): Int {
-        return anyNumber and 1.inv()
+    fun alignToEven(positiveNumber: Int): Int {
+        return positiveNumber and 1.inv()
     }
 
     // compute target resolution with constraint (targetMinVal, targetMaxVal)
@@ -27,7 +27,6 @@ class ScreenCaptureResolutionCalculator(
     // 4.2. compute resolutionMaxScale --> scale factor from displayResolutionMax to targetResolutionMax
     // 4.3. scale the original image using the larger scale (resolutionMinScale or resolutionMaxScale)
     // 4.4. scaled image should maintain the same sample aspect ratio and both resolutions should be within target resolution constraint
-    // 5. After calculation of scaledWidth and scaledHeight, 2-byte alignment is done (to handle 420 color space conversion)
     fun computeTargetSize(displayWidth: Int, displayHeight: Int): IntArray {
         val displayResolutionMin = min(displayWidth, displayHeight)
         val displayResolutionMax = max(displayWidth, displayHeight)
@@ -59,7 +58,6 @@ class ScreenCaptureResolutionCalculator(
             scaledHeight = displayHeight
         }
 
-        // align width and height to 2-byte
         val resolutions = IntArray(2)
         resolutions[0] = scaledWidth
         resolutions[1] = scaledHeight
