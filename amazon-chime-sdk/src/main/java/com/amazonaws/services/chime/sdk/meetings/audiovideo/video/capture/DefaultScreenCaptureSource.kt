@@ -216,7 +216,7 @@ class DefaultScreenCaptureSource(
             handler
         )
 
-        logger.info(TAG, "Media projection adapter activity succeeded, virtual display created, original resolution ${displayMetrics.widthPixels} x ${displayMetrics.heightPixels}, final resolution ${alignedWidth} x ${alignedHeight}, portraint: ${isOrientationInPortrait}")
+        logger.info(TAG, "Media projection adapter activity succeeded, virtual display created")
         return true
     }
 
