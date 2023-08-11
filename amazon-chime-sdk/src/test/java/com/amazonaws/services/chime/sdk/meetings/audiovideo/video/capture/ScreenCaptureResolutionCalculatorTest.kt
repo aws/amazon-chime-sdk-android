@@ -20,14 +20,14 @@ class ScreenCaptureResolutionCalculatorTest {
     private val screenCaptureResolutionCalculator: ScreenCaptureResolutionCalculator = ScreenCaptureResolutionCalculator(this.targetMinVal, this.targetMaxVal)
 
     @Test
-    fun `ScreenCaptureResolutionCalculator(alignToEven) should return original even number when input is even number`() {
+    fun `alignToEven should return original even number when input is even number`() {
         val origNumber: Int = 1280
         val alignedNumber:Int = screenCaptureResolutionCalculator.alignToEven(origNumber)
         assertTrue(origNumber == alignedNumber)
     }
 
     @Test
-    fun `ScreenCaptureResolutionCalculator(alignToEven) should return a smaller even number when input is odd number`() {
+    fun `alignToEven should return a smaller even number when input is odd number`() {
         val origNumber: Int = 1281
         val alignedNumber:Int = screenCaptureResolutionCalculator.alignToEven(origNumber)
         assertTrue(origNumber == alignedNumber+1)
@@ -53,102 +53,102 @@ class ScreenCaptureResolutionCalculatorTest {
     }
 
     @Test
-    fun `ScreenCaptureResolutionCalculator (landscape) should return original resolution when max(width, height) is below targetMaxVal and min(width, height) is below targetMinVal`() {
+    fun `computeTargetSize(landscape) should return original resolution when max(width, height) is below targetMaxVal and min(width, height) is below targetMinVal`() {
         nonScaleTest(1280, 720)
     }
 
     @Test
-    fun `ScreenCaptureResolutionCalculator (landscape) should return original resolution when max(width, height) is equal targetMaxVal and min(width, height) is below targetMinVal`() {
+    fun `computeTargetSize(landscape) should return original resolution when max(width, height) is equal targetMaxVal and min(width, height) is below targetMinVal`() {
         nonScaleTest(1920, 719)
     }
 
     @Test
-    fun `ScreenCaptureResolutionCalculator (landscape) should return original resolution when max(width, height) is below targetMaxVal and min(width, height) is equal targetMinVal`() {
+    fun `computeTargetSize(landscape) should return original resolution when max(width, height) is below targetMaxVal and min(width, height) is equal targetMinVal`() {
         nonScaleTest(1280, 1080)
     }
 
     @Test
-    fun `ScreenCaptureResolutionCalculator (landscape) should return original resolution when max(width, height) is equal targetMaxVal and min(width, height) is equal targetMinVal`() {
+    fun `computeTargetSize(landscape) should return original resolution when max(width, height) is equal targetMaxVal and min(width, height) is equal targetMinVal`() {
         nonScaleTest(1920, 1080)
     }
 
     @Test
-    fun `ScreenCaptureResolutionCalculator (weird number) should return scaled resolution when max(width, height) is above targetMaxVal and min(width, height) is above targetMinVal`() {
+    fun `computeTargetSize(weird number) should return scaled resolution when max(width, height) is above targetMaxVal and min(width, height) is above targetMinVal`() {
         scaleTest(7139, 3217)
     }
 
     @Test
-    fun `ScreenCaptureResolutionCalculator (extra large number) should return scaled resolution when max(width, height) is above targetMaxVal and min(width, height) is above targetMinVal`() {
+    fun `computeTargetSize(extra large number) should return scaled resolution when max(width, height) is above targetMaxVal and min(width, height) is above targetMinVal`() {
         scaleTest(93215327, 32171121)
     }
 
     @Test
-    fun `ScreenCaptureResolutionCalculator (landscape) should return scaled resolution when max(width, height) is above targetMaxVal and min(width, height) is above targetMinVal`() {
+    fun `computeTargetSize(landscape) should return scaled resolution when max(width, height) is above targetMaxVal and min(width, height) is above targetMinVal`() {
         scaleTest(3840, 1423)
     }
 
     @Test
-    fun `ScreenCaptureResolutionCalculator (landscape) should return scaled resolution when max(width, height) is above targetMaxVal and min(width, height) is below targetMinVal`() {
+    fun `computeTargetSize(landscape) should return scaled resolution when max(width, height) is above targetMaxVal and min(width, height) is below targetMinVal`() {
         scaleTest(3840, 720)
     }
 
     @Test
-    fun `ScreenCaptureResolutionCalculator (landscape) should return scaled resolution when max(width, height) is above targetMaxVal and min(width, height) is equal targetMinVal`() {
+    fun `computeTargetSize(landscape) should return scaled resolution when max(width, height) is above targetMaxVal and min(width, height) is equal targetMinVal`() {
         scaleTest(3840, 1080)
     }
 
     @Test
-    fun `ScreenCaptureResolutionCalculator (landscape) should return scaled resolution when max(width, height) is equal targetMaxVal and min(width, height) is above targetMinVal`() {
+    fun `computeTargetSize(landscape) should return scaled resolution when max(width, height) is equal targetMaxVal and min(width, height) is above targetMinVal`() {
         scaleTest(1920, 1280)
     }
 
     @Test
-    fun `ScreenCaptureResolutionCalculator (landscape) should return scaled resolution when max(width, height) is below targetMaxVal and min(width, height) is above targetMinVal`() {
+    fun `computeTargetSize(landscape) should return scaled resolution when max(width, height) is below targetMaxVal and min(width, height) is above targetMinVal`() {
         scaleTest(1600, 1280)
     }
 
     @Test
-    fun `ScreenCaptureResolutionCalculator (portrait) should return original resolution when max(width, height) is below targetMaxVal and min(width, height) is below targetMinVal`() {
+    fun `computeTargetSize(portrait) should return original resolution when max(width, height) is below targetMaxVal and min(width, height) is below targetMinVal`() {
         nonScaleTest(720, 1280)
     }
 
     @Test
-    fun `ScreenCaptureResolutionCalculator (portrait) should return original resolution when max(width, height) is equal targetMaxVal and min(width, height) is below targetMinVal`() {
+    fun `computeTargetSize(portrait) should return original resolution when max(width, height) is equal targetMaxVal and min(width, height) is below targetMinVal`() {
         nonScaleTest(719, 1920)
     }
 
     @Test
-    fun `ScreenCaptureResolutionCalculator (portrait) should return original resolution when max(width, height) is below targetMaxVal and min(width, height) is equal targetMinVal`() {
+    fun `computeTargetSize(portrait) should return original resolution when max(width, height) is below targetMaxVal and min(width, height) is equal targetMinVal`() {
         nonScaleTest(1080, 1280)
     }
 
     @Test
-    fun `ScreenCaptureResolutionCalculator (portrait) should return original resolution when max(width, height) is equal targetMaxVal and min(width, height) is equal targetMinVal`() {
+    fun `computeTargetSize(portrait) should return original resolution when max(width, height) is equal targetMaxVal and min(width, height) is equal targetMinVal`() {
         nonScaleTest(1080, 1920)
     }
 
     @Test
-    fun `ScreenCaptureResolutionCalculator (portrait) should return scaled resolution when max(width, height) is above targetMaxVal and min(width, height) is above targetMinVal`() {
+    fun `computeTargetSize(portrait) should return scaled resolution when max(width, height) is above targetMaxVal and min(width, height) is above targetMinVal`() {
         scaleTest(1423, 3840)
     }
 
     @Test
-    fun `ScreenCaptureResolutionCalculator (portrait) should return scaled resolution when max(width, height) is above targetMaxVal and min(width, height) is below targetMinVal`() {
+    fun `computeTargetSize(portrait) should return scaled resolution when max(width, height) is above targetMaxVal and min(width, height) is below targetMinVal`() {
         scaleTest(720, 3840)
     }
 
     @Test
-    fun `ScreenCaptureResolutionCalculator (portrait) should return scaled resolution when max(width, height) is above targetMaxVal and min(width, height) is equal targetMinVal`() {
+    fun `computeTargetSize(portrait) should return scaled resolution when max(width, height) is above targetMaxVal and min(width, height) is equal targetMinVal`() {
         scaleTest(1080, 3840)
     }
 
     @Test
-    fun `ScreenCaptureResolutionCalculator (portrait) should return scaled resolution when max(width, height) is equal targetMaxVal and min(width, height) is above targetMinVal`() {
+    fun `computeTargetSize(portrait) should return scaled resolution when max(width, height) is equal targetMaxVal and min(width, height) is above targetMinVal`() {
         scaleTest(1280, 1920)
     }
 
     @Test
-    fun `ScreenCaptureResolutionCalculator (portrait) should return scaled resolution when max(width, height) is below targetMaxVal and min(width, height) is above targetMinVal`() {
+    fun `computeTargetSize(portrait) should return scaled resolution when max(width, height) is below targetMaxVal and min(width, height) is above targetMinVal`() {
         scaleTest(1280, 1600)
     }
 }
