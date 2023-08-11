@@ -5,11 +5,11 @@
 
 package com.amazonaws.services.chime.sdk.meetings.audiovideo.video.capture
 
+import org.junit.Assert.assertTrue
+import org.junit.Test
 import kotlin.math.abs
 import kotlin.math.max
 import kotlin.math.min
-import org.junit.Assert.assertTrue
-import org.junit.Test
 
 class ScreenCaptureResolutionCalculatorTest {
 
@@ -22,15 +22,15 @@ class ScreenCaptureResolutionCalculatorTest {
     @Test
     fun `alignToEven should return original even number when input is even number`() {
         val origNumber: Int = 1280
-        val alignedNumber:Int = screenCaptureResolutionCalculator.alignToEven(origNumber)
+        val alignedNumber: Int = screenCaptureResolutionCalculator.alignToEven(origNumber)
         assertTrue(origNumber == alignedNumber)
     }
 
     @Test
     fun `alignToEven should return a smaller even number when input is odd number`() {
         val origNumber: Int = 1281
-        val alignedNumber:Int = screenCaptureResolutionCalculator.alignToEven(origNumber)
-        assertTrue(origNumber == alignedNumber+1)
+        val alignedNumber: Int = screenCaptureResolutionCalculator.alignToEven(origNumber)
+        assertTrue(origNumber == alignedNumber + 1)
     }
 
     fun nonScaleTest(width: Int, height: Int) {
