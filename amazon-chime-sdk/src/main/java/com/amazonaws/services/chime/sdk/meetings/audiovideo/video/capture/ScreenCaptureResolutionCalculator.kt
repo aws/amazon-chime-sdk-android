@@ -7,6 +7,7 @@ package com.amazonaws.services.chime.sdk.meetings.audiovideo.video.capture
 
 import kotlin.math.max
 import kotlin.math.min
+
 class ScreenCaptureResolutionCalculator(
     private val targetMinVal: Int,
     private val targetMaxVal: Int
