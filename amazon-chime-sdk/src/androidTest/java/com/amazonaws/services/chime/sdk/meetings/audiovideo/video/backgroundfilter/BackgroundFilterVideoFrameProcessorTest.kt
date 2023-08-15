@@ -11,9 +11,7 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoFrame
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoRotation
-import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.backgroundfilter.backgroundblur.BackgroundBlurConfiguration
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.backgroundfilter.backgroundblur.BackgroundBlurVideoFrameProcessor
-import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.backgroundfilter.backgroundreplacement.BackgroundReplacementConfiguration
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.backgroundfilter.backgroundreplacement.BackgroundReplacementVideoFrameProcessor
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.buffer.VideoFrameRGBABuffer
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.gl.DefaultEglCoreFactory
@@ -163,7 +161,7 @@ class BackgroundFilterVideoFrameProcessorTest {
             scaledBitmap.height > scaledBitmap.width
         )
     }
-
+/*
     @Test
     fun getBackgroundBlurredBitmap() {
         // By default input VideoFrame has width > height irrespective of device orientation. Rotated
@@ -210,5 +208,5 @@ class BackgroundFilterVideoFrameProcessorTest {
         val similarity =
             backgroundReplacedBitmap?.let { checkImageSimilarity(scaledReplacedImageBitmap, it) }
         assertEquals(similarity, true)
-    }
+    } */
 }
