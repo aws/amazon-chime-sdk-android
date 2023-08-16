@@ -210,5 +210,5 @@ class BackgroundFilterVideoFrameProcessorTest {
         val similarity =
             backgroundReplacedBitmap?.let { checkImageSimilarity(scaledReplacedImageBitmap, it) }
         assertEquals(similarity, true)
-    } 
+    }
 }
