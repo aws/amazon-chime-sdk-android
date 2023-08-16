@@ -8,6 +8,7 @@ import io.mockk.every
 import io.mockk.mockkObject
 import io.mockk.unmockkObject
 import org.junit.After
+import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
 
@@ -69,15 +70,12 @@ class IngestionEventConverterTests {
 
         val record = IngestionEventConverter.fromMeetingEventItems(
             listOf(eventItem1, eventItem2), ingestionConfiguration)
-/*
-        // Event metadata attributes is same as ones in the configuration
-        assertTrue(ingestionConfiguration.clientConfiguration.metadataAttributes.keys.none { metadataAttribute ->
-            record.events.none { it.payloads.none { payload -> payload.containsKey(metadataAttribute) } }
-        })
 
         // Event payload doesn't contain configuration metadata attributes
-        assertTrue(ingestionConfiguration.clientConfiguration.metadataAttributes.keys.none { metadataAttribute ->
-            record.events.none { it.payloads.none { payload -> payload.containsKey(metadataAttribute) } }
-        }) */
+        for (event in record.events) {
+            assertTrue(ingestionConfiguration.clientConfiguration.metadataAttributes.keys.none { metadataAttribute ->
+                event.payloads.none { payload -> payload.containsKey(metadataAttribute) }
+            })
+        }
     }
 }
