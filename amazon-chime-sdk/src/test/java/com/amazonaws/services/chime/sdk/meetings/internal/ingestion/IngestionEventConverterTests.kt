@@ -74,13 +74,13 @@ class IngestionEventConverterTests {
         // Event payload doesn't contain configuration metadata attributes
         var containtMetadata: Boolean = false
         for (event in record.events) {
-           for (payload in event.payloads) {
-              for (metadataAttribute in ingestionConfiguration.clientConfiguration.metadataAttributes) {
-                 if (payload.containsKey(metadataAttribute.key)) {
-                   containtMetadata = true
-                 }
-             }
-          }
+            for (payload in event.payloads) {
+                for (metadataAttribute in ingestionConfiguration.clientConfiguration.metadataAttributes) {
+                    if (payload.containsKey(metadataAttribute.key)) {
+                        containtMetadata = true
+                    }
+                }
+            }
         }
         assertTrue(containtMetadata == false)
     }
