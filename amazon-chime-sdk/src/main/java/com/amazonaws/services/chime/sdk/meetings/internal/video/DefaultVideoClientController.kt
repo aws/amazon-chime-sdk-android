@@ -32,6 +32,7 @@ import com.xodee.client.video.VideoPriorityInternal
 import com.xodee.client.video.VideoResolutionInternal
 import com.xodee.client.video.VideoSubscriptionConfigurationInternal
 import java.security.InvalidParameterException
+import java.util.concurrent.atomic.AtomicBoolean
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
@@ -60,6 +61,8 @@ class DefaultVideoClientController(
     private val VIDEO_CLIENT_FLAG_ENABLE_INBAND_TURN_CREDS = 1 shl 26
 
     private val gson = Gson()
+
+    private var isStopping = AtomicBoolean(false)
 
     private val cameraCaptureSource: DefaultCameraCaptureSource
     private var videoSourceAdapter = VideoSourceAdapter()
@@ -94,6 +97,11 @@ class DefaultVideoClientController(
     }
 
     override fun stopAndDestroy() {
+        if (isStopping.get()) {
+            logger.info(TAG, "Stopping in progress")
+            return
+        }
+        isStopping.set(true)
         GlobalScope.launch {
             // So it doesn't call it spuriously
             videoClientObserver.primaryMeetingPromotionObserver = null
@@ -102,6 +110,7 @@ class DefaultVideoClientController(
 
             eglCore?.release()
             eglCore = null
+            isStopping.set(false)
         }
     }
 
