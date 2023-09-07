@@ -1,5 +1,7 @@
 ## Unreleased
+
 ### Added
+* Support sending and receiving redundant audio data to help reduce the effects of packet loss on audio quality. See README for more details.
 * Meeting constraints 
   - Only allow camera video capture formats below or equal 1280x720
   - Content share resolution above 1920x1080 will be scaled down to be within 1920x1080

@@ -63,7 +63,8 @@ class MeetingActivity : AppCompatActivity(),
         val audioMode = intent.extras?.getInt(HomeActivity.AUDIO_MODE_KEY)?.let { intValue ->
             AudioMode.from(intValue, defaultAudioMode = AudioMode.Stereo48K)
         } ?: AudioMode.Stereo48K
-        audioVideoConfig = AudioVideoConfiguration(audioMode = audioMode)
+        val enableAudioRedundancy = intent.extras?.getBoolean(HomeActivity.ENABLE_AUDIO_REDUNDANCY_KEY) as Boolean
+        audioVideoConfig = AudioVideoConfiguration(audioMode = audioMode, enableAudioRedundancy = enableAudioRedundancy)
         meetingEndpointUrl = intent.extras?.getString(HomeActivity.MEETING_ENDPOINT_KEY) as String
 
         if (savedInstanceState == null) {

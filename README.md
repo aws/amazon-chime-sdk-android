@@ -176,9 +176,11 @@ Start a session with custom configurations:
 meetingSession.audioVideo.start(audioVideoConfiguration)
 ```
 
-There are 2 configurations available in `audioVideoConfiguration`: 
+There are 4 configurations available in `audioVideoConfiguration`:
 - `audioMode`
 - `audioStreamType`
+- `audioRecordingPresetOverride`
+- `enableAudioRedundancy`
 
 AudioMode: The default audio format is Stereo/48KHz i.e Stereo Audio with 48KHz sampling rate (Stereo48K). Other supported audio formats include Mono/48KHz (Mono48K) or Mono/16KHz (Mono16K). You can specify a non-default audio mode in `AudioVideoConfiguration`, and then start the meeting session.
 
@@ -186,7 +188,11 @@ AudioStreamType: The default value is ```VoiceCall```. The available options are
 
 > Note: Even though there are more available stream options in Android, currently only *STREAM_VOICE_CALL* and *STREAM_MUSIC* are supported in Amazon Chime SDK for Android.
 
+AudioRecordingPresetOverride: The default value is ```None```. The available options are ```None```, ```Generic```, ```Camcorder```, ```VoiceRecognition``` and ```VoiceCommunication```. These are equivalent to the options
+mentioned [here](https://android.googlesource.com/platform/frameworks/wilhelm/+/master/include/SLES/OpenSLES_AndroidConfiguration.h) under *Android AudioRecorder configuration*.
 
+EnableAudioRedundancy: The default value is true. When enabled, the SDK will send redundant audio data on detecting packet loss to help reduce its effects on audio quality. More details can be found in the
+*Redundant Audio* section.
 
 #### Use case 2. Add an observer to receive audio and video session life cycle events.
 
@@ -302,13 +308,15 @@ override fun onAudioDeviceChanged(freshAudioDeviceList: List<MediaDevice>) {
 
 #### Use case 8. Choose the audio configuration.
 
-> When joining a meeting, *Stereo/48KHz* and *VoiceCall* will be set as the default audio mode and stream if not explicitly specified when starting the audio session.
+> When joining a meeting, each configuration will have a default if not explicitly specified when starting the audio session.
 > 
-> Supported AudioMode options: *Mono/16KHz*, *Mono/48KHz*, and *Stereo/48KHz*.
-> Supported AudioStreamType options: *VoiceCall* and *Music*.
+> Supported AudioMode options: *Mono/16KHz*, *Mono/48KHz*, and *Stereo/48KHz*. Default is *Stereo/48KHz*.
+> Supported AudioStreamType options: *VoiceCall* and *Music*. Default is *VoiceCall*
+> Supported AudioRecordingPresetOverride options: *None*, *Generic*, *Camcorder*, *VoiceRecognition* and *VoiceCommunication*. Default is *None*.
+> Supported enableAudioRedundancy options: *true* and *false*. Default is *true*.
 
 ```kotlin
-meetingSession.audioVideo.start() // starts the audio video session with Stereo/48KHz and VoiceCall
+meetingSession.audioVideo.start() // starts the audio video session with defaults mentioned above
 
 meetingSession.audioVideo.start(audioVideoConfiguration) // starts the audio video session with the specified [AudioVideoConfiguration]
 ```
@@ -666,6 +674,23 @@ Custom video source allows you to control the video, such as applying a video fi
 ### Background Blur and Replacement
 
 Background Blur/Replacement allows you to apply blur on or replace background of your video with an image. For more details, see [BackgroundFilter](guides/background_video_filters.md).
+
+### Redundant audio
+
+Starting from version 0.18.3, the SDK starts sending redundant audio data to our servers on detecting packet loss
+to help reduce its effect on audio quality. Redundant audio packets are only sent out for packets containing active
+audio, i.e. speech or music. This may increase the bandwidth consumed by audio to up to 3 times the normal amount
+depending on the amount of packet loss detected. The SDK will automatically stop sending redundant data if it hasn't
+detected any packet loss for 5 minutes.
+
+If you need to disable this feature, you can do so through the AudioVideoConfiguration before starting the session.
+
+```kotlin
+meetingSession.audioVideo.start(AudioVideoConfiguration(enableAudioRedundancy = false))
+```
+
+While there is an option to disable the feature, we recommend keeping it enabled for improved audio quality.
+One possible reason to disable it might be if your customers have very strict bandwidth limitations.
 
 ## Frequently Asked Questions
 

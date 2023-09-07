@@ -29,7 +29,8 @@ interface AudioClientController {
         joinToken: String,
         audioMode: AudioMode,
         audioStreamType: AudioStreamType,
-        audioRecordingPresetOverride: AudioRecordingPresetOverride
+        audioRecordingPresetOverride: AudioRecordingPresetOverride,
+        enableAudioRedundancy: Boolean
     )
 
     fun stop()
