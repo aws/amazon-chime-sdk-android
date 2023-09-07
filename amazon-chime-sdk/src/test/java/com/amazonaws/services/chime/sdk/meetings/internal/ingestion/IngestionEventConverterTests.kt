@@ -71,13 +71,17 @@ class IngestionEventConverterTests {
         val record = IngestionEventConverter.fromMeetingEventItems(
             listOf(eventItem1, eventItem2), ingestionConfiguration)
 
-        // Event metadata attributes is same as ones in the configuration
-        assertTrue(ingestionConfiguration.clientConfiguration.metadataAttributes.keys.none { metadataAttribute ->
-            record.events.none { it.payloads.none { payload -> payload.containsKey(metadataAttribute) } }
-        })
         // Event payload doesn't contain configuration metadata attributes
-        assertTrue(ingestionConfiguration.clientConfiguration.metadataAttributes.keys.none { metadataAttribute ->
-            record.events.none { it.payloads.none { payload -> payload.containsKey(metadataAttribute) } }
-        })
+        var containtMetadata: Boolean = false
+        for (event in record.events) {
+            for (payload in event.payloads) {
+                for (metadataAttribute in ingestionConfiguration.clientConfiguration.metadataAttributes) {
+                    if (payload.containsKey(metadataAttribute.key)) {
+                        containtMetadata = true
+                    }
+                }
+            }
+        }
+        assertTrue(containtMetadata == false)
     }
 }
