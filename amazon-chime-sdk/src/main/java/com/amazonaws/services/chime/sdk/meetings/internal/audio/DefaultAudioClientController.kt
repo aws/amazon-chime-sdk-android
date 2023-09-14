@@ -173,6 +173,9 @@ class DefaultAudioClientController(
                 false
             )
         }
+        logger.info(TAG,
+            "audioMode: $audioMode, audioStreamType: $audioStreamType, audioRecordingPresetOverride: $audioRecordingPresetOverride, enableAudioRedundancy: $enableAudioRedundancy"
+        )
         audioManager.mode = AudioManager.MODE_IN_COMMUNICATION
 
         val appInfo = AppInfoUtil.initializeAudioClientAppInfo(context)
