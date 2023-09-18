@@ -49,11 +49,12 @@
         android:contentDescription="@string/audio_mode_spinner"
         android:layout_gravity="center"/>
 
-    <androidx.appcompat.widget.AppCompatSpinner
-        android:id="@+id/audioRedundancySpinner"
+    <androidx.appcompat.widget.SwitchCompat
+        android:id="@+id/audioRedundancySwitch"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:contentDescription="@string/audio_redundancy_spinner"
+        android:contentDescription="@string/audio_redundancy_switch"
+        android:text="@string/audio_redundancy_switch"
         android:layout_gravity="center"/>
 
     <Button
