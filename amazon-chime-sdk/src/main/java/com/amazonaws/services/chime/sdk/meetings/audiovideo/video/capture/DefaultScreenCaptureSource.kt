@@ -80,10 +80,6 @@ class DefaultScreenCaptureSource(
 
     private val observers = mutableSetOf<CaptureSourceObserver>()
 
-    private val targetMinVal: Int = 1080
-    private val targetMaxVal: Int = 1920
-    private val screenCaptureResolutionCalculator: ScreenCaptureResolutionCalculator = ScreenCaptureResolutionCalculator(this.targetMinVal, this.targetMaxVal)
-
     // Concurrency modification could happen when sink gets
     // added/removed from another thread while sending frames
     private val sinks = ConcurrentSet.createConcurrentSet<VideoSink>()
@@ -173,13 +169,10 @@ class DefaultScreenCaptureSource(
         val rotation = display.rotation
         isOrientationInPortrait = rotation == Surface.ROTATION_0 || rotation == Surface.ROTATION_180
 
-        // compute targetWidth and targetHeight with alignment
-        val targetSize: IntArray = screenCaptureResolutionCalculator.computeTargetSize(displayMetrics.widthPixels, displayMetrics.heightPixels)
-        val alignedWidth: Int = screenCaptureResolutionCalculator.alignToEven(targetSize[0])
-        val alignedHeight: Int = screenCaptureResolutionCalculator.alignToEven(targetSize[1])
-
         // Sometimes, Android changes displayMetrics widthPixels and heightPixels
         // and return inconsistent height and width for surfaceTextureSource VS virtualDisplay
+        val width = displayMetrics.widthPixels
+        val height = displayMetrics.heightPixels
 
         // Note that in landscape, for some reason `getRealMetrics` doesn't account for the status bar correctly
         // so we try to account for it with a manual adjustment to the surface size to avoid letterboxes
@@ -187,8 +180,8 @@ class DefaultScreenCaptureSource(
         // so screenCapture surface size is aligned manually to avoid the issue
         surfaceTextureSource =
             surfaceTextureCaptureSourceFactory.createSurfaceTextureCaptureSource(
-                alignNumberBy16(alignedWidth - (if (isOrientationInPortrait) 0 else getStatusBarHeight())),
-                alignNumberBy16(alignedHeight),
+                alignNumberBy16(width - (if (isOrientationInPortrait) 0 else getStatusBarHeight())),
+                alignNumberBy16(height),
                 contentHint
             )
         surfaceTextureSource?.minFps = MIN_FPS
@@ -198,8 +191,8 @@ class DefaultScreenCaptureSource(
 
         virtualDisplay = mediaProjection?.createVirtualDisplay(
             TAG,
-            alignedWidth,
-            alignedHeight,
+            width,
+            height,
             displayMetrics.densityDpi,
             DisplayManager.VIRTUAL_DISPLAY_FLAG_AUTO_MIRROR,
             surfaceTextureSource?.surface,
