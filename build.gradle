@@ -13,6 +13,7 @@ buildscript {
     repositories {
         maven { url "https://plugins.gradle.org/m2/" }
         google()
+        mavenCentral()
         jcenter()
     }
 
@@ -44,6 +45,7 @@ if (localPropertiesFile.exists()) {
 allprojects {
     repositories {
         google()
+        mavenCentral()
         jcenter()
         flatDir {
             dirs '../amazon-chime-sdk/libs'

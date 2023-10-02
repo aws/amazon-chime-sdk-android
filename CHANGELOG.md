@@ -1,4 +1,4 @@
-## Unreleased
+## [0.18.3] - 2023-09-28
 
 ### Added
 * Support sending and receiving redundant audio data to help reduce the effects of packet loss on audio quality. See README for more details.
