@@ -1619,6 +1619,7 @@ class MeetingFragment : Fragment(),
             object {}.javaClass.enclosingMethod?.name,
             "${sessionStatus.statusCode}"
         )
+        audioVideo.setVideoCodecSendPreferences(cameraCaptureSource.codecPreferences)
     }
 
     override fun onCameraSendAvailabilityUpdated(available: Boolean) {

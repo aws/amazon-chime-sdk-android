@@ -8,6 +8,7 @@ package com.amazonaws.services.chime.sdk.meetings.internal.video
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.PrimaryMeetingPromotionObserver
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.LocalVideoConfiguration
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.RemoteVideoSource
+import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoCodecPreference
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoFrame
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoSource
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoSubscriptionConfiguration
@@ -160,4 +161,9 @@ interface VideoClientController {
      * See [AudioVideoFacade.demoteFromPrimaryMeeting]
      */
     fun demoteFromPrimaryMeeting()
+
+    /**
+     * See [AudioVideoFacade.setVideoCodecSendPreferences]
+     */
+    fun setVideoCodecSendPreferences(codecPreference: List<VideoCodecPreference>)
 }

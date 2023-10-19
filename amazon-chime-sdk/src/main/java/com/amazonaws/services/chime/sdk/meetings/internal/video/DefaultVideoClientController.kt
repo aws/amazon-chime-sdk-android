@@ -10,6 +10,7 @@ import com.amazonaws.services.chime.sdk.meetings.analytics.EventAnalyticsControl
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.PrimaryMeetingPromotionObserver
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.LocalVideoConfiguration
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.RemoteVideoSource
+import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoCodecPreference
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoSource
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoSubscriptionConfiguration
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.capture.DefaultCameraCaptureSource
@@ -28,6 +29,7 @@ import com.xodee.client.video.RemoteVideoSourceInternal
 import com.xodee.client.video.VideoClient
 import com.xodee.client.video.VideoClientConfig
 import com.xodee.client.video.VideoClientConfigBuilder
+import com.xodee.client.video.VideoCodecCapabilitiesInternal
 import com.xodee.client.video.VideoPriorityInternal
 import com.xodee.client.video.VideoResolutionInternal
 import com.xodee.client.video.VideoSubscriptionConfigurationInternal
@@ -258,6 +260,14 @@ class DefaultVideoClientController(
 
     override fun demoteFromPrimaryMeeting() {
         if (videoClientStateController.canAct(VideoClientState.INITIALIZED)) videoClient?.demoteFromPrimaryMeeting()
+    }
+
+    override fun setVideoCodecSendPreferences(codecPreference: List<VideoCodecPreference>) {
+        logger.info(TAG, codecPreference.toString())
+        val codecPreferencesInternal = codecPreference.map { preference ->
+            VideoCodecCapabilitiesInternal(preference.name, preference.clockRate, preference.params.toString())
+        }
+        videoClient?.setVideoCodecPreferences(codecPreferencesInternal)
     }
 
     override fun initializeVideoClient() {

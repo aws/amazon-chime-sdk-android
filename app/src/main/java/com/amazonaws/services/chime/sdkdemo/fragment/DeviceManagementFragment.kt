@@ -22,8 +22,11 @@ import com.amazonaws.services.chime.sdk.meetings.audiovideo.AudioVideoConfigurat
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.AudioVideoFacade
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.audio.AudioMode
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.DefaultVideoRenderView
+import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoCodecPreference
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.capture.CameraCaptureSource
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.capture.VideoCaptureFormat
+import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.h264cbp
+import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.vp8
 import com.amazonaws.services.chime.sdk.meetings.device.DeviceChangeObserver
 import com.amazonaws.services.chime.sdk.meetings.device.MediaDevice
 import com.amazonaws.services.chime.sdk.meetings.device.MediaDeviceType
@@ -44,6 +47,7 @@ class DeviceManagementFragment : Fragment(), DeviceChangeObserver {
     private val audioDevices = mutableListOf<MediaDevice>()
     private val videoDevices = mutableListOf<MediaDevice>()
     private val videoFormats = mutableListOf<VideoCaptureFormat>()
+    private val videoCodecs = listOf(listOf(h264cbp, vp8), listOf(vp8, h264cbp))
 
     private lateinit var cameraManager: CameraManager
 
@@ -60,12 +64,15 @@ class DeviceManagementFragment : Fragment(), DeviceChangeObserver {
     private lateinit var videoDeviceArrayAdapter: ArrayAdapter<MediaDevice>
     private lateinit var videoFormatSpinner: Spinner
     private lateinit var videoFormatArrayAdapter: ArrayAdapter<VideoCaptureFormat>
+    private lateinit var videoCodecSpinner: Spinner
+    private lateinit var videoCodecArrayAdapter: ArrayAdapter<List<VideoCodecPreference>>
 
     private val VIDEO_ASPECT_RATIO_16_9 = 0.5625
 
     private val AUDIO_DEVICE_SPINNER_INDEX_KEY = "audioDeviceSpinnerIndex"
     private val VIDEO_DEVICE_SPINNER_INDEX_KEY = "videoDeviceSpinnerIndex"
     private val VIDEO_FORMAT_SPINNER_INDEX_KEY = "videoFormatSpinnerIndex"
+    private val VIDEO_CODEC_SPINNER_INDEX_KEY = "videoCodecSpinnerIndex"
 
     private val MAX_VIDEO_FORMAT_HEIGHT = 800
     private val MAX_VIDEO_FORMAT_FPS = 30
@@ -146,6 +153,13 @@ class DeviceManagementFragment : Fragment(), DeviceChangeObserver {
         videoFormatSpinner.isSelected = false
         videoFormatSpinner.setSelection(0, true)
         videoFormatSpinner.onItemSelectedListener = onVideoFormatSelected
+
+        videoCodecSpinner = view.findViewById(R.id.spinnerVideoCodec)
+        videoCodecArrayAdapter = ArrayAdapter(context, android.R.layout.simple_spinner_item, videoCodecs)
+        videoCodecSpinner.adapter = videoCodecArrayAdapter
+        videoCodecSpinner.isSelected = false
+        videoCodecSpinner.setSelection(0, true)
+        videoCodecSpinner.onItemSelectedListener = onVideoCodecSelected
 
         audioVideo.addDeviceChangeObserver(this)
 
@@ -247,6 +261,15 @@ class DeviceManagementFragment : Fragment(), DeviceChangeObserver {
         }
 
         // Abstract, requires implementation
+        override fun onNothingSelected(parent: AdapterView<*>?) {
+        }
+    }
+
+    private val onVideoCodecSelected = object : AdapterView.OnItemSelectedListener {
+        override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+            cameraCaptureSource.codecPreferences = parent?.getItemAtPosition(position) as List<VideoCodecPreference>
+        }
+
         override fun onNothingSelected(parent: AdapterView<*>?) {
         }
     }
