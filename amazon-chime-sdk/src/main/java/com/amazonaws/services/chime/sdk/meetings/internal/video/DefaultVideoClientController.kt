@@ -85,6 +85,10 @@ class DefaultVideoClientController(
 
     private var eglCore: EglCore? = null
 
+    override fun setMaxBitRateKbps(maxBitRate: Int) {
+        videoClient?.setMaxBitRateKbps(maxBitRate)
+    }
+
     override fun start() {
         if (eglCore == null) {
             eglCore = eglCoreFactory.createEglCore()
@@ -112,7 +116,6 @@ class DefaultVideoClientController(
 
     override fun startLocalVideo(config: LocalVideoConfiguration) {
         if (!videoClientStateController.canAct(VideoClientState.INITIALIZED)) return
-
         videoSourceAdapter.source = cameraCaptureSource
         logger.info(TAG, "Setting external video source in media client to internal camera source")
         videoClient?.setExternalVideoSource(videoSourceAdapter, eglCore?.eglContext)
@@ -132,7 +135,6 @@ class DefaultVideoClientController(
 
     override fun startLocalVideo(source: VideoSource, config: LocalVideoConfiguration) {
         if (!videoClientStateController.canAct(VideoClientState.INITIALIZED)) return
-
         stopInternalCaptureSourceIfRunning()
 
         videoSourceAdapter.source = source

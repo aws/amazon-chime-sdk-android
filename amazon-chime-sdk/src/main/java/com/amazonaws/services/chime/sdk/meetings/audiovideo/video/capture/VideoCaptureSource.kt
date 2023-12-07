@@ -7,6 +7,7 @@ package com.amazonaws.services.chime.sdk.meetings.audiovideo.video.capture
 
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.AudioVideoFacade
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoFrame
+import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoResolution
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoSource
 
 /**
@@ -39,4 +40,10 @@ interface VideoCaptureSource :
      * @param observer: [CaptureSourceObserver] - Observer to remove
      */
     fun removeCaptureSourceObserver(observer: CaptureSourceObserver)
+
+    /**
+     * Set max resolution for video capture source
+     * DefaultCameraCaptureSource and DefaultScreenCaptureSource call this function to set max resolution for camera and screen capture
+     */
+    fun setMaxResolution(maxResolution: VideoResolution)
 }

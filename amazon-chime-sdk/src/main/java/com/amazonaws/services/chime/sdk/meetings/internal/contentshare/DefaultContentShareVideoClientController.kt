@@ -10,6 +10,7 @@ import com.amazonaws.services.chime.sdk.meetings.audiovideo.contentshare.Content
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.contentshare.ContentShareStatus
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.contentshare.ContentShareStatusCode
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.LocalVideoConfiguration
+import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoResolution
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoSource
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.gl.EglCore
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.gl.EglCoreFactory
@@ -39,6 +40,7 @@ class DefaultContentShareVideoClientController(
     private var isSharing = false
 
     private val TAG = "DefaultContentShareVideoClientController"
+    private val ContentHighResolutionBitrateKbps: Int = 2500
 
     private val VIDEO_CLIENT_FLAG_ENABLE_SEND_SIDE_BWE = 1 shl 5
     private val VIDEO_CLIENT_FLAG_ENABLE_USE_HW_DECODE_AND_RENDER = 1 shl 6
@@ -53,6 +55,12 @@ class DefaultContentShareVideoClientController(
     }
 
     override fun startVideoShare(videoSource: VideoSource, config: LocalVideoConfiguration) {
+
+        if (configuration.features.contentMaxResolution == VideoResolution.Disabled) {
+            logger.info(TAG, "Could not start content because max content resolution was set to disabled")
+            return
+        }
+
         // Start the given content share source
         if (eglCore == null) {
             logger.debug(TAG, "Creating EGL core")
@@ -85,6 +93,11 @@ class DefaultContentShareVideoClientController(
         isSharing = true
         config.safeMaxBitRateKbps.let {
             if (it > 0) videoClient?.setMaxBitRateKbps(it)
+        }
+
+        if (configuration.features.contentMaxResolution == VideoResolution.VideoResolutionUHD) {
+            videoClient?.setMaxBitRateKbps(ContentHighResolutionBitrateKbps)
+            logger.info(TAG, "Set Max Bitrate to 2500kbps for UHD content")
         }
     }
 

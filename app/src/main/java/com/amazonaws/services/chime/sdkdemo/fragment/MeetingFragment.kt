@@ -87,6 +87,9 @@ import com.amazonaws.services.chime.sdk.meetings.realtime.datamessage.DataMessag
 import com.amazonaws.services.chime.sdk.meetings.realtime.datamessage.DataMessageObserver
 import com.amazonaws.services.chime.sdk.meetings.session.CreateAttendeeResponse
 import com.amazonaws.services.chime.sdk.meetings.session.CreateMeetingResponse
+import com.amazonaws.services.chime.sdk.meetings.session.MediaPlacement
+import com.amazonaws.services.chime.sdk.meetings.session.Meeting
+import com.amazonaws.services.chime.sdk.meetings.session.MeetingFeatures
 import com.amazonaws.services.chime.sdk.meetings.session.MeetingSessionConfiguration
 import com.amazonaws.services.chime.sdk.meetings.session.MeetingSessionCredentials
 import com.amazonaws.services.chime.sdk.meetings.session.MeetingSessionStatus
@@ -680,8 +683,23 @@ class MeetingFragment : Fragment(),
         }
         return try {
             val joinMeetingResponse = gson.fromJson(responseData, JoinMeetingResponse::class.java)
+            val meetingResp = joinMeetingResponse.joinInfo.meetingResponse.meeting
+            val externalMeetingId: String? = meetingResp.ExternalMeetingId
+            val mediaPlacement: MediaPlacement = meetingResp.MediaPlacement
+            val mediaRegion: String = meetingResp.MediaRegion
+            val meetingId: String = meetingResp.MeetingId
+            val meetingFeatures: MeetingFeatures = MeetingFeatures(meetingResp.MeetingFeatures?.Video?.MaxResolution, meetingResp.MeetingFeatures?.Content?.MaxResolution)
+            val meeting =
+                Meeting(
+                    externalMeetingId,
+                    mediaPlacement,
+                    mediaRegion,
+                    meetingId,
+                    meetingFeatures
+                )
+
             MeetingSessionConfiguration(
-                CreateMeetingResponse(joinMeetingResponse.joinInfo.meetingResponse.meeting),
+                CreateMeetingResponse(meeting),
                 CreateAttendeeResponse(joinMeetingResponse.joinInfo.attendeeResponse.attendee),
                 ::dummyUrlRewriter
             ).credentials
@@ -1446,6 +1464,11 @@ class MeetingFragment : Fragment(),
                         audioVideo.stopContentShare()
                     }
                 }
+
+                // Pass a new parameter to DefaultScreenCaptureSource (contentMaxResolution)
+                val activity = fragmentContext as MeetingActivity
+                val meetingSessionConfiguration = activity.getMeetingSessionConfiguration()
+                screenCaptureSource.setMaxResolution(meetingSessionConfiguration.features.contentMaxResolution)
 
                 screenShareManager = ScreenShareManager(screenCaptureSource, fragmentContext)
                 screenShareManager?.screenCaptureConnectionService = screenshareServiceConnection

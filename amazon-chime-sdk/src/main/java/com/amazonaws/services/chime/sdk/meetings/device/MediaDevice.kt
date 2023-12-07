@@ -41,6 +41,8 @@ data class MediaDevice(
     companion object {
 
         private val DEFAULT_MAX_VIDEO_FORMAT_FPS = 30
+        private val DEFAULT_MAX_VIDEO_WIDTH = 1280
+        private val DEFAULT_MAX_VIDEO_HEIGHT = 720
 
         /**
          * Lists currently available video devices.
@@ -71,7 +73,9 @@ data class MediaDevice(
         fun listSupportedVideoCaptureFormats(
             cameraManager: CameraManager,
             mediaDevice: MediaDevice,
-            maxVideoFps: Int = DEFAULT_MAX_VIDEO_FORMAT_FPS
+            maxVideoFps: Int = DEFAULT_MAX_VIDEO_FORMAT_FPS,
+            maxVideoWidth: Int = DEFAULT_MAX_VIDEO_WIDTH,
+            maxVideoHeight: Int = DEFAULT_MAX_VIDEO_HEIGHT
         ): List<VideoCaptureFormat> {
             val characteristics = cameraManager.getCameraCharacteristics(mediaDevice.id ?: return emptyList())
             val fps = characteristics.get(
@@ -83,8 +87,9 @@ data class MediaDevice(
                             ?: return emptyList()
             val nativeSizes = streamMap.getOutputSizes(SurfaceTexture::class.java)
                     ?: return emptyList()
+            val filteredList = nativeSizes.filter { it.width <= maxVideoWidth && it.height <= maxVideoHeight }
 
-            return nativeSizes.map { size -> VideoCaptureFormat(size.width, size.height, fps) }
+            return filteredList.map { size -> VideoCaptureFormat(size.width, size.height, fps) }
         }
     }
 }

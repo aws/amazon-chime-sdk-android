@@ -15,6 +15,7 @@ import android.os.HandlerThread
 import android.view.Surface
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoContentHint
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoFrame
+import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoResolution
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoSink
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.buffer.VideoFrameTextureBuffer
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.gl.EglCore
@@ -133,6 +134,7 @@ class DefaultSurfaceTextureCaptureSource(
             }, handler)
         }
     }
+    override fun setMaxResolution(maxResolution: VideoResolution) {}
 
     override fun stop() {
         runBlocking(handler.asCoroutineDispatcher().immediate) {

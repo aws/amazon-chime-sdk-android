@@ -1,3 +1,8 @@
+## [0.19.0] - 2023-12-07
+
+### Added
+* Support feature-based meeting. See README for more details.
+
 ## [0.18.3] - 2023-09-28
 
 ### Added

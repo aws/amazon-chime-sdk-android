@@ -22,6 +22,7 @@ import com.amazonaws.services.chime.sdk.meetings.audiovideo.AudioVideoConfigurat
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.AudioVideoFacade
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.audio.AudioMode
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.DefaultVideoRenderView
+import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoResolution
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.capture.CameraCaptureSource
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.capture.VideoCaptureFormat
 import com.amazonaws.services.chime.sdk.meetings.device.DeviceChangeObserver
@@ -67,7 +68,8 @@ class DeviceManagementFragment : Fragment(), DeviceChangeObserver {
     private val VIDEO_DEVICE_SPINNER_INDEX_KEY = "videoDeviceSpinnerIndex"
     private val VIDEO_FORMAT_SPINNER_INDEX_KEY = "videoFormatSpinnerIndex"
 
-    private val MAX_VIDEO_FORMAT_HEIGHT = 800
+    private var MAX_VIDEO_FORMAT_WIDTH = 1280
+    private var MAX_VIDEO_FORMAT_HEIGHT = 720
     private val MAX_VIDEO_FORMAT_FPS = 30
 
     companion object {
@@ -171,7 +173,7 @@ class DeviceManagementFragment : Fragment(), DeviceChangeObserver {
             populateDeviceList(audioVideo.listAudioDevices(), audioDevices, audioDeviceArrayAdapter)
             populateDeviceList(MediaDevice.listVideoDevices(cameraManager), videoDevices, videoDeviceArrayAdapter)
             cameraCaptureSource.device ?.let {
-                populateVideoFormatList(MediaDevice.listSupportedVideoCaptureFormats(cameraManager, it))
+                populateVideoFormatList(MediaDevice.listSupportedVideoCaptureFormats(cameraManager, it, MAX_VIDEO_FORMAT_FPS, MAX_VIDEO_FORMAT_WIDTH, MAX_VIDEO_FORMAT_HEIGHT))
             }
 
             videoPreview.mirror =
@@ -264,10 +266,21 @@ class DeviceManagementFragment : Fragment(), DeviceChangeObserver {
         }
     }
 
+    public fun setVideoMaxResolution(resolution: VideoResolution) {
+        if (resolution == VideoResolution.VideoResolutionFHD) {
+            MAX_VIDEO_FORMAT_WIDTH = 1920
+            MAX_VIDEO_FORMAT_HEIGHT = 1080
+        } else {
+            MAX_VIDEO_FORMAT_WIDTH = 1280
+            MAX_VIDEO_FORMAT_HEIGHT = 720
+        }
+    }
+
     private fun populateVideoFormatList(freshVideoCaptureFormatList: List<VideoCaptureFormat>) {
         videoFormats.clear()
 
         val filteredFormats = freshVideoCaptureFormatList.filter {
+            it.width <= MAX_VIDEO_FORMAT_WIDTH &&
             it.height <= MAX_VIDEO_FORMAT_HEIGHT &&
             it.maxFps <= MAX_VIDEO_FORMAT_FPS
         }

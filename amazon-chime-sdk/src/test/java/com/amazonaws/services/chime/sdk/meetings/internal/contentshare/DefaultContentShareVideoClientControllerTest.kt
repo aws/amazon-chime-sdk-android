@@ -8,6 +8,7 @@ package com.amazonaws.services.chime.sdk.meetings.internal.contentshare
 import android.content.Context
 import android.util.Log
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.contentshare.ContentShareObserver
+import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoResolution
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoSource
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.gl.EglCore
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.gl.EglCoreFactory
@@ -92,10 +93,34 @@ class DefaultContentShareVideoClientControllerTest {
 
     @Test
     fun `startVideoShare should call VideoClientStateController setExternalVideoSource`() {
+
         every { mockVideoClient.start(any()) } returns true
         testContentShareVideoClientController.startVideoShare(mockVideoSource)
 
         verify(exactly = 1) { mockVideoClient.setExternalVideoSource(any(), any()) }
+    }
+    @Test
+    fun `startVideoShare should not call VideoClientStateController setExternalVideoSource when contentMaxResolution is set to Disabled`() {
+
+        every { mockConfiguration.features.contentMaxResolution } returns VideoResolution.Disabled
+        every { mockVideoClient.start(any()) } returns true
+        testContentShareVideoClientController.startVideoShare(mockVideoSource)
+
+        verify(exactly = 0) { mockVideoClient.setExternalVideoSource(any(), any()) }
+    }
+    @Test
+    fun `startVideoShare should call VideoClientStateController setExternalVideoSource when contentMaxResolution is set to VideoResolutionUHD`() {
+
+        every { mockConfiguration.features.contentMaxResolution } returns VideoResolution.VideoResolutionUHD
+        every { mockVideoClient.start(any()) } returns true
+        every { mockVideoClient.setSending(any()) } just runs
+        every { mockVideoClient.setMaxBitRateKbps(any()) } just runs
+        every { mockVideoClient.setExternalVideoSource(any(), any()) } just runs
+        testContentShareVideoClientController.startVideoShare(mockVideoSource)
+
+        verify(exactly = 1) { mockVideoClient.setExternalVideoSource(any(), any()) }
+        verify(exactly = 1) { mockVideoClient.setMaxBitRateKbps(any()) }
+        verify(exactly = 1) { mockVideoClient.setSending(any()) }
     }
 
     @Test

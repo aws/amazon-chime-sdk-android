@@ -6,7 +6,7 @@
 package com.amazonaws.services.chime.sdkdemo.data
 
 import com.amazonaws.services.chime.sdk.meetings.session.Attendee
-import com.amazonaws.services.chime.sdk.meetings.session.Meeting
+import com.amazonaws.services.chime.sdk.meetings.session.MediaPlacement
 import com.google.gson.annotations.SerializedName
 
 data class JoinMeetingResponse(
@@ -20,9 +20,31 @@ data class MeetingInfo(
 )
 
 data class MeetingResponse(
-    @SerializedName("Meeting") val meeting: Meeting
+    @SerializedName("Meeting") val meeting: MeetingResp
 )
 
 data class AttendeeResponse(
     @SerializedName("Attendee") val attendee: Attendee
+)
+data class MeetingResp(
+    val ExternalMeetingId: String?,
+    val MediaPlacement: MediaPlacement,
+    val MediaRegion: String,
+    val MeetingId: String,
+    val MeetingFeatures: MeetingFeaturesResp?
+)
+data class MeetingFeaturesResp constructor(
+    val Audio: AudioFeatures?,
+    val Video: VideoFeatures?,
+    val Content: VideoFeatures?,
+    val Attendee: AttendeeFeatures?
+)
+data class AudioFeatures @JvmOverloads constructor(
+    val EchoReduction: String?
+)
+data class VideoFeatures @JvmOverloads constructor(
+    val MaxResolution: String?
+)
+data class AttendeeFeatures @JvmOverloads constructor(
+    val MaxCount: Int?
 )

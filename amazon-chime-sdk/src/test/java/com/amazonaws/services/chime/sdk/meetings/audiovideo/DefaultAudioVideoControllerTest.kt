@@ -5,29 +5,40 @@
 
 package com.amazonaws.services.chime.sdk.meetings.audiovideo
 
+import android.util.Log
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.audio.AudioMode
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.audio.AudioRecordingPresetOverride
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.audio.AudioStreamType
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.metric.MetricsObserver
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.LocalVideoConfiguration
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.RemoteVideoSource
+import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoResolution
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoSource
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoSubscriptionConfiguration
 import com.amazonaws.services.chime.sdk.meetings.internal.audio.AudioClientController
 import com.amazonaws.services.chime.sdk.meetings.internal.audio.AudioClientObserver
 import com.amazonaws.services.chime.sdk.meetings.internal.metric.ClientMetricsCollector
+import com.amazonaws.services.chime.sdk.meetings.internal.utils.AppInfoUtil
 import com.amazonaws.services.chime.sdk.meetings.internal.video.VideoClientController
 import com.amazonaws.services.chime.sdk.meetings.internal.video.VideoClientObserver
+import com.amazonaws.services.chime.sdk.meetings.session.MeetingFeatures
 import com.amazonaws.services.chime.sdk.meetings.session.MeetingSessionConfiguration
 import com.amazonaws.services.chime.sdk.meetings.session.MeetingSessionCredentials
 import com.amazonaws.services.chime.sdk.meetings.session.MeetingSessionStatus
 import com.amazonaws.services.chime.sdk.meetings.session.MeetingSessionStatusCode
 import com.amazonaws.services.chime.sdk.meetings.session.MeetingSessionURLs
 import com.amazonaws.services.chime.sdk.meetings.session.defaultUrlRewriter
+import com.amazonaws.services.chime.sdk.meetings.utils.logger.ConsoleLogger
+import com.amazonaws.services.chime.sdk.meetings.utils.logger.LogLevel
+import com.xodee.client.video.VideoClient
 import io.mockk.MockKAnnotations
 import io.mockk.every
 import io.mockk.impl.annotations.MockK
+import io.mockk.just
 import io.mockk.mockkConstructor
+import io.mockk.mockkObject
+import io.mockk.mockkStatic
+import io.mockk.runs
 import io.mockk.slot
 import io.mockk.verify
 import java.util.Timer
@@ -61,6 +72,23 @@ class DefaultAudioVideoControllerTest {
         MeetingSessionCredentials(attendeeId, externalUserId, joinToken),
         MeetingSessionURLs(audioFallbackURL, audioHostURL, turnControlURL, signalingURL, ::defaultUrlRewriter)
     )
+
+    private val meetingSessionConfigurationNone = MeetingSessionConfiguration(
+        meetingId,
+        externalMeetingId,
+        MeetingSessionCredentials(attendeeId, externalUserId, joinToken),
+        MeetingSessionURLs(audioFallbackURL, audioHostURL, turnControlURL, signalingURL, ::defaultUrlRewriter),
+        MeetingFeatures(videoMaxResolution = VideoResolution.Disabled, contentMaxResolution = VideoResolution.Disabled)
+    )
+
+    private val meetingSessionConfigurationHigh = MeetingSessionConfiguration(
+        meetingId,
+        externalMeetingId,
+        MeetingSessionCredentials(attendeeId, externalUserId, joinToken),
+        MeetingSessionURLs(audioFallbackURL, audioHostURL, turnControlURL, signalingURL, ::defaultUrlRewriter),
+        MeetingFeatures(videoMaxResolution = VideoResolution.VideoResolutionFHD, contentMaxResolution = VideoResolution.VideoResolutionUHD)
+    )
+
     private val localVideoConfig = LocalVideoConfiguration()
 
     @MockK
@@ -78,8 +106,6 @@ class DefaultAudioVideoControllerTest {
     @MockK
     private lateinit var videoClientObserver: VideoClientObserver
 
-    private lateinit var audioVideoController: DefaultAudioVideoController
-
     @MockK
     private lateinit var mockPrimaryMeetingSessionCredentials: MeetingSessionCredentials
 
@@ -92,14 +118,29 @@ class DefaultAudioVideoControllerTest {
     @MockK
     private lateinit var mockVideoSource: VideoSource
 
+    @MockK
+    private lateinit var mockVideoClient: VideoClient
+
+    private lateinit var audioVideoController: DefaultAudioVideoController
+    private lateinit var audioVideoControllerNone: DefaultAudioVideoController
+    private lateinit var audioVideoControllerHigh: DefaultAudioVideoController
+
     @ExperimentalCoroutinesApi
     private val testDispatcher = TestCoroutineDispatcher()
 
     @ExperimentalCoroutinesApi
     @Before
     fun setup() {
+        mockkStatic(System::class, Log::class, VideoClient::class)
+        every { Log.d(any(), any()) } returns 0
+        every { System.loadLibrary(any()) } just runs
+        every { VideoClient.javaInitializeGlobals(any()) } returns true
+        mockkObject(AppInfoUtil)
+        every { AppInfoUtil.initializeVideoClientAppDetailedInfo(any()) } just runs
         Dispatchers.setMain(testDispatcher)
         MockKAnnotations.init(this, relaxUnitFun = true)
+        val logger = ConsoleLogger(LogLevel.INFO)
+
         audioVideoController =
             DefaultAudioVideoController(
                 audioClientController,
@@ -107,7 +148,28 @@ class DefaultAudioVideoControllerTest {
                 clientMetricsCollector,
                 meetingSessionConfiguration,
                 videoClientController,
-                videoClientObserver
+                videoClientObserver,
+                logger
+            )
+        audioVideoControllerNone =
+            DefaultAudioVideoController(
+                audioClientController,
+                audioClientObserver,
+                clientMetricsCollector,
+                meetingSessionConfigurationNone,
+                videoClientController,
+                videoClientObserver,
+                logger
+            )
+        audioVideoControllerHigh =
+            DefaultAudioVideoController(
+                audioClientController,
+                audioClientObserver,
+                clientMetricsCollector,
+                meetingSessionConfigurationHigh,
+                videoClientController,
+                videoClientObserver,
+                logger
             )
     }
 
@@ -332,12 +394,31 @@ class DefaultAudioVideoControllerTest {
 
         verify { videoClientController.startLocalVideo() }
     }
+    @Test
+    fun `startLocalVideo should not call videoClientController startLocalVideo when videoMaxResolution is set to None`() {
+        audioVideoControllerNone.startLocalVideo()
+        verify(exactly = 0) { videoClientController.startLocalVideo() }
+    }
+
+    @Test
+    fun `startLocalVideo should call videoClientController startLocalVideo when videoMaxResolution is set to FHD`() {
+        every { videoClientController.setMaxBitRateKbps(any()) } just runs
+        audioVideoControllerHigh.startLocalVideo()
+        verify(exactly = 1) { videoClientController.startLocalVideo() }
+        verify(exactly = 1) { videoClientController.setMaxBitRateKbps(any()) }
+    }
 
     @Test
     fun `startLocalVideo should call videoClientController startLocalVideo with given video config)`() {
         audioVideoController.startLocalVideo(localVideoConfig)
 
         verify { videoClientController.startLocalVideo(localVideoConfig) }
+    }
+    @Test
+    fun `startLocalVideo should not call videoClientController startLocalVideo with given video config when videoMaxResolution is set to None)`() {
+        audioVideoControllerNone.startLocalVideo(localVideoConfig)
+
+        verify(exactly = 0) { videoClientController.startLocalVideo(localVideoConfig) }
     }
 
     @Test

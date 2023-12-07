@@ -8,6 +8,7 @@ package com.amazonaws.services.chime.sdk.meetings.audiovideo
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.metric.MetricsObserver
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.LocalVideoConfiguration
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.RemoteVideoSource
+import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoResolution
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoSource
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoSubscriptionConfiguration
 import com.amazonaws.services.chime.sdk.meetings.internal.audio.AudioClientController
@@ -19,6 +20,7 @@ import com.amazonaws.services.chime.sdk.meetings.session.MeetingSessionConfigura
 import com.amazonaws.services.chime.sdk.meetings.session.MeetingSessionCredentials
 import com.amazonaws.services.chime.sdk.meetings.session.MeetingSessionStatus
 import com.amazonaws.services.chime.sdk.meetings.session.MeetingSessionStatusCode
+import com.amazonaws.services.chime.sdk.meetings.utils.logger.Logger
 import java.util.Timer
 import java.util.concurrent.atomic.AtomicInteger
 import kotlin.concurrent.timerTask
@@ -32,8 +34,12 @@ class DefaultAudioVideoController(
     private val clientMetricsCollector: ClientMetricsCollector,
     private val configuration: MeetingSessionConfiguration,
     private val videoClientController: VideoClientController,
-    private val videoClientObserver: VideoClientObserver
+    private val videoClientObserver: VideoClientObserver,
+    private val logger: Logger?
 ) : AudioVideoControllerFacade {
+
+    private val TAG = "DefaultAudioVideoController"
+    private val VideoHighResolutionBitrateKbps: Int = 2500
 
     companion object {
         private const val PRIMARY_MEETING_PROMOTION_TIMEOUT = 5000L
@@ -65,19 +71,31 @@ class DefaultAudioVideoController(
     }
 
     override fun startLocalVideo() {
-        videoClientController.startLocalVideo()
+        startLocalVideo { videoClientController.startLocalVideo() }
     }
 
     override fun startLocalVideo(config: LocalVideoConfiguration) {
-        videoClientController.startLocalVideo(config)
+        startLocalVideo { videoClientController.startLocalVideo(config) }
     }
 
     override fun startLocalVideo(source: VideoSource) {
-        videoClientController.startLocalVideo(source)
+        startLocalVideo { videoClientController.startLocalVideo(source) }
     }
 
     override fun startLocalVideo(source: VideoSource, config: LocalVideoConfiguration) {
-        videoClientController.startLocalVideo(source, config)
+        startLocalVideo { videoClientController.startLocalVideo(source, config) }
+    }
+
+    private fun startLocalVideo(action: () -> Unit) {
+        if (configuration.features.videoMaxResolution == VideoResolution.Disabled) {
+            logger?.info(TAG, "Could not start local video because video max resolution is set to disabled")
+            return
+        }
+        action()
+        if (configuration.features.videoMaxResolution == VideoResolution.VideoResolutionFHD) {
+            logger?.info(TAG, "Set max bitrate to $VideoHighResolutionBitrateKbps for FHD")
+            videoClientController.setMaxBitRateKbps(VideoHighResolutionBitrateKbps)
+        }
     }
 
     override fun stopLocalVideo() {
