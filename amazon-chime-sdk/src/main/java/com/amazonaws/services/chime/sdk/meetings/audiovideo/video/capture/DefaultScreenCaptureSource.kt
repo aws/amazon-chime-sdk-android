@@ -81,7 +81,7 @@ class DefaultScreenCaptureSource(
 
     private val observers = mutableSetOf<CaptureSourceObserver>()
     private var targetResolution: VideoResolution = VideoResolution.VideoResolutionFHD
-    private var screenCaptureResolutionCalculator: ScreenCaptureResolutionCalculator = ScreenCaptureResolutionCalculator()
+    private val screenCaptureResolutionCalculator: ScreenCaptureResolutionCalculator = ScreenCaptureResolutionCalculator()
 
     // Concurrency modification could happen when sink gets
     // added/removed from another thread while sending frames

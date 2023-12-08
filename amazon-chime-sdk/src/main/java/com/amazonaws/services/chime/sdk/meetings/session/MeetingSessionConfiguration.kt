@@ -21,7 +21,7 @@ data class MeetingSessionConfiguration(
     val externalMeetingId: String?,
     val credentials: MeetingSessionCredentials,
     val urls: MeetingSessionURLs,
-    var features: MeetingFeatures = MeetingFeatures()
+    val features: MeetingFeatures = MeetingFeatures()
 ) {
     @JvmOverloads
     constructor(
