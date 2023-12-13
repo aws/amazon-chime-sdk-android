@@ -5,6 +5,7 @@
 
 package com.amazonaws.services.chime.sdk.meetings.session
 
+import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoResolution
 import io.mockk.spyk
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNull
@@ -50,7 +51,281 @@ class MeetingSessionConfigurationTest {
         assertEquals(joinToken, meetingSessionConfiguration.credentials.joinToken)
         assertEquals(ingestionURL, meetingSessionConfiguration.urls.ingestionURL)
     }
+    @Test
+    fun `constructor should return object with data from parameters (check default value for meeting features)`() {
+        val meetingSessionConfiguration = MeetingSessionConfiguration(
+            CreateMeetingResponse(
+                Meeting(
+                    externalMeetingId,
+                    MediaPlacement(audioFallbackURL, audioHostURL, signalingURL, turnControlURL, ingestionURL),
+                    mediaRegion,
+                    meetingId
+                )
+            ), CreateAttendeeResponse(Attendee(attendeeId, externalUserId, joinToken))
+        )
 
+        assertEquals(meetingId, meetingSessionConfiguration.meetingId)
+        assertEquals(audioHostURL, meetingSessionConfiguration.urls.audioHostURL)
+        assertEquals(audioFallbackURL, meetingSessionConfiguration.urls.audioFallbackURL)
+        assertEquals(turnControlURL, meetingSessionConfiguration.urls.turnControlURL)
+        assertEquals(signalingURL, meetingSessionConfiguration.urls.signalingURL)
+        assertEquals(attendeeId, meetingSessionConfiguration.credentials.attendeeId)
+        assertEquals(joinToken, meetingSessionConfiguration.credentials.joinToken)
+        assertEquals(ingestionURL, meetingSessionConfiguration.urls.ingestionURL)
+        assertEquals(VideoResolution.VideoResolutionHD, meetingSessionConfiguration.features.videoMaxResolution)
+        assertEquals(VideoResolution.VideoResolutionFHD, meetingSessionConfiguration.features.contentMaxResolution)
+    }
+    @Test
+    fun `constructor should return object with data from parameters (with Audio feature only)`() {
+        val meetingSessionConfiguration = MeetingSessionConfiguration(
+            CreateMeetingResponse(
+                Meeting(
+                    externalMeetingId,
+                    MediaPlacement(audioFallbackURL, audioHostURL, signalingURL, turnControlURL, ingestionURL),
+                    mediaRegion,
+                    meetingId,
+                    MeetingFeatures()
+                )
+            ), CreateAttendeeResponse(Attendee(attendeeId, externalUserId, joinToken))
+        )
+
+        assertEquals(meetingId, meetingSessionConfiguration.meetingId)
+        assertEquals(audioHostURL, meetingSessionConfiguration.urls.audioHostURL)
+        assertEquals(audioFallbackURL, meetingSessionConfiguration.urls.audioFallbackURL)
+        assertEquals(turnControlURL, meetingSessionConfiguration.urls.turnControlURL)
+        assertEquals(signalingURL, meetingSessionConfiguration.urls.signalingURL)
+        assertEquals(attendeeId, meetingSessionConfiguration.credentials.attendeeId)
+        assertEquals(joinToken, meetingSessionConfiguration.credentials.joinToken)
+        assertEquals(ingestionURL, meetingSessionConfiguration.urls.ingestionURL)
+        assertEquals(VideoResolution.VideoResolutionHD, meetingSessionConfiguration.features.videoMaxResolution)
+        assertEquals(VideoResolution.VideoResolutionFHD, meetingSessionConfiguration.features.contentMaxResolution)
+    }
+    @Test
+    fun `constructor should return object with data from parameters with meeting features (None, None)`() {
+        val meetingSessionConfiguration = MeetingSessionConfiguration(
+            CreateMeetingResponse(
+                Meeting(
+                    externalMeetingId,
+                    MediaPlacement(audioFallbackURL, audioHostURL, signalingURL, turnControlURL, ingestionURL),
+                    mediaRegion,
+                    meetingId,
+                    MeetingFeatures("None", "None")
+                )
+            ), CreateAttendeeResponse(Attendee(attendeeId, externalUserId, joinToken))
+        )
+
+        assertEquals(meetingId, meetingSessionConfiguration.meetingId)
+        assertEquals(audioHostURL, meetingSessionConfiguration.urls.audioHostURL)
+        assertEquals(audioFallbackURL, meetingSessionConfiguration.urls.audioFallbackURL)
+        assertEquals(turnControlURL, meetingSessionConfiguration.urls.turnControlURL)
+        assertEquals(signalingURL, meetingSessionConfiguration.urls.signalingURL)
+        assertEquals(attendeeId, meetingSessionConfiguration.credentials.attendeeId)
+        assertEquals(joinToken, meetingSessionConfiguration.credentials.joinToken)
+        assertEquals(ingestionURL, meetingSessionConfiguration.urls.ingestionURL)
+        assertEquals(VideoResolution.Disabled, meetingSessionConfiguration.features.videoMaxResolution)
+        assertEquals(VideoResolution.Disabled, meetingSessionConfiguration.features.contentMaxResolution)
+    }
+    @Test
+    fun `constructor should return object with data from parameters with meeting features (None, FHD)`() {
+        val meetingSessionConfiguration = MeetingSessionConfiguration(
+            CreateMeetingResponse(
+                Meeting(
+                    externalMeetingId,
+                    MediaPlacement(audioFallbackURL, audioHostURL, signalingURL, turnControlURL, ingestionURL),
+                    mediaRegion,
+                    meetingId,
+                    MeetingFeatures("None", "FHD")
+                )
+            ), CreateAttendeeResponse(Attendee(attendeeId, externalUserId, joinToken))
+        )
+
+        assertEquals(meetingId, meetingSessionConfiguration.meetingId)
+        assertEquals(audioHostURL, meetingSessionConfiguration.urls.audioHostURL)
+        assertEquals(audioFallbackURL, meetingSessionConfiguration.urls.audioFallbackURL)
+        assertEquals(turnControlURL, meetingSessionConfiguration.urls.turnControlURL)
+        assertEquals(signalingURL, meetingSessionConfiguration.urls.signalingURL)
+        assertEquals(attendeeId, meetingSessionConfiguration.credentials.attendeeId)
+        assertEquals(joinToken, meetingSessionConfiguration.credentials.joinToken)
+        assertEquals(ingestionURL, meetingSessionConfiguration.urls.ingestionURL)
+        assertEquals(VideoResolution.Disabled, meetingSessionConfiguration.features.videoMaxResolution)
+        assertEquals(VideoResolution.VideoResolutionFHD, meetingSessionConfiguration.features.contentMaxResolution)
+    }
+    @Test
+    fun `constructor should return object with data from parameters with meeting features (None, UHD)`() {
+        val meetingSessionConfiguration = MeetingSessionConfiguration(
+            CreateMeetingResponse(
+                Meeting(
+                    externalMeetingId,
+                    MediaPlacement(audioFallbackURL, audioHostURL, signalingURL, turnControlURL, ingestionURL),
+                    mediaRegion,
+                    meetingId,
+                    MeetingFeatures("None", "UHD")
+                )
+            ), CreateAttendeeResponse(Attendee(attendeeId, externalUserId, joinToken))
+        )
+
+        assertEquals(meetingId, meetingSessionConfiguration.meetingId)
+        assertEquals(audioHostURL, meetingSessionConfiguration.urls.audioHostURL)
+        assertEquals(audioFallbackURL, meetingSessionConfiguration.urls.audioFallbackURL)
+        assertEquals(turnControlURL, meetingSessionConfiguration.urls.turnControlURL)
+        assertEquals(signalingURL, meetingSessionConfiguration.urls.signalingURL)
+        assertEquals(attendeeId, meetingSessionConfiguration.credentials.attendeeId)
+        assertEquals(joinToken, meetingSessionConfiguration.credentials.joinToken)
+        assertEquals(ingestionURL, meetingSessionConfiguration.urls.ingestionURL)
+        assertEquals(VideoResolution.Disabled, meetingSessionConfiguration.features.videoMaxResolution)
+        assertEquals(VideoResolution.VideoResolutionUHD, meetingSessionConfiguration.features.contentMaxResolution)
+    }
+    @Test
+    fun `constructor should return object with data from parameters with meeting features (HD, None)`() {
+        val meetingSessionConfiguration = MeetingSessionConfiguration(
+            CreateMeetingResponse(
+                Meeting(
+                    externalMeetingId,
+                    MediaPlacement(audioFallbackURL, audioHostURL, signalingURL, turnControlURL, ingestionURL),
+                    mediaRegion,
+                    meetingId,
+                    MeetingFeatures("HD", "None")
+                )
+            ), CreateAttendeeResponse(Attendee(attendeeId, externalUserId, joinToken))
+        )
+
+        assertEquals(meetingId, meetingSessionConfiguration.meetingId)
+        assertEquals(audioHostURL, meetingSessionConfiguration.urls.audioHostURL)
+        assertEquals(audioFallbackURL, meetingSessionConfiguration.urls.audioFallbackURL)
+        assertEquals(turnControlURL, meetingSessionConfiguration.urls.turnControlURL)
+        assertEquals(signalingURL, meetingSessionConfiguration.urls.signalingURL)
+        assertEquals(attendeeId, meetingSessionConfiguration.credentials.attendeeId)
+        assertEquals(joinToken, meetingSessionConfiguration.credentials.joinToken)
+        assertEquals(ingestionURL, meetingSessionConfiguration.urls.ingestionURL)
+        assertEquals(VideoResolution.VideoResolutionHD, meetingSessionConfiguration.features.videoMaxResolution)
+        assertEquals(VideoResolution.Disabled, meetingSessionConfiguration.features.contentMaxResolution)
+    }
+    @Test
+    fun `constructor should return object with data from parameters with meeting features (HD, FHD)`() {
+        val meetingSessionConfiguration = MeetingSessionConfiguration(
+            CreateMeetingResponse(
+                Meeting(
+                    externalMeetingId,
+                    MediaPlacement(audioFallbackURL, audioHostURL, signalingURL, turnControlURL, ingestionURL),
+                    mediaRegion,
+                    meetingId,
+                    MeetingFeatures("HD", "FHD")
+                )
+            ), CreateAttendeeResponse(Attendee(attendeeId, externalUserId, joinToken))
+        )
+
+        assertEquals(meetingId, meetingSessionConfiguration.meetingId)
+        assertEquals(audioHostURL, meetingSessionConfiguration.urls.audioHostURL)
+        assertEquals(audioFallbackURL, meetingSessionConfiguration.urls.audioFallbackURL)
+        assertEquals(turnControlURL, meetingSessionConfiguration.urls.turnControlURL)
+        assertEquals(signalingURL, meetingSessionConfiguration.urls.signalingURL)
+        assertEquals(attendeeId, meetingSessionConfiguration.credentials.attendeeId)
+        assertEquals(joinToken, meetingSessionConfiguration.credentials.joinToken)
+        assertEquals(ingestionURL, meetingSessionConfiguration.urls.ingestionURL)
+        assertEquals(VideoResolution.VideoResolutionHD, meetingSessionConfiguration.features.videoMaxResolution)
+        assertEquals(VideoResolution.VideoResolutionFHD, meetingSessionConfiguration.features.contentMaxResolution)
+    }
+    @Test
+    fun `constructor should return object with data from parameters with meeting features (HD, UHD)`() {
+        val meetingSessionConfiguration = MeetingSessionConfiguration(
+            CreateMeetingResponse(
+                Meeting(
+                    externalMeetingId,
+                    MediaPlacement(audioFallbackURL, audioHostURL, signalingURL, turnControlURL, ingestionURL),
+                    mediaRegion,
+                    meetingId,
+                    MeetingFeatures("HD", "UHD")
+                )
+            ), CreateAttendeeResponse(Attendee(attendeeId, externalUserId, joinToken))
+        )
+
+        assertEquals(meetingId, meetingSessionConfiguration.meetingId)
+        assertEquals(audioHostURL, meetingSessionConfiguration.urls.audioHostURL)
+        assertEquals(audioFallbackURL, meetingSessionConfiguration.urls.audioFallbackURL)
+        assertEquals(turnControlURL, meetingSessionConfiguration.urls.turnControlURL)
+        assertEquals(signalingURL, meetingSessionConfiguration.urls.signalingURL)
+        assertEquals(attendeeId, meetingSessionConfiguration.credentials.attendeeId)
+        assertEquals(joinToken, meetingSessionConfiguration.credentials.joinToken)
+        assertEquals(ingestionURL, meetingSessionConfiguration.urls.ingestionURL)
+        assertEquals(VideoResolution.VideoResolutionHD, meetingSessionConfiguration.features.videoMaxResolution)
+        assertEquals(VideoResolution.VideoResolutionUHD, meetingSessionConfiguration.features.contentMaxResolution)
+    }
+    @Test
+    fun `constructor should return object with data from parameters with meeting features (FHD, None)`() {
+        val meetingSessionConfiguration = MeetingSessionConfiguration(
+            CreateMeetingResponse(
+                Meeting(
+                    externalMeetingId,
+                    MediaPlacement(audioFallbackURL, audioHostURL, signalingURL, turnControlURL, ingestionURL),
+                    mediaRegion,
+                    meetingId,
+                    MeetingFeatures("FHD", "None")
+                )
+            ), CreateAttendeeResponse(Attendee(attendeeId, externalUserId, joinToken))
+        )
+
+        assertEquals(meetingId, meetingSessionConfiguration.meetingId)
+        assertEquals(audioHostURL, meetingSessionConfiguration.urls.audioHostURL)
+        assertEquals(audioFallbackURL, meetingSessionConfiguration.urls.audioFallbackURL)
+        assertEquals(turnControlURL, meetingSessionConfiguration.urls.turnControlURL)
+        assertEquals(signalingURL, meetingSessionConfiguration.urls.signalingURL)
+        assertEquals(attendeeId, meetingSessionConfiguration.credentials.attendeeId)
+        assertEquals(joinToken, meetingSessionConfiguration.credentials.joinToken)
+        assertEquals(ingestionURL, meetingSessionConfiguration.urls.ingestionURL)
+        assertEquals(VideoResolution.VideoResolutionFHD, meetingSessionConfiguration.features.videoMaxResolution)
+        assertEquals(VideoResolution.Disabled, meetingSessionConfiguration.features.contentMaxResolution)
+    }
+
+    @Test
+    fun `constructor should return object with data from parameters with meeting features (FHD, FHD)`() {
+        val meetingSessionConfiguration = MeetingSessionConfiguration(
+            CreateMeetingResponse(
+                Meeting(
+                    externalMeetingId,
+                    MediaPlacement(audioFallbackURL, audioHostURL, signalingURL, turnControlURL, ingestionURL),
+                    mediaRegion,
+                    meetingId,
+                    MeetingFeatures("FHD", "FHD")
+                )
+            ), CreateAttendeeResponse(Attendee(attendeeId, externalUserId, joinToken))
+        )
+
+        assertEquals(meetingId, meetingSessionConfiguration.meetingId)
+        assertEquals(audioHostURL, meetingSessionConfiguration.urls.audioHostURL)
+        assertEquals(audioFallbackURL, meetingSessionConfiguration.urls.audioFallbackURL)
+        assertEquals(turnControlURL, meetingSessionConfiguration.urls.turnControlURL)
+        assertEquals(signalingURL, meetingSessionConfiguration.urls.signalingURL)
+        assertEquals(attendeeId, meetingSessionConfiguration.credentials.attendeeId)
+        assertEquals(joinToken, meetingSessionConfiguration.credentials.joinToken)
+        assertEquals(ingestionURL, meetingSessionConfiguration.urls.ingestionURL)
+        assertEquals(VideoResolution.VideoResolutionFHD, meetingSessionConfiguration.features.videoMaxResolution)
+        assertEquals(VideoResolution.VideoResolutionFHD, meetingSessionConfiguration.features.contentMaxResolution)
+    }
+    @Test
+    fun `constructor should return object with data from parameters with meeting features (FHD, UHD)`() {
+        val meetingSessionConfiguration = MeetingSessionConfiguration(
+            CreateMeetingResponse(
+                Meeting(
+                    externalMeetingId,
+                    MediaPlacement(audioFallbackURL, audioHostURL, signalingURL, turnControlURL, ingestionURL),
+                    mediaRegion,
+                    meetingId,
+                    MeetingFeatures("FHD", "UHD")
+                )
+            ), CreateAttendeeResponse(Attendee(attendeeId, externalUserId, joinToken))
+        )
+
+        assertEquals(meetingId, meetingSessionConfiguration.meetingId)
+        assertEquals(audioHostURL, meetingSessionConfiguration.urls.audioHostURL)
+        assertEquals(audioFallbackURL, meetingSessionConfiguration.urls.audioFallbackURL)
+        assertEquals(turnControlURL, meetingSessionConfiguration.urls.turnControlURL)
+        assertEquals(signalingURL, meetingSessionConfiguration.urls.signalingURL)
+        assertEquals(attendeeId, meetingSessionConfiguration.credentials.attendeeId)
+        assertEquals(joinToken, meetingSessionConfiguration.credentials.joinToken)
+        assertEquals(ingestionURL, meetingSessionConfiguration.urls.ingestionURL)
+        assertEquals(VideoResolution.VideoResolutionFHD, meetingSessionConfiguration.features.videoMaxResolution)
+        assertEquals(VideoResolution.VideoResolutionUHD, meetingSessionConfiguration.features.contentMaxResolution)
+    }
     @Test
     fun `constructor should return null externalMeetingId when not provided through Meeting`() {
         val meetingSessionConfiguration = MeetingSessionConfiguration(

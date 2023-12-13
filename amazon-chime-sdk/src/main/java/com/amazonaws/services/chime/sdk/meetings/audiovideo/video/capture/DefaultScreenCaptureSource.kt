@@ -22,6 +22,7 @@ import android.view.Display
 import android.view.Surface
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoContentHint
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoFrame
+import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoResolution
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoSink
 import com.amazonaws.services.chime.sdk.meetings.internal.utils.ConcurrentSet
 import com.amazonaws.services.chime.sdk.meetings.internal.utils.ObserverUtils
@@ -79,6 +80,8 @@ class DefaultScreenCaptureSource(
     private val handler: Handler
 
     private val observers = mutableSetOf<CaptureSourceObserver>()
+    private var targetResolution: VideoResolution = VideoResolution.VideoResolutionFHD
+    private val screenCaptureResolutionCalculator: ScreenCaptureResolutionCalculator = ScreenCaptureResolutionCalculator()
 
     // Concurrency modification could happen when sink gets
     // added/removed from another thread while sending frames
@@ -121,6 +124,13 @@ class DefaultScreenCaptureSource(
                     it.onCaptureStarted()
                 }
             }
+        }
+    }
+    override fun setMaxResolution(maxResolution: VideoResolution) {
+        if (maxResolution == VideoResolution.VideoResolutionUHD) {
+            targetResolution = VideoResolution.VideoResolutionUHD
+        } else {
+            targetResolution = VideoResolution.VideoResolutionFHD
         }
     }
 
@@ -171,8 +181,9 @@ class DefaultScreenCaptureSource(
 
         // Sometimes, Android changes displayMetrics widthPixels and heightPixels
         // and return inconsistent height and width for surfaceTextureSource VS virtualDisplay
-        val width = displayMetrics.widthPixels
-        val height = displayMetrics.heightPixels
+        val targetSize: IntArray = screenCaptureResolutionCalculator.computeTargetSize(displayMetrics.widthPixels, displayMetrics.heightPixels, targetResolution.width, targetResolution.height)
+        val width: Int = screenCaptureResolutionCalculator.alignToEven(targetSize[0])
+        val height: Int = screenCaptureResolutionCalculator.alignToEven(targetSize[1])
 
         // Note that in landscape, for some reason `getRealMetrics` doesn't account for the status bar correctly
         // so we try to account for it with a manual adjustment to the surface size to avoid letterboxes

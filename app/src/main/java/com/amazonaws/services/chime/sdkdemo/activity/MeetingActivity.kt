@@ -12,6 +12,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.AudioVideoConfiguration
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.AudioVideoFacade
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.audio.AudioMode
+import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoResolution
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.backgroundfilter.backgroundblur.BackgroundBlurConfiguration
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.backgroundfilter.backgroundblur.BackgroundBlurVideoFrameProcessor
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.backgroundfilter.backgroundreplacement.BackgroundReplacementVideoFrameProcessor
@@ -23,6 +24,9 @@ import com.amazonaws.services.chime.sdk.meetings.device.MediaDevice
 import com.amazonaws.services.chime.sdk.meetings.session.CreateAttendeeResponse
 import com.amazonaws.services.chime.sdk.meetings.session.CreateMeetingResponse
 import com.amazonaws.services.chime.sdk.meetings.session.DefaultMeetingSession
+import com.amazonaws.services.chime.sdk.meetings.session.MediaPlacement
+import com.amazonaws.services.chime.sdk.meetings.session.Meeting
+import com.amazonaws.services.chime.sdk.meetings.session.MeetingFeatures
 import com.amazonaws.services.chime.sdk.meetings.session.MeetingSessionConfiguration
 import com.amazonaws.services.chime.sdk.meetings.session.MeetingSessionCredentials
 import com.amazonaws.services.chime.sdk.meetings.utils.logger.ConsoleLogger
@@ -111,6 +115,13 @@ class MeetingActivity : AppCompatActivity(),
             ).apply {
                 eventAnalyticsController = meetingSession?.eventAnalyticsController
             }
+            // Add a new parameter for DefaultCameraCaptureSource (videoMaxResolution)
+            var resolution: VideoResolution = VideoResolution.VideoResolutionHD
+            meetingSession?.let {
+                resolution = it.configuration.features.videoMaxResolution
+            }
+            meetingSessionModel.cameraCaptureSource.setMaxResolution(resolution)
+
             meetingSessionModel.cpuVideoProcessor =
                 CpuVideoProcessor(logger, meetingSessionModel.eglCoreFactory)
             meetingSessionModel.gpuVideoProcessor =
@@ -132,6 +143,7 @@ class MeetingActivity : AppCompatActivity(),
 
             val deviceManagementFragment =
                 DeviceManagementFragment.newInstance(meetingId, name, audioVideoConfig)
+            deviceManagementFragment.setVideoMaxResolution(meetingSessionModel.meetingSession.configuration.features.videoMaxResolution)
             supportFragmentManager
                 .beginTransaction()
                 .add(R.id.root_layout, deviceManagementFragment, "deviceManagement")
@@ -218,11 +230,26 @@ class MeetingActivity : AppCompatActivity(),
 
     private fun createSessionConfigurationAndExtractPrimaryMeetingInformation(response: String?): MeetingSessionConfiguration? {
         if (response.isNullOrBlank()) return null
+
         return try {
             val joinMeetingResponse = gson.fromJson(response, JoinMeetingResponse::class.java)
             primaryExternalMeetingId = joinMeetingResponse.joinInfo.primaryExternalMeetingId
+            val meetingResp = joinMeetingResponse.joinInfo.meetingResponse.meeting
+            val externalMeetingId: String? = meetingResp.ExternalMeetingId
+            val mediaPlacement: MediaPlacement = meetingResp.MediaPlacement
+            val mediaRegion: String = meetingResp.MediaRegion
+            val meetingId: String = meetingResp.MeetingId
+            val meetingFeatures: MeetingFeatures = MeetingFeatures(meetingResp.MeetingFeatures?.Video?.MaxResolution, meetingResp.MeetingFeatures?.Content?.MaxResolution)
+            val meeting =
+                Meeting(
+                    externalMeetingId,
+                    mediaPlacement,
+                    mediaRegion,
+                    meetingId,
+                    meetingFeatures
+                )
             MeetingSessionConfiguration(
-                CreateMeetingResponse(joinMeetingResponse.joinInfo.meetingResponse.meeting),
+                CreateMeetingResponse(meeting),
                 CreateAttendeeResponse(joinMeetingResponse.joinInfo.attendeeResponse.attendee),
                 ::urlRewriter
             )

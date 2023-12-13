@@ -160,4 +160,9 @@ interface VideoClientController {
      * See [AudioVideoFacade.demoteFromPrimaryMeeting]
      */
     fun demoteFromPrimaryMeeting()
+
+    /**
+     * Set max bitrate in kbps for mobile video client
+     */
+    fun setMaxBitRateKbps(maxBitRate: Int)
 }

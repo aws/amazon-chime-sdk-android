@@ -31,6 +31,7 @@ import com.amazonaws.services.chime.sdk.meetings.analytics.EventName
 import com.amazonaws.services.chime.sdk.meetings.analytics.MeetingHistoryEventName
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoContentHint
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoFrame
+import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoResolution
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoRotation
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoSink
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.buffer.VideoFrameBuffer
@@ -89,6 +90,8 @@ class DefaultCameraCaptureSource @JvmOverloads constructor(
     private val DESIRED_CAPTURE_FORMAT = VideoCaptureFormat(960, 720, 30)
     private val ROTATION_360_DEGREES = 360
 
+    private var maxResolution: VideoResolution = VideoResolution.VideoResolutionHD
+
     private val TAG = "DefaultCameraCaptureSource"
 
     var eventAnalyticsController: EventAnalyticsController? = null
@@ -136,6 +139,9 @@ class DefaultCameraCaptureSource @JvmOverloads constructor(
         if (device != null) {
             eventAnalyticsController?.pushHistory(MeetingHistoryEventName.videoInputSelected)
         }
+    }
+    override fun setMaxResolution(maxResolution: VideoResolution) {
+        this.maxResolution = maxResolution
     }
 
     override var torchEnabled: Boolean = false
@@ -202,9 +208,12 @@ class DefaultCameraCaptureSource @JvmOverloads constructor(
             isCameraFrontFacing =
                 it.get(CameraCharacteristics.LENS_FACING) == CameraMetadata.LENS_FACING_FRONT
         }
+        val maxWidth: Int = this.maxResolution.width
+        val maxHeight: Int = this.maxResolution.height
+        val maxFps: Int = 30
 
         val chosenCaptureFormat: VideoCaptureFormat? =
-            MediaDevice.listSupportedVideoCaptureFormats(cameraManager, device).minBy { format ->
+            MediaDevice.listSupportedVideoCaptureFormats(cameraManager, device, maxFps, maxWidth, maxHeight).minBy { format ->
                 abs(format.width - this.format.width) + abs(format.height - this.format.height)
             }
         val surfaceTextureFormat: VideoCaptureFormat = chosenCaptureFormat ?: run {

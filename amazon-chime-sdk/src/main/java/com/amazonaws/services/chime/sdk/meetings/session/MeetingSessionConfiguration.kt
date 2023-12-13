@@ -20,7 +20,8 @@ data class MeetingSessionConfiguration(
     val meetingId: String,
     val externalMeetingId: String?,
     val credentials: MeetingSessionCredentials,
-    val urls: MeetingSessionURLs
+    val urls: MeetingSessionURLs,
+    val features: MeetingFeatures = MeetingFeatures()
 ) {
     @JvmOverloads
     constructor(
@@ -42,14 +43,15 @@ data class MeetingSessionConfiguration(
             createMeetingResponse.Meeting.MediaPlacement.SignalingUrl,
             urlRewriter,
             createMeetingResponse.Meeting.MediaPlacement.EventIngestionUrl
-        )
+        ),
+        MeetingFeatures(createMeetingResponse)
     )
 
     constructor(
         meetingId: String,
         credentials: MeetingSessionCredentials,
         urls: MeetingSessionURLs
-    ) : this(meetingId, null, credentials, urls)
+    ) : this(meetingId, null, credentials, urls, MeetingFeatures())
 
     fun createContentShareMeetingSessionConfiguration(): MeetingSessionConfiguration {
         val contentModality: String =
@@ -62,7 +64,8 @@ data class MeetingSessionConfiguration(
                 credentials.externalUserId,
                 credentials.joinToken + contentModality
             ),
-            urls
+            urls,
+            features
         )
     }
 }

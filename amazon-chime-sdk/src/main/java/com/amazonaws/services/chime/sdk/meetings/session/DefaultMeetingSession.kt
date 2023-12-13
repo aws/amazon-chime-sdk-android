@@ -170,7 +170,8 @@ class DefaultMeetingSession @JvmOverloads constructor(
                 metricsCollector,
                 configuration,
                 videoClientController,
-                videoClientObserver
+                videoClientObserver,
+                logger
             )
 
         val contentShareConfiguration =
