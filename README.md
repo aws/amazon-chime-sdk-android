@@ -62,7 +62,7 @@ dependencies {
 ```
 The version numbers could be obtained from the latest [release](https://github.com/aws/amazon-chime-sdk-android/releases/latest).
 
-If you don't need any video features, you could use amazon-chime-sdk-media-no-video-codecs instead:
+If you don't need any video features, you could use `amazon-chime-sdk-media-no-video-codecs` instead to exclude software video codecs support and reduce size.:
 
 ```
 dependencies {
