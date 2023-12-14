@@ -100,6 +100,37 @@ project.afterEvaluate {
                     }
                 }
             }
+            publishChimeSDKMediaNoVideoCodecs(MavenPublication) {
+                groupId = GROUP
+                version = media_version
+                artifactId = ARTIFACT_ID_SDK_MEDIA_NO_VIDEO_CODECS
+                artifact("$buildDir/../libs/amazon-chime-sdk-media-no-video-codecs.aar")
+
+                pom {
+                    name = POM_SDK_MEDIA_NO_VIDEO_CODECS_NAME
+                    description = POM_DESCRIPTION_SDK_MEDIA_NO_VIDEO_CODECS
+                    url = POM_URL
+                    licenses {
+                        license {
+                            name = POM_LICENCE_NAME
+                            url = POM_LICENCE_URL
+                            distribution = POM_LICENCE_DIST
+                        }
+                    }
+                    scm {
+                        url = POM_SCM_URL
+                        connection = POM_SCM_CONNECTION
+                        developerConnection = POM_SCM_DEV_CONNECTION
+                    }
+                    developers {
+                        developer {
+                            id = POM_DEVELOPER_ID
+                            organization = POM_DEVELOPER_ORGANIZATION
+                            organizationUrl = POM_DEVELOPER_ORGANIZATION_URL
+                        }
+                    }
+                }
+            }
             publishChimeSDKMachineLearning(MavenPublication) {
                 groupId = GROUP
                 version = machineLearningVersion
