@@ -62,7 +62,7 @@ dependencies {
 ```
 The version numbers could be obtained from the latest [release](https://github.com/aws/amazon-chime-sdk-android/releases/latest).
 
-If you don't need any video features, you could use `amazon-chime-sdk-media-no-video-codecs` instead to exclude software video codecs support and reduce size:
+If you don't need video and content share functionality, or software video codec support, you could use `amazon-chime-sdk-media-no-video-codecs` instead to reduce size:
 
 ```
 dependencies {
@@ -80,7 +80,7 @@ Download `amazon-chime-sdk` and `amazon-chime-sdk-media` binaries from the lates
 
 If you like to use more machine learning features, e.g. background blur/replacement, also download the `amazon-chime-sdk-machine-learning` binary from the latest [release](https://github.com/aws/amazon-chime-sdk-android/releases/latest). Otherwise, you can ignore all references to `amazon-chime-sdk-machine-learning` in the instructions below.
 
-If you don't need any video features, you could use `amazon-chime-sdk-media-no-video-codecs` instead of `amazon-chime-sdk-media` to exclude software video codecs support and reduce size. If you do, you can treat all references to `amazon-chime-sdk-media` as `amazon-chime-sdk-media-no-video-codecs` in the instructions below. 
+If you don't need video and content share functionality, or software video codec support, you could use `amazon-chime-sdk-media-no-video-codecs` instead of `amazon-chime-sdk-media` to exclude software video codecs support and reduce size. If you do, you can treat all references to `amazon-chime-sdk-media` as `amazon-chime-sdk-media-no-video-codecs` in the instructions below. 
 
 **NOTE: We do not support mixing and matching binaries from different releases.**
 
