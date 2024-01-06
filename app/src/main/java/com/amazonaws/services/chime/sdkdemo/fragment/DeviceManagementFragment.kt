@@ -165,7 +165,7 @@ class DeviceManagementFragment : Fragment(), DeviceChangeObserver {
 
             it.logger = logger
             it.init((activity as MeetingActivity).getEglCoreFactory())
-            cameraCaptureSource.addVideoSink(it)
+            // cameraCaptureSource.addVideoSink(it)
             videoPreview = it
         }
 
@@ -197,6 +197,10 @@ class DeviceManagementFragment : Fragment(), DeviceChangeObserver {
             cameraCaptureSource.device = videoDeviceSpinner.getItemAtPosition(videoDeviceSpinnerIndex) as MediaDevice
             videoPreview.mirror = cameraCaptureSource.device?.type == MediaDeviceType.VIDEO_FRONT_CAMERA
             cameraCaptureSource.format = videoFormatSpinner.getItemAtPosition(videoFormatSpinnerIndex) as VideoCaptureFormat
+
+            val backgroundBlurVideoFrameProcessor = (activity as MeetingActivity).getBackgroundBlurVideoFrameProcessor()
+            backgroundBlurVideoFrameProcessor.addVideoSink(videoPreview)
+            cameraCaptureSource.addVideoSink(backgroundBlurVideoFrameProcessor)
 
             cameraCaptureSource.start()
         }
