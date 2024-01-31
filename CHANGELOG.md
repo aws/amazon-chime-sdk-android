@@ -1,3 +1,9 @@
+## Unreleased
+
+### Fixed
+
+* Move BackgroundFilterVideoFrameProcessor.filterByteBuffer to local variable in getProcessedFrame() to prevent race condition
+
 ## [0.19.0] - 2023-12-20
 
 ### Added
