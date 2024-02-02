@@ -51,7 +51,6 @@ class BackgroundFilterVideoFrameProcessor(
 
     private var cachedWidth: Int = 0
     private var cachedHeight: Int = 0
-    private lateinit var filteredByteBuffer: ByteBuffer
 
     private val defaultInputModelShape = ModelShape()
     private val channels = defaultInputModelShape.channels
@@ -124,6 +123,7 @@ class BackgroundFilterVideoFrameProcessor(
         filteredBitmap: Bitmap?,
         rgbaData: ByteBuffer
     ): VideoFrame {
+        var filteredByteBuffer: ByteBuffer
         if (filteredBitmap == null) {
             // Display original frame when there is an error getting segmentation mask and/or blurring.
             filteredByteBuffer = rgbaData
