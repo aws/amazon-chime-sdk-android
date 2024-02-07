@@ -62,12 +62,15 @@ dependencies {
 ```
 The version numbers could be obtained from the latest [release](https://github.com/aws/amazon-chime-sdk-android/releases/latest).
 
-If you don't need video and content share functionality, or software video codec support, you could use `amazon-chime-sdk-media-no-video-codecs` instead to reduce size:
+If you don't need video and content share functionality, or software video codec support, you could use `amazon-chime-sdk-media-no-video-codecs` instead to reduce size. Exclude the usage of `amazon-chime-sdk-media` module and/or `amazon-chime-sdk-machine-learning` module from the transitive dependency of `amazon-chime-sdk`:
 
 ```
 dependencies {
     implementation 'software.aws.chimesdk:amazon-chime-sdk-media-no-video-codecs:$MEDIA_VERSION'
-    implementation 'software.aws.chimesdk:amazon-chime-sdk:$SDK_VERSION'
+    implementation ('software.aws.chimesdk:amazon-chime-sdk:$MEDIA_VERSION') {
+        exclude module: 'amazon-chime-sdk-media'
+        exclude module: 'amazon-chime-sdk-machine-learning'
+    }
 }
 ```
 
