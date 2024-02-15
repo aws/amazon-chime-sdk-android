@@ -1,8 +1,8 @@
 name: Code Coverage Check
 
 on:
-  push:
-    branches: [ '**' ]
+#  push:
+#    branches: [ '**' ]
   pull_request:
     branches: [ '**' ]
 
