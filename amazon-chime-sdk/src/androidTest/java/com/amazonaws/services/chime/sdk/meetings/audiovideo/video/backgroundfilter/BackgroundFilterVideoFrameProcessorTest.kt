@@ -32,10 +32,12 @@ import kotlin.math.abs
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
 import org.junit.Before
+import org.junit.Ignore
 import org.junit.Test
 import org.junit.runner.RunWith
 
 @RunWith(AndroidJUnit4::class)
+@Ignore("Skipping all tests before setting up real device in code coverage wf")
 class BackgroundFilterVideoFrameProcessorTest {
 
     private lateinit var testBackgroundFilterVideoFrameProcessor: BackgroundFilterVideoFrameProcessor
