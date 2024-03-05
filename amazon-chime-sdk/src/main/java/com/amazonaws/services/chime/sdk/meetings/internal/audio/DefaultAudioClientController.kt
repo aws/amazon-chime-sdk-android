@@ -147,6 +147,14 @@ class DefaultAudioClientController(
             return
         }
 
+        if (audioHostUrl.isBlank() || audioFallbackUrl.isBlank()) {
+            logger.error(
+                TAG,
+                "`audioHostUrl` or `audioFallbackUrl` is blank"
+            )
+            throw Exception("Audio failed to start")
+        }
+
         val audioUrlParts: List<String> =
             audioHostUrl.split(":".toRegex()).dropLastWhile { it.isEmpty() }
 

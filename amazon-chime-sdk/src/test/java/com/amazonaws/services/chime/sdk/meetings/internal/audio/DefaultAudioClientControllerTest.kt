@@ -33,6 +33,7 @@ import io.mockk.mockkObject
 import io.mockk.mockkStatic
 import io.mockk.runs
 import io.mockk.verify
+import java.lang.Exception
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.TestCoroutineDispatcher
@@ -685,5 +686,39 @@ class DefaultAudioClientControllerTest {
                 assertEquals(AudioRecordingPreset.VOICE_COMMUNICATION, it.audioRecordingPreset)
             })
         }
+    }
+
+    @Test(expected = Exception::class)
+    fun `start should throw exception if audioHostUrl is blank`() {
+        setupStartTests()
+
+        audioClientController.start(
+            testAudioFallbackUrl,
+            "",
+            testMeetingId,
+            testAttendeeId,
+            testJoinToken,
+            AudioMode.Mono16K,
+            AudioStreamType.VoiceCall,
+            AudioRecordingPresetOverride.VoiceCommunication,
+            true
+        )
+    }
+
+    @Test(expected = Exception::class)
+    fun `start should throw exception if audioFallbackUrl is blank`() {
+        setupStartTests()
+
+        audioClientController.start(
+            "",
+            testAudioHostUrl,
+            testMeetingId,
+            testAttendeeId,
+            testJoinToken,
+            AudioMode.Mono16K,
+            AudioStreamType.VoiceCall,
+            AudioRecordingPresetOverride.VoiceCommunication,
+            true
+        )
     }
 }
