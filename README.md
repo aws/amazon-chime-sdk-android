@@ -190,13 +190,16 @@ Start a session with custom configurations:
 meetingSession.audioVideo.start(audioVideoConfiguration)
 ```
 
-There are 4 configurations available in `audioVideoConfiguration`:
+These configurations are available in `audioVideoConfiguration`:
 - `audioMode`
+- `audioDeviceCapabilities`
 - `audioStreamType`
 - `audioRecordingPresetOverride`
 - `enableAudioRedundancy`
 
 AudioMode: The default audio format is Stereo/48KHz i.e Stereo Audio with 48KHz sampling rate (Stereo48K). Other supported audio formats include Mono/48KHz (Mono48K) or Mono/16KHz (Mono16K). You can specify a non-default audio mode in `AudioVideoConfiguration`, and then start the meeting session.
+
+AudioDeviceCapabilities: The default audio device capabilities are to have both the audio input and output devices enabled, i.e. both microphone and speaker are enabled (`InputAndOutput`). Other options are `OutputOnly` (microphone disabled and speaker enabled) and `None` (both microphone and speaker disabled).
 
 AudioStreamType: The default value is ```VoiceCall```. The available options are ```VoiceCall``` and ```Music```, they are equivalent of `STREAM_VOICE_CALL` and `STREAM_MUSIC` respectively in [AudioManager](https://developer.android.com/reference/android/media/AudioManager). This configuration is for addressing the audio volume [issue](https://github.com/aws/amazon-chime-sdk-android/issues/296) on Oculus Quest 2. If you don't know what it is, you probably don't need to worry about it. For more information, please refer to Android documentation: [STREAM_VOICE_CALL](https://developer.android.com/reference/android/media/AudioManager#STREAM_VOICE_CALL), [STREAM_MUSIC](https://developer.android.com/reference/android/media/AudioManager#STREAM_MUSIC).
 
@@ -324,10 +327,11 @@ override fun onAudioDeviceChanged(freshAudioDeviceList: List<MediaDevice>) {
 
 > When joining a meeting, each configuration will have a default if not explicitly specified when starting the audio session.
 > 
-> Supported AudioMode options: *Mono/16KHz*, *Mono/48KHz*, and *Stereo/48KHz*. Default is *Stereo/48KHz*.
-> Supported AudioStreamType options: *VoiceCall* and *Music*. Default is *VoiceCall*
-> Supported AudioRecordingPresetOverride options: *None*, *Generic*, *Camcorder*, *VoiceRecognition* and *VoiceCommunication*. Default is *None*.
-> Supported enableAudioRedundancy options: *true* and *false*. Default is *true*.
+> - Supported AudioMode options: *Mono/16KHz*, *Mono/48KHz*, and *Stereo/48KHz*. Default is *Stereo/48KHz*.
+> - Supported AudioDeviceCapabilities options: *Input and Output*, *Output Only*, and *None*. Default is *Input and Output*.
+> - Supported AudioStreamType options: *VoiceCall* and *Music*. Default is *VoiceCall*
+> - Supported AudioRecordingPresetOverride options: *None*, *Generic*, *Camcorder*, *VoiceRecognition* and *VoiceCommunication*. Default is *None*.
+> - Supported enableAudioRedundancy options: *true* and *false*. Default is *true*.
 
 ```kotlin
 meetingSession.audioVideo.start() // starts the audio video session with defaults mentioned above

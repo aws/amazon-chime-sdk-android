@@ -6,6 +6,7 @@
 package com.amazonaws.services.chime.sdk.meetings.internal.audio
 
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.PrimaryMeetingPromotionObserver
+import com.amazonaws.services.chime.sdk.meetings.audiovideo.audio.AudioDeviceCapabilities
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.audio.AudioMode
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.audio.AudioRecordingPresetOverride
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.audio.AudioStreamType
@@ -28,6 +29,7 @@ interface AudioClientController {
         attendeeId: String,
         joinToken: String,
         audioMode: AudioMode,
+        audioDeviceCapabilities: AudioDeviceCapabilities,
         audioStreamType: AudioStreamType,
         audioRecordingPresetOverride: AudioRecordingPresetOverride,
         enableAudioRedundancy: Boolean

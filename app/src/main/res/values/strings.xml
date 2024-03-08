@@ -9,6 +9,7 @@
     <string name="edit_name">Your Name</string>
     <string name="main_title">Join a meeting</string>
     <string name="audio_mode_spinner">Audio Mode</string>
+    <string name="audio_device_capabilities_spinner">Audio Device Capabilities</string>
     <string name="audio_redundancy_switch">Audio Redundancy</string>
     <string name="main_continue">Continue</string>
     <string name="main_continue_without_audio">Continue without audio</string>

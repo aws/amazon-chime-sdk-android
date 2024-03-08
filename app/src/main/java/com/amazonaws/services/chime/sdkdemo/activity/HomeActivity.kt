@@ -23,6 +23,7 @@ import androidx.core.content.ContextCompat
 import androidx.core.os.bundleOf
 import androidx.lifecycle.ViewModelProvider
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.AudioVideoConfiguration
+import com.amazonaws.services.chime.sdk.meetings.audiovideo.audio.AudioDeviceCapabilities
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.audio.AudioMode
 import com.amazonaws.services.chime.sdk.meetings.internal.utils.DefaultBackOffRetry
 import com.amazonaws.services.chime.sdk.meetings.internal.utils.HttpUtils
@@ -56,12 +57,14 @@ class HomeActivity : AppCompatActivity() {
     private var meetingEditText: EditText? = null
     private var nameEditText: EditText? = null
     private var audioMode: AppCompatSpinner? = null
+    private var audioDeviceCapabilitiesSpinner: AppCompatSpinner? = null
     private var audioRedundancySwitch: SwitchCompat? = null
     private var authenticationProgressBar: ProgressBar? = null
     private var meetingID: String? = null
     private var yourName: String? = null
     private var testUrl: String = ""
     private var audioModes = listOf("Stereo/48KHz Audio", "Mono/48KHz Audio", "Mono/16KHz Audio")
+    private var audioDeviceCapabilitiesOptions = listOf("Input and Output", "None", "Output Only")
     private lateinit var audioVideoConfig: AudioVideoConfiguration
     private lateinit var debugSettingsViewModel: DebugSettingsViewModel
 
@@ -71,6 +74,7 @@ class HomeActivity : AppCompatActivity() {
         const val NAME_KEY = "NAME"
         const val MEETING_ENDPOINT_KEY = "MEETING_ENDPOINT_URL"
         const val AUDIO_MODE_KEY = "AUDIO_MODE"
+        const val AUDIO_DEVICE_CAPABILITIES_KEY = "AUDIO_DEVICE_CAPABILITIES"
         const val ENABLE_AUDIO_REDUNDANCY_KEY = "ENABLE_AUDIO_REDUNDANCY"
     }
 
@@ -81,12 +85,14 @@ class HomeActivity : AppCompatActivity() {
         meetingEditText = findViewById(R.id.editMeetingId)
         nameEditText = findViewById(R.id.editName)
         audioMode = findViewById(R.id.audioModeSpinner)
+        audioDeviceCapabilitiesSpinner = findViewById(R.id.audioDeviceCapabilitiesSpinner)
         audioRedundancySwitch = findViewById(R.id.audioRedundancySwitch)
         audioRedundancySwitch?.setChecked(true)
         authenticationProgressBar = findViewById(R.id.progressAuthentication)
         debugSettingsViewModel = ViewModelProvider(this).get(DebugSettingsViewModel::class.java)
 
         audioMode?.adapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, audioModes)
+        audioDeviceCapabilitiesSpinner?.adapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, audioDeviceCapabilitiesOptions)
         findViewById<Button>(R.id.buttonContinue)?.setOnClickListener {
             joinMeeting()
         }
@@ -108,9 +114,15 @@ class HomeActivity : AppCompatActivity() {
             1 -> mode = AudioMode.Mono48K
             2 -> mode = AudioMode.Mono16K
         }
+        var audioDeviceCapabilities = AudioDeviceCapabilities.InputAndOutput
+        when (audioDeviceCapabilitiesSpinner?.selectedItemPosition ?: 0) {
+            0 -> audioDeviceCapabilities = AudioDeviceCapabilities.InputAndOutput
+            1 -> audioDeviceCapabilities = AudioDeviceCapabilities.None
+            2 -> audioDeviceCapabilities = AudioDeviceCapabilities.OutputOnly
+        }
 
         val redundancyEnabled = audioRedundancySwitch?.isChecked as Boolean
-        audioVideoConfig = AudioVideoConfiguration(audioMode = mode, enableAudioRedundancy = redundancyEnabled)
+        audioVideoConfig = AudioVideoConfiguration(audioMode = mode, audioDeviceCapabilities = audioDeviceCapabilities, enableAudioRedundancy = redundancyEnabled)
 
         meetingID = meetingEditText?.text.toString().trim().replace("\\s+".toRegex(), "+")
         yourName = nameEditText?.text.toString().trim().replace("\\s+".toRegex(), "+")
@@ -124,7 +136,12 @@ class HomeActivity : AppCompatActivity() {
             if (hasPermissionsAlready()) {
                 authenticate(testUrl, meetingID, yourName)
             } else {
-                ActivityCompat.requestPermissions(this, WEBRTC_PERM, WEBRTC_PERMISSION_REQUEST_CODE)
+                var permissions = WEBRTC_PERM
+                when (audioVideoConfig.audioDeviceCapabilities) {
+                    AudioDeviceCapabilities.None -> permissions = arrayOf(Manifest.permission.CAMERA)
+                    AudioDeviceCapabilities.OutputOnly -> permissions = arrayOf(Manifest.permission.MODIFY_AUDIO_SETTINGS, Manifest.permission.CAMERA)
+                }
+                ActivityCompat.requestPermissions(this, permissions, WEBRTC_PERMISSION_REQUEST_CODE)
             }
         }
     }
@@ -135,7 +152,12 @@ class HomeActivity : AppCompatActivity() {
     }
 
     private fun hasPermissionsAlready(): Boolean {
-        return WEBRTC_PERM.all {
+        var permissions = WEBRTC_PERM
+        when (audioVideoConfig.audioDeviceCapabilities) {
+            AudioDeviceCapabilities.None -> permissions = arrayOf(Manifest.permission.CAMERA)
+            AudioDeviceCapabilities.OutputOnly -> permissions = arrayOf(Manifest.permission.MODIFY_AUDIO_SETTINGS, Manifest.permission.CAMERA)
+        }
+        return permissions.all {
             ContextCompat.checkSelfPermission(this, it) == PackageManager.PERMISSION_GRANTED
         }
     }
@@ -190,6 +212,7 @@ class HomeActivity : AppCompatActivity() {
                                 NAME_KEY to attendeeName,
                                 MEETING_ENDPOINT_KEY to meetingUrl,
                                 AUDIO_MODE_KEY to audioVideoConfig.audioMode.value,
+                                AUDIO_DEVICE_CAPABILITIES_KEY to audioVideoConfig.audioDeviceCapabilities.value,
                                 ENABLE_AUDIO_REDUNDANCY_KEY to audioVideoConfig.enableAudioRedundancy
                             )
                         )

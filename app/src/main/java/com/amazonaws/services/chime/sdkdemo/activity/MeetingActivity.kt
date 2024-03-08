@@ -11,6 +11,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.AudioVideoConfiguration
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.AudioVideoFacade
+import com.amazonaws.services.chime.sdk.meetings.audiovideo.audio.AudioDeviceCapabilities
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.audio.AudioMode
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoResolution
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.backgroundfilter.backgroundblur.BackgroundBlurConfiguration
@@ -67,8 +68,11 @@ class MeetingActivity : AppCompatActivity(),
         val audioMode = intent.extras?.getInt(HomeActivity.AUDIO_MODE_KEY)?.let { intValue ->
             AudioMode.from(intValue, defaultAudioMode = AudioMode.Stereo48K)
         } ?: AudioMode.Stereo48K
+        val audioDeviceCapabilities = intent.extras?.getInt(HomeActivity.AUDIO_DEVICE_CAPABILITIES_KEY)?.let { intValue ->
+            AudioDeviceCapabilities.from(intValue, defaultAudioDeviceCapabilities = AudioDeviceCapabilities.InputAndOutput)
+        } ?: AudioDeviceCapabilities.InputAndOutput
         val enableAudioRedundancy = intent.extras?.getBoolean(HomeActivity.ENABLE_AUDIO_REDUNDANCY_KEY) as Boolean
-        audioVideoConfig = AudioVideoConfiguration(audioMode = audioMode, enableAudioRedundancy = enableAudioRedundancy)
+        audioVideoConfig = AudioVideoConfiguration(audioMode = audioMode, audioDeviceCapabilities = audioDeviceCapabilities, enableAudioRedundancy = enableAudioRedundancy)
         meetingEndpointUrl = intent.extras?.getString(HomeActivity.MEETING_ENDPOINT_KEY) as String
 
         if (savedInstanceState == null) {

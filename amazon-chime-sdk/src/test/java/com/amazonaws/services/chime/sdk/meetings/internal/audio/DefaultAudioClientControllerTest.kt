@@ -15,6 +15,7 @@ import com.amazonaws.services.chime.sdk.meetings.TestConstant
 import com.amazonaws.services.chime.sdk.meetings.analytics.EventAnalyticsController
 import com.amazonaws.services.chime.sdk.meetings.analytics.EventName
 import com.amazonaws.services.chime.sdk.meetings.analytics.MeetingStatsCollector
+import com.amazonaws.services.chime.sdk.meetings.audiovideo.audio.AudioDeviceCapabilities
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.audio.AudioMode
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.audio.AudioRecordingPresetOverride
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.audio.AudioStreamType
@@ -22,6 +23,7 @@ import com.amazonaws.services.chime.sdk.meetings.internal.utils.AppInfoUtil
 import com.amazonaws.services.chime.sdk.meetings.utils.logger.Logger
 import com.xodee.client.audio.audioclient.AppInfo
 import com.xodee.client.audio.audioclient.AudioClient
+import com.xodee.client.audio.audioclient.AudioClient.AudioDeviceCapabilitiesInternal
 import com.xodee.client.audio.audioclient.AudioClient.AudioModeInternal
 import com.xodee.client.audio.audioclient.AudioClient.AudioRecordingPreset
 import io.mockk.MockKAnnotations
@@ -287,6 +289,7 @@ class DefaultAudioClientControllerTest {
             testAttendeeId,
             testJoinToken,
             AudioMode.Stereo48K,
+            AudioDeviceCapabilities.InputAndOutput,
             AudioStreamType.VoiceCall,
             AudioRecordingPresetOverride.None,
             true
@@ -294,6 +297,8 @@ class DefaultAudioClientControllerTest {
 
         verify {
             mockAudioClient.startSession(withArg {
+                assertFalse(it.micMute)
+                assertFalse(it.spkMute)
                 assertEquals(AudioModeInternal.STEREO_48K, it.audioMode)
             })
         }
@@ -310,6 +315,7 @@ class DefaultAudioClientControllerTest {
                 testAttendeeId,
                 testJoinToken,
                 AudioMode.Mono16K,
+                AudioDeviceCapabilities.InputAndOutput,
                 AudioStreamType.VoiceCall,
                 AudioRecordingPresetOverride.None,
                 true
@@ -335,6 +341,7 @@ class DefaultAudioClientControllerTest {
                 testAttendeeId,
                 testJoinToken,
                 AudioMode.Mono48K,
+                AudioDeviceCapabilities.InputAndOutput,
                 AudioStreamType.VoiceCall,
                 AudioRecordingPresetOverride.None,
                 true
@@ -350,6 +357,78 @@ class DefaultAudioClientControllerTest {
     }
 
     @Test
+    fun `start with audio device capabilities none should call AudioClient startSession with capability none`() {
+        setupStartTests()
+
+        audioClientController.start(
+            testAudioFallbackUrl,
+            testAudioHostUrl,
+            testMeetingId,
+            testAttendeeId,
+            testJoinToken,
+            AudioMode.Stereo48K,
+            AudioDeviceCapabilities.None,
+            AudioStreamType.VoiceCall,
+            AudioRecordingPresetOverride.None,
+            true
+        )
+
+        verify {
+            mockAudioClient.startSession(withArg {
+                assertEquals(AudioDeviceCapabilitiesInternal.NONE, it.audioDeviceCapabilities)
+            })
+        }
+    }
+
+    @Test
+    fun `start with audio device capabilities output only should call AudioClient startSession with capability output only`() {
+        setupStartTests()
+
+        audioClientController.start(
+            testAudioFallbackUrl,
+            testAudioHostUrl,
+            testMeetingId,
+            testAttendeeId,
+            testJoinToken,
+            AudioMode.Stereo48K,
+            AudioDeviceCapabilities.OutputOnly,
+            AudioStreamType.VoiceCall,
+            AudioRecordingPresetOverride.None,
+            true
+        )
+
+        verify {
+            mockAudioClient.startSession(withArg {
+                assertEquals(AudioDeviceCapabilitiesInternal.OUTPUT_ONLY, it.audioDeviceCapabilities)
+            })
+        }
+    }
+
+    @Test
+    fun `start with audio device capabilities input and output should call AudioClient startSession with capability input and output`() {
+        setupStartTests()
+
+        audioClientController.start(
+            testAudioFallbackUrl,
+            testAudioHostUrl,
+            testMeetingId,
+            testAttendeeId,
+            testJoinToken,
+            AudioMode.Stereo48K,
+            AudioDeviceCapabilities.InputAndOutput,
+            AudioStreamType.VoiceCall,
+            AudioRecordingPresetOverride.None,
+            true
+        )
+
+        verify {
+            mockAudioClient.startSession(withArg {
+                assertEquals(AudioDeviceCapabilitiesInternal.INPUT_AND_OUTPUT, it.audioDeviceCapabilities)
+            })
+        }
+    }
+
+    @Test
     fun `start() with voice call stream should call startSession(AudioClientSessionConfig) with AudioStreamType VOICE_CALL`() {
         setupStartTests()
 
@@ -360,6 +439,7 @@ class DefaultAudioClientControllerTest {
             testAttendeeId,
             testJoinToken,
             AudioMode.Mono48K,
+            AudioDeviceCapabilities.InputAndOutput,
             AudioStreamType.VoiceCall,
             AudioRecordingPresetOverride.None,
             true
@@ -383,6 +463,7 @@ class DefaultAudioClientControllerTest {
             testAttendeeId,
             testJoinToken,
             AudioMode.Mono48K,
+            AudioDeviceCapabilities.InputAndOutput,
             AudioStreamType.Music,
             AudioRecordingPresetOverride.None,
             true
@@ -406,6 +487,7 @@ class DefaultAudioClientControllerTest {
                 testAttendeeId,
                 testJoinToken,
                 AudioMode.Stereo48K,
+                AudioDeviceCapabilities.InputAndOutput,
                 AudioStreamType.VoiceCall,
                 AudioRecordingPresetOverride.None,
                 true
@@ -427,6 +509,7 @@ class DefaultAudioClientControllerTest {
             testAttendeeId,
             testJoinToken,
             AudioMode.Stereo48K,
+            AudioDeviceCapabilities.InputAndOutput,
             AudioStreamType.VoiceCall,
             AudioRecordingPresetOverride.None,
             true
@@ -445,6 +528,7 @@ class DefaultAudioClientControllerTest {
             testAttendeeId,
             testJoinToken,
             AudioMode.Stereo48K,
+            AudioDeviceCapabilities.InputAndOutput,
             AudioStreamType.VoiceCall,
             AudioRecordingPresetOverride.None,
             true
@@ -473,6 +557,7 @@ class DefaultAudioClientControllerTest {
             testAttendeeId,
             testJoinToken,
             AudioMode.Stereo48K,
+            AudioDeviceCapabilities.InputAndOutput,
             AudioStreamType.VoiceCall,
             AudioRecordingPresetOverride.None,
             true
@@ -494,6 +579,7 @@ class DefaultAudioClientControllerTest {
             testAttendeeId,
             testJoinToken,
             AudioMode.Stereo48K,
+            AudioDeviceCapabilities.InputAndOutput,
             AudioStreamType.VoiceCall,
             AudioRecordingPresetOverride.None,
             true
@@ -519,6 +605,7 @@ class DefaultAudioClientControllerTest {
             testAttendeeId,
             testJoinToken,
             AudioMode.Stereo48K,
+            AudioDeviceCapabilities.InputAndOutput,
             AudioStreamType.VoiceCall,
             AudioRecordingPresetOverride.None,
             true
@@ -556,6 +643,7 @@ class DefaultAudioClientControllerTest {
             testAttendeeId,
             testJoinToken,
             AudioMode.Stereo48K,
+            AudioDeviceCapabilities.InputAndOutput,
             AudioStreamType.VoiceCall,
             AudioRecordingPresetOverride.None,
             true
@@ -584,6 +672,7 @@ class DefaultAudioClientControllerTest {
                 testAttendeeId,
                 testJoinToken,
                 AudioMode.Mono16K,
+                AudioDeviceCapabilities.InputAndOutput,
                 AudioStreamType.VoiceCall,
                 AudioRecordingPresetOverride.None,
                 true
@@ -607,6 +696,7 @@ class DefaultAudioClientControllerTest {
                 testAttendeeId,
                 testJoinToken,
                 AudioMode.Mono16K,
+                AudioDeviceCapabilities.InputAndOutput,
                 AudioStreamType.VoiceCall,
                 AudioRecordingPresetOverride.Generic,
                 true
@@ -630,6 +720,7 @@ class DefaultAudioClientControllerTest {
                 testAttendeeId,
                 testJoinToken,
                 AudioMode.Mono16K,
+                AudioDeviceCapabilities.InputAndOutput,
                 AudioStreamType.VoiceCall,
                 AudioRecordingPresetOverride.Camcorder,
                 true
@@ -653,6 +744,7 @@ class DefaultAudioClientControllerTest {
                 testAttendeeId,
                 testJoinToken,
                 AudioMode.Mono16K,
+                AudioDeviceCapabilities.InputAndOutput,
                 AudioStreamType.VoiceCall,
                 AudioRecordingPresetOverride.VoiceRecognition,
                 true
@@ -676,6 +768,7 @@ class DefaultAudioClientControllerTest {
                 testAttendeeId,
                 testJoinToken,
                 AudioMode.Mono16K,
+                AudioDeviceCapabilities.InputAndOutput,
                 AudioStreamType.VoiceCall,
                 AudioRecordingPresetOverride.VoiceCommunication,
                 true
@@ -699,6 +792,7 @@ class DefaultAudioClientControllerTest {
             testAttendeeId,
             testJoinToken,
             AudioMode.Mono16K,
+            AudioDeviceCapabilities.InputAndOutput,
             AudioStreamType.VoiceCall,
             AudioRecordingPresetOverride.VoiceCommunication,
             true
@@ -716,6 +810,7 @@ class DefaultAudioClientControllerTest {
             testAttendeeId,
             testJoinToken,
             AudioMode.Mono16K,
+            AudioDeviceCapabilities.InputAndOutput,
             AudioStreamType.VoiceCall,
             AudioRecordingPresetOverride.VoiceCommunication,
             true

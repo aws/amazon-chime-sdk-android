@@ -58,6 +58,7 @@ class DefaultAudioVideoController(
             attendeeId = configuration.credentials.attendeeId,
             joinToken = configuration.credentials.joinToken,
             audioMode = audioVideoConfiguration.audioMode,
+            audioDeviceCapabilities = audioVideoConfiguration.audioDeviceCapabilities,
             audioStreamType = audioVideoConfiguration.audioStreamType,
             audioRecordingPresetOverride = audioVideoConfiguration.audioRecordingPresetOverride,
             enableAudioRedundancy = audioVideoConfiguration.enableAudioRedundancy
