@@ -29,7 +29,8 @@ enum class AudioMode(val value: Int) {
     NoDevice(4);
 
     companion object {
-        fun from(intValue: Int): AudioMode? = values().find { it.value == intValue }
+        // Return null for value 4 since NoDevice should not be accessible from this function
+        fun from(intValue: Int): AudioMode? = if (intValue == 4) null else values().find { it.value == intValue }
         fun from(intValue: Int, defaultAudioMode: AudioMode): AudioMode = from(intValue) ?: defaultAudioMode
     }
 }
