@@ -136,10 +136,10 @@ class HomeActivity : AppCompatActivity() {
             if (hasPermissionsAlready()) {
                 authenticate(testUrl, meetingID, yourName)
             } else {
-                var permissions = WEBRTC_PERM
-                when (audioVideoConfig.audioDeviceCapabilities) {
-                    AudioDeviceCapabilities.None -> permissions = arrayOf(Manifest.permission.CAMERA)
-                    AudioDeviceCapabilities.OutputOnly -> permissions = arrayOf(Manifest.permission.MODIFY_AUDIO_SETTINGS, Manifest.permission.CAMERA)
+                var permissions = when (audioVideoConfig.audioDeviceCapabilities) {
+                    AudioDeviceCapabilities.None -> arrayOf(Manifest.permission.CAMERA)
+                    AudioDeviceCapabilities.OutputOnly -> arrayOf(Manifest.permission.MODIFY_AUDIO_SETTINGS, Manifest.permission.CAMERA)
+                    else -> WEBRTC_PERM
                 }
                 ActivityCompat.requestPermissions(this, permissions, WEBRTC_PERMISSION_REQUEST_CODE)
             }
@@ -152,10 +152,10 @@ class HomeActivity : AppCompatActivity() {
     }
 
     private fun hasPermissionsAlready(): Boolean {
-        var permissions = WEBRTC_PERM
-        when (audioVideoConfig.audioDeviceCapabilities) {
-            AudioDeviceCapabilities.None -> permissions = arrayOf(Manifest.permission.CAMERA)
-            AudioDeviceCapabilities.OutputOnly -> permissions = arrayOf(Manifest.permission.MODIFY_AUDIO_SETTINGS, Manifest.permission.CAMERA)
+        var permissions = when (audioVideoConfig.audioDeviceCapabilities) {
+            AudioDeviceCapabilities.None -> arrayOf(Manifest.permission.CAMERA)
+            AudioDeviceCapabilities.OutputOnly -> arrayOf(Manifest.permission.MODIFY_AUDIO_SETTINGS, Manifest.permission.CAMERA)
+            else -> WEBRTC_PERM
         }
         return permissions.all {
             ContextCompat.checkSelfPermission(this, it) == PackageManager.PERMISSION_GRANTED
