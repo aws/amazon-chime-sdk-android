@@ -23,14 +23,13 @@ enum class AudioMode(val value: Int) {
      * The stereo audio mode with two audio channels for speaker, and single audio channel for microphone,
      * both with 48KHz sampling rate.
      */
-    Stereo48K(3),
+    Stereo48K(3);
 
-    @Deprecated("Use AudioDeviceCapabilities.None instead", level = DeprecationLevel.HIDDEN)
-    NoDevice(4);
+    // Value 4 is reserved for the obsolete NoDevice case, which is replaced by AudioDeviceCapabilities.None
+    // NoDevice(4) 
 
     companion object {
-        // Return null for value 4 since NoDevice should not be accessible from this function
-        fun from(intValue: Int): AudioMode? = if (intValue == 4) null else values().find { it.value == intValue }
+        fun from(intValue: Int): AudioMode? = values().find { it.value == intValue }
         fun from(intValue: Int, defaultAudioMode: AudioMode): AudioMode = from(intValue) ?: defaultAudioMode
     }
 }
