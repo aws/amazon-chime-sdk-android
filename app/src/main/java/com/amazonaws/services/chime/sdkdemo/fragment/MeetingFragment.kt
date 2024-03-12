@@ -327,6 +327,14 @@ class MeetingFragment : Fragment(),
         buttonMute = view.findViewById(R.id.buttonMute)
         buttonMute.setImageResource(if (meetingModel.isMuted) R.drawable.button_mute_on else R.drawable.button_mute)
         buttonMute.setOnClickListener { toggleMute() }
+        val audioDeviceCapabilities = arguments?.getInt(HomeActivity.AUDIO_DEVICE_CAPABILITIES_KEY)?.let { intValue ->
+            AudioDeviceCapabilities.from(intValue, defaultAudioDeviceCapabilities = AudioDeviceCapabilities.InputAndOutput)
+        } ?: AudioDeviceCapabilities.InputAndOutput
+        if (audioDeviceCapabilities == AudioDeviceCapabilities.None || audioDeviceCapabilities == AudioDeviceCapabilities.OutputOnly) {
+            buttonMute.isEnabled = false
+            meetingModel.isMuted = true
+            buttonMute.setImageResource(R.drawable.button_mute_on)
+        }
 
         buttonSpeaker = view.findViewById(R.id.buttonSpeaker)
         buttonSpeaker.setOnClickListener { toggleSpeaker() }
