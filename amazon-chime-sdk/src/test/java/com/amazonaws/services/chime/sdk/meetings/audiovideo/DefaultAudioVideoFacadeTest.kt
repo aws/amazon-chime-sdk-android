@@ -129,7 +129,7 @@ class DefaultAudioVideoFacadeTest {
         mockkStatic(ContextCompat::class)
         every { ContextCompat.checkSelfPermission(any(), any()) } returns 0
         audioVideoFacade.start(AudioVideoConfiguration(audioDeviceCapabilities = AudioDeviceCapabilities.OutputOnly))
-        verify(atLeast = 1) { ContextCompat.checkSelfPermission(any(), Manifest.permission.MODIFY_AUDIO_SETTINGS) }
+        verify(exactly = 1) { ContextCompat.checkSelfPermission(any(), Manifest.permission.MODIFY_AUDIO_SETTINGS) }
     }
 
     @Test
@@ -137,8 +137,8 @@ class DefaultAudioVideoFacadeTest {
         mockkStatic(ContextCompat::class)
         every { ContextCompat.checkSelfPermission(any(), any()) } returns 0
         audioVideoFacade.start(AudioVideoConfiguration(audioDeviceCapabilities = AudioDeviceCapabilities.InputAndOutput))
-        verify(atLeast = 1) { ContextCompat.checkSelfPermission(any(), Manifest.permission.MODIFY_AUDIO_SETTINGS) }
-        verify(atLeast = 1) { ContextCompat.checkSelfPermission(any(), Manifest.permission.RECORD_AUDIO) }
+        verify(exactly = 1) { ContextCompat.checkSelfPermission(any(), Manifest.permission.MODIFY_AUDIO_SETTINGS) }
+        verify(exactly = 1) { ContextCompat.checkSelfPermission(any(), Manifest.permission.RECORD_AUDIO) }
     }
 
     @Test

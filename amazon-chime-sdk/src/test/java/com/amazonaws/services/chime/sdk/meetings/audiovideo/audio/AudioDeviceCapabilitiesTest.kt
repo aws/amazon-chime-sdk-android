@@ -1,23 +1,22 @@
 package com.amazonaws.services.chime.sdk.meetings.audiovideo.audio
 
-import org.junit.Assert
+import android.Manifest
 import org.junit.Test
 
 class AudioDeviceCapabilitiesTest {
     @Test
-    fun `get enum value from int`() {
-        Assert.assertEquals(AudioDeviceCapabilities.from(0), AudioDeviceCapabilities.None)
-        Assert.assertEquals(AudioDeviceCapabilities.from(1), AudioDeviceCapabilities.OutputOnly)
-        Assert.assertEquals(AudioDeviceCapabilities.from(2), AudioDeviceCapabilities.InputAndOutput)
+    fun `should not require permissions for None`() {
+        assert(AudioDeviceCapabilities.None.requiredPermissions().isEmpty())
     }
 
     @Test
-    fun `get enum value from invalid int returns null`() {
-        Assert.assertNull(AudioDeviceCapabilities.from(-1))
+    fun `should require MODIFY_AUDIO_SETTINGS permissions for OutputOnly`() {
+        assert(AudioDeviceCapabilities.OutputOnly.requiredPermissions().contains(Manifest.permission.MODIFY_AUDIO_SETTINGS))
     }
 
     @Test
-    fun `get enum value from int with fallback to default value`() {
-        Assert.assertEquals(AudioDeviceCapabilities.from(-1, AudioDeviceCapabilities.InputAndOutput), AudioDeviceCapabilities.InputAndOutput)
+    fun `should check MODIFY_AUDIO_SETTINGS and RECORD_AUDIO permissions for InputAndOutput`() {
+        assert(AudioDeviceCapabilities.InputAndOutput.requiredPermissions().contains(Manifest.permission.MODIFY_AUDIO_SETTINGS))
+        assert(AudioDeviceCapabilities.InputAndOutput.requiredPermissions().contains(Manifest.permission.RECORD_AUDIO))
     }
 }

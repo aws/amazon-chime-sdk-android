@@ -235,7 +235,7 @@ class MeetingFragment : Fragment(),
             fragment.arguments = bundleOf(
                 HomeActivity.MEETING_ID_KEY to meetingId,
                 HomeActivity.AUDIO_MODE_KEY to audioVideoConfig.audioMode.value,
-                HomeActivity.AUDIO_DEVICE_CAPABILITIES_KEY to audioVideoConfig.audioDeviceCapabilities.value,
+                HomeActivity.AUDIO_DEVICE_CAPABILITIES_KEY to audioVideoConfig.audioDeviceCapabilities,
                 HomeActivity.MEETING_ENDPOINT_KEY to meetingEndpointUrl,
                 HomeActivity.ENABLE_AUDIO_REDUNDANCY_KEY to audioVideoConfig.enableAudioRedundancy
             )
@@ -312,9 +312,7 @@ class MeetingFragment : Fragment(),
         val audioMode = arguments?.getInt(HomeActivity.AUDIO_MODE_KEY)?.let { intValue ->
             AudioMode.from(intValue, defaultAudioMode = AudioMode.Stereo48K)
         } ?: AudioMode.Stereo48K
-        val audioDeviceCapabilities = arguments?.getInt(HomeActivity.AUDIO_DEVICE_CAPABILITIES_KEY)?.let { intValue ->
-            AudioDeviceCapabilities.from(intValue, defaultAudioDeviceCapabilities = AudioDeviceCapabilities.InputAndOutput)
-        } ?: AudioDeviceCapabilities.InputAndOutput
+        val audioDeviceCapabilities = arguments?.get(HomeActivity.AUDIO_DEVICE_CAPABILITIES_KEY) as? AudioDeviceCapabilities ?: AudioDeviceCapabilities.InputAndOutput
         val enableAudioRedundancy = arguments?.getBoolean(HomeActivity.ENABLE_AUDIO_REDUNDANCY_KEY) as Boolean
         val audioVideoConfig = AudioVideoConfiguration(audioMode = audioMode, audioDeviceCapabilities = audioDeviceCapabilities, enableAudioRedundancy = enableAudioRedundancy)
         // Start Audio Video
@@ -327,9 +325,7 @@ class MeetingFragment : Fragment(),
         buttonMute = view.findViewById(R.id.buttonMute)
         buttonMute.setImageResource(if (meetingModel.isMuted) R.drawable.button_mute_on else R.drawable.button_mute)
         buttonMute.setOnClickListener { toggleMute() }
-        val audioDeviceCapabilities = arguments?.getInt(HomeActivity.AUDIO_DEVICE_CAPABILITIES_KEY)?.let { intValue ->
-            AudioDeviceCapabilities.from(intValue, defaultAudioDeviceCapabilities = AudioDeviceCapabilities.InputAndOutput)
-        } ?: AudioDeviceCapabilities.InputAndOutput
+        val audioDeviceCapabilities = arguments?.get(HomeActivity.AUDIO_DEVICE_CAPABILITIES_KEY) as? AudioDeviceCapabilities ?: AudioDeviceCapabilities.InputAndOutput
         if (audioDeviceCapabilities == AudioDeviceCapabilities.None || audioDeviceCapabilities == AudioDeviceCapabilities.OutputOnly) {
             buttonMute.isEnabled = false
             meetingModel.isMuted = true

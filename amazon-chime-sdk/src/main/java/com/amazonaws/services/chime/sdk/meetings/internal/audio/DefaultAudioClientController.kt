@@ -199,11 +199,7 @@ class DefaultAudioClientController(
                 else -> AudioModeInternal.STEREO_48K
             }
 
-            val audioDeviceCapabilitiesInternal = when (audioDeviceCapabilities) {
-                AudioDeviceCapabilities.None -> AudioDeviceCapabilitiesInternal.NONE
-                AudioDeviceCapabilities.OutputOnly -> AudioDeviceCapabilitiesInternal.OUTPUT_ONLY
-                AudioDeviceCapabilities.InputAndOutput -> AudioDeviceCapabilitiesInternal.INPUT_AND_OUTPUT
-            }
+            val audioDeviceCapabilitiesInternal = mapAudioDeviceCapabilitiesToInternal(audioDeviceCapabilities)
 
             var audioStreamTypeInternal = when (audioStreamType) {
                 AudioStreamType.VoiceCall -> AudioClient.AudioStreamType.VOICE_CALL
@@ -345,5 +341,11 @@ class DefaultAudioClientController(
             return
         }
         audioClient.demoteFromPrimaryMeeting()
+    }
+
+    private fun mapAudioDeviceCapabilitiesToInternal(audioDeviceCapabilities: AudioDeviceCapabilities): AudioDeviceCapabilitiesInternal = when (audioDeviceCapabilities) {
+        AudioDeviceCapabilities.None -> AudioDeviceCapabilitiesInternal.NONE
+        AudioDeviceCapabilities.OutputOnly -> AudioDeviceCapabilitiesInternal.OUTPUT_ONLY
+        AudioDeviceCapabilities.InputAndOutput -> AudioDeviceCapabilitiesInternal.INPUT_AND_OUTPUT
     }
 }

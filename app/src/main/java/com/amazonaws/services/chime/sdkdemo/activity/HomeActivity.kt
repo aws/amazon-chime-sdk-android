@@ -48,12 +48,6 @@ class HomeActivity : AppCompatActivity() {
     private val TAG = "MeetingHomeActivity"
     private val WEBRTC_PERMISSION_REQUEST_CODE = 1
 
-    private val WEBRTC_PERM = arrayOf(
-        Manifest.permission.MODIFY_AUDIO_SETTINGS,
-        Manifest.permission.RECORD_AUDIO,
-        Manifest.permission.CAMERA
-    )
-
     private var meetingEditText: EditText? = null
     private var nameEditText: EditText? = null
     private var audioMode: AppCompatSpinner? = null
@@ -136,11 +130,7 @@ class HomeActivity : AppCompatActivity() {
             if (hasPermissionsAlready()) {
                 authenticate(testUrl, meetingID, yourName)
             } else {
-                var permissions = when (audioVideoConfig.audioDeviceCapabilities) {
-                    AudioDeviceCapabilities.None -> arrayOf(Manifest.permission.CAMERA)
-                    AudioDeviceCapabilities.OutputOnly -> arrayOf(Manifest.permission.MODIFY_AUDIO_SETTINGS, Manifest.permission.CAMERA)
-                    else -> WEBRTC_PERM
-                }
+                val permissions = audioVideoConfig.audioDeviceCapabilities.requiredPermissions() + arrayOf(Manifest.permission.CAMERA)
                 ActivityCompat.requestPermissions(this, permissions, WEBRTC_PERMISSION_REQUEST_CODE)
             }
         }
@@ -152,11 +142,7 @@ class HomeActivity : AppCompatActivity() {
     }
 
     private fun hasPermissionsAlready(): Boolean {
-        var permissions = when (audioVideoConfig.audioDeviceCapabilities) {
-            AudioDeviceCapabilities.None -> arrayOf(Manifest.permission.CAMERA)
-            AudioDeviceCapabilities.OutputOnly -> arrayOf(Manifest.permission.MODIFY_AUDIO_SETTINGS, Manifest.permission.CAMERA)
-            else -> WEBRTC_PERM
-        }
+        val permissions = audioVideoConfig.audioDeviceCapabilities.requiredPermissions() + arrayOf(Manifest.permission.CAMERA)
         return permissions.all {
             ContextCompat.checkSelfPermission(this, it) == PackageManager.PERMISSION_GRANTED
         }
@@ -212,7 +198,7 @@ class HomeActivity : AppCompatActivity() {
                                 NAME_KEY to attendeeName,
                                 MEETING_ENDPOINT_KEY to meetingUrl,
                                 AUDIO_MODE_KEY to audioVideoConfig.audioMode.value,
-                                AUDIO_DEVICE_CAPABILITIES_KEY to audioVideoConfig.audioDeviceCapabilities.value,
+                                AUDIO_DEVICE_CAPABILITIES_KEY to audioVideoConfig.audioDeviceCapabilities,
                                 ENABLE_AUDIO_REDUNDANCY_KEY to audioVideoConfig.enableAudioRedundancy
                             )
                         )

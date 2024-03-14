@@ -5,7 +5,6 @@
 
 package com.amazonaws.services.chime.sdk.meetings.audiovideo
 
-import android.Manifest
 import android.content.Context
 import android.content.pm.PackageManager
 import android.os.Build
@@ -49,9 +48,6 @@ class DefaultAudioVideoFacade(
     private val contentShareController: ContentShareController,
     private val eventAnalyticsController: EventAnalyticsController
 ) : AudioVideoFacade {
-
-    private val audioInputPermissions = arrayOf(Manifest.permission.MODIFY_AUDIO_SETTINGS, Manifest.permission.RECORD_AUDIO)
-    private val audioOutputPermissions = arrayOf(Manifest.permission.MODIFY_AUDIO_SETTINGS)
 
     override fun start() {
         start(AudioVideoConfiguration())
@@ -274,14 +270,9 @@ class DefaultAudioVideoFacade(
     }
 
     private fun checkAudioPermissions(audioDeviceCapabilities: AudioDeviceCapabilities) {
-        val requiredPermissions: Array<String> = when (audioDeviceCapabilities) {
-            AudioDeviceCapabilities.None -> emptyArray()
-            AudioDeviceCapabilities.OutputOnly -> audioOutputPermissions
-            AudioDeviceCapabilities.InputAndOutput -> audioInputPermissions + audioOutputPermissions
-        }
-        val hasRequiredPermissions: Boolean = requiredPermissions.all { ContextCompat.checkSelfPermission(context, it) == PackageManager.PERMISSION_GRANTED }
+        val hasRequiredPermissions: Boolean = audioDeviceCapabilities.requiredPermissions().all { ContextCompat.checkSelfPermission(context, it) == PackageManager.PERMISSION_GRANTED }
         if (!hasRequiredPermissions) {
-            throw SecurityException("Missing necessary permissions for WebRTC: ${requiredPermissions.joinToString()}")
+            throw SecurityException("Missing necessary permissions for WebRTC: ${audioDeviceCapabilities.requiredPermissions().joinToString()}")
         }
     }
 }
