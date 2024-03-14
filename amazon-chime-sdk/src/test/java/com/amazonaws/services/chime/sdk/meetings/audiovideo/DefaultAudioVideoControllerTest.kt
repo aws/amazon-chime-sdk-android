@@ -6,6 +6,7 @@
 package com.amazonaws.services.chime.sdk.meetings.audiovideo
 
 import android.util.Log
+import com.amazonaws.services.chime.sdk.meetings.audiovideo.audio.AudioDeviceCapabilities
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.audio.AudioMode
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.audio.AudioRecordingPresetOverride
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.audio.AudioStreamType
@@ -184,6 +185,7 @@ class DefaultAudioVideoControllerTest {
                 attendeeId,
                 joinToken,
                 AudioMode.Stereo48K,
+                AudioDeviceCapabilities.InputAndOutput,
                 AudioStreamType.VoiceCall,
                 AudioRecordingPresetOverride.None,
                 true
@@ -203,6 +205,7 @@ class DefaultAudioVideoControllerTest {
                     attendeeId,
                     joinToken,
                     AudioMode.Mono16K,
+                    AudioDeviceCapabilities.InputAndOutput,
                     AudioStreamType.VoiceCall,
                     AudioRecordingPresetOverride.None,
                     true
@@ -222,6 +225,7 @@ class DefaultAudioVideoControllerTest {
                     attendeeId,
                     joinToken,
                     AudioMode.Mono48K,
+                    AudioDeviceCapabilities.InputAndOutput,
                     AudioStreamType.VoiceCall,
                     AudioRecordingPresetOverride.None,
                     true
@@ -241,10 +245,33 @@ class DefaultAudioVideoControllerTest {
                     attendeeId,
                     joinToken,
                     AudioMode.Stereo48K,
+                    AudioDeviceCapabilities.InputAndOutput,
                     AudioStreamType.VoiceCall,
                     AudioRecordingPresetOverride.None,
                     true
             )
+        }
+    }
+
+    @Test
+    fun `start with specified audio device capabilities should call audioClientController start with the parameters in configuration and the correct audio device capabilities`() {
+        for (capabilities in AudioDeviceCapabilities.values()) {
+            val testAudioVideoConfiguration = AudioVideoConfiguration(audioDeviceCapabilities = capabilities)
+            audioVideoController.start(testAudioVideoConfiguration)
+            verify {
+                audioClientController.start(
+                    audioFallbackURL,
+                    audioHostURL,
+                    meetingId,
+                    attendeeId,
+                    joinToken,
+                    AudioMode.Stereo48K,
+                    capabilities,
+                    AudioStreamType.VoiceCall,
+                    AudioRecordingPresetOverride.None,
+                    true
+                )
+            }
         }
     }
 
@@ -260,6 +287,7 @@ class DefaultAudioVideoControllerTest {
                 attendeeId,
                 joinToken,
                 AudioMode.Stereo48K,
+                AudioDeviceCapabilities.InputAndOutput,
                 AudioStreamType.VoiceCall,
                 AudioRecordingPresetOverride.None,
                 true
@@ -279,26 +307,8 @@ class DefaultAudioVideoControllerTest {
                 attendeeId,
                 joinToken,
                 AudioMode.Stereo48K,
+                AudioDeviceCapabilities.InputAndOutput,
                 AudioStreamType.Music,
-                AudioRecordingPresetOverride.None,
-                true
-            )
-        }
-    }
-
-    @Test
-    fun `start with no_device should call audioClientController start with the parameters in configuration and no device`() {
-        val testAudioVideoConfiguration = AudioVideoConfiguration(audioMode = AudioMode.NoDevice)
-        audioVideoController.start(testAudioVideoConfiguration)
-        verify {
-            audioClientController.start(
-                audioFallbackURL,
-                audioHostURL,
-                meetingId,
-                attendeeId,
-                joinToken,
-                AudioMode.NoDevice,
-                AudioStreamType.VoiceCall,
                 AudioRecordingPresetOverride.None,
                 true
             )
@@ -317,6 +327,7 @@ class DefaultAudioVideoControllerTest {
                 attendeeId,
                 joinToken,
                 AudioMode.Stereo48K,
+                AudioDeviceCapabilities.InputAndOutput,
                 AudioStreamType.VoiceCall,
                 AudioRecordingPresetOverride.None,
                 false

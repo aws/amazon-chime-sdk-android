@@ -37,12 +37,12 @@ compileOptions {
     targetCompatibility JavaVersion.VERSION_1_8
 }
 ```
-6. `MODIFY_AUDIO_SETTINGS`, `RECORD_AUDIO`, and `CAMERA` permissions are already added to the manifest by the Amazon Chime SDK. Your activity should also request the appropriate permissions.
+6. `CAMERA` permissions are already added to the manifest by the Amazon Chime SDK. Your activity should also request the appropriate permissions. Additionally, based on which `AudioDeviceCapabilities` you plan to have users join meetings with, you will need to add `MODIFY_AUDIO_SETTINGS` or `RECORD_AUDIO` to your manifest file and request these permissions in your application.
 ```
 private val PERMISSION_REQUEST_CODE = 1
 private val PERMISSIONS = arrayOf(
-    Manifest.permission.MODIFY_AUDIO_SETTINGS,
-    Manifest.permission.RECORD_AUDIO,
+    Manifest.permission.MODIFY_AUDIO_SETTINGS, // Required for `AudioDeviceCapabilities.InputAndOutput` and `AudioDeviceCapabilities.OutputOnly`
+    Manifest.permission.RECORD_AUDIO,          // Required for `AudioDeviceCapabilities.InputAndOutput`
     Manifest.permission.CAMERA)
 
 ActivityCompat.requestPermissions(applicationContext, PERMISSIONS, PERMISSION_REQUEST_CODE)

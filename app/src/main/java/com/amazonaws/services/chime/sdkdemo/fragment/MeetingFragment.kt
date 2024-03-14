@@ -52,6 +52,7 @@ import com.amazonaws.services.chime.sdk.meetings.audiovideo.TranscriptItem
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.TranscriptionStatus
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.TranscriptionStatusType
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.VolumeUpdate
+import com.amazonaws.services.chime.sdk.meetings.audiovideo.audio.AudioDeviceCapabilities
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.audio.AudioMode
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.audio.activespeakerdetector.ActiveSpeakerObserver
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.audio.activespeakerpolicy.DefaultActiveSpeakerPolicy
@@ -234,6 +235,7 @@ class MeetingFragment : Fragment(),
             fragment.arguments = bundleOf(
                 HomeActivity.MEETING_ID_KEY to meetingId,
                 HomeActivity.AUDIO_MODE_KEY to audioVideoConfig.audioMode.value,
+                HomeActivity.AUDIO_DEVICE_CAPABILITIES_KEY to audioVideoConfig.audioDeviceCapabilities,
                 HomeActivity.MEETING_ENDPOINT_KEY to meetingEndpointUrl,
                 HomeActivity.ENABLE_AUDIO_REDUNDANCY_KEY to audioVideoConfig.enableAudioRedundancy
             )
@@ -310,8 +312,9 @@ class MeetingFragment : Fragment(),
         val audioMode = arguments?.getInt(HomeActivity.AUDIO_MODE_KEY)?.let { intValue ->
             AudioMode.from(intValue, defaultAudioMode = AudioMode.Stereo48K)
         } ?: AudioMode.Stereo48K
+        val audioDeviceCapabilities = arguments?.get(HomeActivity.AUDIO_DEVICE_CAPABILITIES_KEY) as? AudioDeviceCapabilities ?: AudioDeviceCapabilities.InputAndOutput
         val enableAudioRedundancy = arguments?.getBoolean(HomeActivity.ENABLE_AUDIO_REDUNDANCY_KEY) as Boolean
-        val audioVideoConfig = AudioVideoConfiguration(audioMode = audioMode, enableAudioRedundancy = enableAudioRedundancy)
+        val audioVideoConfig = AudioVideoConfiguration(audioMode = audioMode, audioDeviceCapabilities = audioDeviceCapabilities, enableAudioRedundancy = enableAudioRedundancy)
         // Start Audio Video
         audioVideo.start(audioVideoConfig)
         audioVideo.startRemoteVideo()
@@ -322,6 +325,12 @@ class MeetingFragment : Fragment(),
         buttonMute = view.findViewById(R.id.buttonMute)
         buttonMute.setImageResource(if (meetingModel.isMuted) R.drawable.button_mute_on else R.drawable.button_mute)
         buttonMute.setOnClickListener { toggleMute() }
+        val audioDeviceCapabilities = arguments?.get(HomeActivity.AUDIO_DEVICE_CAPABILITIES_KEY) as? AudioDeviceCapabilities ?: AudioDeviceCapabilities.InputAndOutput
+        if (audioDeviceCapabilities == AudioDeviceCapabilities.None || audioDeviceCapabilities == AudioDeviceCapabilities.OutputOnly) {
+            buttonMute.isEnabled = false
+            meetingModel.isMuted = true
+            buttonMute.setImageResource(R.drawable.button_mute_on)
+        }
 
         buttonSpeaker = view.findViewById(R.id.buttonSpeaker)
         buttonSpeaker.setOnClickListener { toggleSpeaker() }

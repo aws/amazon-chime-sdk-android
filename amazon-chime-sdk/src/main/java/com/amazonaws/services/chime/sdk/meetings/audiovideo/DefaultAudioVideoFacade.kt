@@ -5,7 +5,6 @@
 
 package com.amazonaws.services.chime.sdk.meetings.audiovideo
 
-import android.Manifest
 import android.content.Context
 import android.content.pm.PackageManager
 import android.os.Build
@@ -15,7 +14,7 @@ import com.amazonaws.services.chime.sdk.meetings.analytics.EventAnalyticsControl
 import com.amazonaws.services.chime.sdk.meetings.analytics.EventAnalyticsObserver
 import com.amazonaws.services.chime.sdk.meetings.analytics.EventAttributes
 import com.amazonaws.services.chime.sdk.meetings.analytics.MeetingHistoryEvent
-import com.amazonaws.services.chime.sdk.meetings.audiovideo.audio.AudioMode
+import com.amazonaws.services.chime.sdk.meetings.audiovideo.audio.AudioDeviceCapabilities
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.audio.activespeakerdetector.ActiveSpeakerDetectorFacade
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.audio.activespeakerdetector.ActiveSpeakerObserver
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.audio.activespeakerpolicy.ActiveSpeakerPolicy
@@ -50,32 +49,12 @@ class DefaultAudioVideoFacade(
     private val eventAnalyticsController: EventAnalyticsController
 ) : AudioVideoFacade {
 
-    private val permissions = arrayOf(
-        Manifest.permission.MODIFY_AUDIO_SETTINGS,
-        Manifest.permission.RECORD_AUDIO
-    )
-
     override fun start() {
         start(AudioVideoConfiguration())
     }
 
     override fun start(audioVideoConfiguration: AudioVideoConfiguration) {
-        if (audioVideoConfiguration.audioMode != AudioMode.NoDevice) {
-            val hasPermission: Boolean = permissions.all {
-                ContextCompat.checkSelfPermission(context, it) == PackageManager.PERMISSION_GRANTED
-            }
-            if (!hasPermission) {
-                throw SecurityException(
-                    "Missing necessary permissions for WebRTC: ${
-                        permissions.joinToString(
-                            separator = ", ",
-                            prefix = "",
-                            postfix = ""
-                        )
-                    }"
-                )
-            }
-        }
+        checkAudioPermissions(audioVideoConfiguration.audioDeviceCapabilities)
         audioVideoController.start(audioVideoConfiguration)
     }
 
@@ -288,5 +267,12 @@ class DefaultAudioVideoFacade(
 
     override fun removeRealtimeTranscriptEventObserver(observer: TranscriptEventObserver) {
         realtimeController.removeRealtimeTranscriptEventObserver(observer)
+    }
+
+    private fun checkAudioPermissions(audioDeviceCapabilities: AudioDeviceCapabilities) {
+        val hasRequiredPermissions: Boolean = audioDeviceCapabilities.requiredPermissions().all { ContextCompat.checkSelfPermission(context, it) == PackageManager.PERMISSION_GRANTED }
+        if (!hasRequiredPermissions) {
+            throw SecurityException("Missing necessary permissions for WebRTC: ${audioDeviceCapabilities.requiredPermissions().joinToString()}")
+        }
     }
 }

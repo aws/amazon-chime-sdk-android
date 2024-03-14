@@ -1,3 +1,13 @@
+## Unreleased
+
+### Added
+* Added `AudioDeviceCapabilities` to `AudioVideoConfiguration`, which allows configuring whether the audio input and output devices are enabled or disabled before starting a meeting.
+  * Audio recording permissions will only be required when using `AudioDeviceCapabilities.InputAndOutput`
+  * [Demo] Added spinner to join screen to configure the audio device capabilities
+
+### Removed
+* **Breaking** Removed `AudioMode.NoDevice`, which is now replaced by `AudioDeviceCapabilities.None`. Apps which previously used `AudioMode.NoDevice` can achieve the same functionality by using `AudioDeviceCapabilities.None` when constructing an `AudioVideoConfiguration`, e.g. `AudioVideoConfiguration(audioDeviceCapabilities = AudioDeviceCapabilities.None)`.
+
 ## [0.19.1] - 2024-02-15
 
 ### Fixed

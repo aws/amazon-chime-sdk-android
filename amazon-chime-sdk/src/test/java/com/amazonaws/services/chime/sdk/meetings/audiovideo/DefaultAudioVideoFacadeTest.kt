@@ -5,11 +5,12 @@
 
 package com.amazonaws.services.chime.sdk.meetings.audiovideo
 
+import android.Manifest
 import android.content.Context
 import androidx.core.content.ContextCompat
 import com.amazonaws.services.chime.sdk.meetings.analytics.EventAnalyticsController
 import com.amazonaws.services.chime.sdk.meetings.analytics.EventAnalyticsObserver
-import com.amazonaws.services.chime.sdk.meetings.audiovideo.audio.AudioMode
+import com.amazonaws.services.chime.sdk.meetings.audiovideo.audio.AudioDeviceCapabilities
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.audio.activespeakerdetector.ActiveSpeakerDetectorFacade
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.contentshare.ContentShareController
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.contentshare.ContentShareObserver
@@ -110,17 +111,34 @@ class DefaultAudioVideoFacadeTest {
     fun setup() = MockKAnnotations.init(this, relaxUnitFun = true)
 
     @Test(expected = SecurityException::class)
-    fun `start should throw exception when the required permissions are not granted with default AudioMode`() {
+    fun `start should throw exception when the required permissions are not granted with default AudioDeviceCapabilities`() {
         mockkStatic(ContextCompat::class)
         every { ContextCompat.checkSelfPermission(any(), any()) } returns 1
         audioVideoFacade.start()
     }
 
     @Test
-    fun `start should not check permissions if AudioMode is NoDevice`() {
+    fun `start should not check permissions if AudioDeviceCapabilities is None`() {
         mockkStatic(ContextCompat::class)
-        audioVideoFacade.start(AudioVideoConfiguration(audioMode = AudioMode.NoDevice))
+        audioVideoFacade.start(AudioVideoConfiguration(audioDeviceCapabilities = AudioDeviceCapabilities.None))
         verify(exactly = 0) { ContextCompat.checkSelfPermission(any(), any()) }
+    }
+
+    @Test
+    fun `start should check MODIFY_AUDIO_SETTINGS permissions if AudioDeviceCapabilities is OutputOnly`() {
+        mockkStatic(ContextCompat::class)
+        every { ContextCompat.checkSelfPermission(any(), any()) } returns 0
+        audioVideoFacade.start(AudioVideoConfiguration(audioDeviceCapabilities = AudioDeviceCapabilities.OutputOnly))
+        verify(exactly = 1) { ContextCompat.checkSelfPermission(any(), Manifest.permission.MODIFY_AUDIO_SETTINGS) }
+    }
+
+    @Test
+    fun `start should check MODIFY_AUDIO_SETTINGS and RECORD_AUDIO permissions if AudioDeviceCapabilities is InputAndOutput`() {
+        mockkStatic(ContextCompat::class)
+        every { ContextCompat.checkSelfPermission(any(), any()) } returns 0
+        audioVideoFacade.start(AudioVideoConfiguration(audioDeviceCapabilities = AudioDeviceCapabilities.InputAndOutput))
+        verify(exactly = 1) { ContextCompat.checkSelfPermission(any(), Manifest.permission.MODIFY_AUDIO_SETTINGS) }
+        verify(exactly = 1) { ContextCompat.checkSelfPermission(any(), Manifest.permission.RECORD_AUDIO) }
     }
 
     @Test
