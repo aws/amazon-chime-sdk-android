@@ -23,13 +23,27 @@ enum class AudioMode(val value: Int) {
      * The stereo audio mode with two audio channels for speaker, and single audio channel for microphone,
      * both with 48KHz sampling rate.
      */
-    Stereo48K(3);
+    Stereo48K(3),
 
-    // Value 4 is reserved for the obsolete NoDevice case, which is replaced by AudioDeviceCapabilities.None
-    // NoDevice(4) 
+    /**
+     * The [NoDevice] audio mode is obsolete, and is replaced by [AudioDeviceCapabilities.None]. To achieve the
+     * same functionality as NoDevice, pass AudioDeviceCapabilities.None into the AudioVideoConfiguration constructor
+     * instead, e.g. AudioVideoConfiguration(audioDeviceCapabilities = AudioDeviceCapabilities.None)
+     */
+    @Deprecated("To achieve the same functionality as NoDevice, pass AudioDeviceCapabilities.None into" +
+            " the AudioVideoConfiguration constructor instead, e.g." +
+            " AudioVideoConfiguration(audioDeviceCapabilities = AudioDeviceCapabilities.None)", level = DeprecationLevel.HIDDEN)
+    NoDevice(4);
 
     companion object {
-        fun from(intValue: Int): AudioMode? = values().find { it.value == intValue }
+        fun from(intValue: Int): AudioMode? {
+            if (intValue == 4) {
+                // NoDevice cannot be instantiated since it is obsolete
+                return null
+            }
+            return values().find { it.value == intValue }
+        }
+
         fun from(intValue: Int, defaultAudioMode: AudioMode): AudioMode = from(intValue) ?: defaultAudioMode
     }
 }

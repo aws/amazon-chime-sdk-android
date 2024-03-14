@@ -50,21 +50,15 @@ class DefaultAudioVideoFacade(
     private val eventAnalyticsController: EventAnalyticsController
 ) : AudioVideoFacade {
 
+    private val audioInputPermissions = arrayOf(Manifest.permission.MODIFY_AUDIO_SETTINGS, Manifest.permission.RECORD_AUDIO)
+    private val audioOutputPermissions = arrayOf(Manifest.permission.MODIFY_AUDIO_SETTINGS)
+
     override fun start() {
         start(AudioVideoConfiguration())
     }
 
     override fun start(audioVideoConfiguration: AudioVideoConfiguration) {
-        if (audioVideoConfiguration.audioDeviceCapabilities != AudioDeviceCapabilities.None) {
-            if (ContextCompat.checkSelfPermission(context, Manifest.permission.MODIFY_AUDIO_SETTINGS) != PackageManager.PERMISSION_GRANTED) {
-                throw SecurityException("Missing necessary permissions for WebRTC: ${Manifest.permission.MODIFY_AUDIO_SETTINGS}")
-            }
-        }
-        if (audioVideoConfiguration.audioDeviceCapabilities == AudioDeviceCapabilities.InputAndOutput) {
-            if (ContextCompat.checkSelfPermission(context, Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED) {
-                throw SecurityException("Missing necessary permissions for WebRTC: ${Manifest.permission.RECORD_AUDIO}")
-            }
-        }
+        checkAudioPermissions(audioVideoConfiguration.audioDeviceCapabilities)
         audioVideoController.start(audioVideoConfiguration)
     }
 
@@ -277,5 +271,17 @@ class DefaultAudioVideoFacade(
 
     override fun removeRealtimeTranscriptEventObserver(observer: TranscriptEventObserver) {
         realtimeController.removeRealtimeTranscriptEventObserver(observer)
+    }
+
+    private fun checkAudioPermissions(audioDeviceCapabilities: AudioDeviceCapabilities) {
+        val requiredPermissions: Array<String> = when (audioDeviceCapabilities) {
+            AudioDeviceCapabilities.None -> emptyArray()
+            AudioDeviceCapabilities.OutputOnly -> audioOutputPermissions
+            AudioDeviceCapabilities.InputAndOutput -> audioInputPermissions + audioOutputPermissions
+        }
+        val hasRequiredPermissions: Boolean = requiredPermissions.all { ContextCompat.checkSelfPermission(context, it) == PackageManager.PERMISSION_GRANTED }
+        if (!hasRequiredPermissions) {
+            throw SecurityException("Missing necessary permissions for WebRTC: ${requiredPermissions.joinToString()}")
+        }
     }
 }

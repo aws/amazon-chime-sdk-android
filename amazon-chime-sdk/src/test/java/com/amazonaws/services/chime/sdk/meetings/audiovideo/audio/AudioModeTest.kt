@@ -14,6 +14,7 @@ class AudioModeTest {
     @Test
     fun `get enum value from invalid int returns null`() {
         Assert.assertNull(AudioMode.from(-1))
+        Assert.assertNull(AudioMode.from(4))
     }
 
     @Test

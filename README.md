@@ -177,7 +177,7 @@ If you discover a potential security issue in this project we ask that you notif
 
 #### Use case 1. Start a session.
 
-You need to start the meeting session to start sending and receiving audio. Make sure that the user has granted audio permission first.
+You need to start the meeting session to start sending and receiving audio.
 
 Start a session with default configurations:
 ```kotlin
@@ -199,7 +199,7 @@ These configurations are available in `audioVideoConfiguration`:
 
 AudioMode: The default audio format is Stereo/48KHz i.e Stereo Audio with 48KHz sampling rate (Stereo48K). Other supported audio formats include Mono/48KHz (Mono48K) or Mono/16KHz (Mono16K). You can specify a non-default audio mode in `AudioVideoConfiguration`, and then start the meeting session.
 
-AudioDeviceCapabilities: The default audio device capabilities are to have both the audio input and output devices enabled, i.e. both microphone and speaker are enabled (`InputAndOutput`). Other options are `OutputOnly` (microphone disabled and speaker enabled) and `None` (both microphone and speaker disabled).
+AudioDeviceCapabilities: The default audio device capabilities are to have both the audio input and output devices enabled (`InputAndOutput`), i.e. both microphone and speaker are enabled. `InputAndOutput` will require `MODIFY_AUDIO_SETTINGS` and `RECORD_AUDIO` permissions. Other options are `OutputOnly` (microphone disabled and speaker enabled; requires `MODIFY_AUDIO_SETTINGS` permission) and `None` (both microphone and speaker disabled; does not require any audio permissions).
 
 AudioStreamType: The default value is ```VoiceCall```. The available options are ```VoiceCall``` and ```Music```, they are equivalent of `STREAM_VOICE_CALL` and `STREAM_MUSIC` respectively in [AudioManager](https://developer.android.com/reference/android/media/AudioManager). This configuration is for addressing the audio volume [issue](https://github.com/aws/amazon-chime-sdk-android/issues/296) on Oculus Quest 2. If you don't know what it is, you probably don't need to worry about it. For more information, please refer to Android documentation: [STREAM_VOICE_CALL](https://developer.android.com/reference/android/media/AudioManager#STREAM_VOICE_CALL), [STREAM_MUSIC](https://developer.android.com/reference/android/media/AudioManager#STREAM_MUSIC).
 

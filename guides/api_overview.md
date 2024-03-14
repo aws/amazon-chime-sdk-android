@@ -59,17 +59,20 @@ A DeviceChangeObserver has the following method:
 
 Before starting audio or video, you will need to request permissions from the user and verify that
 they are granted. Otherwise, the API will throw a `SecurityException`. Amazon Chime SDK for Android 
-already declares these permissions in its manifest file.
-
-Audio permissions:
-```
-Manifest.permission.MODIFY_AUDIO_SETTINGS,
-Manifest.permission.RECORD_AUDIO
-```
+already declares the following permissions in its manifest file.
 
 Video permissions:
 ```
 Manifest.permission.CAMERA
+```
+
+Based on which `AudioDeviceCapabilities` you plan to have users join meetings with, you will need to
+request certain audio permissions and declare them in your manifest file.
+
+Audio permissions:
+```
+Manifest.permission.MODIFY_AUDIO_SETTINGS // Required for `AudioDeviceCapabilities.InputAndOutput` and `AudioDeviceCapabilities.OutputOnly`
+Manifest.permission.RECORD_AUDIO          // Required for `AudioDeviceCapabilities.InputAndOutput`
 ```
 
 ## 4. Register an audio video observer 
@@ -96,8 +99,7 @@ An AudioVideoObserver has the following methods:
 
 ## 5. Starting and stopping the meeting session
 
-Call this method after doing pre-requisite configuration (See previous sections). Audio permissions
-are required for starting the meeting session. 
+Call this method after doing pre-requisite configuration (See previous sections).
 
 To start the meeting session, call meetingSession.audioVideo.[start()](https://aws.github.io/amazon-chime-sdk-android/amazon-chime-sdk/com.amazonaws.services.chime.sdk.meetings.audiovideo/-audio-video-controller-facade/start.html). This will start underlying
 media clients and will start sending and receiving audio.
