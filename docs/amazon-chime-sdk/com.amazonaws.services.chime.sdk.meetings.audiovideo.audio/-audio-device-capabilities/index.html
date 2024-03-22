@@ -1,0 +1,58 @@
+<HTML>
+<HEAD>
+<meta charset="UTF-8">
+<title>AudioDeviceCapabilities - amazon-chime-sdk</title>
+<link rel="stylesheet" href="../../../style.css">
+</HEAD>
+<BODY>
+<a href="../../index.html">amazon-chime-sdk</a>&nbsp;/&nbsp;<a href="../index.html">com.amazonaws.services.chime.sdk.meetings.audiovideo.audio</a>&nbsp;/&nbsp;<a href="./index.html">AudioDeviceCapabilities</a><br/>
+<br/>
+<h1>AudioDeviceCapabilities</h1>
+<code><span class="keyword">enum</span> <span class="keyword">class </span><span class="identifier">AudioDeviceCapabilities</span></code>
+<p><a href="./index.html">AudioDeviceCapabilities</a> describes whether the audio input and output devices are enabled or disabled. Disabling
+either the audio input or output will change what audio permissions are required in order to join a meeting.</p>
+<h3>Enum Values</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<h4><a href="-none.html">None</a></h4>
+</td>
+<td>
+<p>Disable both the audio input and output devices (i.e. connections to the microphone and speaker devices are not
+opened). Muted packets are sent to the server. No audio permissions are required.</p>
+</td>
+</tr>
+<tr>
+<td>
+<h4><a href="-output-only.html">OutputOnly</a></h4>
+</td>
+<td>
+<p>Disable the audio input device and only enable the audio output device (i.e. the connection to the microphone
+device is not opened). Muted packets are sent to the server. MODIFY_AUDIO_SETTINGS permission is required.</p>
+</td>
+</tr>
+<tr>
+<td>
+<h4><a href="-input-and-output.html">InputAndOutput</a></h4>
+</td>
+<td>
+<p>Enable both the audio input and output devices. MODIFY_AUDIO_SETTINGS and RECORD_AUDIO permissions are required.</p>
+</td>
+</tr>
+</tbody>
+</table>
+<h3>Functions</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<h4><a href="required-permissions.html">requiredPermissions</a></h4>
+</td>
+<td>
+<code><span class="keyword">fun </span><span class="identifier">requiredPermissions</span><span class="symbol">(</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-array/index.html"><span class="identifier">Array</span></a><span class="symbol">&lt;</span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">&gt;</span></code></td>
+</tr>
+</tbody>
+</table>
+</BODY>
+</HTML>

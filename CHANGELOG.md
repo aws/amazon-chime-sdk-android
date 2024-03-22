@@ -1,4 +1,4 @@
-## Unreleased
+## [0.20.0] - 2024-03-21
 
 ### Added
 * Added `AudioDeviceCapabilities` to `AudioVideoConfiguration`, which allows configuring whether the audio input and output devices are enabled or disabled before starting a meeting.
