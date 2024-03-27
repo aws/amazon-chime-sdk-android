@@ -47,7 +47,7 @@ jobs:
 
       - name: Send Notification
         uses: slackapi/slack-github-action@v1.25.0
-        if: always()
+        if: failure()
         with:
           payload: |
             {
