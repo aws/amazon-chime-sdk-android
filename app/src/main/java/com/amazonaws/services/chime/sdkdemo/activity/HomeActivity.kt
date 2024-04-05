@@ -25,17 +25,13 @@ import androidx.lifecycle.ViewModelProvider
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.AudioVideoConfiguration
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.audio.AudioDeviceCapabilities
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.audio.AudioMode
-import com.amazonaws.services.chime.sdk.meetings.internal.utils.DefaultBackOffRetry
-import com.amazonaws.services.chime.sdk.meetings.internal.utils.HttpUtils
 import com.amazonaws.services.chime.sdk.meetings.utils.Versioning
 import com.amazonaws.services.chime.sdk.meetings.utils.logger.ConsoleLogger
 import com.amazonaws.services.chime.sdk.meetings.utils.logger.LogLevel
 import com.amazonaws.services.chime.sdkdemo.R
 import com.amazonaws.services.chime.sdkdemo.fragment.DebugSettingsFragment
 import com.amazonaws.services.chime.sdkdemo.model.DebugSettingsViewModel
-import com.amazonaws.services.chime.sdkdemo.utils.encodeURLParam
 import com.amazonaws.services.chime.sdkdemo.utils.showToast
-import java.net.URL
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -214,18 +210,52 @@ class HomeActivity : AppCompatActivity() {
         attendeeName: String?,
         primaryMeetingId: String?
     ): String? {
-        val meetingServerUrl = if (meetingUrl.endsWith("/")) meetingUrl else "$meetingUrl/"
-        var url = "${meetingServerUrl}join?title=${encodeURLParam(meetingId)}&name=${encodeURLParam(
-            attendeeName)}&region=${encodeURLParam(MEETING_REGION)}"
-        if (!primaryMeetingId.isNullOrEmpty()) {
-            url += "&primaryExternalMeetingId=${encodeURLParam(primaryMeetingId)}"
-        }
-        val response = HttpUtils.post(URL(url), "", DefaultBackOffRetry(), logger)
-        return if (response.httpException == null) {
-            response.data
-        } else {
-            logger.error(TAG, "Unable to join meeting. ${response.httpException}")
-            null
-        }
+        return "{\n" +
+                "  \"JoinInfo\": {\n" +
+                "    \"Meeting\": {\n" +
+                "      \"metadata\": {\n" +
+                "        \"httpStatusCode\": 200,\n" +
+                "        \"requestId\": \"55cf6f07-b167-4510-8e88-2936d90c9e7a\",\n" +
+                "        \"attempts\": 1,\n" +
+                "        \"totalRetryDelay\": 0\n" +
+                "      },\n" +
+                "      \"Meeting\": {\n" +
+                "        \"ExternalMeetingId\": \"uiop\",\n" +
+                "        \"MediaPlacement\": {\n" +
+                "          \"AudioFallbackUrl\": \"wss://haxrp.m3.uw2.app.chime.aws:443/calls/1a8d7ee0-2e22-412c-b4d4-649528cf2713\",\n" +
+                "          \"AudioHostUrl\": \"6dae15680e1f231a1f9e9024349e0cbf.k.m3.uw2.app.chime.aws:3478\",\n" +
+                "          \"EventIngestionUrl\": \"https://data.svc.ue1.ingest.chime.aws/v1/client-events\",\n" +
+                "          \"ScreenDataUrl\": \"wss://bitpw.m3.uw2.app.chime.aws:443/v2/screen/1a8d7ee0-2e22-412c-b4d4-649528cf2713\",\n" +
+                "          \"ScreenSharingUrl\": \"wss://bitpw.m3.uw2.app.chime.aws:443/v2/screen/1a8d7ee0-2e22-412c-b4d4-649528cf2713\",\n" +
+                "          \"ScreenViewingUrl\": \"wss://bitpw.m3.uw2.app.chime.aws:443/ws/connect?passcode=null&viewer_uuid=null&X-BitHub-Call-Id=1a8d7ee0-2e22-412c-b4d4-649528cf2713\",\n" +
+                "          \"SignalingUrl\": \"wss://signal.m3.uw2.app.chime.aws/control/1a8d7ee0-2e22-412c-b4d4-649528cf2713\",\n" +
+                "          \"TurnControlUrl\": \"https://2713.cell.us-east-1.meetings.chime.aws/v2/turn_sessions\"\n" +
+                "        },\n" +
+                "        \"MediaRegion\": \"us-west-2\",\n" +
+                "        \"MeetingArn\": \"arn:aws:chime:us-east-1:365135496707:meeting/1a8d7ee0-2e22-412c-b4d4-649528cf2713\",\n" +
+                "        \"MeetingId\": \"1a8d7ee0-2e22-412c-b4d4-649528cf2713\",\n" +
+                "        \"TenantIds\": []\n" +
+                "      }\n" +
+                "    },\n" +
+                "    \"Attendee\": {\n" +
+                "      \"metadata\": {\n" +
+                "        \"httpStatusCode\": 200,\n" +
+                "        \"requestId\": \"1a150f92-db25-4658-9877-d65fc6709538\",\n" +
+                "        \"attempts\": 1,\n" +
+                "        \"totalRetryDelay\": 0\n" +
+                "      },\n" +
+                "      \"Attendee\": {\n" +
+                "        \"AttendeeId\": \"47ce36c4-afa6-4e82-3891-8ae0d7184112\",\n" +
+                "        \"Capabilities\": {\n" +
+                "          \"Audio\": \"SendReceive\",\n" +
+                "          \"Content\": \"SendReceive\",\n" +
+                "          \"Video\": \"SendReceive\"\n" +
+                "        },\n" +
+                "        \"ExternalUserId\": \"a9a5a064#asdf\",\n" +
+                "        \"JoinToken\": \"\"\n" +
+                "      }\n" +
+                "    }\n" +
+                "  }\n" +
+                "}"
     }
 }
