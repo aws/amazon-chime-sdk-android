@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 class DebugSettingsViewModel : ViewModel() {
     val endpointUrl = MutableLiveData("")
     val primaryMeetingId = MutableLiveData("")
+    val customPort = MutableLiveData("")
 
     fun sendEndpointUrl(data: String) {
         endpointUrl.value = data
@@ -13,5 +14,9 @@ class DebugSettingsViewModel : ViewModel() {
 
     fun sendPrimaryMeetingId(data: String) {
         primaryMeetingId.value = data
+    }
+
+    fun sendCustomPort(data: String) {
+        customPort.value = data
     }
 }

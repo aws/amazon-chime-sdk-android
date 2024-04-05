@@ -226,7 +226,31 @@ class MeetingActivity : AppCompatActivity(),
     }
 
     private fun urlRewriter(url: String): String {
-        // You can change urls by url.replace("example.com", "my.example.com")
+        val customPort = intent.extras?.getString(HomeActivity.CUSTOM_PORT_KEY) as String
+        if (customPort == "") return url
+        var tempUrl: String = url
+        // Signaling
+        if (tempUrl.contains("/control")) {
+            tempUrl = tempUrl.replace("/control", ":$customPort/control")
+            logger.info(TAG, "Joining with signaling url $tempUrl")
+            return tempUrl
+        }
+        // TURN UDP
+        if (tempUrl.contains("turn:ice.")) {
+            val regex = Regex("(?:aws:)([0-9]*)")
+            val port = regex.find(tempUrl)?.groupValues?.get(1) ?: ""
+            tempUrl = tempUrl.replace(port, customPort)
+            logger.info(TAG, "Joining with TURN UDP url $tempUrl")
+            return tempUrl
+        }
+        // Audio Host
+        if (tempUrl.contains(".k.")) {
+            val regex = Regex("(?:aws:)([0-9]*)")
+            val port = regex.find(tempUrl)?.groupValues?.get(1) ?: ""
+            tempUrl = tempUrl.replace(port, customPort)
+            logger.info(TAG, "Joining with audio host url $tempUrl")
+            return tempUrl
+        }
         return url
     }
 

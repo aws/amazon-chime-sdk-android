@@ -32,6 +32,7 @@ class DebugSettingsFragment : DialogFragment() {
         debugSettingsViewModel = ViewModelProvider(requireActivity()).get(DebugSettingsViewModel::class.java)
         view.endpointUrlEditText.setText(debugSettingsViewModel.endpointUrl.value)
         view.primaryMeetingIdEditText.setText(debugSettingsViewModel.primaryMeetingId.value)
+        view.customPortEditText.setText(debugSettingsViewModel.customPort.value)
         setupClickListeners(view)
     }
 
@@ -39,6 +40,7 @@ class DebugSettingsFragment : DialogFragment() {
         view.saveButton.setOnClickListener {
             debugSettingsViewModel.sendEndpointUrl(view.endpointUrlEditText.text.toString())
             debugSettingsViewModel.sendPrimaryMeetingId(view.primaryMeetingIdEditText.text.toString())
+            debugSettingsViewModel.sendCustomPort(view.customPortEditText.text.toString())
             dismiss()
         }
     }

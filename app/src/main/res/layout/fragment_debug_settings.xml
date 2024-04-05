@@ -75,6 +75,35 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/titlePrimaryMeetingId" />
 
+     <TextView
+        android:id="@+id/titleCustomPort"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="42dp"
+        android:layout_marginBottom="24dp"
+        android:text="@string/debug_settings_label_custom_port"
+        android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+        android:textSize="18sp"
+        app:layout_constraintBottom_toTopOf="@+id/customPortEditText"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.497"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/primaryMeetingIdEditText" />
+
+    <EditText
+        android:id="@+id/customPortEditText"
+        android:layout_width="284dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="63dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="64dp"
+        android:autofillHints=""
+        android:hint="@string/debug_settings_placeholder_custom_port"
+        android:inputType="textUri|text"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/titleCustomPort" />
+
     <Button
         android:id="@+id/saveButton"
         android:layout_width="wrap_content"

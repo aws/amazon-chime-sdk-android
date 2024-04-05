@@ -70,6 +70,7 @@ class HomeActivity : AppCompatActivity() {
         const val AUDIO_MODE_KEY = "AUDIO_MODE"
         const val AUDIO_DEVICE_CAPABILITIES_KEY = "AUDIO_DEVICE_CAPABILITIES"
         const val ENABLE_AUDIO_REDUNDANCY_KEY = "ENABLE_AUDIO_REDUNDANCY"
+        const val CUSTOM_PORT_KEY = "CUSTOM_PORT"
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -199,7 +200,8 @@ class HomeActivity : AppCompatActivity() {
                                 MEETING_ENDPOINT_KEY to meetingUrl,
                                 AUDIO_MODE_KEY to audioVideoConfig.audioMode.value,
                                 AUDIO_DEVICE_CAPABILITIES_KEY to audioVideoConfig.audioDeviceCapabilities,
-                                ENABLE_AUDIO_REDUNDANCY_KEY to audioVideoConfig.enableAudioRedundancy
+                                ENABLE_AUDIO_REDUNDANCY_KEY to audioVideoConfig.enableAudioRedundancy,
+                                CUSTOM_PORT_KEY to debugSettingsViewModel.customPort.value
                             )
                         )
                     }
