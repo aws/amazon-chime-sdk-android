@@ -40,6 +40,7 @@ import com.amazonaws.services.chime.sdkdemo.fragment.MeetingFragment
 import com.amazonaws.services.chime.sdkdemo.model.MeetingSessionModel
 import com.amazonaws.services.chime.sdkdemo.utils.CpuVideoProcessor
 import com.amazonaws.services.chime.sdkdemo.utils.GpuVideoProcessor
+import com.bugsnag.android.Bugsnag
 import com.google.gson.Gson
 
 class MeetingActivity : AppCompatActivity(),
@@ -93,7 +94,10 @@ class MeetingActivity : AppCompatActivity(),
                     meetingSessionModel.eglCoreFactory
                 )
             }
-
+            Bugsnag.addMetadata("MeetingInfo", "ExternalMeetingId", meetingId)
+            Bugsnag.addMetadata("MeetingInfo", "MeetingId", sessionConfig?.meetingId)
+            Bugsnag.addMetadata("MeetingInfo", "AttendeeName", name)
+            Bugsnag.addMetadata("MeetingInfo", "AttendeeId", sessionConfig?.credentials?.attendeeId)
             if (meetingSession == null) {
                 Toast.makeText(
                     applicationContext,
