@@ -21,6 +21,10 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
 
+        <meta-data
+                android:name="com.bugsnag.android.API_KEY"
+                android:value="c6fe56dddccadb0c07dc3e6727ee4dae"/>
+
         <activity android:name=".activity.SplashActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

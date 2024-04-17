@@ -13,6 +13,8 @@ import android.view.Window
 import android.view.WindowManager
 import androidx.appcompat.app.AppCompatActivity
 import com.amazonaws.services.chime.sdkdemo.R
+import com.bugsnag.android.Bugsnag
+import com.bugsnag.android.performance.BugsnagPerformance
 
 class SplashActivity : AppCompatActivity() {
 
@@ -20,6 +22,8 @@ class SplashActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        Bugsnag.start(this)
+        BugsnagPerformance.start(this)
         this.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LOCKED
         window.requestFeature(Window.FEATURE_NO_TITLE)
         window.setFlags(

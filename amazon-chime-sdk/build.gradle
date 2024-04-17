@@ -29,8 +29,6 @@ android {
     defaultConfig {
         minSdkVersion project.ext.chimeMinSdkVersion
         targetSdkVersion project.ext.chimeTargetSdkVersion
-        versionCode generateVersionCode()
-        versionName generateVersionName()
         consumerProguardFiles 'consumer-rules.pro'
         renderscriptTargetApi 21
         renderscriptSupportModeEnabled true
