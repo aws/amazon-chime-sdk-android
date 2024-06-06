@@ -74,6 +74,20 @@ dependencies {
 }
 ```
 
+Projects can now build Arm and x86 targets, which may be useful if bundling an app. x86 targets will not function and are not intended to be installed or run on any x86 device or emulator.
+**Important: Only Arm devices are supported.**
+
+
+If you need non-functional x86 stubs in the media binary in order to bundle your app, you can append `-x86-stub` to your chosen media dependency. For example:
+```
+dependencies {
+    implementation 'software.aws.chimesdk:amazon-chime-sdk-media-no-video-codecs-x86-stub:$MEDIA_VERSION'
+    implementation ('software.aws.chimesdk:amazon-chime-sdk:$MEDIA_VERSION') {
+        exclude module: 'amazon-chime-sdk-media'
+        exclude module: 'amazon-chime-sdk-machine-learning'
+    }
+}
+```
 ### Manually download SDK binaries
 To include the SDK binaries in your own project, follow these steps.
 
@@ -84,6 +98,11 @@ Download `amazon-chime-sdk` and `amazon-chime-sdk-media` binaries from the lates
 If you like to use more machine learning features, e.g. background blur/replacement, also download the `amazon-chime-sdk-machine-learning` binary from the latest [release](https://github.com/aws/amazon-chime-sdk-android/releases/latest). Otherwise, you can ignore all references to `amazon-chime-sdk-machine-learning` in the instructions below.
 
 If you don't need video and content share functionality, or software video codec support, you could use `amazon-chime-sdk-media-no-video-codecs` instead of `amazon-chime-sdk-media` to exclude software video codecs support and reduce size. If you do, you can treat all references to `amazon-chime-sdk-media` as `amazon-chime-sdk-media-no-video-codecs` in the instructions below. 
+
+Projects can now build Arm and x86 targets, which may be useful if bundling an app. x86 targets will not function and are not intended to be installed or run on any x86 device or emulator.
+**Important: Only Arm devices are supported.**
+
+If you need non-functional x86 stubs combined with fully functional arm architectures in order to bundle your app, you can use `amazon-chime-sdk-media-x86-stub` or `amazon-chime-sdk-media-no-video-codecs-x86-stub` media binaries and substitute them for `amazon-chime-sdk-media` references in the instructions below.
 
 **NOTE: We do not support mixing and matching binaries from different releases.**
 
