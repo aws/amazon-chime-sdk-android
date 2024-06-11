@@ -169,41 +169,23 @@ class DefaultScreenCaptureSource(
             return false
         }
 
-        // Note that these metrics depend on orientation
-        displayMetrics = context.resources.displayMetrics
-        val display = displayManager.getDisplay(Display.DEFAULT_DISPLAY)
-            ?: throw RuntimeException("No display found.")
-        // Use `getRealMetrics` to properly account for menu, status bar, and rotation
-        display.getRealMetrics(displayMetrics)
+        isOrientationInPortrait = isOrientationInPortrait()
+        val size = getWidthAndHeight()
+        surfaceTextureSource = createNewSurfaceTextureSource(size.first, size.second)
 
-        val rotation = display.rotation
-        isOrientationInPortrait = rotation == Surface.ROTATION_0 || rotation == Surface.ROTATION_180
-
-        // Sometimes, Android changes displayMetrics widthPixels and heightPixels
-        // and return inconsistent height and width for surfaceTextureSource VS virtualDisplay
-        val targetSize: IntArray = screenCaptureResolutionCalculator.computeTargetSize(displayMetrics.widthPixels, displayMetrics.heightPixels, targetResolution.width, targetResolution.height)
-        val width: Int = screenCaptureResolutionCalculator.alignToEven(targetSize[0])
-        val height: Int = screenCaptureResolutionCalculator.alignToEven(targetSize[1])
-
-        // Note that in landscape, for some reason `getRealMetrics` doesn't account for the status bar correctly
-        // so we try to account for it with a manual adjustment to the surface size to avoid letterboxes
-        // Some android device H.264 encoder is not able to handle size that is not multiples of 16 (such as Pixel3),
-        // so screenCapture surface size is aligned manually to avoid the issue
-        surfaceTextureSource =
-            surfaceTextureCaptureSourceFactory.createSurfaceTextureCaptureSource(
-                alignNumberBy16(width - (if (isOrientationInPortrait) 0 else getStatusBarHeight())),
-                alignNumberBy16(height),
-                contentHint
-            )
-        surfaceTextureSource?.minFps = MIN_FPS
-
-        surfaceTextureSource?.addVideoSink(this)
-        surfaceTextureSource?.start()
-
+        mediaProjection?.registerCallback(
+            object : MediaProjection.Callback() {
+                override fun onStop() {
+                    // clean up resources
+                    stopInternal()
+                }
+            },
+            handler
+        )
         virtualDisplay = mediaProjection?.createVirtualDisplay(
             TAG,
-            width,
-            height,
+            size.first,
+            size.second,
             displayMetrics.densityDpi,
             DisplayManager.VIRTUAL_DISPLAY_FLAG_AUTO_MIRROR,
             surfaceTextureSource?.surface,
@@ -222,6 +204,46 @@ class DefaultScreenCaptureSource(
 
         logger.info(TAG, "Media projection adapter activity succeeded, virtual display created")
         return true
+    }
+
+    private fun isOrientationInPortrait(): Boolean {
+        // Note that these metrics depend on orientation
+        displayMetrics = context.resources.displayMetrics
+        val display = displayManager.getDisplay(Display.DEFAULT_DISPLAY)
+            ?: throw RuntimeException("No display found.")
+        // Use `getRealMetrics` to properly account for menu, status bar, and rotation
+        display.getRealMetrics(displayMetrics)
+
+        val rotation = display.rotation
+        val isInPortrait = rotation == Surface.ROTATION_0 || rotation == Surface.ROTATION_180
+        logger.info(TAG, "isOrientationInPortrait: $isInPortrait")
+        return isInPortrait
+    }
+    private fun getWidthAndHeight(): Pair<Int, Int> {
+        // Sometimes, Android changes displayMetrics widthPixels and heightPixels
+        // and return inconsistent height and width for surfaceTextureSource VS virtualDisplay
+        val targetSize: IntArray = screenCaptureResolutionCalculator.computeTargetSize(displayMetrics.widthPixels, displayMetrics.heightPixels, targetResolution.width, targetResolution.height)
+        val width: Int = screenCaptureResolutionCalculator.alignToEven(targetSize[0])
+        val height: Int = screenCaptureResolutionCalculator.alignToEven(targetSize[1])
+        logger.info(TAG, "width: $width, height: $height")
+        return Pair(width, height)
+    }
+
+    private fun createNewSurfaceTextureSource(width: Int, height: Int): SurfaceTextureCaptureSource {
+        // Note that in landscape, for some reason `getRealMetrics` doesn't account for the status bar correctly
+        // so we try to account for it with a manual adjustment to the surface size to avoid letterboxes
+        // Some android device H.264 encoder is not able to handle size that is not multiples of 16 (such as Pixel3),
+        // so screenCapture surface size is aligned manually to avoid the issue
+        val source =
+            surfaceTextureCaptureSourceFactory.createSurfaceTextureCaptureSource(
+                alignNumberBy16(width - (if (isOrientationInPortrait) 0 else getStatusBarHeight())),
+                alignNumberBy16(height),
+                contentHint
+            )
+        source.minFps = MIN_FPS
+        source.addVideoSink(this@DefaultScreenCaptureSource)
+        source.start()
+        return source
     }
 
     override fun stop() {
@@ -287,8 +309,7 @@ class DefaultScreenCaptureSource(
             handler.post {
                 // Double check that start or stop hasn't been called since this was posted
                 if (isRestartingForOrientationChange) {
-                    stopInternal()
-                    startInternal()
+                    resize()
                     isRestartingForOrientationChange = false
                 }
             }
@@ -298,6 +319,23 @@ class DefaultScreenCaptureSource(
         // Ignore frames while we are recreating the surface and display
         if (isRestartingForOrientationChange) return
         sinks.forEach { it.onVideoFrameReceived(frame) }
+    }
+
+    private fun resize() {
+        isOrientationInPortrait = isOrientationInPortrait()
+        val size = getWidthAndHeight()
+        logger.info(TAG, "resize to width: ${size.first}, height: ${size.second}")
+        if (surfaceTextureSource != null) {
+            virtualDisplay?.surface?.release()
+            virtualDisplay?.resize(size.first, size.second, displayMetrics.densityDpi)
+
+            surfaceTextureSource?.removeVideoSink(this@DefaultScreenCaptureSource)
+            surfaceTextureSource?.stop()
+            surfaceTextureSource?.release()
+            surfaceTextureSource = null
+        }
+        surfaceTextureSource = createNewSurfaceTextureSource(size.first, size.second)
+        virtualDisplay?.surface = surfaceTextureSource?.surface
     }
 
     fun release() {
