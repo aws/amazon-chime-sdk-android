@@ -5,6 +5,9 @@
 
 package com.amazonaws.services.chime.sdkdemo.model
 
+import android.content.ComponentName
+import android.content.ServiceConnection
+import android.os.IBinder
 import androidx.lifecycle.ViewModel
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.AttendeeInfo
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.AudioVideoFacade
@@ -78,6 +81,18 @@ class MeetingModel : ViewModel() {
     var isUsingBackgroundReplacement = false
     var localVideoMaxBitRateKbps = 0
     var isCameraSendAvailable = false
+    var isMicrophoneServiceBound = false
+    val microphoneServiceConnection = object : ServiceConnection {
+        override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
+            isMicrophoneServiceBound = true
+        }
+
+        override fun onServiceDisconnected(name: ComponentName?) {
+            isMicrophoneServiceBound = false
+        }
+    }
+    var isScreenShareServiceBound = false
+    var screenShareServiceConnection: ServiceConnection? = null
 
     fun getRemoteVideoTileStates(): List<VideoCollectionTile> {
         return remoteVideoTileStates

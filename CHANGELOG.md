@@ -1,3 +1,13 @@
+## Unreleased
+
+### Changed
+* Updated SDK compile and target SDK level to 34 (Android 14)
+  * Changed resize logic for handling screen rotation in `DefaultScreenCaptureSource` to avoid restart the capturing, which lead to security exception
+  * Registered required `MediaProjection.Callback` before creating the virtual display
+  * [Demo] Declaimed required permissions for foreground service in manifest file
+  * [Demo] Fixed memory leak for `ScreenShareServiceConnection` after screen rotations
+  * [Demo] Added `microphone` foreground service for app to still capture microphone audio after being backgrounded
+
 ## [0.22.0] - 2024-07-18
 
 ### Added

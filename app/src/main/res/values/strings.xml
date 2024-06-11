@@ -112,6 +112,8 @@
     <string name="alert_title_additional_options">Additional Options</string>
 
     <!-- Service -->
+    <string name="microphone_notification_tile">Microphone in use</string>
+    <string name="microphone_notification_text">The microphone is being used by AmazonChimeSDKDemo.</string>
     <string name="screen_capture_notification_tile">Screen Sharing</string>
     <string name="screen_capture_notification_text">Your screen is being shared.</string>
 

@@ -14,6 +14,7 @@ import android.content.Intent
 import android.content.ServiceConnection
 import android.content.pm.PackageManager
 import android.media.projection.MediaProjectionManager
+import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.os.IBinder
@@ -118,6 +119,7 @@ import com.amazonaws.services.chime.sdkdemo.data.VideoCollectionTile
 import com.amazonaws.services.chime.sdkdemo.device.AudioDeviceManager
 import com.amazonaws.services.chime.sdkdemo.device.ScreenShareManager
 import com.amazonaws.services.chime.sdkdemo.model.MeetingModel
+import com.amazonaws.services.chime.sdkdemo.service.MicrophoneService
 import com.amazonaws.services.chime.sdkdemo.service.ScreenCaptureService
 import com.amazonaws.services.chime.sdkdemo.utils.CpuVideoProcessor
 import com.amazonaws.services.chime.sdkdemo.utils.GpuVideoProcessor
@@ -180,9 +182,6 @@ class MeetingFragment : Fragment(),
 
     private val DATA_MESSAGE_TOPIC = "chat"
     private val DATA_MESSAGE_LIFETIME_MS = 300000
-
-    private var screenshareServiceConnection: ServiceConnection? = null
-    private var isBound: Boolean = false
 
     private var primaryExternalMeetingId: String? = null
     private var hasJoinedPrimaryMeeting = false
@@ -320,6 +319,23 @@ class MeetingFragment : Fragment(),
         // Start Audio Video
         audioVideo.start(audioVideoConfig)
         audioVideo.startRemoteVideo()
+        // Start microphone service starting Android 14 and when require microphone
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE &&
+            audioVideoConfig.audioDeviceCapabilities == AudioDeviceCapabilities.InputAndOutput) {
+            requireContext().startForegroundService(
+                Intent(
+                    requireContext(),
+                    MicrophoneService::class.java
+                ).also { intent ->
+                    requireContext().bindService(
+                        intent,
+                        meetingModel.microphoneServiceConnection,
+                        Context.BIND_AUTO_CREATE
+                    )
+                }
+            )
+        }
+
         return view
     }
 
@@ -1126,7 +1142,7 @@ class MeetingFragment : Fragment(),
     private fun toggleScreenCapture() {
         if (meetingModel.isSharingContent) {
             audioVideo.stopContentShare()
-            screenShareManager?.stop(isBound)
+            screenShareManager?.stop(meetingModel.isScreenShareServiceBound)
         } else {
             startActivityForResult(
                 mediaProjectionManager.createScreenCaptureIntent(),
@@ -1445,7 +1461,7 @@ class MeetingFragment : Fragment(),
     }
 
     private fun startScreenShare(resultCode: Int, data: Intent, fragmentContext: Context) {
-        screenshareServiceConnection = object : ServiceConnection {
+        meetingModel.screenShareServiceConnection = object : ServiceConnection {
             override fun onServiceConnected(className: ComponentName, service: IBinder) {
                 val screenCaptureSource = DefaultScreenCaptureSource(
                     fragmentContext,
@@ -1457,7 +1473,7 @@ class MeetingFragment : Fragment(),
                     resultCode,
                     data
                 )
-                isBound = true
+                meetingModel.isScreenShareServiceBound = true
 
                 val screenCaptureSourceObserver = object : CaptureSourceObserver {
                     override fun onCaptureStarted() {
@@ -1482,14 +1498,14 @@ class MeetingFragment : Fragment(),
                 screenCaptureSource.setMaxResolution(meetingSessionConfiguration.features.contentMaxResolution)
 
                 screenShareManager = ScreenShareManager(screenCaptureSource, fragmentContext)
-                screenShareManager?.screenCaptureConnectionService = screenshareServiceConnection
+                screenShareManager?.screenCaptureConnectionService = meetingModel.screenShareServiceConnection
                 screenShareManager?.addObserver(screenCaptureSourceObserver)
                 screenShareManager?.start()
-                (activity as MeetingActivity).setScreenShareManager(screenShareManager)
+                activity.setScreenShareManager(screenShareManager)
             }
 
             override fun onServiceDisconnected(arg0: ComponentName) {
-                isBound = false
+                meetingModel.isScreenShareServiceBound = false
             }
         }
 
@@ -1498,7 +1514,7 @@ class MeetingFragment : Fragment(),
                 fragmentContext,
                 ScreenCaptureService::class.java
             ).also { intent ->
-                screenshareServiceConnection?.let {
+                meetingModel.screenShareServiceConnection?.let {
                     context?.bindService(
                         intent,
                         it,
@@ -1915,6 +1931,14 @@ class MeetingFragment : Fragment(),
         super.onDestroy()
         deviceDialog?.dismiss()
         removeAudioVideoFacadeObservers()
+        if (meetingModel.isMicrophoneServiceBound) {
+            context?.unbindService(meetingModel.microphoneServiceConnection)
+            meetingModel.isMicrophoneServiceBound = false
+        }
+        if (meetingModel.isScreenShareServiceBound) {
+            meetingModel.screenShareServiceConnection?.let { context?.unbindService(it) }
+            meetingModel.isScreenShareServiceBound = false
+        }
     }
 
     // Handle backgrounded app
@@ -1937,7 +1961,7 @@ class MeetingFragment : Fragment(),
         // Turn off screen share when screen locked
         if (meetingModel.isSharingContent && !powerManager.isInteractive) {
             audioVideo.stopContentShare()
-            screenShareManager?.stop(isBound)
+            screenShareManager?.stop(meetingModel.isScreenShareServiceBound)
         }
     }
 
