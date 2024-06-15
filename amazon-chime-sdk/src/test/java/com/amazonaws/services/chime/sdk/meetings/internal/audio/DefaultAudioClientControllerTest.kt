@@ -13,6 +13,7 @@ import android.media.AudioTrack
 import android.util.Log
 import com.amazonaws.services.chime.sdk.meetings.TestConstant
 import com.amazonaws.services.chime.sdk.meetings.analytics.EventAnalyticsController
+import com.amazonaws.services.chime.sdk.meetings.analytics.EventAttributeName
 import com.amazonaws.services.chime.sdk.meetings.analytics.EventName
 import com.amazonaws.services.chime.sdk.meetings.analytics.MeetingStatsCollector
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.audio.AudioDeviceCapabilities
@@ -20,6 +21,7 @@ import com.amazonaws.services.chime.sdk.meetings.audiovideo.audio.AudioMode
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.audio.AudioRecordingPresetOverride
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.audio.AudioStreamType
 import com.amazonaws.services.chime.sdk.meetings.internal.utils.AppInfoUtil
+import com.amazonaws.services.chime.sdk.meetings.session.MeetingSessionStatusCode
 import com.amazonaws.services.chime.sdk.meetings.utils.logger.Logger
 import com.xodee.client.audio.audioclient.AppInfo
 import com.xodee.client.audio.audioclient.AudioClient
@@ -96,6 +98,8 @@ class DefaultAudioClientControllerTest {
         MockKAnnotations.init(this, relaxUnitFun = true)
 
         setupAudioManager()
+
+        every { mockAudioClientObserver.currentAudioStatus } returns MeetingSessionStatusCode.OK
 
         audioClientController = DefaultAudioClientController(
             context,
@@ -535,6 +539,31 @@ class DefaultAudioClientControllerTest {
         )
 
         verify(exactly = 1) { mockEventAnalyticsController.publishEvent(EventName.meetingStartRequested, any()) }
+    }
+
+    @Test
+    fun `start should notify EventAnalyticsController about meeting start failed event`() {
+        setupStartTests()
+        every {
+            mockAudioClient.startSession(any())
+        } returns testAudioClientFailureCode
+
+        audioClientController.start(
+            testAudioFallbackUrl,
+            testAudioHostUrl,
+            testMeetingId,
+            testAttendeeId,
+            testJoinToken,
+            AudioMode.Stereo48K,
+            AudioDeviceCapabilities.InputAndOutput,
+            AudioStreamType.VoiceCall,
+            AudioRecordingPresetOverride.None,
+            true
+        )
+
+        verify(exactly = 1) { mockEventAnalyticsController
+            .publishEvent(EventName.meetingStartFailed,
+                mutableMapOf(EventAttributeName.meetingStatus to MeetingSessionStatusCode.OK)) }
     }
 
     @Test
