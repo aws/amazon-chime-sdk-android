@@ -1,4 +1,4 @@
-## Unreleased
+## [0.21.0] - 2024-06-18
 
 ### Added
 * Added non-functional x86 stubs. Projects can now build Arm and x86 targets, which may be useful if bundling an app. x86 targets will not function and are not intended to be installed or run on any x86 device or emulator.
