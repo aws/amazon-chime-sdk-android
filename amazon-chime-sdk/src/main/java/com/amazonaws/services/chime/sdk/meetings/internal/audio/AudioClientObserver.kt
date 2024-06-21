@@ -9,6 +9,7 @@ import com.amazonaws.services.chime.sdk.meetings.audiovideo.AudioVideoObserver
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.PrimaryMeetingPromotionObserver
 import com.amazonaws.services.chime.sdk.meetings.realtime.RealtimeObserver
 import com.amazonaws.services.chime.sdk.meetings.realtime.TranscriptEventObserver
+import com.amazonaws.services.chime.sdk.meetings.session.MeetingSessionStatusCode
 import com.xodee.client.audio.audioclient.AudioClientLogListener
 import com.xodee.client.audio.audioclient.AudioClientMetricsListener
 import com.xodee.client.audio.audioclient.AudioClientPresenceListener
@@ -37,4 +38,5 @@ interface AudioClientObserver : AudioClientStateChangeListener,
     fun unsubscribeFromTranscriptEvent(observer: TranscriptEventObserver)
     // This only supports one observer at a time
     var primaryMeetingPromotionObserver: PrimaryMeetingPromotionObserver?
+    var currentAudioStatus: MeetingSessionStatusCode?
 }

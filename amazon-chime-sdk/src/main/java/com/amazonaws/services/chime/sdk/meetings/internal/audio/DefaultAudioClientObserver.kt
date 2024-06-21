@@ -66,7 +66,7 @@ class DefaultAudioClientObserver(
      * codes that we map to [MeetingSessionStatusCode].
      */
     private var currentAudioState = SessionStateControllerAction.Init
-    private var currentAudioStatus: MeetingSessionStatusCode? = MeetingSessionStatusCode.OK
+    override var currentAudioStatus: MeetingSessionStatusCode? = MeetingSessionStatusCode.OK
 
     private var audioClientStateObservers = ConcurrentSet.createConcurrentSet<AudioVideoObserver>()
     private var realtimeEventObservers = ConcurrentSet.createConcurrentSet<RealtimeObserver>()

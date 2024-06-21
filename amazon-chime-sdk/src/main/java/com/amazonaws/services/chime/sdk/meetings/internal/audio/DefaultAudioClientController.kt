@@ -240,7 +240,8 @@ class DefaultAudioClientController(
                 logger.error(TAG, "Failed to start audio session. Response code: $res")
 
                 eventAnalyticsController.publishEvent(
-                    EventName.meetingStartFailed
+                    EventName.meetingStartFailed,
+                    mutableMapOf(EventAttributeName.meetingStatus to audioClientObserver.currentAudioStatus as MeetingSessionStatusCode)
                 )
             } else {
                 logger.info(TAG, "Started audio session.")
