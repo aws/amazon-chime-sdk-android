@@ -215,6 +215,7 @@ These configurations are available in `audioVideoConfiguration`:
 - `audioStreamType`
 - `audioRecordingPresetOverride`
 - `enableAudioRedundancy`
+- `reconnectTimeoutMs`
 
 AudioMode: The default audio format is Stereo/48KHz i.e Stereo Audio with 48KHz sampling rate (Stereo48K). Other supported audio formats include Mono/48KHz (Mono48K) or Mono/16KHz (Mono16K). You can specify a non-default audio mode in `AudioVideoConfiguration`, and then start the meeting session.
 
@@ -229,6 +230,8 @@ mentioned [here](https://android.googlesource.com/platform/frameworks/wilhelm/+/
 
 EnableAudioRedundancy: The default value is true. When enabled, the SDK will send redundant audio data on detecting packet loss to help reduce its effects on audio quality. More details can be found in the
 *Redundant Audio* section.
+
+ReconnectTimeoutMs: The default value is 180,000ms. Use this configuration to control the session reconnect timeout due to poor network condition.
 
 #### Use case 2. Add an observer to receive audio and video session life cycle events.
 
@@ -351,6 +354,7 @@ override fun onAudioDeviceChanged(freshAudioDeviceList: List<MediaDevice>) {
 > - Supported AudioStreamType options: *VoiceCall* and *Music*. Default is *VoiceCall*
 > - Supported AudioRecordingPresetOverride options: *None*, *Generic*, *Camcorder*, *VoiceRecognition* and *VoiceCommunication*. Default is *None*.
 > - Supported enableAudioRedundancy options: *true* and *false*. Default is *true*.
+> - Supported reconnectTimeoutMs values: Integers greater than or equal to 0. Default is *180,000*.
 
 ```kotlin
 meetingSession.audioVideo.start() // starts the audio video session with defaults mentioned above

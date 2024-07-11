@@ -32,4 +32,9 @@ class AudioVideoConfigurationTest {
     fun `audio redundancy should be enabled by default`() {
         Assert.assertEquals(AudioVideoConfiguration().enableAudioRedundancy, true)
     }
+
+    @Test
+    fun `default reconnectTimeoutMs should be 180000`() {
+        Assert.assertEquals(AudioVideoConfiguration().reconnectTimeoutMs, 180000)
+    }
 }

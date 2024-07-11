@@ -61,7 +61,8 @@ class DefaultAudioVideoController(
             audioDeviceCapabilities = audioVideoConfiguration.audioDeviceCapabilities,
             audioStreamType = audioVideoConfiguration.audioStreamType,
             audioRecordingPresetOverride = audioVideoConfiguration.audioRecordingPresetOverride,
-            enableAudioRedundancy = audioVideoConfiguration.enableAudioRedundancy
+            enableAudioRedundancy = audioVideoConfiguration.enableAudioRedundancy,
+            reconnectTimeoutMs = audioVideoConfiguration.reconnectTimeoutMs
         )
         videoClientController.start()
     }

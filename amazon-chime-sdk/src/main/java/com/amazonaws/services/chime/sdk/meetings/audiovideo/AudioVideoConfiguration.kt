@@ -22,11 +22,15 @@ import com.amazonaws.services.chime.sdk.meetings.audiovideo.audio.AudioStreamTyp
  *
  * @property audioStreamType: AudioStreamType - the audio stream type in which the audio client
  * should operate during a meeting session.
+ *
+ * @property reconnectTimeoutMs: Int - Maximum amount of time in milliseconds to allow for reconnecting. Default
+ * value is 180000.
  */
 data class AudioVideoConfiguration @JvmOverloads constructor(
     val audioMode: AudioMode = AudioMode.Stereo48K,
     val audioDeviceCapabilities: AudioDeviceCapabilities = AudioDeviceCapabilities.InputAndOutput,
     val audioStreamType: AudioStreamType = AudioStreamType.VoiceCall,
     val audioRecordingPresetOverride: AudioRecordingPresetOverride = AudioRecordingPresetOverride.None,
-    val enableAudioRedundancy: Boolean = true
+    val enableAudioRedundancy: Boolean = true,
+    val reconnectTimeoutMs: Int = 180 * 1000
 )
