@@ -137,7 +137,8 @@ class DefaultAudioClientController(
         audioDeviceCapabilities: AudioDeviceCapabilities,
         audioStreamType: AudioStreamType,
         audioRecordingPresetOverride: AudioRecordingPresetOverride,
-        enableAudioRedundancy: Boolean
+        enableAudioRedundancy: Boolean,
+        reconnectTimeoutMs: Int
     ) {
         // Validate audio client state
         if (audioClientState != AudioClientState.INITIALIZED &&
@@ -201,12 +202,12 @@ class DefaultAudioClientController(
 
             val audioDeviceCapabilitiesInternal = mapAudioDeviceCapabilitiesToInternal(audioDeviceCapabilities)
 
-            var audioStreamTypeInternal = when (audioStreamType) {
+            val audioStreamTypeInternal = when (audioStreamType) {
                 AudioStreamType.VoiceCall -> AudioClient.AudioStreamType.VOICE_CALL
                 AudioStreamType.Music -> AudioClient.AudioStreamType.MUSIC
             }
 
-            var audioRecordingPresetInternal = when (audioRecordingPresetOverride) {
+            val audioRecordingPresetInternal = when (audioRecordingPresetOverride) {
                 AudioRecordingPresetOverride.None -> getDefaultRecordingPreset()
                 AudioRecordingPresetOverride.Generic -> AudioClient.AudioRecordingPreset.GENERIC
                 AudioRecordingPresetOverride.Camcorder -> AudioClient.AudioRecordingPreset.CAMCORDER
@@ -214,7 +215,7 @@ class DefaultAudioClientController(
                 AudioRecordingPresetOverride.VoiceCommunication -> AudioClient.AudioRecordingPreset.VOICE_COMMUNICATION
             }
 
-            var config = AudioClientSessionConfig.Builder(
+            val config = AudioClientSessionConfig.Builder(
                 host,
                 port,
                 joinToken,
@@ -232,6 +233,7 @@ class DefaultAudioClientController(
                 .withSpkMute(muteMicAndSpeaker)
                 .withPresenter(DEFAULT_PRESENTER)
                 .withProxyConfig(null)
+                .withReconnectTimeoutMs(reconnectTimeoutMs)
                 .build()
 
             val res = audioClient.startSession(config)

@@ -296,7 +296,8 @@ class DefaultAudioClientControllerTest {
             AudioDeviceCapabilities.InputAndOutput,
             AudioStreamType.VoiceCall,
             AudioRecordingPresetOverride.None,
-            true
+            true,
+            reconnectTimeoutMs = 180000
         )
 
         verify {
@@ -322,7 +323,8 @@ class DefaultAudioClientControllerTest {
                 AudioDeviceCapabilities.InputAndOutput,
                 AudioStreamType.VoiceCall,
                 AudioRecordingPresetOverride.None,
-                true
+                true,
+                reconnectTimeoutMs = 180000
         )
 
         verify {
@@ -348,7 +350,8 @@ class DefaultAudioClientControllerTest {
                 AudioDeviceCapabilities.InputAndOutput,
                 AudioStreamType.VoiceCall,
                 AudioRecordingPresetOverride.None,
-                true
+                true,
+                reconnectTimeoutMs = 180000
         )
 
         verify {
@@ -374,7 +377,8 @@ class DefaultAudioClientControllerTest {
             AudioDeviceCapabilities.None,
             AudioStreamType.VoiceCall,
             AudioRecordingPresetOverride.None,
-            true
+            true,
+            reconnectTimeoutMs = 180000
         )
 
         verify {
@@ -398,7 +402,8 @@ class DefaultAudioClientControllerTest {
             AudioDeviceCapabilities.OutputOnly,
             AudioStreamType.VoiceCall,
             AudioRecordingPresetOverride.None,
-            true
+            true,
+            reconnectTimeoutMs = 180000
         )
 
         verify {
@@ -422,7 +427,8 @@ class DefaultAudioClientControllerTest {
             AudioDeviceCapabilities.InputAndOutput,
             AudioStreamType.VoiceCall,
             AudioRecordingPresetOverride.None,
-            true
+            true,
+            reconnectTimeoutMs = 180000
         )
 
         verify {
@@ -446,7 +452,8 @@ class DefaultAudioClientControllerTest {
             AudioDeviceCapabilities.InputAndOutput,
             AudioStreamType.VoiceCall,
             AudioRecordingPresetOverride.None,
-            true
+            true,
+            reconnectTimeoutMs = 180000
         )
 
         verify {
@@ -470,7 +477,8 @@ class DefaultAudioClientControllerTest {
             AudioDeviceCapabilities.InputAndOutput,
             AudioStreamType.Music,
             AudioRecordingPresetOverride.None,
-            true
+            true,
+            reconnectTimeoutMs = 180000
         )
 
         verify {
@@ -494,7 +502,8 @@ class DefaultAudioClientControllerTest {
                 AudioDeviceCapabilities.InputAndOutput,
                 AudioStreamType.VoiceCall,
                 AudioRecordingPresetOverride.None,
-                true
+                true,
+                reconnectTimeoutMs = 180000
         )
 
         verify {
@@ -516,7 +525,8 @@ class DefaultAudioClientControllerTest {
             AudioDeviceCapabilities.InputAndOutput,
             AudioStreamType.VoiceCall,
             AudioRecordingPresetOverride.None,
-            true
+            true,
+            reconnectTimeoutMs = 180000
         )
 
         verify(exactly = 1) { mockAudioClientObserver.notifyAudioClientObserver(any()) }
@@ -535,7 +545,8 @@ class DefaultAudioClientControllerTest {
             AudioDeviceCapabilities.InputAndOutput,
             AudioStreamType.VoiceCall,
             AudioRecordingPresetOverride.None,
-            true
+            true,
+            reconnectTimeoutMs = 180000
         )
 
         verify(exactly = 1) { mockEventAnalyticsController.publishEvent(EventName.meetingStartRequested, any()) }
@@ -558,7 +569,8 @@ class DefaultAudioClientControllerTest {
             AudioDeviceCapabilities.InputAndOutput,
             AudioStreamType.VoiceCall,
             AudioRecordingPresetOverride.None,
-            true
+            true,
+            reconnectTimeoutMs = 180000
         )
 
         verify(exactly = 1) { mockEventAnalyticsController
@@ -589,7 +601,8 @@ class DefaultAudioClientControllerTest {
             AudioDeviceCapabilities.InputAndOutput,
             AudioStreamType.VoiceCall,
             AudioRecordingPresetOverride.None,
-            true
+            true,
+            reconnectTimeoutMs = 180000
         )
         every { mockAudioClient.stopSession() } returns testAudioClientSuccessCode
 
@@ -611,7 +624,8 @@ class DefaultAudioClientControllerTest {
             AudioDeviceCapabilities.InputAndOutput,
             AudioStreamType.VoiceCall,
             AudioRecordingPresetOverride.None,
-            true
+            true,
+            reconnectTimeoutMs = 180000
         )
         every { mockAudioClient.stopSession() } returns testAudioClientSuccessCode
 
@@ -637,7 +651,8 @@ class DefaultAudioClientControllerTest {
             AudioDeviceCapabilities.InputAndOutput,
             AudioStreamType.VoiceCall,
             AudioRecordingPresetOverride.None,
-            true
+            true,
+            reconnectTimeoutMs = 180000
         )
 
         val enableOutput: Boolean = audioClientController.setVoiceFocusEnabled(true)
@@ -675,7 +690,8 @@ class DefaultAudioClientControllerTest {
             AudioDeviceCapabilities.InputAndOutput,
             AudioStreamType.VoiceCall,
             AudioRecordingPresetOverride.None,
-            true
+            true,
+            reconnectTimeoutMs = 180000
         )
 
         audioClientController.isVoiceFocusEnabled()
@@ -704,7 +720,8 @@ class DefaultAudioClientControllerTest {
                 AudioDeviceCapabilities.InputAndOutput,
                 AudioStreamType.VoiceCall,
                 AudioRecordingPresetOverride.None,
-                true
+                true,
+                reconnectTimeoutMs = 180000
         )
 
         verify {
@@ -728,7 +745,8 @@ class DefaultAudioClientControllerTest {
                 AudioDeviceCapabilities.InputAndOutput,
                 AudioStreamType.VoiceCall,
                 AudioRecordingPresetOverride.Generic,
-                true
+                true,
+                reconnectTimeoutMs = 180000
         )
 
         verify {
@@ -752,7 +770,8 @@ class DefaultAudioClientControllerTest {
                 AudioDeviceCapabilities.InputAndOutput,
                 AudioStreamType.VoiceCall,
                 AudioRecordingPresetOverride.Camcorder,
-                true
+                true,
+                reconnectTimeoutMs = 180000
         )
 
         verify {
@@ -776,7 +795,8 @@ class DefaultAudioClientControllerTest {
                 AudioDeviceCapabilities.InputAndOutput,
                 AudioStreamType.VoiceCall,
                 AudioRecordingPresetOverride.VoiceRecognition,
-                true
+                true,
+                reconnectTimeoutMs = 180000
         )
 
         verify {
@@ -800,7 +820,8 @@ class DefaultAudioClientControllerTest {
                 AudioDeviceCapabilities.InputAndOutput,
                 AudioStreamType.VoiceCall,
                 AudioRecordingPresetOverride.VoiceCommunication,
-                true
+                true,
+                reconnectTimeoutMs = 180000
         )
 
         verify {
@@ -824,7 +845,8 @@ class DefaultAudioClientControllerTest {
             AudioDeviceCapabilities.InputAndOutput,
             AudioStreamType.VoiceCall,
             AudioRecordingPresetOverride.VoiceCommunication,
-            true
+            true,
+            reconnectTimeoutMs = 180000
         )
     }
 
@@ -842,7 +864,8 @@ class DefaultAudioClientControllerTest {
             AudioDeviceCapabilities.InputAndOutput,
             AudioStreamType.VoiceCall,
             AudioRecordingPresetOverride.VoiceCommunication,
-            true
+            true,
+            reconnectTimeoutMs = 180000
         )
     }
 }

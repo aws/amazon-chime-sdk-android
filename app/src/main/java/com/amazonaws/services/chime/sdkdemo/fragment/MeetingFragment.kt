@@ -237,7 +237,8 @@ class MeetingFragment : Fragment(),
                 HomeActivity.AUDIO_MODE_KEY to audioVideoConfig.audioMode.value,
                 HomeActivity.AUDIO_DEVICE_CAPABILITIES_KEY to audioVideoConfig.audioDeviceCapabilities,
                 HomeActivity.MEETING_ENDPOINT_KEY to meetingEndpointUrl,
-                HomeActivity.ENABLE_AUDIO_REDUNDANCY_KEY to audioVideoConfig.enableAudioRedundancy
+                HomeActivity.ENABLE_AUDIO_REDUNDANCY_KEY to audioVideoConfig.enableAudioRedundancy,
+                HomeActivity.RECONNECT_TIMEOUT_MS to audioVideoConfig.reconnectTimeoutMs
             )
             return fragment
         }
@@ -314,7 +315,8 @@ class MeetingFragment : Fragment(),
         } ?: AudioMode.Stereo48K
         val audioDeviceCapabilities = arguments?.get(HomeActivity.AUDIO_DEVICE_CAPABILITIES_KEY) as? AudioDeviceCapabilities ?: AudioDeviceCapabilities.InputAndOutput
         val enableAudioRedundancy = arguments?.getBoolean(HomeActivity.ENABLE_AUDIO_REDUNDANCY_KEY) as Boolean
-        val audioVideoConfig = AudioVideoConfiguration(audioMode = audioMode, audioDeviceCapabilities = audioDeviceCapabilities, enableAudioRedundancy = enableAudioRedundancy)
+        val reconnectTimeoutMs = arguments?.getInt(HomeActivity.RECONNECT_TIMEOUT_MS) as Int
+        val audioVideoConfig = AudioVideoConfiguration(audioMode = audioMode, audioDeviceCapabilities = audioDeviceCapabilities, enableAudioRedundancy = enableAudioRedundancy, reconnectTimeoutMs = reconnectTimeoutMs)
         // Start Audio Video
         audioVideo.start(audioVideoConfig)
         audioVideo.startRemoteVideo()

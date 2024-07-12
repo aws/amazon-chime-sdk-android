@@ -32,7 +32,8 @@ interface AudioClientController {
         audioDeviceCapabilities: AudioDeviceCapabilities,
         audioStreamType: AudioStreamType,
         audioRecordingPresetOverride: AudioRecordingPresetOverride,
-        enableAudioRedundancy: Boolean
+        enableAudioRedundancy: Boolean,
+        reconnectTimeoutMs: Int
     )
 
     fun stop()

@@ -188,7 +188,8 @@ class DefaultAudioVideoControllerTest {
                 AudioDeviceCapabilities.InputAndOutput,
                 AudioStreamType.VoiceCall,
                 AudioRecordingPresetOverride.None,
-                true
+                true,
+                reconnectTimeoutMs = 180000
             )
         }
     }
@@ -208,7 +209,8 @@ class DefaultAudioVideoControllerTest {
                     AudioDeviceCapabilities.InputAndOutput,
                     AudioStreamType.VoiceCall,
                     AudioRecordingPresetOverride.None,
-                    true
+                    true,
+                    reconnectTimeoutMs = 180000
             )
         }
     }
@@ -228,7 +230,8 @@ class DefaultAudioVideoControllerTest {
                     AudioDeviceCapabilities.InputAndOutput,
                     AudioStreamType.VoiceCall,
                     AudioRecordingPresetOverride.None,
-                    true
+                    true,
+                    reconnectTimeoutMs = 180000
             )
         }
     }
@@ -248,7 +251,8 @@ class DefaultAudioVideoControllerTest {
                     AudioDeviceCapabilities.InputAndOutput,
                     AudioStreamType.VoiceCall,
                     AudioRecordingPresetOverride.None,
-                    true
+                    true,
+                    reconnectTimeoutMs = 180000
             )
         }
     }
@@ -269,7 +273,8 @@ class DefaultAudioVideoControllerTest {
                     capabilities,
                     AudioStreamType.VoiceCall,
                     AudioRecordingPresetOverride.None,
-                    true
+                    true,
+                    reconnectTimeoutMs = 180000
                 )
             }
         }
@@ -290,7 +295,8 @@ class DefaultAudioVideoControllerTest {
                 AudioDeviceCapabilities.InputAndOutput,
                 AudioStreamType.VoiceCall,
                 AudioRecordingPresetOverride.None,
-                true
+                true,
+                reconnectTimeoutMs = 180000
             )
         }
     }
@@ -310,7 +316,8 @@ class DefaultAudioVideoControllerTest {
                 AudioDeviceCapabilities.InputAndOutput,
                 AudioStreamType.Music,
                 AudioRecordingPresetOverride.None,
-                true
+                true,
+                reconnectTimeoutMs = 180000
             )
         }
     }
@@ -330,7 +337,8 @@ class DefaultAudioVideoControllerTest {
                 AudioDeviceCapabilities.InputAndOutput,
                 AudioStreamType.VoiceCall,
                 AudioRecordingPresetOverride.None,
-                false
+                false,
+                reconnectTimeoutMs = 180000
             )
         }
     }

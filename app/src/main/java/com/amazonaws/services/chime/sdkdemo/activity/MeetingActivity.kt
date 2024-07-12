@@ -70,7 +70,8 @@ class MeetingActivity : AppCompatActivity(),
         } ?: AudioMode.Stereo48K
         val audioDeviceCapabilities = intent.extras?.get(HomeActivity.AUDIO_DEVICE_CAPABILITIES_KEY) as? AudioDeviceCapabilities ?: AudioDeviceCapabilities.InputAndOutput
         val enableAudioRedundancy = intent.extras?.getBoolean(HomeActivity.ENABLE_AUDIO_REDUNDANCY_KEY) as Boolean
-        audioVideoConfig = AudioVideoConfiguration(audioMode = audioMode, audioDeviceCapabilities = audioDeviceCapabilities, enableAudioRedundancy = enableAudioRedundancy)
+        val reconnectTimeoutMs = intent.extras?.getInt(HomeActivity.RECONNECT_TIMEOUT_MS) as Int
+        audioVideoConfig = AudioVideoConfiguration(audioMode = audioMode, audioDeviceCapabilities = audioDeviceCapabilities, enableAudioRedundancy = enableAudioRedundancy, reconnectTimeoutMs = reconnectTimeoutMs)
         meetingEndpointUrl = intent.extras?.getString(HomeActivity.MEETING_ENDPOINT_KEY) as String
 
         if (savedInstanceState == null) {

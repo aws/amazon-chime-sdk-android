@@ -53,12 +53,14 @@ class HomeActivity : AppCompatActivity() {
     private var audioMode: AppCompatSpinner? = null
     private var audioDeviceCapabilitiesSpinner: AppCompatSpinner? = null
     private var audioRedundancySwitch: SwitchCompat? = null
+    private var reconnectTimeoutSpinner: AppCompatSpinner? = null
     private var authenticationProgressBar: ProgressBar? = null
     private var meetingID: String? = null
     private var yourName: String? = null
     private var testUrl: String = ""
     private var audioModes = listOf("Stereo/48KHz Audio", "Mono/48KHz Audio", "Mono/16KHz Audio")
     private var audioDeviceCapabilitiesOptions = listOf("Input and Output", "None", "Output Only")
+    private var reconnectTimeoutOptions = listOf(180000, 20000, 5000, 0)
     private lateinit var audioVideoConfig: AudioVideoConfiguration
     private lateinit var debugSettingsViewModel: DebugSettingsViewModel
 
@@ -70,6 +72,7 @@ class HomeActivity : AppCompatActivity() {
         const val AUDIO_MODE_KEY = "AUDIO_MODE"
         const val AUDIO_DEVICE_CAPABILITIES_KEY = "AUDIO_DEVICE_CAPABILITIES"
         const val ENABLE_AUDIO_REDUNDANCY_KEY = "ENABLE_AUDIO_REDUNDANCY"
+        const val RECONNECT_TIMEOUT_MS = "RECONNECT_TIMEOUT_MS"
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -90,6 +93,10 @@ class HomeActivity : AppCompatActivity() {
         findViewById<Button>(R.id.buttonContinue)?.setOnClickListener {
             joinMeeting()
         }
+
+        reconnectTimeoutSpinner = findViewById(R.id.reconnectTimeoutSpinner)
+        reconnectTimeoutSpinner?.adapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, reconnectTimeoutOptions.map { "Reconnect timeout ms: $it" })
+
         findViewById<Button>(R.id.buttonDebugSettings)?.setOnClickListener { showDebugSettings() }
 
         val versionText: TextView = findViewById(R.id.versionText) as TextView
@@ -115,8 +122,10 @@ class HomeActivity : AppCompatActivity() {
             2 -> audioDeviceCapabilities = AudioDeviceCapabilities.OutputOnly
         }
 
+        val reconnectTimeoutMs = reconnectTimeoutOptions[reconnectTimeoutSpinner?.selectedItemPosition ?: 0]
+
         val redundancyEnabled = audioRedundancySwitch?.isChecked as Boolean
-        audioVideoConfig = AudioVideoConfiguration(audioMode = mode, audioDeviceCapabilities = audioDeviceCapabilities, enableAudioRedundancy = redundancyEnabled)
+        audioVideoConfig = AudioVideoConfiguration(audioMode = mode, audioDeviceCapabilities = audioDeviceCapabilities, enableAudioRedundancy = redundancyEnabled, reconnectTimeoutMs = reconnectTimeoutMs)
 
         meetingID = meetingEditText?.text.toString().trim().replace("\\s+".toRegex(), "+")
         yourName = nameEditText?.text.toString().trim().replace("\\s+".toRegex(), "+")
@@ -199,7 +208,8 @@ class HomeActivity : AppCompatActivity() {
                                 MEETING_ENDPOINT_KEY to meetingUrl,
                                 AUDIO_MODE_KEY to audioVideoConfig.audioMode.value,
                                 AUDIO_DEVICE_CAPABILITIES_KEY to audioVideoConfig.audioDeviceCapabilities,
-                                ENABLE_AUDIO_REDUNDANCY_KEY to audioVideoConfig.enableAudioRedundancy
+                                ENABLE_AUDIO_REDUNDANCY_KEY to audioVideoConfig.enableAudioRedundancy,
+                                RECONNECT_TIMEOUT_MS to audioVideoConfig.reconnectTimeoutMs
                             )
                         )
                     }
