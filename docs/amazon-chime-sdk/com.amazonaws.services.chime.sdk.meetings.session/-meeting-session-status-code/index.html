@@ -52,7 +52,10 @@ checked-in.</p>
 <h4><a href="-audio-authentication-rejected.html">AudioAuthenticationRejected</a></h4>
 </td>
 <td>
-<p>Authentication was rejected. The client is not allowed on this call.</p>
+<p>Authentication was rejected as the attendee information in MeetingSessionCredentials did not
+match that of an attendee created via chime::CreateAttendee.
+This error may imply an issue with your credential providing service,
+the client will not be allowed on this call.</p>
 </td>
 </tr>
 <tr>
@@ -60,7 +63,8 @@ checked-in.</p>
 <h4><a href="-audio-call-at-capacity.html">AudioCallAtCapacity</a></h4>
 </td>
 <td>
-<p>The client can not join because the call is at capacity.</p>
+<p>The client can not join because the meeting is at capacity.
+The service supports up to 250 attendees.</p>
 </td>
 </tr>
 <tr>
@@ -68,7 +72,9 @@ checked-in.</p>
 <h4><a href="-audio-call-ended.html">AudioCallEnded</a></h4>
 </td>
 <td>
-<p>The call was ended.</p>
+<p>The attendee attempted to join a meeting that has already ended.
+See this <a href="https://aws.github.io/amazon-chime-sdk-js/modules/faqs.html#when-does-an-amazon-chime-sdk-meeting-end">FAQ</a>
+for more information. The end user may want to be notified of this type of error.</p>
 </td>
 </tr>
 <tr>
@@ -76,7 +82,9 @@ checked-in.</p>
 <h4><a href="-audio-internal-server-error.html">AudioInternalServerError</a></h4>
 </td>
 <td>
-<p>There was an internal server error with the audio leg.</p>
+<p>There was an internal server error related to audio.
+This may indicate some issue with the audio device,
+or an issue with the Amazon Chime SDK service itself</p>
 </td>
 </tr>
 <tr>
@@ -84,7 +92,9 @@ checked-in.</p>
 <h4><a href="-audio-service-unavailable.html">AudioServiceUnavailable</a></h4>
 </td>
 <td>
-<p>Could not connect the audio leg due to the service being unavailable.</p>
+<p>There was an internal server error related to audio.
+This may indicate some issue with the audio device,
+or an issue with the Amazon Chime SDK service itself.</p>
 </td>
 </tr>
 <tr>
@@ -92,7 +102,9 @@ checked-in.</p>
 <h4><a href="-audio-disconnected.html">AudioDisconnected</a></h4>
 </td>
 <td>
-<p>The audio leg failed.</p>
+<p>There was an internal server error related to audio.
+This may indicate some issue with the audio device,
+or an issue with the Amazon Chime SDK service itself.</p>
 </td>
 </tr>
 <tr>
@@ -108,7 +120,10 @@ checked-in.</p>
 <h4><a href="-network-became-poor.html">NetworkBecamePoor</a></h4>
 </td>
 <td>
-<p>The network has become poor and is no longer good enough for VoIP.</p>
+<p>Network is not good enough for VoIP, <code>AudioVideoObserver.audioSessionDidDrop()</code> will be
+triggered, and there will an automatic attempt of reconnecting.
+If the reconnecting is successful, <code>onAudioSessionStarted</code> will be called with value of
+reconnecting as true.</p>
 </td>
 </tr>
 <tr>
@@ -116,7 +131,8 @@ checked-in.</p>
 <h4><a href="-video-service-failed.html">VideoServiceFailed</a></h4>
 </td>
 <td>
-<p>Video Client Failed.</p>
+<p>There was an internal server error related to video. This may indicate some issue with the
+video device, or an issue with the Amazon Chime SDK service itself.</p>
 </td>
 </tr>
 <tr>

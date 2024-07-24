@@ -10,6 +10,9 @@
 <h1>AudioAuthenticationRejected</h1>
 <a name="com.amazonaws.services.chime.sdk.meetings.session.MeetingSessionStatusCode.AudioAuthenticationRejected"></a>
 <code><span class="identifier">AudioAuthenticationRejected</span></code>
-<p>Authentication was rejected. The client is not allowed on this call.</p>
+<p>Authentication was rejected as the attendee information in MeetingSessionCredentials did not
+match that of an attendee created via chime::CreateAttendee.
+This error may imply an issue with your credential providing service,
+the client will not be allowed on this call.</p>
 </BODY>
 </HTML>
