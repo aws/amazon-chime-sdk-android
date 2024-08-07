@@ -95,11 +95,11 @@ class DefaultScreenCaptureSource(
     // draw a WxH frame on a HxW surface (it uses aspect fit).
     //
     // Therefore to avoid letterboxes we must track orientation and
-    // restart when it changes to avoid the aforementioned issue.
+    // resize when it changes to avoid the aforementioned issue.
     private var isOrientationInPortrait = true
-    // This is used to block frames during restart, and to avoid
-    // calling observers when we are just restarting
-    private var isRestartingForOrientationChange = false
+    // This is used to block frames during resizing, and to avoid
+    // calling observers when we are just resizing
+    private var isResizingForOrientationChange = false
 
     private val TAG = "DefaultScreenCaptureSource"
 
@@ -110,16 +110,15 @@ class DefaultScreenCaptureSource(
     }
 
     override fun start() {
-        // This function is shared with logic which restarts following orientation changes, so post it
+        // This function is shared with logic which resizing following orientation changes, so post it
         // onto the handler for thread safety
         handler.post {
             val success = startInternal()
 
-            // Set this to no-op any future restart requests on the handler
-            isRestartingForOrientationChange = false
+            // Set this to no-op any future resizing requests on the handler
+            isResizingForOrientationChange = false
 
             if (success) {
-                // Notify here so restarts do not trigger the callback
                 ObserverUtils.notifyObserverOnMainThread(observers) {
                     it.onCaptureStarted()
                 }
@@ -140,8 +139,7 @@ class DefaultScreenCaptureSource(
         return number and maxIntAlignedBy16
     }
 
-    // Separate internal function since only some logic is shared between external calls
-    // and internal restarts; must be called on handler
+    // Separate internal function for clearness, return true when success; must be called on handler
     private fun startInternal(): Boolean {
         if (mediaProjection != null) {
             logger.warn(TAG, "Screen capture has not been stopped before start request, stopping to release resources")
@@ -200,8 +198,8 @@ class DefaultScreenCaptureSource(
             surfaceTextureSource?.surface,
                 object : VirtualDisplay.Callback() {
                     override fun onStopped() {
-                        // Don't trigger observer for restart
-                        if (!isRestartingForOrientationChange) {
+                        // Don't trigger observer for resizing
+                        if (!isResizingForOrientationChange) {
                             ObserverUtils.notifyObserverOnMainThread(observers) {
                                 it.onCaptureStopped()
                             }
@@ -255,18 +253,16 @@ class DefaultScreenCaptureSource(
         runBlocking(handler.asCoroutineDispatcher().immediate) {
             stopInternal()
 
-            // Set this to no-op any future restart requests on the handler
-            isRestartingForOrientationChange = false
+            // Set this to no-op any future resizing requests on the handler
+            isResizingForOrientationChange = false
 
-            // Notify here so restarts do not trigger the callback
             ObserverUtils.notifyObserverOnMainThread(observers) {
                 it.onCaptureStopped()
             }
         }
     }
 
-    // Separate internal function since only some logic is shared between external calls
-    // and internal restarts; must be called on handler
+    // Separate internal function to be reused; must be called on handler
     private fun stopInternal() {
         logger.info(TAG, "Stopping screen capture source")
 
@@ -307,22 +303,22 @@ class DefaultScreenCaptureSource(
         val rotation = display.rotation
         val isOrientationInPortrait = rotation == Surface.ROTATION_0 || rotation == Surface.ROTATION_180
         if (this.isOrientationInPortrait != isOrientationInPortrait) {
-            isRestartingForOrientationChange = true
+            isResizingForOrientationChange = true
             logger.info(TAG, "Orientation changed from ${if (this.isOrientationInPortrait) "portrait" else "landscape"} " +
-                "to ${if (isOrientationInPortrait) "portrait" else "landscape"}, restarting screen capture to update dimensions")
+                "to ${if (isOrientationInPortrait) "portrait" else "landscape"}, resize virtual display to update dimensions")
             // Post this task to avoid deadlock with the surface texture source handler
             handler.post {
                 // Double check that start or stop hasn't been called since this was posted
-                if (isRestartingForOrientationChange) {
+                if (isResizingForOrientationChange) {
                     resize()
-                    isRestartingForOrientationChange = false
+                    isResizingForOrientationChange = false
                 }
             }
             return
         }
 
         // Ignore frames while we are recreating the surface and display
-        if (isRestartingForOrientationChange) return
+        if (isResizingForOrientationChange) return
         sinks.forEach { it.onVideoFrameReceived(frame) }
     }
 

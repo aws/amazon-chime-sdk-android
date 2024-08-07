@@ -16,6 +16,7 @@ import android.os.Build
 import android.os.IBinder
 import androidx.core.app.NotificationCompat
 import com.amazonaws.services.chime.sdkdemo.R
+import com.amazonaws.services.chime.sdkdemo.utils.isOSVersionAtLeast
 
 class ScreenCaptureService : Service() {
     private lateinit var notificationManager: NotificationManager
@@ -38,7 +39,7 @@ class ScreenCaptureService : Service() {
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+        if (isOSVersionAtLeast(Build.VERSION_CODES.O)) {
             val channel = NotificationChannel(
                 CHANNEL_ID,
                 CHANNEL_NAME,
@@ -47,7 +48,7 @@ class ScreenCaptureService : Service() {
             notificationManager.createNotificationChannel(channel)
         }
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+        if (isOSVersionAtLeast(Build.VERSION_CODES.Q)) {
             startForeground(
                 SERVICE_ID,
                 NotificationCompat.Builder(this, CHANNEL_ID)

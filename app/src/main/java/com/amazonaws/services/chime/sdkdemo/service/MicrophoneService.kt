@@ -1,3 +1,8 @@
+/*
+ * Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
 package com.amazonaws.services.chime.sdkdemo.service
 
 import android.app.NotificationChannel
@@ -11,6 +16,7 @@ import android.os.Build
 import android.os.IBinder
 import androidx.core.app.NotificationCompat
 import com.amazonaws.services.chime.sdkdemo.R
+import com.amazonaws.services.chime.sdkdemo.utils.isOSVersionAtLeast
 
 class MicrophoneService : Service() {
     private lateinit var notificationManager: NotificationManager
@@ -31,7 +37,7 @@ class MicrophoneService : Service() {
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+        if (isOSVersionAtLeast(Build.VERSION_CODES.O)) {
             val channel = NotificationChannel(
                 CHANNEL_ID,
                 CHANNEL_NAME,
@@ -40,7 +46,7 @@ class MicrophoneService : Service() {
             notificationManager.createNotificationChannel(channel)
         }
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+        if (isOSVersionAtLeast(Build.VERSION_CODES.R)) {
             startForeground(
                 NOTIFICATION_ID,
                 NotificationCompat.Builder(this, CHANNEL_ID)
