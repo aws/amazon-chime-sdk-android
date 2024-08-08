@@ -7,6 +7,7 @@ package com.amazonaws.services.chime.sdkdemo.utils
 
 import android.content.Context
 import android.content.res.Configuration
+import android.os.Build
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -47,3 +48,5 @@ fun String.isContentShare(): Boolean {
 fun RemoteVideoSource.isContentShare(): Boolean {
     return this.attendeeId.isContentShare()
 }
+
+fun isOSVersionAtLeast(targetVersion: Int): Boolean = Build.VERSION.SDK_INT >= targetVersion

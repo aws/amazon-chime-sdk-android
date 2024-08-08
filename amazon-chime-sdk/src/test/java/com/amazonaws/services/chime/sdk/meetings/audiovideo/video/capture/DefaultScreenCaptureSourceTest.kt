@@ -66,6 +66,9 @@ class DefaultScreenCaptureSourceTest {
     @MockK(relaxed = true)
     private lateinit var mockSurfaceTextureCaptureSource: SurfaceTextureCaptureSource
 
+    @MockK(relaxed = true)
+    private lateinit var mockSurface: Surface
+
     @MockK
     private lateinit var mockVideoSink: VideoSink
 
@@ -111,6 +114,7 @@ class DefaultScreenCaptureSourceTest {
         every { mockMediaProjectionManager.getMediaProjection(1, mockActivityData) } returns mockMediaProjection
         every { mockMediaProjection.createVirtualDisplay(any(), any(), any(), any(), any(), any(), any(), any()) } returns mockVirtualDisplay
         every { mockDisplayManager.getDisplay(Display.DEFAULT_DISPLAY) } returns mockDisplay
+        every { mockVirtualDisplay.surface } returns mockSurface
     }
 
     @After
@@ -139,13 +143,12 @@ class DefaultScreenCaptureSourceTest {
     }
 
     @Test
-    fun `restarting for rotation will not notify subscribed observers of events`() {
+    fun `resizing for rotation will not notify subscribed observers of events`() {
         every { mockDisplay.rotation } returns Surface.ROTATION_90
 
         testScreenCaptureSource.onVideoFrameReceived(mockFrame)
 
-        verify(exactly = 1) { mockMediaProjection.stop() }
-        verify(exactly = 1) { mockMediaProjectionManager.getMediaProjection(1, mockActivityData) }
+        verify(exactly = 1) { mockVirtualDisplay.resize(any(), any(), any()) }
         verify(exactly = 0) { mockCaptureSourceObserver.onCaptureStopped() }
         verify(exactly = 0) { mockCaptureSourceObserver.onCaptureStarted() }
     }

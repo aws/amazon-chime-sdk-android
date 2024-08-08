@@ -20,6 +20,7 @@ In [DefaultScreenCaptureSource](https://aws.github.io/amazon-chime-sdk-android/a
 
 ```xml
 <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+<uses-permission android:name="android.permission.FOREGROUND_SERVICE_MEDIA_PROJECTION" />
 
 <application>
     <service

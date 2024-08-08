@@ -95,11 +95,11 @@ class DefaultScreenCaptureSource(
     // draw a WxH frame on a HxW surface (it uses aspect fit).
     //
     // Therefore to avoid letterboxes we must track orientation and
-    // restart when it changes to avoid the aforementioned issue.
+    // resize when it changes to avoid the aforementioned issue.
     private var isOrientationInPortrait = true
-    // This is used to block frames during restart, and to avoid
-    // calling observers when we are just restarting
-    private var isRestartingForOrientationChange = false
+    // This is used to block frames during resizing, and to avoid
+    // calling observers when we are just resizing
+    private var isResizingForOrientationChange = false
 
     private val TAG = "DefaultScreenCaptureSource"
 
@@ -110,16 +110,15 @@ class DefaultScreenCaptureSource(
     }
 
     override fun start() {
-        // This function is shared with logic which restarts following orientation changes, so post it
+        // This function is shared with logic which resizing following orientation changes, so post it
         // onto the handler for thread safety
         handler.post {
             val success = startInternal()
 
-            // Set this to no-op any future restart requests on the handler
-            isRestartingForOrientationChange = false
+            // Set this to no-op any future resizing requests on the handler
+            isResizingForOrientationChange = false
 
             if (success) {
-                // Notify here so restarts do not trigger the callback
                 ObserverUtils.notifyObserverOnMainThread(observers) {
                     it.onCaptureStarted()
                 }
@@ -140,8 +139,7 @@ class DefaultScreenCaptureSource(
         return number and maxIntAlignedBy16
     }
 
-    // Separate internal function since only some logic is shared between external calls
-    // and internal restarts; must be called on handler
+    // Separate internal function for clearness, return true when success; must be called on handler
     private fun startInternal(): Boolean {
         if (mediaProjection != null) {
             logger.warn(TAG, "Screen capture has not been stopped before start request, stopping to release resources")
@@ -169,48 +167,39 @@ class DefaultScreenCaptureSource(
             return false
         }
 
-        // Note that these metrics depend on orientation
-        displayMetrics = context.resources.displayMetrics
-        val display = displayManager.getDisplay(Display.DEFAULT_DISPLAY)
-            ?: throw RuntimeException("No display found.")
-        // Use `getRealMetrics` to properly account for menu, status bar, and rotation
-        display.getRealMetrics(displayMetrics)
+        isOrientationInPortrait = isOrientationInPortrait()
+        val size = getAdjustedWidthAndHeight()
+        val newSurfaceTextureSource = surfaceTextureCaptureSourceFactory.createSurfaceTextureCaptureSource(
+            size.first,
+            size.second,
+            contentHint
+        ).apply {
+            minFps = MIN_FPS
+            addVideoSink(this@DefaultScreenCaptureSource)
+            start()
+        }
+        surfaceTextureSource = newSurfaceTextureSource
 
-        val rotation = display.rotation
-        isOrientationInPortrait = rotation == Surface.ROTATION_0 || rotation == Surface.ROTATION_180
-
-        // Sometimes, Android changes displayMetrics widthPixels and heightPixels
-        // and return inconsistent height and width for surfaceTextureSource VS virtualDisplay
-        val targetSize: IntArray = screenCaptureResolutionCalculator.computeTargetSize(displayMetrics.widthPixels, displayMetrics.heightPixels, targetResolution.width, targetResolution.height)
-        val width: Int = screenCaptureResolutionCalculator.alignToEven(targetSize[0])
-        val height: Int = screenCaptureResolutionCalculator.alignToEven(targetSize[1])
-
-        // Note that in landscape, for some reason `getRealMetrics` doesn't account for the status bar correctly
-        // so we try to account for it with a manual adjustment to the surface size to avoid letterboxes
-        // Some android device H.264 encoder is not able to handle size that is not multiples of 16 (such as Pixel3),
-        // so screenCapture surface size is aligned manually to avoid the issue
-        surfaceTextureSource =
-            surfaceTextureCaptureSourceFactory.createSurfaceTextureCaptureSource(
-                alignNumberBy16(width - (if (isOrientationInPortrait) 0 else getStatusBarHeight())),
-                alignNumberBy16(height),
-                contentHint
-            )
-        surfaceTextureSource?.minFps = MIN_FPS
-
-        surfaceTextureSource?.addVideoSink(this)
-        surfaceTextureSource?.start()
-
+        mediaProjection?.registerCallback(
+            object : MediaProjection.Callback() {
+                override fun onStop() {
+                    // clean up resources
+                    stopInternal()
+                }
+            },
+            handler
+        )
         virtualDisplay = mediaProjection?.createVirtualDisplay(
             TAG,
-            width,
-            height,
+            size.first,
+            size.second,
             displayMetrics.densityDpi,
             DisplayManager.VIRTUAL_DISPLAY_FLAG_AUTO_MIRROR,
             surfaceTextureSource?.surface,
                 object : VirtualDisplay.Callback() {
                     override fun onStopped() {
-                        // Don't trigger observer for restart
-                        if (!isRestartingForOrientationChange) {
+                        // Don't trigger observer for resizing
+                        if (!isResizingForOrientationChange) {
                             ObserverUtils.notifyObserverOnMainThread(observers) {
                                 it.onCaptureStopped()
                             }
@@ -224,22 +213,56 @@ class DefaultScreenCaptureSource(
         return true
     }
 
+    private fun isOrientationInPortrait(): Boolean {
+        // Note that these metrics depend on orientation
+        displayMetrics = context.resources.displayMetrics
+        val display = displayManager.getDisplay(Display.DEFAULT_DISPLAY)
+            ?: throw RuntimeException("No display found.")
+        // Use `getRealMetrics` to properly account for menu, status bar, and rotation
+        display.getRealMetrics(displayMetrics)
+
+        val rotation = display.rotation
+        val isInPortrait = rotation == Surface.ROTATION_0 || rotation == Surface.ROTATION_180
+        logger.info(TAG, "isOrientationInPortrait: $isInPortrait")
+        return isInPortrait
+    }
+
+    private fun getAdjustedWidthAndHeight(): Pair<Int, Int> {
+        val displayWidthAndHeight = if (isOrientationInPortrait) {
+            arrayOf(minOf(displayMetrics.widthPixels, displayMetrics.heightPixels), maxOf(displayMetrics.widthPixels, displayMetrics.heightPixels))
+        } else {
+            arrayOf(maxOf(displayMetrics.widthPixels, displayMetrics.heightPixels), minOf(displayMetrics.widthPixels, displayMetrics.heightPixels))
+        }
+        logger.info(TAG, "displayMetrics - width: ${displayWidthAndHeight[0]}, height: ${displayWidthAndHeight[1]}")
+
+        val targetSize: IntArray = screenCaptureResolutionCalculator.computeTargetSize(displayWidthAndHeight[0], displayWidthAndHeight[1], targetResolution.width, targetResolution.height)
+        val width: Int = screenCaptureResolutionCalculator.alignToEven(targetSize[0])
+        val height: Int = screenCaptureResolutionCalculator.alignToEven(targetSize[1])
+
+        // Note that in landscape, for some reason `getRealMetrics` doesn't account for the status bar correctly
+        // so we try to account for it with a manual adjustment to the surface size to avoid letterboxes
+        // Some android device H.264 encoder is not able to handle size that is not multiples of 16 (such as Pixel3),
+        // so screenCapture surface size is aligned manually to avoid the issue
+        val adjustedWidth = alignNumberBy16(width - (if (isOrientationInPortrait) 0 else getStatusBarHeight()))
+        val adjustedHeight = alignNumberBy16(height)
+        logger.info(TAG, "width: $adjustedWidth, adjustedHeight: $adjustedHeight")
+        return Pair(adjustedWidth, adjustedHeight)
+    }
+
     override fun stop() {
         runBlocking(handler.asCoroutineDispatcher().immediate) {
             stopInternal()
 
-            // Set this to no-op any future restart requests on the handler
-            isRestartingForOrientationChange = false
+            // Set this to no-op any future resizing requests on the handler
+            isResizingForOrientationChange = false
 
-            // Notify here so restarts do not trigger the callback
             ObserverUtils.notifyObserverOnMainThread(observers) {
                 it.onCaptureStopped()
             }
         }
     }
 
-    // Separate internal function since only some logic is shared between external calls
-    // and internal restarts; must be called on handler
+    // Separate internal function to be reused; must be called on handler
     private fun stopInternal() {
         logger.info(TAG, "Stopping screen capture source")
 
@@ -280,24 +303,47 @@ class DefaultScreenCaptureSource(
         val rotation = display.rotation
         val isOrientationInPortrait = rotation == Surface.ROTATION_0 || rotation == Surface.ROTATION_180
         if (this.isOrientationInPortrait != isOrientationInPortrait) {
-            isRestartingForOrientationChange = true
+            isResizingForOrientationChange = true
             logger.info(TAG, "Orientation changed from ${if (this.isOrientationInPortrait) "portrait" else "landscape"} " +
-                "to ${if (isOrientationInPortrait) "portrait" else "landscape"}, restarting screen capture to update dimensions")
+                "to ${if (isOrientationInPortrait) "portrait" else "landscape"}, resize virtual display to update dimensions")
             // Post this task to avoid deadlock with the surface texture source handler
             handler.post {
                 // Double check that start or stop hasn't been called since this was posted
-                if (isRestartingForOrientationChange) {
-                    stopInternal()
-                    startInternal()
-                    isRestartingForOrientationChange = false
+                if (isResizingForOrientationChange) {
+                    resize()
+                    isResizingForOrientationChange = false
                 }
             }
             return
         }
 
         // Ignore frames while we are recreating the surface and display
-        if (isRestartingForOrientationChange) return
+        if (isResizingForOrientationChange) return
         sinks.forEach { it.onVideoFrameReceived(frame) }
+    }
+
+    private fun resize() {
+        isOrientationInPortrait = isOrientationInPortrait()
+        val size = getAdjustedWidthAndHeight()
+        logger.info(TAG, "resize to width: ${size.first}, height: ${size.second}")
+        virtualDisplay?.surface?.release()
+        surfaceTextureSource?.removeVideoSink(this@DefaultScreenCaptureSource)
+        surfaceTextureSource?.stop()
+        surfaceTextureSource?.release()
+        surfaceTextureSource = null
+        val newSurfaceTextureSource = surfaceTextureCaptureSourceFactory.createSurfaceTextureCaptureSource(
+            size.first,
+            size.second,
+            contentHint
+        ).apply {
+            minFps = MIN_FPS
+            addVideoSink(this@DefaultScreenCaptureSource)
+            start()
+        }
+        surfaceTextureSource = newSurfaceTextureSource
+        virtualDisplay?.resize(size.first, size.second, displayMetrics.densityDpi)
+        virtualDisplay?.surface = newSurfaceTextureSource.surface
+        logger.info(TAG, "resize done!")
     }
 
     fun release() {

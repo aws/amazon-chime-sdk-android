@@ -10,6 +10,8 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.BLUETOOTH" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_MEDIA_PROJECTION" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_MICROPHONE" />
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
     <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
 
@@ -21,7 +23,8 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
 
-        <activity android:name=".activity.SplashActivity">
+        <activity android:name=".activity.SplashActivity"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -33,7 +36,10 @@
         <activity android:name=".activity.TranscriptionConfigActivity"
             android:parentActivityName=".activity.MeetingActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"/>
-
+        <service android:name=".service.MicrophoneService"
+            android:enabled="true"
+            android:foregroundServiceType="microphone"
+            android:exported="false" />
         <service
             android:name=".service.ScreenCaptureService"
             android:enabled="true"
