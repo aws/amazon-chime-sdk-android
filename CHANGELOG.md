@@ -1,4 +1,4 @@
-## Unreleased
+## [0.23.0] - 2024-08-15
 
 ### Changed
 * Updated SDK compile and target SDK level to 34 (Android 14)
