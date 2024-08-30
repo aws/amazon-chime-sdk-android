@@ -2,6 +2,7 @@
  * Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
  * SPDX-License-Identifier: Apache-2.0
  */
+import org.jetbrains.dokka.gradle.DokkaTask
 
 apply from: rootProject.file('publishing.gradle')
 apply plugin: 'com.android.library'
@@ -23,8 +24,8 @@ ext.versionMinor = versionProperties.getProperty('versionMinor') as Integer
 ext.versionPatch = versionProperties.getProperty('versionPatch') as Integer
 
 android {
-    compileSdkVersion project.ext.chimeCompileSdkVersion
-    buildToolsVersion project.ext.chimeBuildToolsVersion
+    compileSdk project.ext.chimeCompileSdkVersion
+    buildToolsVersion = project.ext.chimeBuildToolsVersion
 
     defaultConfig {
         minSdkVersion project.ext.chimeMinSdkVersion
@@ -73,24 +74,24 @@ android {
         targetCompatibility JavaVersion.VERSION_1_8
     }
 
-    dokka {
-        outputFormat = 'html'
-        outputDirectory = "docs"
-
-        configuration {
-            includeNonPublic = false
-            skipDeprecated = true
-            skipEmptyPackages = true
-
-            perPackageOption {
-                prefix = "com.amazonaws.services.chime.sdk.meetings.internal"
-                suppress = true
-            }
-        }
-    }
-
     defaultConfig {
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+    }
+}
+
+tasks.withType(DokkaTask.class) {
+    dokkaSourceSets.configureEach {
+        documentedVisibilities.set([
+                Visibility.PUBLIC,
+                Visibility.PROTECTED
+        ])
+        skipEmptyPackages.set(true)
+        skipDeprecated.set(true)
+
+        perPackageOption {
+            matchingRegex.set(".*internal.*")
+            suppress.set(true)
+        }
     }
 }
 

@@ -1143,6 +1143,7 @@ class MeetingFragment : Fragment(),
         if (meetingModel.isSharingContent) {
             audioVideo.stopContentShare()
             screenShareManager?.stop(meetingModel.isScreenShareServiceBound)
+            meetingModel.isScreenShareServiceBound = false
         } else {
             startActivityForResult(
                 mediaProjectionManager.createScreenCaptureIntent(),
@@ -1962,6 +1963,7 @@ class MeetingFragment : Fragment(),
         if (meetingModel.isSharingContent && !powerManager.isInteractive) {
             audioVideo.stopContentShare()
             screenShareManager?.stop(meetingModel.isScreenShareServiceBound)
+            meetingModel.isScreenShareServiceBound = false
         }
     }
 

@@ -1,151 +1,318 @@
-<HTML>
-<HEAD>
-<meta charset="UTF-8">
-<title>DefaultAudioVideoController - amazon-chime-sdk</title>
-<link rel="stylesheet" href="../../../style.css">
-</HEAD>
-<BODY>
-<a href="../../index.html">amazon-chime-sdk</a>&nbsp;/&nbsp;<a href="../index.html">com.amazonaws.services.chime.sdk.meetings.audiovideo</a>&nbsp;/&nbsp;<a href="./index.html">DefaultAudioVideoController</a><br/>
-<br/>
-<h1>DefaultAudioVideoController</h1>
-<code><span class="keyword">class </span><span class="identifier">DefaultAudioVideoController</span>&nbsp;<span class="symbol">:</span>&nbsp;<a href="../-audio-video-controller-facade/index.html"><span class="identifier">AudioVideoControllerFacade</span></a></code>
-<h3>Constructors</h3>
-<table>
-<tbody>
-<tr>
-<td>
-<h4><a href="-init-.html">&lt;init&gt;</a></h4>
-</td>
-<td>
-<code><span class="identifier">DefaultAudioVideoController</span><span class="symbol">(</span><span class="identifier" id="com.amazonaws.services.chime.sdk.meetings.audiovideo.DefaultAudioVideoController$<init>(com.amazonaws.services.chime.sdk.meetings.internal.audio.AudioClientController, com.amazonaws.services.chime.sdk.meetings.internal.audio.AudioClientObserver, com.amazonaws.services.chime.sdk.meetings.internal.metric.ClientMetricsCollector, com.amazonaws.services.chime.sdk.meetings.session.MeetingSessionConfiguration, com.amazonaws.services.chime.sdk.meetings.internal.video.VideoClientController, com.amazonaws.services.chime.sdk.meetings.internal.video.VideoClientObserver, com.amazonaws.services.chime.sdk.meetings.utils.logger.Logger)/audioClientController">audioClientController</span><span class="symbol">:</span>&nbsp;<span class="identifier">AudioClientController</span><span class="symbol">, </span><span class="identifier" id="com.amazonaws.services.chime.sdk.meetings.audiovideo.DefaultAudioVideoController$<init>(com.amazonaws.services.chime.sdk.meetings.internal.audio.AudioClientController, com.amazonaws.services.chime.sdk.meetings.internal.audio.AudioClientObserver, com.amazonaws.services.chime.sdk.meetings.internal.metric.ClientMetricsCollector, com.amazonaws.services.chime.sdk.meetings.session.MeetingSessionConfiguration, com.amazonaws.services.chime.sdk.meetings.internal.video.VideoClientController, com.amazonaws.services.chime.sdk.meetings.internal.video.VideoClientObserver, com.amazonaws.services.chime.sdk.meetings.utils.logger.Logger)/audioClientObserver">audioClientObserver</span><span class="symbol">:</span>&nbsp;<span class="identifier">AudioClientObserver</span><span class="symbol">, </span><span class="identifier" id="com.amazonaws.services.chime.sdk.meetings.audiovideo.DefaultAudioVideoController$<init>(com.amazonaws.services.chime.sdk.meetings.internal.audio.AudioClientController, com.amazonaws.services.chime.sdk.meetings.internal.audio.AudioClientObserver, com.amazonaws.services.chime.sdk.meetings.internal.metric.ClientMetricsCollector, com.amazonaws.services.chime.sdk.meetings.session.MeetingSessionConfiguration, com.amazonaws.services.chime.sdk.meetings.internal.video.VideoClientController, com.amazonaws.services.chime.sdk.meetings.internal.video.VideoClientObserver, com.amazonaws.services.chime.sdk.meetings.utils.logger.Logger)/clientMetricsCollector">clientMetricsCollector</span><span class="symbol">:</span>&nbsp;<span class="identifier">ClientMetricsCollector</span><span class="symbol">, </span><span class="identifier" id="com.amazonaws.services.chime.sdk.meetings.audiovideo.DefaultAudioVideoController$<init>(com.amazonaws.services.chime.sdk.meetings.internal.audio.AudioClientController, com.amazonaws.services.chime.sdk.meetings.internal.audio.AudioClientObserver, com.amazonaws.services.chime.sdk.meetings.internal.metric.ClientMetricsCollector, com.amazonaws.services.chime.sdk.meetings.session.MeetingSessionConfiguration, com.amazonaws.services.chime.sdk.meetings.internal.video.VideoClientController, com.amazonaws.services.chime.sdk.meetings.internal.video.VideoClientObserver, com.amazonaws.services.chime.sdk.meetings.utils.logger.Logger)/configuration">configuration</span><span class="symbol">:</span>&nbsp;<a href="../../com.amazonaws.services.chime.sdk.meetings.session/-meeting-session-configuration/index.html"><span class="identifier">MeetingSessionConfiguration</span></a><span class="symbol">, </span><span class="identifier" id="com.amazonaws.services.chime.sdk.meetings.audiovideo.DefaultAudioVideoController$<init>(com.amazonaws.services.chime.sdk.meetings.internal.audio.AudioClientController, com.amazonaws.services.chime.sdk.meetings.internal.audio.AudioClientObserver, com.amazonaws.services.chime.sdk.meetings.internal.metric.ClientMetricsCollector, com.amazonaws.services.chime.sdk.meetings.session.MeetingSessionConfiguration, com.amazonaws.services.chime.sdk.meetings.internal.video.VideoClientController, com.amazonaws.services.chime.sdk.meetings.internal.video.VideoClientObserver, com.amazonaws.services.chime.sdk.meetings.utils.logger.Logger)/videoClientController">videoClientController</span><span class="symbol">:</span>&nbsp;<span class="identifier">VideoClientController</span><span class="symbol">, </span><span class="identifier" id="com.amazonaws.services.chime.sdk.meetings.audiovideo.DefaultAudioVideoController$<init>(com.amazonaws.services.chime.sdk.meetings.internal.audio.AudioClientController, com.amazonaws.services.chime.sdk.meetings.internal.audio.AudioClientObserver, com.amazonaws.services.chime.sdk.meetings.internal.metric.ClientMetricsCollector, com.amazonaws.services.chime.sdk.meetings.session.MeetingSessionConfiguration, com.amazonaws.services.chime.sdk.meetings.internal.video.VideoClientController, com.amazonaws.services.chime.sdk.meetings.internal.video.VideoClientObserver, com.amazonaws.services.chime.sdk.meetings.utils.logger.Logger)/videoClientObserver">videoClientObserver</span><span class="symbol">:</span>&nbsp;<span class="identifier">VideoClientObserver</span><span class="symbol">, </span><span class="identifier" id="com.amazonaws.services.chime.sdk.meetings.audiovideo.DefaultAudioVideoController$<init>(com.amazonaws.services.chime.sdk.meetings.internal.audio.AudioClientController, com.amazonaws.services.chime.sdk.meetings.internal.audio.AudioClientObserver, com.amazonaws.services.chime.sdk.meetings.internal.metric.ClientMetricsCollector, com.amazonaws.services.chime.sdk.meetings.session.MeetingSessionConfiguration, com.amazonaws.services.chime.sdk.meetings.internal.video.VideoClientController, com.amazonaws.services.chime.sdk.meetings.internal.video.VideoClientObserver, com.amazonaws.services.chime.sdk.meetings.utils.logger.Logger)/logger">logger</span><span class="symbol">:</span>&nbsp;<a href="../../com.amazonaws.services.chime.sdk.meetings.utils.logger/-logger/index.html"><span class="identifier">Logger</span></a><span class="symbol">?</span><span class="symbol">)</span></code></td>
-</tr>
-</tbody>
-</table>
-<h3>Functions</h3>
-<table>
-<tbody>
-<tr>
-<td>
-<h4><a href="add-audio-video-observer.html">addAudioVideoObserver</a></h4>
-</td>
-<td>
-<p>Subscribe to audio, video, and connection events with an <a href="../-audio-video-observer/index.html">AudioVideoObserver</a>.</p>
-<code><span class="keyword">fun </span><span class="identifier">addAudioVideoObserver</span><span class="symbol">(</span><span class="identifier" id="com.amazonaws.services.chime.sdk.meetings.audiovideo.DefaultAudioVideoController$addAudioVideoObserver(com.amazonaws.services.chime.sdk.meetings.audiovideo.AudioVideoObserver)/observer">observer</span><span class="symbol">:</span>&nbsp;<a href="../-audio-video-observer/index.html"><span class="identifier">AudioVideoObserver</span></a><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code></td>
-</tr>
-<tr>
-<td>
-<h4><a href="add-metrics-observer.html">addMetricsObserver</a></h4>
-</td>
-<td>
-<p>Subscribe to metrics events with an <a href="../../com.amazonaws.services.chime.sdk.meetings.audiovideo.metric/-metrics-observer/index.html">MetricsObserver</a>.</p>
-<code><span class="keyword">fun </span><span class="identifier">addMetricsObserver</span><span class="symbol">(</span><span class="identifier" id="com.amazonaws.services.chime.sdk.meetings.audiovideo.DefaultAudioVideoController$addMetricsObserver(com.amazonaws.services.chime.sdk.meetings.audiovideo.metric.MetricsObserver)/observer">observer</span><span class="symbol">:</span>&nbsp;<a href="../../com.amazonaws.services.chime.sdk.meetings.audiovideo.metric/-metrics-observer/index.html"><span class="identifier">MetricsObserver</span></a><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code></td>
-</tr>
-<tr>
-<td>
-<h4><a href="demote-from-primary-meeting.html">demoteFromPrimaryMeeting</a></h4>
-</td>
-<td>
-<p>Remove the promoted attendee from the Primary meeting. This client will stop sharing audio, video, and data messages.
-This will revert the end-user to precisely the state they were before a call to <a href="../-audio-video-controller-facade/promote-to-primary-meeting.html">promoteToPrimaryMeeting</a></p>
-<code><span class="keyword">fun </span><span class="identifier">demoteFromPrimaryMeeting</span><span class="symbol">(</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code></td>
-</tr>
-<tr>
-<td>
-<h4><a href="promote-to-primary-meeting.html">promoteToPrimaryMeeting</a></h4>
-</td>
-<td>
-<p>Allows an attendee in a Replica meeting to immediately transition to a Primary meeting attendee
-without need for reconnection.</p>
-<code><span class="keyword">fun </span><span class="identifier">promoteToPrimaryMeeting</span><span class="symbol">(</span><span class="identifier" id="com.amazonaws.services.chime.sdk.meetings.audiovideo.DefaultAudioVideoController$promoteToPrimaryMeeting(com.amazonaws.services.chime.sdk.meetings.session.MeetingSessionCredentials, com.amazonaws.services.chime.sdk.meetings.audiovideo.PrimaryMeetingPromotionObserver)/credentials">credentials</span><span class="symbol">:</span>&nbsp;<a href="../../com.amazonaws.services.chime.sdk.meetings.session/-meeting-session-credentials/index.html"><span class="identifier">MeetingSessionCredentials</span></a><span class="symbol">, </span><span class="identifier" id="com.amazonaws.services.chime.sdk.meetings.audiovideo.DefaultAudioVideoController$promoteToPrimaryMeeting(com.amazonaws.services.chime.sdk.meetings.session.MeetingSessionCredentials, com.amazonaws.services.chime.sdk.meetings.audiovideo.PrimaryMeetingPromotionObserver)/observer">observer</span><span class="symbol">:</span>&nbsp;<a href="../-primary-meeting-promotion-observer/index.html"><span class="identifier">PrimaryMeetingPromotionObserver</span></a><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code></td>
-</tr>
-<tr>
-<td>
-<h4><a href="remove-audio-video-observer.html">removeAudioVideoObserver</a></h4>
-</td>
-<td>
-<p>Unsubscribes from audio, video, and connection events by removing specified <a href="../-audio-video-observer/index.html">AudioVideoObserver</a>.</p>
-<code><span class="keyword">fun </span><span class="identifier">removeAudioVideoObserver</span><span class="symbol">(</span><span class="identifier" id="com.amazonaws.services.chime.sdk.meetings.audiovideo.DefaultAudioVideoController$removeAudioVideoObserver(com.amazonaws.services.chime.sdk.meetings.audiovideo.AudioVideoObserver)/observer">observer</span><span class="symbol">:</span>&nbsp;<a href="../-audio-video-observer/index.html"><span class="identifier">AudioVideoObserver</span></a><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code></td>
-</tr>
-<tr>
-<td>
-<h4><a href="remove-metrics-observer.html">removeMetricsObserver</a></h4>
-</td>
-<td>
-<p>Unsubscribes from metrics by removing specified <a href="../../com.amazonaws.services.chime.sdk.meetings.audiovideo.metric/-metrics-observer/index.html">MetricsObserver</a>.</p>
-<code><span class="keyword">fun </span><span class="identifier">removeMetricsObserver</span><span class="symbol">(</span><span class="identifier" id="com.amazonaws.services.chime.sdk.meetings.audiovideo.DefaultAudioVideoController$removeMetricsObserver(com.amazonaws.services.chime.sdk.meetings.audiovideo.metric.MetricsObserver)/observer">observer</span><span class="symbol">:</span>&nbsp;<a href="../../com.amazonaws.services.chime.sdk.meetings.audiovideo.metric/-metrics-observer/index.html"><span class="identifier">MetricsObserver</span></a><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code></td>
-</tr>
-<tr>
-<td>
-<h4><a href="start.html">start</a></h4>
-</td>
-<td>
-<p>Starts audio and video.</p>
-<code><span class="keyword">fun </span><span class="identifier">start</span><span class="symbol">(</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code>
-<p>Starts audio and video with the given configuration.</p>
-<code><span class="keyword">fun </span><span class="identifier">start</span><span class="symbol">(</span><span class="identifier" id="com.amazonaws.services.chime.sdk.meetings.audiovideo.DefaultAudioVideoController$start(com.amazonaws.services.chime.sdk.meetings.audiovideo.AudioVideoConfiguration)/audioVideoConfiguration">audioVideoConfiguration</span><span class="symbol">:</span>&nbsp;<a href="../-audio-video-configuration/index.html"><span class="identifier">AudioVideoConfiguration</span></a><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code></td>
-</tr>
-<tr>
-<td>
-<h4><a href="start-local-video.html">startLocalVideo</a></h4>
-</td>
-<td>
-<p>Start local video and begin transmitting frames from an internally held <a href="../../com.amazonaws.services.chime.sdk.meetings.audiovideo.video.capture/-default-camera-capture-source/index.html">DefaultCameraCaptureSource</a>.
-<a href="../-audio-video-controller-facade/stop-local-video.html">stopLocalVideo</a> will stop the internal capture source if being used.</p>
-<code><span class="keyword">fun </span><span class="identifier">startLocalVideo</span><span class="symbol">(</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code>
-<p>Start local video with configuration and begin transmitting frames from an internally held <a href="../../com.amazonaws.services.chime.sdk.meetings.audiovideo.video.capture/-default-camera-capture-source/index.html">DefaultCameraCaptureSource</a>.
-<a href="../-audio-video-controller-facade/stop-local-video.html">stopLocalVideo</a> will stop the internal capture source if being used.</p>
-<code><span class="keyword">fun </span><span class="identifier">startLocalVideo</span><span class="symbol">(</span><span class="identifier" id="com.amazonaws.services.chime.sdk.meetings.audiovideo.DefaultAudioVideoController$startLocalVideo(com.amazonaws.services.chime.sdk.meetings.audiovideo.video.LocalVideoConfiguration)/config">config</span><span class="symbol">:</span>&nbsp;<a href="../../com.amazonaws.services.chime.sdk.meetings.audiovideo.video/-local-video-configuration/index.html"><span class="identifier">LocalVideoConfiguration</span></a><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code>
-<p>Start local video with a provided custom <a href="../../com.amazonaws.services.chime.sdk.meetings.audiovideo.video/-video-source/index.html">VideoSource</a> which can be used to provide custom
-<a href="../../com.amazonaws.services.chime.sdk.meetings.audiovideo.video/-video-frame/index.html">VideoFrame</a> objects to be transmitted to remote clients</p>
-<code><span class="keyword">fun </span><span class="identifier">startLocalVideo</span><span class="symbol">(</span><span class="identifier" id="com.amazonaws.services.chime.sdk.meetings.audiovideo.DefaultAudioVideoController$startLocalVideo(com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoSource)/source">source</span><span class="symbol">:</span>&nbsp;<a href="../../com.amazonaws.services.chime.sdk.meetings.audiovideo.video/-video-source/index.html"><span class="identifier">VideoSource</span></a><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code>
-<p>Start local video with with configuration and a provided custom <a href="../../com.amazonaws.services.chime.sdk.meetings.audiovideo.video/-video-source/index.html">VideoSource</a> which can be used to provide custom
-<a href="../../com.amazonaws.services.chime.sdk.meetings.audiovideo.video/-video-frame/index.html">VideoFrame</a> objects to be transmitted to remote clients</p>
-<code><span class="keyword">fun </span><span class="identifier">startLocalVideo</span><span class="symbol">(</span><span class="identifier" id="com.amazonaws.services.chime.sdk.meetings.audiovideo.DefaultAudioVideoController$startLocalVideo(com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoSource, com.amazonaws.services.chime.sdk.meetings.audiovideo.video.LocalVideoConfiguration)/source">source</span><span class="symbol">:</span>&nbsp;<a href="../../com.amazonaws.services.chime.sdk.meetings.audiovideo.video/-video-source/index.html"><span class="identifier">VideoSource</span></a><span class="symbol">, </span><span class="identifier" id="com.amazonaws.services.chime.sdk.meetings.audiovideo.DefaultAudioVideoController$startLocalVideo(com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoSource, com.amazonaws.services.chime.sdk.meetings.audiovideo.video.LocalVideoConfiguration)/config">config</span><span class="symbol">:</span>&nbsp;<a href="../../com.amazonaws.services.chime.sdk.meetings.audiovideo.video/-local-video-configuration/index.html"><span class="identifier">LocalVideoConfiguration</span></a><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code></td>
-</tr>
-<tr>
-<td>
-<h4><a href="start-remote-video.html">startRemoteVideo</a></h4>
-</td>
-<td>
-<p>Start remote video.</p>
-<code><span class="keyword">fun </span><span class="identifier">startRemoteVideo</span><span class="symbol">(</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code></td>
-</tr>
-<tr>
-<td>
-<h4><a href="stop.html">stop</a></h4>
-</td>
-<td>
-<p>Stops audio and video.
-It's important to call this when your meeting connection is no longer needed
-in order to clean up and explicitly release resources.</p>
-<code><span class="keyword">fun </span><span class="identifier">stop</span><span class="symbol">(</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code></td>
-</tr>
-<tr>
-<td>
-<h4><a href="stop-local-video.html">stopLocalVideo</a></h4>
-</td>
-<td>
-<p>Stops sending video for local attendee. This will additionally stop the internal capture source if being used.
-If using a custom video source, this will call <a href="../../com.amazonaws.services.chime.sdk.meetings.audiovideo.video/-video-source/remove-video-sink.html">VideoSource.removeVideoSink</a> on the previously provided source.</p>
-<code><span class="keyword">fun </span><span class="identifier">stopLocalVideo</span><span class="symbol">(</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code></td>
-</tr>
-<tr>
-<td>
-<h4><a href="stop-remote-video.html">stopRemoteVideo</a></h4>
-</td>
-<td>
-<p>Stop remote video.</p>
-<code><span class="keyword">fun </span><span class="identifier">stopRemoteVideo</span><span class="symbol">(</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code></td>
-</tr>
-<tr>
-<td>
-<h4><a href="update-video-source-subscriptions.html">updateVideoSourceSubscriptions</a></h4>
-</td>
-<td>
-<p>Add, update, or remove subscriptions to remote video sources provided via <code>remoteVideoSourcesDidBecomeAvailable</code>.</p>
-<code><span class="keyword">fun </span><span class="identifier">updateVideoSourceSubscriptions</span><span class="symbol">(</span><span class="identifier" id="com.amazonaws.services.chime.sdk.meetings.audiovideo.DefaultAudioVideoController$updateVideoSourceSubscriptions(kotlin.collections.Map((com.amazonaws.services.chime.sdk.meetings.audiovideo.video.RemoteVideoSource, com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoSubscriptionConfiguration)), kotlin.Array((com.amazonaws.services.chime.sdk.meetings.audiovideo.video.RemoteVideoSource)))/addedOrUpdated">addedOrUpdated</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-map/index.html"><span class="identifier">Map</span></a><span class="symbol">&lt;</span><a href="../../com.amazonaws.services.chime.sdk.meetings.audiovideo.video/-remote-video-source/index.html"><span class="identifier">RemoteVideoSource</span></a><span class="symbol">,</span>&nbsp;<a href="../../com.amazonaws.services.chime.sdk.meetings.audiovideo.video/-video-subscription-configuration/index.html"><span class="identifier">VideoSubscriptionConfiguration</span></a><span class="symbol">&gt;</span><span class="symbol">, </span><span class="identifier" id="com.amazonaws.services.chime.sdk.meetings.audiovideo.DefaultAudioVideoController$updateVideoSourceSubscriptions(kotlin.collections.Map((com.amazonaws.services.chime.sdk.meetings.audiovideo.video.RemoteVideoSource, com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoSubscriptionConfiguration)), kotlin.Array((com.amazonaws.services.chime.sdk.meetings.audiovideo.video.RemoteVideoSource)))/removed">removed</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-array/index.html"><span class="identifier">Array</span></a><span class="symbol">&lt;</span><a href="../../com.amazonaws.services.chime.sdk.meetings.audiovideo.video/-remote-video-source/index.html"><span class="identifier">RemoteVideoSource</span></a><span class="symbol">&gt;</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code></td>
-</tr>
-</tbody>
-</table>
-</BODY>
-</HTML>
+<!doctype html>
+<html class="no-js">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1" charset="UTF-8">
+    <title>DefaultAudioVideoController</title>
+<link href="../../../images/logo-icon.svg" rel="icon" type="image/svg">    <script>var pathToRoot = "../../../";</script>
+    <script>document.documentElement.classList.replace("no-js","js");</script>
+    <script>const storage = localStorage.getItem("dokka-dark-mode")
+    if (storage == null) {
+        const osDarkSchemePreferred = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
+        if (osDarkSchemePreferred === true) {
+            document.getElementsByTagName("html")[0].classList.add("theme-dark")
+        }
+    } else {
+        const savedDarkMode = JSON.parse(storage)
+        if(savedDarkMode === true) {
+            document.getElementsByTagName("html")[0].classList.add("theme-dark")
+        }
+    }
+    </script>
+<script type="text/javascript" src="https://unpkg.com/kotlin-playground@1/dist/playground.min.js" async></script>
+<script type="text/javascript" src="../../../scripts/sourceset_dependencies.js" async></script>
+<link href="../../../styles/style.css" rel="Stylesheet">
+<link href="../../../styles/main.css" rel="Stylesheet">
+<link href="../../../styles/prism.css" rel="Stylesheet">
+<link href="../../../styles/logo-styles.css" rel="Stylesheet">
+<link href="../../../styles/font-jb-sans-auto.css" rel="Stylesheet">
+<script type="text/javascript" src="../../../scripts/clipboard.js" async></script>
+<script type="text/javascript" src="../../../scripts/navigation-loader.js" async></script>
+<script type="text/javascript" src="../../../scripts/platform-content-handler.js" async></script>
+<script type="text/javascript" src="../../../scripts/main.js" defer></script>
+<script type="text/javascript" src="../../../scripts/prism.js" async></script>
+<script type="text/javascript" src="../../../scripts/symbol-parameters-wrapper_deferred.js" defer></script></head>
+<body>
+    <div class="root">
+<nav class="navigation" id="navigation-wrapper">
+    <div class="navigation--inner">
+        <div class="navigation-title">
+            <button class="menu-toggle" id="menu-toggle" type="button">toggle menu</button>
+            <div class="library-name">
+<a class="library-name--link" href="../../../index.html">
+                            amazon-chime-sdk-android
+                    </a>            </div>
+            <div class="library-version">
+            </div>
+        </div>
+        <div class="filter-section" id="filter-section">
+                <button class="platform-tag platform-selector jvm-like" data-active="" data-filter=":amazon-chime-sdk:dokkaHtmlPartial/release">androidJvm</button>
+        </div>
+    </div>
+    <div class="navigation-controls">
+        <button class="navigation-controls--btn navigation-controls--theme" id="theme-toggle-button" type="button">switch theme</button>
+        <div class="navigation-controls--btn navigation-controls--search" id="searchBar" role="button">search in API</div>
+    </div>
+</nav>
+        <div id="container">
+            <div class="sidebar" id="leftColumn">
+                <div class="sidebar--inner" id="sideMenu"></div>
+            </div>
+            <div id="main">
+<div class="main-content" data-page-type="classlike" id="content" pageids="amazon-chime-sdk::com.amazonaws.services.chime.sdk.meetings.audiovideo/DefaultAudioVideoController///PointingToDeclaration//533364019">
+  <div class="breadcrumbs"><a href="../../index.html">amazon-chime-sdk</a><span class="delimiter">/</span><a href="../index.html">com.amazonaws.services.chime.sdk.meetings.audiovideo</a><span class="delimiter">/</span><span class="current">DefaultAudioVideoController</span></div>
+  <div class="cover ">
+    <h1 class="cover"><span>Default</span><wbr><span>Audio</span><wbr><span>Video</span><wbr><span><span>Controller</span></span></h1>
+    <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":amazon-chime-sdk:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">class </span><a href="index.html">DefaultAudioVideoController</a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">audioClientController<span class="token operator">: </span><a href="../../com.amazonaws.services.chime.sdk.meetings.internal.audio/-audio-client-controller/index.html">AudioClientController</a><span class="token punctuation">, </span></span><span class="parameter ">audioClientObserver<span class="token operator">: </span><a href="../../com.amazonaws.services.chime.sdk.meetings.internal.audio/-audio-client-observer/index.html">AudioClientObserver</a><span class="token punctuation">, </span></span><span class="parameter ">clientMetricsCollector<span class="token operator">: </span><a href="../../com.amazonaws.services.chime.sdk.meetings.internal.metric/-client-metrics-collector/index.html">ClientMetricsCollector</a><span class="token punctuation">, </span></span><span class="parameter ">configuration<span class="token operator">: </span><a href="../../com.amazonaws.services.chime.sdk.meetings.session/-meeting-session-configuration/index.html">MeetingSessionConfiguration</a><span class="token punctuation">, </span></span><span class="parameter ">videoClientController<span class="token operator">: </span><a href="../../com.amazonaws.services.chime.sdk.meetings.internal.video/-video-client-controller/index.html">VideoClientController</a><span class="token punctuation">, </span></span><span class="parameter ">videoClientObserver<span class="token operator">: </span><a href="../../com.amazonaws.services.chime.sdk.meetings.internal.video/-video-client-observer/index.html">VideoClientObserver</a><span class="token punctuation">, </span></span><span class="parameter ">logger<span class="token operator">: </span><a href="../../com.amazonaws.services.chime.sdk.meetings.utils.logger/-logger/index.html">Logger</a><span class="token operator">?</span></span></span><span class="token punctuation">)</span> : <a href="../-audio-video-controller-facade/index.html">AudioVideoControllerFacade</a></div></div></div>
+  </div>
+  <div class="tabbedcontent">
+    <div class="tabs-section" tabs-section="tabs-section"><button class="section-tab" data-active="" data-togglable="CONSTRUCTOR,TYPE,PROPERTY,FUNCTION">Members</button></div>
+    <div class="tabs-section-body">
+      <div data-togglable="CONSTRUCTOR">
+        <h2 class="">Constructors</h2>
+        <div class="table"><a data-name="-1193122399%2FConstructors%2F533364019" anchor-label="DefaultAudioVideoController" id="-1193122399%2FConstructors%2F533364019" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release"></a>
+          <div class="table-row" data-togglable="CONSTRUCTOR" data-filterable-current=":amazon-chime-sdk:dokkaHtmlPartial/release" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-default-audio-video-controller.html"><span>Default</span><wbr><span>Audio</span><wbr><span>Video</span><wbr><span><span>Controller</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1193122399%2FConstructors%2F533364019"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":amazon-chime-sdk:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">constructor</span><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">audioClientController<span class="token operator">: </span><a href="../../com.amazonaws.services.chime.sdk.meetings.internal.audio/-audio-client-controller/index.html">AudioClientController</a><span class="token punctuation">, </span></span><span class="parameter ">audioClientObserver<span class="token operator">: </span><a href="../../com.amazonaws.services.chime.sdk.meetings.internal.audio/-audio-client-observer/index.html">AudioClientObserver</a><span class="token punctuation">, </span></span><span class="parameter ">clientMetricsCollector<span class="token operator">: </span><a href="../../com.amazonaws.services.chime.sdk.meetings.internal.metric/-client-metrics-collector/index.html">ClientMetricsCollector</a><span class="token punctuation">, </span></span><span class="parameter ">configuration<span class="token operator">: </span><a href="../../com.amazonaws.services.chime.sdk.meetings.session/-meeting-session-configuration/index.html">MeetingSessionConfiguration</a><span class="token punctuation">, </span></span><span class="parameter ">videoClientController<span class="token operator">: </span><a href="../../com.amazonaws.services.chime.sdk.meetings.internal.video/-video-client-controller/index.html">VideoClientController</a><span class="token punctuation">, </span></span><span class="parameter ">videoClientObserver<span class="token operator">: </span><a href="../../com.amazonaws.services.chime.sdk.meetings.internal.video/-video-client-observer/index.html">VideoClientObserver</a><span class="token punctuation">, </span></span><span class="parameter ">logger<span class="token operator">: </span><a href="../../com.amazonaws.services.chime.sdk.meetings.utils.logger/-logger/index.html">Logger</a><span class="token operator">?</span></span></span><span class="token punctuation">)</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div data-togglable="TYPE">
+        <h2 class="">Types</h2>
+        <div class="table"><a data-name="1062154073%2FClasslikes%2F533364019" anchor-label="Companion" id="1062154073%2FClasslikes%2F533364019" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release"></a>
+          <div class="table-row" data-filterable-current=":amazon-chime-sdk:dokkaHtmlPartial/release" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-companion/index.html"><span><span>Companion</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1062154073%2FClasslikes%2F533364019"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":amazon-chime-sdk:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">object </span><a href="-companion/index.html">Companion</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div data-togglable="FUNCTION">
+        <h2 class="">Functions</h2>
+        <div class="table"><a data-name="-2028637270%2FFunctions%2F533364019" anchor-label="addAudioVideoObserver" id="-2028637270%2FFunctions%2F533364019" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release"></a>
+          <div class="table-row" data-filterable-current=":amazon-chime-sdk:dokkaHtmlPartial/release" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="add-audio-video-observer.html"><span>add</span><wbr><span>Audio</span><wbr><span>Video</span><wbr><span><span>Observer</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-2028637270%2FFunctions%2F533364019"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":amazon-chime-sdk:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">override </span><span class="token keyword">fun </span><a href="add-audio-video-observer.html"><span class="token function">addAudioVideoObserver</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">observer<span class="token operator">: </span><a href="../-audio-video-observer/index.html">AudioVideoObserver</a></span></span><span class="token punctuation">)</span></div><div class="brief "><p class="paragraph">Subscribe to audio, video, and connection events with an <a href="../-audio-video-observer/index.html">AudioVideoObserver</a>.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1019310448%2FFunctions%2F533364019" anchor-label="addMetricsObserver" id="-1019310448%2FFunctions%2F533364019" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release"></a>
+          <div class="table-row" data-filterable-current=":amazon-chime-sdk:dokkaHtmlPartial/release" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="add-metrics-observer.html"><span>add</span><wbr><span>Metrics</span><wbr><span><span>Observer</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1019310448%2FFunctions%2F533364019"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":amazon-chime-sdk:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">override </span><span class="token keyword">fun </span><a href="add-metrics-observer.html"><span class="token function">addMetricsObserver</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">observer<span class="token operator">: </span><a href="../../com.amazonaws.services.chime.sdk.meetings.audiovideo.metric/-metrics-observer/index.html">MetricsObserver</a></span></span><span class="token punctuation">)</span></div><div class="brief "><p class="paragraph">Subscribe to metrics events with an <a href="../../com.amazonaws.services.chime.sdk.meetings.audiovideo.metric/-metrics-observer/index.html">MetricsObserver</a>.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-438983215%2FFunctions%2F533364019" anchor-label="demoteFromPrimaryMeeting" id="-438983215%2FFunctions%2F533364019" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release"></a>
+          <div class="table-row" data-filterable-current=":amazon-chime-sdk:dokkaHtmlPartial/release" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="demote-from-primary-meeting.html"><span>demote</span><wbr><span>From</span><wbr><span>Primary</span><wbr><span><span>Meeting</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-438983215%2FFunctions%2F533364019"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":amazon-chime-sdk:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">override </span><span class="token keyword">fun </span><a href="demote-from-primary-meeting.html"><span class="token function">demoteFromPrimaryMeeting</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span></div><div class="brief "><p class="paragraph">Remove the promoted attendee from the Primary meeting. This client will stop sharing audio, video, and data messages. This will revert the end-user to precisely the state they were before a call to <a href="promote-to-primary-meeting.html">promoteToPrimaryMeeting</a></p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1178637207%2FFunctions%2F533364019" anchor-label="promoteToPrimaryMeeting" id="-1178637207%2FFunctions%2F533364019" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release"></a>
+          <div class="table-row" data-filterable-current=":amazon-chime-sdk:dokkaHtmlPartial/release" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="promote-to-primary-meeting.html"><span>promote</span><wbr><span>To</span><wbr><span>Primary</span><wbr><span><span>Meeting</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1178637207%2FFunctions%2F533364019"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":amazon-chime-sdk:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">override </span><span class="token keyword">fun </span><a href="promote-to-primary-meeting.html"><span class="token function">promoteToPrimaryMeeting</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">credentials<span class="token operator">: </span><a href="../../com.amazonaws.services.chime.sdk.meetings.session/-meeting-session-credentials/index.html">MeetingSessionCredentials</a><span class="token punctuation">, </span></span><span class="parameter ">observer<span class="token operator">: </span><a href="../-primary-meeting-promotion-observer/index.html">PrimaryMeetingPromotionObserver</a></span></span><span class="token punctuation">)</span></div><div class="brief "><p class="paragraph">Allows an attendee in a Replica meeting to immediately transition to a Primary meeting attendee without need for reconnection.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-2036558377%2FFunctions%2F533364019" anchor-label="removeAudioVideoObserver" id="-2036558377%2FFunctions%2F533364019" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release"></a>
+          <div class="table-row" data-filterable-current=":amazon-chime-sdk:dokkaHtmlPartial/release" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="remove-audio-video-observer.html"><span>remove</span><wbr><span>Audio</span><wbr><span>Video</span><wbr><span><span>Observer</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-2036558377%2FFunctions%2F533364019"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":amazon-chime-sdk:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">override </span><span class="token keyword">fun </span><a href="remove-audio-video-observer.html"><span class="token function">removeAudioVideoObserver</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">observer<span class="token operator">: </span><a href="../-audio-video-observer/index.html">AudioVideoObserver</a></span></span><span class="token punctuation">)</span></div><div class="brief "><p class="paragraph">Unsubscribes from audio, video, and connection events by removing specified <a href="../-audio-video-observer/index.html">AudioVideoObserver</a>.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1264864765%2FFunctions%2F533364019" anchor-label="removeMetricsObserver" id="-1264864765%2FFunctions%2F533364019" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release"></a>
+          <div class="table-row" data-filterable-current=":amazon-chime-sdk:dokkaHtmlPartial/release" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="remove-metrics-observer.html"><span>remove</span><wbr><span>Metrics</span><wbr><span><span>Observer</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1264864765%2FFunctions%2F533364019"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":amazon-chime-sdk:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">override </span><span class="token keyword">fun </span><a href="remove-metrics-observer.html"><span class="token function">removeMetricsObserver</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">observer<span class="token operator">: </span><a href="../../com.amazonaws.services.chime.sdk.meetings.audiovideo.metric/-metrics-observer/index.html">MetricsObserver</a></span></span><span class="token punctuation">)</span></div><div class="brief "><p class="paragraph">Unsubscribes from metrics by removing specified <a href="../../com.amazonaws.services.chime.sdk.meetings.audiovideo.metric/-metrics-observer/index.html">MetricsObserver</a>.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="484213314%2FFunctions%2F533364019" anchor-label="start" id="484213314%2FFunctions%2F533364019" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release"></a>
+          <div class="table-row" data-filterable-current=":amazon-chime-sdk:dokkaHtmlPartial/release" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="start.html"><span><span>start</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="484213314%2FFunctions%2F533364019"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":amazon-chime-sdk:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">override </span><span class="token keyword">fun </span><a href="start.html"><span class="token function">start</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span></div><div class="brief "><p class="paragraph">Starts audio and video.</p></div><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">override </span><span class="token keyword">fun </span><a href="start.html"><span class="token function">start</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">audioVideoConfiguration<span class="token operator">: </span><a href="../-audio-video-configuration/index.html">AudioVideoConfiguration</a></span></span><span class="token punctuation">)</span></div><div class="brief "><p class="paragraph">Starts audio and video with the given configuration.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="2071182669%2FFunctions%2F533364019" anchor-label="startLocalVideo" id="2071182669%2FFunctions%2F533364019" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release"></a>
+          <div class="table-row" data-filterable-current=":amazon-chime-sdk:dokkaHtmlPartial/release" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="start-local-video.html"><span>start</span><wbr><span>Local</span><wbr><span><span>Video</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="2071182669%2FFunctions%2F533364019"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":amazon-chime-sdk:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">override </span><span class="token keyword">fun </span><a href="start-local-video.html"><span class="token function">startLocalVideo</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span></div><div class="brief "><p class="paragraph">Start local video and begin transmitting frames from an internally held DefaultCameraCaptureSource. <a href="stop-local-video.html">stopLocalVideo</a> will stop the internal capture source if being used.</p></div><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">override </span><span class="token keyword">fun </span><a href="start-local-video.html"><span class="token function">startLocalVideo</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">config<span class="token operator">: </span><a href="../../com.amazonaws.services.chime.sdk.meetings.audiovideo.video/-local-video-configuration/index.html">LocalVideoConfiguration</a></span></span><span class="token punctuation">)</span></div><div class="brief "><p class="paragraph">Start local video with configuration and begin transmitting frames from an internally held DefaultCameraCaptureSource. <a href="stop-local-video.html">stopLocalVideo</a> will stop the internal capture source if being used.</p></div><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">override </span><span class="token keyword">fun </span><a href="start-local-video.html"><span class="token function">startLocalVideo</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">source<span class="token operator">: </span><a href="../../com.amazonaws.services.chime.sdk.meetings.audiovideo.video/-video-source/index.html">VideoSource</a></span></span><span class="token punctuation">)</span></div><div class="brief "><p class="paragraph">Start local video with a provided custom <a href="../../com.amazonaws.services.chime.sdk.meetings.audiovideo.video/-video-source/index.html">VideoSource</a> which can be used to provide custom VideoFrame objects to be transmitted to remote clients</p></div><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">override </span><span class="token keyword">fun </span><a href="start-local-video.html"><span class="token function">startLocalVideo</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">source<span class="token operator">: </span><a href="../../com.amazonaws.services.chime.sdk.meetings.audiovideo.video/-video-source/index.html">VideoSource</a><span class="token punctuation">, </span></span><span class="parameter ">config<span class="token operator">: </span><a href="../../com.amazonaws.services.chime.sdk.meetings.audiovideo.video/-local-video-configuration/index.html">LocalVideoConfiguration</a></span></span><span class="token punctuation">)</span></div><div class="brief "><p class="paragraph">Start local video with with configuration and a provided custom <a href="../../com.amazonaws.services.chime.sdk.meetings.audiovideo.video/-video-source/index.html">VideoSource</a> which can be used to provide custom VideoFrame objects to be transmitted to remote clients</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1981816555%2FFunctions%2F533364019" anchor-label="startRemoteVideo" id="-1981816555%2FFunctions%2F533364019" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release"></a>
+          <div class="table-row" data-filterable-current=":amazon-chime-sdk:dokkaHtmlPartial/release" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="start-remote-video.html"><span>start</span><wbr><span>Remote</span><wbr><span><span>Video</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1981816555%2FFunctions%2F533364019"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":amazon-chime-sdk:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">override </span><span class="token keyword">fun </span><a href="start-remote-video.html"><span class="token function">startRemoteVideo</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span></div><div class="brief "><p class="paragraph">Start remote video.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1721935494%2FFunctions%2F533364019" anchor-label="stop" id="1721935494%2FFunctions%2F533364019" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release"></a>
+          <div class="table-row" data-filterable-current=":amazon-chime-sdk:dokkaHtmlPartial/release" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="stop.html"><span><span>stop</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1721935494%2FFunctions%2F533364019"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":amazon-chime-sdk:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">override </span><span class="token keyword">fun </span><a href="stop.html"><span class="token function">stop</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span></div><div class="brief "><p class="paragraph">Stops audio and video. It's important to call this when your meeting connection is no longer needed in order to clean up and explicitly release resources.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1652178602%2FFunctions%2F533364019" anchor-label="stopLocalVideo" id="-1652178602%2FFunctions%2F533364019" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release"></a>
+          <div class="table-row" data-filterable-current=":amazon-chime-sdk:dokkaHtmlPartial/release" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="stop-local-video.html"><span>stop</span><wbr><span>Local</span><wbr><span><span>Video</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1652178602%2FFunctions%2F533364019"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":amazon-chime-sdk:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">override </span><span class="token keyword">fun </span><a href="stop-local-video.html"><span class="token function">stopLocalVideo</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span></div><div class="brief "><p class="paragraph">Stops sending video for local attendee. This will additionally stop the internal capture source if being used. If using a custom video source, this will call <a href="../../com.amazonaws.services.chime.sdk.meetings.audiovideo.video/-video-source/remove-video-sink.html">VideoSource.removeVideoSink</a> on the previously provided source.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1914621759%2FFunctions%2F533364019" anchor-label="stopRemoteVideo" id="1914621759%2FFunctions%2F533364019" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release"></a>
+          <div class="table-row" data-filterable-current=":amazon-chime-sdk:dokkaHtmlPartial/release" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="stop-remote-video.html"><span>stop</span><wbr><span>Remote</span><wbr><span><span>Video</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1914621759%2FFunctions%2F533364019"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":amazon-chime-sdk:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">override </span><span class="token keyword">fun </span><a href="stop-remote-video.html"><span class="token function">stopRemoteVideo</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span></div><div class="brief "><p class="paragraph">Stop remote video.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1303077602%2FFunctions%2F533364019" anchor-label="updateVideoSourceSubscriptions" id="-1303077602%2FFunctions%2F533364019" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release"></a>
+          <div class="table-row" data-filterable-current=":amazon-chime-sdk:dokkaHtmlPartial/release" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="update-video-source-subscriptions.html"><span>update</span><wbr><span>Video</span><wbr><span>Source</span><wbr><span><span>Subscriptions</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1303077602%2FFunctions%2F533364019"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":amazon-chime-sdk:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">override </span><span class="token keyword">fun </span><a href="update-video-source-subscriptions.html"><span class="token function">updateVideoSourceSubscriptions</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">addedOrUpdated<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-map/index.html">Map</a><span class="token operator">&lt;</span><a href="../../com.amazonaws.services.chime.sdk.meetings.audiovideo.video/-remote-video-source/index.html">RemoteVideoSource</a><span class="token punctuation">, </span><a href="../../com.amazonaws.services.chime.sdk.meetings.audiovideo.video/-video-subscription-configuration/index.html">VideoSubscriptionConfiguration</a><span class="token operator">&gt;</span><span class="token punctuation">, </span></span><span class="parameter ">removed<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-array/index.html">Array</a><span class="token operator">&lt;</span><a href="../../com.amazonaws.services.chime.sdk.meetings.audiovideo.video/-remote-video-source/index.html">RemoteVideoSource</a><span class="token operator">&gt;</span></span></span><span class="token punctuation">)</span></div><div class="brief "><p class="paragraph">Add, update, or remove subscriptions to remote video sources provided via <code class="lang-kotlin">remoteVideoSourcesDidBecomeAvailable</code>.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      <div class="footer">
+        <span class="go-to-top-icon"><a href="#content" id="go-to-top-link"></a></span><span>© 2024 Copyright</span><span class="pull-right"><span>Generated by </span><a href="https://github.com/Kotlin/dokka"><span>dokka</span><span class="padded-icon"></span></a></span>
+      </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+

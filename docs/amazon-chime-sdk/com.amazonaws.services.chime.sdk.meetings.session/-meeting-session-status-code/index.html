@@ -1,190 +1,427 @@
-<HTML>
-<HEAD>
-<meta charset="UTF-8">
-<title>MeetingSessionStatusCode - amazon-chime-sdk</title>
-<link rel="stylesheet" href="../../../style.css">
-</HEAD>
-<BODY>
-<a href="../../index.html">amazon-chime-sdk</a>&nbsp;/&nbsp;<a href="../index.html">com.amazonaws.services.chime.sdk.meetings.session</a>&nbsp;/&nbsp;<a href="./index.html">MeetingSessionStatusCode</a><br/>
-<br/>
-<h1>MeetingSessionStatusCode</h1>
-<code><span class="keyword">enum</span> <span class="keyword">class </span><span class="identifier">MeetingSessionStatusCode</span></code>
-<p><a href="./index.html">MeetingSessionStatusCode</a> provides additional details for the <a href="../-meeting-session-status/index.html">MeetingSessionStatus</a>
-received for a session.</p>
-<h3>Enum Values</h3>
-<table>
-<tbody>
-<tr>
-<td>
-<h4><a href="-o-k.html">OK</a></h4>
-</td>
-<td>
-<p>Everything is OK so far.</p>
-</td>
-</tr>
-<tr>
-<td>
-<h4><a href="-left.html">Left</a></h4>
-</td>
-<td>
-<p>The attendee left the meeting normally.</p>
-</td>
-</tr>
-<tr>
-<td>
-<h4><a href="-audio-joined-from-another-device.html">AudioJoinedFromAnotherDevice</a></h4>
-</td>
-<td>
-<p>The attendee joined from another device.</p>
-</td>
-</tr>
-<tr>
-<td>
-<h4><a href="-audio-disconnect-audio.html">AudioDisconnectAudio</a></h4>
-</td>
-<td>
-<p>The attendee should explicitly switch itself from joined with audio to
-checked-in.</p>
-</td>
-</tr>
-<tr>
-<td>
-<h4><a href="-audio-authentication-rejected.html">AudioAuthenticationRejected</a></h4>
-</td>
-<td>
-<p>Authentication was rejected as the attendee information in MeetingSessionCredentials did not
-match that of an attendee created via chime::CreateAttendee.
-This error may imply an issue with your credential providing service,
-the client will not be allowed on this call.</p>
-</td>
-</tr>
-<tr>
-<td>
-<h4><a href="-audio-call-at-capacity.html">AudioCallAtCapacity</a></h4>
-</td>
-<td>
-<p>The client can not join because the meeting is at capacity.
-The service supports up to 250 attendees.</p>
-</td>
-</tr>
-<tr>
-<td>
-<h4><a href="-audio-call-ended.html">AudioCallEnded</a></h4>
-</td>
-<td>
-<p>The attendee attempted to join a meeting that has already ended.
-See this <a href="https://aws.github.io/amazon-chime-sdk-js/modules/faqs.html#when-does-an-amazon-chime-sdk-meeting-end">FAQ</a>
-for more information. The end user may want to be notified of this type of error.</p>
-</td>
-</tr>
-<tr>
-<td>
-<h4><a href="-audio-internal-server-error.html">AudioInternalServerError</a></h4>
-</td>
-<td>
-<p>There was an internal server error related to audio.
-This may indicate some issue with the audio device,
-or an issue with the Amazon Chime SDK service itself</p>
-</td>
-</tr>
-<tr>
-<td>
-<h4><a href="-audio-service-unavailable.html">AudioServiceUnavailable</a></h4>
-</td>
-<td>
-<p>There was an internal server error related to audio.
-This may indicate some issue with the audio device,
-or an issue with the Amazon Chime SDK service itself.</p>
-</td>
-</tr>
-<tr>
-<td>
-<h4><a href="-audio-disconnected.html">AudioDisconnected</a></h4>
-</td>
-<td>
-<p>There was an internal server error related to audio.
-This may indicate some issue with the audio device,
-or an issue with the Amazon Chime SDK service itself.</p>
-</td>
-</tr>
-<tr>
-<td>
-<h4><a href="-connection-health-reconnect.html">ConnectionHealthReconnect</a></h4>
-</td>
-<td>
-<p>Due to connection health, a reconnect has been triggered.</p>
-</td>
-</tr>
-<tr>
-<td>
-<h4><a href="-network-became-poor.html">NetworkBecamePoor</a></h4>
-</td>
-<td>
-<p>Network is not good enough for VoIP, <code>AudioVideoObserver.audioSessionDidDrop()</code> will be
-triggered, and there will an automatic attempt of reconnecting.
-If the reconnecting is successful, <code>onAudioSessionStarted</code> will be called with value of
-reconnecting as true.</p>
-</td>
-</tr>
-<tr>
-<td>
-<h4><a href="-video-service-failed.html">VideoServiceFailed</a></h4>
-</td>
-<td>
-<p>There was an internal server error related to video. This may indicate some issue with the
-video device, or an issue with the Amazon Chime SDK service itself.</p>
-</td>
-</tr>
-<tr>
-<td>
-<h4><a href="-video-at-capacity-view-only.html">VideoAtCapacityViewOnly</a></h4>
-</td>
-<td>
-<p>The video client has tried to send video but was unable to do so due to capacity reached.
-However, the video client can still receive remote video streams.</p>
-</td>
-</tr>
-<tr>
-<td>
-<h4><a href="-audio-output-device-not-responding.html">AudioOutputDeviceNotResponding</a></h4>
-</td>
-<td>
-<p>Designated output device is not responding and timed out.</p>
-</td>
-</tr>
-<tr>
-<td>
-<h4><a href="-audio-input-device-not-responding.html">AudioInputDeviceNotResponding</a></h4>
-</td>
-<td>
-<p>Designated input device is not responding and timed out.</p>
-</td>
-</tr>
-</tbody>
-</table>
-<h3>Properties</h3>
-<table>
-<tbody>
-<tr>
-<td>
-<h4><a href="value.html">value</a></h4>
-</td>
-<td>
-<code><span class="keyword">val </span><span class="identifier">value</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html"><span class="identifier">Int</span></a></code></td>
-</tr>
-</tbody>
-</table>
-<h3>Companion Object Functions</h3>
-<table>
-<tbody>
-<tr>
-<td>
-<h4><a href="from.html">from</a></h4>
-</td>
-<td>
-<code><span class="keyword">fun </span><span class="identifier">from</span><span class="symbol">(</span><span class="identifier" id="com.amazonaws.services.chime.sdk.meetings.session.MeetingSessionStatusCode.Companion$from(kotlin.Int)/intValue">intValue</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html"><span class="identifier">Int</span></a><span class="symbol">)</span><span class="symbol">: </span><a href="./index.html"><span class="identifier">MeetingSessionStatusCode</span></a><span class="symbol">?</span></code></td>
-</tr>
-</tbody>
-</table>
-</BODY>
-</HTML>
+<!doctype html>
+<html class="no-js">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1" charset="UTF-8">
+    <title>MeetingSessionStatusCode</title>
+<link href="../../../images/logo-icon.svg" rel="icon" type="image/svg">    <script>var pathToRoot = "../../../";</script>
+    <script>document.documentElement.classList.replace("no-js","js");</script>
+    <script>const storage = localStorage.getItem("dokka-dark-mode")
+    if (storage == null) {
+        const osDarkSchemePreferred = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
+        if (osDarkSchemePreferred === true) {
+            document.getElementsByTagName("html")[0].classList.add("theme-dark")
+        }
+    } else {
+        const savedDarkMode = JSON.parse(storage)
+        if(savedDarkMode === true) {
+            document.getElementsByTagName("html")[0].classList.add("theme-dark")
+        }
+    }
+    </script>
+<script type="text/javascript" src="https://unpkg.com/kotlin-playground@1/dist/playground.min.js" async></script>
+<script type="text/javascript" src="../../../scripts/sourceset_dependencies.js" async></script>
+<link href="../../../styles/style.css" rel="Stylesheet">
+<link href="../../../styles/main.css" rel="Stylesheet">
+<link href="../../../styles/prism.css" rel="Stylesheet">
+<link href="../../../styles/logo-styles.css" rel="Stylesheet">
+<link href="../../../styles/font-jb-sans-auto.css" rel="Stylesheet">
+<script type="text/javascript" src="../../../scripts/clipboard.js" async></script>
+<script type="text/javascript" src="../../../scripts/navigation-loader.js" async></script>
+<script type="text/javascript" src="../../../scripts/platform-content-handler.js" async></script>
+<script type="text/javascript" src="../../../scripts/main.js" defer></script>
+<script type="text/javascript" src="../../../scripts/prism.js" async></script>
+<script type="text/javascript" src="../../../scripts/symbol-parameters-wrapper_deferred.js" defer></script></head>
+<body>
+    <div class="root">
+<nav class="navigation" id="navigation-wrapper">
+    <div class="navigation--inner">
+        <div class="navigation-title">
+            <button class="menu-toggle" id="menu-toggle" type="button">toggle menu</button>
+            <div class="library-name">
+<a class="library-name--link" href="../../../index.html">
+                            amazon-chime-sdk-android
+                    </a>            </div>
+            <div class="library-version">
+            </div>
+        </div>
+        <div class="filter-section" id="filter-section">
+                <button class="platform-tag platform-selector jvm-like" data-active="" data-filter=":amazon-chime-sdk:dokkaHtmlPartial/release">androidJvm</button>
+        </div>
+    </div>
+    <div class="navigation-controls">
+        <button class="navigation-controls--btn navigation-controls--theme" id="theme-toggle-button" type="button">switch theme</button>
+        <div class="navigation-controls--btn navigation-controls--search" id="searchBar" role="button">search in API</div>
+    </div>
+</nav>
+        <div id="container">
+            <div class="sidebar" id="leftColumn">
+                <div class="sidebar--inner" id="sideMenu"></div>
+            </div>
+            <div id="main">
+<div class="main-content" data-page-type="classlike" id="content" pageids="amazon-chime-sdk::com.amazonaws.services.chime.sdk.meetings.session/MeetingSessionStatusCode///PointingToDeclaration//533364019">
+  <div class="breadcrumbs"><a href="../../index.html">amazon-chime-sdk</a><span class="delimiter">/</span><a href="../index.html">com.amazonaws.services.chime.sdk.meetings.session</a><span class="delimiter">/</span><span class="current">MeetingSessionStatusCode</span></div>
+  <div class="cover ">
+    <h1 class="cover"><span>Meeting</span><wbr><span>Session</span><wbr><span>Status</span><wbr><span><span>Code</span></span></h1>
+    <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":amazon-chime-sdk:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">enum </span><a href="index.html">MeetingSessionStatusCode</a> : <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-enum/index.html">Enum</a><span class="token operator">&lt;</span><a href="index.html">MeetingSessionStatusCode</a><span class="token operator">&gt; </span></div><p class="paragraph"><a href="index.html">MeetingSessionStatusCode</a> provides additional details for the <a href="../-meeting-session-status/index.html">MeetingSessionStatus</a> received for a session.</p></div></div>
+  </div>
+  <div class="tabbedcontent">
+    <div class="tabs-section" tabs-section="tabs-section"><button class="section-tab" data-active="" data-togglable="CONSTRUCTOR,TYPE,PROPERTY,FUNCTION">Members</button><button class="section-tab" data-togglable="ENTRY">Entries</button></div>
+    <div class="tabs-section-body">
+      <div data-togglable="ENTRY">
+        <h2 class="">Entries</h2>
+        <div class="table"><a data-name="-2043513847%2FClasslikes%2F533364019" anchor-label="OK" id="-2043513847%2FClasslikes%2F533364019" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release"></a>
+          <div class="table-row" data-togglable="ENTRY" data-filterable-current=":amazon-chime-sdk:dokkaHtmlPartial/release" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-o-k/index.html">OK</a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-2043513847%2FClasslikes%2F533364019"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":amazon-chime-sdk:dokkaHtmlPartial/release"><div class="symbol monospace"><div class="block"><a href="-o-k/index.html">OK</a></div></div><div class="brief "><p class="paragraph">Everything is OK so far.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1698405676%2FClasslikes%2F533364019" anchor-label="Left" id="-1698405676%2FClasslikes%2F533364019" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release"></a>
+          <div class="table-row" data-togglable="ENTRY" data-filterable-current=":amazon-chime-sdk:dokkaHtmlPartial/release" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-left/index.html">Left</a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1698405676%2FClasslikes%2F533364019"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":amazon-chime-sdk:dokkaHtmlPartial/release"><div class="symbol monospace"><div class="block"><a href="-left/index.html">Left</a></div></div><div class="brief "><p class="paragraph">The attendee left the meeting normally.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="954117309%2FClasslikes%2F533364019" anchor-label="AudioJoinedFromAnotherDevice" id="954117309%2FClasslikes%2F533364019" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release"></a>
+          <div class="table-row" data-togglable="ENTRY" data-filterable-current=":amazon-chime-sdk:dokkaHtmlPartial/release" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-audio-joined-from-another-device/index.html">AudioJoinedFromAnotherDevice</a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="954117309%2FClasslikes%2F533364019"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":amazon-chime-sdk:dokkaHtmlPartial/release"><div class="symbol monospace"><div class="block"><a href="-audio-joined-from-another-device/index.html">AudioJoinedFromAnotherDevice</a></div></div><div class="brief "><p class="paragraph">The attendee joined from another device.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-344900111%2FClasslikes%2F533364019" anchor-label="AudioDisconnectAudio" id="-344900111%2FClasslikes%2F533364019" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release"></a>
+          <div class="table-row" data-togglable="ENTRY" data-filterable-current=":amazon-chime-sdk:dokkaHtmlPartial/release" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-audio-disconnect-audio/index.html">AudioDisconnectAudio</a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-344900111%2FClasslikes%2F533364019"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":amazon-chime-sdk:dokkaHtmlPartial/release"><div class="symbol monospace"><div class="block"><a href="-audio-disconnect-audio/index.html">AudioDisconnectAudio</a></div></div><div class="brief "><p class="paragraph">The attendee should explicitly switch itself from joined with audio to checked-in.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-894532729%2FClasslikes%2F533364019" anchor-label="AudioAuthenticationRejected" id="-894532729%2FClasslikes%2F533364019" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release"></a>
+          <div class="table-row" data-togglable="ENTRY" data-filterable-current=":amazon-chime-sdk:dokkaHtmlPartial/release" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-audio-authentication-rejected/index.html">AudioAuthenticationRejected</a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-894532729%2FClasslikes%2F533364019"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":amazon-chime-sdk:dokkaHtmlPartial/release"><div class="symbol monospace"><div class="block"><a href="-audio-authentication-rejected/index.html">AudioAuthenticationRejected</a></div></div><div class="brief "><p class="paragraph">Authentication was rejected as the attendee information in MeetingSessionCredentials did not match that of an attendee created via chime::CreateAttendee. This error may imply an issue with your credential providing service, the client will not be allowed on this call.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-462351940%2FClasslikes%2F533364019" anchor-label="AudioCallAtCapacity" id="-462351940%2FClasslikes%2F533364019" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release"></a>
+          <div class="table-row" data-togglable="ENTRY" data-filterable-current=":amazon-chime-sdk:dokkaHtmlPartial/release" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-audio-call-at-capacity/index.html">AudioCallAtCapacity</a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-462351940%2FClasslikes%2F533364019"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":amazon-chime-sdk:dokkaHtmlPartial/release"><div class="symbol monospace"><div class="block"><a href="-audio-call-at-capacity/index.html">AudioCallAtCapacity</a></div></div><div class="brief "><p class="paragraph">The client can not join because the meeting is at capacity. The service supports up to 250 attendees.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1536856851%2FClasslikes%2F533364019" anchor-label="AudioCallEnded" id="1536856851%2FClasslikes%2F533364019" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release"></a>
+          <div class="table-row" data-togglable="ENTRY" data-filterable-current=":amazon-chime-sdk:dokkaHtmlPartial/release" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-audio-call-ended/index.html">AudioCallEnded</a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1536856851%2FClasslikes%2F533364019"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":amazon-chime-sdk:dokkaHtmlPartial/release"><div class="symbol monospace"><div class="block"><a href="-audio-call-ended/index.html">AudioCallEnded</a></div></div><div class="brief "><p class="paragraph">The attendee attempted to join a meeting that has already ended. See this <a href="https://aws.github.io/amazon-chime-sdk-js/modules/faqs.html#when-does-an-amazon-chime-sdk-meeting-end">FAQ</a> for more information. The end user may want to be notified of this type of error.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="466292959%2FClasslikes%2F533364019" anchor-label="AudioInternalServerError" id="466292959%2FClasslikes%2F533364019" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release"></a>
+          <div class="table-row" data-togglable="ENTRY" data-filterable-current=":amazon-chime-sdk:dokkaHtmlPartial/release" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-audio-internal-server-error/index.html">AudioInternalServerError</a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="466292959%2FClasslikes%2F533364019"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":amazon-chime-sdk:dokkaHtmlPartial/release"><div class="symbol monospace"><div class="block"><a href="-audio-internal-server-error/index.html">AudioInternalServerError</a></div></div><div class="brief "><p class="paragraph">There was an internal server error related to audio. This may indicate some issue with the audio device, or an issue with the Amazon Chime SDK service itself</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-119276916%2FClasslikes%2F533364019" anchor-label="AudioServiceUnavailable" id="-119276916%2FClasslikes%2F533364019" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release"></a>
+          <div class="table-row" data-togglable="ENTRY" data-filterable-current=":amazon-chime-sdk:dokkaHtmlPartial/release" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-audio-service-unavailable/index.html">AudioServiceUnavailable</a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-119276916%2FClasslikes%2F533364019"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":amazon-chime-sdk:dokkaHtmlPartial/release"><div class="symbol monospace"><div class="block"><a href="-audio-service-unavailable/index.html">AudioServiceUnavailable</a></div></div><div class="brief "><p class="paragraph">There was an internal server error related to audio. This may indicate some issue with the audio device, or an issue with the Amazon Chime SDK service itself.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="820651052%2FClasslikes%2F533364019" anchor-label="AudioDisconnected" id="820651052%2FClasslikes%2F533364019" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release"></a>
+          <div class="table-row" data-togglable="ENTRY" data-filterable-current=":amazon-chime-sdk:dokkaHtmlPartial/release" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-audio-disconnected/index.html">AudioDisconnected</a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="820651052%2FClasslikes%2F533364019"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":amazon-chime-sdk:dokkaHtmlPartial/release"><div class="symbol monospace"><div class="block"><a href="-audio-disconnected/index.html">AudioDisconnected</a></div></div><div class="brief "><p class="paragraph">There was an internal server error related to audio. This may indicate some issue with the audio device, or an issue with the Amazon Chime SDK service itself.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="351235224%2FClasslikes%2F533364019" anchor-label="ConnectionHealthReconnect" id="351235224%2FClasslikes%2F533364019" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release"></a>
+          <div class="table-row" data-togglable="ENTRY" data-filterable-current=":amazon-chime-sdk:dokkaHtmlPartial/release" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-connection-health-reconnect/index.html">ConnectionHealthReconnect</a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="351235224%2FClasslikes%2F533364019"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":amazon-chime-sdk:dokkaHtmlPartial/release"><div class="symbol monospace"><div class="block"><a href="-connection-health-reconnect/index.html">ConnectionHealthReconnect</a></div></div><div class="brief "><p class="paragraph">Due to connection health, a reconnect has been triggered.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1771329852%2FClasslikes%2F533364019" anchor-label="NetworkBecamePoor" id="-1771329852%2FClasslikes%2F533364019" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release"></a>
+          <div class="table-row" data-togglable="ENTRY" data-filterable-current=":amazon-chime-sdk:dokkaHtmlPartial/release" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-network-became-poor/index.html">NetworkBecamePoor</a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1771329852%2FClasslikes%2F533364019"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":amazon-chime-sdk:dokkaHtmlPartial/release"><div class="symbol monospace"><div class="block"><a href="-network-became-poor/index.html">NetworkBecamePoor</a></div></div><div class="brief "><p class="paragraph">Network is not good enough for VoIP, <code class="lang-kotlin">AudioVideoObserver.audioSessionDidDrop()</code> will be triggered, and there will an automatic attempt of reconnecting. If the reconnecting is successful, <code class="lang-kotlin">onAudioSessionStarted</code> will be called with value of reconnecting as true.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1726072228%2FClasslikes%2F533364019" anchor-label="VideoServiceFailed" id="1726072228%2FClasslikes%2F533364019" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release"></a>
+          <div class="table-row" data-togglable="ENTRY" data-filterable-current=":amazon-chime-sdk:dokkaHtmlPartial/release" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-video-service-failed/index.html">VideoServiceFailed</a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1726072228%2FClasslikes%2F533364019"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":amazon-chime-sdk:dokkaHtmlPartial/release"><div class="symbol monospace"><div class="block"><a href="-video-service-failed/index.html">VideoServiceFailed</a></div></div><div class="brief "><p class="paragraph">There was an internal server error related to video. This may indicate some issue with the video device, or an issue with the Amazon Chime SDK service itself.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="719033524%2FClasslikes%2F533364019" anchor-label="VideoAtCapacityViewOnly" id="719033524%2FClasslikes%2F533364019" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release"></a>
+          <div class="table-row" data-togglable="ENTRY" data-filterable-current=":amazon-chime-sdk:dokkaHtmlPartial/release" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-video-at-capacity-view-only/index.html">VideoAtCapacityViewOnly</a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="719033524%2FClasslikes%2F533364019"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":amazon-chime-sdk:dokkaHtmlPartial/release"><div class="symbol monospace"><div class="block"><a href="-video-at-capacity-view-only/index.html">VideoAtCapacityViewOnly</a></div></div><div class="brief "><p class="paragraph">The video client has tried to send video but was unable to do so due to capacity reached. However, the video client can still receive remote video streams.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1165748800%2FClasslikes%2F533364019" anchor-label="AudioOutputDeviceNotResponding" id="1165748800%2FClasslikes%2F533364019" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release"></a>
+          <div class="table-row" data-togglable="ENTRY" data-filterable-current=":amazon-chime-sdk:dokkaHtmlPartial/release" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-audio-output-device-not-responding/index.html">AudioOutputDeviceNotResponding</a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1165748800%2FClasslikes%2F533364019"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":amazon-chime-sdk:dokkaHtmlPartial/release"><div class="symbol monospace"><div class="block"><a href="-audio-output-device-not-responding/index.html">AudioOutputDeviceNotResponding</a></div></div><div class="brief "><p class="paragraph">Designated output device is not responding and timed out.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1244421327%2FClasslikes%2F533364019" anchor-label="AudioInputDeviceNotResponding" id="-1244421327%2FClasslikes%2F533364019" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release"></a>
+          <div class="table-row" data-togglable="ENTRY" data-filterable-current=":amazon-chime-sdk:dokkaHtmlPartial/release" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-audio-input-device-not-responding/index.html">AudioInputDeviceNotResponding</a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1244421327%2FClasslikes%2F533364019"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":amazon-chime-sdk:dokkaHtmlPartial/release"><div class="symbol monospace"><div class="block"><a href="-audio-input-device-not-responding/index.html">AudioInputDeviceNotResponding</a></div></div><div class="brief "><p class="paragraph">Designated input device is not responding and timed out.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div data-togglable="TYPE">
+        <h2 class="">Types</h2>
+        <div class="table"><a data-name="1409073694%2FClasslikes%2F533364019" anchor-label="Companion" id="1409073694%2FClasslikes%2F533364019" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release"></a>
+          <div class="table-row" data-filterable-current=":amazon-chime-sdk:dokkaHtmlPartial/release" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-companion/index.html"><span><span>Companion</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1409073694%2FClasslikes%2F533364019"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":amazon-chime-sdk:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">object </span><a href="-companion/index.html">Companion</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div data-togglable="PROPERTY">
+        <h2 class="">Properties</h2>
+        <div class="table"><a data-name="-372974862%2FProperties%2F533364019" anchor-label="name" id="-372974862%2FProperties%2F533364019" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release"></a>
+          <div class="table-row" data-filterable-current=":amazon-chime-sdk:dokkaHtmlPartial/release" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="../../com.amazonaws.services.chime.sdk.meetings.utils.logger/-log-level/-o-f-f/index.html#-372974862%2FProperties%2F533364019"><span><span>name</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-372974862%2FProperties%2F533364019"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":amazon-chime-sdk:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">val </span><a href="../../com.amazonaws.services.chime.sdk.meetings.utils.logger/-log-level/-o-f-f/index.html#-372974862%2FProperties%2F533364019">name</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-739389684%2FProperties%2F533364019" anchor-label="ordinal" id="-739389684%2FProperties%2F533364019" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release"></a>
+          <div class="table-row" data-filterable-current=":amazon-chime-sdk:dokkaHtmlPartial/release" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="../../com.amazonaws.services.chime.sdk.meetings.utils.logger/-log-level/-o-f-f/index.html#-739389684%2FProperties%2F533364019"><span><span>ordinal</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-739389684%2FProperties%2F533364019"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":amazon-chime-sdk:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">val </span><a href="../../com.amazonaws.services.chime.sdk.meetings.utils.logger/-log-level/-o-f-f/index.html#-739389684%2FProperties%2F533364019">ordinal</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1936510342%2FProperties%2F533364019" anchor-label="value" id="1936510342%2FProperties%2F533364019" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release"></a>
+          <div class="table-row" data-filterable-current=":amazon-chime-sdk:dokkaHtmlPartial/release" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="value.html"><span><span>value</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1936510342%2FProperties%2F533364019"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":amazon-chime-sdk:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">val </span><a href="value.html">value</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div data-togglable="FUNCTION">
+        <h2 class="">Functions</h2>
+        <div class="table"><a data-name="-2059539403%2FFunctions%2F533364019" anchor-label="valueOf" id="-2059539403%2FFunctions%2F533364019" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release"></a>
+          <div class="table-row" data-filterable-current=":amazon-chime-sdk:dokkaHtmlPartial/release" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="value-of.html"><span>value</span><wbr><span><span>Of</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-2059539403%2FFunctions%2F533364019"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":amazon-chime-sdk:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">fun </span><a href="value-of.html"><span class="token function">valueOf</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">value<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="index.html">MeetingSessionStatusCode</a></div><div class="brief "><p class="paragraph">Returns the enum constant of this type with the specified name. The string must match exactly an identifier used to declare an enum constant in this type. (Extraneous whitespace characters are not permitted.)</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1468533249%2FFunctions%2F533364019" anchor-label="values" id="1468533249%2FFunctions%2F533364019" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release"></a>
+          <div class="table-row" data-filterable-current=":amazon-chime-sdk:dokkaHtmlPartial/release" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="values.html"><span><span>values</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1468533249%2FFunctions%2F533364019"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":amazon-chime-sdk:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">fun </span><a href="values.html"><span class="token function">values</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-array/index.html">Array</a><span class="token operator">&lt;</span><a href="index.html">MeetingSessionStatusCode</a><span class="token operator">&gt;</span></div><div class="brief "><p class="paragraph">Returns an array containing the constants of this enum type, in the order they're declared.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      <div class="footer">
+        <span class="go-to-top-icon"><a href="#content" id="go-to-top-link"></a></span><span>© 2024 Copyright</span><span class="pull-right"><span>Generated by </span><a href="https://github.com/Kotlin/dokka"><span>dokka</span><span class="padded-icon"></span></a></span>
+      </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+
