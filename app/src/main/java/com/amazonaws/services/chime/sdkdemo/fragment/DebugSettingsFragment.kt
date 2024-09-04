@@ -7,11 +7,15 @@ import android.view.ViewGroup
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.ViewModelProvider
 import com.amazonaws.services.chime.sdkdemo.R
+import com.amazonaws.services.chime.sdkdemo.databinding.FragmentDebugSettingsBinding
 import com.amazonaws.services.chime.sdkdemo.model.DebugSettingsViewModel
-import kotlinx.android.synthetic.main.fragment_debug_settings.view.*
 
 class DebugSettingsFragment : DialogFragment() {
     private lateinit var debugSettingsViewModel: DebugSettingsViewModel
+    private var _binding: FragmentDebugSettingsBinding? = null
+    // This property is only valid between onCreateView and
+    // onDestroyView.
+    private val binding get() = _binding!!
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -30,15 +34,15 @@ class DebugSettingsFragment : DialogFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         debugSettingsViewModel = ViewModelProvider(requireActivity()).get(DebugSettingsViewModel::class.java)
-        view.endpointUrlEditText.setText(debugSettingsViewModel.endpointUrl.value)
-        view.primaryMeetingIdEditText.setText(debugSettingsViewModel.primaryMeetingId.value)
+        binding.endpointUrlEditText.setText(debugSettingsViewModel.endpointUrl.value)
+        binding.primaryMeetingIdEditText.setText(debugSettingsViewModel.primaryMeetingId.value)
         setupClickListeners(view)
     }
 
     private fun setupClickListeners(view: View) {
-        view.saveButton.setOnClickListener {
-            debugSettingsViewModel.sendEndpointUrl(view.endpointUrlEditText.text.toString())
-            debugSettingsViewModel.sendPrimaryMeetingId(view.primaryMeetingIdEditText.text.toString())
+        binding.saveButton.setOnClickListener {
+            debugSettingsViewModel.sendEndpointUrl(binding.endpointUrlEditText.text.toString())
+            debugSettingsViewModel.sendPrimaryMeetingId(binding.primaryMeetingIdEditText.text.toString())
             dismiss()
         }
     }

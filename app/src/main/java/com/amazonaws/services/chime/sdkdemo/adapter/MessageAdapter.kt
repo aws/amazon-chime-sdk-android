@@ -10,10 +10,8 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.amazonaws.services.chime.sdkdemo.R
 import com.amazonaws.services.chime.sdkdemo.data.Message
+import com.amazonaws.services.chime.sdkdemo.databinding.RowMessageBinding
 import com.amazonaws.services.chime.sdkdemo.utils.inflate
-import kotlinx.android.synthetic.main.row_message.view.messageText
-import kotlinx.android.synthetic.main.row_message.view.messageTimestamp
-import kotlinx.android.synthetic.main.row_message.view.senderName
 
 class MessageAdapter(
     private val messages: Collection<Message>
@@ -36,14 +34,14 @@ class MessageAdapter(
 
 class MessageHolder(inflatedView: View) :
     RecyclerView.ViewHolder(inflatedView) {
-    private var view: View = inflatedView
+    private val binding = RowMessageBinding.bind(inflatedView)
 
     fun bindMessage(message: Message) {
-        view.senderName.text = message.senderName
-        view.messageTimestamp.text = message.displayTime
-        view.messageText.text = message.text
-        view.messageText.contentDescription = message.text
-        view.messageText.textAlignment =
+        binding.senderName.text = message.senderName
+        binding.messageTimestamp.text = message.displayTime
+        binding.messageText.text = message.text
+        binding.messageText.contentDescription = message.text
+        binding.messageText.textAlignment =
             if (message.isLocal) View.TEXT_ALIGNMENT_TEXT_END else View.TEXT_ALIGNMENT_TEXT_START
     }
 }

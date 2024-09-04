@@ -29,15 +29,10 @@ import com.amazonaws.services.chime.sdk.meetings.utils.logger.Logger
 import com.amazonaws.services.chime.sdkdemo.R
 import com.amazonaws.services.chime.sdkdemo.activity.MeetingActivity
 import com.amazonaws.services.chime.sdkdemo.data.VideoCollectionTile
+import com.amazonaws.services.chime.sdkdemo.databinding.ItemVideoBinding
 import com.amazonaws.services.chime.sdkdemo.model.MeetingModel
 import com.amazonaws.services.chime.sdkdemo.utils.inflate
 import com.amazonaws.services.chime.sdkdemo.utils.isLandscapeMode
-import kotlinx.android.synthetic.main.item_video.view.attendee_name
-import kotlinx.android.synthetic.main.item_video.view.on_tile_button
-import kotlinx.android.synthetic.main.item_video.view.poor_connection_message
-import kotlinx.android.synthetic.main.item_video.view.video_config_button
-import kotlinx.android.synthetic.main.item_video.view.video_filter_button
-import kotlinx.android.synthetic.main.item_video.view.video_surface
 
 class VideoAdapter(
     private val videoCollectionTiles: Collection<VideoCollectionTile>,
@@ -84,7 +79,7 @@ class VideoAdapter(
                         (VIDEO_ASPECT_RATIO_16_9 * viewportWidth).toInt()
                 }
             }
-            val videoRenderView = holder.itemView.video_surface
+            val videoRenderView = holder.binding.videoSurface
             videoRenderView.scalingType = VideoScalingType.AspectFit
             videoRenderView.hardwareScaling = false
         }
@@ -99,44 +94,45 @@ class VideoHolder(
     private val logger: Logger,
     private val cameraCaptureSource: CameraCaptureSource?,
     private val backgroundBlurVideoFrameProcessor: BackgroundBlurVideoFrameProcessor?,
-    private val backgroundReplacementVideoFrameProcessor: BackgroundReplacementVideoFrameProcessor?
+    private val backgroundReplacementVideoFrameProcessor: BackgroundReplacementVideoFrameProcessor?,
+    val binding: ItemVideoBinding = ItemVideoBinding.bind(view)
 ) : RecyclerView.ViewHolder(view) {
 
     val tileContainer: ConstraintLayout = view.findViewById(R.id.tile_container)
     private val TAG = "VideoHolder"
 
     init {
-        view.video_surface.logger = logger
+        binding.videoSurface.logger = logger
     }
 
     fun bindVideoTile(videoCollectionTile: VideoCollectionTile) {
-        audioVideo.bindVideoView(view.video_surface, videoCollectionTile.videoTileState.tileId)
+        audioVideo.bindVideoView(binding.videoSurface, videoCollectionTile.videoTileState.tileId)
         // Save the bound VideoRenderView in order to explicitly control the visibility of SurfaceView.
         // This is to bypass the issue where we cannot hide a SurfaceView that overlaps with another one.
-        videoCollectionTile.videoRenderView = view.video_surface
-        videoCollectionTile.pauseMessageView = view.poor_connection_message
+        videoCollectionTile.videoRenderView = binding.videoSurface
+        videoCollectionTile.pauseMessageView = binding.poorConnectionMessage
 
         if (videoCollectionTile.videoTileState.isContent) {
-            view.video_surface.contentDescription = "ScreenTile"
+            binding.videoSurface.contentDescription = "ScreenTile"
         } else {
-            view.video_surface.contentDescription = "${videoCollectionTile.attendeeName} VideoTile"
+            binding.videoSurface.contentDescription = "${videoCollectionTile.attendeeName} VideoTile"
         }
         if (videoCollectionTile.videoTileState.isLocalTile) {
-            view.on_tile_button.setImageResource(R.drawable.ic_switch_camera)
-            view.attendee_name.visibility = View.GONE
-            view.on_tile_button.visibility = View.VISIBLE
+            binding.onTileButton.setImageResource(R.drawable.ic_switch_camera)
+            binding.attendeeName.visibility = View.GONE
+            binding.onTileButton.visibility = View.VISIBLE
 
             if (SegmentationProcessor.isMachineLearningLibraryLoaded) {
-                view.video_filter_button.setImageResource(R.drawable.button_more)
-                view.video_filter_button.visibility = View.VISIBLE
+                binding.videoFilterButton.setImageResource(R.drawable.button_more)
+                binding.videoFilterButton.visibility = View.VISIBLE
             } else {
-                view.video_filter_button.visibility = View.INVISIBLE
+                binding.videoFilterButton.visibility = View.INVISIBLE
             }
             // To facilitate demoing and testing both use cases, we account for both our external
             // camera and the camera managed by the facade. Actual applications should
             // only use one or the other
             updateLocalVideoMirror()
-            view.on_tile_button.setOnClickListener {
+            binding.onTileButton.setOnClickListener {
                 if (audioVideo.getActiveCamera() != null) {
                     audioVideo.switchCamera()
                 } else {
@@ -145,47 +141,47 @@ class VideoHolder(
                 updateLocalVideoMirror()
             }
             if (SegmentationProcessor.isMachineLearningLibraryLoaded) {
-                view.video_filter_button.setOnClickListener {
-                    showVideoFilterPopup(view.video_filter_button)
+                binding.videoFilterButton.setOnClickListener {
+                    showVideoFilterPopup(binding.videoFilterButton)
                 }
             }
         } else {
-            view.video_surface.mirror = false
-            view.attendee_name.text = videoCollectionTile.attendeeName
-            view.attendee_name.visibility = View.VISIBLE
-            view.on_tile_button.visibility = View.VISIBLE
-            view.video_filter_button.visibility = View.INVISIBLE
+            binding.videoSurface.mirror = false
+            binding.attendeeName.text = videoCollectionTile.attendeeName
+            binding.attendeeName.visibility = View.VISIBLE
+            binding.onTileButton.visibility = View.VISIBLE
+            binding.videoFilterButton.visibility = View.INVISIBLE
             when (videoCollectionTile.videoTileState.pauseState) {
                 VideoPauseState.Unpaused ->
-                    view.on_tile_button.setImageResource(R.drawable.ic_pause_video)
+                    binding.onTileButton.setImageResource(R.drawable.ic_pause_video)
                 VideoPauseState.PausedByUserRequest ->
-                    view.on_tile_button.setImageResource(R.drawable.ic_resume_video)
+                    binding.onTileButton.setImageResource(R.drawable.ic_resume_video)
                 VideoPauseState.PausedForPoorConnection ->
-                    view.poor_connection_message.visibility = View.VISIBLE
+                    binding.poorConnectionMessage.visibility = View.VISIBLE
             }
 
-            view.on_tile_button.setOnClickListener {
+            binding.onTileButton.setOnClickListener {
                 val tileId = videoCollectionTile.videoTileState.tileId
                 if (videoCollectionTile.videoTileState.pauseState == VideoPauseState.Unpaused) {
                     audioVideo.pauseRemoteVideoTile(tileId)
                     meetingModel.userPausedVideoTileIds.add(tileId)
-                    view.on_tile_button.setImageResource(R.drawable.ic_resume_video)
+                    binding.onTileButton.setImageResource(R.drawable.ic_resume_video)
                 } else {
                     audioVideo.resumeRemoteVideoTile(tileId)
                     meetingModel.userPausedVideoTileIds.remove(tileId)
-                    view.on_tile_button.setImageResource(R.drawable.ic_pause_video)
+                    binding.onTileButton.setImageResource(R.drawable.ic_pause_video)
                 }
             }
 
-            view.video_surface.setOnClickListener {
+            binding.videoSurface.setOnClickListener {
                 val attendeeId = videoCollectionTile.videoTileState.attendeeId
-                showPriorityPopup(view.on_tile_button, attendeeId)
+                showPriorityPopup(binding.onTileButton, attendeeId)
             }
         }
 
-        view.video_config_button.setOnClickListener {
+        binding.videoConfigButton.setOnClickListener {
             val attendeeId = videoCollectionTile.videoTileState.attendeeId
-            showResolutionPopup(view.video_config_button, attendeeId)
+            showResolutionPopup(binding.videoConfigButton, attendeeId)
         }
     }
 
@@ -387,7 +383,7 @@ class VideoHolder(
     }
 
     private fun updateLocalVideoMirror() {
-        view.video_surface.mirror =
+        binding.videoSurface.mirror =
                 // If we are using internal source, base mirror state off that device type
             (audioVideo.getActiveCamera()?.type == MediaDeviceType.VIDEO_FRONT_CAMERA ||
                     // Otherwise (audioVideo.getActiveCamera() == null) use the device type of our external/custom camera capture source

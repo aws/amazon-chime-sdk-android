@@ -10,8 +10,8 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.amazonaws.services.chime.sdkdemo.R
 import com.amazonaws.services.chime.sdkdemo.data.MetricData
+import com.amazonaws.services.chime.sdkdemo.databinding.RowMetricBinding
 import com.amazonaws.services.chime.sdkdemo.utils.inflate
-import kotlinx.android.synthetic.main.row_metric.view.*
 
 class MetricAdapter(
     private val metricsList: Collection<MetricData>
@@ -34,14 +34,14 @@ class MetricAdapter(
 class MetricHolder(inflatedView: View) :
     RecyclerView.ViewHolder(inflatedView) {
 
-    private var view: View = inflatedView
+    private val binding = RowMetricBinding.bind(inflatedView)
 
     fun bindMetrics(metric: MetricData) {
         val name = metric.metricName
         val value = metric.metricValue.toString()
-        view.metricName.text = name
-        view.metricValue.text = value
-        view.metricName.contentDescription = "$name metric"
-        view.metricValue.contentDescription = "$name value"
+        binding.metricName.text = name
+        binding.metricValue.text = value
+        binding.metricName.contentDescription = "$name metric"
+        binding.metricValue.contentDescription = "$name value"
     }
 }

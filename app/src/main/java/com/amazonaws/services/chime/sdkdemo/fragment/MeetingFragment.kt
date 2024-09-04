@@ -1665,6 +1665,7 @@ class MeetingFragment : Fragment(),
                 meetingModel.isCameraOn = !meetingModel.isCameraOn
                 refreshNoVideosOrScreenShareAvailableText()
             }
+            else -> Unit
         }
         logWithFunctionName(
             object {}.javaClass.enclosingMethod?.name,
