@@ -20,11 +20,11 @@ class DeviceUtils {
             Versioning.sdkVersion()
         }
 
-        val deviceModel: String by lazy {
+        val deviceModel: String? by lazy {
             android.os.Build.MODEL
         }
 
-        val deviceManufacturer: String by lazy {
+        val deviceManufacturer: String? by lazy {
             android.os.Build.MANUFACTURER
         }
 
@@ -35,7 +35,7 @@ class DeviceUtils {
         val osName: String by lazy {
             "Android"
         }
-        val osVersion: String by lazy {
+        val osVersion: String? by lazy {
             android.os.Build.VERSION.RELEASE
         }
 
