@@ -260,7 +260,7 @@ class DefaultCameraCaptureSource @JvmOverloads constructor(
 
         val processedFrame =
             VideoFrame(frame.timestampNs, processedBuffer, getCaptureFrameRotation())
-        sinks.forEach { it.onVideoFrameReceived(processedFrame) }
+        sinks.iterator().forEach { it.onVideoFrameReceived(processedFrame) }
         processedBuffer.release()
     }
 
