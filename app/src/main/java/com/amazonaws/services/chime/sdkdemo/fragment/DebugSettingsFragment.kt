@@ -23,7 +23,8 @@ class DebugSettingsFragment : DialogFragment() {
         savedInstanceState: Bundle?
     ): View {
         // Inflate the layout to use as embedded fragment
-        return inflater.inflate(R.layout.fragment_debug_settings, container, false)
+        _binding = FragmentDebugSettingsBinding.inflate(inflater, container, false)
+        return binding.root
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
