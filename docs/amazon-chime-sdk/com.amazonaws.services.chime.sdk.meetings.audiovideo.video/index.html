@@ -1,211 +1,429 @@
-<HTML>
-<HEAD>
-<meta charset="UTF-8">
-<title>com.amazonaws.services.chime.sdk.meetings.audiovideo.video - amazon-chime-sdk</title>
-<link rel="stylesheet" href="../../style.css">
-</HEAD>
-<BODY>
-<a href="../index.html">amazon-chime-sdk</a>&nbsp;/&nbsp;<a href="./index.html">com.amazonaws.services.chime.sdk.meetings.audiovideo.video</a><br/>
-<br/>
-<h2>Package com.amazonaws.services.chime.sdk.meetings.audiovideo.video</h2>
-<h3>Types</h3>
-<table>
-<tbody>
-<tr>
-<td>
-<h4><a href="-default-video-render-view/index.html">DefaultVideoRenderView</a></h4>
-</td>
-<td>
-<code><span class="keyword">class </span><span class="identifier">DefaultVideoRenderView</span>&nbsp;<span class="symbol">:</span>&nbsp;<a href="../com.amazonaws.services.chime.sdk.meetings.audiovideo.video.gl/-surface-render-view/index.html"><span class="identifier">SurfaceRenderView</span></a></code></td>
-</tr>
-<tr>
-<td>
-<h4><a href="-default-video-tile/index.html">DefaultVideoTile</a></h4>
-</td>
-<td>
-<code><span class="keyword">class </span><span class="identifier">DefaultVideoTile</span>&nbsp;<span class="symbol">:</span>&nbsp;<a href="-video-tile/index.html"><span class="identifier">VideoTile</span></a></code></td>
-</tr>
-<tr>
-<td>
-<h4><a href="-default-video-tile-controller/index.html">DefaultVideoTileController</a></h4>
-</td>
-<td>
-<code><span class="keyword">class </span><span class="identifier">DefaultVideoTileController</span>&nbsp;<span class="symbol">:</span>&nbsp;<a href="-video-tile-controller/index.html"><span class="identifier">VideoTileController</span></a></code></td>
-</tr>
-<tr>
-<td>
-<h4><a href="-default-video-tile-factory/index.html">DefaultVideoTileFactory</a></h4>
-</td>
-<td>
-<code><span class="keyword">class </span><span class="identifier">DefaultVideoTileFactory</span>&nbsp;<span class="symbol">:</span>&nbsp;<a href="-video-tile-factory/index.html"><span class="identifier">VideoTileFactory</span></a></code></td>
-</tr>
-<tr>
-<td>
-<h4><a href="-local-video-configuration/index.html">LocalVideoConfiguration</a></h4>
-</td>
-<td>
-<p>Contains configuration for a local video or content share to be sent</p>
-<code><span class="keyword">data</span> <span class="keyword">class </span><span class="identifier">LocalVideoConfiguration</span></code></td>
-</tr>
-<tr>
-<td>
-<h4><a href="-remote-video-source/index.html">RemoteVideoSource</a></h4>
-</td>
-<td>
-<p>A video source available in the current meeting. RemoteVideoSource need to be consistent between <code>remoteVideoSourcesDidBecomeAvailable</code>
-and <code>updateVideoSourceSubscriptions</code> as they are used as keys in maps that may be updated.
-I.e. when setting up a map for <code>updateVideoSourceSubscriptions</code> do not construct RemoteVideoSource yourselves
-or the configuration may or may not be updated.</p>
-<code><span class="keyword">class </span><span class="identifier">RemoteVideoSource</span></code></td>
-</tr>
-<tr>
-<td>
-<h4><a href="-video-content-hint/index.html">VideoContentHint</a></h4>
-</td>
-<td>
-<p><a href="-video-content-hint/index.html">VideoContentHint</a> describes the content type of a video source so that downstream encoders, etc. can properly
-decide on what parameters will work best. These options mirror https://www.w3.org/TR/mst-content-hint/ .</p>
-<code><span class="keyword">enum</span> <span class="keyword">class </span><span class="identifier">VideoContentHint</span></code></td>
-</tr>
-<tr>
-<td>
-<h4><a href="-video-frame/index.html">VideoFrame</a></h4>
-</td>
-<td>
-<p><a href="-video-frame/index.html">VideoFrame</a> is a class which contains a <a href="../com.amazonaws.services.chime.sdk.meetings.audiovideo.video.buffer/-video-frame-buffer/index.html">VideoFrameBuffer</a> and metadata necessary for transmission
-Typically produced via a <a href="-video-source/index.html">VideoSource</a> and consumed via a <a href="-video-sink/index.html">VideoSink</a></p>
-<code><span class="keyword">class </span><span class="identifier">VideoFrame</span></code></td>
-</tr>
-<tr>
-<td>
-<h4><a href="-video-pause-state/index.html">VideoPauseState</a></h4>
-</td>
-<td>
-<p><a href="-video-pause-state/index.html">VideoPauseState</a> describes the pause status of a video tile.</p>
-<code><span class="keyword">enum</span> <span class="keyword">class </span><span class="identifier">VideoPauseState</span></code></td>
-</tr>
-<tr>
-<td>
-<h4><a href="-video-priority/index.html">VideoPriority</a></h4>
-</td>
-<td>
-<p>Enum defining video priority for remote video sources. The 'higher' the number the 'higher' the priority for the source when adjusting video quality
-to adapt to variable network conditions, i.e. <code>Highest</code> will be chosen before <code>High</code>, <code>Medium</code>, etc.</p>
-<code><span class="keyword">enum</span> <span class="keyword">class </span><span class="identifier">VideoPriority</span></code></td>
-</tr>
-<tr>
-<td>
-<h4><a href="-video-render-view.html">VideoRenderView</a></h4>
-</td>
-<td>
-<p><a href="-video-render-view.html">VideoRenderView</a> is the type of VideoSink used by the <a href="-video-tile-controller/index.html">VideoTileController</a></p>
-<code><span class="keyword">interface </span><span class="identifier">VideoRenderView</span>&nbsp;<span class="symbol">:</span>&nbsp;<a href="-video-sink/index.html"><span class="identifier">VideoSink</span></a></code></td>
-</tr>
-<tr>
-<td>
-<h4><a href="-video-resolution/index.html">VideoResolution</a></h4>
-</td>
-<td>
-<p>Customizable video resolution parameters for a remote video source.</p>
-<code><span class="keyword">enum</span> <span class="keyword">class </span><span class="identifier">VideoResolution</span></code></td>
-</tr>
-<tr>
-<td>
-<h4><a href="-video-rotation/index.html">VideoRotation</a></h4>
-</td>
-<td>
-<p><a href="-video-rotation/index.html">VideoRotation</a> describes the rotation of the video frame buffer in degrees clockwise
-from intended viewing horizon.</p>
-<code><span class="keyword">enum</span> <span class="keyword">class </span><span class="identifier">VideoRotation</span></code></td>
-</tr>
-<tr>
-<td>
-<h4><a href="-video-scaling-type/index.html">VideoScalingType</a></h4>
-</td>
-<td>
-<p><a href="-video-scaling-type/index.html">VideoScalingType</a> describes the scaling type of how video is rendered.  Certain types
-may effect how much of a video is cropped. <a href="-video-scaling-type/visible-fraction.html">visibleFraction</a> refers to the minimum amount
-of a video frame required to be shown per scaling type (e.g. <a href="-video-scaling-type/-aspect-fit.html">AspectFit</a> indicates showing
-the whole frame, no cropping).</p>
-<code><span class="keyword">enum</span> <span class="keyword">class </span><span class="identifier">VideoScalingType</span></code></td>
-</tr>
-<tr>
-<td>
-<h4><a href="-video-sink/index.html">VideoSink</a></h4>
-</td>
-<td>
-<p>A <a href="-video-sink/index.html">VideoSink</a> consumes video frames, typically from a <a href="-video-source/index.html">VideoSource</a>. It may process, fork, or render these frames.
-Typically connected via <a href="-video-source/add-video-sink.html">VideoSource.addVideoSink</a> and disconnected via <a href="-video-source/remove-video-sink.html">VideoSource.removeVideoSink</a></p>
-<code><span class="keyword">interface </span><span class="identifier">VideoSink</span></code></td>
-</tr>
-<tr>
-<td>
-<h4><a href="-video-source/index.html">VideoSource</a></h4>
-</td>
-<td>
-<p><a href="-video-source/index.html">VideoSource</a> is an interface for sources which produce video frames, and can send to a <a href="-video-sink/index.html">VideoSink</a>.
-Implementations can be passed to the <a href="../com.amazonaws.services.chime.sdk.meetings.audiovideo/-audio-video-facade.html">AudioVideoFacade</a> to be used as the video source sent to remote
-participants</p>
-<code><span class="keyword">interface </span><span class="identifier">VideoSource</span></code></td>
-</tr>
-<tr>
-<td>
-<h4><a href="-video-subscription-configuration/index.html">VideoSubscriptionConfiguration</a></h4>
-</td>
-<td>
-<p>Configuration for a specific video source.
-The values are intentionally mutable so that a map of all current configurations can be kept and updated as needed.</p>
-<code><span class="keyword">class </span><span class="identifier">VideoSubscriptionConfiguration</span></code></td>
-</tr>
-<tr>
-<td>
-<h4><a href="-video-tile/index.html">VideoTile</a></h4>
-</td>
-<td>
-<p><a href="-video-tile/index.html">VideoTile</a> is a tile that binds video render view to display the frame into the view.</p>
-<code><span class="keyword">interface </span><span class="identifier">VideoTile</span>&nbsp;<span class="symbol">:</span>&nbsp;<a href="-video-sink/index.html"><span class="identifier">VideoSink</span></a></code></td>
-</tr>
-<tr>
-<td>
-<h4><a href="-video-tile-controller/index.html">VideoTileController</a></h4>
-</td>
-<td>
-<p><a href="-video-tile-controller/index.html">VideoTileController</a> handles rendering/creating of new <a href="-video-tile/index.html">VideoTile</a>.</p>
-<code><span class="keyword">interface </span><span class="identifier">VideoTileController</span>&nbsp;<span class="symbol">:</span>&nbsp;<a href="-video-tile-controller-facade/index.html"><span class="identifier">VideoTileControllerFacade</span></a></code></td>
-</tr>
-<tr>
-<td>
-<h4><a href="-video-tile-controller-facade/index.html">VideoTileControllerFacade</a></h4>
-</td>
-<td>
-<p><a href="-video-tile-controller-facade/index.html">VideoTileControllerFacade</a> manages video tile binding, pausing, and resuming as well as subscribing
-to video tile events by adding a <a href="-video-tile-observer/index.html">VideoTileObserver</a>.</p>
-<code><span class="keyword">interface </span><span class="identifier">VideoTileControllerFacade</span></code></td>
-</tr>
-<tr>
-<td>
-<h4><a href="-video-tile-factory/index.html">VideoTileFactory</a></h4>
-</td>
-<td>
-<code><span class="keyword">interface </span><span class="identifier">VideoTileFactory</span></code></td>
-</tr>
-<tr>
-<td>
-<h4><a href="-video-tile-observer/index.html">VideoTileObserver</a></h4>
-</td>
-<td>
-<p><a href="-video-tile-observer/index.html">VideoTileObserver</a> handles events related to <a href="-video-tile/index.html">VideoTile</a>.</p>
-<code><span class="keyword">interface </span><span class="identifier">VideoTileObserver</span></code></td>
-</tr>
-<tr>
-<td>
-<h4><a href="-video-tile-state/index.html">VideoTileState</a></h4>
-</td>
-<td>
-<p>Contains properties related to the current state of the <a href="-video-tile/index.html">VideoTile</a></p>
-<code><span class="keyword">data</span> <span class="keyword">class </span><span class="identifier">VideoTileState</span></code></td>
-</tr>
-</tbody>
-</table>
-</BODY>
-</HTML>
+<!doctype html>
+<html class="no-js">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1" charset="UTF-8">
+    <title>com.amazonaws.services.chime.sdk.meetings.audiovideo.video</title>
+<link href="../../images/logo-icon.svg" rel="icon" type="image/svg">    <script>var pathToRoot = "../../";</script>
+    <script>document.documentElement.classList.replace("no-js","js");</script>
+    <script>const storage = localStorage.getItem("dokka-dark-mode")
+    if (storage == null) {
+        const osDarkSchemePreferred = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
+        if (osDarkSchemePreferred === true) {
+            document.getElementsByTagName("html")[0].classList.add("theme-dark")
+        }
+    } else {
+        const savedDarkMode = JSON.parse(storage)
+        if(savedDarkMode === true) {
+            document.getElementsByTagName("html")[0].classList.add("theme-dark")
+        }
+    }
+    </script>
+<script type="text/javascript" src="https://unpkg.com/kotlin-playground@1/dist/playground.min.js" async></script>
+<script type="text/javascript" src="../../scripts/sourceset_dependencies.js" async></script>
+<link href="../../styles/style.css" rel="Stylesheet">
+<link href="../../styles/main.css" rel="Stylesheet">
+<link href="../../styles/prism.css" rel="Stylesheet">
+<link href="../../styles/logo-styles.css" rel="Stylesheet">
+<link href="../../styles/font-jb-sans-auto.css" rel="Stylesheet">
+<script type="text/javascript" src="../../scripts/clipboard.js" async></script>
+<script type="text/javascript" src="../../scripts/navigation-loader.js" async></script>
+<script type="text/javascript" src="../../scripts/platform-content-handler.js" async></script>
+<script type="text/javascript" src="../../scripts/main.js" defer></script>
+<script type="text/javascript" src="../../scripts/prism.js" async></script>
+<script type="text/javascript" src="../../scripts/symbol-parameters-wrapper_deferred.js" defer></script></head>
+<body>
+    <div class="root">
+<nav class="navigation" id="navigation-wrapper">
+    <div class="navigation--inner">
+        <div class="navigation-title">
+            <button class="menu-toggle" id="menu-toggle" type="button">toggle menu</button>
+            <div class="library-name">
+<a class="library-name--link" href="../../index.html">
+                            amazon-chime-sdk-android
+                    </a>            </div>
+            <div class="library-version">
+            </div>
+        </div>
+        <div class="filter-section" id="filter-section">
+                <button class="platform-tag platform-selector jvm-like" data-active="" data-filter=":amazon-chime-sdk:dokkaHtmlPartial/release">androidJvm</button>
+        </div>
+    </div>
+    <div class="navigation-controls">
+        <button class="navigation-controls--btn navigation-controls--theme" id="theme-toggle-button" type="button">switch theme</button>
+        <div class="navigation-controls--btn navigation-controls--search" id="searchBar" role="button">search in API</div>
+    </div>
+</nav>
+        <div id="container">
+            <div class="sidebar" id="leftColumn">
+                <div class="sidebar--inner" id="sideMenu"></div>
+            </div>
+            <div id="main">
+<div class="main-content" data-page-type="package" id="content" pageids="amazon-chime-sdk::com.amazonaws.services.chime.sdk.meetings.audiovideo.video////PointingToDeclaration//533364019">
+  <div class="breadcrumbs"><a href="../index.html">amazon-chime-sdk</a><span class="delimiter">/</span><span class="current">com.amazonaws.services.chime.sdk.meetings.audiovideo.video</span></div>
+  <div class="cover ">
+    <h1 class="cover"><span><span>Package-level</span></span> <span><span>declarations</span></span></h1>
+  </div>
+  <div class="tabbedcontent">
+    <div class="tabs-section" tabs-section="tabs-section"><button class="section-tab" data-active="" data-togglable="TYPE">Types</button></div>
+    <div class="tabs-section-body">
+      <div data-togglable="TYPE">
+        <h2 class="">Types</h2>
+        <div class="table"><a data-name="-2034783711%2FClasslikes%2F533364019" anchor-label="DefaultVideoRenderView" id="-2034783711%2FClasslikes%2F533364019" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release"></a>
+          <div class="table-row" data-filterable-current=":amazon-chime-sdk:dokkaHtmlPartial/release" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-default-video-render-view/index.html"><span>Default</span><wbr><span>Video</span><wbr><span>Render</span><wbr><span><span>View</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-2034783711%2FClasslikes%2F533364019"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":amazon-chime-sdk:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">class </span><a href="-default-video-render-view/index.html">DefaultVideoRenderView</a>&nbsp;<span><span class="token annotation builtin">@</span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.jvm/-jvm-overloads/index.html"><span class="token annotation builtin">JvmOverloads</span></a>&nbsp;</span><span class="token keyword">constructor</span><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">context<span class="token operator">: </span><a href="https://developer.android.com/reference/kotlin/android/content/Context.html">Context</a><span class="token punctuation">, </span></span><span class="parameter ">attrs<span class="token operator">: </span><a href="https://developer.android.com/reference/kotlin/android/util/AttributeSet.html">AttributeSet</a><span class="token operator">?</span><span class="token operator"> = </span>null<span class="token punctuation">, </span></span><span class="parameter ">defStyle<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a><span class="token operator"> = </span><span class="token constant">0</span></span></span><span class="token punctuation">)</span> : <a href="../com.amazonaws.services.chime.sdk.meetings.audiovideo.video.gl/-surface-render-view/index.html">SurfaceRenderView</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1211765650%2FClasslikes%2F533364019" anchor-label="DefaultVideoTile" id="-1211765650%2FClasslikes%2F533364019" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release"></a>
+          <div class="table-row" data-filterable-current=":amazon-chime-sdk:dokkaHtmlPartial/release" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-default-video-tile/index.html"><span>Default</span><wbr><span>Video</span><wbr><span><span>Tile</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1211765650%2FClasslikes%2F533364019"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":amazon-chime-sdk:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">class </span><a href="-default-video-tile/index.html">DefaultVideoTile</a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">logger<span class="token operator">: </span><a href="../com.amazonaws.services.chime.sdk.meetings.utils.logger/-logger/index.html">Logger</a><span class="token punctuation">, </span></span><span class="parameter ">tileId<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a><span class="token punctuation">, </span></span><span class="parameter ">attendeeId<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a><span class="token punctuation">, </span></span><span class="parameter ">videoStreamContentWidth<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a><span class="token punctuation">, </span></span><span class="parameter ">videoStreamContentHeight<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a><span class="token punctuation">, </span></span><span class="parameter ">isLocalTile<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html">Boolean</a></span></span><span class="token punctuation">)</span> : <a href="-video-tile/index.html">VideoTile</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="561950706%2FClasslikes%2F533364019" anchor-label="DefaultVideoTileController" id="561950706%2FClasslikes%2F533364019" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release"></a>
+          <div class="table-row" data-filterable-current=":amazon-chime-sdk:dokkaHtmlPartial/release" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-default-video-tile-controller/index.html"><span>Default</span><wbr><span>Video</span><wbr><span>Tile</span><wbr><span><span>Controller</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="561950706%2FClasslikes%2F533364019"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":amazon-chime-sdk:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">class </span><a href="-default-video-tile-controller/index.html">DefaultVideoTileController</a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">logger<span class="token operator">: </span><a href="../com.amazonaws.services.chime.sdk.meetings.utils.logger/-logger/index.html">Logger</a><span class="token punctuation">, </span></span><span class="parameter ">videoClientController<span class="token operator">: </span><a href="../com.amazonaws.services.chime.sdk.meetings.internal.video/-video-client-controller/index.html">VideoClientController</a><span class="token punctuation">, </span></span><span class="parameter ">videoTileFactory<span class="token operator">: </span><a href="-video-tile-factory/index.html">VideoTileFactory</a><span class="token punctuation">, </span></span><span class="parameter ">eglCoreFactory<span class="token operator">: </span><a href="../com.amazonaws.services.chime.sdk.meetings.audiovideo.video.gl/-egl-core-factory/index.html">EglCoreFactory</a><span class="token punctuation">, </span></span><span class="parameter ">meetingStatsCollector<span class="token operator">: </span><a href="../com.amazonaws.services.chime.sdk.meetings.analytics/-meeting-stats-collector/index.html">MeetingStatsCollector</a></span></span><span class="token punctuation">)</span> : <a href="-video-tile-controller/index.html">VideoTileController</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="359981994%2FClasslikes%2F533364019" anchor-label="DefaultVideoTileFactory" id="359981994%2FClasslikes%2F533364019" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release"></a>
+          <div class="table-row" data-filterable-current=":amazon-chime-sdk:dokkaHtmlPartial/release" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-default-video-tile-factory/index.html"><span>Default</span><wbr><span>Video</span><wbr><span>Tile</span><wbr><span><span>Factory</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="359981994%2FClasslikes%2F533364019"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":amazon-chime-sdk:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">class </span><a href="-default-video-tile-factory/index.html">DefaultVideoTileFactory</a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">logger<span class="token operator">: </span><a href="../com.amazonaws.services.chime.sdk.meetings.utils.logger/-logger/index.html">Logger</a></span></span><span class="token punctuation">)</span> : <a href="-video-tile-factory/index.html">VideoTileFactory</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1429607558%2FClasslikes%2F533364019" anchor-label="LocalVideoConfiguration" id="1429607558%2FClasslikes%2F533364019" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release"></a>
+          <div class="table-row" data-filterable-current=":amazon-chime-sdk:dokkaHtmlPartial/release" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-local-video-configuration/index.html"><span>Local</span><wbr><span>Video</span><wbr><span><span>Configuration</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1429607558%2FClasslikes%2F533364019"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":amazon-chime-sdk:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">data </span><span class="token keyword">class </span><a href="-local-video-configuration/index.html">LocalVideoConfiguration</a>&nbsp;<span><span class="token annotation builtin">@</span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.jvm/-jvm-overloads/index.html"><span class="token annotation builtin">JvmOverloads</span></a>&nbsp;</span><span class="token keyword">constructor</span><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">maxBitRateKbps<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a><span class="token operator"> = </span><span class="token constant">0</span></span></span><span class="token punctuation">)</span></div><div class="brief "><p class="paragraph">Contains configuration for a local video or content share to be sent</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1974867268%2FClasslikes%2F533364019" anchor-label="RemoteVideoSource" id="-1974867268%2FClasslikes%2F533364019" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release"></a>
+          <div class="table-row" data-filterable-current=":amazon-chime-sdk:dokkaHtmlPartial/release" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-remote-video-source/index.html"><span>Remote</span><wbr><span>Video</span><wbr><span><span>Source</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1974867268%2FClasslikes%2F533364019"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":amazon-chime-sdk:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">class </span><a href="-remote-video-source/index.html">RemoteVideoSource</a><span class="token punctuation">(</span><span class="parameters "><span class="parameter "><span class="token keyword">val </span>attendeeId<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a></span></span><span class="token punctuation">)</span></div><div class="brief "><p class="paragraph">A video source available in the current meeting. RemoteVideoSource need to be consistent between <code class="lang-kotlin">remoteVideoSourcesDidBecomeAvailable</code> and <code class="lang-kotlin">updateVideoSourceSubscriptions</code> as they are used as keys in maps that may be updated. I.e. when setting up a map for <code class="lang-kotlin">updateVideoSourceSubscriptions</code> do not construct RemoteVideoSource yourselves or the configuration may or may not be updated.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-568597391%2FClasslikes%2F533364019" anchor-label="VideoContentHint" id="-568597391%2FClasslikes%2F533364019" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release"></a>
+          <div class="table-row" data-filterable-current=":amazon-chime-sdk:dokkaHtmlPartial/release" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-video-content-hint/index.html"><span>Video</span><wbr><span>Content</span><wbr><span><span>Hint</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-568597391%2FClasslikes%2F533364019"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":amazon-chime-sdk:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">enum </span><a href="-video-content-hint/index.html">VideoContentHint</a> : <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-enum/index.html">Enum</a><span class="token operator">&lt;</span><a href="-video-content-hint/index.html">VideoContentHint</a><span class="token operator">&gt; </span></div><div class="brief "><p class="paragraph"><a href="-video-content-hint/index.html">VideoContentHint</a> describes the content type of a video source so that downstream encoders, etc. can properly decide on what parameters will work best. These options mirror https://www.w3.org/TR/mst-content-hint/ .</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1472419396%2FClasslikes%2F533364019" anchor-label="VideoFrame" id="1472419396%2FClasslikes%2F533364019" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release"></a>
+          <div class="table-row" data-filterable-current=":amazon-chime-sdk:dokkaHtmlPartial/release" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-video-frame/index.html"><span>Video</span><wbr><span><span>Frame</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1472419396%2FClasslikes%2F533364019"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":amazon-chime-sdk:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">class </span><a href="-video-frame/index.html">VideoFrame</a><span class="token punctuation">(</span><span class="parameters "><span class="parameter "><span class="token keyword">val </span>timestampNs<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html">Long</a><span class="token punctuation">, </span></span><span class="parameter "><span class="token keyword">val </span>buffer<span class="token operator">: </span><a href="../com.amazonaws.services.chime.sdk.meetings.audiovideo.video.buffer/-video-frame-buffer/index.html">VideoFrameBuffer</a><span class="token punctuation">, </span></span><span class="parameter "><span class="token keyword">val </span>rotation<span class="token operator">: </span><a href="-video-rotation/index.html">VideoRotation</a><span class="token operator"> = </span>VideoRotation.Rotation0</span></span><span class="token punctuation">)</span></div><div class="brief "><p class="paragraph"><a href="-video-frame/index.html">VideoFrame</a> is a class which contains a <a href="../com.amazonaws.services.chime.sdk.meetings.audiovideo.video.buffer/-video-frame-buffer/index.html">VideoFrameBuffer</a> and metadata necessary for transmission Typically produced via a <a href="-video-source/index.html">VideoSource</a> and consumed via a <a href="-video-sink/index.html">VideoSink</a></p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-900633226%2FClasslikes%2F533364019" anchor-label="VideoPauseState" id="-900633226%2FClasslikes%2F533364019" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release"></a>
+          <div class="table-row" data-filterable-current=":amazon-chime-sdk:dokkaHtmlPartial/release" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-video-pause-state/index.html"><span>Video</span><wbr><span>Pause</span><wbr><span><span>State</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-900633226%2FClasslikes%2F533364019"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":amazon-chime-sdk:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">enum </span><a href="-video-pause-state/index.html">VideoPauseState</a> : <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-enum/index.html">Enum</a><span class="token operator">&lt;</span><a href="-video-pause-state/index.html">VideoPauseState</a><span class="token operator">&gt; </span></div><div class="brief "><p class="paragraph"><a href="-video-pause-state/index.html">VideoPauseState</a> describes the pause status of a video tile.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-607818707%2FClasslikes%2F533364019" anchor-label="VideoPriority" id="-607818707%2FClasslikes%2F533364019" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release"></a>
+          <div class="table-row" data-filterable-current=":amazon-chime-sdk:dokkaHtmlPartial/release" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-video-priority/index.html"><span>Video</span><wbr><span><span>Priority</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-607818707%2FClasslikes%2F533364019"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":amazon-chime-sdk:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">enum </span><a href="-video-priority/index.html">VideoPriority</a> : <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-enum/index.html">Enum</a><span class="token operator">&lt;</span><a href="-video-priority/index.html">VideoPriority</a><span class="token operator">&gt; </span></div><div class="brief "><p class="paragraph">Enum defining video priority for remote video sources. The 'higher' the number the 'higher' the priority for the source when adjusting video quality to adapt to variable network conditions, i.e. <code class="lang-kotlin">Highest</code> will be chosen before <code class="lang-kotlin">High</code>, <code class="lang-kotlin">Medium</code>, etc.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1436273578%2FClasslikes%2F533364019" anchor-label="VideoRenderView" id="-1436273578%2FClasslikes%2F533364019" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release"></a>
+          <div class="table-row" data-filterable-current=":amazon-chime-sdk:dokkaHtmlPartial/release" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-video-render-view/index.html"><span>Video</span><wbr><span>Render</span><wbr><span><span>View</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1436273578%2FClasslikes%2F533364019"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":amazon-chime-sdk:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">interface </span><a href="-video-render-view/index.html">VideoRenderView</a> : <a href="-video-sink/index.html">VideoSink</a></div><div class="brief "><p class="paragraph"><a href="-video-render-view/index.html">VideoRenderView</a> is the type of VideoSink used by the <a href="-video-tile-controller/index.html">VideoTileController</a></p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1846239707%2FClasslikes%2F533364019" anchor-label="VideoResolution" id="-1846239707%2FClasslikes%2F533364019" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release"></a>
+          <div class="table-row" data-filterable-current=":amazon-chime-sdk:dokkaHtmlPartial/release" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-video-resolution/index.html"><span>Video</span><wbr><span><span>Resolution</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1846239707%2FClasslikes%2F533364019"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":amazon-chime-sdk:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">enum </span><a href="-video-resolution/index.html">VideoResolution</a> : <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-enum/index.html">Enum</a><span class="token operator">&lt;</span><a href="-video-resolution/index.html">VideoResolution</a><span class="token operator">&gt; </span></div><div class="brief "><p class="paragraph">Customizable video resolution parameters for a remote video source.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="992427923%2FClasslikes%2F533364019" anchor-label="VideoRotation" id="992427923%2FClasslikes%2F533364019" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release"></a>
+          <div class="table-row" data-filterable-current=":amazon-chime-sdk:dokkaHtmlPartial/release" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-video-rotation/index.html"><span>Video</span><wbr><span><span>Rotation</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="992427923%2FClasslikes%2F533364019"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":amazon-chime-sdk:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">enum </span><a href="-video-rotation/index.html">VideoRotation</a> : <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-enum/index.html">Enum</a><span class="token operator">&lt;</span><a href="-video-rotation/index.html">VideoRotation</a><span class="token operator">&gt; </span></div><div class="brief "><p class="paragraph"><a href="-video-rotation/index.html">VideoRotation</a> describes the rotation of the video frame buffer in degrees clockwise from intended viewing horizon.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1304604976%2FClasslikes%2F533364019" anchor-label="VideoScalingType" id="-1304604976%2FClasslikes%2F533364019" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release"></a>
+          <div class="table-row" data-filterable-current=":amazon-chime-sdk:dokkaHtmlPartial/release" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-video-scaling-type/index.html"><span>Video</span><wbr><span>Scaling</span><wbr><span><span>Type</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1304604976%2FClasslikes%2F533364019"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":amazon-chime-sdk:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">enum </span><a href="-video-scaling-type/index.html">VideoScalingType</a> : <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-enum/index.html">Enum</a><span class="token operator">&lt;</span><a href="-video-scaling-type/index.html">VideoScalingType</a><span class="token operator">&gt; </span></div><div class="brief "><p class="paragraph"><a href="-video-scaling-type/index.html">VideoScalingType</a> describes the scaling type of how video is rendered.  Certain types may effect how much of a video is cropped. <a href="-video-scaling-type/visible-fraction.html">visibleFraction</a> refers to the minimum amount of a video frame required to be shown per scaling type (e.g. <a href="-video-scaling-type/-aspect-fit/index.html">AspectFit</a> indicates showing the whole frame, no cropping).</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-439766498%2FClasslikes%2F533364019" anchor-label="VideoSink" id="-439766498%2FClasslikes%2F533364019" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release"></a>
+          <div class="table-row" data-filterable-current=":amazon-chime-sdk:dokkaHtmlPartial/release" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-video-sink/index.html"><span>Video</span><wbr><span><span>Sink</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-439766498%2FClasslikes%2F533364019"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":amazon-chime-sdk:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">interface </span><a href="-video-sink/index.html">VideoSink</a></div><div class="brief "><p class="paragraph">A <a href="-video-sink/index.html">VideoSink</a> consumes video frames, typically from a <a href="-video-source/index.html">VideoSource</a>. It may process, fork, or render these frames. Typically connected via <a href="-video-source/add-video-sink.html">VideoSource.addVideoSink</a> and disconnected via <a href="-video-source/remove-video-sink.html">VideoSource.removeVideoSink</a></p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="191637910%2FClasslikes%2F533364019" anchor-label="VideoSource" id="191637910%2FClasslikes%2F533364019" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release"></a>
+          <div class="table-row" data-filterable-current=":amazon-chime-sdk:dokkaHtmlPartial/release" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-video-source/index.html"><span>Video</span><wbr><span><span>Source</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="191637910%2FClasslikes%2F533364019"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":amazon-chime-sdk:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">interface </span><a href="-video-source/index.html">VideoSource</a></div><div class="brief "><p class="paragraph"><a href="-video-source/index.html">VideoSource</a> is an interface for sources which produce video frames, and can send to a <a href="-video-sink/index.html">VideoSink</a>. Implementations can be passed to the <a href="../com.amazonaws.services.chime.sdk.meetings.audiovideo/-audio-video-facade/index.html">AudioVideoFacade</a> to be used as the video source sent to remote participants</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-2046083496%2FClasslikes%2F533364019" anchor-label="VideoSubscriptionConfiguration" id="-2046083496%2FClasslikes%2F533364019" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release"></a>
+          <div class="table-row" data-filterable-current=":amazon-chime-sdk:dokkaHtmlPartial/release" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-video-subscription-configuration/index.html"><span>Video</span><wbr><span>Subscription</span><wbr><span><span>Configuration</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-2046083496%2FClasslikes%2F533364019"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":amazon-chime-sdk:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">class </span><a href="-video-subscription-configuration/index.html">VideoSubscriptionConfiguration</a><span class="token punctuation">(</span><span class="parameters "><span class="parameter "><span class="token keyword">var </span>priority<span class="token operator">: </span><a href="-video-priority/index.html">VideoPriority</a><span class="token punctuation">, </span></span><span class="parameter "><span class="token keyword">var </span>targetResolution<span class="token operator">: </span><a href="-video-resolution/index.html">VideoResolution</a></span></span><span class="token punctuation">)</span></div><div class="brief "><p class="paragraph">Configuration for a specific video source. The values are intentionally mutable so that a map of all current configurations can be kept and updated as needed.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1856011677%2FClasslikes%2F533364019" anchor-label="VideoTile" id="-1856011677%2FClasslikes%2F533364019" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release"></a>
+          <div class="table-row" data-filterable-current=":amazon-chime-sdk:dokkaHtmlPartial/release" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-video-tile/index.html"><span>Video</span><wbr><span><span>Tile</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1856011677%2FClasslikes%2F533364019"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":amazon-chime-sdk:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">interface </span><a href="-video-tile/index.html">VideoTile</a> : <a href="-video-sink/index.html">VideoSink</a></div><div class="brief "><p class="paragraph"><a href="-video-tile/index.html">VideoTile</a> is a tile that binds video render view to display the frame into the view.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="717297575%2FClasslikes%2F533364019" anchor-label="VideoTileController" id="717297575%2FClasslikes%2F533364019" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release"></a>
+          <div class="table-row" data-filterable-current=":amazon-chime-sdk:dokkaHtmlPartial/release" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-video-tile-controller/index.html"><span>Video</span><wbr><span>Tile</span><wbr><span><span>Controller</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="717297575%2FClasslikes%2F533364019"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":amazon-chime-sdk:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">interface </span><a href="-video-tile-controller/index.html">VideoTileController</a> : <a href="-video-tile-controller-facade/index.html">VideoTileControllerFacade</a></div><div class="brief "><p class="paragraph"><a href="-video-tile-controller/index.html">VideoTileController</a> handles rendering/creating of new <a href="-video-tile/index.html">VideoTile</a>.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-140447827%2FClasslikes%2F533364019" anchor-label="VideoTileControllerFacade" id="-140447827%2FClasslikes%2F533364019" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release"></a>
+          <div class="table-row" data-filterable-current=":amazon-chime-sdk:dokkaHtmlPartial/release" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-video-tile-controller-facade/index.html"><span>Video</span><wbr><span>Tile</span><wbr><span>Controller</span><wbr><span><span>Facade</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-140447827%2FClasslikes%2F533364019"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":amazon-chime-sdk:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">interface </span><a href="-video-tile-controller-facade/index.html">VideoTileControllerFacade</a></div><div class="brief "><p class="paragraph"><a href="-video-tile-controller-facade/index.html">VideoTileControllerFacade</a> manages video tile binding, pausing, and resuming as well as subscribing to video tile events by adding a <a href="-video-tile-observer/index.html">VideoTileObserver</a>.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1733926933%2FClasslikes%2F533364019" anchor-label="VideoTileFactory" id="1733926933%2FClasslikes%2F533364019" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release"></a>
+          <div class="table-row" data-filterable-current=":amazon-chime-sdk:dokkaHtmlPartial/release" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-video-tile-factory/index.html"><span>Video</span><wbr><span>Tile</span><wbr><span><span>Factory</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1733926933%2FClasslikes%2F533364019"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":amazon-chime-sdk:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">interface </span><a href="-video-tile-factory/index.html">VideoTileFactory</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="2067667501%2FClasslikes%2F533364019" anchor-label="VideoTileObserver" id="2067667501%2FClasslikes%2F533364019" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release"></a>
+          <div class="table-row" data-filterable-current=":amazon-chime-sdk:dokkaHtmlPartial/release" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-video-tile-observer/index.html"><span>Video</span><wbr><span>Tile</span><wbr><span><span>Observer</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="2067667501%2FClasslikes%2F533364019"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":amazon-chime-sdk:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">interface </span><a href="-video-tile-observer/index.html">VideoTileObserver</a></div><div class="brief "><p class="paragraph"><a href="-video-tile-observer/index.html">VideoTileObserver</a> handles events related to <a href="-video-tile/index.html">VideoTile</a>.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-2130749970%2FClasslikes%2F533364019" anchor-label="VideoTileState" id="-2130749970%2FClasslikes%2F533364019" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release"></a>
+          <div class="table-row" data-filterable-current=":amazon-chime-sdk:dokkaHtmlPartial/release" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-video-tile-state/index.html"><span>Video</span><wbr><span>Tile</span><wbr><span><span>State</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-2130749970%2FClasslikes%2F533364019"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":amazon-chime-sdk:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">data </span><span class="token keyword">class </span><a href="-video-tile-state/index.html">VideoTileState</a><span class="token punctuation">(</span><span class="parameters "><span class="parameter "><span class="token keyword">val </span>tileId<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a><span class="token punctuation">, </span></span><span class="parameter "><span class="token keyword">val </span>attendeeId<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a><span class="token punctuation">, </span></span><span class="parameter "><span class="token keyword">var </span>videoStreamContentWidth<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a><span class="token punctuation">, </span></span><span class="parameter "><span class="token keyword">var </span>videoStreamContentHeight<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a><span class="token punctuation">, </span></span><span class="parameter "><span class="token keyword">var </span>pauseState<span class="token operator">: </span><a href="-video-pause-state/index.html">VideoPauseState</a><span class="token punctuation">, </span></span><span class="parameter "><span class="token keyword">val </span>isLocalTile<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html">Boolean</a></span></span><span class="token punctuation">)</span></div><div class="brief "><p class="paragraph">Contains properties related to the current state of the <a href="-video-tile/index.html">VideoTile</a></p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      <div class="footer">
+        <span class="go-to-top-icon"><a href="#content" id="go-to-top-link"></a></span><span>© 2024 Copyright</span><span class="pull-right"><span>Generated by </span><a href="https://github.com/Kotlin/dokka"><span>dokka</span><span class="padded-icon"></span></a></span>
+      </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+

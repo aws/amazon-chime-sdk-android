@@ -197,7 +197,7 @@ class DefaultSurfaceTextureCaptureSource(
         val alignedTimestamp = timestampAligner.translateTimestamp(surfaceTexture.timestamp)
         val frame = VideoFrame(alignedTimestamp, buffer)
 
-        sinks.forEach { it.onVideoFrameReceived(frame) }
+        sinks.iterator().forEach { it.onVideoFrameReceived(frame) }
         frame.release()
 
         // If we have min FPS set, check in a while if we should resend the previous frame

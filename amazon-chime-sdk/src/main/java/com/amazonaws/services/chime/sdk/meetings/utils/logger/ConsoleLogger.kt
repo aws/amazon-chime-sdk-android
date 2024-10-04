@@ -64,6 +64,7 @@ class ConsoleLogger(private var level: LogLevel = LogLevel.INFO) : Logger {
             LogLevel.INFO -> Log.i(tag, msg)
             LogLevel.WARN -> Log.w(tag, msg)
             LogLevel.ERROR -> Log.e(tag, msg)
+            else -> Unit
         }
     }
 }

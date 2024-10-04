@@ -80,7 +80,7 @@ data class MediaDevice(
             val characteristics = cameraManager.getCameraCharacteristics(mediaDevice.id ?: return emptyList())
             val fps = characteristics.get(
                 CameraCharacteristics.CONTROL_AE_AVAILABLE_TARGET_FPS_RANGES
-            )?.map { it.upper }?.filter { it <= maxVideoFps }?.max() ?: DEFAULT_MAX_VIDEO_FORMAT_FPS
+            )?.map { it.upper }?.filter { it <= maxVideoFps }?.maxOrNull() ?: DEFAULT_MAX_VIDEO_FORMAT_FPS
 
             val streamMap =
                     characteristics.get(CameraCharacteristics.SCALER_STREAM_CONFIGURATION_MAP)

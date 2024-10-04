@@ -131,7 +131,9 @@ class DefaultAudioClientObserver(
                                     meetingStatsCollector.incrementPoorConnectionCount()
                                     notifyAudioClientObserver { observer -> observer.onConnectionBecamePoor() }
                                 }
+                            else -> Unit
                         }
+                    else -> Unit
                 }
             }
             SessionStateControllerAction.Reconnecting -> {
@@ -156,8 +158,10 @@ class DefaultAudioClientObserver(
                         }
                         handleOnAudioSessionFailed(newAudioStatus)
                     }
+                    else -> Unit
                 }
             }
+            else -> Unit
         }
         currentAudioState = newAudioState
         currentAudioStatus = newAudioStatus
@@ -558,7 +562,7 @@ class DefaultAudioClientObserver(
     }
 
     private fun notifyFailed(statusCode: MeetingSessionStatusCode?) {
-        val attributes = statusCode?.let {
+        val attributes: MutableMap<EventAttributeName, Any>? = statusCode?.let {
             mutableMapOf(
                 EventAttributeName.meetingStatus to statusCode,
                 EventAttributeName.meetingErrorMessage to statusCode.toString()

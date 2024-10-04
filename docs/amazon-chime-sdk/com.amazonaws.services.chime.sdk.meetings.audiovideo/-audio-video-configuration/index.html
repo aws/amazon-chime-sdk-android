@@ -1,84 +1,194 @@
-<HTML>
-<HEAD>
-<meta charset="UTF-8">
-<title>AudioVideoConfiguration - amazon-chime-sdk</title>
-<link rel="stylesheet" href="../../../style.css">
-</HEAD>
-<BODY>
-<a href="../../index.html">amazon-chime-sdk</a>&nbsp;/&nbsp;<a href="../index.html">com.amazonaws.services.chime.sdk.meetings.audiovideo</a>&nbsp;/&nbsp;<a href="./index.html">AudioVideoConfiguration</a><br/>
-<br/>
-<h1>AudioVideoConfiguration</h1>
-<code><span class="keyword">data</span> <span class="keyword">class </span><span class="identifier">AudioVideoConfiguration</span></code>
-<p><a href="./index.html">AudioVideoConfiguration</a> represents the configuration to be used for audio and video during a
-meeting session.</p>
-<h3>Constructors</h3>
-<table>
-<tbody>
-<tr>
-<td>
-<h4><a href="-init-.html">&lt;init&gt;</a></h4>
-</td>
-<td>
-<p><a href="./index.html">AudioVideoConfiguration</a> represents the configuration to be used for audio and video during a
-meeting session.</p>
-<code><span class="identifier">AudioVideoConfiguration</span><span class="symbol">(</span><span class="identifier" id="com.amazonaws.services.chime.sdk.meetings.audiovideo.AudioVideoConfiguration$<init>(com.amazonaws.services.chime.sdk.meetings.audiovideo.audio.AudioMode, com.amazonaws.services.chime.sdk.meetings.audiovideo.audio.AudioDeviceCapabilities, com.amazonaws.services.chime.sdk.meetings.audiovideo.audio.AudioStreamType, com.amazonaws.services.chime.sdk.meetings.audiovideo.audio.AudioRecordingPresetOverride, kotlin.Boolean, kotlin.Int)/audioMode">audioMode</span><span class="symbol">:</span>&nbsp;<a href="../../com.amazonaws.services.chime.sdk.meetings.audiovideo.audio/-audio-mode/index.html"><span class="identifier">AudioMode</span></a>&nbsp;<span class="symbol">=</span>&nbsp;AudioMode.Stereo48K<span class="symbol">, </span><span class="identifier" id="com.amazonaws.services.chime.sdk.meetings.audiovideo.AudioVideoConfiguration$<init>(com.amazonaws.services.chime.sdk.meetings.audiovideo.audio.AudioMode, com.amazonaws.services.chime.sdk.meetings.audiovideo.audio.AudioDeviceCapabilities, com.amazonaws.services.chime.sdk.meetings.audiovideo.audio.AudioStreamType, com.amazonaws.services.chime.sdk.meetings.audiovideo.audio.AudioRecordingPresetOverride, kotlin.Boolean, kotlin.Int)/audioDeviceCapabilities">audioDeviceCapabilities</span><span class="symbol">:</span>&nbsp;<a href="../../com.amazonaws.services.chime.sdk.meetings.audiovideo.audio/-audio-device-capabilities/index.html"><span class="identifier">AudioDeviceCapabilities</span></a>&nbsp;<span class="symbol">=</span>&nbsp;AudioDeviceCapabilities.InputAndOutput<span class="symbol">, </span><span class="identifier" id="com.amazonaws.services.chime.sdk.meetings.audiovideo.AudioVideoConfiguration$<init>(com.amazonaws.services.chime.sdk.meetings.audiovideo.audio.AudioMode, com.amazonaws.services.chime.sdk.meetings.audiovideo.audio.AudioDeviceCapabilities, com.amazonaws.services.chime.sdk.meetings.audiovideo.audio.AudioStreamType, com.amazonaws.services.chime.sdk.meetings.audiovideo.audio.AudioRecordingPresetOverride, kotlin.Boolean, kotlin.Int)/audioStreamType">audioStreamType</span><span class="symbol">:</span>&nbsp;<a href="../../com.amazonaws.services.chime.sdk.meetings.audiovideo.audio/-audio-stream-type/index.html"><span class="identifier">AudioStreamType</span></a>&nbsp;<span class="symbol">=</span>&nbsp;AudioStreamType.VoiceCall<span class="symbol">, </span><span class="identifier" id="com.amazonaws.services.chime.sdk.meetings.audiovideo.AudioVideoConfiguration$<init>(com.amazonaws.services.chime.sdk.meetings.audiovideo.audio.AudioMode, com.amazonaws.services.chime.sdk.meetings.audiovideo.audio.AudioDeviceCapabilities, com.amazonaws.services.chime.sdk.meetings.audiovideo.audio.AudioStreamType, com.amazonaws.services.chime.sdk.meetings.audiovideo.audio.AudioRecordingPresetOverride, kotlin.Boolean, kotlin.Int)/audioRecordingPresetOverride">audioRecordingPresetOverride</span><span class="symbol">:</span>&nbsp;<a href="../../com.amazonaws.services.chime.sdk.meetings.audiovideo.audio/-audio-recording-preset-override/index.html"><span class="identifier">AudioRecordingPresetOverride</span></a>&nbsp;<span class="symbol">=</span>&nbsp;AudioRecordingPresetOverride.None<span class="symbol">, </span><span class="identifier" id="com.amazonaws.services.chime.sdk.meetings.audiovideo.AudioVideoConfiguration$<init>(com.amazonaws.services.chime.sdk.meetings.audiovideo.audio.AudioMode, com.amazonaws.services.chime.sdk.meetings.audiovideo.audio.AudioDeviceCapabilities, com.amazonaws.services.chime.sdk.meetings.audiovideo.audio.AudioStreamType, com.amazonaws.services.chime.sdk.meetings.audiovideo.audio.AudioRecordingPresetOverride, kotlin.Boolean, kotlin.Int)/enableAudioRedundancy">enableAudioRedundancy</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html"><span class="identifier">Boolean</span></a>&nbsp;<span class="symbol">=</span>&nbsp;true<span class="symbol">, </span><span class="identifier" id="com.amazonaws.services.chime.sdk.meetings.audiovideo.AudioVideoConfiguration$<init>(com.amazonaws.services.chime.sdk.meetings.audiovideo.audio.AudioMode, com.amazonaws.services.chime.sdk.meetings.audiovideo.audio.AudioDeviceCapabilities, com.amazonaws.services.chime.sdk.meetings.audiovideo.audio.AudioStreamType, com.amazonaws.services.chime.sdk.meetings.audiovideo.audio.AudioRecordingPresetOverride, kotlin.Boolean, kotlin.Int)/reconnectTimeoutMs">reconnectTimeoutMs</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html"><span class="identifier">Int</span></a>&nbsp;<span class="symbol">=</span>&nbsp;180 * 1000<span class="symbol">)</span></code></td>
-</tr>
-</tbody>
-</table>
-<h3>Properties</h3>
-<table>
-<tbody>
-<tr>
-<td>
-<h4><a href="audio-device-capabilities.html">audioDeviceCapabilities</a></h4>
-</td>
-<td>
-<p>: AudioDeviceCapabilities - the audio device capabilities that the audio client
-should have during a meeting session.</p>
-<code><span class="keyword">val </span><span class="identifier">audioDeviceCapabilities</span><span class="symbol">: </span><a href="../../com.amazonaws.services.chime.sdk.meetings.audiovideo.audio/-audio-device-capabilities/index.html"><span class="identifier">AudioDeviceCapabilities</span></a></code></td>
-</tr>
-<tr>
-<td>
-<h4><a href="audio-mode.html">audioMode</a></h4>
-</td>
-<td>
-<p>: AudioMode - the audio mode in which the audio client should operate during
-a meeting session.</p>
-<code><span class="keyword">val </span><span class="identifier">audioMode</span><span class="symbol">: </span><a href="../../com.amazonaws.services.chime.sdk.meetings.audiovideo.audio/-audio-mode/index.html"><span class="identifier">AudioMode</span></a></code></td>
-</tr>
-<tr>
-<td>
-<h4><a href="audio-recording-preset-override.html">audioRecordingPresetOverride</a></h4>
-</td>
-<td>
-<code><span class="keyword">val </span><span class="identifier">audioRecordingPresetOverride</span><span class="symbol">: </span><a href="../../com.amazonaws.services.chime.sdk.meetings.audiovideo.audio/-audio-recording-preset-override/index.html"><span class="identifier">AudioRecordingPresetOverride</span></a></code></td>
-</tr>
-<tr>
-<td>
-<h4><a href="audio-stream-type.html">audioStreamType</a></h4>
-</td>
-<td>
-<p>: AudioStreamType - the audio stream type in which the audio client
-should operate during a meeting session.</p>
-<code><span class="keyword">val </span><span class="identifier">audioStreamType</span><span class="symbol">: </span><a href="../../com.amazonaws.services.chime.sdk.meetings.audiovideo.audio/-audio-stream-type/index.html"><span class="identifier">AudioStreamType</span></a></code></td>
-</tr>
-<tr>
-<td>
-<h4><a href="enable-audio-redundancy.html">enableAudioRedundancy</a></h4>
-</td>
-<td>
-<code><span class="keyword">val </span><span class="identifier">enableAudioRedundancy</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html"><span class="identifier">Boolean</span></a></code></td>
-</tr>
-<tr>
-<td>
-<h4><a href="reconnect-timeout-ms.html">reconnectTimeoutMs</a></h4>
-</td>
-<td>
-<p>: Int - Maximum amount of time in milliseconds to allow for reconnecting. Default
-value is 180000.</p>
-<code><span class="keyword">val </span><span class="identifier">reconnectTimeoutMs</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html"><span class="identifier">Int</span></a></code></td>
-</tr>
-</tbody>
-</table>
-</BODY>
-</HTML>
+<!doctype html>
+<html class="no-js">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1" charset="UTF-8">
+    <title>AudioVideoConfiguration</title>
+<link href="../../../images/logo-icon.svg" rel="icon" type="image/svg">    <script>var pathToRoot = "../../../";</script>
+    <script>document.documentElement.classList.replace("no-js","js");</script>
+    <script>const storage = localStorage.getItem("dokka-dark-mode")
+    if (storage == null) {
+        const osDarkSchemePreferred = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
+        if (osDarkSchemePreferred === true) {
+            document.getElementsByTagName("html")[0].classList.add("theme-dark")
+        }
+    } else {
+        const savedDarkMode = JSON.parse(storage)
+        if(savedDarkMode === true) {
+            document.getElementsByTagName("html")[0].classList.add("theme-dark")
+        }
+    }
+    </script>
+<script type="text/javascript" src="https://unpkg.com/kotlin-playground@1/dist/playground.min.js" async></script>
+<script type="text/javascript" src="../../../scripts/sourceset_dependencies.js" async></script>
+<link href="../../../styles/style.css" rel="Stylesheet">
+<link href="../../../styles/main.css" rel="Stylesheet">
+<link href="../../../styles/prism.css" rel="Stylesheet">
+<link href="../../../styles/logo-styles.css" rel="Stylesheet">
+<link href="../../../styles/font-jb-sans-auto.css" rel="Stylesheet">
+<script type="text/javascript" src="../../../scripts/clipboard.js" async></script>
+<script type="text/javascript" src="../../../scripts/navigation-loader.js" async></script>
+<script type="text/javascript" src="../../../scripts/platform-content-handler.js" async></script>
+<script type="text/javascript" src="../../../scripts/main.js" defer></script>
+<script type="text/javascript" src="../../../scripts/prism.js" async></script>
+<script type="text/javascript" src="../../../scripts/symbol-parameters-wrapper_deferred.js" defer></script></head>
+<body>
+    <div class="root">
+<nav class="navigation" id="navigation-wrapper">
+    <div class="navigation--inner">
+        <div class="navigation-title">
+            <button class="menu-toggle" id="menu-toggle" type="button">toggle menu</button>
+            <div class="library-name">
+<a class="library-name--link" href="../../../index.html">
+                            amazon-chime-sdk-android
+                    </a>            </div>
+            <div class="library-version">
+            </div>
+        </div>
+        <div class="filter-section" id="filter-section">
+                <button class="platform-tag platform-selector jvm-like" data-active="" data-filter=":amazon-chime-sdk:dokkaHtmlPartial/release">androidJvm</button>
+        </div>
+    </div>
+    <div class="navigation-controls">
+        <button class="navigation-controls--btn navigation-controls--theme" id="theme-toggle-button" type="button">switch theme</button>
+        <div class="navigation-controls--btn navigation-controls--search" id="searchBar" role="button">search in API</div>
+    </div>
+</nav>
+        <div id="container">
+            <div class="sidebar" id="leftColumn">
+                <div class="sidebar--inner" id="sideMenu"></div>
+            </div>
+            <div id="main">
+<div class="main-content" data-page-type="classlike" id="content" pageids="amazon-chime-sdk::com.amazonaws.services.chime.sdk.meetings.audiovideo/AudioVideoConfiguration///PointingToDeclaration//533364019">
+  <div class="breadcrumbs"><a href="../../index.html">amazon-chime-sdk</a><span class="delimiter">/</span><a href="../index.html">com.amazonaws.services.chime.sdk.meetings.audiovideo</a><span class="delimiter">/</span><span class="current">AudioVideoConfiguration</span></div>
+  <div class="cover ">
+    <h1 class="cover"><span>Audio</span><wbr><span>Video</span><wbr><span><span>Configuration</span></span></h1>
+    <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":amazon-chime-sdk:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">data </span><span class="token keyword">class </span><a href="index.html">AudioVideoConfiguration</a>&nbsp;<span><span class="token annotation builtin">@</span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.jvm/-jvm-overloads/index.html"><span class="token annotation builtin">JvmOverloads</span></a>&nbsp;</span><span class="token keyword">constructor</span><span class="token punctuation">(</span><span class="parameters "><span class="parameter "><span class="token keyword">val </span>audioMode<span class="token operator">: </span><a href="../../com.amazonaws.services.chime.sdk.meetings.audiovideo.audio/-audio-mode/index.html">AudioMode</a><span class="token operator"> = </span>AudioMode.Stereo48K<span class="token punctuation">, </span></span><span class="parameter "><span class="token keyword">val </span>audioDeviceCapabilities<span class="token operator">: </span><a href="../../com.amazonaws.services.chime.sdk.meetings.audiovideo.audio/-audio-device-capabilities/index.html">AudioDeviceCapabilities</a><span class="token operator"> = </span>AudioDeviceCapabilities.InputAndOutput<span class="token punctuation">, </span></span><span class="parameter "><span class="token keyword">val </span>audioStreamType<span class="token operator">: </span><a href="../../com.amazonaws.services.chime.sdk.meetings.audiovideo.audio/-audio-stream-type/index.html">AudioStreamType</a><span class="token operator"> = </span>AudioStreamType.VoiceCall<span class="token punctuation">, </span></span><span class="parameter "><span class="token keyword">val </span>audioRecordingPresetOverride<span class="token operator">: </span><a href="../../com.amazonaws.services.chime.sdk.meetings.audiovideo.audio/-audio-recording-preset-override/index.html">AudioRecordingPresetOverride</a><span class="token operator"> = </span>AudioRecordingPresetOverride.None<span class="token punctuation">, </span></span><span class="parameter "><span class="token keyword">val </span>enableAudioRedundancy<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html">Boolean</a><span class="token operator"> = </span><span class="token boolean">true</span><span class="token punctuation">, </span></span><span class="parameter "><span class="token keyword">val </span>reconnectTimeoutMs<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a><span class="token operator"> = </span>180 * 1000</span></span><span class="token punctuation">)</span></div><p class="paragraph"><a href="index.html">AudioVideoConfiguration</a> represents the configuration to be used for audio and video during a meeting session.</p></div></div>
+  </div>
+  <div class="tabbedcontent">
+    <div class="tabs-section" tabs-section="tabs-section"><button class="section-tab" data-active="" data-togglable="CONSTRUCTOR,TYPE,PROPERTY,FUNCTION">Members</button></div>
+    <div class="tabs-section-body">
+      <div data-togglable="CONSTRUCTOR">
+        <h2 class="">Constructors</h2>
+        <div class="table"><a data-name="-1759483839%2FConstructors%2F533364019" anchor-label="AudioVideoConfiguration" id="-1759483839%2FConstructors%2F533364019" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release"></a>
+          <div class="table-row" data-togglable="CONSTRUCTOR" data-filterable-current=":amazon-chime-sdk:dokkaHtmlPartial/release" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-audio-video-configuration.html"><span>Audio</span><wbr><span>Video</span><wbr><span><span>Configuration</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1759483839%2FConstructors%2F533364019"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":amazon-chime-sdk:dokkaHtmlPartial/release"><div class="symbol monospace"><div class="block"><div class="block"><span class="token annotation builtin">@</span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.jvm/-jvm-overloads/index.html"><span class="token annotation builtin">JvmOverloads</span></a></div></div><span class="token keyword">constructor</span><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">audioMode<span class="token operator">: </span><a href="../../com.amazonaws.services.chime.sdk.meetings.audiovideo.audio/-audio-mode/index.html">AudioMode</a><span class="token operator"> = </span>AudioMode.Stereo48K<span class="token punctuation">, </span></span><span class="parameter ">audioDeviceCapabilities<span class="token operator">: </span><a href="../../com.amazonaws.services.chime.sdk.meetings.audiovideo.audio/-audio-device-capabilities/index.html">AudioDeviceCapabilities</a><span class="token operator"> = </span>AudioDeviceCapabilities.InputAndOutput<span class="token punctuation">, </span></span><span class="parameter ">audioStreamType<span class="token operator">: </span><a href="../../com.amazonaws.services.chime.sdk.meetings.audiovideo.audio/-audio-stream-type/index.html">AudioStreamType</a><span class="token operator"> = </span>AudioStreamType.VoiceCall<span class="token punctuation">, </span></span><span class="parameter ">audioRecordingPresetOverride<span class="token operator">: </span><a href="../../com.amazonaws.services.chime.sdk.meetings.audiovideo.audio/-audio-recording-preset-override/index.html">AudioRecordingPresetOverride</a><span class="token operator"> = </span>AudioRecordingPresetOverride.None<span class="token punctuation">, </span></span><span class="parameter ">enableAudioRedundancy<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html">Boolean</a><span class="token operator"> = </span><span class="token boolean">true</span><span class="token punctuation">, </span></span><span class="parameter ">reconnectTimeoutMs<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a><span class="token operator"> = </span>180 * 1000</span></span><span class="token punctuation">)</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div data-togglable="PROPERTY">
+        <h2 class="">Properties</h2>
+        <div class="table"><a data-name="909176001%2FProperties%2F533364019" anchor-label="audioDeviceCapabilities" id="909176001%2FProperties%2F533364019" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release"></a>
+          <div class="table-row" data-filterable-current=":amazon-chime-sdk:dokkaHtmlPartial/release" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="audio-device-capabilities.html"><span>audio</span><wbr><span>Device</span><wbr><span><span>Capabilities</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="909176001%2FProperties%2F533364019"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":amazon-chime-sdk:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">val </span><a href="audio-device-capabilities.html">audioDeviceCapabilities</a><span class="token operator">: </span><a href="../../com.amazonaws.services.chime.sdk.meetings.audiovideo.audio/-audio-device-capabilities/index.html">AudioDeviceCapabilities</a></div><div class="brief "><p class="paragraph">: AudioDeviceCapabilities - the audio device capabilities that the audio client should have during a meeting session.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1025704918%2FProperties%2F533364019" anchor-label="audioMode" id="-1025704918%2FProperties%2F533364019" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release"></a>
+          <div class="table-row" data-filterable-current=":amazon-chime-sdk:dokkaHtmlPartial/release" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="audio-mode.html"><span>audio</span><wbr><span><span>Mode</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1025704918%2FProperties%2F533364019"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":amazon-chime-sdk:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">val </span><a href="audio-mode.html">audioMode</a><span class="token operator">: </span><a href="../../com.amazonaws.services.chime.sdk.meetings.audiovideo.audio/-audio-mode/index.html">AudioMode</a></div><div class="brief "><p class="paragraph">: AudioMode - the audio mode in which the audio client should operate during a meeting session.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1667429489%2FProperties%2F533364019" anchor-label="audioRecordingPresetOverride" id="1667429489%2FProperties%2F533364019" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release"></a>
+          <div class="table-row" data-filterable-current=":amazon-chime-sdk:dokkaHtmlPartial/release" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="audio-recording-preset-override.html"><span>audio</span><wbr><span>Recording</span><wbr><span>Preset</span><wbr><span><span>Override</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1667429489%2FProperties%2F533364019"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":amazon-chime-sdk:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">val </span><a href="audio-recording-preset-override.html">audioRecordingPresetOverride</a><span class="token operator">: </span><a href="../../com.amazonaws.services.chime.sdk.meetings.audiovideo.audio/-audio-recording-preset-override/index.html">AudioRecordingPresetOverride</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1225565485%2FProperties%2F533364019" anchor-label="audioStreamType" id="-1225565485%2FProperties%2F533364019" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release"></a>
+          <div class="table-row" data-filterable-current=":amazon-chime-sdk:dokkaHtmlPartial/release" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="audio-stream-type.html"><span>audio</span><wbr><span>Stream</span><wbr><span><span>Type</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1225565485%2FProperties%2F533364019"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":amazon-chime-sdk:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">val </span><a href="audio-stream-type.html">audioStreamType</a><span class="token operator">: </span><a href="../../com.amazonaws.services.chime.sdk.meetings.audiovideo.audio/-audio-stream-type/index.html">AudioStreamType</a></div><div class="brief "><p class="paragraph">: AudioStreamType - the audio stream type in which the audio client should operate during a meeting session.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-643397101%2FProperties%2F533364019" anchor-label="enableAudioRedundancy" id="-643397101%2FProperties%2F533364019" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release"></a>
+          <div class="table-row" data-filterable-current=":amazon-chime-sdk:dokkaHtmlPartial/release" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="enable-audio-redundancy.html"><span>enable</span><wbr><span>Audio</span><wbr><span><span>Redundancy</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-643397101%2FProperties%2F533364019"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":amazon-chime-sdk:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">val </span><a href="enable-audio-redundancy.html">enableAudioRedundancy</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html">Boolean</a><span class="token operator"> = </span><span class="token boolean">true</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1348194745%2FProperties%2F533364019" anchor-label="reconnectTimeoutMs" id="-1348194745%2FProperties%2F533364019" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release"></a>
+          <div class="table-row" data-filterable-current=":amazon-chime-sdk:dokkaHtmlPartial/release" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="reconnect-timeout-ms.html"><span>reconnect</span><wbr><span>Timeout</span><wbr><span><span>Ms</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1348194745%2FProperties%2F533364019"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":amazon-chime-sdk:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">val </span><a href="reconnect-timeout-ms.html">reconnectTimeoutMs</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a></div><div class="brief "><p class="paragraph">: Int - Maximum amount of time in milliseconds to allow for reconnecting. Default value is 180000.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      <div class="footer">
+        <span class="go-to-top-icon"><a href="#content" id="go-to-top-link"></a></span><span>© 2024 Copyright</span><span class="pull-right"><span>Generated by </span><a href="https://github.com/Kotlin/dokka"><span>dokka</span><span class="padded-icon"></span></a></span>
+      </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+

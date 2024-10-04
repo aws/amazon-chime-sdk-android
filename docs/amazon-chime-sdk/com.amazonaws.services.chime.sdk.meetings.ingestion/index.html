@@ -1,176 +1,388 @@
-<HTML>
-<HEAD>
-<meta charset="UTF-8">
-<title>com.amazonaws.services.chime.sdk.meetings.ingestion - amazon-chime-sdk</title>
-<link rel="stylesheet" href="../../style.css">
-</HEAD>
-<BODY>
-<a href="../index.html">amazon-chime-sdk</a>&nbsp;/&nbsp;<a href="./index.html">com.amazonaws.services.chime.sdk.meetings.ingestion</a><br/>
-<br/>
-<h2>Package com.amazonaws.services.chime.sdk.meetings.ingestion</h2>
-<h3>Types</h3>
-<table>
-<tbody>
-<tr>
-<td>
-<h4><a href="-default-event-reporter/index.html">DefaultEventReporter</a></h4>
-</td>
-<td>
-<code><span class="keyword">class </span><span class="identifier">DefaultEventReporter</span>&nbsp;<span class="symbol">:</span>&nbsp;<a href="-event-reporter/index.html"><span class="identifier">EventReporter</span></a></code></td>
-</tr>
-<tr>
-<td>
-<h4><a href="-default-event-sender/index.html">DefaultEventSender</a></h4>
-</td>
-<td>
-<code><span class="keyword">class </span><span class="identifier">DefaultEventSender</span>&nbsp;<span class="symbol">:</span>&nbsp;<a href="-event-sender/index.html"><span class="identifier">EventSender</span></a></code></td>
-</tr>
-<tr>
-<td>
-<h4><a href="-default-meeting-event-buffer/index.html">DefaultMeetingEventBuffer</a></h4>
-</td>
-<td>
-<code><span class="keyword">class </span><span class="identifier">DefaultMeetingEventBuffer</span>&nbsp;<span class="symbol">:</span>&nbsp;<a href="-event-buffer/index.html"><span class="identifier">EventBuffer</span></a></code></td>
-</tr>
-<tr>
-<td>
-<h4><a href="-default-meeting-event-reporter-factory/index.html">DefaultMeetingEventReporterFactory</a></h4>
-</td>
-<td>
-<code><span class="keyword">class </span><span class="identifier">DefaultMeetingEventReporterFactory</span>&nbsp;<span class="symbol">:</span>&nbsp;<a href="-event-reporter-factory/index.html"><span class="identifier">EventReporterFactory</span></a></code></td>
-</tr>
-<tr>
-<td>
-<h4><a href="-event-buffer/index.html">EventBuffer</a></h4>
-</td>
-<td>
-<p><a href="-event-buffer/index.html">EventBuffer</a> defines a buffer which will consume the <a href="#">SDKEvent</a> internally.</p>
-<code><span class="keyword">interface </span><span class="identifier">EventBuffer</span></code></td>
-</tr>
-<tr>
-<td>
-<h4><a href="-event-client-configuration/index.html">EventClientConfiguration</a></h4>
-</td>
-<td>
-<p><a href="-event-client-configuration/index.html">EventClientConfiguration</a> defines core properties needed for every event client configuration.</p>
-<code><span class="keyword">interface </span><span class="identifier">EventClientConfiguration</span></code></td>
-</tr>
-<tr>
-<td>
-<h4><a href="-event-client-type/index.html">EventClientType</a></h4>
-</td>
-<td>
-<p><a href="-event-client-type/index.html">EventClientType</a> defines the type of event client configuration that will be
-sent to the server.</p>
-<code><span class="keyword">enum</span> <span class="keyword">class </span><span class="identifier">EventClientType</span></code></td>
-</tr>
-<tr>
-<td>
-<h4><a href="-event-reporter/index.html">EventReporter</a></h4>
-</td>
-<td>
-<p><a href="-event-reporter/index.html">EventReporter</a> is class that process meeting event that is created in <a href="#">EventAnalyticsController</a>.</p>
-<code><span class="keyword">interface </span><span class="identifier">EventReporter</span></code></td>
-</tr>
-<tr>
-<td>
-<h4><a href="-event-reporter-factory/index.html">EventReporterFactory</a></h4>
-</td>
-<td>
-<p><a href="-event-reporter-factory/index.html">EventReporterFactory</a> facilitates creating <a href="-event-reporter/index.html">EventReporter</a></p>
-<code><span class="keyword">interface </span><span class="identifier">EventReporterFactory</span></code></td>
-</tr>
-<tr>
-<td>
-<h4><a href="-event-sender/index.html">EventSender</a></h4>
-</td>
-<td>
-<p><a href="-event-sender/index.html">EventSender</a> is responsible for sending <a href="-ingestion-record/index.html">IngestionRecord</a>.</p>
-<code><span class="keyword">interface </span><span class="identifier">EventSender</span></code></td>
-</tr>
-<tr>
-<td>
-<h4><a href="-ingestion-configuration/index.html">IngestionConfiguration</a></h4>
-</td>
-<td>
-<p><a href="-ingestion-configuration/index.html">IngestionConfiguration</a> defines the configuration that can customize <a href="-default-event-reporter/index.html">DefaultEventReporter</a>.</p>
-<code><span class="keyword">data</span> <span class="keyword">class </span><span class="identifier">IngestionConfiguration</span></code></td>
-</tr>
-<tr>
-<td>
-<h4><a href="-ingestion-event/index.html">IngestionEvent</a></h4>
-</td>
-<td>
-<p><a href="-ingestion-event/index.html">IngestionEvent</a> defines the event format ingestion server will accept</p>
-<code><span class="keyword">data</span> <span class="keyword">class </span><span class="identifier">IngestionEvent</span></code></td>
-</tr>
-<tr>
-<td>
-<h4><a href="-ingestion-metadata.html">IngestionMetadata</a></h4>
-</td>
-<td>
-<p>A record that contains batch of <a href="-ingestion-event/index.html">IngestionEvent</a> to send.
-This contains metadata that is shared among events.</p>
-<code><span class="keyword">typealias </span><span class="identifier">IngestionMetadata</span>&nbsp;<span class="symbol">=</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-map/index.html"><span class="identifier">Map</span></a><span class="symbol">&lt;</span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">,</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-any/index.html"><span class="identifier">Any</span></a><span class="symbol">&gt;</span></code></td>
-</tr>
-<tr>
-<td>
-<h4><a href="-ingestion-payload.html">IngestionPayload</a></h4>
-</td>
-<td>
-<code><span class="keyword">typealias </span><span class="identifier">IngestionPayload</span>&nbsp;<span class="symbol">=</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-map/index.html"><span class="identifier">Map</span></a><span class="symbol">&lt;</span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">,</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-any/index.html"><span class="identifier">Any</span></a><span class="symbol">&gt;</span></code></td>
-</tr>
-<tr>
-<td>
-<h4><a href="-ingestion-record/index.html">IngestionRecord</a></h4>
-</td>
-<td>
-<code><span class="keyword">data</span> <span class="keyword">class </span><span class="identifier">IngestionRecord</span></code></td>
-</tr>
-<tr>
-<td>
-<h4><a href="-meeting-event-client-configuration/index.html">MeetingEventClientConfiguration</a></h4>
-</td>
-<td>
-<p><a href="-meeting-event-client-configuration/index.html">MeetingEventClientConfiguration</a> defines one type of <a href="-event-client-configuration/index.html">EventClientConfiguration</a>
-that is needed for <a href="-default-event-reporter/index.html">DefaultEventReporter</a></p>
-<code><span class="keyword">data</span> <span class="keyword">class </span><span class="identifier">MeetingEventClientConfiguration</span>&nbsp;<span class="symbol">:</span>&nbsp;<a href="-event-client-configuration/index.html"><span class="identifier">EventClientConfiguration</span></a></code></td>
-</tr>
-<tr>
-<td>
-<h4><a href="-noop-event-reporter-factory/index.html">NoopEventReporterFactory</a></h4>
-</td>
-<td>
-<p><a href="-noop-event-reporter-factory/index.html">NoopEventReporterFactory</a> returns null <a href="-event-reporter/index.html">EventReporter</a></p>
-<code><span class="keyword">class </span><span class="identifier">NoopEventReporterFactory</span>&nbsp;<span class="symbol">:</span>&nbsp;<a href="-event-reporter-factory/index.html"><span class="identifier">EventReporterFactory</span></a></code></td>
-</tr>
-</tbody>
-</table>
-<h3>Properties</h3>
-<table>
-<tbody>
-<tr>
-<td>
-<h4><a href="-f-l-u-s-h_-i-n-t-e-r-v-a-l_-l-i-m-i-t_-m-i-n-i-m-u-m.html">FLUSH_INTERVAL_LIMIT_MINIMUM</a></h4>
-</td>
-<td>
-<code><span class="keyword">const</span> <span class="keyword">val </span><span class="identifier">FLUSH_INTERVAL_LIMIT_MINIMUM</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html"><span class="identifier">Long</span></a></code></td>
-</tr>
-<tr>
-<td>
-<h4><a href="-f-l-u-s-h_-s-i-z-e_-l-i-m-i-t_-m-a-x-i-m-u-m.html">FLUSH_SIZE_LIMIT_MAXIMUM</a></h4>
-</td>
-<td>
-<code><span class="keyword">const</span> <span class="keyword">val </span><span class="identifier">FLUSH_SIZE_LIMIT_MAXIMUM</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html"><span class="identifier">Int</span></a></code></td>
-</tr>
-<tr>
-<td>
-<h4><a href="-r-e-t-r-y_-c-o-u-n-t_-l-i-m-i-t_-m-a-x-i-m-u-m.html">RETRY_COUNT_LIMIT_MAXIMUM</a></h4>
-</td>
-<td>
-<code><span class="keyword">const</span> <span class="keyword">val </span><span class="identifier">RETRY_COUNT_LIMIT_MAXIMUM</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html"><span class="identifier">Int</span></a></code></td>
-</tr>
-</tbody>
-</table>
-</BODY>
-</HTML>
+<!doctype html>
+<html class="no-js">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1" charset="UTF-8">
+    <title>com.amazonaws.services.chime.sdk.meetings.ingestion</title>
+<link href="../../images/logo-icon.svg" rel="icon" type="image/svg">    <script>var pathToRoot = "../../";</script>
+    <script>document.documentElement.classList.replace("no-js","js");</script>
+    <script>const storage = localStorage.getItem("dokka-dark-mode")
+    if (storage == null) {
+        const osDarkSchemePreferred = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
+        if (osDarkSchemePreferred === true) {
+            document.getElementsByTagName("html")[0].classList.add("theme-dark")
+        }
+    } else {
+        const savedDarkMode = JSON.parse(storage)
+        if(savedDarkMode === true) {
+            document.getElementsByTagName("html")[0].classList.add("theme-dark")
+        }
+    }
+    </script>
+<script type="text/javascript" src="https://unpkg.com/kotlin-playground@1/dist/playground.min.js" async></script>
+<script type="text/javascript" src="../../scripts/sourceset_dependencies.js" async></script>
+<link href="../../styles/style.css" rel="Stylesheet">
+<link href="../../styles/main.css" rel="Stylesheet">
+<link href="../../styles/prism.css" rel="Stylesheet">
+<link href="../../styles/logo-styles.css" rel="Stylesheet">
+<link href="../../styles/font-jb-sans-auto.css" rel="Stylesheet">
+<script type="text/javascript" src="../../scripts/clipboard.js" async></script>
+<script type="text/javascript" src="../../scripts/navigation-loader.js" async></script>
+<script type="text/javascript" src="../../scripts/platform-content-handler.js" async></script>
+<script type="text/javascript" src="../../scripts/main.js" defer></script>
+<script type="text/javascript" src="../../scripts/prism.js" async></script>
+<script type="text/javascript" src="../../scripts/symbol-parameters-wrapper_deferred.js" defer></script></head>
+<body>
+    <div class="root">
+<nav class="navigation" id="navigation-wrapper">
+    <div class="navigation--inner">
+        <div class="navigation-title">
+            <button class="menu-toggle" id="menu-toggle" type="button">toggle menu</button>
+            <div class="library-name">
+<a class="library-name--link" href="../../index.html">
+                            amazon-chime-sdk-android
+                    </a>            </div>
+            <div class="library-version">
+            </div>
+        </div>
+        <div class="filter-section" id="filter-section">
+                <button class="platform-tag platform-selector jvm-like" data-active="" data-filter=":amazon-chime-sdk:dokkaHtmlPartial/release">androidJvm</button>
+        </div>
+    </div>
+    <div class="navigation-controls">
+        <button class="navigation-controls--btn navigation-controls--theme" id="theme-toggle-button" type="button">switch theme</button>
+        <div class="navigation-controls--btn navigation-controls--search" id="searchBar" role="button">search in API</div>
+    </div>
+</nav>
+        <div id="container">
+            <div class="sidebar" id="leftColumn">
+                <div class="sidebar--inner" id="sideMenu"></div>
+            </div>
+            <div id="main">
+<div class="main-content" data-page-type="package" id="content" pageids="amazon-chime-sdk::com.amazonaws.services.chime.sdk.meetings.ingestion////PointingToDeclaration//533364019">
+  <div class="breadcrumbs"><a href="../index.html">amazon-chime-sdk</a><span class="delimiter">/</span><span class="current">com.amazonaws.services.chime.sdk.meetings.ingestion</span></div>
+  <div class="cover ">
+    <h1 class="cover"><span><span>Package-level</span></span> <span><span>declarations</span></span></h1>
+  </div>
+  <div class="tabbedcontent">
+    <div class="tabs-section" tabs-section="tabs-section"><button class="section-tab" data-active="" data-togglable="TYPE">Types</button><button class="section-tab" data-togglable="PROPERTY,EXTENSION_PROPERTY">Properties</button></div>
+    <div class="tabs-section-body">
+      <div data-togglable="TYPE">
+        <h2 class="">Types</h2>
+        <div class="table"><a data-name="-1368748534%2FClasslikes%2F533364019" anchor-label="DefaultEventReporter" id="-1368748534%2FClasslikes%2F533364019" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release"></a>
+          <div class="table-row" data-filterable-current=":amazon-chime-sdk:dokkaHtmlPartial/release" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-default-event-reporter/index.html"><span>Default</span><wbr><span>Event</span><wbr><span><span>Reporter</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1368748534%2FClasslikes%2F533364019"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":amazon-chime-sdk:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">class </span><a href="-default-event-reporter/index.html">DefaultEventReporter</a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">ingestionConfiguration<span class="token operator">: </span><a href="-ingestion-configuration/index.html">IngestionConfiguration</a><span class="token punctuation">, </span></span><span class="parameter ">eventBuffer<span class="token operator">: </span><a href="-event-buffer/index.html">EventBuffer</a><span class="token punctuation">, </span></span><span class="parameter ">logger<span class="token operator">: </span><a href="../com.amazonaws.services.chime.sdk.meetings.utils.logger/-logger/index.html">Logger</a><span class="token punctuation">, </span></span><span class="parameter ">timer<span class="token operator">: </span><a href="https://developer.android.com/reference/kotlin/java/util/Timer.html">Timer</a><span class="token operator"> = </span>Timer("DefaultEventReporter", false)</span></span><span class="token punctuation">)</span> : <a href="-event-reporter/index.html">EventReporter</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1118446154%2FClasslikes%2F533364019" anchor-label="DefaultEventSender" id="-1118446154%2FClasslikes%2F533364019" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release"></a>
+          <div class="table-row" data-filterable-current=":amazon-chime-sdk:dokkaHtmlPartial/release" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-default-event-sender/index.html"><span>Default</span><wbr><span>Event</span><wbr><span><span>Sender</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1118446154%2FClasslikes%2F533364019"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":amazon-chime-sdk:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">class </span><a href="-default-event-sender/index.html">DefaultEventSender</a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">ingestionConfiguration<span class="token operator">: </span><a href="-ingestion-configuration/index.html">IngestionConfiguration</a><span class="token punctuation">, </span></span><span class="parameter ">logger<span class="token operator">: </span><a href="../com.amazonaws.services.chime.sdk.meetings.utils.logger/-logger/index.html">Logger</a></span></span><span class="token punctuation">)</span> : <a href="-event-sender/index.html">EventSender</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="624001086%2FClasslikes%2F533364019" anchor-label="DefaultMeetingEventBuffer" id="624001086%2FClasslikes%2F533364019" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release"></a>
+          <div class="table-row" data-filterable-current=":amazon-chime-sdk:dokkaHtmlPartial/release" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-default-meeting-event-buffer/index.html"><span>Default</span><wbr><span>Meeting</span><wbr><span>Event</span><wbr><span><span>Buffer</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="624001086%2FClasslikes%2F533364019"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":amazon-chime-sdk:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">class </span><a href="-default-meeting-event-buffer/index.html">DefaultMeetingEventBuffer</a>&nbsp;<span><span class="token annotation builtin">@</span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.jvm/-jvm-overloads/index.html"><span class="token annotation builtin">JvmOverloads</span></a>&nbsp;</span><span class="token keyword">constructor</span><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">ingestionConfiguration<span class="token operator">: </span><a href="-ingestion-configuration/index.html">IngestionConfiguration</a><span class="token punctuation">, </span></span><span class="parameter ">eventDao<span class="token operator">: </span><a href="../com.amazonaws.services.chime.sdk.meetings.internal.ingestion/-event-dao/index.html">EventDao</a><span class="token punctuation">, </span></span><span class="parameter ">dirtyEventDao<span class="token operator">: </span><a href="../com.amazonaws.services.chime.sdk.meetings.internal.ingestion/-dirty-event-dao/index.html">DirtyEventDao</a><span class="token punctuation">, </span></span><span class="parameter ">eventSender<span class="token operator">: </span><a href="-event-sender/index.html">EventSender</a><span class="token punctuation">, </span></span><span class="parameter ">logger<span class="token operator">: </span><a href="../com.amazonaws.services.chime.sdk.meetings.utils.logger/-logger/index.html">Logger</a><span class="token punctuation">, </span></span><span class="parameter ">eventScope<span class="token operator">: </span><span data-unresolved-link="kotlinx.coroutines/CoroutineScope///PointingToDeclaration/">CoroutineScope</span><span class="token operator"> = </span>CoroutineScope(Dispatchers.IO + SupervisorJob())</span></span><span class="token punctuation">)</span> : <a href="-event-buffer/index.html">EventBuffer</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1542325829%2FClasslikes%2F533364019" anchor-label="DefaultMeetingEventReporterFactory" id="-1542325829%2FClasslikes%2F533364019" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release"></a>
+          <div class="table-row" data-filterable-current=":amazon-chime-sdk:dokkaHtmlPartial/release" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-default-meeting-event-reporter-factory/index.html"><span>Default</span><wbr><span>Meeting</span><wbr><span>Event</span><wbr><span>Reporter</span><wbr><span><span>Factory</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1542325829%2FClasslikes%2F533364019"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":amazon-chime-sdk:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">class </span><a href="-default-meeting-event-reporter-factory/index.html">DefaultMeetingEventReporterFactory</a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">context<span class="token operator">: </span><a href="https://developer.android.com/reference/kotlin/android/content/Context.html">Context</a><span class="token punctuation">, </span></span><span class="parameter ">ingestionConfiguration<span class="token operator">: </span><a href="-ingestion-configuration/index.html">IngestionConfiguration</a><span class="token punctuation">, </span></span><span class="parameter ">logger<span class="token operator">: </span><a href="../com.amazonaws.services.chime.sdk.meetings.utils.logger/-logger/index.html">Logger</a></span></span><span class="token punctuation">)</span> : <a href="-event-reporter-factory/index.html">EventReporterFactory</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-651377884%2FClasslikes%2F533364019" anchor-label="EventBuffer" id="-651377884%2FClasslikes%2F533364019" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release"></a>
+          <div class="table-row" data-filterable-current=":amazon-chime-sdk:dokkaHtmlPartial/release" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-event-buffer/index.html"><span>Event</span><wbr><span><span>Buffer</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-651377884%2FClasslikes%2F533364019"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":amazon-chime-sdk:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">interface </span><a href="-event-buffer/index.html">EventBuffer</a></div><div class="brief "><p class="paragraph"><a href="-event-buffer/index.html">EventBuffer</a> defines a buffer which will consume the <a href="../com.amazonaws.services.chime.sdk.meetings.internal.ingestion/-s-d-k-event/index.html">SDKEvent</a> internally.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1310032723%2FClasslikes%2F533364019" anchor-label="EventClientConfiguration" id="1310032723%2FClasslikes%2F533364019" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release"></a>
+          <div class="table-row" data-filterable-current=":amazon-chime-sdk:dokkaHtmlPartial/release" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-event-client-configuration/index.html"><span>Event</span><wbr><span>Client</span><wbr><span><span>Configuration</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1310032723%2FClasslikes%2F533364019"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":amazon-chime-sdk:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">interface </span><a href="-event-client-configuration/index.html">EventClientConfiguration</a></div><div class="brief "><p class="paragraph"><a href="-event-client-configuration/index.html">EventClientConfiguration</a> defines core properties needed for every event client configuration.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-2041980961%2FClasslikes%2F533364019" anchor-label="EventClientType" id="-2041980961%2FClasslikes%2F533364019" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release"></a>
+          <div class="table-row" data-filterable-current=":amazon-chime-sdk:dokkaHtmlPartial/release" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-event-client-type/index.html"><span>Event</span><wbr><span>Client</span><wbr><span><span>Type</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-2041980961%2FClasslikes%2F533364019"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":amazon-chime-sdk:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">enum </span><a href="-event-client-type/index.html">EventClientType</a> : <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-enum/index.html">Enum</a><span class="token operator">&lt;</span><a href="-event-client-type/index.html">EventClientType</a><span class="token operator">&gt; </span></div><div class="brief "><p class="paragraph"><a href="-event-client-type/index.html">EventClientType</a> defines the type of event client configuration that will be sent to the server.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1369818909%2FClasslikes%2F533364019" anchor-label="EventReporter" id="-1369818909%2FClasslikes%2F533364019" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release"></a>
+          <div class="table-row" data-filterable-current=":amazon-chime-sdk:dokkaHtmlPartial/release" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-event-reporter/index.html"><span>Event</span><wbr><span><span>Reporter</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1369818909%2FClasslikes%2F533364019"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":amazon-chime-sdk:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">interface </span><a href="-event-reporter/index.html">EventReporter</a></div><div class="brief "><p class="paragraph"><a href="-event-reporter/index.html">EventReporter</a> is class that process meeting event that is created in EventAnalyticsController.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1550018155%2FClasslikes%2F533364019" anchor-label="EventReporterFactory" id="-1550018155%2FClasslikes%2F533364019" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release"></a>
+          <div class="table-row" data-filterable-current=":amazon-chime-sdk:dokkaHtmlPartial/release" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-event-reporter-factory/index.html"><span>Event</span><wbr><span>Reporter</span><wbr><span><span>Factory</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1550018155%2FClasslikes%2F533364019"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":amazon-chime-sdk:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">interface </span><a href="-event-reporter-factory/index.html">EventReporterFactory</a></div><div class="brief "><p class="paragraph"><a href="-event-reporter-factory/index.html">EventReporterFactory</a> facilitates creating <a href="-event-reporter/index.html">EventReporter</a></p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1699452209%2FClasslikes%2F533364019" anchor-label="EventSender" id="-1699452209%2FClasslikes%2F533364019" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release"></a>
+          <div class="table-row" data-filterable-current=":amazon-chime-sdk:dokkaHtmlPartial/release" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-event-sender/index.html"><span>Event</span><wbr><span><span>Sender</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1699452209%2FClasslikes%2F533364019"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":amazon-chime-sdk:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">interface </span><a href="-event-sender/index.html">EventSender</a></div><div class="brief "><p class="paragraph"><a href="-event-sender/index.html">EventSender</a> is responsible for sending <a href="-ingestion-record/index.html">IngestionRecord</a>.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="721804530%2FClasslikes%2F533364019" anchor-label="IngestionConfiguration" id="721804530%2FClasslikes%2F533364019" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release"></a>
+          <div class="table-row" data-filterable-current=":amazon-chime-sdk:dokkaHtmlPartial/release" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-ingestion-configuration/index.html"><span>Ingestion</span><wbr><span><span>Configuration</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="721804530%2FClasslikes%2F533364019"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":amazon-chime-sdk:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">data </span><span class="token keyword">class </span><a href="-ingestion-configuration/index.html">IngestionConfiguration</a>&nbsp;<span><span class="token annotation builtin">@</span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.jvm/-jvm-overloads/index.html"><span class="token annotation builtin">JvmOverloads</span></a>&nbsp;</span><span class="token keyword">constructor</span><span class="token punctuation">(</span><span class="parameters "><span class="parameter "><span class="token keyword">val </span>clientConfiguration<span class="token operator">: </span><a href="-event-client-configuration/index.html">EventClientConfiguration</a><span class="token punctuation">, </span></span><span class="parameter "><span class="token keyword">var </span>ingestionUrl<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a><span class="token punctuation">, </span></span><span class="parameter "><span class="token keyword">val </span>disabled<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html">Boolean</a><span class="token operator"> = </span><span class="token boolean">true</span><span class="token punctuation">, </span></span><span class="parameter "><span class="token keyword">var </span>flushSize<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a><span class="token operator"> = </span><span class="token constant">20</span><span class="token punctuation">, </span></span><span class="parameter "><span class="token keyword">var </span>flushIntervalMs<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html">Long</a><span class="token operator"> = </span><span class="token constant">5000</span><span class="token punctuation">, </span></span><span class="parameter "><span class="token keyword">var </span>retryCountLimit<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a><span class="token operator"> = </span><span class="token constant">2</span></span></span><span class="token punctuation">)</span></div><div class="brief "><p class="paragraph"><a href="-ingestion-configuration/index.html">IngestionConfiguration</a> defines the configuration that can customize <a href="-default-event-reporter/index.html">DefaultEventReporter</a>.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1524848946%2FClasslikes%2F533364019" anchor-label="IngestionEvent" id="-1524848946%2FClasslikes%2F533364019" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release"></a>
+          <div class="table-row" data-filterable-current=":amazon-chime-sdk:dokkaHtmlPartial/release" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-ingestion-event/index.html"><span>Ingestion</span><wbr><span><span>Event</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1524848946%2FClasslikes%2F533364019"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":amazon-chime-sdk:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">data </span><span class="token keyword">class </span><a href="-ingestion-event/index.html">IngestionEvent</a><span class="token punctuation">(</span><span class="parameters "><span class="parameter "><span class="token keyword">val </span>type<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a><span class="token punctuation">, </span></span><span class="parameter "><span class="token keyword">val </span>metadata<span class="token operator">: </span><a href="-ingestion-metadata/index.html">IngestionMetadata</a><span class="token punctuation">, </span></span><span class="parameter "><span class="token keyword">val </span>payloads<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/index.html">List</a><span class="token operator">&lt;</span><a href="-ingestion-payload/index.html">IngestionPayload</a><span class="token operator">&gt;</span><span class="token punctuation">, </span></span><span class="parameter "><span class="token keyword">val </span>version<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a><span class="token operator"> = </span><span class="token constant">1</span></span></span><span class="token punctuation">)</span></div><div class="brief "><p class="paragraph"><a href="-ingestion-event/index.html">IngestionEvent</a> defines the event format ingestion server will accept</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="684696715%2FClasslikes%2F533364019" anchor-label="IngestionMetadata" id="684696715%2FClasslikes%2F533364019" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release"></a>
+          <div class="table-row" data-filterable-current=":amazon-chime-sdk:dokkaHtmlPartial/release" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-ingestion-metadata/index.html"><span>Ingestion</span><wbr><span><span>Metadata</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="684696715%2FClasslikes%2F533364019"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":amazon-chime-sdk:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">typealias </span><a href="-ingestion-metadata/index.html">IngestionMetadata</a><span class="token operator"> = </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-map/index.html">Map</a><span class="token operator">&lt;</span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a><span class="token punctuation">, </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-any/index.html">Any</a><span class="token operator">&gt;</span></div><div class="brief "><p class="paragraph">A record that contains batch of <a href="-ingestion-event/index.html">IngestionEvent</a> to send. This contains metadata that is shared among events.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1009356954%2FClasslikes%2F533364019" anchor-label="IngestionPayload" id="1009356954%2FClasslikes%2F533364019" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release"></a>
+          <div class="table-row" data-filterable-current=":amazon-chime-sdk:dokkaHtmlPartial/release" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-ingestion-payload/index.html"><span>Ingestion</span><wbr><span><span>Payload</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1009356954%2FClasslikes%2F533364019"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":amazon-chime-sdk:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">typealias </span><a href="-ingestion-payload/index.html">IngestionPayload</a><span class="token operator"> = </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-map/index.html">Map</a><span class="token operator">&lt;</span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a><span class="token punctuation">, </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-any/index.html">Any</a><span class="token operator">&gt;</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="231764969%2FClasslikes%2F533364019" anchor-label="IngestionRecord" id="231764969%2FClasslikes%2F533364019" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release"></a>
+          <div class="table-row" data-filterable-current=":amazon-chime-sdk:dokkaHtmlPartial/release" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-ingestion-record/index.html"><span>Ingestion</span><wbr><span><span>Record</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="231764969%2FClasslikes%2F533364019"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":amazon-chime-sdk:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">data </span><span class="token keyword">class </span><a href="-ingestion-record/index.html">IngestionRecord</a><span class="token punctuation">(</span><span class="parameters "><span class="parameter "><span class="token keyword">val </span>metadata<span class="token operator">: </span><a href="-ingestion-metadata/index.html">IngestionMetadata</a><span class="token punctuation">, </span></span><span class="parameter "><span class="token keyword">val </span>events<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/index.html">List</a><span class="token operator">&lt;</span><a href="-ingestion-event/index.html">IngestionEvent</a><span class="token operator">&gt;</span></span></span><span class="token punctuation">)</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1400399634%2FClasslikes%2F533364019" anchor-label="MeetingEventClientConfiguration" id="1400399634%2FClasslikes%2F533364019" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release"></a>
+          <div class="table-row" data-filterable-current=":amazon-chime-sdk:dokkaHtmlPartial/release" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-meeting-event-client-configuration/index.html"><span>Meeting</span><wbr><span>Event</span><wbr><span>Client</span><wbr><span><span>Configuration</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1400399634%2FClasslikes%2F533364019"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":amazon-chime-sdk:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">data </span><span class="token keyword">class </span><a href="-meeting-event-client-configuration/index.html">MeetingEventClientConfiguration</a><span class="token punctuation">(</span><span class="parameters "><span class="parameter "><span class="token keyword">val </span>eventClientJoinToken<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a><span class="token punctuation">, </span></span><span class="parameter "><span class="token keyword">val </span>meetingId<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a><span class="token punctuation">, </span></span><span class="parameter "><span class="token keyword">val </span>attendeeId<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a></span></span><span class="token punctuation">)</span> : <a href="-event-client-configuration/index.html">EventClientConfiguration</a></div><div class="brief "><p class="paragraph"><a href="-meeting-event-client-configuration/index.html">MeetingEventClientConfiguration</a> defines one type of <a href="-event-client-configuration/index.html">EventClientConfiguration</a> that is needed for <a href="-default-event-reporter/index.html">DefaultEventReporter</a></p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="38027219%2FClasslikes%2F533364019" anchor-label="NoopEventReporterFactory" id="38027219%2FClasslikes%2F533364019" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release"></a>
+          <div class="table-row" data-filterable-current=":amazon-chime-sdk:dokkaHtmlPartial/release" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-noop-event-reporter-factory/index.html"><span>Noop</span><wbr><span>Event</span><wbr><span>Reporter</span><wbr><span><span>Factory</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="38027219%2FClasslikes%2F533364019"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":amazon-chime-sdk:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">class </span><a href="-noop-event-reporter-factory/index.html">NoopEventReporterFactory</a> : <a href="-event-reporter-factory/index.html">EventReporterFactory</a></div><div class="brief "><p class="paragraph"><a href="-noop-event-reporter-factory/index.html">NoopEventReporterFactory</a> returns null <a href="-event-reporter/index.html">EventReporter</a></p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div data-togglable="PROPERTY">
+        <h2 class="">Properties</h2>
+        <div class="table"><a data-name="-48198128%2FProperties%2F533364019" anchor-label="FLUSH_INTERVAL_LIMIT_MINIMUM" id="-48198128%2FProperties%2F533364019" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release"></a>
+          <div class="table-row" data-filterable-current=":amazon-chime-sdk:dokkaHtmlPartial/release" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-f-l-u-s-h_-i-n-t-e-r-v-a-l_-l-i-m-i-t_-m-i-n-i-m-u-m.html"><span><span>FLUSH_INTERVAL_LIMIT_MINIMUM</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-48198128%2FProperties%2F533364019"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":amazon-chime-sdk:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">const </span><span class="token keyword">val </span><a href="-f-l-u-s-h_-i-n-t-e-r-v-a-l_-l-i-m-i-t_-m-i-n-i-m-u-m.html">FLUSH_INTERVAL_LIMIT_MINIMUM</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html">Long</a><span class="token operator"> = </span><span class="token constant">100</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1881234178%2FProperties%2F533364019" anchor-label="FLUSH_SIZE_LIMIT_MAXIMUM" id="1881234178%2FProperties%2F533364019" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release"></a>
+          <div class="table-row" data-filterable-current=":amazon-chime-sdk:dokkaHtmlPartial/release" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-f-l-u-s-h_-s-i-z-e_-l-i-m-i-t_-m-a-x-i-m-u-m.html"><span><span>FLUSH_SIZE_LIMIT_MAXIMUM</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1881234178%2FProperties%2F533364019"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":amazon-chime-sdk:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">const </span><span class="token keyword">val </span><a href="-f-l-u-s-h_-s-i-z-e_-l-i-m-i-t_-m-a-x-i-m-u-m.html">FLUSH_SIZE_LIMIT_MAXIMUM</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a><span class="token operator"> = </span><span class="token constant">100</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1815888714%2FProperties%2F533364019" anchor-label="RETRY_COUNT_LIMIT_MAXIMUM" id="1815888714%2FProperties%2F533364019" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release"></a>
+          <div class="table-row" data-filterable-current=":amazon-chime-sdk:dokkaHtmlPartial/release" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-r-e-t-r-y_-c-o-u-n-t_-l-i-m-i-t_-m-a-x-i-m-u-m.html"><span><span>RETRY_COUNT_LIMIT_MAXIMUM</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1815888714%2FProperties%2F533364019"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":amazon-chime-sdk:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">const </span><span class="token keyword">val </span><a href="-r-e-t-r-y_-c-o-u-n-t_-l-i-m-i-t_-m-a-x-i-m-u-m.html">RETRY_COUNT_LIMIT_MAXIMUM</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a><span class="token operator"> = </span><span class="token constant">5</span></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      <div class="footer">
+        <span class="go-to-top-icon"><a href="#content" id="go-to-top-link"></a></span><span>© 2024 Copyright</span><span class="pull-right"><span>Generated by </span><a href="https://github.com/Kotlin/dokka"><span>dokka</span><span class="padded-icon"></span></a></span>
+      </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+

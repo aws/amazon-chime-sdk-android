@@ -7,11 +7,9 @@ apply plugin: 'com.android.application'
 
 apply plugin: 'kotlin-android'
 
-apply plugin: 'kotlin-android-extensions'
-
 android {
-    compileSdkVersion project.ext.chimeCompileSdkVersion
-    buildToolsVersion project.ext.chimeBuildToolsVersion
+    compileSdk project.ext.chimeCompileSdkVersion
+    buildToolsVersion = project.ext.chimeBuildToolsVersion
     defaultConfig {
         applicationId "com.amazonaws.services.chime.sdkdemo"
         minSdkVersion project.ext.chimeMinSdkVersion
@@ -28,6 +26,9 @@ android {
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
+    }
+    buildFeatures {
+        viewBinding true
     }
 }
 

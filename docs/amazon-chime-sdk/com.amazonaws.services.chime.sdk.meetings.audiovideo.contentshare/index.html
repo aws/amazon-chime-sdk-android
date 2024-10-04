@@ -1,69 +1,174 @@
-<HTML>
-<HEAD>
-<meta charset="UTF-8">
-<title>com.amazonaws.services.chime.sdk.meetings.audiovideo.contentshare - amazon-chime-sdk</title>
-<link rel="stylesheet" href="../../style.css">
-</HEAD>
-<BODY>
-<a href="../index.html">amazon-chime-sdk</a>&nbsp;/&nbsp;<a href="./index.html">com.amazonaws.services.chime.sdk.meetings.audiovideo.contentshare</a><br/>
-<br/>
-<h2>Package com.amazonaws.services.chime.sdk.meetings.audiovideo.contentshare</h2>
-<h3>Types</h3>
-<table>
-<tbody>
-<tr>
-<td>
-<h4><a href="-content-share-controller/index.html">ContentShareController</a></h4>
-</td>
-<td>
-<p><a href="-content-share-controller/index.html">ContentShareController</a> exposes methods for starting and stopping content share with a <a href="-content-share-source/index.html">ContentShareSource</a>.
-The content represents a media steam to be shared in the meeting, such as screen capture or
-media files.
-Read <a href="https://github.com/aws/amazon-chime-sdk-android/blob/master/guides/content_share.md">content share guide</a> for details.</p>
-<code><span class="keyword">interface </span><span class="identifier">ContentShareController</span></code></td>
-</tr>
-<tr>
-<td>
-<h4><a href="-content-share-observer/index.html">ContentShareObserver</a></h4>
-</td>
-<td>
-<p><a href="-content-share-observer/index.html">ContentShareObserver</a> handles all callbacks related to the content share.
-By implementing the callback functions and registering with <a href="-content-share-controller/add-content-share-observer.html">ContentShareController.addContentShareObserver</a>,
-one can get notified with content share status events.</p>
-<code><span class="keyword">interface </span><span class="identifier">ContentShareObserver</span></code></td>
-</tr>
-<tr>
-<td>
-<h4><a href="-content-share-source/index.html">ContentShareSource</a></h4>
-</td>
-<td>
-<p><a href="-content-share-source/index.html">ContentShareSource</a> contains the media sources to attach to the content share</p>
-<code><span class="keyword">open</span> <span class="keyword">class </span><span class="identifier">ContentShareSource</span></code></td>
-</tr>
-<tr>
-<td>
-<h4><a href="-content-share-status/index.html">ContentShareStatus</a></h4>
-</td>
-<td>
-<p><a href="-content-share-status/index.html">ContentShareStatus</a> indicates a status received regarding the content share.</p>
-<code><span class="keyword">data</span> <span class="keyword">class </span><span class="identifier">ContentShareStatus</span></code></td>
-</tr>
-<tr>
-<td>
-<h4><a href="-content-share-status-code/index.html">ContentShareStatusCode</a></h4>
-</td>
-<td>
-<p><a href="-content-share-status-code/index.html">ContentShareStatusCode</a> indicates the reason the content share event occurred.</p>
-<code><span class="keyword">enum</span> <span class="keyword">class </span><span class="identifier">ContentShareStatusCode</span></code></td>
-</tr>
-<tr>
-<td>
-<h4><a href="-default-content-share-controller/index.html">DefaultContentShareController</a></h4>
-</td>
-<td>
-<code><span class="keyword">class </span><span class="identifier">DefaultContentShareController</span>&nbsp;<span class="symbol">:</span>&nbsp;<a href="-content-share-controller/index.html"><span class="identifier">ContentShareController</span></a></code></td>
-</tr>
-</tbody>
-</table>
-</BODY>
-</HTML>
+<!doctype html>
+<html class="no-js">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1" charset="UTF-8">
+    <title>com.amazonaws.services.chime.sdk.meetings.audiovideo.contentshare</title>
+<link href="../../images/logo-icon.svg" rel="icon" type="image/svg">    <script>var pathToRoot = "../../";</script>
+    <script>document.documentElement.classList.replace("no-js","js");</script>
+    <script>const storage = localStorage.getItem("dokka-dark-mode")
+    if (storage == null) {
+        const osDarkSchemePreferred = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
+        if (osDarkSchemePreferred === true) {
+            document.getElementsByTagName("html")[0].classList.add("theme-dark")
+        }
+    } else {
+        const savedDarkMode = JSON.parse(storage)
+        if(savedDarkMode === true) {
+            document.getElementsByTagName("html")[0].classList.add("theme-dark")
+        }
+    }
+    </script>
+<script type="text/javascript" src="https://unpkg.com/kotlin-playground@1/dist/playground.min.js" async></script>
+<script type="text/javascript" src="../../scripts/sourceset_dependencies.js" async></script>
+<link href="../../styles/style.css" rel="Stylesheet">
+<link href="../../styles/main.css" rel="Stylesheet">
+<link href="../../styles/prism.css" rel="Stylesheet">
+<link href="../../styles/logo-styles.css" rel="Stylesheet">
+<link href="../../styles/font-jb-sans-auto.css" rel="Stylesheet">
+<script type="text/javascript" src="../../scripts/clipboard.js" async></script>
+<script type="text/javascript" src="../../scripts/navigation-loader.js" async></script>
+<script type="text/javascript" src="../../scripts/platform-content-handler.js" async></script>
+<script type="text/javascript" src="../../scripts/main.js" defer></script>
+<script type="text/javascript" src="../../scripts/prism.js" async></script>
+<script type="text/javascript" src="../../scripts/symbol-parameters-wrapper_deferred.js" defer></script></head>
+<body>
+    <div class="root">
+<nav class="navigation" id="navigation-wrapper">
+    <div class="navigation--inner">
+        <div class="navigation-title">
+            <button class="menu-toggle" id="menu-toggle" type="button">toggle menu</button>
+            <div class="library-name">
+<a class="library-name--link" href="../../index.html">
+                            amazon-chime-sdk-android
+                    </a>            </div>
+            <div class="library-version">
+            </div>
+        </div>
+        <div class="filter-section" id="filter-section">
+                <button class="platform-tag platform-selector jvm-like" data-active="" data-filter=":amazon-chime-sdk:dokkaHtmlPartial/release">androidJvm</button>
+        </div>
+    </div>
+    <div class="navigation-controls">
+        <button class="navigation-controls--btn navigation-controls--theme" id="theme-toggle-button" type="button">switch theme</button>
+        <div class="navigation-controls--btn navigation-controls--search" id="searchBar" role="button">search in API</div>
+    </div>
+</nav>
+        <div id="container">
+            <div class="sidebar" id="leftColumn">
+                <div class="sidebar--inner" id="sideMenu"></div>
+            </div>
+            <div id="main">
+<div class="main-content" data-page-type="package" id="content" pageids="amazon-chime-sdk::com.amazonaws.services.chime.sdk.meetings.audiovideo.contentshare////PointingToDeclaration//533364019">
+  <div class="breadcrumbs"><a href="../index.html">amazon-chime-sdk</a><span class="delimiter">/</span><span class="current">com.amazonaws.services.chime.sdk.meetings.audiovideo.contentshare</span></div>
+  <div class="cover ">
+    <h1 class="cover"><span><span>Package-level</span></span> <span><span>declarations</span></span></h1>
+  </div>
+  <div class="tabbedcontent">
+    <div class="tabs-section" tabs-section="tabs-section"><button class="section-tab" data-active="" data-togglable="TYPE">Types</button></div>
+    <div class="tabs-section-body">
+      <div data-togglable="TYPE">
+        <h2 class="">Types</h2>
+        <div class="table"><a data-name="-235911603%2FClasslikes%2F533364019" anchor-label="ContentShareController" id="-235911603%2FClasslikes%2F533364019" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release"></a>
+          <div class="table-row" data-filterable-current=":amazon-chime-sdk:dokkaHtmlPartial/release" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-content-share-controller/index.html"><span>Content</span><wbr><span>Share</span><wbr><span><span>Controller</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-235911603%2FClasslikes%2F533364019"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":amazon-chime-sdk:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">interface </span><a href="-content-share-controller/index.html">ContentShareController</a></div><div class="brief "><p class="paragraph"><a href="-content-share-controller/index.html">ContentShareController</a> exposes methods for starting and stopping content share with a <a href="-content-share-source/index.html">ContentShareSource</a>. The content represents a media steam to be shared in the meeting, such as screen capture or media files. Read <a href="https://github.com/aws/amazon-chime-sdk-android/blob/master/guides/content_share.md">content share guide</a> for details.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="2106899027%2FClasslikes%2F533364019" anchor-label="ContentShareObserver" id="2106899027%2FClasslikes%2F533364019" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release"></a>
+          <div class="table-row" data-filterable-current=":amazon-chime-sdk:dokkaHtmlPartial/release" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-content-share-observer/index.html"><span>Content</span><wbr><span>Share</span><wbr><span><span>Observer</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="2106899027%2FClasslikes%2F533364019"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":amazon-chime-sdk:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">interface </span><a href="-content-share-observer/index.html">ContentShareObserver</a></div><div class="brief "><p class="paragraph"><a href="-content-share-observer/index.html">ContentShareObserver</a> handles all callbacks related to the content share. By implementing the callback functions and registering with <a href="-content-share-controller/add-content-share-observer.html">ContentShareController.addContentShareObserver</a>, one can get notified with content share status events.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-1636181330%2FClasslikes%2F533364019" anchor-label="ContentShareSource" id="-1636181330%2FClasslikes%2F533364019" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release"></a>
+          <div class="table-row" data-filterable-current=":amazon-chime-sdk:dokkaHtmlPartial/release" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-content-share-source/index.html"><span>Content</span><wbr><span>Share</span><wbr><span><span>Source</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1636181330%2FClasslikes%2F533364019"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":amazon-chime-sdk:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">class </span><a href="-content-share-source/index.html">ContentShareSource</a></div><div class="brief "><p class="paragraph"><a href="-content-share-source/index.html">ContentShareSource</a> contains the media sources to attach to the content share</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1792221879%2FClasslikes%2F533364019" anchor-label="ContentShareStatus" id="1792221879%2FClasslikes%2F533364019" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release"></a>
+          <div class="table-row" data-filterable-current=":amazon-chime-sdk:dokkaHtmlPartial/release" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-content-share-status/index.html"><span>Content</span><wbr><span>Share</span><wbr><span><span>Status</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1792221879%2FClasslikes%2F533364019"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":amazon-chime-sdk:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">data </span><span class="token keyword">class </span><a href="-content-share-status/index.html">ContentShareStatus</a><span class="token punctuation">(</span><span class="parameters "><span class="parameter "><span class="token keyword">val </span>statusCode<span class="token operator">: </span><a href="-content-share-status-code/index.html">ContentShareStatusCode</a></span></span><span class="token punctuation">)</span></div><div class="brief "><p class="paragraph"><a href="-content-share-status/index.html">ContentShareStatus</a> indicates a status received regarding the content share.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="1373685322%2FClasslikes%2F533364019" anchor-label="ContentShareStatusCode" id="1373685322%2FClasslikes%2F533364019" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release"></a>
+          <div class="table-row" data-filterable-current=":amazon-chime-sdk:dokkaHtmlPartial/release" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-content-share-status-code/index.html"><span>Content</span><wbr><span>Share</span><wbr><span>Status</span><wbr><span><span>Code</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1373685322%2FClasslikes%2F533364019"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":amazon-chime-sdk:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">enum </span><a href="-content-share-status-code/index.html">ContentShareStatusCode</a> : <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-enum/index.html">Enum</a><span class="token operator">&lt;</span><a href="-content-share-status-code/index.html">ContentShareStatusCode</a><span class="token operator">&gt; </span></div><div class="brief "><p class="paragraph"><a href="-content-share-status-code/index.html">ContentShareStatusCode</a> indicates the reason the content share event occurred.</p></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+<a data-name="-742642160%2FClasslikes%2F533364019" anchor-label="DefaultContentShareController" id="-742642160%2FClasslikes%2F533364019" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release"></a>
+          <div class="table-row" data-filterable-current=":amazon-chime-sdk:dokkaHtmlPartial/release" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release">
+            <div class="main-subrow keyValue ">
+              <div class=""><span class="inline-flex">
+                  <div><a href="-default-content-share-controller/index.html"><span>Default</span><wbr><span>Content</span><wbr><span>Share</span><wbr><span><span>Controller</span></span></a></div>
+<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-742642160%2FClasslikes%2F533364019"></span>
+                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
+                  </span></span></div>
+              <div>
+                <div class="title">
+                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":amazon-chime-sdk:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">class </span><a href="-default-content-share-controller/index.html">DefaultContentShareController</a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">logger<span class="token operator">: </span><a href="../com.amazonaws.services.chime.sdk.meetings.utils.logger/-logger/index.html">Logger</a><span class="token punctuation">, </span></span><span class="parameter ">contentShareVideoClientController<span class="token operator">: </span><a href="../com.amazonaws.services.chime.sdk.meetings.internal.contentshare/-content-share-video-client-controller/index.html">ContentShareVideoClientController</a></span></span><span class="token punctuation">)</span> : <a href="-content-share-controller/index.html">ContentShareController</a></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      <div class="footer">
+        <span class="go-to-top-icon"><a href="#content" id="go-to-top-link"></a></span><span>© 2024 Copyright</span><span class="pull-right"><span>Generated by </span><a href="https://github.com/Kotlin/dokka"><span>dokka</span><span class="padded-icon"></span></a></span>
+      </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+
