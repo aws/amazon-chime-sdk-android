@@ -1695,9 +1695,6 @@ class MeetingFragment : Fragment(),
             object {}.javaClass.enclosingMethod?.name,
             "${sessionStatus.statusCode}"
         )
-        if (sessionStatus.statusCode == MeetingSessionStatusCode.VideoServiceFailed) {
-            onAudioSessionStopped(sessionStatus)
-        }
     }
 
     override fun onRemoteVideoSourceAvailable(sources: List<RemoteVideoSource>) {
