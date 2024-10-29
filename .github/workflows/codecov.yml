@@ -83,7 +83,7 @@ jobs:
         uses: actions/setup-java@v4
         with:
           distribution: 'zulu'
-          java-version: '11'
+          java-version: '17'
           
       # Execute unit tests
       - name: Unit Test with Android Emulator Runner
