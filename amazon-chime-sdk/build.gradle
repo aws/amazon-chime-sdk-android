@@ -25,6 +25,7 @@ ext.versionPatch = versionProperties.getProperty('versionPatch') as Integer
 android {
     compileSdk project.ext.chimeCompileSdkVersion
     buildToolsVersion = project.ext.chimeBuildToolsVersion
+    testCoverage.jacocoVersion = "$jacocoVersion"
 
     defaultConfig {
         minSdkVersion project.ext.chimeMinSdkVersion
