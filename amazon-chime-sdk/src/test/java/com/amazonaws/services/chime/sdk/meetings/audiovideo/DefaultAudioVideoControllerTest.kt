@@ -5,7 +5,6 @@
 
 package com.amazonaws.services.chime.sdk.meetings.audiovideo
 
-import android.util.Log
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.audio.AudioDeviceCapabilities
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.audio.AudioMode
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.audio.AudioRecordingPresetOverride
@@ -19,7 +18,6 @@ import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoSubscript
 import com.amazonaws.services.chime.sdk.meetings.internal.audio.AudioClientController
 import com.amazonaws.services.chime.sdk.meetings.internal.audio.AudioClientObserver
 import com.amazonaws.services.chime.sdk.meetings.internal.metric.ClientMetricsCollector
-import com.amazonaws.services.chime.sdk.meetings.internal.utils.AppInfoUtil
 import com.amazonaws.services.chime.sdk.meetings.internal.video.VideoClientController
 import com.amazonaws.services.chime.sdk.meetings.internal.video.VideoClientObserver
 import com.amazonaws.services.chime.sdk.meetings.session.MeetingFeatures
@@ -31,14 +29,11 @@ import com.amazonaws.services.chime.sdk.meetings.session.MeetingSessionURLs
 import com.amazonaws.services.chime.sdk.meetings.session.defaultUrlRewriter
 import com.amazonaws.services.chime.sdk.meetings.utils.logger.ConsoleLogger
 import com.amazonaws.services.chime.sdk.meetings.utils.logger.LogLevel
-import com.xodee.client.video.VideoClient
 import io.mockk.MockKAnnotations
 import io.mockk.every
 import io.mockk.impl.annotations.MockK
 import io.mockk.just
 import io.mockk.mockkConstructor
-import io.mockk.mockkObject
-import io.mockk.mockkStatic
 import io.mockk.runs
 import io.mockk.slot
 import io.mockk.verify
@@ -114,13 +109,7 @@ class DefaultAudioVideoControllerTest {
     private lateinit var mockPrimaryMeetingPromotionObserver: PrimaryMeetingPromotionObserver
 
     @MockK
-    private lateinit var mockTimer: Timer
-
-    @MockK
     private lateinit var mockVideoSource: VideoSource
-
-    @MockK
-    private lateinit var mockVideoClient: VideoClient
 
     private lateinit var audioVideoController: DefaultAudioVideoController
     private lateinit var audioVideoControllerNone: DefaultAudioVideoController
@@ -132,12 +121,6 @@ class DefaultAudioVideoControllerTest {
     @ExperimentalCoroutinesApi
     @Before
     fun setup() {
-        mockkStatic(System::class, Log::class, VideoClient::class)
-        every { Log.d(any(), any()) } returns 0
-        every { System.loadLibrary(any()) } just runs
-        every { VideoClient.javaInitializeGlobals(any()) } returns true
-        mockkObject(AppInfoUtil)
-        every { AppInfoUtil.initializeVideoClientAppDetailedInfo(any()) } just runs
         Dispatchers.setMain(testDispatcher)
         MockKAnnotations.init(this, relaxUnitFun = true)
         val logger = ConsoleLogger(LogLevel.INFO)

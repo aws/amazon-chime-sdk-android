@@ -82,8 +82,8 @@ jobs:
       - name: Set up Java
         uses: actions/setup-java@v4
         with:
-          distribution: 'zulu'
-          java-version: '17'
+          distribution: 'corretto'
+          java-version: '11'
           
       # Execute unit tests
       - name: Unit Test with Android Emulator Runner
@@ -99,4 +99,8 @@ jobs:
 
       # Upload code coverage report to codecov to process data
       - name: Upload coverage to Codecov
-        uses: codecov/codecov-action@v1.2.1
+        uses: codecov/codecov-action@v4
+        with:
+          fail_ci_if_error: true
+          token: ${{ secrets.CODECOV_TOKEN }}
+          verbose: true

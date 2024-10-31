@@ -28,6 +28,7 @@ import io.mockk.just
 import io.mockk.mockkStatic
 import io.mockk.runs
 import io.mockk.slot
+import io.mockk.unmockkAll
 import io.mockk.verify
 import java.nio.ByteBuffer
 import kotlinx.coroutines.Dispatchers
@@ -153,6 +154,7 @@ class DefaultVideoClientObserverTest {
 
     @After
     fun tearDown() {
+        unmockkAll()
         Dispatchers.resetMain()
         testDispatcher.cleanupTestCoroutines()
     }
