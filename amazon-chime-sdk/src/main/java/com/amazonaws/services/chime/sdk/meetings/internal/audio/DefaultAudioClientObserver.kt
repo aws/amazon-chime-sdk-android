@@ -142,8 +142,20 @@ class DefaultAudioClientObserver(
                 }
             }
             SessionStateControllerAction.FinishDisconnecting -> {
-                if (currentAudioState == SessionStateControllerAction.Reconnecting) {
-                    notifyAudioClientObserver { observer -> observer.onAudioSessionCancelledReconnect() }
+                when (currentAudioState) {
+                    SessionStateControllerAction.Connecting,
+                    SessionStateControllerAction.FinishConnecting -> {
+                        if (newAudioStatus == MeetingSessionStatusCode.AudioServerHungup) {
+                            handleAudioSessionEndedByServer(newAudioStatus)
+                        }
+                    }
+                    SessionStateControllerAction.Reconnecting -> {
+                        notifyAudioClientObserver { observer -> observer.onAudioSessionCancelledReconnect() }
+                        if (newAudioStatus == MeetingSessionStatusCode.AudioServerHungup) {
+                            handleAudioSessionEndedByServer(newAudioStatus)
+                        }
+                    }
+                    else -> Unit
                 }
             }
             SessionStateControllerAction.Fail -> {
@@ -520,10 +532,10 @@ class DefaultAudioClientObserver(
             AudioClient.AUDIO_CLIENT_STATE_CONNECTED -> SessionStateControllerAction.FinishConnecting
             AudioClient.AUDIO_CLIENT_STATE_RECONNECTING -> SessionStateControllerAction.Reconnecting
             AudioClient.AUDIO_CLIENT_STATE_DISCONNECTING -> SessionStateControllerAction.Disconnecting
-            AudioClient.AUDIO_CLIENT_STATE_DISCONNECTED_NORMAL -> SessionStateControllerAction.FinishDisconnecting
+            AudioClient.AUDIO_CLIENT_STATE_DISCONNECTED_NORMAL,
+            AudioClient.AUDIO_CLIENT_STATE_SERVER_HUNGUP -> SessionStateControllerAction.FinishDisconnecting
             AudioClient.AUDIO_CLIENT_STATE_FAILED_TO_CONNECT,
-            AudioClient.AUDIO_CLIENT_STATE_DISCONNECTED_ABNORMAL,
-            AudioClient.AUDIO_CLIENT_STATE_SERVER_HUNGUP -> SessionStateControllerAction.Fail
+            AudioClient.AUDIO_CLIENT_STATE_DISCONNECTED_ABNORMAL -> SessionStateControllerAction.Fail
             else -> SessionStateControllerAction.Unknown
         }
     }
@@ -532,7 +544,7 @@ class DefaultAudioClientObserver(
         return when (internalAudioStatus) {
             AudioClient.AUDIO_CLIENT_OK -> MeetingSessionStatusCode.OK
             AudioClient.AUDIO_CLIENT_STATUS_NETWORK_IS_NOT_GOOD_ENOUGH_FOR_VOIP -> MeetingSessionStatusCode.NetworkBecamePoor
-            AudioClient.AUDIO_CLIENT_ERR_SERVER_HUNGUP -> MeetingSessionStatusCode.AudioDisconnected
+            AudioClient.AUDIO_CLIENT_ERR_SERVER_HUNGUP -> MeetingSessionStatusCode.AudioServerHungup
             AudioClient.AUDIO_CLIENT_ERR_JOINED_FROM_ANOTHER_DEVICE -> MeetingSessionStatusCode.AudioJoinedFromAnotherDevice
             AudioClient.AUDIO_CLIENT_ERR_INTERNAL_SERVER_ERROR -> MeetingSessionStatusCode.AudioInternalServerError
             AudioClient.AUDIO_CLIENT_ERR_AUTH_REJECTED -> MeetingSessionStatusCode.AudioAuthenticationRejected
@@ -549,6 +561,12 @@ class DefaultAudioClientObserver(
     private fun handleOnAudioSessionFailed(statusCode: MeetingSessionStatusCode?) {
         if (audioClient != null) {
             notifyFailed(statusCode)
+        }
+        handleAudioClientStop(statusCode)
+    }
+
+    private fun handleAudioClientStop(statusCode: MeetingSessionStatusCode?) {
+        if (audioClient != null) {
             GlobalScope.launch {
                 audioClient?.stopSession()
                 DefaultAudioClientController.audioClientState = AudioClientState.STOPPED
@@ -570,5 +588,24 @@ class DefaultAudioClientObserver(
         }
         eventAnalyticsController.publishEvent(EventName.meetingFailed, attributes)
         meetingStatsCollector.resetMeetingStats()
+    }
+
+    private fun notifyMeetingEnded(statusCode: MeetingSessionStatusCode?) {
+        val attributes: MutableMap<EventAttributeName, Any>? = statusCode?.let {
+            mutableMapOf(
+                EventAttributeName.meetingStatus to statusCode,
+                EventAttributeName.meetingErrorMessage to statusCode.toString()
+            )
+        }
+        eventAnalyticsController.publishEvent(EventName.meetingEnded, attributes)
+        meetingStatsCollector.resetMeetingStats()
+    }
+
+    private fun handleAudioSessionEndedByServer(statusCode: MeetingSessionStatusCode?) {
+        if (DefaultAudioClientController.audioClientState == AudioClientState.STOPPED) {
+            return
+        }
+        notifyMeetingEnded(statusCode)
+        handleAudioClientStop(statusCode)
     }
 }
