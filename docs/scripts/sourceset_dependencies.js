@@ -1,1 +1,0 @@
-sourceset_dependencies = '{":amazon-chime-sdk:dokkaHtmlPartial/debug":[],":amazon-chime-sdk:dokkaHtmlPartial/main":[],":amazon-chime-sdk:dokkaHtmlPartial/release":[]}'

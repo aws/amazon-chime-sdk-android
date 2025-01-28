@@ -1,283 +1,115 @@
-<!doctype html>
-<html class="no-js">
-<head>
-    <meta name="viewport" content="width=device-width, initial-scale=1" charset="UTF-8">
-    <title>com.amazonaws.services.chime.sdk.meetings.analytics</title>
-<link href="../../images/logo-icon.svg" rel="icon" type="image/svg">    <script>var pathToRoot = "../../";</script>
-    <script>document.documentElement.classList.replace("no-js","js");</script>
-    <script>const storage = localStorage.getItem("dokka-dark-mode")
-    if (storage == null) {
-        const osDarkSchemePreferred = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
-        if (osDarkSchemePreferred === true) {
-            document.getElementsByTagName("html")[0].classList.add("theme-dark")
-        }
-    } else {
-        const savedDarkMode = JSON.parse(storage)
-        if(savedDarkMode === true) {
-            document.getElementsByTagName("html")[0].classList.add("theme-dark")
-        }
-    }
-    </script>
-<script type="text/javascript" src="https://unpkg.com/kotlin-playground@1/dist/playground.min.js" async></script>
-<script type="text/javascript" src="../../scripts/sourceset_dependencies.js" async></script>
-<link href="../../styles/style.css" rel="Stylesheet">
-<link href="../../styles/main.css" rel="Stylesheet">
-<link href="../../styles/prism.css" rel="Stylesheet">
-<link href="../../styles/logo-styles.css" rel="Stylesheet">
-<link href="../../styles/font-jb-sans-auto.css" rel="Stylesheet">
-<script type="text/javascript" src="../../scripts/clipboard.js" async></script>
-<script type="text/javascript" src="../../scripts/navigation-loader.js" async></script>
-<script type="text/javascript" src="../../scripts/platform-content-handler.js" async></script>
-<script type="text/javascript" src="../../scripts/main.js" defer></script>
-<script type="text/javascript" src="../../scripts/prism.js" async></script>
-<script type="text/javascript" src="../../scripts/symbol-parameters-wrapper_deferred.js" defer></script></head>
-<body>
-    <div class="root">
-<nav class="navigation" id="navigation-wrapper">
-    <div class="navigation--inner">
-        <div class="navigation-title">
-            <button class="menu-toggle" id="menu-toggle" type="button">toggle menu</button>
-            <div class="library-name">
-<a class="library-name--link" href="../../index.html">
-                            amazon-chime-sdk-android
-                    </a>            </div>
-            <div class="library-version">
-            </div>
-        </div>
-        <div class="filter-section" id="filter-section">
-                <button class="platform-tag platform-selector jvm-like" data-active="" data-filter=":amazon-chime-sdk:dokkaHtmlPartial/release">androidJvm</button>
-        </div>
-    </div>
-    <div class="navigation-controls">
-        <button class="navigation-controls--btn navigation-controls--theme" id="theme-toggle-button" type="button">switch theme</button>
-        <div class="navigation-controls--btn navigation-controls--search" id="searchBar" role="button">search in API</div>
-    </div>
-</nav>
-        <div id="container">
-            <div class="sidebar" id="leftColumn">
-                <div class="sidebar--inner" id="sideMenu"></div>
-            </div>
-            <div id="main">
-<div class="main-content" data-page-type="package" id="content" pageids="amazon-chime-sdk::com.amazonaws.services.chime.sdk.meetings.analytics////PointingToDeclaration//533364019">
-  <div class="breadcrumbs"><a href="../index.html">amazon-chime-sdk</a><span class="delimiter">/</span><span class="current">com.amazonaws.services.chime.sdk.meetings.analytics</span></div>
-  <div class="cover ">
-    <h1 class="cover"><span><span>Package-level</span></span> <span><span>declarations</span></span></h1>
-  </div>
-  <div class="tabbedcontent">
-    <div class="tabs-section" tabs-section="tabs-section"><button class="section-tab" data-active="" data-togglable="TYPE">Types</button><button class="section-tab" data-togglable="FUNCTION,EXTENSION_FUNCTION">Functions</button></div>
-    <div class="tabs-section-body">
-      <div data-togglable="TYPE">
-        <h2 class="">Types</h2>
-        <div class="table"><a data-name="-1376152397%2FClasslikes%2F533364019" anchor-label="DefaultEventAnalyticsController" id="-1376152397%2FClasslikes%2F533364019" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release"></a>
-          <div class="table-row" data-filterable-current=":amazon-chime-sdk:dokkaHtmlPartial/release" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release">
-            <div class="main-subrow keyValue ">
-              <div class=""><span class="inline-flex">
-                  <div><a href="-default-event-analytics-controller/index.html"><span>Default</span><wbr><span>Event</span><wbr><span>Analytics</span><wbr><span><span>Controller</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1376152397%2FClasslikes%2F533364019"></span>
-                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
-                  </span></span></div>
-              <div>
-                <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":amazon-chime-sdk:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">class </span><a href="-default-event-analytics-controller/index.html">DefaultEventAnalyticsController</a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">logger<span class="token operator">: </span><a href="../com.amazonaws.services.chime.sdk.meetings.utils.logger/-logger/index.html">Logger</a><span class="token punctuation">, </span></span><span class="parameter ">meetingSessionConfiguration<span class="token operator">: </span><a href="../com.amazonaws.services.chime.sdk.meetings.session/-meeting-session-configuration/index.html">MeetingSessionConfiguration</a><span class="token punctuation">, </span></span><span class="parameter ">meetingStatsCollector<span class="token operator">: </span><a href="-meeting-stats-collector/index.html">MeetingStatsCollector</a><span class="token punctuation">, </span></span><span class="parameter ">eventReporter<span class="token operator">: </span><a href="../com.amazonaws.services.chime.sdk.meetings.ingestion/-event-reporter/index.html">EventReporter</a><span class="token operator">?</span><span class="token operator"> = </span>null</span></span><span class="token punctuation">)</span> : <a href="-event-analytics-controller/index.html">EventAnalyticsController</a></div></div></div>
-                </div>
-              </div>
-            </div>
-          </div>
-<a data-name="-1549570946%2FClasslikes%2F533364019" anchor-label="DefaultMeetingStatsCollector" id="-1549570946%2FClasslikes%2F533364019" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release"></a>
-          <div class="table-row" data-filterable-current=":amazon-chime-sdk:dokkaHtmlPartial/release" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release">
-            <div class="main-subrow keyValue ">
-              <div class=""><span class="inline-flex">
-                  <div><a href="-default-meeting-stats-collector/index.html"><span>Default</span><wbr><span>Meeting</span><wbr><span>Stats</span><wbr><span><span>Collector</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1549570946%2FClasslikes%2F533364019"></span>
-                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
-                  </span></span></div>
-              <div>
-                <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":amazon-chime-sdk:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">class </span><a href="-default-meeting-stats-collector/index.html">DefaultMeetingStatsCollector</a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">logger<span class="token operator">: </span><a href="../com.amazonaws.services.chime.sdk.meetings.utils.logger/-logger/index.html">Logger</a></span></span><span class="token punctuation">)</span> : <a href="-meeting-stats-collector/index.html">MeetingStatsCollector</a></div></div></div>
-                </div>
-              </div>
-            </div>
-          </div>
-<a data-name="573839934%2FClasslikes%2F533364019" anchor-label="EventAnalyticsController" id="573839934%2FClasslikes%2F533364019" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release"></a>
-          <div class="table-row" data-filterable-current=":amazon-chime-sdk:dokkaHtmlPartial/release" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release">
-            <div class="main-subrow keyValue ">
-              <div class=""><span class="inline-flex">
-                  <div><a href="-event-analytics-controller/index.html"><span>Event</span><wbr><span>Analytics</span><wbr><span><span>Controller</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="573839934%2FClasslikes%2F533364019"></span>
-                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
-                  </span></span></div>
-              <div>
-                <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":amazon-chime-sdk:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">interface </span><a href="-event-analytics-controller/index.html">EventAnalyticsController</a></div><div class="brief "><p class="paragraph"><a href="-event-analytics-controller/index.html">EventAnalyticsController</a> keeps track of events and notifies <a href="-event-analytics-observer/index.html">EventAnalyticsObserver</a>. An event describes the success and failure conditions for the meeting session.</p></div></div></div>
-                </div>
-              </div>
-            </div>
-          </div>
-<a data-name="451756928%2FClasslikes%2F533364019" anchor-label="EventAnalyticsFacade" id="451756928%2FClasslikes%2F533364019" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release"></a>
-          <div class="table-row" data-filterable-current=":amazon-chime-sdk:dokkaHtmlPartial/release" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release">
-            <div class="main-subrow keyValue ">
-              <div class=""><span class="inline-flex">
-                  <div><a href="-event-analytics-facade/index.html"><span>Event</span><wbr><span>Analytics</span><wbr><span><span>Facade</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="451756928%2FClasslikes%2F533364019"></span>
-                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
-                  </span></span></div>
-              <div>
-                <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":amazon-chime-sdk:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">interface </span><a href="-event-analytics-facade/index.html">EventAnalyticsFacade</a></div><div class="brief "><p class="paragraph"><a href="-event-analytics-facade/index.html">EventAnalyticsFacade</a> allows builders to listen to meeting analytics events through adding/removing <a href="-event-analytics-observer/index.html">EventAnalyticsObserver</a>.</p></div></div></div>
-                </div>
-              </div>
-            </div>
-          </div>
-<a data-name="-605104508%2FClasslikes%2F533364019" anchor-label="EventAnalyticsObserver" id="-605104508%2FClasslikes%2F533364019" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release"></a>
-          <div class="table-row" data-filterable-current=":amazon-chime-sdk:dokkaHtmlPartial/release" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release">
-            <div class="main-subrow keyValue ">
-              <div class=""><span class="inline-flex">
-                  <div><a href="-event-analytics-observer/index.html"><span>Event</span><wbr><span>Analytics</span><wbr><span><span>Observer</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-605104508%2FClasslikes%2F533364019"></span>
-                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
-                  </span></span></div>
-              <div>
-                <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":amazon-chime-sdk:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">interface </span><a href="-event-analytics-observer/index.html">EventAnalyticsObserver</a></div><div class="brief "><p class="paragraph"><a href="-event-analytics-observer/index.html">EventAnalyticsObserver</a> handles events regarding to analytics.</p></div></div></div>
-                </div>
-              </div>
-            </div>
-          </div>
-<a data-name="-2038562407%2FClasslikes%2F533364019" anchor-label="EventAttributeName" id="-2038562407%2FClasslikes%2F533364019" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release"></a>
-          <div class="table-row" data-filterable-current=":amazon-chime-sdk:dokkaHtmlPartial/release" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release">
-            <div class="main-subrow keyValue ">
-              <div class=""><span class="inline-flex">
-                  <div><a href="-event-attribute-name/index.html"><span>Event</span><wbr><span>Attribute</span><wbr><span><span>Name</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-2038562407%2FClasslikes%2F533364019"></span>
-                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
-                  </span></span></div>
-              <div>
-                <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":amazon-chime-sdk:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">enum </span><a href="-event-attribute-name/index.html">EventAttributeName</a> : <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-enum/index.html">Enum</a><span class="token operator">&lt;</span><a href="-event-attribute-name/index.html">EventAttributeName</a><span class="token operator">&gt; </span></div></div></div>
-                </div>
-              </div>
-            </div>
-          </div>
-<a data-name="-818074037%2FClasslikes%2F533364019" anchor-label="EventAttributes" id="-818074037%2FClasslikes%2F533364019" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release"></a>
-          <div class="table-row" data-filterable-current=":amazon-chime-sdk:dokkaHtmlPartial/release" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release">
-            <div class="main-subrow keyValue ">
-              <div class=""><span class="inline-flex">
-                  <div><a href="-event-attributes/index.html"><span>Event</span><wbr><span><span>Attributes</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-818074037%2FClasslikes%2F533364019"></span>
-                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
-                  </span></span></div>
-              <div>
-                <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":amazon-chime-sdk:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">typealias </span><a href="-event-attributes/index.html">EventAttributes</a><span class="token operator"> = </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-mutable-map/index.html">MutableMap</a><span class="token operator">&lt;</span><a href="-event-attribute-name/index.html">EventAttributeName</a><span class="token punctuation">, </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-any/index.html">Any</a><span class="token operator">&gt;</span></div><div class="brief "><p class="paragraph"><a href="-event-attributes/index.html">EventAttributes</a> describes meeting event.</p></div></div></div>
-                </div>
-              </div>
-            </div>
-          </div>
-<a data-name="-1737351081%2FClasslikes%2F533364019" anchor-label="EventName" id="-1737351081%2FClasslikes%2F533364019" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release"></a>
-          <div class="table-row" data-filterable-current=":amazon-chime-sdk:dokkaHtmlPartial/release" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release">
-            <div class="main-subrow keyValue ">
-              <div class=""><span class="inline-flex">
-                  <div><a href="-event-name/index.html"><span>Event</span><wbr><span><span>Name</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1737351081%2FClasslikes%2F533364019"></span>
-                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
-                  </span></span></div>
-              <div>
-                <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":amazon-chime-sdk:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">enum </span><a href="-event-name/index.html">EventName</a> : <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-enum/index.html">Enum</a><span class="token operator">&lt;</span><a href="-event-name/index.html">EventName</a><span class="token operator">&gt; </span></div><div class="brief "><p class="paragraph"><a href="-event-name/index.html">EventName</a> represent sdk event that could help builders to analyze the data.</p></div></div></div>
-                </div>
-              </div>
-            </div>
-          </div>
-<a data-name="1760665115%2FClasslikes%2F533364019" anchor-label="MeetingHistoryEvent" id="1760665115%2FClasslikes%2F533364019" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release"></a>
-          <div class="table-row" data-filterable-current=":amazon-chime-sdk:dokkaHtmlPartial/release" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release">
-            <div class="main-subrow keyValue ">
-              <div class=""><span class="inline-flex">
-                  <div><a href="-meeting-history-event/index.html"><span>Meeting</span><wbr><span>History</span><wbr><span><span>Event</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1760665115%2FClasslikes%2F533364019"></span>
-                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
-                  </span></span></div>
-              <div>
-                <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":amazon-chime-sdk:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">data </span><span class="token keyword">class </span><a href="-meeting-history-event/index.html">MeetingHistoryEvent</a><span class="token punctuation">(</span><span class="parameters "><span class="parameter "><span class="token keyword">val </span>meetingHistoryEventName<span class="token operator">: </span><a href="-meeting-history-event-name/index.html">MeetingHistoryEventName</a><span class="token punctuation">, </span></span><span class="parameter "><span class="token keyword">val </span>timestamp<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html">Long</a></span></span><span class="token punctuation">)</span></div></div></div>
-                </div>
-              </div>
-            </div>
-          </div>
-<a data-name="2057629904%2FClasslikes%2F533364019" anchor-label="MeetingHistoryEventName" id="2057629904%2FClasslikes%2F533364019" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release"></a>
-          <div class="table-row" data-filterable-current=":amazon-chime-sdk:dokkaHtmlPartial/release" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release">
-            <div class="main-subrow keyValue ">
-              <div class=""><span class="inline-flex">
-                  <div><a href="-meeting-history-event-name/index.html"><span>Meeting</span><wbr><span>History</span><wbr><span>Event</span><wbr><span><span>Name</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="2057629904%2FClasslikes%2F533364019"></span>
-                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
-                  </span></span></div>
-              <div>
-                <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":amazon-chime-sdk:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">enum </span><a href="-meeting-history-event-name/index.html">MeetingHistoryEventName</a> : <a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-enum/index.html">Enum</a><span class="token operator">&lt;</span><a href="-meeting-history-event-name/index.html">MeetingHistoryEventName</a><span class="token operator">&gt; </span></div><div class="brief "><p class="paragraph"><a href="-meeting-history-event-name/index.html">MeetingHistoryEventName</a> is a notable event (such as MeetingStartSucceeded) that occur during meeting. Thus, this also includes events in <a href="-event-name/index.html">EventName</a>.</p></div></div></div>
-                </div>
-              </div>
-            </div>
-          </div>
-<a data-name="-2132096301%2FClasslikes%2F533364019" anchor-label="MeetingStatsCollector" id="-2132096301%2FClasslikes%2F533364019" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release"></a>
-          <div class="table-row" data-filterable-current=":amazon-chime-sdk:dokkaHtmlPartial/release" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release">
-            <div class="main-subrow keyValue ">
-              <div class=""><span class="inline-flex">
-                  <div><a href="-meeting-stats-collector/index.html"><span>Meeting</span><wbr><span>Stats</span><wbr><span><span>Collector</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-2132096301%2FClasslikes%2F533364019"></span>
-                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
-                  </span></span></div>
-              <div>
-                <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":amazon-chime-sdk:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">interface </span><a href="-meeting-stats-collector/index.html">MeetingStatsCollector</a></div></div></div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div data-togglable="EXTENSION_FUNCTION">
-        <h2 class="">Functions</h2>
-        <div class="table"><a data-name="-959273139%2FFunctions%2F533364019" anchor-label="toJsonString" id="-959273139%2FFunctions%2F533364019" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release"></a>
-          <div class="table-row" data-filterable-current=":amazon-chime-sdk:dokkaHtmlPartial/release" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release">
-            <div class="main-subrow keyValue ">
-              <div class=""><span class="inline-flex">
-                  <div><a href="to-json-string.html"><span>to</span><wbr><span>Json</span><wbr><span><span>String</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-959273139%2FFunctions%2F533364019"></span>
-                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
-                  </span></span></div>
-              <div>
-                <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":amazon-chime-sdk:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">fun </span><a href="-event-attributes/index.html">EventAttributes</a><span class="token punctuation">.</span><a href="to-json-string.html"><span class="token function">toJsonString</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a></div><div class="brief "><p class="paragraph">Convert event attributes into JSON string.</p></div></div></div>
-                </div>
-              </div>
-            </div>
-          </div>
-<a data-name="-647752744%2FFunctions%2F533364019" anchor-label="toStringKeyMap" id="-647752744%2FFunctions%2F533364019" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release"></a>
-          <div class="table-row" data-filterable-current=":amazon-chime-sdk:dokkaHtmlPartial/release" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release">
-            <div class="main-subrow keyValue ">
-              <div class=""><span class="inline-flex">
-                  <div><a href="to-string-key-map.html"><span>to</span><wbr><span>String</span><wbr><span>Key</span><wbr><span><span>Map</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-647752744%2FFunctions%2F533364019"></span>
-                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
-                  </span></span></div>
-              <div>
-                <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":amazon-chime-sdk:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">fun </span><a href="-event-attributes/index.html">EventAttributes</a><span class="token punctuation">.</span><a href="to-string-key-map.html"><span class="token function">toStringKeyMap</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-map/index.html">Map</a><span class="token operator">&lt;</span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a><span class="token punctuation">, </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-any/index.html">Any</a><span class="token operator">&gt;</span></div></div></div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-      <div class="footer">
-        <span class="go-to-top-icon"><a href="#content" id="go-to-top-link"></a></span><span>© 2024 Copyright</span><span class="pull-right"><span>Generated by </span><a href="https://github.com/Kotlin/dokka"><span>dokka</span><span class="padded-icon"></span></a></span>
-      </div>
-            </div>
-        </div>
-    </div>
-</body>
-</html>
-
+<HTML>
+<HEAD>
+<meta charset="UTF-8">
+<title>com.amazonaws.services.chime.sdk.meetings.analytics - amazon-chime-sdk</title>
+<link rel="stylesheet" href="../../style.css">
+</HEAD>
+<BODY>
+<a href="../index.html">amazon-chime-sdk</a>&nbsp;/&nbsp;<a href="./index.html">com.amazonaws.services.chime.sdk.meetings.analytics</a><br/>
+<br/>
+<h2>Package com.amazonaws.services.chime.sdk.meetings.analytics</h2>
+<h3>Types</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<h4><a href="-default-event-analytics-controller/index.html">DefaultEventAnalyticsController</a></h4>
+</td>
+<td>
+<code><span class="keyword">class </span><span class="identifier">DefaultEventAnalyticsController</span>&nbsp;<span class="symbol">:</span>&nbsp;<a href="-event-analytics-controller/index.html"><span class="identifier">EventAnalyticsController</span></a></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="-default-meeting-stats-collector/index.html">DefaultMeetingStatsCollector</a></h4>
+</td>
+<td>
+<code><span class="keyword">class </span><span class="identifier">DefaultMeetingStatsCollector</span>&nbsp;<span class="symbol">:</span>&nbsp;<a href="-meeting-stats-collector/index.html"><span class="identifier">MeetingStatsCollector</span></a></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="-event-analytics-controller/index.html">EventAnalyticsController</a></h4>
+</td>
+<td>
+<p><a href="-event-analytics-controller/index.html">EventAnalyticsController</a> keeps track of events and notifies <a href="-event-analytics-observer/index.html">EventAnalyticsObserver</a>.
+An event describes the success and failure conditions for the meeting session.</p>
+<code><span class="keyword">interface </span><span class="identifier">EventAnalyticsController</span></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="-event-analytics-facade/index.html">EventAnalyticsFacade</a></h4>
+</td>
+<td>
+<p><a href="-event-analytics-facade/index.html">EventAnalyticsFacade</a> allows builders to listen to meeting analytics events
+through adding/removing <a href="-event-analytics-observer/index.html">EventAnalyticsObserver</a>.</p>
+<code><span class="keyword">interface </span><span class="identifier">EventAnalyticsFacade</span></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="-event-analytics-observer/index.html">EventAnalyticsObserver</a></h4>
+</td>
+<td>
+<p><a href="-event-analytics-observer/index.html">EventAnalyticsObserver</a> handles events regarding to analytics.</p>
+<code><span class="keyword">interface </span><span class="identifier">EventAnalyticsObserver</span></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="-event-attribute-name/index.html">EventAttributeName</a></h4>
+</td>
+<td>
+<code><span class="keyword">enum</span> <span class="keyword">class </span><span class="identifier">EventAttributeName</span></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="-event-attributes.html">EventAttributes</a></h4>
+</td>
+<td>
+<p><a href="-event-attributes.html">EventAttributes</a> describes meeting event.</p>
+<code><span class="keyword">typealias </span><span class="identifier">EventAttributes</span>&nbsp;<span class="symbol">=</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-mutable-map/index.html"><span class="identifier">MutableMap</span></a><span class="symbol">&lt;</span><a href="-event-attribute-name/index.html"><span class="identifier">EventAttributeName</span></a><span class="symbol">,</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-any/index.html"><span class="identifier">Any</span></a><span class="symbol">&gt;</span></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="-event-name/index.html">EventName</a></h4>
+</td>
+<td>
+<p><a href="-event-name/index.html">EventName</a> represent sdk event that could help builders to analyze the data.</p>
+<code><span class="keyword">enum</span> <span class="keyword">class </span><span class="identifier">EventName</span></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="-meeting-history-event/index.html">MeetingHistoryEvent</a></h4>
+</td>
+<td>
+<code><span class="keyword">data</span> <span class="keyword">class </span><span class="identifier">MeetingHistoryEvent</span></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="-meeting-history-event-name/index.html">MeetingHistoryEventName</a></h4>
+</td>
+<td>
+<p><a href="-meeting-history-event-name/index.html">MeetingHistoryEventName</a> is a notable event (such as MeetingStartSucceeded) that occur during meeting.
+Thus, this also includes events in <a href="-event-name/index.html">EventName</a>.</p>
+<code><span class="keyword">enum</span> <span class="keyword">class </span><span class="identifier">MeetingHistoryEventName</span></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="-meeting-stats-collector/index.html">MeetingStatsCollector</a></h4>
+</td>
+<td>
+<code><span class="keyword">interface </span><span class="identifier">MeetingStatsCollector</span></code></td>
+</tr>
+</tbody>
+</table>
+<h3>Extensions for External Classes</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<h4><a href="kotlin.collections.-mutable-map/index.html">kotlin.collections.MutableMap</a></h4>
+</td>
+<td>
+</td>
+</tr>
+</tbody>
+</table>
+</BODY>
+</HTML>

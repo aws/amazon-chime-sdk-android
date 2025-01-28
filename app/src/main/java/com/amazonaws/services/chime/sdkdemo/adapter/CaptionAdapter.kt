@@ -18,8 +18,9 @@ import androidx.recyclerview.widget.RecyclerView
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.TranscriptItemType
 import com.amazonaws.services.chime.sdkdemo.R
 import com.amazonaws.services.chime.sdkdemo.data.Caption
-import com.amazonaws.services.chime.sdkdemo.databinding.RowCaptionBinding
 import com.amazonaws.services.chime.sdkdemo.utils.inflate
+import kotlinx.android.synthetic.main.row_caption.view.captionText
+import kotlinx.android.synthetic.main.row_caption.view.speakerName
 
 class CaptionAdapter(
     private val captions: Collection<Caption>
@@ -48,15 +49,15 @@ class CaptionHolder(inflatedView: View) :
         private const val FILTERED_CAPTION_FIRST_INDEX = "["
     }
 
-    private val binding = RowCaptionBinding.bind(inflatedView)
+    private var view: View = inflatedView
 
     fun bindCaption(caption: Caption, position: Int) {
         val speakerName = caption.speakerName ?: ""
 
         val captionTextBackgroundColor = caption.speakerName?.let { R.color.colorWhite } ?: R.color.colorMissingSpeaker
-        binding.captionText.setBackgroundResource(captionTextBackgroundColor)
-        binding.speakerName.text = speakerName
-        binding.captionText.text = caption.content
+        view.captionText.setBackgroundResource(captionTextBackgroundColor)
+        view.speakerName.text = speakerName
+        view.captionText.text = caption.content
         val spannable = SpannableString(caption.content)
         caption.entities?.let { contents ->
             // Highlight PII identified and redacted words.
@@ -68,7 +69,7 @@ class CaptionHolder(inflatedView: View) :
                     Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
                 )
             }
-        } ?: run { binding.captionText.setTextColor(Color.BLACK) }
+        } ?: run { view.captionText.setTextColor(Color.BLACK) }
         caption.items?.let { items ->
             // Underline words with low confidence score.
             items.forEach { item ->
@@ -84,8 +85,8 @@ class CaptionHolder(inflatedView: View) :
                 }
             }
         }
-        binding.captionText.text = spannable
-        binding.captionText.contentDescription = "caption-$position"
+        view.captionText.text = spannable
+        view.captionText.contentDescription = "caption-$position"
     }
 }
 

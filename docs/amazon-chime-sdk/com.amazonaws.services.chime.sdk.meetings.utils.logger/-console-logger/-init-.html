@@ -1,0 +1,28 @@
+<HTML>
+<HEAD>
+<meta charset="UTF-8">
+<title>ConsoleLogger.<init> - amazon-chime-sdk</title>
+<link rel="stylesheet" href="../../../style.css">
+</HEAD>
+<BODY>
+<a href="../../index.html">amazon-chime-sdk</a>&nbsp;/&nbsp;<a href="../index.html">com.amazonaws.services.chime.sdk.meetings.utils.logger</a>&nbsp;/&nbsp;<a href="index.html">ConsoleLogger</a>&nbsp;/&nbsp;<a href="./-init-.html">&lt;init&gt;</a><br/>
+<br/>
+<h1>&lt;init&gt;</h1>
+<a name="com.amazonaws.services.chime.sdk.meetings.utils.logger.ConsoleLogger$&lt;init&gt;(com.amazonaws.services.chime.sdk.meetings.utils.logger.LogLevel)"></a>
+<code><span class="identifier">ConsoleLogger</span><span class="symbol">(</span><span class="identifier" id="com.amazonaws.services.chime.sdk.meetings.utils.logger.ConsoleLogger$<init>(com.amazonaws.services.chime.sdk.meetings.utils.logger.LogLevel)/level">level</span><span class="symbol">:</span>&nbsp;<a href="../-log-level/index.html"><span class="identifier">LogLevel</span></a>&nbsp;<span class="symbol">=</span>&nbsp;LogLevel.INFO<span class="symbol">)</span></code>
+<p><a href="index.html">ConsoleLogger</a> writes logs with console</p>
+<pre><code>// Working with the ConsoleLogger
+val logger = new ConsoleLogger("demo"); // defaults to WARN
+logger.info("info");
+logger.debug("debug");
+logger.warn("warn");
+logger.error("error");
+
+// Setting logging levels
+val logger = new ConsoleLogger("demo", LogLevel.WARN);
+logger.debug("debug"); // does not print
+logger.setLogLevel(LogLevel.DEBUG)
+logger.debug("debug"); // print
+</code></pre>
+</BODY>
+</HTML>

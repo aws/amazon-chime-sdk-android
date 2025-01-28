@@ -1,213 +1,103 @@
-<!doctype html>
-<html class="no-js">
-<head>
-    <meta name="viewport" content="width=device-width, initial-scale=1" charset="UTF-8">
-    <title>BackgroundReplacementVideoFrameProcessor</title>
-<link href="../../../images/logo-icon.svg" rel="icon" type="image/svg">    <script>var pathToRoot = "../../../";</script>
-    <script>document.documentElement.classList.replace("no-js","js");</script>
-    <script>const storage = localStorage.getItem("dokka-dark-mode")
-    if (storage == null) {
-        const osDarkSchemePreferred = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
-        if (osDarkSchemePreferred === true) {
-            document.getElementsByTagName("html")[0].classList.add("theme-dark")
-        }
-    } else {
-        const savedDarkMode = JSON.parse(storage)
-        if(savedDarkMode === true) {
-            document.getElementsByTagName("html")[0].classList.add("theme-dark")
-        }
-    }
-    </script>
-<script type="text/javascript" src="https://unpkg.com/kotlin-playground@1/dist/playground.min.js" async></script>
-<script type="text/javascript" src="../../../scripts/sourceset_dependencies.js" async></script>
-<link href="../../../styles/style.css" rel="Stylesheet">
-<link href="../../../styles/main.css" rel="Stylesheet">
-<link href="../../../styles/prism.css" rel="Stylesheet">
-<link href="../../../styles/logo-styles.css" rel="Stylesheet">
-<link href="../../../styles/font-jb-sans-auto.css" rel="Stylesheet">
-<script type="text/javascript" src="../../../scripts/clipboard.js" async></script>
-<script type="text/javascript" src="../../../scripts/navigation-loader.js" async></script>
-<script type="text/javascript" src="../../../scripts/platform-content-handler.js" async></script>
-<script type="text/javascript" src="../../../scripts/main.js" defer></script>
-<script type="text/javascript" src="../../../scripts/prism.js" async></script>
-<script type="text/javascript" src="../../../scripts/symbol-parameters-wrapper_deferred.js" defer></script></head>
-<body>
-    <div class="root">
-<nav class="navigation" id="navigation-wrapper">
-    <div class="navigation--inner">
-        <div class="navigation-title">
-            <button class="menu-toggle" id="menu-toggle" type="button">toggle menu</button>
-            <div class="library-name">
-<a class="library-name--link" href="../../../index.html">
-                            amazon-chime-sdk-android
-                    </a>            </div>
-            <div class="library-version">
-            </div>
-        </div>
-        <div class="filter-section" id="filter-section">
-                <button class="platform-tag platform-selector jvm-like" data-active="" data-filter=":amazon-chime-sdk:dokkaHtmlPartial/release">androidJvm</button>
-        </div>
-    </div>
-    <div class="navigation-controls">
-        <button class="navigation-controls--btn navigation-controls--theme" id="theme-toggle-button" type="button">switch theme</button>
-        <div class="navigation-controls--btn navigation-controls--search" id="searchBar" role="button">search in API</div>
-    </div>
-</nav>
-        <div id="container">
-            <div class="sidebar" id="leftColumn">
-                <div class="sidebar--inner" id="sideMenu"></div>
-            </div>
-            <div id="main">
-<div class="main-content" data-page-type="classlike" id="content" pageids="amazon-chime-sdk::com.amazonaws.services.chime.sdk.meetings.audiovideo.video.backgroundfilter.backgroundreplacement/BackgroundReplacementVideoFrameProcessor///PointingToDeclaration//533364019">
-  <div class="breadcrumbs"><a href="../../index.html">amazon-chime-sdk</a><span class="delimiter">/</span><a href="../index.html">com.amazonaws.services.chime.sdk.meetings.audiovideo.video.backgroundfilter.backgroundreplacement</a><span class="delimiter">/</span><span class="current">BackgroundReplacementVideoFrameProcessor</span></div>
-  <div class="cover ">
-    <h1 class="cover"><span>Background</span><wbr><span>Replacement</span><wbr><span>Video</span><wbr><span>Frame</span><wbr><span><span>Processor</span></span></h1>
-    <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":amazon-chime-sdk:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">class </span><a href="index.html">BackgroundReplacementVideoFrameProcessor</a>&nbsp;<span><span class="token annotation builtin">@</span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.jvm/-jvm-overloads/index.html"><span class="token annotation builtin">JvmOverloads</span></a>&nbsp;</span><span class="token keyword">constructor</span><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">logger<span class="token operator">: </span><a href="../../com.amazonaws.services.chime.sdk.meetings.utils.logger/-logger/index.html">Logger</a><span class="token punctuation">, </span></span><span class="parameter ">eglCoreFactory<span class="token operator">: </span><a href="../../com.amazonaws.services.chime.sdk.meetings.audiovideo.video.gl/-egl-core-factory/index.html">EglCoreFactory</a><span class="token punctuation">, </span></span><span class="parameter ">context<span class="token operator">: </span><a href="https://developer.android.com/reference/kotlin/android/content/Context.html">Context</a><span class="token punctuation">, </span></span><span class="parameter "><span class="token keyword">var </span>configurations<span class="token operator">: </span><a href="../-background-replacement-configuration/index.html">BackgroundReplacementConfiguration</a><span class="token operator">?</span></span></span><span class="token punctuation">)</span> : <a href="../../com.amazonaws.services.chime.sdk.meetings.audiovideo.video/-video-source/index.html">VideoSource</a>, <a href="../../com.amazonaws.services.chime.sdk.meetings.audiovideo.video/-video-sink/index.html">VideoSink</a></div><p class="paragraph"><a href="index.html">BackgroundReplacementVideoFrameProcessor</a> Draws frames to RGBA, converts to CPU, identifies the foreground person and replaces the background of a video frame.</p><h4 class="">Parameters</h4><div class="table"><div class="table-row" data-filterable-current=":amazon-chime-sdk:dokkaHtmlPartial/release" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release"><div class="main-subrow keyValue "><div class=""><span class="inline-flex"><div><u><span><span>logger</span></span></u></div></span></div><div><div class="title"><p class="paragraph">: <a href="../../com.amazonaws.services.chime.sdk.meetings.utils.logger/-logger/index.html">Logger</a> - Logger to log the data.</p></div></div></div></div><div class="table-row" data-filterable-current=":amazon-chime-sdk:dokkaHtmlPartial/release" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release"><div class="main-subrow keyValue "><div class=""><span class="inline-flex"><div><u><span>egl</span><wbr><span>Core</span><wbr><span><span>Factory</span></span></u></div></span></div><div><div class="title"><p class="paragraph">: <a href="../../com.amazonaws.services.chime.sdk.meetings.audiovideo.video.gl/-egl-core-factory/index.html">EglCoreFactory</a> - Factory to create <a href="../../com.amazonaws.services.chime.sdk.meetings.audiovideo.video.gl/-egl-core/index.html">EglCore</a> objects to hold EGL state.</p></div></div></div></div><div class="table-row" data-filterable-current=":amazon-chime-sdk:dokkaHtmlPartial/release" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release"><div class="main-subrow keyValue "><div class=""><span class="inline-flex"><div><u><span><span>context</span></span></u></div></span></div><div><div class="title"><p class="paragraph">: <a href="https://developer.android.com/reference/kotlin/android/content/Context.html">Context</a> - Context to create segmentation processor.</p></div></div></div></div><div class="table-row" data-filterable-current=":amazon-chime-sdk:dokkaHtmlPartial/release" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release"><div class="main-subrow keyValue "><div class=""><span class="inline-flex"><div><u><span><span>configurations</span></span></u></div></span></div><div><div class="title"><p class="paragraph">: <a href="../-background-replacement-configuration/index.html">BackgroundReplacementConfiguration</a> - Image to replace the background with.</p></div></div></div></div></div></div></div>
-  </div>
-  <div class="tabbedcontent">
-    <div class="tabs-section" tabs-section="tabs-section"><button class="section-tab" data-active="" data-togglable="CONSTRUCTOR,TYPE,PROPERTY,FUNCTION">Members</button></div>
-    <div class="tabs-section-body">
-      <div data-togglable="CONSTRUCTOR">
-        <h2 class="">Constructors</h2>
-        <div class="table"><a data-name="-901690951%2FConstructors%2F533364019" anchor-label="BackgroundReplacementVideoFrameProcessor" id="-901690951%2FConstructors%2F533364019" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release"></a>
-          <div class="table-row" data-togglable="CONSTRUCTOR" data-filterable-current=":amazon-chime-sdk:dokkaHtmlPartial/release" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release">
-            <div class="main-subrow keyValue ">
-              <div class=""><span class="inline-flex">
-                  <div><a href="-background-replacement-video-frame-processor.html"><span>Background</span><wbr><span>Replacement</span><wbr><span>Video</span><wbr><span>Frame</span><wbr><span><span>Processor</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-901690951%2FConstructors%2F533364019"></span>
-                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
-                  </span></span></div>
-              <div>
-                <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":amazon-chime-sdk:dokkaHtmlPartial/release"><div class="symbol monospace"><div class="block"><div class="block"><span class="token annotation builtin">@</span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.jvm/-jvm-overloads/index.html"><span class="token annotation builtin">JvmOverloads</span></a></div></div><span class="token keyword">constructor</span><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">logger<span class="token operator">: </span><a href="../../com.amazonaws.services.chime.sdk.meetings.utils.logger/-logger/index.html">Logger</a><span class="token punctuation">, </span></span><span class="parameter ">eglCoreFactory<span class="token operator">: </span><a href="../../com.amazonaws.services.chime.sdk.meetings.audiovideo.video.gl/-egl-core-factory/index.html">EglCoreFactory</a><span class="token punctuation">, </span></span><span class="parameter ">context<span class="token operator">: </span><a href="https://developer.android.com/reference/kotlin/android/content/Context.html">Context</a><span class="token punctuation">, </span></span><span class="parameter ">configurations<span class="token operator">: </span><a href="../-background-replacement-configuration/index.html">BackgroundReplacementConfiguration</a><span class="token operator">?</span></span></span><span class="token punctuation">)</span></div></div></div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div data-togglable="PROPERTY">
-        <h2 class="">Properties</h2>
-        <div class="table"><a data-name="1502227238%2FProperties%2F533364019" anchor-label="configurations" id="1502227238%2FProperties%2F533364019" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release"></a>
-          <div class="table-row" data-filterable-current=":amazon-chime-sdk:dokkaHtmlPartial/release" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release">
-            <div class="main-subrow keyValue ">
-              <div class=""><span class="inline-flex">
-                  <div><a href="configurations.html"><span><span>configurations</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1502227238%2FProperties%2F533364019"></span>
-                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
-                  </span></span></div>
-              <div>
-                <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":amazon-chime-sdk:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">var </span><a href="configurations.html">configurations</a><span class="token operator">: </span><a href="../-background-replacement-configuration/index.html">BackgroundReplacementConfiguration</a><span class="token operator">?</span></div></div></div>
-                </div>
-              </div>
-            </div>
-          </div>
-<a data-name="-642261033%2FProperties%2F533364019" anchor-label="contentHint" id="-642261033%2FProperties%2F533364019" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release"></a>
-          <div class="table-row" data-filterable-current=":amazon-chime-sdk:dokkaHtmlPartial/release" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release">
-            <div class="main-subrow keyValue ">
-              <div class=""><span class="inline-flex">
-                  <div><a href="content-hint.html"><span>content</span><wbr><span><span>Hint</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-642261033%2FProperties%2F533364019"></span>
-                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
-                  </span></span></div>
-              <div>
-                <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":amazon-chime-sdk:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">override </span><span class="token keyword">val </span><a href="content-hint.html">contentHint</a><span class="token operator">: </span><a href="../../com.amazonaws.services.chime.sdk.meetings.audiovideo.video/-video-content-hint/index.html">VideoContentHint</a></div><div class="brief "><p class="paragraph">Content hint for downstream processing</p></div></div></div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div data-togglable="FUNCTION">
-        <h2 class="">Functions</h2>
-        <div class="table"><a data-name="-1325600894%2FFunctions%2F533364019" anchor-label="addVideoSink" id="-1325600894%2FFunctions%2F533364019" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release"></a>
-          <div class="table-row" data-filterable-current=":amazon-chime-sdk:dokkaHtmlPartial/release" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release">
-            <div class="main-subrow keyValue ">
-              <div class=""><span class="inline-flex">
-                  <div><a href="add-video-sink.html"><span>add</span><wbr><span>Video</span><wbr><span><span>Sink</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1325600894%2FFunctions%2F533364019"></span>
-                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
-                  </span></span></div>
-              <div>
-                <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":amazon-chime-sdk:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">override </span><span class="token keyword">fun </span><a href="add-video-sink.html"><span class="token function">addVideoSink</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">sink<span class="token operator">: </span><a href="../../com.amazonaws.services.chime.sdk.meetings.audiovideo.video/-video-sink/index.html">VideoSink</a></span></span><span class="token punctuation">)</span></div><div class="brief "><p class="paragraph">Add a video sink which will immediately begin to receive new frames.</p></div></div></div>
-                </div>
-              </div>
-            </div>
-          </div>
-<a data-name="-1227257454%2FFunctions%2F533364019" anchor-label="getBackgroundReplacedBitmap" id="-1227257454%2FFunctions%2F533364019" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release"></a>
-          <div class="table-row" data-filterable-current=":amazon-chime-sdk:dokkaHtmlPartial/release" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release">
-            <div class="main-subrow keyValue ">
-              <div class=""><span class="inline-flex">
-                  <div><a href="get-background-replaced-bitmap.html"><span>get</span><wbr><span>Background</span><wbr><span>Replaced</span><wbr><span><span>Bitmap</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1227257454%2FFunctions%2F533364019"></span>
-                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
-                  </span></span></div>
-              <div>
-                <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":amazon-chime-sdk:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">fun </span><a href="get-background-replaced-bitmap.html"><span class="token function">getBackgroundReplacedBitmap</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">inputBitmap<span class="token operator">: </span><a href="https://developer.android.com/reference/kotlin/android/graphics/Bitmap.html">Bitmap</a><span class="token punctuation">, </span></span><span class="parameter ">frame<span class="token operator">: </span><a href="../../com.amazonaws.services.chime.sdk.meetings.audiovideo.video/-video-frame/index.html">VideoFrame</a></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://developer.android.com/reference/kotlin/android/graphics/Bitmap.html">Bitmap</a><span class="token operator">?</span></div></div></div>
-                </div>
-              </div>
-            </div>
-          </div>
-<a data-name="-1270731707%2FFunctions%2F533364019" anchor-label="onVideoFrameReceived" id="-1270731707%2FFunctions%2F533364019" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release"></a>
-          <div class="table-row" data-filterable-current=":amazon-chime-sdk:dokkaHtmlPartial/release" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release">
-            <div class="main-subrow keyValue ">
-              <div class=""><span class="inline-flex">
-                  <div><a href="on-video-frame-received.html"><span>on</span><wbr><span>Video</span><wbr><span>Frame</span><wbr><span><span>Received</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1270731707%2FFunctions%2F533364019"></span>
-                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
-                  </span></span></div>
-              <div>
-                <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":amazon-chime-sdk:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">override </span><span class="token keyword">fun </span><a href="on-video-frame-received.html"><span class="token function">onVideoFrameReceived</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">frame<span class="token operator">: </span><a href="../../com.amazonaws.services.chime.sdk.meetings.audiovideo.video/-video-frame/index.html">VideoFrame</a></span></span><span class="token punctuation">)</span></div><div class="brief "><p class="paragraph">Receive a video frame from some upstream source. The <a href="../../com.amazonaws.services.chime.sdk.meetings.audiovideo.video/-video-sink/index.html">VideoSink</a> may render, store, process, and forward the frame, among other applications.</p></div></div></div>
-                </div>
-              </div>
-            </div>
-          </div>
-<a data-name="-1589257904%2FFunctions%2F533364019" anchor-label="release" id="-1589257904%2FFunctions%2F533364019" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release"></a>
-          <div class="table-row" data-filterable-current=":amazon-chime-sdk:dokkaHtmlPartial/release" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release">
-            <div class="main-subrow keyValue ">
-              <div class=""><span class="inline-flex">
-                  <div><a href="release.html"><span><span>release</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1589257904%2FFunctions%2F533364019"></span>
-                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
-                  </span></span></div>
-              <div>
-                <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":amazon-chime-sdk:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">fun </span><a href="release.html"><span class="token function">release</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span></div></div></div>
-                </div>
-              </div>
-            </div>
-          </div>
-<a data-name="1318882393%2FFunctions%2F533364019" anchor-label="removeVideoSink" id="1318882393%2FFunctions%2F533364019" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release"></a>
-          <div class="table-row" data-filterable-current=":amazon-chime-sdk:dokkaHtmlPartial/release" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release">
-            <div class="main-subrow keyValue ">
-              <div class=""><span class="inline-flex">
-                  <div><a href="remove-video-sink.html"><span>remove</span><wbr><span>Video</span><wbr><span><span>Sink</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1318882393%2FFunctions%2F533364019"></span>
-                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
-                  </span></span></div>
-              <div>
-                <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":amazon-chime-sdk:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">override </span><span class="token keyword">fun </span><a href="remove-video-sink.html"><span class="token function">removeVideoSink</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">sink<span class="token operator">: </span><a href="../../com.amazonaws.services.chime.sdk.meetings.audiovideo.video/-video-sink/index.html">VideoSink</a></span></span><span class="token punctuation">)</span></div><div class="brief "><p class="paragraph">Remove a video sink which will no longer receive new frames on return</p></div></div></div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-      <div class="footer">
-        <span class="go-to-top-icon"><a href="#content" id="go-to-top-link"></a></span><span>© 2024 Copyright</span><span class="pull-right"><span>Generated by </span><a href="https://github.com/Kotlin/dokka"><span>dokka</span><span class="padded-icon"></span></a></span>
-      </div>
-            </div>
-        </div>
-    </div>
-</body>
-</html>
-
+<HTML>
+<HEAD>
+<meta charset="UTF-8">
+<title>BackgroundReplacementVideoFrameProcessor - amazon-chime-sdk</title>
+<link rel="stylesheet" href="../../../style.css">
+</HEAD>
+<BODY>
+<a href="../../index.html">amazon-chime-sdk</a>&nbsp;/&nbsp;<a href="../index.html">com.amazonaws.services.chime.sdk.meetings.audiovideo.video.backgroundfilter.backgroundreplacement</a>&nbsp;/&nbsp;<a href="./index.html">BackgroundReplacementVideoFrameProcessor</a><br/>
+<br/>
+<h1>BackgroundReplacementVideoFrameProcessor</h1>
+<code><span class="keyword">class </span><span class="identifier">BackgroundReplacementVideoFrameProcessor</span>&nbsp;<span class="symbol">:</span>&nbsp;<a href="../../com.amazonaws.services.chime.sdk.meetings.audiovideo.video/-video-source/index.html"><span class="identifier">VideoSource</span></a><span class="symbol">, </span><a href="../../com.amazonaws.services.chime.sdk.meetings.audiovideo.video/-video-sink/index.html"><span class="identifier">VideoSink</span></a></code>
+<p><a href="./index.html">BackgroundReplacementVideoFrameProcessor</a> Draws frames to RGBA, converts to CPU, identifies the foreground person
+and replaces the background of a video frame.</p>
+<h3>Parameters</h3>
+<p><a name="logger"></a>
+<code>logger</code> - : <a href="../../com.amazonaws.services.chime.sdk.meetings.utils.logger/-logger/index.html">Logger</a> - Logger to log the data.</p>
+<p><a name="eglCoreFactory"></a>
+<code>eglCoreFactory</code> - : <a href="../../com.amazonaws.services.chime.sdk.meetings.audiovideo.video.gl/-egl-core-factory/index.html">EglCoreFactory</a> - Factory to create <a href="../../com.amazonaws.services.chime.sdk.meetings.audiovideo.video.gl/-egl-core/index.html">EglCore</a> objects to hold EGL state.</p>
+<p><a name="context"></a>
+<code>context</code> - : <a href="https://developer.android.com/reference/android/content/Context.html">Context</a> - Context to create segmentation processor.</p>
+<p><a name="configurations"></a>
+<code>configurations</code> - : <a href="../-background-replacement-configuration/index.html">BackgroundReplacementConfiguration</a> - Image to replace the background with.</p>
+<h3>Constructors</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<h4><a href="-init-.html">&lt;init&gt;</a></h4>
+</td>
+<td>
+<p><a href="./index.html">BackgroundReplacementVideoFrameProcessor</a> Draws frames to RGBA, converts to CPU, identifies the foreground person
+and replaces the background of a video frame.</p>
+<code><span class="identifier">BackgroundReplacementVideoFrameProcessor</span><span class="symbol">(</span><span class="identifier" id="com.amazonaws.services.chime.sdk.meetings.audiovideo.video.backgroundfilter.backgroundreplacement.BackgroundReplacementVideoFrameProcessor$<init>(com.amazonaws.services.chime.sdk.meetings.utils.logger.Logger, com.amazonaws.services.chime.sdk.meetings.audiovideo.video.gl.EglCoreFactory, android.content.Context, com.amazonaws.services.chime.sdk.meetings.audiovideo.video.backgroundfilter.backgroundreplacement.BackgroundReplacementConfiguration)/logger">logger</span><span class="symbol">:</span>&nbsp;<a href="../../com.amazonaws.services.chime.sdk.meetings.utils.logger/-logger/index.html"><span class="identifier">Logger</span></a><span class="symbol">, </span><span class="identifier" id="com.amazonaws.services.chime.sdk.meetings.audiovideo.video.backgroundfilter.backgroundreplacement.BackgroundReplacementVideoFrameProcessor$<init>(com.amazonaws.services.chime.sdk.meetings.utils.logger.Logger, com.amazonaws.services.chime.sdk.meetings.audiovideo.video.gl.EglCoreFactory, android.content.Context, com.amazonaws.services.chime.sdk.meetings.audiovideo.video.backgroundfilter.backgroundreplacement.BackgroundReplacementConfiguration)/eglCoreFactory">eglCoreFactory</span><span class="symbol">:</span>&nbsp;<a href="../../com.amazonaws.services.chime.sdk.meetings.audiovideo.video.gl/-egl-core-factory/index.html"><span class="identifier">EglCoreFactory</span></a><span class="symbol">, </span><span class="identifier" id="com.amazonaws.services.chime.sdk.meetings.audiovideo.video.backgroundfilter.backgroundreplacement.BackgroundReplacementVideoFrameProcessor$<init>(com.amazonaws.services.chime.sdk.meetings.utils.logger.Logger, com.amazonaws.services.chime.sdk.meetings.audiovideo.video.gl.EglCoreFactory, android.content.Context, com.amazonaws.services.chime.sdk.meetings.audiovideo.video.backgroundfilter.backgroundreplacement.BackgroundReplacementConfiguration)/context">context</span><span class="symbol">:</span>&nbsp;<a href="https://developer.android.com/reference/android/content/Context.html"><span class="identifier">Context</span></a><span class="symbol">, </span><span class="identifier" id="com.amazonaws.services.chime.sdk.meetings.audiovideo.video.backgroundfilter.backgroundreplacement.BackgroundReplacementVideoFrameProcessor$<init>(com.amazonaws.services.chime.sdk.meetings.utils.logger.Logger, com.amazonaws.services.chime.sdk.meetings.audiovideo.video.gl.EglCoreFactory, android.content.Context, com.amazonaws.services.chime.sdk.meetings.audiovideo.video.backgroundfilter.backgroundreplacement.BackgroundReplacementConfiguration)/configurations">configurations</span><span class="symbol">:</span>&nbsp;<a href="../-background-replacement-configuration/index.html"><span class="identifier">BackgroundReplacementConfiguration</span></a><span class="symbol">?</span><span class="symbol">)</span></code></td>
+</tr>
+</tbody>
+</table>
+<h3>Properties</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<h4><a href="configurations.html">configurations</a></h4>
+</td>
+<td>
+<p>: <a href="../-background-replacement-configuration/index.html">BackgroundReplacementConfiguration</a> - Image to replace the background with.</p>
+<code><span class="keyword">var </span><span class="identifier">configurations</span><span class="symbol">: </span><a href="../-background-replacement-configuration/index.html"><span class="identifier">BackgroundReplacementConfiguration</span></a><span class="symbol">?</span></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="content-hint.html">contentHint</a></h4>
+</td>
+<td>
+<p>Content hint for downstream processing</p>
+<code><span class="keyword">val </span><span class="identifier">contentHint</span><span class="symbol">: </span><a href="../../com.amazonaws.services.chime.sdk.meetings.audiovideo.video/-video-content-hint/index.html"><span class="identifier">VideoContentHint</span></a></code></td>
+</tr>
+</tbody>
+</table>
+<h3>Functions</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<h4><a href="add-video-sink.html">addVideoSink</a></h4>
+</td>
+<td>
+<p>Add a video sink which will immediately begin to receive new frames.</p>
+<code><span class="keyword">fun </span><span class="identifier">addVideoSink</span><span class="symbol">(</span><span class="identifier" id="com.amazonaws.services.chime.sdk.meetings.audiovideo.video.backgroundfilter.backgroundreplacement.BackgroundReplacementVideoFrameProcessor$addVideoSink(com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoSink)/sink">sink</span><span class="symbol">:</span>&nbsp;<a href="../../com.amazonaws.services.chime.sdk.meetings.audiovideo.video/-video-sink/index.html"><span class="identifier">VideoSink</span></a><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="get-background-replaced-bitmap.html">getBackgroundReplacedBitmap</a></h4>
+</td>
+<td>
+<code><span class="keyword">fun </span><span class="identifier">getBackgroundReplacedBitmap</span><span class="symbol">(</span><span class="identifier" id="com.amazonaws.services.chime.sdk.meetings.audiovideo.video.backgroundfilter.backgroundreplacement.BackgroundReplacementVideoFrameProcessor$getBackgroundReplacedBitmap(android.graphics.Bitmap, com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoFrame)/inputBitmap">inputBitmap</span><span class="symbol">:</span>&nbsp;<a href="https://developer.android.com/reference/android/graphics/Bitmap.html"><span class="identifier">Bitmap</span></a><span class="symbol">, </span><span class="identifier" id="com.amazonaws.services.chime.sdk.meetings.audiovideo.video.backgroundfilter.backgroundreplacement.BackgroundReplacementVideoFrameProcessor$getBackgroundReplacedBitmap(android.graphics.Bitmap, com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoFrame)/frame">frame</span><span class="symbol">:</span>&nbsp;<a href="../../com.amazonaws.services.chime.sdk.meetings.audiovideo.video/-video-frame/index.html"><span class="identifier">VideoFrame</span></a><span class="symbol">)</span><span class="symbol">: </span><a href="https://developer.android.com/reference/android/graphics/Bitmap.html"><span class="identifier">Bitmap</span></a><span class="symbol">?</span></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="on-video-frame-received.html">onVideoFrameReceived</a></h4>
+</td>
+<td>
+<p>Receive a video frame from some upstream source.
+The <a href="../../com.amazonaws.services.chime.sdk.meetings.audiovideo.video/-video-sink/index.html">VideoSink</a> may render, store, process, and forward the frame, among other applications.</p>
+<code><span class="keyword">fun </span><span class="identifier">onVideoFrameReceived</span><span class="symbol">(</span><span class="identifier" id="com.amazonaws.services.chime.sdk.meetings.audiovideo.video.backgroundfilter.backgroundreplacement.BackgroundReplacementVideoFrameProcessor$onVideoFrameReceived(com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoFrame)/frame">frame</span><span class="symbol">:</span>&nbsp;<a href="../../com.amazonaws.services.chime.sdk.meetings.audiovideo.video/-video-frame/index.html"><span class="identifier">VideoFrame</span></a><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="release.html">release</a></h4>
+</td>
+<td>
+<code><span class="keyword">fun </span><span class="identifier">release</span><span class="symbol">(</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="remove-video-sink.html">removeVideoSink</a></h4>
+</td>
+<td>
+<p>Remove a video sink which will no longer receive new frames on return</p>
+<code><span class="keyword">fun </span><span class="identifier">removeVideoSink</span><span class="symbol">(</span><span class="identifier" id="com.amazonaws.services.chime.sdk.meetings.audiovideo.video.backgroundfilter.backgroundreplacement.BackgroundReplacementVideoFrameProcessor$removeVideoSink(com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoSink)/sink">sink</span><span class="symbol">:</span>&nbsp;<a href="../../com.amazonaws.services.chime.sdk.meetings.audiovideo.video/-video-sink/index.html"><span class="identifier">VideoSink</span></a><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code></td>
+</tr>
+</tbody>
+</table>
+</BODY>
+</HTML>

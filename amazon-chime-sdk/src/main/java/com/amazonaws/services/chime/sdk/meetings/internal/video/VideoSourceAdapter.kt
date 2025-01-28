@@ -106,6 +106,6 @@ class VideoSourceAdapter : VideoSink,
         val videoClientFrame = com.xodee.client.video.VideoFrame(
             frame.width, frame.height, frame.timestampNs, frame.rotation.degrees, buffer
         )
-        sinks.iterator().forEach { it.onFrameCaptured(videoClientFrame) }
+        sinks.forEach { it.onFrameCaptured(videoClientFrame) }
     }
 }

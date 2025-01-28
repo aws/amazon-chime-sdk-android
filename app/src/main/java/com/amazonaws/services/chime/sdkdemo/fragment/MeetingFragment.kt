@@ -375,7 +375,7 @@ class MeetingFragment : Fragment(),
             buttonSendChat
         )
 
-        buttons.iterator().forEach {
+        buttons.forEach {
             if (!promoted) {
                 it.alpha = 0.2f
                 it.isClickable = false
@@ -491,7 +491,7 @@ class MeetingFragment : Fragment(),
 
     private fun setupTab(view: View) {
         tabLayout = view.findViewById(R.id.tabLayoutMeetingView)
-        SubTab.values().iterator().forEach {
+        SubTab.values().forEach {
             tabLayout.addTab(
                 tabLayout.newTab().setText(it.name).setContentDescription("${it.name} Tab")
             )
@@ -517,11 +517,11 @@ class MeetingFragment : Fragment(),
 
     private fun setVideoSurfaceViewsVisibility(visibility: Int) {
         meetingModel.localVideoTileState?.setRenderViewVisibility(visibility)
-        meetingModel.getRemoteVideoTileStates().iterator().forEach { it.setRenderViewVisibility(visibility) }
+        meetingModel.getRemoteVideoTileStates().forEach { it.setRenderViewVisibility(visibility) }
     }
 
     private fun setScreenSurfaceViewsVisibility(visibility: Int) {
-        meetingModel.currentScreenTiles.iterator().forEach { it.setRenderViewVisibility(visibility) }
+        meetingModel.currentScreenTiles.forEach { it.setRenderViewVisibility(visibility) }
     }
 
     private fun showViewAt(index: Int) {
@@ -778,7 +778,7 @@ class MeetingFragment : Fragment(),
     override fun onVolumeChanged(volumeUpdates: Array<VolumeUpdate>) {
         uiScope.launch {
             mutex.withLock {
-                volumeUpdates.iterator().forEach { (attendeeInfo, volumeLevel) ->
+                volumeUpdates.forEach { (attendeeInfo, volumeLevel) ->
                     meetingModel.currentRoster[attendeeInfo.attendeeId]?.let {
                         meetingModel.currentRoster[attendeeInfo.attendeeId] =
                             RosterAttendee(
@@ -799,7 +799,7 @@ class MeetingFragment : Fragment(),
     override fun onSignalStrengthChanged(signalUpdates: Array<SignalUpdate>) {
         uiScope.launch {
             mutex.withLock {
-                signalUpdates.iterator().forEach { (attendeeInfo, signalStrength) ->
+                signalUpdates.forEach { (attendeeInfo, signalStrength) ->
                     logWithFunctionName(
                         "onSignalStrengthChanged",
                         "${attendeeInfo.externalUserId} $signalStrength",
@@ -829,7 +829,7 @@ class MeetingFragment : Fragment(),
     override fun onAttendeesLeft(attendeeInfo: Array<AttendeeInfo>) {
         uiScope.launch {
             mutex.withLock {
-                attendeeInfo.iterator().forEach { (attendeeId, _) ->
+                attendeeInfo.forEach { (attendeeId, _) ->
                     meetingModel.currentRoster.remove(
                         attendeeId
                     )
@@ -841,7 +841,7 @@ class MeetingFragment : Fragment(),
     }
 
     override fun onAttendeesDropped(attendeeInfo: Array<AttendeeInfo>) {
-        attendeeInfo.iterator().forEach { (_, externalUserId) ->
+        attendeeInfo.forEach { (_, externalUserId) ->
             notifyHandler("$externalUserId dropped")
             logWithFunctionName(
                 object {}.javaClass.enclosingMethod?.name,
@@ -851,7 +851,7 @@ class MeetingFragment : Fragment(),
 
         uiScope.launch {
             mutex.withLock {
-                attendeeInfo.iterator().forEach { (attendeeId, _) ->
+                attendeeInfo.forEach { (attendeeId, _) ->
                     meetingModel.currentRoster.remove(
                         attendeeId
                     )
@@ -863,7 +863,7 @@ class MeetingFragment : Fragment(),
     }
 
     override fun onAttendeesMuted(attendeeInfo: Array<AttendeeInfo>) {
-        attendeeInfo.iterator().forEach { (attendeeId, externalUserId) ->
+        attendeeInfo.forEach { (attendeeId, externalUserId) ->
             logWithFunctionName(
                 object {}.javaClass.enclosingMethod?.name,
                 "Attendee with attendeeId $attendeeId and externalUserId $externalUserId muted"
@@ -872,7 +872,7 @@ class MeetingFragment : Fragment(),
     }
 
     override fun onAttendeesUnmuted(attendeeInfo: Array<AttendeeInfo>) {
-        attendeeInfo.iterator().forEach { (attendeeId, externalUserId) ->
+        attendeeInfo.forEach { (attendeeId, externalUserId) ->
             logger.info(
                 TAG,
                 "Attendee with attendeeId $attendeeId and externalUserId $externalUserId unmuted"
@@ -885,7 +885,7 @@ class MeetingFragment : Fragment(),
             mutex.withLock {
                 var needUpdate = false
                 val activeSpeakers = attendeeInfo.map { it.attendeeId }.toSet()
-                meetingModel.currentRoster.values.iterator().forEach { attendee ->
+                meetingModel.currentRoster.values.forEach { attendee ->
                     if (activeSpeakers.contains(attendee.attendeeId) != attendee.isActiveSpeaker) {
                         meetingModel.currentRoster[attendee.attendeeId] =
                             RosterAttendee(
@@ -926,7 +926,7 @@ class MeetingFragment : Fragment(),
     ) {
         uiScope.launch {
             mutex.withLock {
-                attendeeInfo.iterator().forEach { (attendeeId, externalUserId) ->
+                attendeeInfo.forEach { (attendeeId, externalUserId) ->
                     if (attendeeId.isContentShare() &&
                         !isSelfAttendee(attendeeId) &&
                         meetingModel.isSharingContent
@@ -1143,7 +1143,6 @@ class MeetingFragment : Fragment(),
         if (meetingModel.isSharingContent) {
             audioVideo.stopContentShare()
             screenShareManager?.stop(meetingModel.isScreenShareServiceBound)
-            meetingModel.isScreenShareServiceBound = false
         } else {
             startActivityForResult(
                 mediaProjectionManager.createScreenCaptureIntent(),
@@ -1248,7 +1247,7 @@ class MeetingFragment : Fragment(),
             }
             is Transcript -> {
                 val entitySet = mutableSetOf<String>()
-                transcriptEvent.results.iterator().forEach { result ->
+                transcriptEvent.results.forEach { result ->
                     val alternative = result.alternatives.firstOrNull() ?: return
                     // for simplicity and demo purposes, assume each result only contains transcripts from
                     // the same speaker, which matches our observation with current transcription service behavior.
@@ -1274,7 +1273,7 @@ class MeetingFragment : Fragment(),
                             alternative.items
                         )
                     } else {
-                        entities.iterator().forEach { entity ->
+                        entities.forEach { entity ->
                             entitySet.addAll(entity.content.split(" "))
                         }
                         Caption(
@@ -1379,7 +1378,7 @@ class MeetingFragment : Fragment(),
     private fun subscribeRemoteVideoByTileState(tileSate: VideoTileState) {
         val updatedSources: MutableMap<RemoteVideoSource, VideoSubscriptionConfiguration> =
             mutableMapOf()
-        meetingModel.getRemoteVideoSourceConfigurations().iterator().forEach {
+        meetingModel.getRemoteVideoSourceConfigurations().forEach {
             if (it.key.attendeeId == tileSate.attendeeId) {
                 updatedSources[it.key] = it.value
             }
@@ -1389,7 +1388,7 @@ class MeetingFragment : Fragment(),
 
     private fun unsubscribeRemoteVideoByTileState(tileState: VideoTileState) {
         val removedList: ArrayList<RemoteVideoSource> = arrayListOf()
-        meetingModel.getRemoteVideoSourceConfigurations().iterator().forEach {
+        meetingModel.getRemoteVideoSourceConfigurations().forEach {
             if (it.key.attendeeId == tileState.attendeeId) {
                 removedList.add(it.key)
             }
@@ -1399,7 +1398,7 @@ class MeetingFragment : Fragment(),
 
     private fun unsubscribeAllRemoteVideos() {
         val removedList: ArrayList<RemoteVideoSource> = arrayListOf()
-        meetingModel.getRemoteVideoTileStates().iterator().forEach {
+        meetingModel.getRemoteVideoTileStates().forEach {
             for ((key) in meetingModel.getRemoteVideoSourceConfigurations()) {
                 if (key.attendeeId == it.videoTileState.attendeeId) {
                     removedList.add(key)
@@ -1410,7 +1409,7 @@ class MeetingFragment : Fragment(),
     }
 
     private fun pauseAllContentShares() {
-        meetingModel.currentScreenTiles.iterator().forEach {
+        meetingModel.currentScreenTiles.forEach {
             unsubscribeRemoteVideoByTileState(it.videoTileState)
         }
     }
@@ -1547,7 +1546,7 @@ class MeetingFragment : Fragment(),
         if (tileState.isContent) {
             meetingModel.currentScreenTiles.add(videoCollectionTile)
             screenTileAdapter.notifyDataSetChanged()
-            meetingModel.currentScreenTiles.iterator().forEach {
+            meetingModel.currentScreenTiles.forEach {
                 subscribeRemoteVideoByTileState(it.videoTileState)
                 audioVideo.resumeRemoteVideoTile(it.videoTileState.tileId)
             }
@@ -1665,7 +1664,6 @@ class MeetingFragment : Fragment(),
                 meetingModel.isCameraOn = !meetingModel.isCameraOn
                 refreshNoVideosOrScreenShareAvailableText()
             }
-            else -> Unit
         }
         logWithFunctionName(
             object {}.javaClass.enclosingMethod?.name,
@@ -1711,7 +1709,7 @@ class MeetingFragment : Fragment(),
         // removed(by calling AudioVideo.updateVideoSourceSubscriptions()), as they will be
         // automatically unsubscribed in SDK.
         // The tracking sources still need to be removed in demo app
-        sources.iterator().forEach { meetingModel.removeVideoSource(it) }
+        sources.forEach { meetingModel.removeVideoSource(it) }
     }
 
     override fun onVideoTileAdded(tileState: VideoTileState) {
@@ -1798,7 +1796,7 @@ class MeetingFragment : Fragment(),
         uiScope.launch {
             mutex.withLock {
                 meetingModel.currentMetrics.clear()
-                metrics.iterator().forEach { (metricsName, metricsValue) ->
+                metrics.forEach { (metricsName, metricsValue) ->
                     meetingModel.currentMetrics[metricsName.name] =
                         MetricData(metricsName.name, metricsValue.toString())
                 }
@@ -1917,10 +1915,10 @@ class MeetingFragment : Fragment(),
         if (meetingModel.localVideoTileState != null) {
             audioVideo.unbindVideoView(meetingModel.localTileId)
         }
-        meetingModel.getRemoteVideoTileStates().iterator().forEach {
+        meetingModel.getRemoteVideoTileStates().forEach {
             audioVideo.unbindVideoView(it.videoTileState.tileId)
         }
-        meetingModel.currentScreenTiles.iterator().forEach {
+        meetingModel.currentScreenTiles.forEach {
             audioVideo.unbindVideoView(it.videoTileState.tileId)
         }
         audioVideo.stopLocalVideo()
@@ -1964,7 +1962,6 @@ class MeetingFragment : Fragment(),
         if (meetingModel.isSharingContent && !powerManager.isInteractive) {
             audioVideo.stopContentShare()
             screenShareManager?.stop(meetingModel.isScreenShareServiceBound)
-            meetingModel.isScreenShareServiceBound = false
         }
     }
 

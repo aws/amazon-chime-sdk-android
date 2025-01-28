@@ -12,50 +12,36 @@ import org.junit.Test
 class DeviceUtilsTest {
     @Test
     fun `sdkName should return "amazon-chime-sdk-android"`() {
-        val expected = "amazon-chime-sdk-android"
-        val actual = DeviceUtils.sdkName
-        Assert.assertEquals(expected, actual)
+        Assert.assertEquals("amazon-chime-sdk-android", DeviceUtils.sdkName)
     }
 
     @Test
     fun `osName should return "Android"`() {
-        val expected = "Android"
-        val actual = DeviceUtils.osName
-        Assert.assertEquals(expected, actual)
+        Assert.assertEquals("Android", DeviceUtils.osName)
     }
 
     @Test
-    fun `osVersion should return version`() {
-        val expected = android.os.Build.VERSION.RELEASE
-        val actual = DeviceUtils.osVersion
-        Assert.assertEquals(expected, actual)
+    fun `osVersion should return "Android"`() {
+        Assert.assertEquals(android.os.Build.VERSION.RELEASE, DeviceUtils.osVersion)
     }
 
     @Test
     fun `sdkVersion should return value same as BuildConfig`() {
-        val expected = BuildConfig.VERSION_NAME
-        val actual = DeviceUtils.sdkVersion
-        Assert.assertEquals(expected, actual)
+        Assert.assertEquals(BuildConfig.VERSION_NAME, DeviceUtils.sdkVersion)
     }
 
     @Test
     fun `deviceName should return value same as vendor + model`() {
-        val expected = "${android.os.Build.MANUFACTURER} ${android.os.Build.MODEL}"
-        val actual = DeviceUtils.deviceName
-        Assert.assertEquals(expected, actual)
+        Assert.assertEquals("${android.os.Build.MANUFACTURER} ${android.os.Build.MODEL}", DeviceUtils.deviceName)
     }
 
     @Test
     fun `deviceModel should return value same as model`() {
-        val expected = android.os.Build.MODEL
-        val actual = DeviceUtils.deviceModel
-        Assert.assertEquals(expected, actual)
+        Assert.assertEquals(android.os.Build.MODEL, DeviceUtils.deviceModel)
     }
 
     @Test
     fun `deviceManufacturer should return value same as vendor`() {
-        val expected = android.os.Build.MANUFACTURER
-        val actual = DeviceUtils.deviceManufacturer
-        Assert.assertEquals(expected, actual)
+        Assert.assertEquals(android.os.Build.MANUFACTURER, DeviceUtils.deviceManufacturer)
     }
 }

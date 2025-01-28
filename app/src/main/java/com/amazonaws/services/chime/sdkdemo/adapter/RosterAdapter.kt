@@ -13,8 +13,11 @@ import com.amazonaws.services.chime.sdk.meetings.audiovideo.VolumeLevel
 import com.amazonaws.services.chime.sdk.meetings.internal.AttendeeStatus
 import com.amazonaws.services.chime.sdkdemo.R
 import com.amazonaws.services.chime.sdkdemo.data.RosterAttendee
-import com.amazonaws.services.chime.sdkdemo.databinding.RowRosterBinding
 import com.amazonaws.services.chime.sdkdemo.utils.inflate
+import kotlinx.android.synthetic.main.row_roster.view.activeSpeakerIndicator
+import kotlinx.android.synthetic.main.row_roster.view.attendeeName
+import kotlinx.android.synthetic.main.row_roster.view.attendeeVolume
+
 class RosterAdapter(
     private val roster: Collection<RosterAttendee>
 ) :
@@ -37,14 +40,14 @@ class RosterAdapter(
 class RosterHolder(inflatedView: View) :
     RecyclerView.ViewHolder(inflatedView) {
 
-    private val binding = RowRosterBinding.bind(inflatedView)
+    private var view: View = inflatedView
 
     fun bindAttendee(attendee: RosterAttendee) {
         val attendeeName = attendee.attendeeName
-        binding.attendeeName.text = attendeeName
-        binding.attendeeName.contentDescription = attendeeName
-        binding.activeSpeakerIndicator.visibility = if (attendee.isActiveSpeaker) View.VISIBLE else View.INVISIBLE
-        binding.activeSpeakerIndicator.contentDescription = if (attendee.isActiveSpeaker) "${attendee.attendeeName} Active" else ""
+        view.attendeeName.text = attendeeName
+        view.attendeeName.contentDescription = attendeeName
+        view.activeSpeakerIndicator.visibility = if (attendee.isActiveSpeaker) View.VISIBLE else View.INVISIBLE
+        view.activeSpeakerIndicator.contentDescription = if (attendee.isActiveSpeaker) "${attendee.attendeeName} Active" else ""
 
         if (attendee.attendeeStatus == AttendeeStatus.Joined) {
             if (attendee.signalStrength == SignalStrength.None ||
@@ -55,35 +58,35 @@ class RosterHolder(inflatedView: View) :
                 } else {
                     R.drawable.ic_microphone_poor_connectivity
                 }
-                binding.attendeeVolume.setImageResource(drawable)
-                binding.attendeeVolume.contentDescription = "$attendeeName Signal Strength Poor"
+                view.attendeeVolume.setImageResource(drawable)
+                view.contentDescription = "$attendeeName Signal Strength Poor"
             } else {
                 when (attendee.volumeLevel) {
                     VolumeLevel.Muted -> {
-                        binding.attendeeVolume.setImageResource(R.drawable.ic_microphone_disabled)
-                        binding.attendeeVolume.contentDescription = "$attendeeName Muted"
+                        view.attendeeVolume.setImageResource(R.drawable.ic_microphone_disabled)
+                        view.attendeeVolume.contentDescription = "$attendeeName Muted"
                     }
                     VolumeLevel.NotSpeaking -> {
-                        binding.attendeeVolume.setImageResource(R.drawable.ic_microphone_enabled)
-                        binding.attendeeVolume.contentDescription = "$attendeeName Not Speaking"
+                        view.attendeeVolume.setImageResource(R.drawable.ic_microphone_enabled)
+                        view.attendeeVolume.contentDescription = "$attendeeName Not Speaking"
                     }
                     VolumeLevel.Low -> {
-                        binding.attendeeVolume.setImageResource(R.drawable.ic_microphone_audio_1)
-                        binding.attendeeVolume.contentDescription = "$attendeeName Speaking"
+                        view.attendeeVolume.setImageResource(R.drawable.ic_microphone_audio_1)
+                        view.attendeeVolume.contentDescription = "$attendeeName Speaking"
                     }
                     VolumeLevel.Medium -> {
-                        binding.attendeeVolume.setImageResource(R.drawable.ic_microphone_audio_2)
-                        binding.attendeeVolume.contentDescription = "$attendeeName Speaking"
+                        view.attendeeVolume.setImageResource(R.drawable.ic_microphone_audio_2)
+                        view.attendeeVolume.contentDescription = "$attendeeName Speaking"
                     }
                     VolumeLevel.High -> {
-                        binding.attendeeVolume.setImageResource(R.drawable.ic_microphone_audio_3)
-                        binding.attendeeVolume.contentDescription = "$attendeeName Speaking"
+                        view.attendeeVolume.setImageResource(R.drawable.ic_microphone_audio_3)
+                        view.attendeeVolume.contentDescription = "$attendeeName Speaking"
                     }
                 }
             }
-            binding.attendeeVolume.visibility = View.VISIBLE
+            view.attendeeVolume.visibility = View.VISIBLE
         } else {
-            binding.attendeeVolume.visibility = View.GONE
+            view.attendeeVolume.visibility = View.GONE
         }
     }
 }

@@ -115,7 +115,7 @@ object IngestionEventConverter {
     }
 
     private fun toIngestionPayload(event: MeetingEventItem, metadataAttributeKeys: Set<String>): IngestionPayload {
-        val payload: MutableMap<String, Any> = mutableMapOf(
+        val payload = mutableMapOf(
             NAME_KEY to event.data.name,
             TIMESTAMP_KEY to (event.data.eventAttributes[EventAttributeName.timestampMs.name] as Double).toLong(),
             ID_KEY to event.id
@@ -130,7 +130,7 @@ object IngestionEventConverter {
     }
 
     private fun toIngestionPayload(dirtyEvent: DirtyMeetingEventItem, metadataAttributeKeys: Set<String>): IngestionPayload {
-        val payload: MutableMap<String, Any> = mutableMapOf(
+        val payload = mutableMapOf(
             NAME_KEY to dirtyEvent.data.name,
             TTL_KEY to dirtyEvent.ttl,
             TIMESTAMP_KEY to (dirtyEvent.data.eventAttributes[EventAttributeName.timestampMs.name] as Double).toLong(),

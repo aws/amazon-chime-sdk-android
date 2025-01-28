@@ -70,8 +70,8 @@ class DefaultActiveSpeakerDetector(
         activityTimer.scheduleAtFixedRate(
             object : TimerTask() {
                 override fun run() {
-                    observerToPolicy.values.iterator().forEach { policy ->
-                        speakerScores.keys.iterator().forEach { attendeeInfo ->
+                    observerToPolicy.values.forEach { policy ->
+                        speakerScores.keys.forEach { attendeeInfo ->
                             val lastTimestamp = mostRecentUpdateTimestamp[attendeeInfo] ?: 0
                             if (System.currentTimeMillis() - lastTimestamp > ACTIVITY_WAIT_INTERVAL_MS) {
                                 updateScore(

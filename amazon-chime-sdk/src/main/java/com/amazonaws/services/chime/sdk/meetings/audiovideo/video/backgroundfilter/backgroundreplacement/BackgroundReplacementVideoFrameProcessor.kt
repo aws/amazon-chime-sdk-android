@@ -97,7 +97,7 @@ class BackgroundReplacementVideoFrameProcessor @JvmOverloads constructor(
             )
             frame.release()
 
-            sinks.iterator().forEach { it.onVideoFrameReceived(processedFrame) }
+            sinks.forEach { it.onVideoFrameReceived(processedFrame) }
             processedFrame.release()
             JniUtil.nativeFreeByteBuffer(rgbaData)
         }

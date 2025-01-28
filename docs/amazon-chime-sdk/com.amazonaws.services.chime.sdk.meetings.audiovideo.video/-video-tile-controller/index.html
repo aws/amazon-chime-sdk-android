@@ -1,190 +1,39 @@
-<!doctype html>
-<html class="no-js">
-<head>
-    <meta name="viewport" content="width=device-width, initial-scale=1" charset="UTF-8">
-    <title>VideoTileController</title>
-<link href="../../../images/logo-icon.svg" rel="icon" type="image/svg">    <script>var pathToRoot = "../../../";</script>
-    <script>document.documentElement.classList.replace("no-js","js");</script>
-    <script>const storage = localStorage.getItem("dokka-dark-mode")
-    if (storage == null) {
-        const osDarkSchemePreferred = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
-        if (osDarkSchemePreferred === true) {
-            document.getElementsByTagName("html")[0].classList.add("theme-dark")
-        }
-    } else {
-        const savedDarkMode = JSON.parse(storage)
-        if(savedDarkMode === true) {
-            document.getElementsByTagName("html")[0].classList.add("theme-dark")
-        }
-    }
-    </script>
-<script type="text/javascript" src="https://unpkg.com/kotlin-playground@1/dist/playground.min.js" async></script>
-<script type="text/javascript" src="../../../scripts/sourceset_dependencies.js" async></script>
-<link href="../../../styles/style.css" rel="Stylesheet">
-<link href="../../../styles/main.css" rel="Stylesheet">
-<link href="../../../styles/prism.css" rel="Stylesheet">
-<link href="../../../styles/logo-styles.css" rel="Stylesheet">
-<link href="../../../styles/font-jb-sans-auto.css" rel="Stylesheet">
-<script type="text/javascript" src="../../../scripts/clipboard.js" async></script>
-<script type="text/javascript" src="../../../scripts/navigation-loader.js" async></script>
-<script type="text/javascript" src="../../../scripts/platform-content-handler.js" async></script>
-<script type="text/javascript" src="../../../scripts/main.js" defer></script>
-<script type="text/javascript" src="../../../scripts/prism.js" async></script>
-<script type="text/javascript" src="../../../scripts/symbol-parameters-wrapper_deferred.js" defer></script></head>
-<body>
-    <div class="root">
-<nav class="navigation" id="navigation-wrapper">
-    <div class="navigation--inner">
-        <div class="navigation-title">
-            <button class="menu-toggle" id="menu-toggle" type="button">toggle menu</button>
-            <div class="library-name">
-<a class="library-name--link" href="../../../index.html">
-                            amazon-chime-sdk-android
-                    </a>            </div>
-            <div class="library-version">
-            </div>
-        </div>
-        <div class="filter-section" id="filter-section">
-                <button class="platform-tag platform-selector jvm-like" data-active="" data-filter=":amazon-chime-sdk:dokkaHtmlPartial/release">androidJvm</button>
-        </div>
-    </div>
-    <div class="navigation-controls">
-        <button class="navigation-controls--btn navigation-controls--theme" id="theme-toggle-button" type="button">switch theme</button>
-        <div class="navigation-controls--btn navigation-controls--search" id="searchBar" role="button">search in API</div>
-    </div>
-</nav>
-        <div id="container">
-            <div class="sidebar" id="leftColumn">
-                <div class="sidebar--inner" id="sideMenu"></div>
-            </div>
-            <div id="main">
-<div class="main-content" data-page-type="classlike" id="content" pageids="amazon-chime-sdk::com.amazonaws.services.chime.sdk.meetings.audiovideo.video/VideoTileController///PointingToDeclaration//533364019">
-  <div class="breadcrumbs"><a href="../../index.html">amazon-chime-sdk</a><span class="delimiter">/</span><a href="../index.html">com.amazonaws.services.chime.sdk.meetings.audiovideo.video</a><span class="delimiter">/</span><span class="current">VideoTileController</span></div>
-  <div class="cover ">
-    <h1 class="cover"><span>Video</span><wbr><span>Tile</span><wbr><span><span>Controller</span></span></h1>
-    <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":amazon-chime-sdk:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">interface </span><a href="index.html">VideoTileController</a> : <a href="../-video-tile-controller-facade/index.html">VideoTileControllerFacade</a></div><p class="paragraph"><a href="index.html">VideoTileController</a> handles rendering/creating of new <a href="../-video-tile/index.html">VideoTile</a>.</p><h4 class="">Inheritors</h4><div class="table"><div class="table-row" data-filterable-current=":amazon-chime-sdk:dokkaHtmlPartial/release" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release"><div class="main-subrow keyValue "><div class=""><span class="inline-flex"><div><a href="../-default-video-tile-controller/index.html">DefaultVideoTileController</a></div></span></div><div></div></div></div></div></div></div>
-  </div>
-  <div class="tabbedcontent">
-    <div class="tabs-section" tabs-section="tabs-section"><button class="section-tab" data-active="" data-togglable="CONSTRUCTOR,TYPE,PROPERTY,FUNCTION">Members</button></div>
-    <div class="tabs-section-body">
-      <div data-togglable="FUNCTION">
-        <h2 class="">Functions</h2>
-        <div class="table"><a data-name="-1472458737%2FFunctions%2F533364019" anchor-label="addVideoTileObserver" id="-1472458737%2FFunctions%2F533364019" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release"></a>
-          <div class="table-row" data-filterable-current=":amazon-chime-sdk:dokkaHtmlPartial/release" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release">
-            <div class="main-subrow keyValue ">
-              <div class=""><span class="inline-flex">
-                  <div><a href="../-video-tile-controller-facade/add-video-tile-observer.html"><span>add</span><wbr><span>Video</span><wbr><span>Tile</span><wbr><span><span>Observer</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1472458737%2FFunctions%2F533364019"></span>
-                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
-                  </span></span></div>
-              <div>
-                <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":amazon-chime-sdk:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">fun </span><a href="../-video-tile-controller-facade/add-video-tile-observer.html"><span class="token function">addVideoTileObserver</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">observer<span class="token operator">: </span><a href="../-video-tile-observer/index.html">VideoTileObserver</a></span></span><span class="token punctuation">)</span></div><div class="brief "><p class="paragraph">Subscribe to Video Tile events with an <a href="../-video-tile-observer/index.html">VideoTileObserver</a>.</p></div></div></div>
-                </div>
-              </div>
-            </div>
-          </div>
-<a data-name="700729876%2FFunctions%2F533364019" anchor-label="bindVideoView" id="700729876%2FFunctions%2F533364019" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release"></a>
-          <div class="table-row" data-filterable-current=":amazon-chime-sdk:dokkaHtmlPartial/release" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release">
-            <div class="main-subrow keyValue ">
-              <div class=""><span class="inline-flex">
-                  <div><a href="../-video-tile-controller-facade/bind-video-view.html"><span>bind</span><wbr><span>Video</span><wbr><span><span>View</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="700729876%2FFunctions%2F533364019"></span>
-                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
-                  </span></span></div>
-              <div>
-                <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":amazon-chime-sdk:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">fun </span><a href="../-video-tile-controller-facade/bind-video-view.html"><span class="token function">bindVideoView</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">videoView<span class="token operator">: </span><a href="../-video-render-view/index.html">VideoRenderView</a><span class="token punctuation">, </span></span><span class="parameter ">tileId<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a></span></span><span class="token punctuation">)</span></div><div class="brief "><p class="paragraph">Binds the video rendering view to Video Tile. The view will start displaying the video frame after the completion of this API.</p></div></div></div>
-                </div>
-              </div>
-            </div>
-          </div>
-<a data-name="-591746938%2FFunctions%2F533364019" anchor-label="onReceiveFrame" id="-591746938%2FFunctions%2F533364019" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release"></a>
-          <div class="table-row" data-filterable-current=":amazon-chime-sdk:dokkaHtmlPartial/release" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release">
-            <div class="main-subrow keyValue ">
-              <div class=""><span class="inline-flex">
-                  <div><a href="on-receive-frame.html"><span>on</span><wbr><span>Receive</span><wbr><span><span>Frame</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-591746938%2FFunctions%2F533364019"></span>
-                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
-                  </span></span></div>
-              <div>
-                <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":amazon-chime-sdk:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">fun </span><a href="on-receive-frame.html"><span class="token function">onReceiveFrame</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">frame<span class="token operator">: </span><a href="../-video-frame/index.html">VideoFrame</a><span class="token operator">?</span><span class="token punctuation">, </span></span><span class="parameter ">videoId<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a><span class="token punctuation">, </span></span><span class="parameter ">attendeeId<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a><span class="token operator">?</span><span class="token punctuation">, </span></span><span class="parameter ">pauseState<span class="token operator">: </span><a href="../-video-pause-state/index.html">VideoPauseState</a></span></span><span class="token punctuation">)</span></div><div class="brief "><p class="paragraph">Called whenever there is a new Video frame received for any of the attendee in the meeting</p></div></div></div>
-                </div>
-              </div>
-            </div>
-          </div>
-<a data-name="-676858717%2FFunctions%2F533364019" anchor-label="pauseRemoteVideoTile" id="-676858717%2FFunctions%2F533364019" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release"></a>
-          <div class="table-row" data-filterable-current=":amazon-chime-sdk:dokkaHtmlPartial/release" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release">
-            <div class="main-subrow keyValue ">
-              <div class=""><span class="inline-flex">
-                  <div><a href="../-video-tile-controller-facade/pause-remote-video-tile.html"><span>pause</span><wbr><span>Remote</span><wbr><span>Video</span><wbr><span><span>Tile</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-676858717%2FFunctions%2F533364019"></span>
-                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
-                  </span></span></div>
-              <div>
-                <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":amazon-chime-sdk:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">fun </span><a href="../-video-tile-controller-facade/pause-remote-video-tile.html"><span class="token function">pauseRemoteVideoTile</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">tileId<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a></span></span><span class="token punctuation">)</span></div><div class="brief "><p class="paragraph">Pauses the specified remote video tile. Ignores the tileId if it belongs to the local video tile.</p></div></div></div>
-                </div>
-              </div>
-            </div>
-          </div>
-<a data-name="-1464803800%2FFunctions%2F533364019" anchor-label="removeVideoTileObserver" id="-1464803800%2FFunctions%2F533364019" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release"></a>
-          <div class="table-row" data-filterable-current=":amazon-chime-sdk:dokkaHtmlPartial/release" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release">
-            <div class="main-subrow keyValue ">
-              <div class=""><span class="inline-flex">
-                  <div><a href="../-video-tile-controller-facade/remove-video-tile-observer.html"><span>remove</span><wbr><span>Video</span><wbr><span>Tile</span><wbr><span><span>Observer</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1464803800%2FFunctions%2F533364019"></span>
-                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
-                  </span></span></div>
-              <div>
-                <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":amazon-chime-sdk:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">fun </span><a href="../-video-tile-controller-facade/remove-video-tile-observer.html"><span class="token function">removeVideoTileObserver</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">observer<span class="token operator">: </span><a href="../-video-tile-observer/index.html">VideoTileObserver</a></span></span><span class="token punctuation">)</span></div><div class="brief "><p class="paragraph">Unsubscribes from Video Tile events by removing specified <a href="../-video-tile-observer/index.html">VideoTileObserver</a>.</p></div></div></div>
-                </div>
-              </div>
-            </div>
-          </div>
-<a data-name="-1949999664%2FFunctions%2F533364019" anchor-label="resumeRemoteVideoTile" id="-1949999664%2FFunctions%2F533364019" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release"></a>
-          <div class="table-row" data-filterable-current=":amazon-chime-sdk:dokkaHtmlPartial/release" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release">
-            <div class="main-subrow keyValue ">
-              <div class=""><span class="inline-flex">
-                  <div><a href="../-video-tile-controller-facade/resume-remote-video-tile.html"><span>resume</span><wbr><span>Remote</span><wbr><span>Video</span><wbr><span><span>Tile</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1949999664%2FFunctions%2F533364019"></span>
-                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
-                  </span></span></div>
-              <div>
-                <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":amazon-chime-sdk:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">fun </span><a href="../-video-tile-controller-facade/resume-remote-video-tile.html"><span class="token function">resumeRemoteVideoTile</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">tileId<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a></span></span><span class="token punctuation">)</span></div><div class="brief "><p class="paragraph">Resumes the specified remote video tile. Ignores the tileId if it belongs to the local video tile.</p></div></div></div>
-                </div>
-              </div>
-            </div>
-          </div>
-<a data-name="540231100%2FFunctions%2F533364019" anchor-label="unbindVideoView" id="540231100%2FFunctions%2F533364019" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release"></a>
-          <div class="table-row" data-filterable-current=":amazon-chime-sdk:dokkaHtmlPartial/release" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release">
-            <div class="main-subrow keyValue ">
-              <div class=""><span class="inline-flex">
-                  <div><a href="../-video-tile-controller-facade/unbind-video-view.html"><span>unbind</span><wbr><span>Video</span><wbr><span><span>View</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="540231100%2FFunctions%2F533364019"></span>
-                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
-                  </span></span></div>
-              <div>
-                <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":amazon-chime-sdk:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">fun </span><a href="../-video-tile-controller-facade/unbind-video-view.html"><span class="token function">unbindVideoView</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">tileId<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html">Int</a></span></span><span class="token punctuation">)</span></div><div class="brief "><p class="paragraph">Unbinds the video rendering view from Video Tile. The view will stop displaying the video frame after the completion of this API.</p></div></div></div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-      <div class="footer">
-        <span class="go-to-top-icon"><a href="#content" id="go-to-top-link"></a></span><span>© 2024 Copyright</span><span class="pull-right"><span>Generated by </span><a href="https://github.com/Kotlin/dokka"><span>dokka</span><span class="padded-icon"></span></a></span>
-      </div>
-            </div>
-        </div>
-    </div>
-</body>
-</html>
-
+<HTML>
+<HEAD>
+<meta charset="UTF-8">
+<title>VideoTileController - amazon-chime-sdk</title>
+<link rel="stylesheet" href="../../../style.css">
+</HEAD>
+<BODY>
+<a href="../../index.html">amazon-chime-sdk</a>&nbsp;/&nbsp;<a href="../index.html">com.amazonaws.services.chime.sdk.meetings.audiovideo.video</a>&nbsp;/&nbsp;<a href="./index.html">VideoTileController</a><br/>
+<br/>
+<h1>VideoTileController</h1>
+<code><span class="keyword">interface </span><span class="identifier">VideoTileController</span>&nbsp;<span class="symbol">:</span>&nbsp;<a href="../-video-tile-controller-facade/index.html"><span class="identifier">VideoTileControllerFacade</span></a></code>
+<p><a href="./index.html">VideoTileController</a> handles rendering/creating of new <a href="../-video-tile/index.html">VideoTile</a>.</p>
+<h3>Functions</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<h4><a href="on-receive-frame.html">onReceiveFrame</a></h4>
+</td>
+<td>
+<p>Called whenever there is a new Video frame received for any of the attendee in the meeting</p>
+<code><span class="keyword">abstract</span> <span class="keyword">fun </span><span class="identifier">onReceiveFrame</span><span class="symbol">(</span><span class="identifier" id="com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoTileController$onReceiveFrame(com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoFrame, kotlin.Int, kotlin.String, com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoPauseState)/frame">frame</span><span class="symbol">:</span>&nbsp;<a href="../-video-frame/index.html"><span class="identifier">VideoFrame</span></a><span class="symbol">?</span><span class="symbol">, </span><span class="identifier" id="com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoTileController$onReceiveFrame(com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoFrame, kotlin.Int, kotlin.String, com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoPauseState)/videoId">videoId</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-int/index.html"><span class="identifier">Int</span></a><span class="symbol">, </span><span class="identifier" id="com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoTileController$onReceiveFrame(com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoFrame, kotlin.Int, kotlin.String, com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoPauseState)/attendeeId">attendeeId</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">?</span><span class="symbol">, </span><span class="identifier" id="com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoTileController$onReceiveFrame(com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoFrame, kotlin.Int, kotlin.String, com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoPauseState)/pauseState">pauseState</span><span class="symbol">:</span>&nbsp;<a href="../-video-pause-state/index.html"><span class="identifier">VideoPauseState</span></a><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code></td>
+</tr>
+</tbody>
+</table>
+<h3>Inheritors</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<h4><a href="../-default-video-tile-controller/index.html">DefaultVideoTileController</a></h4>
+</td>
+<td>
+<code><span class="keyword">class </span><span class="identifier">DefaultVideoTileController</span>&nbsp;<span class="symbol">:</span>&nbsp;<a href="./index.html"><span class="identifier">VideoTileController</span></a></code></td>
+</tr>
+</tbody>
+</table>
+</BODY>
+</HTML>

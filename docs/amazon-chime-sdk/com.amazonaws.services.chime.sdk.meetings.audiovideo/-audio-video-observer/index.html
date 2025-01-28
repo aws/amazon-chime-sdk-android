@@ -1,280 +1,131 @@
-<!doctype html>
-<html class="no-js">
-<head>
-    <meta name="viewport" content="width=device-width, initial-scale=1" charset="UTF-8">
-    <title>AudioVideoObserver</title>
-<link href="../../../images/logo-icon.svg" rel="icon" type="image/svg">    <script>var pathToRoot = "../../../";</script>
-    <script>document.documentElement.classList.replace("no-js","js");</script>
-    <script>const storage = localStorage.getItem("dokka-dark-mode")
-    if (storage == null) {
-        const osDarkSchemePreferred = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
-        if (osDarkSchemePreferred === true) {
-            document.getElementsByTagName("html")[0].classList.add("theme-dark")
-        }
-    } else {
-        const savedDarkMode = JSON.parse(storage)
-        if(savedDarkMode === true) {
-            document.getElementsByTagName("html")[0].classList.add("theme-dark")
-        }
-    }
-    </script>
-<script type="text/javascript" src="https://unpkg.com/kotlin-playground@1/dist/playground.min.js" async></script>
-<script type="text/javascript" src="../../../scripts/sourceset_dependencies.js" async></script>
-<link href="../../../styles/style.css" rel="Stylesheet">
-<link href="../../../styles/main.css" rel="Stylesheet">
-<link href="../../../styles/prism.css" rel="Stylesheet">
-<link href="../../../styles/logo-styles.css" rel="Stylesheet">
-<link href="../../../styles/font-jb-sans-auto.css" rel="Stylesheet">
-<script type="text/javascript" src="../../../scripts/clipboard.js" async></script>
-<script type="text/javascript" src="../../../scripts/navigation-loader.js" async></script>
-<script type="text/javascript" src="../../../scripts/platform-content-handler.js" async></script>
-<script type="text/javascript" src="../../../scripts/main.js" defer></script>
-<script type="text/javascript" src="../../../scripts/prism.js" async></script>
-<script type="text/javascript" src="../../../scripts/symbol-parameters-wrapper_deferred.js" defer></script></head>
-<body>
-    <div class="root">
-<nav class="navigation" id="navigation-wrapper">
-    <div class="navigation--inner">
-        <div class="navigation-title">
-            <button class="menu-toggle" id="menu-toggle" type="button">toggle menu</button>
-            <div class="library-name">
-<a class="library-name--link" href="../../../index.html">
-                            amazon-chime-sdk-android
-                    </a>            </div>
-            <div class="library-version">
-            </div>
-        </div>
-        <div class="filter-section" id="filter-section">
-                <button class="platform-tag platform-selector jvm-like" data-active="" data-filter=":amazon-chime-sdk:dokkaHtmlPartial/release">androidJvm</button>
-        </div>
-    </div>
-    <div class="navigation-controls">
-        <button class="navigation-controls--btn navigation-controls--theme" id="theme-toggle-button" type="button">switch theme</button>
-        <div class="navigation-controls--btn navigation-controls--search" id="searchBar" role="button">search in API</div>
-    </div>
-</nav>
-        <div id="container">
-            <div class="sidebar" id="leftColumn">
-                <div class="sidebar--inner" id="sideMenu"></div>
-            </div>
-            <div id="main">
-<div class="main-content" data-page-type="classlike" id="content" pageids="amazon-chime-sdk::com.amazonaws.services.chime.sdk.meetings.audiovideo/AudioVideoObserver///PointingToDeclaration//533364019">
-  <div class="breadcrumbs"><a href="../../index.html">amazon-chime-sdk</a><span class="delimiter">/</span><a href="../index.html">com.amazonaws.services.chime.sdk.meetings.audiovideo</a><span class="delimiter">/</span><span class="current">AudioVideoObserver</span></div>
-  <div class="cover ">
-    <h1 class="cover"><span>Audio</span><wbr><span>Video</span><wbr><span><span>Observer</span></span></h1>
-    <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":amazon-chime-sdk:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">interface </span><a href="index.html">AudioVideoObserver</a></div><p class="paragraph"><a href="index.html">AudioVideoObserver</a> handles audio / video session events.</p><p class="paragraph">Note: all callbacks will be called on main thread.</p></div></div>
-  </div>
-  <div class="tabbedcontent">
-    <div class="tabs-section" tabs-section="tabs-section"><button class="section-tab" data-active="" data-togglable="CONSTRUCTOR,TYPE,PROPERTY,FUNCTION">Members</button></div>
-    <div class="tabs-section-body">
-      <div data-togglable="FUNCTION">
-        <h2 class="">Functions</h2>
-        <div class="table"><a data-name="336970892%2FFunctions%2F533364019" anchor-label="onAudioSessionCancelledReconnect" id="336970892%2FFunctions%2F533364019" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release"></a>
-          <div class="table-row" data-filterable-current=":amazon-chime-sdk:dokkaHtmlPartial/release" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release">
-            <div class="main-subrow keyValue ">
-              <div class=""><span class="inline-flex">
-                  <div><a href="on-audio-session-cancelled-reconnect.html"><span>on</span><wbr><span>Audio</span><wbr><span>Session</span><wbr><span>Cancelled</span><wbr><span><span>Reconnect</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="336970892%2FFunctions%2F533364019"></span>
-                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
-                  </span></span></div>
-              <div>
-                <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":amazon-chime-sdk:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">fun </span><a href="on-audio-session-cancelled-reconnect.html"><span class="token function">onAudioSessionCancelledReconnect</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span></div><div class="brief "><p class="paragraph">Called when audio session cancelled reconnecting.</p></div></div></div>
-                </div>
-              </div>
-            </div>
-          </div>
-<a data-name="-1707179000%2FFunctions%2F533364019" anchor-label="onAudioSessionDropped" id="-1707179000%2FFunctions%2F533364019" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release"></a>
-          <div class="table-row" data-filterable-current=":amazon-chime-sdk:dokkaHtmlPartial/release" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release">
-            <div class="main-subrow keyValue ">
-              <div class=""><span class="inline-flex">
-                  <div><a href="on-audio-session-dropped.html"><span>on</span><wbr><span>Audio</span><wbr><span>Session</span><wbr><span><span>Dropped</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1707179000%2FFunctions%2F533364019"></span>
-                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
-                  </span></span></div>
-              <div>
-                <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":amazon-chime-sdk:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">fun </span><a href="on-audio-session-dropped.html"><span class="token function">onAudioSessionDropped</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span></div><div class="brief "><p class="paragraph">Called when audio session got dropped due to poor network conditions. There will be an automatic attempt of reconnecting it. If the reconnection is successful, <a href="on-audio-session-started.html">onAudioSessionStarted</a> will be called with value of reconnecting as true</p></div></div></div>
-                </div>
-              </div>
-            </div>
-          </div>
-<a data-name="-1111786132%2FFunctions%2F533364019" anchor-label="onAudioSessionStarted" id="-1111786132%2FFunctions%2F533364019" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release"></a>
-          <div class="table-row" data-filterable-current=":amazon-chime-sdk:dokkaHtmlPartial/release" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release">
-            <div class="main-subrow keyValue ">
-              <div class=""><span class="inline-flex">
-                  <div><a href="on-audio-session-started.html"><span>on</span><wbr><span>Audio</span><wbr><span>Session</span><wbr><span><span>Started</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1111786132%2FFunctions%2F533364019"></span>
-                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
-                  </span></span></div>
-              <div>
-                <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":amazon-chime-sdk:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">fun </span><a href="on-audio-session-started.html"><span class="token function">onAudioSessionStarted</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">reconnecting<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html">Boolean</a></span></span><span class="token punctuation">)</span></div><div class="brief "><p class="paragraph">Called when the audio session has started.</p></div></div></div>
-                </div>
-              </div>
-            </div>
-          </div>
-<a data-name="484389652%2FFunctions%2F533364019" anchor-label="onAudioSessionStartedConnecting" id="484389652%2FFunctions%2F533364019" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release"></a>
-          <div class="table-row" data-filterable-current=":amazon-chime-sdk:dokkaHtmlPartial/release" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release">
-            <div class="main-subrow keyValue ">
-              <div class=""><span class="inline-flex">
-                  <div><a href="on-audio-session-started-connecting.html"><span>on</span><wbr><span>Audio</span><wbr><span>Session</span><wbr><span>Started</span><wbr><span><span>Connecting</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="484389652%2FFunctions%2F533364019"></span>
-                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
-                  </span></span></div>
-              <div>
-                <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":amazon-chime-sdk:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">fun </span><a href="on-audio-session-started-connecting.html"><span class="token function">onAudioSessionStartedConnecting</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">reconnecting<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html">Boolean</a></span></span><span class="token punctuation">)</span></div><div class="brief "><p class="paragraph">Called when the audio session is connecting or reconnecting.</p></div></div></div>
-                </div>
-              </div>
-            </div>
-          </div>
-<a data-name="442226580%2FFunctions%2F533364019" anchor-label="onAudioSessionStopped" id="442226580%2FFunctions%2F533364019" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release"></a>
-          <div class="table-row" data-filterable-current=":amazon-chime-sdk:dokkaHtmlPartial/release" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release">
-            <div class="main-subrow keyValue ">
-              <div class=""><span class="inline-flex">
-                  <div><a href="on-audio-session-stopped.html"><span>on</span><wbr><span>Audio</span><wbr><span>Session</span><wbr><span><span>Stopped</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="442226580%2FFunctions%2F533364019"></span>
-                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
-                  </span></span></div>
-              <div>
-                <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":amazon-chime-sdk:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">fun </span><a href="on-audio-session-stopped.html"><span class="token function">onAudioSessionStopped</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">sessionStatus<span class="token operator">: </span><a href="../../com.amazonaws.services.chime.sdk.meetings.session/-meeting-session-status/index.html">MeetingSessionStatus</a></span></span><span class="token punctuation">)</span></div><div class="brief "><p class="paragraph">Called when the audio session has stopped with the reason provided in the status. This callback implies that audio client has stopped permanently for this session and there will be no attempt of reconnecting it.</p></div></div></div>
-                </div>
-              </div>
-            </div>
-          </div>
-<a data-name="1846010010%2FFunctions%2F533364019" anchor-label="onCameraSendAvailabilityUpdated" id="1846010010%2FFunctions%2F533364019" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release"></a>
-          <div class="table-row" data-filterable-current=":amazon-chime-sdk:dokkaHtmlPartial/release" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release">
-            <div class="main-subrow keyValue ">
-              <div class=""><span class="inline-flex">
-                  <div><a href="on-camera-send-availability-updated.html"><span>on</span><wbr><span>Camera</span><wbr><span>Send</span><wbr><span>Availability</span><wbr><span><span>Updated</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1846010010%2FFunctions%2F533364019"></span>
-                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
-                  </span></span></div>
-              <div>
-                <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":amazon-chime-sdk:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">fun </span><a href="on-camera-send-availability-updated.html"><span class="token function">onCameraSendAvailabilityUpdated</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">available<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html">Boolean</a></span></span><span class="token punctuation">)</span></div><div class="brief "><p class="paragraph">Called when video capacity status is updated.</p></div></div></div>
-                </div>
-              </div>
-            </div>
-          </div>
-<a data-name="629289657%2FFunctions%2F533364019" anchor-label="onConnectionBecamePoor" id="629289657%2FFunctions%2F533364019" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release"></a>
-          <div class="table-row" data-filterable-current=":amazon-chime-sdk:dokkaHtmlPartial/release" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release">
-            <div class="main-subrow keyValue ">
-              <div class=""><span class="inline-flex">
-                  <div><a href="on-connection-became-poor.html"><span>on</span><wbr><span>Connection</span><wbr><span>Became</span><wbr><span><span>Poor</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="629289657%2FFunctions%2F533364019"></span>
-                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
-                  </span></span></div>
-              <div>
-                <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":amazon-chime-sdk:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">fun </span><a href="on-connection-became-poor.html"><span class="token function">onConnectionBecamePoor</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span></div><div class="brief "><p class="paragraph">Called when connection became poor.</p></div></div></div>
-                </div>
-              </div>
-            </div>
-          </div>
-<a data-name="417986979%2FFunctions%2F533364019" anchor-label="onConnectionRecovered" id="417986979%2FFunctions%2F533364019" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release"></a>
-          <div class="table-row" data-filterable-current=":amazon-chime-sdk:dokkaHtmlPartial/release" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release">
-            <div class="main-subrow keyValue ">
-              <div class=""><span class="inline-flex">
-                  <div><a href="on-connection-recovered.html"><span>on</span><wbr><span>Connection</span><wbr><span><span>Recovered</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="417986979%2FFunctions%2F533364019"></span>
-                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
-                  </span></span></div>
-              <div>
-                <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":amazon-chime-sdk:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">fun </span><a href="on-connection-recovered.html"><span class="token function">onConnectionRecovered</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span></div><div class="brief "><p class="paragraph">Called when the connection health is recovered.</p></div></div></div>
-                </div>
-              </div>
-            </div>
-          </div>
-<a data-name="1281157785%2FFunctions%2F533364019" anchor-label="onRemoteVideoSourceAvailable" id="1281157785%2FFunctions%2F533364019" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release"></a>
-          <div class="table-row" data-filterable-current=":amazon-chime-sdk:dokkaHtmlPartial/release" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release">
-            <div class="main-subrow keyValue ">
-              <div class=""><span class="inline-flex">
-                  <div><a href="on-remote-video-source-available.html"><span>on</span><wbr><span>Remote</span><wbr><span>Video</span><wbr><span>Source</span><wbr><span><span>Available</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1281157785%2FFunctions%2F533364019"></span>
-                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
-                  </span></span></div>
-              <div>
-                <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":amazon-chime-sdk:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">fun </span><a href="on-remote-video-source-available.html"><span class="token function">onRemoteVideoSourceAvailable</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">sources<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/index.html">List</a><span class="token operator">&lt;</span><a href="../../com.amazonaws.services.chime.sdk.meetings.audiovideo.video/-remote-video-source/index.html">RemoteVideoSource</a><span class="token operator">&gt;</span></span></span><span class="token punctuation">)</span></div><div class="brief "><p class="paragraph">Called when remote video source(s) is/are now available.</p></div></div></div>
-                </div>
-              </div>
-            </div>
-          </div>
-<a data-name="-1792728288%2FFunctions%2F533364019" anchor-label="onRemoteVideoSourceUnavailable" id="-1792728288%2FFunctions%2F533364019" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release"></a>
-          <div class="table-row" data-filterable-current=":amazon-chime-sdk:dokkaHtmlPartial/release" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release">
-            <div class="main-subrow keyValue ">
-              <div class=""><span class="inline-flex">
-                  <div><a href="on-remote-video-source-unavailable.html"><span>on</span><wbr><span>Remote</span><wbr><span>Video</span><wbr><span>Source</span><wbr><span><span>Unavailable</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1792728288%2FFunctions%2F533364019"></span>
-                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
-                  </span></span></div>
-              <div>
-                <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":amazon-chime-sdk:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">fun </span><a href="on-remote-video-source-unavailable.html"><span class="token function">onRemoteVideoSourceUnavailable</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">sources<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/index.html">List</a><span class="token operator">&lt;</span><a href="../../com.amazonaws.services.chime.sdk.meetings.audiovideo.video/-remote-video-source/index.html">RemoteVideoSource</a><span class="token operator">&gt;</span></span></span><span class="token punctuation">)</span></div><div class="brief "><p class="paragraph">Called when remote video source(s) is/are no longer available.</p></div></div></div>
-                </div>
-              </div>
-            </div>
-          </div>
-<a data-name="477129179%2FFunctions%2F533364019" anchor-label="onVideoSessionStarted" id="477129179%2FFunctions%2F533364019" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release"></a>
-          <div class="table-row" data-filterable-current=":amazon-chime-sdk:dokkaHtmlPartial/release" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release">
-            <div class="main-subrow keyValue ">
-              <div class=""><span class="inline-flex">
-                  <div><a href="on-video-session-started.html"><span>on</span><wbr><span>Video</span><wbr><span>Session</span><wbr><span><span>Started</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="477129179%2FFunctions%2F533364019"></span>
-                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
-                  </span></span></div>
-              <div>
-                <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":amazon-chime-sdk:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">fun </span><a href="on-video-session-started.html"><span class="token function">onVideoSessionStarted</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">sessionStatus<span class="token operator">: </span><a href="../../com.amazonaws.services.chime.sdk.meetings.session/-meeting-session-status/index.html">MeetingSessionStatus</a></span></span><span class="token punctuation">)</span></div><div class="brief "><p class="paragraph">Called when the video session has started. Sometimes there is a non fatal error such as trying to send local video when the capacity was already reached. However, user can still receive remote video in the existing video session.</p></div></div></div>
-                </div>
-              </div>
-            </div>
-          </div>
-<a data-name="1142172682%2FFunctions%2F533364019" anchor-label="onVideoSessionStartedConnecting" id="1142172682%2FFunctions%2F533364019" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release"></a>
-          <div class="table-row" data-filterable-current=":amazon-chime-sdk:dokkaHtmlPartial/release" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release">
-            <div class="main-subrow keyValue ">
-              <div class=""><span class="inline-flex">
-                  <div><a href="on-video-session-started-connecting.html"><span>on</span><wbr><span>Video</span><wbr><span>Session</span><wbr><span>Started</span><wbr><span><span>Connecting</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1142172682%2FFunctions%2F533364019"></span>
-                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
-                  </span></span></div>
-              <div>
-                <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":amazon-chime-sdk:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">fun </span><a href="on-video-session-started-connecting.html"><span class="token function">onVideoSessionStartedConnecting</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span></div><div class="brief "><p class="paragraph">Called when the video session is connecting or reconnecting.</p></div></div></div>
-                </div>
-              </div>
-            </div>
-          </div>
-<a data-name="-638497009%2FFunctions%2F533364019" anchor-label="onVideoSessionStopped" id="-638497009%2FFunctions%2F533364019" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release"></a>
-          <div class="table-row" data-filterable-current=":amazon-chime-sdk:dokkaHtmlPartial/release" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release">
-            <div class="main-subrow keyValue ">
-              <div class=""><span class="inline-flex">
-                  <div><a href="on-video-session-stopped.html"><span>on</span><wbr><span>Video</span><wbr><span>Session</span><wbr><span><span>Stopped</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-638497009%2FFunctions%2F533364019"></span>
-                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
-                  </span></span></div>
-              <div>
-                <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":amazon-chime-sdk:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">fun </span><a href="on-video-session-stopped.html"><span class="token function">onVideoSessionStopped</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">sessionStatus<span class="token operator">: </span><a href="../../com.amazonaws.services.chime.sdk.meetings.session/-meeting-session-status/index.html">MeetingSessionStatus</a></span></span><span class="token punctuation">)</span></div><div class="brief "><p class="paragraph">Called when the video session has stopped from a started state with the reason provided in the status.</p></div></div></div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-      <div class="footer">
-        <span class="go-to-top-icon"><a href="#content" id="go-to-top-link"></a></span><span>© 2024 Copyright</span><span class="pull-right"><span>Generated by </span><a href="https://github.com/Kotlin/dokka"><span>dokka</span><span class="padded-icon"></span></a></span>
-      </div>
-            </div>
-        </div>
-    </div>
-</body>
-</html>
-
+<HTML>
+<HEAD>
+<meta charset="UTF-8">
+<title>AudioVideoObserver - amazon-chime-sdk</title>
+<link rel="stylesheet" href="../../../style.css">
+</HEAD>
+<BODY>
+<a href="../../index.html">amazon-chime-sdk</a>&nbsp;/&nbsp;<a href="../index.html">com.amazonaws.services.chime.sdk.meetings.audiovideo</a>&nbsp;/&nbsp;<a href="./index.html">AudioVideoObserver</a><br/>
+<br/>
+<h1>AudioVideoObserver</h1>
+<code><span class="keyword">interface </span><span class="identifier">AudioVideoObserver</span></code>
+<p><a href="./index.html">AudioVideoObserver</a> handles audio / video session events.</p>
+<p>Note: all callbacks will be called on main thread.</p>
+<h3>Functions</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<h4><a href="on-audio-session-cancelled-reconnect.html">onAudioSessionCancelledReconnect</a></h4>
+</td>
+<td>
+<p>Called when audio session cancelled reconnecting.</p>
+<code><span class="keyword">abstract</span> <span class="keyword">fun </span><span class="identifier">onAudioSessionCancelledReconnect</span><span class="symbol">(</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="on-audio-session-dropped.html">onAudioSessionDropped</a></h4>
+</td>
+<td>
+<p>Called when audio session got dropped due to poor network conditions.
+There will be an automatic attempt of reconnecting it.
+If the reconnection is successful, <a href="on-audio-session-started.html">onAudioSessionStarted</a> will be called with value of reconnecting as true</p>
+<code><span class="keyword">abstract</span> <span class="keyword">fun </span><span class="identifier">onAudioSessionDropped</span><span class="symbol">(</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="on-audio-session-started.html">onAudioSessionStarted</a></h4>
+</td>
+<td>
+<p>Called when the audio session has started.</p>
+<code><span class="keyword">abstract</span> <span class="keyword">fun </span><span class="identifier">onAudioSessionStarted</span><span class="symbol">(</span><span class="identifier" id="com.amazonaws.services.chime.sdk.meetings.audiovideo.AudioVideoObserver$onAudioSessionStarted(kotlin.Boolean)/reconnecting">reconnecting</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html"><span class="identifier">Boolean</span></a><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="on-audio-session-started-connecting.html">onAudioSessionStartedConnecting</a></h4>
+</td>
+<td>
+<p>Called when the audio session is connecting or reconnecting.</p>
+<code><span class="keyword">abstract</span> <span class="keyword">fun </span><span class="identifier">onAudioSessionStartedConnecting</span><span class="symbol">(</span><span class="identifier" id="com.amazonaws.services.chime.sdk.meetings.audiovideo.AudioVideoObserver$onAudioSessionStartedConnecting(kotlin.Boolean)/reconnecting">reconnecting</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html"><span class="identifier">Boolean</span></a><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="on-audio-session-stopped.html">onAudioSessionStopped</a></h4>
+</td>
+<td>
+<p>Called when the audio session has stopped with the reason
+provided in the status. This callback implies that audio client has stopped permanently for this session and there will be
+no attempt of reconnecting it.</p>
+<code><span class="keyword">abstract</span> <span class="keyword">fun </span><span class="identifier">onAudioSessionStopped</span><span class="symbol">(</span><span class="identifier" id="com.amazonaws.services.chime.sdk.meetings.audiovideo.AudioVideoObserver$onAudioSessionStopped(com.amazonaws.services.chime.sdk.meetings.session.MeetingSessionStatus)/sessionStatus">sessionStatus</span><span class="symbol">:</span>&nbsp;<a href="../../com.amazonaws.services.chime.sdk.meetings.session/-meeting-session-status/index.html"><span class="identifier">MeetingSessionStatus</span></a><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="on-camera-send-availability-updated.html">onCameraSendAvailabilityUpdated</a></h4>
+</td>
+<td>
+<p>Called when video capacity status is updated.</p>
+<code><span class="keyword">abstract</span> <span class="keyword">fun </span><span class="identifier">onCameraSendAvailabilityUpdated</span><span class="symbol">(</span><span class="identifier" id="com.amazonaws.services.chime.sdk.meetings.audiovideo.AudioVideoObserver$onCameraSendAvailabilityUpdated(kotlin.Boolean)/available">available</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html"><span class="identifier">Boolean</span></a><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="on-connection-became-poor.html">onConnectionBecamePoor</a></h4>
+</td>
+<td>
+<p>Called when connection became poor.</p>
+<code><span class="keyword">abstract</span> <span class="keyword">fun </span><span class="identifier">onConnectionBecamePoor</span><span class="symbol">(</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="on-connection-recovered.html">onConnectionRecovered</a></h4>
+</td>
+<td>
+<p>Called when the connection health is recovered.</p>
+<code><span class="keyword">abstract</span> <span class="keyword">fun </span><span class="identifier">onConnectionRecovered</span><span class="symbol">(</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="on-remote-video-source-available.html">onRemoteVideoSourceAvailable</a></h4>
+</td>
+<td>
+<p>Called when remote video source(s) is/are now available.</p>
+<code><span class="keyword">abstract</span> <span class="keyword">fun </span><span class="identifier">onRemoteVideoSourceAvailable</span><span class="symbol">(</span><span class="identifier" id="com.amazonaws.services.chime.sdk.meetings.audiovideo.AudioVideoObserver$onRemoteVideoSourceAvailable(kotlin.collections.List((com.amazonaws.services.chime.sdk.meetings.audiovideo.video.RemoteVideoSource)))/sources">sources</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/index.html"><span class="identifier">List</span></a><span class="symbol">&lt;</span><a href="../../com.amazonaws.services.chime.sdk.meetings.audiovideo.video/-remote-video-source/index.html"><span class="identifier">RemoteVideoSource</span></a><span class="symbol">&gt;</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="on-remote-video-source-unavailable.html">onRemoteVideoSourceUnavailable</a></h4>
+</td>
+<td>
+<p>Called when remote video source(s) is/are no longer available.</p>
+<code><span class="keyword">abstract</span> <span class="keyword">fun </span><span class="identifier">onRemoteVideoSourceUnavailable</span><span class="symbol">(</span><span class="identifier" id="com.amazonaws.services.chime.sdk.meetings.audiovideo.AudioVideoObserver$onRemoteVideoSourceUnavailable(kotlin.collections.List((com.amazonaws.services.chime.sdk.meetings.audiovideo.video.RemoteVideoSource)))/sources">sources</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/index.html"><span class="identifier">List</span></a><span class="symbol">&lt;</span><a href="../../com.amazonaws.services.chime.sdk.meetings.audiovideo.video/-remote-video-source/index.html"><span class="identifier">RemoteVideoSource</span></a><span class="symbol">&gt;</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="on-video-session-started.html">onVideoSessionStarted</a></h4>
+</td>
+<td>
+<p>Called when the video session has started. Sometimes there is a non fatal error such as
+trying to send local video when the capacity was already reached. However, user can still
+receive remote video in the existing video session.</p>
+<code><span class="keyword">abstract</span> <span class="keyword">fun </span><span class="identifier">onVideoSessionStarted</span><span class="symbol">(</span><span class="identifier" id="com.amazonaws.services.chime.sdk.meetings.audiovideo.AudioVideoObserver$onVideoSessionStarted(com.amazonaws.services.chime.sdk.meetings.session.MeetingSessionStatus)/sessionStatus">sessionStatus</span><span class="symbol">:</span>&nbsp;<a href="../../com.amazonaws.services.chime.sdk.meetings.session/-meeting-session-status/index.html"><span class="identifier">MeetingSessionStatus</span></a><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="on-video-session-started-connecting.html">onVideoSessionStartedConnecting</a></h4>
+</td>
+<td>
+<p>Called when the video session is connecting or reconnecting.</p>
+<code><span class="keyword">abstract</span> <span class="keyword">fun </span><span class="identifier">onVideoSessionStartedConnecting</span><span class="symbol">(</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="on-video-session-stopped.html">onVideoSessionStopped</a></h4>
+</td>
+<td>
+<p>Called when the video session has stopped from a started state with the reason
+provided in the status.</p>
+<code><span class="keyword">abstract</span> <span class="keyword">fun </span><span class="identifier">onVideoSessionStopped</span><span class="symbol">(</span><span class="identifier" id="com.amazonaws.services.chime.sdk.meetings.audiovideo.AudioVideoObserver$onVideoSessionStopped(com.amazonaws.services.chime.sdk.meetings.session.MeetingSessionStatus)/sessionStatus">sessionStatus</span><span class="symbol">:</span>&nbsp;<a href="../../com.amazonaws.services.chime.sdk.meetings.session/-meeting-session-status/index.html"><span class="identifier">MeetingSessionStatus</span></a><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code></td>
+</tr>
+</tbody>
+</table>
+</BODY>
+</HTML>

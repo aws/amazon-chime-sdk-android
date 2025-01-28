@@ -1,100 +1,86 @@
-<!doctype html>
-<html class="no-js">
-<head>
-    <meta name="viewport" content="width=device-width, initial-scale=1" charset="UTF-8">
-    <title>VideoSink</title>
-<link href="../../../images/logo-icon.svg" rel="icon" type="image/svg">    <script>var pathToRoot = "../../../";</script>
-    <script>document.documentElement.classList.replace("no-js","js");</script>
-    <script>const storage = localStorage.getItem("dokka-dark-mode")
-    if (storage == null) {
-        const osDarkSchemePreferred = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
-        if (osDarkSchemePreferred === true) {
-            document.getElementsByTagName("html")[0].classList.add("theme-dark")
-        }
-    } else {
-        const savedDarkMode = JSON.parse(storage)
-        if(savedDarkMode === true) {
-            document.getElementsByTagName("html")[0].classList.add("theme-dark")
-        }
-    }
-    </script>
-<script type="text/javascript" src="https://unpkg.com/kotlin-playground@1/dist/playground.min.js" async></script>
-<script type="text/javascript" src="../../../scripts/sourceset_dependencies.js" async></script>
-<link href="../../../styles/style.css" rel="Stylesheet">
-<link href="../../../styles/main.css" rel="Stylesheet">
-<link href="../../../styles/prism.css" rel="Stylesheet">
-<link href="../../../styles/logo-styles.css" rel="Stylesheet">
-<link href="../../../styles/font-jb-sans-auto.css" rel="Stylesheet">
-<script type="text/javascript" src="../../../scripts/clipboard.js" async></script>
-<script type="text/javascript" src="../../../scripts/navigation-loader.js" async></script>
-<script type="text/javascript" src="../../../scripts/platform-content-handler.js" async></script>
-<script type="text/javascript" src="../../../scripts/main.js" defer></script>
-<script type="text/javascript" src="../../../scripts/prism.js" async></script>
-<script type="text/javascript" src="../../../scripts/symbol-parameters-wrapper_deferred.js" defer></script></head>
-<body>
-    <div class="root">
-<nav class="navigation" id="navigation-wrapper">
-    <div class="navigation--inner">
-        <div class="navigation-title">
-            <button class="menu-toggle" id="menu-toggle" type="button">toggle menu</button>
-            <div class="library-name">
-<a class="library-name--link" href="../../../index.html">
-                            amazon-chime-sdk-android
-                    </a>            </div>
-            <div class="library-version">
-            </div>
-        </div>
-        <div class="filter-section" id="filter-section">
-                <button class="platform-tag platform-selector jvm-like" data-active="" data-filter=":amazon-chime-sdk:dokkaHtmlPartial/release">androidJvm</button>
-        </div>
-    </div>
-    <div class="navigation-controls">
-        <button class="navigation-controls--btn navigation-controls--theme" id="theme-toggle-button" type="button">switch theme</button>
-        <div class="navigation-controls--btn navigation-controls--search" id="searchBar" role="button">search in API</div>
-    </div>
-</nav>
-        <div id="container">
-            <div class="sidebar" id="leftColumn">
-                <div class="sidebar--inner" id="sideMenu"></div>
-            </div>
-            <div id="main">
-<div class="main-content" data-page-type="classlike" id="content" pageids="amazon-chime-sdk::com.amazonaws.services.chime.sdk.meetings.audiovideo.video/VideoSink///PointingToDeclaration//533364019">
-  <div class="breadcrumbs"><a href="../../index.html">amazon-chime-sdk</a><span class="delimiter">/</span><a href="../index.html">com.amazonaws.services.chime.sdk.meetings.audiovideo.video</a><span class="delimiter">/</span><span class="current">VideoSink</span></div>
-  <div class="cover ">
-    <h1 class="cover"><span>Video</span><wbr><span><span>Sink</span></span></h1>
-    <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":amazon-chime-sdk:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">interface </span><a href="index.html">VideoSink</a></div><p class="paragraph">A <a href="index.html">VideoSink</a> consumes video frames, typically from a <a href="../-video-source/index.html">VideoSource</a>. It may process, fork, or render these frames. Typically connected via <a href="../-video-source/add-video-sink.html">VideoSource.addVideoSink</a> and disconnected via <a href="../-video-source/remove-video-sink.html">VideoSource.removeVideoSink</a></p><h4 class="">Inheritors</h4><div class="table"><div class="table-row" data-filterable-current=":amazon-chime-sdk:dokkaHtmlPartial/release" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release"><div class="main-subrow keyValue "><div class=""><span class="inline-flex"><div><a href="../-video-render-view/index.html">VideoRenderView</a></div></span></div><div></div></div></div><div class="table-row" data-filterable-current=":amazon-chime-sdk:dokkaHtmlPartial/release" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release"><div class="main-subrow keyValue "><div class=""><span class="inline-flex"><div><a href="../-video-tile/index.html">VideoTile</a></div></span></div><div></div></div></div><div class="table-row" data-filterable-current=":amazon-chime-sdk:dokkaHtmlPartial/release" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release"><div class="main-subrow keyValue "><div class=""><span class="inline-flex"><div><a href="../../com.amazonaws.services.chime.sdk.meetings.audiovideo.video.backgroundfilter.backgroundblur/-background-blur-video-frame-processor/index.html">BackgroundBlurVideoFrameProcessor</a></div></span></div><div></div></div></div><div class="table-row" data-filterable-current=":amazon-chime-sdk:dokkaHtmlPartial/release" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release"><div class="main-subrow keyValue "><div class=""><span class="inline-flex"><div><a href="../../com.amazonaws.services.chime.sdk.meetings.audiovideo.video.backgroundfilter.backgroundreplacement/-background-replacement-video-frame-processor/index.html">BackgroundReplacementVideoFrameProcessor</a></div></span></div><div></div></div></div><div class="table-row" data-filterable-current=":amazon-chime-sdk:dokkaHtmlPartial/release" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release"><div class="main-subrow keyValue "><div class=""><span class="inline-flex"><div><a href="../../com.amazonaws.services.chime.sdk.meetings.audiovideo.video.capture/-default-camera-capture-source/index.html">DefaultCameraCaptureSource</a></div></span></div><div></div></div></div><div class="table-row" data-filterable-current=":amazon-chime-sdk:dokkaHtmlPartial/release" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release"><div class="main-subrow keyValue "><div class=""><span class="inline-flex"><div><a href="../../com.amazonaws.services.chime.sdk.meetings.audiovideo.video.capture/-default-screen-capture-source/index.html">DefaultScreenCaptureSource</a></div></span></div><div></div></div></div><div class="table-row" data-filterable-current=":amazon-chime-sdk:dokkaHtmlPartial/release" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release"><div class="main-subrow keyValue "><div class=""><span class="inline-flex"><div><a href="../../com.amazonaws.services.chime.sdk.meetings.internal.video/-video-source-adapter/index.html">VideoSourceAdapter</a></div></span></div><div></div></div></div><div class="table-row" data-filterable-current=":amazon-chime-sdk:dokkaHtmlPartial/release" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release"><div class="main-subrow keyValue "><div class=""><span class="inline-flex"><div><a href="../../com.amazonaws.services.chime.sdk.meetings.internal.video.gl/-egl-renderer/index.html">EglRenderer</a></div></span></div><div></div></div></div></div></div></div>
-  </div>
-  <div class="tabbedcontent">
-    <div class="tabs-section" tabs-section="tabs-section"><button class="section-tab" data-active="" data-togglable="CONSTRUCTOR,TYPE,PROPERTY,FUNCTION">Members</button></div>
-    <div class="tabs-section-body">
-      <div data-togglable="FUNCTION">
-        <h2 class="">Functions</h2>
-        <div class="table"><a data-name="-879733977%2FFunctions%2F533364019" anchor-label="onVideoFrameReceived" id="-879733977%2FFunctions%2F533364019" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release"></a>
-          <div class="table-row" data-filterable-current=":amazon-chime-sdk:dokkaHtmlPartial/release" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release">
-            <div class="main-subrow keyValue ">
-              <div class=""><span class="inline-flex">
-                  <div><a href="on-video-frame-received.html"><span>on</span><wbr><span>Video</span><wbr><span>Frame</span><wbr><span><span>Received</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-879733977%2FFunctions%2F533364019"></span>
-                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
-                  </span></span></div>
-              <div>
-                <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":amazon-chime-sdk:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">fun </span><a href="on-video-frame-received.html"><span class="token function">onVideoFrameReceived</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">frame<span class="token operator">: </span><a href="../-video-frame/index.html">VideoFrame</a></span></span><span class="token punctuation">)</span></div><div class="brief "><p class="paragraph">Receive a video frame from some upstream source. The <a href="index.html">VideoSink</a> may render, store, process, and forward the frame, among other applications.</p></div></div></div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-      <div class="footer">
-        <span class="go-to-top-icon"><a href="#content" id="go-to-top-link"></a></span><span>© 2024 Copyright</span><span class="pull-right"><span>Generated by </span><a href="https://github.com/Kotlin/dokka"><span>dokka</span><span class="padded-icon"></span></a></span>
-      </div>
-            </div>
-        </div>
-    </div>
-</body>
-</html>
-
+<HTML>
+<HEAD>
+<meta charset="UTF-8">
+<title>VideoSink - amazon-chime-sdk</title>
+<link rel="stylesheet" href="../../../style.css">
+</HEAD>
+<BODY>
+<a href="../../index.html">amazon-chime-sdk</a>&nbsp;/&nbsp;<a href="../index.html">com.amazonaws.services.chime.sdk.meetings.audiovideo.video</a>&nbsp;/&nbsp;<a href="./index.html">VideoSink</a><br/>
+<br/>
+<h1>VideoSink</h1>
+<code><span class="keyword">interface </span><span class="identifier">VideoSink</span></code>
+<p>A <a href="./index.html">VideoSink</a> consumes video frames, typically from a <a href="../-video-source/index.html">VideoSource</a>. It may process, fork, or render these frames.
+Typically connected via <a href="../-video-source/add-video-sink.html">VideoSource.addVideoSink</a> and disconnected via <a href="../-video-source/remove-video-sink.html">VideoSource.removeVideoSink</a></p>
+<h3>Functions</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<h4><a href="on-video-frame-received.html">onVideoFrameReceived</a></h4>
+</td>
+<td>
+<p>Receive a video frame from some upstream source.
+The <a href="./index.html">VideoSink</a> may render, store, process, and forward the frame, among other applications.</p>
+<code><span class="keyword">abstract</span> <span class="keyword">fun </span><span class="identifier">onVideoFrameReceived</span><span class="symbol">(</span><span class="identifier" id="com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoSink$onVideoFrameReceived(com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoFrame)/frame">frame</span><span class="symbol">:</span>&nbsp;<a href="../-video-frame/index.html"><span class="identifier">VideoFrame</span></a><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code></td>
+</tr>
+</tbody>
+</table>
+<h3>Inheritors</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<h4><a href="../../com.amazonaws.services.chime.sdk.meetings.audiovideo.video.backgroundfilter.backgroundblur/-background-blur-video-frame-processor/index.html">BackgroundBlurVideoFrameProcessor</a></h4>
+</td>
+<td>
+<p><a href="../../com.amazonaws.services.chime.sdk.meetings.audiovideo.video.backgroundfilter.backgroundblur/-background-blur-video-frame-processor/index.html">BackgroundBlurVideoFrameProcessor</a> Draws frames to RGBA, converts to CPU, identifies the
+foreground person and blurs the background of a video frame.</p>
+<code><span class="keyword">class </span><span class="identifier">BackgroundBlurVideoFrameProcessor</span>&nbsp;<span class="symbol">:</span>&nbsp;<a href="../-video-source/index.html"><span class="identifier">VideoSource</span></a><span class="symbol">, </span><a href="./index.html"><span class="identifier">VideoSink</span></a></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="../../com.amazonaws.services.chime.sdk.meetings.audiovideo.video.backgroundfilter.backgroundreplacement/-background-replacement-video-frame-processor/index.html">BackgroundReplacementVideoFrameProcessor</a></h4>
+</td>
+<td>
+<p><a href="../../com.amazonaws.services.chime.sdk.meetings.audiovideo.video.backgroundfilter.backgroundreplacement/-background-replacement-video-frame-processor/index.html">BackgroundReplacementVideoFrameProcessor</a> Draws frames to RGBA, converts to CPU, identifies the foreground person
+and replaces the background of a video frame.</p>
+<code><span class="keyword">class </span><span class="identifier">BackgroundReplacementVideoFrameProcessor</span>&nbsp;<span class="symbol">:</span>&nbsp;<a href="../-video-source/index.html"><span class="identifier">VideoSource</span></a><span class="symbol">, </span><a href="./index.html"><span class="identifier">VideoSink</span></a></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="../../com.amazonaws.services.chime.sdk.meetings.audiovideo.video.capture/-default-camera-capture-source/index.html">DefaultCameraCaptureSource</a></h4>
+</td>
+<td>
+<p><a href="../../com.amazonaws.services.chime.sdk.meetings.audiovideo.video.capture/-default-camera-capture-source/index.html">DefaultCameraCaptureSource</a> will configure a reasonably standard capture stream which will
+use the <a href="https://developer.android.com/reference/android/view/Surface.html">Surface</a> provided by the capture source provided by a <a href="../../com.amazonaws.services.chime.sdk.meetings.audiovideo.video.capture/-surface-texture-capture-source-factory/index.html">SurfaceTextureCaptureSourceFactory</a></p>
+<code><span class="keyword">class </span><span class="identifier">DefaultCameraCaptureSource</span>&nbsp;<span class="symbol">:</span>&nbsp;<a href="../../com.amazonaws.services.chime.sdk.meetings.audiovideo.video.capture/-camera-capture-source/index.html"><span class="identifier">CameraCaptureSource</span></a><span class="symbol">, </span><a href="./index.html"><span class="identifier">VideoSink</span></a></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="../../com.amazonaws.services.chime.sdk.meetings.audiovideo.video.capture/-default-screen-capture-source/index.html">DefaultScreenCaptureSource</a></h4>
+</td>
+<td>
+<p><a href="../../com.amazonaws.services.chime.sdk.meetings.audiovideo.video.capture/-default-screen-capture-source/index.html">DefaultScreenCaptureSource</a> uses <a href="https://developer.android.com/reference/android/media/projection/MediaProjection.html">MediaProjection</a> to create a <a href="https://developer.android.com/reference/android/hardware/display/VirtualDisplay.html">VirtualDisplay</a> to capture the
+device screen. It will render the captured frames to a <a href="https://developer.android.com/reference/android/view/Surface.html">Surface</a> provided by a <a href="../../com.amazonaws.services.chime.sdk.meetings.audiovideo.video.capture/-surface-texture-capture-source-factory/index.html">SurfaceTextureCaptureSourceFactory</a>.</p>
+<code><span class="keyword">class </span><span class="identifier">DefaultScreenCaptureSource</span>&nbsp;<span class="symbol">:</span>&nbsp;<a href="../../com.amazonaws.services.chime.sdk.meetings.audiovideo.video.capture/-video-capture-source/index.html"><span class="identifier">VideoCaptureSource</span></a><span class="symbol">, </span><a href="./index.html"><span class="identifier">VideoSink</span></a></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="../-video-render-view.html">VideoRenderView</a></h4>
+</td>
+<td>
+<p><a href="../-video-render-view.html">VideoRenderView</a> is the type of VideoSink used by the <a href="../-video-tile-controller/index.html">VideoTileController</a></p>
+<code><span class="keyword">interface </span><span class="identifier">VideoRenderView</span>&nbsp;<span class="symbol">:</span>&nbsp;<a href="./index.html"><span class="identifier">VideoSink</span></a></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="../-video-tile/index.html">VideoTile</a></h4>
+</td>
+<td>
+<p><a href="../-video-tile/index.html">VideoTile</a> is a tile that binds video render view to display the frame into the view.</p>
+<code><span class="keyword">interface </span><span class="identifier">VideoTile</span>&nbsp;<span class="symbol">:</span>&nbsp;<a href="./index.html"><span class="identifier">VideoSink</span></a></code></td>
+</tr>
+</tbody>
+</table>
+</BODY>
+</HTML>

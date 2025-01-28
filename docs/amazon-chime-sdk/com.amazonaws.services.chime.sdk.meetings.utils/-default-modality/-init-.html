@@ -1,0 +1,24 @@
+<HTML>
+<HEAD>
+<meta charset="UTF-8">
+<title>DefaultModality.<init> - amazon-chime-sdk</title>
+<link rel="stylesheet" href="../../../style.css">
+</HEAD>
+<BODY>
+<a href="../../index.html">amazon-chime-sdk</a>&nbsp;/&nbsp;<a href="../index.html">com.amazonaws.services.chime.sdk.meetings.utils</a>&nbsp;/&nbsp;<a href="index.html">DefaultModality</a>&nbsp;/&nbsp;<a href="./-init-.html">&lt;init&gt;</a><br/>
+<br/>
+<h1>&lt;init&gt;</h1>
+<a name="com.amazonaws.services.chime.sdk.meetings.utils.DefaultModality$&lt;init&gt;(kotlin.String)"></a>
+<code><span class="identifier">DefaultModality</span><span class="symbol">(</span><span class="identifier" id="com.amazonaws.services.chime.sdk.meetings.utils.DefaultModality$<init>(kotlin.String)/id">id</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">)</span></code>
+<p><a href="index.html">DefaultModality</a> is a backwards compatible extension of the
+attendee id (UUID string) and session token schemas (base 64 string).
+It appends # to either strings, which indicates the modality
+of the participant.</p>
+<p>For example,
+attendeeId: "abcdefg"
+contentAttendeeId: "abcdefg#content"
+base(contentAttendeeId): "abcdefg"
+modality(contentAttendeeId): "content"
+hasModality(contentAttendeeId): true</p>
+</BODY>
+</HTML>

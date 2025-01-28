@@ -1,198 +1,86 @@
-<!doctype html>
-<html class="no-js">
-<head>
-    <meta name="viewport" content="width=device-width, initial-scale=1" charset="UTF-8">
-    <title>MeetingSessionConfiguration</title>
-<link href="../../../images/logo-icon.svg" rel="icon" type="image/svg">    <script>var pathToRoot = "../../../";</script>
-    <script>document.documentElement.classList.replace("no-js","js");</script>
-    <script>const storage = localStorage.getItem("dokka-dark-mode")
-    if (storage == null) {
-        const osDarkSchemePreferred = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
-        if (osDarkSchemePreferred === true) {
-            document.getElementsByTagName("html")[0].classList.add("theme-dark")
-        }
-    } else {
-        const savedDarkMode = JSON.parse(storage)
-        if(savedDarkMode === true) {
-            document.getElementsByTagName("html")[0].classList.add("theme-dark")
-        }
-    }
-    </script>
-<script type="text/javascript" src="https://unpkg.com/kotlin-playground@1/dist/playground.min.js" async></script>
-<script type="text/javascript" src="../../../scripts/sourceset_dependencies.js" async></script>
-<link href="../../../styles/style.css" rel="Stylesheet">
-<link href="../../../styles/main.css" rel="Stylesheet">
-<link href="../../../styles/prism.css" rel="Stylesheet">
-<link href="../../../styles/logo-styles.css" rel="Stylesheet">
-<link href="../../../styles/font-jb-sans-auto.css" rel="Stylesheet">
-<script type="text/javascript" src="../../../scripts/clipboard.js" async></script>
-<script type="text/javascript" src="../../../scripts/navigation-loader.js" async></script>
-<script type="text/javascript" src="../../../scripts/platform-content-handler.js" async></script>
-<script type="text/javascript" src="../../../scripts/main.js" defer></script>
-<script type="text/javascript" src="../../../scripts/prism.js" async></script>
-<script type="text/javascript" src="../../../scripts/symbol-parameters-wrapper_deferred.js" defer></script></head>
-<body>
-    <div class="root">
-<nav class="navigation" id="navigation-wrapper">
-    <div class="navigation--inner">
-        <div class="navigation-title">
-            <button class="menu-toggle" id="menu-toggle" type="button">toggle menu</button>
-            <div class="library-name">
-<a class="library-name--link" href="../../../index.html">
-                            amazon-chime-sdk-android
-                    </a>            </div>
-            <div class="library-version">
-            </div>
-        </div>
-        <div class="filter-section" id="filter-section">
-                <button class="platform-tag platform-selector jvm-like" data-active="" data-filter=":amazon-chime-sdk:dokkaHtmlPartial/release">androidJvm</button>
-        </div>
-    </div>
-    <div class="navigation-controls">
-        <button class="navigation-controls--btn navigation-controls--theme" id="theme-toggle-button" type="button">switch theme</button>
-        <div class="navigation-controls--btn navigation-controls--search" id="searchBar" role="button">search in API</div>
-    </div>
-</nav>
-        <div id="container">
-            <div class="sidebar" id="leftColumn">
-                <div class="sidebar--inner" id="sideMenu"></div>
-            </div>
-            <div id="main">
-<div class="main-content" data-page-type="classlike" id="content" pageids="amazon-chime-sdk::com.amazonaws.services.chime.sdk.meetings.session/MeetingSessionConfiguration///PointingToDeclaration//533364019">
-  <div class="breadcrumbs"><a href="../../index.html">amazon-chime-sdk</a><span class="delimiter">/</span><a href="../index.html">com.amazonaws.services.chime.sdk.meetings.session</a><span class="delimiter">/</span><span class="current">MeetingSessionConfiguration</span></div>
-  <div class="cover ">
-    <h1 class="cover"><span>Meeting</span><wbr><span>Session</span><wbr><span><span>Configuration</span></span></h1>
-    <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":amazon-chime-sdk:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">data </span><span class="token keyword">class </span><a href="index.html">MeetingSessionConfiguration</a><span class="token punctuation">(</span><span class="parameters "><span class="parameter "><span class="token keyword">val </span>meetingId<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a><span class="token punctuation">, </span></span><span class="parameter "><span class="token keyword">val </span>externalMeetingId<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a><span class="token operator">?</span><span class="token punctuation">, </span></span><span class="parameter "><span class="token keyword">val </span>credentials<span class="token operator">: </span><a href="../-meeting-session-credentials/index.html">MeetingSessionCredentials</a><span class="token punctuation">, </span></span><span class="parameter "><span class="token keyword">val </span>urls<span class="token operator">: </span><a href="../-meeting-session-u-r-ls/index.html">MeetingSessionURLs</a><span class="token punctuation">, </span></span><span class="parameter "><span class="token keyword">val </span>features<span class="token operator">: </span><a href="../-meeting-features/index.html">MeetingFeatures</a><span class="token operator"> = </span>MeetingFeatures()</span></span><span class="token punctuation">)</span></div><p class="paragraph"><a href="index.html">MeetingSessionConfiguration</a> includes information needed to start the meeting session such as attendee credentials and URLs for audio and video</p><p class="paragraph">Constructs a MeetingSessionConfiguration with a chime:<a href="../-create-meeting-response/index.html">CreateMeetingResponse</a> and chime:<a href="../-create-attendee-response/index.html">CreateAttendeeResponse</a> response and optional custom <a href="../-u-r-l-rewriter/index.html">URLRewriter</a> that will rewrite urls given to new urls.</p></div></div>
-  </div>
-  <div class="tabbedcontent">
-    <div class="tabs-section" tabs-section="tabs-section"><button class="section-tab" data-active="" data-togglable="CONSTRUCTOR,TYPE,PROPERTY,FUNCTION">Members</button></div>
-    <div class="tabs-section-body">
-      <div data-togglable="CONSTRUCTOR">
-        <h2 class="">Constructors</h2>
-        <div class="table"><a data-name="1088278939%2FConstructors%2F533364019" anchor-label="MeetingSessionConfiguration" id="1088278939%2FConstructors%2F533364019" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release"></a>
-          <div class="table-row" data-togglable="CONSTRUCTOR" data-filterable-current=":amazon-chime-sdk:dokkaHtmlPartial/release" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release">
-            <div class="main-subrow keyValue ">
-              <div class=""><span class="inline-flex">
-                  <div><a href="-meeting-session-configuration.html"><span>Meeting</span><wbr><span>Session</span><wbr><span><span>Configuration</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1088278939%2FConstructors%2F533364019"></span>
-                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
-                  </span></span></div>
-              <div>
-                <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":amazon-chime-sdk:dokkaHtmlPartial/release"><div class="symbol monospace"><div class="block"><div class="block"><span class="token annotation builtin">@</span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.jvm/-jvm-overloads/index.html"><span class="token annotation builtin">JvmOverloads</span></a></div></div><span class="token keyword">constructor</span><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">createMeetingResponse<span class="token operator">: </span><a href="../-create-meeting-response/index.html">CreateMeetingResponse</a><span class="token punctuation">, </span></span><span class="parameter ">createAttendeeResponse<span class="token operator">: </span><a href="../-create-attendee-response/index.html">CreateAttendeeResponse</a><span class="token punctuation">, </span></span><span class="parameter ">urlRewriter<span class="token operator">: </span><a href="../-u-r-l-rewriter/index.html">URLRewriter</a><span class="token operator"> = </span>::defaultUrlRewriter</span></span><span class="token punctuation">)</span></div><div class="symbol monospace"><span class="token keyword">constructor</span><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">meetingId<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a><span class="token punctuation">, </span></span><span class="parameter ">credentials<span class="token operator">: </span><a href="../-meeting-session-credentials/index.html">MeetingSessionCredentials</a><span class="token punctuation">, </span></span><span class="parameter ">urls<span class="token operator">: </span><a href="../-meeting-session-u-r-ls/index.html">MeetingSessionURLs</a></span></span><span class="token punctuation">)</span></div><div class="symbol monospace"><span class="token keyword">constructor</span><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">meetingId<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a><span class="token punctuation">, </span></span><span class="parameter ">externalMeetingId<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a><span class="token operator">?</span><span class="token punctuation">, </span></span><span class="parameter ">credentials<span class="token operator">: </span><a href="../-meeting-session-credentials/index.html">MeetingSessionCredentials</a><span class="token punctuation">, </span></span><span class="parameter ">urls<span class="token operator">: </span><a href="../-meeting-session-u-r-ls/index.html">MeetingSessionURLs</a><span class="token punctuation">, </span></span><span class="parameter ">features<span class="token operator">: </span><a href="../-meeting-features/index.html">MeetingFeatures</a><span class="token operator"> = </span>MeetingFeatures()</span></span><span class="token punctuation">)</span></div></div></div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div data-togglable="PROPERTY">
-        <h2 class="">Properties</h2>
-        <div class="table"><a data-name="1181290992%2FProperties%2F533364019" anchor-label="credentials" id="1181290992%2FProperties%2F533364019" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release"></a>
-          <div class="table-row" data-filterable-current=":amazon-chime-sdk:dokkaHtmlPartial/release" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release">
-            <div class="main-subrow keyValue ">
-              <div class=""><span class="inline-flex">
-                  <div><a href="credentials.html"><span><span>credentials</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1181290992%2FProperties%2F533364019"></span>
-                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
-                  </span></span></div>
-              <div>
-                <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":amazon-chime-sdk:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">val </span><a href="credentials.html">credentials</a><span class="token operator">: </span><a href="../-meeting-session-credentials/index.html">MeetingSessionCredentials</a></div></div></div>
-                </div>
-              </div>
-            </div>
-          </div>
-<a data-name="-603097247%2FProperties%2F533364019" anchor-label="externalMeetingId" id="-603097247%2FProperties%2F533364019" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release"></a>
-          <div class="table-row" data-filterable-current=":amazon-chime-sdk:dokkaHtmlPartial/release" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release">
-            <div class="main-subrow keyValue ">
-              <div class=""><span class="inline-flex">
-                  <div><a href="external-meeting-id.html"><span>external</span><wbr><span>Meeting</span><wbr><span><span>Id</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-603097247%2FProperties%2F533364019"></span>
-                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
-                  </span></span></div>
-              <div>
-                <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":amazon-chime-sdk:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">val </span><a href="external-meeting-id.html">externalMeetingId</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a><span class="token operator">?</span></div></div></div>
-                </div>
-              </div>
-            </div>
-          </div>
-<a data-name="-375978287%2FProperties%2F533364019" anchor-label="features" id="-375978287%2FProperties%2F533364019" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release"></a>
-          <div class="table-row" data-filterable-current=":amazon-chime-sdk:dokkaHtmlPartial/release" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release">
-            <div class="main-subrow keyValue ">
-              <div class=""><span class="inline-flex">
-                  <div><a href="features.html"><span><span>features</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-375978287%2FProperties%2F533364019"></span>
-                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
-                  </span></span></div>
-              <div>
-                <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":amazon-chime-sdk:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">val </span><a href="features.html">features</a><span class="token operator">: </span><a href="../-meeting-features/index.html">MeetingFeatures</a></div></div></div>
-                </div>
-              </div>
-            </div>
-          </div>
-<a data-name="612772150%2FProperties%2F533364019" anchor-label="meetingId" id="612772150%2FProperties%2F533364019" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release"></a>
-          <div class="table-row" data-filterable-current=":amazon-chime-sdk:dokkaHtmlPartial/release" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release">
-            <div class="main-subrow keyValue ">
-              <div class=""><span class="inline-flex">
-                  <div><a href="meeting-id.html"><span>meeting</span><wbr><span><span>Id</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="612772150%2FProperties%2F533364019"></span>
-                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
-                  </span></span></div>
-              <div>
-                <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":amazon-chime-sdk:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">val </span><a href="meeting-id.html">meetingId</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a></div></div></div>
-                </div>
-              </div>
-            </div>
-          </div>
-<a data-name="-808403830%2FProperties%2F533364019" anchor-label="urls" id="-808403830%2FProperties%2F533364019" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release"></a>
-          <div class="table-row" data-filterable-current=":amazon-chime-sdk:dokkaHtmlPartial/release" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release">
-            <div class="main-subrow keyValue ">
-              <div class=""><span class="inline-flex">
-                  <div><a href="urls.html"><span><span>urls</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-808403830%2FProperties%2F533364019"></span>
-                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
-                  </span></span></div>
-              <div>
-                <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":amazon-chime-sdk:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">val </span><a href="urls.html">urls</a><span class="token operator">: </span><a href="../-meeting-session-u-r-ls/index.html">MeetingSessionURLs</a></div></div></div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div data-togglable="FUNCTION">
-        <h2 class="">Functions</h2>
-        <div class="table"><a data-name="-878642605%2FFunctions%2F533364019" anchor-label="createContentShareMeetingSessionConfiguration" id="-878642605%2FFunctions%2F533364019" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release"></a>
-          <div class="table-row" data-filterable-current=":amazon-chime-sdk:dokkaHtmlPartial/release" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release">
-            <div class="main-subrow keyValue ">
-              <div class=""><span class="inline-flex">
-                  <div><a href="create-content-share-meeting-session-configuration.html"><span>create</span><wbr><span>Content</span><wbr><span>Share</span><wbr><span>Meeting</span><wbr><span>Session</span><wbr><span><span>Configuration</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-878642605%2FFunctions%2F533364019"></span>
-                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
-                  </span></span></div>
-              <div>
-                <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":amazon-chime-sdk:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">fun </span><a href="create-content-share-meeting-session-configuration.html"><span class="token function">createContentShareMeetingSessionConfiguration</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">: </span><a href="index.html">MeetingSessionConfiguration</a></div></div></div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-      <div class="footer">
-        <span class="go-to-top-icon"><a href="#content" id="go-to-top-link"></a></span><span>© 2024 Copyright</span><span class="pull-right"><span>Generated by </span><a href="https://github.com/Kotlin/dokka"><span>dokka</span><span class="padded-icon"></span></a></span>
-      </div>
-            </div>
-        </div>
-    </div>
-</body>
-</html>
-
+<HTML>
+<HEAD>
+<meta charset="UTF-8">
+<title>MeetingSessionConfiguration - amazon-chime-sdk</title>
+<link rel="stylesheet" href="../../../style.css">
+</HEAD>
+<BODY>
+<a href="../../index.html">amazon-chime-sdk</a>&nbsp;/&nbsp;<a href="../index.html">com.amazonaws.services.chime.sdk.meetings.session</a>&nbsp;/&nbsp;<a href="./index.html">MeetingSessionConfiguration</a><br/>
+<br/>
+<h1>MeetingSessionConfiguration</h1>
+<code><span class="keyword">data</span> <span class="keyword">class </span><span class="identifier">MeetingSessionConfiguration</span></code>
+<p><a href="./index.html">MeetingSessionConfiguration</a> includes information needed to start the meeting session such as
+attendee credentials and URLs for audio and video</p>
+<p>Constructs a MeetingSessionConfiguration with a chime:<a href="../-create-meeting-response/index.html">CreateMeetingResponse</a> and
+chime:<a href="../-create-attendee-response/index.html">CreateAttendeeResponse</a> response and optional custom <a href="../-u-r-l-rewriter.html">URLRewriter</a> that will
+rewrite urls given to new urls.</p>
+<h3>Constructors</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<h4><a href="-init-.html">&lt;init&gt;</a></h4>
+</td>
+<td>
+<code><span class="identifier">MeetingSessionConfiguration</span><span class="symbol">(</span><span class="identifier" id="com.amazonaws.services.chime.sdk.meetings.session.MeetingSessionConfiguration$<init>(com.amazonaws.services.chime.sdk.meetings.session.CreateMeetingResponse, com.amazonaws.services.chime.sdk.meetings.session.CreateAttendeeResponse, kotlin.Function1((kotlin.String, )))/createMeetingResponse">createMeetingResponse</span><span class="symbol">:</span>&nbsp;<a href="../-create-meeting-response/index.html"><span class="identifier">CreateMeetingResponse</span></a><span class="symbol">, </span><span class="identifier" id="com.amazonaws.services.chime.sdk.meetings.session.MeetingSessionConfiguration$<init>(com.amazonaws.services.chime.sdk.meetings.session.CreateMeetingResponse, com.amazonaws.services.chime.sdk.meetings.session.CreateAttendeeResponse, kotlin.Function1((kotlin.String, )))/createAttendeeResponse">createAttendeeResponse</span><span class="symbol">:</span>&nbsp;<a href="../-create-attendee-response/index.html"><span class="identifier">CreateAttendeeResponse</span></a><span class="symbol">, </span><span class="identifier" id="com.amazonaws.services.chime.sdk.meetings.session.MeetingSessionConfiguration$<init>(com.amazonaws.services.chime.sdk.meetings.session.CreateMeetingResponse, com.amazonaws.services.chime.sdk.meetings.session.CreateAttendeeResponse, kotlin.Function1((kotlin.String, )))/urlRewriter">urlRewriter</span><span class="symbol">:</span>&nbsp;<a href="../-u-r-l-rewriter.html"><span class="identifier">URLRewriter</span></a>&nbsp;<span class="symbol">=</span>&nbsp;::defaultUrlRewriter<span class="symbol">)</span></code><br/>
+<code><span class="identifier">MeetingSessionConfiguration</span><span class="symbol">(</span><span class="identifier" id="com.amazonaws.services.chime.sdk.meetings.session.MeetingSessionConfiguration$<init>(kotlin.String, com.amazonaws.services.chime.sdk.meetings.session.MeetingSessionCredentials, com.amazonaws.services.chime.sdk.meetings.session.MeetingSessionURLs)/meetingId">meetingId</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">, </span><span class="identifier" id="com.amazonaws.services.chime.sdk.meetings.session.MeetingSessionConfiguration$<init>(kotlin.String, com.amazonaws.services.chime.sdk.meetings.session.MeetingSessionCredentials, com.amazonaws.services.chime.sdk.meetings.session.MeetingSessionURLs)/credentials">credentials</span><span class="symbol">:</span>&nbsp;<a href="../-meeting-session-credentials/index.html"><span class="identifier">MeetingSessionCredentials</span></a><span class="symbol">, </span><span class="identifier" id="com.amazonaws.services.chime.sdk.meetings.session.MeetingSessionConfiguration$<init>(kotlin.String, com.amazonaws.services.chime.sdk.meetings.session.MeetingSessionCredentials, com.amazonaws.services.chime.sdk.meetings.session.MeetingSessionURLs)/urls">urls</span><span class="symbol">:</span>&nbsp;<a href="../-meeting-session-u-r-ls/index.html"><span class="identifier">MeetingSessionURLs</span></a><span class="symbol">)</span></code>
+<p><a href="./index.html">MeetingSessionConfiguration</a> includes information needed to start the meeting session such as
+attendee credentials and URLs for audio and video</p>
+<code><span class="identifier">MeetingSessionConfiguration</span><span class="symbol">(</span><span class="identifier" id="com.amazonaws.services.chime.sdk.meetings.session.MeetingSessionConfiguration$<init>(kotlin.String, kotlin.String, com.amazonaws.services.chime.sdk.meetings.session.MeetingSessionCredentials, com.amazonaws.services.chime.sdk.meetings.session.MeetingSessionURLs, com.amazonaws.services.chime.sdk.meetings.session.MeetingFeatures)/meetingId">meetingId</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">, </span><span class="identifier" id="com.amazonaws.services.chime.sdk.meetings.session.MeetingSessionConfiguration$<init>(kotlin.String, kotlin.String, com.amazonaws.services.chime.sdk.meetings.session.MeetingSessionCredentials, com.amazonaws.services.chime.sdk.meetings.session.MeetingSessionURLs, com.amazonaws.services.chime.sdk.meetings.session.MeetingFeatures)/externalMeetingId">externalMeetingId</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">?</span><span class="symbol">, </span><span class="identifier" id="com.amazonaws.services.chime.sdk.meetings.session.MeetingSessionConfiguration$<init>(kotlin.String, kotlin.String, com.amazonaws.services.chime.sdk.meetings.session.MeetingSessionCredentials, com.amazonaws.services.chime.sdk.meetings.session.MeetingSessionURLs, com.amazonaws.services.chime.sdk.meetings.session.MeetingFeatures)/credentials">credentials</span><span class="symbol">:</span>&nbsp;<a href="../-meeting-session-credentials/index.html"><span class="identifier">MeetingSessionCredentials</span></a><span class="symbol">, </span><span class="identifier" id="com.amazonaws.services.chime.sdk.meetings.session.MeetingSessionConfiguration$<init>(kotlin.String, kotlin.String, com.amazonaws.services.chime.sdk.meetings.session.MeetingSessionCredentials, com.amazonaws.services.chime.sdk.meetings.session.MeetingSessionURLs, com.amazonaws.services.chime.sdk.meetings.session.MeetingFeatures)/urls">urls</span><span class="symbol">:</span>&nbsp;<a href="../-meeting-session-u-r-ls/index.html"><span class="identifier">MeetingSessionURLs</span></a><span class="symbol">, </span><span class="identifier" id="com.amazonaws.services.chime.sdk.meetings.session.MeetingSessionConfiguration$<init>(kotlin.String, kotlin.String, com.amazonaws.services.chime.sdk.meetings.session.MeetingSessionCredentials, com.amazonaws.services.chime.sdk.meetings.session.MeetingSessionURLs, com.amazonaws.services.chime.sdk.meetings.session.MeetingFeatures)/features">features</span><span class="symbol">:</span>&nbsp;<a href="../-meeting-features/index.html"><span class="identifier">MeetingFeatures</span></a>&nbsp;<span class="symbol">=</span>&nbsp;MeetingFeatures()<span class="symbol">)</span></code></td>
+</tr>
+</tbody>
+</table>
+<h3>Properties</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<h4><a href="credentials.html">credentials</a></h4>
+</td>
+<td>
+<code><span class="keyword">val </span><span class="identifier">credentials</span><span class="symbol">: </span><a href="../-meeting-session-credentials/index.html"><span class="identifier">MeetingSessionCredentials</span></a></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="external-meeting-id.html">externalMeetingId</a></h4>
+</td>
+<td>
+<code><span class="keyword">val </span><span class="identifier">externalMeetingId</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">?</span></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="features.html">features</a></h4>
+</td>
+<td>
+<code><span class="keyword">val </span><span class="identifier">features</span><span class="symbol">: </span><a href="../-meeting-features/index.html"><span class="identifier">MeetingFeatures</span></a></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="meeting-id.html">meetingId</a></h4>
+</td>
+<td>
+<code><span class="keyword">val </span><span class="identifier">meetingId</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="urls.html">urls</a></h4>
+</td>
+<td>
+<code><span class="keyword">val </span><span class="identifier">urls</span><span class="symbol">: </span><a href="../-meeting-session-u-r-ls/index.html"><span class="identifier">MeetingSessionURLs</span></a></code></td>
+</tr>
+</tbody>
+</table>
+<h3>Functions</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<h4><a href="create-content-share-meeting-session-configuration.html">createContentShareMeetingSessionConfiguration</a></h4>
+</td>
+<td>
+<code><span class="keyword">fun </span><span class="identifier">createContentShareMeetingSessionConfiguration</span><span class="symbol">(</span><span class="symbol">)</span><span class="symbol">: </span><a href="./index.html"><span class="identifier">MeetingSessionConfiguration</span></a></code></td>
+</tr>
+</tbody>
+</table>
+</BODY>
+</HTML>

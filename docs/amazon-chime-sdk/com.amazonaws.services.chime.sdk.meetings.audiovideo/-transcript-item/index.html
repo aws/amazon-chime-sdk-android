@@ -1,224 +1,86 @@
-<!doctype html>
-<html class="no-js">
-<head>
-    <meta name="viewport" content="width=device-width, initial-scale=1" charset="UTF-8">
-    <title>TranscriptItem</title>
-<link href="../../../images/logo-icon.svg" rel="icon" type="image/svg">    <script>var pathToRoot = "../../../";</script>
-    <script>document.documentElement.classList.replace("no-js","js");</script>
-    <script>const storage = localStorage.getItem("dokka-dark-mode")
-    if (storage == null) {
-        const osDarkSchemePreferred = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
-        if (osDarkSchemePreferred === true) {
-            document.getElementsByTagName("html")[0].classList.add("theme-dark")
-        }
-    } else {
-        const savedDarkMode = JSON.parse(storage)
-        if(savedDarkMode === true) {
-            document.getElementsByTagName("html")[0].classList.add("theme-dark")
-        }
-    }
-    </script>
-<script type="text/javascript" src="https://unpkg.com/kotlin-playground@1/dist/playground.min.js" async></script>
-<script type="text/javascript" src="../../../scripts/sourceset_dependencies.js" async></script>
-<link href="../../../styles/style.css" rel="Stylesheet">
-<link href="../../../styles/main.css" rel="Stylesheet">
-<link href="../../../styles/prism.css" rel="Stylesheet">
-<link href="../../../styles/logo-styles.css" rel="Stylesheet">
-<link href="../../../styles/font-jb-sans-auto.css" rel="Stylesheet">
-<script type="text/javascript" src="../../../scripts/clipboard.js" async></script>
-<script type="text/javascript" src="../../../scripts/navigation-loader.js" async></script>
-<script type="text/javascript" src="../../../scripts/platform-content-handler.js" async></script>
-<script type="text/javascript" src="../../../scripts/main.js" defer></script>
-<script type="text/javascript" src="../../../scripts/prism.js" async></script>
-<script type="text/javascript" src="../../../scripts/symbol-parameters-wrapper_deferred.js" defer></script></head>
-<body>
-    <div class="root">
-<nav class="navigation" id="navigation-wrapper">
-    <div class="navigation--inner">
-        <div class="navigation-title">
-            <button class="menu-toggle" id="menu-toggle" type="button">toggle menu</button>
-            <div class="library-name">
-<a class="library-name--link" href="../../../index.html">
-                            amazon-chime-sdk-android
-                    </a>            </div>
-            <div class="library-version">
-            </div>
-        </div>
-        <div class="filter-section" id="filter-section">
-                <button class="platform-tag platform-selector jvm-like" data-active="" data-filter=":amazon-chime-sdk:dokkaHtmlPartial/release">androidJvm</button>
-        </div>
-    </div>
-    <div class="navigation-controls">
-        <button class="navigation-controls--btn navigation-controls--theme" id="theme-toggle-button" type="button">switch theme</button>
-        <div class="navigation-controls--btn navigation-controls--search" id="searchBar" role="button">search in API</div>
-    </div>
-</nav>
-        <div id="container">
-            <div class="sidebar" id="leftColumn">
-                <div class="sidebar--inner" id="sideMenu"></div>
-            </div>
-            <div id="main">
-<div class="main-content" data-page-type="classlike" id="content" pageids="amazon-chime-sdk::com.amazonaws.services.chime.sdk.meetings.audiovideo/TranscriptItem///PointingToDeclaration//533364019">
-  <div class="breadcrumbs"><a href="../../index.html">amazon-chime-sdk</a><span class="delimiter">/</span><a href="../index.html">com.amazonaws.services.chime.sdk.meetings.audiovideo</a><span class="delimiter">/</span><span class="current">TranscriptItem</span></div>
-  <div class="cover ">
-    <h1 class="cover"><span>Transcript</span><wbr><span><span>Item</span></span></h1>
-    <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":amazon-chime-sdk:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">data </span><span class="token keyword">class </span><a href="index.html">TranscriptItem</a><span class="token punctuation">(</span><span class="parameters "><span class="parameter "><span class="token keyword">val </span>type<span class="token operator">: </span><a href="../-transcript-item-type/index.html">TranscriptItemType</a><span class="token punctuation">, </span></span><span class="parameter "><span class="token keyword">val </span>startTimeMs<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html">Long</a><span class="token punctuation">, </span></span><span class="parameter "><span class="token keyword">val </span>endTimeMs<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html">Long</a><span class="token punctuation">, </span></span><span class="parameter "><span class="token keyword">val </span>attendee<span class="token operator">: </span><a href="../-attendee-info/index.html">AttendeeInfo</a><span class="token punctuation">, </span></span><span class="parameter "><span class="token keyword">val </span>content<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a><span class="token punctuation">, </span></span><span class="parameter "><span class="token keyword">val </span>vocabularyFilterMatch<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html">Boolean</a><span class="token punctuation">, </span></span><span class="parameter "><span class="token keyword">val </span>confidence<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-double/index.html">Double</a><span class="token operator">?</span><span class="token punctuation">, </span></span><span class="parameter "><span class="token keyword">val </span>stable<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html">Boolean</a><span class="token operator">?</span></span></span><span class="token punctuation">)</span></div></div></div>
-  </div>
-  <div class="tabbedcontent">
-    <div class="tabs-section" tabs-section="tabs-section"><button class="section-tab" data-active="" data-togglable="CONSTRUCTOR,TYPE,PROPERTY,FUNCTION">Members</button></div>
-    <div class="tabs-section-body">
-      <div data-togglable="CONSTRUCTOR">
-        <h2 class="">Constructors</h2>
-        <div class="table"><a data-name="-1523827640%2FConstructors%2F533364019" anchor-label="TranscriptItem" id="-1523827640%2FConstructors%2F533364019" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release"></a>
-          <div class="table-row" data-togglable="CONSTRUCTOR" data-filterable-current=":amazon-chime-sdk:dokkaHtmlPartial/release" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release">
-            <div class="main-subrow keyValue ">
-              <div class=""><span class="inline-flex">
-                  <div><a href="-transcript-item.html"><span>Transcript</span><wbr><span><span>Item</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1523827640%2FConstructors%2F533364019"></span>
-                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
-                  </span></span></div>
-              <div>
-                <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":amazon-chime-sdk:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">constructor</span><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">type<span class="token operator">: </span><a href="../-transcript-item-type/index.html">TranscriptItemType</a><span class="token punctuation">, </span></span><span class="parameter ">startTimeMs<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html">Long</a><span class="token punctuation">, </span></span><span class="parameter ">endTimeMs<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html">Long</a><span class="token punctuation">, </span></span><span class="parameter ">attendee<span class="token operator">: </span><a href="../-attendee-info/index.html">AttendeeInfo</a><span class="token punctuation">, </span></span><span class="parameter ">content<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a><span class="token punctuation">, </span></span><span class="parameter ">vocabularyFilterMatch<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html">Boolean</a><span class="token punctuation">, </span></span><span class="parameter ">confidence<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-double/index.html">Double</a><span class="token operator">?</span><span class="token punctuation">, </span></span><span class="parameter ">stable<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html">Boolean</a><span class="token operator">?</span></span></span><span class="token punctuation">)</span></div></div></div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div data-togglable="PROPERTY">
-        <h2 class="">Properties</h2>
-        <div class="table"><a data-name="876061285%2FProperties%2F533364019" anchor-label="attendee" id="876061285%2FProperties%2F533364019" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release"></a>
-          <div class="table-row" data-filterable-current=":amazon-chime-sdk:dokkaHtmlPartial/release" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release">
-            <div class="main-subrow keyValue ">
-              <div class=""><span class="inline-flex">
-                  <div><a href="attendee.html"><span><span>attendee</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="876061285%2FProperties%2F533364019"></span>
-                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
-                  </span></span></div>
-              <div>
-                <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":amazon-chime-sdk:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">val </span><a href="attendee.html">attendee</a><span class="token operator">: </span><a href="../-attendee-info/index.html">AttendeeInfo</a></div></div></div>
-                </div>
-              </div>
-            </div>
-          </div>
-<a data-name="1095481877%2FProperties%2F533364019" anchor-label="confidence" id="1095481877%2FProperties%2F533364019" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release"></a>
-          <div class="table-row" data-filterable-current=":amazon-chime-sdk:dokkaHtmlPartial/release" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release">
-            <div class="main-subrow keyValue ">
-              <div class=""><span class="inline-flex">
-                  <div><a href="confidence.html"><span><span>confidence</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1095481877%2FProperties%2F533364019"></span>
-                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
-                  </span></span></div>
-              <div>
-                <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":amazon-chime-sdk:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">val </span><a href="confidence.html">confidence</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-double/index.html">Double</a><span class="token operator">?</span></div></div></div>
-                </div>
-              </div>
-            </div>
-          </div>
-<a data-name="1402930946%2FProperties%2F533364019" anchor-label="content" id="1402930946%2FProperties%2F533364019" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release"></a>
-          <div class="table-row" data-filterable-current=":amazon-chime-sdk:dokkaHtmlPartial/release" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release">
-            <div class="main-subrow keyValue ">
-              <div class=""><span class="inline-flex">
-                  <div><a href="content.html"><span><span>content</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1402930946%2FProperties%2F533364019"></span>
-                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
-                  </span></span></div>
-              <div>
-                <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":amazon-chime-sdk:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">val </span><a href="content.html">content</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html">String</a></div></div></div>
-                </div>
-              </div>
-            </div>
-          </div>
-<a data-name="-605729907%2FProperties%2F533364019" anchor-label="endTimeMs" id="-605729907%2FProperties%2F533364019" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release"></a>
-          <div class="table-row" data-filterable-current=":amazon-chime-sdk:dokkaHtmlPartial/release" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release">
-            <div class="main-subrow keyValue ">
-              <div class=""><span class="inline-flex">
-                  <div><a href="end-time-ms.html"><span>end</span><wbr><span>Time</span><wbr><span><span>Ms</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-605729907%2FProperties%2F533364019"></span>
-                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
-                  </span></span></div>
-              <div>
-                <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":amazon-chime-sdk:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">val </span><a href="end-time-ms.html">endTimeMs</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html">Long</a></div></div></div>
-                </div>
-              </div>
-            </div>
-          </div>
-<a data-name="1316988804%2FProperties%2F533364019" anchor-label="stable" id="1316988804%2FProperties%2F533364019" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release"></a>
-          <div class="table-row" data-filterable-current=":amazon-chime-sdk:dokkaHtmlPartial/release" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release">
-            <div class="main-subrow keyValue ">
-              <div class=""><span class="inline-flex">
-                  <div><a href="stable.html"><span><span>stable</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1316988804%2FProperties%2F533364019"></span>
-                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
-                  </span></span></div>
-              <div>
-                <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":amazon-chime-sdk:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">val </span><a href="stable.html">stable</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html">Boolean</a><span class="token operator">?</span></div></div></div>
-                </div>
-              </div>
-            </div>
-          </div>
-<a data-name="1042763686%2FProperties%2F533364019" anchor-label="startTimeMs" id="1042763686%2FProperties%2F533364019" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release"></a>
-          <div class="table-row" data-filterable-current=":amazon-chime-sdk:dokkaHtmlPartial/release" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release">
-            <div class="main-subrow keyValue ">
-              <div class=""><span class="inline-flex">
-                  <div><a href="start-time-ms.html"><span>start</span><wbr><span>Time</span><wbr><span><span>Ms</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1042763686%2FProperties%2F533364019"></span>
-                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
-                  </span></span></div>
-              <div>
-                <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":amazon-chime-sdk:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">val </span><a href="start-time-ms.html">startTimeMs</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html">Long</a></div></div></div>
-                </div>
-              </div>
-            </div>
-          </div>
-<a data-name="807342309%2FProperties%2F533364019" anchor-label="type" id="807342309%2FProperties%2F533364019" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release"></a>
-          <div class="table-row" data-filterable-current=":amazon-chime-sdk:dokkaHtmlPartial/release" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release">
-            <div class="main-subrow keyValue ">
-              <div class=""><span class="inline-flex">
-                  <div><a href="type.html"><span><span>type</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="807342309%2FProperties%2F533364019"></span>
-                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
-                  </span></span></div>
-              <div>
-                <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":amazon-chime-sdk:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">val </span><a href="type.html">type</a><span class="token operator">: </span><a href="../-transcript-item-type/index.html">TranscriptItemType</a></div></div></div>
-                </div>
-              </div>
-            </div>
-          </div>
-<a data-name="667664980%2FProperties%2F533364019" anchor-label="vocabularyFilterMatch" id="667664980%2FProperties%2F533364019" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release"></a>
-          <div class="table-row" data-filterable-current=":amazon-chime-sdk:dokkaHtmlPartial/release" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release">
-            <div class="main-subrow keyValue ">
-              <div class=""><span class="inline-flex">
-                  <div><a href="vocabulary-filter-match.html"><span>vocabulary</span><wbr><span>Filter</span><wbr><span><span>Match</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="667664980%2FProperties%2F533364019"></span>
-                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
-                  </span></span></div>
-              <div>
-                <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":amazon-chime-sdk:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">val </span><a href="vocabulary-filter-match.html">vocabularyFilterMatch</a><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html">Boolean</a></div></div></div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-      <div class="footer">
-        <span class="go-to-top-icon"><a href="#content" id="go-to-top-link"></a></span><span>© 2024 Copyright</span><span class="pull-right"><span>Generated by </span><a href="https://github.com/Kotlin/dokka"><span>dokka</span><span class="padded-icon"></span></a></span>
-      </div>
-            </div>
-        </div>
-    </div>
-</body>
-</html>
-
+<HTML>
+<HEAD>
+<meta charset="UTF-8">
+<title>TranscriptItem - amazon-chime-sdk</title>
+<link rel="stylesheet" href="../../../style.css">
+</HEAD>
+<BODY>
+<a href="../../index.html">amazon-chime-sdk</a>&nbsp;/&nbsp;<a href="../index.html">com.amazonaws.services.chime.sdk.meetings.audiovideo</a>&nbsp;/&nbsp;<a href="./index.html">TranscriptItem</a><br/>
+<br/>
+<h1>TranscriptItem</h1>
+<code><span class="keyword">data</span> <span class="keyword">class </span><span class="identifier">TranscriptItem</span></code>
+<h3>Constructors</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<h4><a href="-init-.html">&lt;init&gt;</a></h4>
+</td>
+<td>
+<code><span class="identifier">TranscriptItem</span><span class="symbol">(</span><span class="identifier" id="com.amazonaws.services.chime.sdk.meetings.audiovideo.TranscriptItem$<init>(com.amazonaws.services.chime.sdk.meetings.audiovideo.TranscriptItemType, kotlin.Long, kotlin.Long, com.amazonaws.services.chime.sdk.meetings.audiovideo.AttendeeInfo, kotlin.String, kotlin.Boolean, kotlin.Double, kotlin.Boolean)/type">type</span><span class="symbol">:</span>&nbsp;<a href="../-transcript-item-type/index.html"><span class="identifier">TranscriptItemType</span></a><span class="symbol">, </span><span class="identifier" id="com.amazonaws.services.chime.sdk.meetings.audiovideo.TranscriptItem$<init>(com.amazonaws.services.chime.sdk.meetings.audiovideo.TranscriptItemType, kotlin.Long, kotlin.Long, com.amazonaws.services.chime.sdk.meetings.audiovideo.AttendeeInfo, kotlin.String, kotlin.Boolean, kotlin.Double, kotlin.Boolean)/startTimeMs">startTimeMs</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html"><span class="identifier">Long</span></a><span class="symbol">, </span><span class="identifier" id="com.amazonaws.services.chime.sdk.meetings.audiovideo.TranscriptItem$<init>(com.amazonaws.services.chime.sdk.meetings.audiovideo.TranscriptItemType, kotlin.Long, kotlin.Long, com.amazonaws.services.chime.sdk.meetings.audiovideo.AttendeeInfo, kotlin.String, kotlin.Boolean, kotlin.Double, kotlin.Boolean)/endTimeMs">endTimeMs</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html"><span class="identifier">Long</span></a><span class="symbol">, </span><span class="identifier" id="com.amazonaws.services.chime.sdk.meetings.audiovideo.TranscriptItem$<init>(com.amazonaws.services.chime.sdk.meetings.audiovideo.TranscriptItemType, kotlin.Long, kotlin.Long, com.amazonaws.services.chime.sdk.meetings.audiovideo.AttendeeInfo, kotlin.String, kotlin.Boolean, kotlin.Double, kotlin.Boolean)/attendee">attendee</span><span class="symbol">:</span>&nbsp;<a href="../-attendee-info/index.html"><span class="identifier">AttendeeInfo</span></a><span class="symbol">, </span><span class="identifier" id="com.amazonaws.services.chime.sdk.meetings.audiovideo.TranscriptItem$<init>(com.amazonaws.services.chime.sdk.meetings.audiovideo.TranscriptItemType, kotlin.Long, kotlin.Long, com.amazonaws.services.chime.sdk.meetings.audiovideo.AttendeeInfo, kotlin.String, kotlin.Boolean, kotlin.Double, kotlin.Boolean)/content">content</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a><span class="symbol">, </span><span class="identifier" id="com.amazonaws.services.chime.sdk.meetings.audiovideo.TranscriptItem$<init>(com.amazonaws.services.chime.sdk.meetings.audiovideo.TranscriptItemType, kotlin.Long, kotlin.Long, com.amazonaws.services.chime.sdk.meetings.audiovideo.AttendeeInfo, kotlin.String, kotlin.Boolean, kotlin.Double, kotlin.Boolean)/vocabularyFilterMatch">vocabularyFilterMatch</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html"><span class="identifier">Boolean</span></a><span class="symbol">, </span><span class="identifier" id="com.amazonaws.services.chime.sdk.meetings.audiovideo.TranscriptItem$<init>(com.amazonaws.services.chime.sdk.meetings.audiovideo.TranscriptItemType, kotlin.Long, kotlin.Long, com.amazonaws.services.chime.sdk.meetings.audiovideo.AttendeeInfo, kotlin.String, kotlin.Boolean, kotlin.Double, kotlin.Boolean)/confidence">confidence</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-double/index.html"><span class="identifier">Double</span></a><span class="symbol">?</span><span class="symbol">, </span><span class="identifier" id="com.amazonaws.services.chime.sdk.meetings.audiovideo.TranscriptItem$<init>(com.amazonaws.services.chime.sdk.meetings.audiovideo.TranscriptItemType, kotlin.Long, kotlin.Long, com.amazonaws.services.chime.sdk.meetings.audiovideo.AttendeeInfo, kotlin.String, kotlin.Boolean, kotlin.Double, kotlin.Boolean)/stable">stable</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html"><span class="identifier">Boolean</span></a><span class="symbol">?</span><span class="symbol">)</span></code></td>
+</tr>
+</tbody>
+</table>
+<h3>Properties</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<h4><a href="attendee.html">attendee</a></h4>
+</td>
+<td>
+<code><span class="keyword">val </span><span class="identifier">attendee</span><span class="symbol">: </span><a href="../-attendee-info/index.html"><span class="identifier">AttendeeInfo</span></a></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="confidence.html">confidence</a></h4>
+</td>
+<td>
+<code><span class="keyword">val </span><span class="identifier">confidence</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-double/index.html"><span class="identifier">Double</span></a><span class="symbol">?</span></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="content.html">content</a></h4>
+</td>
+<td>
+<code><span class="keyword">val </span><span class="identifier">content</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-string/index.html"><span class="identifier">String</span></a></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="end-time-ms.html">endTimeMs</a></h4>
+</td>
+<td>
+<code><span class="keyword">val </span><span class="identifier">endTimeMs</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html"><span class="identifier">Long</span></a></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="stable.html">stable</a></h4>
+</td>
+<td>
+<code><span class="keyword">val </span><span class="identifier">stable</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html"><span class="identifier">Boolean</span></a><span class="symbol">?</span></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="start-time-ms.html">startTimeMs</a></h4>
+</td>
+<td>
+<code><span class="keyword">val </span><span class="identifier">startTimeMs</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-long/index.html"><span class="identifier">Long</span></a></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="type.html">type</a></h4>
+</td>
+<td>
+<code><span class="keyword">val </span><span class="identifier">type</span><span class="symbol">: </span><a href="../-transcript-item-type/index.html"><span class="identifier">TranscriptItemType</span></a></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="vocabulary-filter-match.html">vocabularyFilterMatch</a></h4>
+</td>
+<td>
+<code><span class="keyword">val </span><span class="identifier">vocabularyFilterMatch</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-boolean/index.html"><span class="identifier">Boolean</span></a></code></td>
+</tr>
+</tbody>
+</table>
+</BODY>
+</HTML>

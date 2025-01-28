@@ -1,0 +1,24 @@
+<HTML>
+<HEAD>
+<meta charset="UTF-8">
+<title>DefaultMeetingSession.<init> - amazon-chime-sdk</title>
+<link rel="stylesheet" href="../../../style.css">
+</HEAD>
+<BODY>
+<a href="../../index.html">amazon-chime-sdk</a>&nbsp;/&nbsp;<a href="../index.html">com.amazonaws.services.chime.sdk.meetings.session</a>&nbsp;/&nbsp;<a href="index.html">DefaultMeetingSession</a>&nbsp;/&nbsp;<a href="./-init-.html">&lt;init&gt;</a><br/>
+<br/>
+<h1>&lt;init&gt;</h1>
+<a name="com.amazonaws.services.chime.sdk.meetings.session.DefaultMeetingSession$&lt;init&gt;(com.amazonaws.services.chime.sdk.meetings.session.MeetingSessionConfiguration, com.amazonaws.services.chime.sdk.meetings.utils.logger.Logger, android.content.Context, com.amazonaws.services.chime.sdk.meetings.audiovideo.video.gl.EglCoreFactory, com.amazonaws.services.chime.sdk.meetings.ingestion.EventReporterFactory)"></a>
+<code><span class="identifier">DefaultMeetingSession</span><span class="symbol">(</span><span class="identifier" id="com.amazonaws.services.chime.sdk.meetings.session.DefaultMeetingSession$<init>(com.amazonaws.services.chime.sdk.meetings.session.MeetingSessionConfiguration, com.amazonaws.services.chime.sdk.meetings.utils.logger.Logger, android.content.Context, com.amazonaws.services.chime.sdk.meetings.audiovideo.video.gl.EglCoreFactory, com.amazonaws.services.chime.sdk.meetings.ingestion.EventReporterFactory)/configuration">configuration</span><span class="symbol">:</span>&nbsp;<a href="../-meeting-session-configuration/index.html"><span class="identifier">MeetingSessionConfiguration</span></a><span class="symbol">, </span><span class="identifier" id="com.amazonaws.services.chime.sdk.meetings.session.DefaultMeetingSession$<init>(com.amazonaws.services.chime.sdk.meetings.session.MeetingSessionConfiguration, com.amazonaws.services.chime.sdk.meetings.utils.logger.Logger, android.content.Context, com.amazonaws.services.chime.sdk.meetings.audiovideo.video.gl.EglCoreFactory, com.amazonaws.services.chime.sdk.meetings.ingestion.EventReporterFactory)/logger">logger</span><span class="symbol">:</span>&nbsp;<a href="../../com.amazonaws.services.chime.sdk.meetings.utils.logger/-logger/index.html"><span class="identifier">Logger</span></a><span class="symbol">, </span><span class="identifier" id="com.amazonaws.services.chime.sdk.meetings.session.DefaultMeetingSession$<init>(com.amazonaws.services.chime.sdk.meetings.session.MeetingSessionConfiguration, com.amazonaws.services.chime.sdk.meetings.utils.logger.Logger, android.content.Context, com.amazonaws.services.chime.sdk.meetings.audiovideo.video.gl.EglCoreFactory, com.amazonaws.services.chime.sdk.meetings.ingestion.EventReporterFactory)/context">context</span><span class="symbol">:</span>&nbsp;<a href="https://developer.android.com/reference/android/content/Context.html"><span class="identifier">Context</span></a><span class="symbol">, </span><span class="identifier" id="com.amazonaws.services.chime.sdk.meetings.session.DefaultMeetingSession$<init>(com.amazonaws.services.chime.sdk.meetings.session.MeetingSessionConfiguration, com.amazonaws.services.chime.sdk.meetings.utils.logger.Logger, android.content.Context, com.amazonaws.services.chime.sdk.meetings.audiovideo.video.gl.EglCoreFactory, com.amazonaws.services.chime.sdk.meetings.ingestion.EventReporterFactory)/eglCoreFactory">eglCoreFactory</span><span class="symbol">:</span>&nbsp;<a href="../../com.amazonaws.services.chime.sdk.meetings.audiovideo.video.gl/-egl-core-factory/index.html"><span class="identifier">EglCoreFactory</span></a>&nbsp;<span class="symbol">=</span>&nbsp;DefaultEglCoreFactory()<span class="symbol">, </span><span class="identifier" id="com.amazonaws.services.chime.sdk.meetings.session.DefaultMeetingSession$<init>(com.amazonaws.services.chime.sdk.meetings.session.MeetingSessionConfiguration, com.amazonaws.services.chime.sdk.meetings.utils.logger.Logger, android.content.Context, com.amazonaws.services.chime.sdk.meetings.audiovideo.video.gl.EglCoreFactory, com.amazonaws.services.chime.sdk.meetings.ingestion.EventReporterFactory)/eventReporterFactory">eventReporterFactory</span><span class="symbol">:</span>&nbsp;<a href="../../com.amazonaws.services.chime.sdk.meetings.ingestion/-event-reporter-factory/index.html"><span class="identifier">EventReporterFactory</span></a>&nbsp;<span class="symbol">=</span>&nbsp;DefaultMeetingEventReporterFactory(
+        context,
+        IngestionConfiguration(
+            MeetingEventClientConfiguration(configuration.credentials.joinToken,
+                                            configuration.meetingId,
+                                            configuration.credentials.attendeeId),
+            configuration.urls.ingestionURL ?: "",
+            configuration.urls.ingestionURL.isNullOrEmpty()
+        ),
+        logger
+    )<span class="symbol">)</span></code>
+</BODY>
+</HTML>

@@ -32,8 +32,9 @@ import com.amazonaws.services.chime.sdkdemo.activity.HomeActivity
 import com.amazonaws.services.chime.sdkdemo.adapter.LanguageOptionsAdapter
 import com.amazonaws.services.chime.sdkdemo.data.SpinnerItem
 import com.amazonaws.services.chime.sdkdemo.data.TranscribeLanguageOption
-import com.amazonaws.services.chime.sdkdemo.databinding.FragmentTranscriptionConfigBinding
 import java.lang.ClassCastException
+import kotlinx.android.synthetic.main.fragment_transcription_config.checkboxCustomLanguageModel
+import kotlinx.android.synthetic.main.fragment_transcription_config.checkboxPHIContentIdentification
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -246,11 +247,6 @@ class TranscriptionConfigFragment : Fragment() {
     private val IDENTIFY_LANGUAGE_ENABLED_KEY = "identifyLanguageEnabled"
     private val PREFERRED_LANGUAGE_INDEX_KEY = "preferredLanguageIndex"
 
-    private var _binding: FragmentTranscriptionConfigBinding? = null
-    // This property is only valid between onCreateView and
-    // onDestroyView.
-    private val binding get() = _binding!!
-
     companion object {
         fun newInstance(meetingId: String): TranscriptionConfigFragment {
             val fragment = TranscriptionConfigFragment()
@@ -294,8 +290,7 @@ class TranscriptionConfigFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        _binding = FragmentTranscriptionConfigBinding.inflate(inflater, container, false)
-        val view = binding.root
+        val view = inflater.inflate(R.layout.fragment_transcription_config, container, false)
         val context = activity as Context
 
         view.findViewById<Button>(R.id.buttonStartTranscription)?.setOnClickListener {
@@ -457,9 +452,9 @@ class TranscriptionConfigFragment : Fragment() {
             partialResultsStabilizationSpinner.setSelection(partialResultsStabilizationSpinnerIndex)
             piiIdentificationSpinner.setSelection(piiContentIdentificationSpinnerIndex)
             piiRedactionSpinner.setSelection(piiContentRedactionSpinnerIndex)
-            binding.checkboxPHIContentIdentification.isChecked = phiContentIdentificationEnabled
-            binding.checkboxCustomLanguageModel.isChecked = customLanguageModelName != (resources.getString(R.string.custom_language_checkbox))
-            binding.checkboxCustomLanguageModel.text = customLanguageModelName
+            checkboxPHIContentIdentification.isChecked = phiContentIdentificationEnabled
+            checkboxCustomLanguageModel.isChecked = customLanguageModelName != (resources.getString(R.string.custom_language_checkbox))
+            checkboxCustomLanguageModel.text = customLanguageModelName
             identifyLanguageCheckbox.isChecked = identifyLanguageEnabled
             preferredLanguageSpinner.setSelection(preferredLanguageSpinnerIndex)
         }
@@ -476,7 +471,7 @@ class TranscriptionConfigFragment : Fragment() {
         outState.putInt(PII_CONTENT_IDENTIFICATION_SPINNER_INDEX_KEY, piiIdentificationSpinner.selectedItemPosition)
         outState.putInt(PII_CONTENT_REDACTION_SPINNER_INDEX_KEY, piiRedactionSpinner.selectedItemPosition)
         outState.putBoolean(PHI_CONTENT_IDENTIFICATION_ENABLED_KEY, phiIdentificationCheckBox.isChecked)
-        outState.putString(CUSTOM_LANGUAGE_MODEL_NAME_KEY, binding.checkboxCustomLanguageModel.text.toString())
+        outState.putString(CUSTOM_LANGUAGE_MODEL_NAME_KEY, checkboxCustomLanguageModel.text.toString())
         outState.putInt(PREFERRED_LANGUAGE_INDEX_KEY, preferredLanguageSpinner.selectedItemPosition)
         outState.putBoolean(IDENTIFY_LANGUAGE_ENABLED_KEY, identifyLanguageCheckbox.isChecked)
     }
@@ -587,15 +582,15 @@ class TranscriptionConfigFragment : Fragment() {
         piiIdentificationSpinner.setSelection(0, true)
         piiRedactionSpinner.setSelection(0, true)
         partialResultsStabilizationSpinner.setSelection(0, true)
-        binding.checkboxCustomLanguageModel.isChecked = false
+        checkboxCustomLanguageModel.isChecked = false
         phiIdentificationCheckBox.isChecked = false
         piiIdentificationSpinner.setSelection(0, true)
-        binding.checkboxCustomLanguageModel.text = resources.getString(R.string.custom_language_checkbox)
+        checkboxCustomLanguageModel.text = resources.getString(R.string.custom_language_checkbox)
         customLanguageModelEditText.visibility = View.GONE
 
         piiRedactionSpinner.visibility = if (isTranscribeMedical) View.GONE else View.VISIBLE
         piiIdentificationSpinner.visibility = if (isTranscribeMedical) View.GONE else View.VISIBLE
-        binding.checkboxCustomLanguageModel.visibility = if (isTranscribeMedical) View.GONE else View.VISIBLE
+        checkboxCustomLanguageModel.visibility = if (isTranscribeMedical) View.GONE else View.VISIBLE
         partialResultsStabilizationSpinner.visibility = if (isTranscribeMedical) View.GONE else View.VISIBLE
         phiIdentificationCheckBox.visibility = if (isTranscribeMedical) View.VISIBLE else View.GONE
         identifyLanguageCheckbox.visibility = if (isTranscribeMedical) View.GONE else View.VISIBLE

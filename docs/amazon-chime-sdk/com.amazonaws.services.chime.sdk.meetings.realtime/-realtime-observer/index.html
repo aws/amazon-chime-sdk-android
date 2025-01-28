@@ -1,190 +1,90 @@
-<!doctype html>
-<html class="no-js">
-<head>
-    <meta name="viewport" content="width=device-width, initial-scale=1" charset="UTF-8">
-    <title>RealtimeObserver</title>
-<link href="../../../images/logo-icon.svg" rel="icon" type="image/svg">    <script>var pathToRoot = "../../../";</script>
-    <script>document.documentElement.classList.replace("no-js","js");</script>
-    <script>const storage = localStorage.getItem("dokka-dark-mode")
-    if (storage == null) {
-        const osDarkSchemePreferred = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
-        if (osDarkSchemePreferred === true) {
-            document.getElementsByTagName("html")[0].classList.add("theme-dark")
-        }
-    } else {
-        const savedDarkMode = JSON.parse(storage)
-        if(savedDarkMode === true) {
-            document.getElementsByTagName("html")[0].classList.add("theme-dark")
-        }
-    }
-    </script>
-<script type="text/javascript" src="https://unpkg.com/kotlin-playground@1/dist/playground.min.js" async></script>
-<script type="text/javascript" src="../../../scripts/sourceset_dependencies.js" async></script>
-<link href="../../../styles/style.css" rel="Stylesheet">
-<link href="../../../styles/main.css" rel="Stylesheet">
-<link href="../../../styles/prism.css" rel="Stylesheet">
-<link href="../../../styles/logo-styles.css" rel="Stylesheet">
-<link href="../../../styles/font-jb-sans-auto.css" rel="Stylesheet">
-<script type="text/javascript" src="../../../scripts/clipboard.js" async></script>
-<script type="text/javascript" src="../../../scripts/navigation-loader.js" async></script>
-<script type="text/javascript" src="../../../scripts/platform-content-handler.js" async></script>
-<script type="text/javascript" src="../../../scripts/main.js" defer></script>
-<script type="text/javascript" src="../../../scripts/prism.js" async></script>
-<script type="text/javascript" src="../../../scripts/symbol-parameters-wrapper_deferred.js" defer></script></head>
-<body>
-    <div class="root">
-<nav class="navigation" id="navigation-wrapper">
-    <div class="navigation--inner">
-        <div class="navigation-title">
-            <button class="menu-toggle" id="menu-toggle" type="button">toggle menu</button>
-            <div class="library-name">
-<a class="library-name--link" href="../../../index.html">
-                            amazon-chime-sdk-android
-                    </a>            </div>
-            <div class="library-version">
-            </div>
-        </div>
-        <div class="filter-section" id="filter-section">
-                <button class="platform-tag platform-selector jvm-like" data-active="" data-filter=":amazon-chime-sdk:dokkaHtmlPartial/release">androidJvm</button>
-        </div>
-    </div>
-    <div class="navigation-controls">
-        <button class="navigation-controls--btn navigation-controls--theme" id="theme-toggle-button" type="button">switch theme</button>
-        <div class="navigation-controls--btn navigation-controls--search" id="searchBar" role="button">search in API</div>
-    </div>
-</nav>
-        <div id="container">
-            <div class="sidebar" id="leftColumn">
-                <div class="sidebar--inner" id="sideMenu"></div>
-            </div>
-            <div id="main">
-<div class="main-content" data-page-type="classlike" id="content" pageids="amazon-chime-sdk::com.amazonaws.services.chime.sdk.meetings.realtime/RealtimeObserver///PointingToDeclaration//533364019">
-  <div class="breadcrumbs"><a href="../../index.html">amazon-chime-sdk</a><span class="delimiter">/</span><a href="../index.html">com.amazonaws.services.chime.sdk.meetings.realtime</a><span class="delimiter">/</span><span class="current">RealtimeObserver</span></div>
-  <div class="cover ">
-    <h1 class="cover"><span>Realtime</span><wbr><span><span>Observer</span></span></h1>
-    <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":amazon-chime-sdk:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">interface </span><a href="index.html">RealtimeObserver</a></div><p class="paragraph"><a href="index.html">RealtimeObserver</a> lets one listen to real time events such a volume, signal strength, or attendee changes.</p><p class="paragraph">Note: all callbacks will be called on main thread.</p><h4 class="">Inheritors</h4><div class="table"><div class="table-row" data-filterable-current=":amazon-chime-sdk:dokkaHtmlPartial/release" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release"><div class="main-subrow keyValue "><div class=""><span class="inline-flex"><div><a href="../../com.amazonaws.services.chime.sdk.meetings.audiovideo.audio.activespeakerdetector/-default-active-speaker-detector/index.html">DefaultActiveSpeakerDetector</a></div></span></div><div></div></div></div></div></div></div>
-  </div>
-  <div class="tabbedcontent">
-    <div class="tabs-section" tabs-section="tabs-section"><button class="section-tab" data-active="" data-togglable="CONSTRUCTOR,TYPE,PROPERTY,FUNCTION">Members</button></div>
-    <div class="tabs-section-body">
-      <div data-togglable="FUNCTION">
-        <h2 class="">Functions</h2>
-        <div class="table"><a data-name="60530298%2FFunctions%2F533364019" anchor-label="onAttendeesDropped" id="60530298%2FFunctions%2F533364019" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release"></a>
-          <div class="table-row" data-filterable-current=":amazon-chime-sdk:dokkaHtmlPartial/release" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release">
-            <div class="main-subrow keyValue ">
-              <div class=""><span class="inline-flex">
-                  <div><a href="on-attendees-dropped.html"><span>on</span><wbr><span>Attendees</span><wbr><span><span>Dropped</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="60530298%2FFunctions%2F533364019"></span>
-                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
-                  </span></span></div>
-              <div>
-                <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":amazon-chime-sdk:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">fun </span><a href="on-attendees-dropped.html"><span class="token function">onAttendeesDropped</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">attendeeInfo<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-array/index.html">Array</a><span class="token operator">&lt;</span><a href="../../com.amazonaws.services.chime.sdk.meetings.audiovideo/-attendee-info/index.html">AttendeeInfo</a><span class="token operator">&gt;</span></span></span><span class="token punctuation">)</span></div><div class="brief "><p class="paragraph">Handles attendee(s) being dropped due to network.</p></div></div></div>
-                </div>
-              </div>
-            </div>
-          </div>
-<a data-name="910395615%2FFunctions%2F533364019" anchor-label="onAttendeesJoined" id="910395615%2FFunctions%2F533364019" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release"></a>
-          <div class="table-row" data-filterable-current=":amazon-chime-sdk:dokkaHtmlPartial/release" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release">
-            <div class="main-subrow keyValue ">
-              <div class=""><span class="inline-flex">
-                  <div><a href="on-attendees-joined.html"><span>on</span><wbr><span>Attendees</span><wbr><span><span>Joined</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="910395615%2FFunctions%2F533364019"></span>
-                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
-                  </span></span></div>
-              <div>
-                <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":amazon-chime-sdk:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">fun </span><a href="on-attendees-joined.html"><span class="token function">onAttendeesJoined</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">attendeeInfo<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-array/index.html">Array</a><span class="token operator">&lt;</span><a href="../../com.amazonaws.services.chime.sdk.meetings.audiovideo/-attendee-info/index.html">AttendeeInfo</a><span class="token operator">&gt;</span></span></span><span class="token punctuation">)</span></div><div class="brief "><p class="paragraph">Handles attendee(s) being added.</p></div></div></div>
-                </div>
-              </div>
-            </div>
-          </div>
-<a data-name="234665757%2FFunctions%2F533364019" anchor-label="onAttendeesLeft" id="234665757%2FFunctions%2F533364019" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release"></a>
-          <div class="table-row" data-filterable-current=":amazon-chime-sdk:dokkaHtmlPartial/release" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release">
-            <div class="main-subrow keyValue ">
-              <div class=""><span class="inline-flex">
-                  <div><a href="on-attendees-left.html"><span>on</span><wbr><span>Attendees</span><wbr><span><span>Left</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="234665757%2FFunctions%2F533364019"></span>
-                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
-                  </span></span></div>
-              <div>
-                <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":amazon-chime-sdk:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">fun </span><a href="on-attendees-left.html"><span class="token function">onAttendeesLeft</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">attendeeInfo<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-array/index.html">Array</a><span class="token operator">&lt;</span><a href="../../com.amazonaws.services.chime.sdk.meetings.audiovideo/-attendee-info/index.html">AttendeeInfo</a><span class="token operator">&gt;</span></span></span><span class="token punctuation">)</span></div><div class="brief "><p class="paragraph">Handles attendee(s) being removed.</p></div></div></div>
-                </div>
-              </div>
-            </div>
-          </div>
-<a data-name="-2009621083%2FFunctions%2F533364019" anchor-label="onAttendeesMuted" id="-2009621083%2FFunctions%2F533364019" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release"></a>
-          <div class="table-row" data-filterable-current=":amazon-chime-sdk:dokkaHtmlPartial/release" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release">
-            <div class="main-subrow keyValue ">
-              <div class=""><span class="inline-flex">
-                  <div><a href="on-attendees-muted.html"><span>on</span><wbr><span>Attendees</span><wbr><span><span>Muted</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-2009621083%2FFunctions%2F533364019"></span>
-                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
-                  </span></span></div>
-              <div>
-                <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":amazon-chime-sdk:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">fun </span><a href="on-attendees-muted.html"><span class="token function">onAttendeesMuted</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">attendeeInfo<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-array/index.html">Array</a><span class="token operator">&lt;</span><a href="../../com.amazonaws.services.chime.sdk.meetings.audiovideo/-attendee-info/index.html">AttendeeInfo</a><span class="token operator">&gt;</span></span></span><span class="token punctuation">)</span></div><div class="brief "><p class="paragraph">Handles attendee(s) whose <a href="../../com.amazonaws.services.chime.sdk.meetings.audiovideo/-volume-level/index.html">VolumeLevel</a> has changed to muted.</p></div></div></div>
-                </div>
-              </div>
-            </div>
-          </div>
-<a data-name="-677533908%2FFunctions%2F533364019" anchor-label="onAttendeesUnmuted" id="-677533908%2FFunctions%2F533364019" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release"></a>
-          <div class="table-row" data-filterable-current=":amazon-chime-sdk:dokkaHtmlPartial/release" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release">
-            <div class="main-subrow keyValue ">
-              <div class=""><span class="inline-flex">
-                  <div><a href="on-attendees-unmuted.html"><span>on</span><wbr><span>Attendees</span><wbr><span><span>Unmuted</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-677533908%2FFunctions%2F533364019"></span>
-                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
-                  </span></span></div>
-              <div>
-                <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":amazon-chime-sdk:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">fun </span><a href="on-attendees-unmuted.html"><span class="token function">onAttendeesUnmuted</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">attendeeInfo<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-array/index.html">Array</a><span class="token operator">&lt;</span><a href="../../com.amazonaws.services.chime.sdk.meetings.audiovideo/-attendee-info/index.html">AttendeeInfo</a><span class="token operator">&gt;</span></span></span><span class="token punctuation">)</span></div><div class="brief "><p class="paragraph">Handles attendee(s) whose <a href="../../com.amazonaws.services.chime.sdk.meetings.audiovideo/-volume-level/index.html">VolumeLevel</a> has changed from muted.</p></div></div></div>
-                </div>
-              </div>
-            </div>
-          </div>
-<a data-name="180674033%2FFunctions%2F533364019" anchor-label="onSignalStrengthChanged" id="180674033%2FFunctions%2F533364019" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release"></a>
-          <div class="table-row" data-filterable-current=":amazon-chime-sdk:dokkaHtmlPartial/release" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release">
-            <div class="main-subrow keyValue ">
-              <div class=""><span class="inline-flex">
-                  <div><a href="on-signal-strength-changed.html"><span>on</span><wbr><span>Signal</span><wbr><span>Strength</span><wbr><span><span>Changed</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="180674033%2FFunctions%2F533364019"></span>
-                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
-                  </span></span></div>
-              <div>
-                <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":amazon-chime-sdk:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">fun </span><a href="on-signal-strength-changed.html"><span class="token function">onSignalStrengthChanged</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">signalUpdates<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-array/index.html">Array</a><span class="token operator">&lt;</span><a href="../../com.amazonaws.services.chime.sdk.meetings.audiovideo/-signal-update/index.html">SignalUpdate</a><span class="token operator">&gt;</span></span></span><span class="token punctuation">)</span></div><div class="brief "><p class="paragraph">Handles signal strength changes for attendees whose <a href="../../com.amazonaws.services.chime.sdk.meetings.audiovideo/-signal-strength/index.html">SignalStrength</a> has changed.</p></div></div></div>
-                </div>
-              </div>
-            </div>
-          </div>
-<a data-name="45573042%2FFunctions%2F533364019" anchor-label="onVolumeChanged" id="45573042%2FFunctions%2F533364019" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release"></a>
-          <div class="table-row" data-filterable-current=":amazon-chime-sdk:dokkaHtmlPartial/release" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release">
-            <div class="main-subrow keyValue ">
-              <div class=""><span class="inline-flex">
-                  <div><a href="on-volume-changed.html"><span>on</span><wbr><span>Volume</span><wbr><span><span>Changed</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="45573042%2FFunctions%2F533364019"></span>
-                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
-                  </span></span></div>
-              <div>
-                <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":amazon-chime-sdk:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">fun </span><a href="on-volume-changed.html"><span class="token function">onVolumeChanged</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">volumeUpdates<span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-array/index.html">Array</a><span class="token operator">&lt;</span><a href="../../com.amazonaws.services.chime.sdk.meetings.audiovideo/-volume-update/index.html">VolumeUpdate</a><span class="token operator">&gt;</span></span></span><span class="token punctuation">)</span></div><div class="brief "><p class="paragraph">Handles volume changes for attendees whose <a href="../../com.amazonaws.services.chime.sdk.meetings.audiovideo/-volume-level/index.html">VolumeLevel</a> has changed.</p></div></div></div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-      <div class="footer">
-        <span class="go-to-top-icon"><a href="#content" id="go-to-top-link"></a></span><span>© 2024 Copyright</span><span class="pull-right"><span>Generated by </span><a href="https://github.com/Kotlin/dokka"><span>dokka</span><span class="padded-icon"></span></a></span>
-      </div>
-            </div>
-        </div>
-    </div>
-</body>
-</html>
-
+<HTML>
+<HEAD>
+<meta charset="UTF-8">
+<title>RealtimeObserver - amazon-chime-sdk</title>
+<link rel="stylesheet" href="../../../style.css">
+</HEAD>
+<BODY>
+<a href="../../index.html">amazon-chime-sdk</a>&nbsp;/&nbsp;<a href="../index.html">com.amazonaws.services.chime.sdk.meetings.realtime</a>&nbsp;/&nbsp;<a href="./index.html">RealtimeObserver</a><br/>
+<br/>
+<h1>RealtimeObserver</h1>
+<code><span class="keyword">interface </span><span class="identifier">RealtimeObserver</span></code>
+<p><a href="./index.html">RealtimeObserver</a> lets one listen to real time events such a volume, signal strength, or
+attendee changes.</p>
+<p>Note: all callbacks will be called on main thread.</p>
+<h3>Functions</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<h4><a href="on-attendees-dropped.html">onAttendeesDropped</a></h4>
+</td>
+<td>
+<p>Handles attendee(s) being dropped due to network.</p>
+<code><span class="keyword">abstract</span> <span class="keyword">fun </span><span class="identifier">onAttendeesDropped</span><span class="symbol">(</span><span class="identifier" id="com.amazonaws.services.chime.sdk.meetings.realtime.RealtimeObserver$onAttendeesDropped(kotlin.Array((com.amazonaws.services.chime.sdk.meetings.audiovideo.AttendeeInfo)))/attendeeInfo">attendeeInfo</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-array/index.html"><span class="identifier">Array</span></a><span class="symbol">&lt;</span><a href="../../com.amazonaws.services.chime.sdk.meetings.audiovideo/-attendee-info/index.html"><span class="identifier">AttendeeInfo</span></a><span class="symbol">&gt;</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="on-attendees-joined.html">onAttendeesJoined</a></h4>
+</td>
+<td>
+<p>Handles attendee(s) being added.</p>
+<code><span class="keyword">abstract</span> <span class="keyword">fun </span><span class="identifier">onAttendeesJoined</span><span class="symbol">(</span><span class="identifier" id="com.amazonaws.services.chime.sdk.meetings.realtime.RealtimeObserver$onAttendeesJoined(kotlin.Array((com.amazonaws.services.chime.sdk.meetings.audiovideo.AttendeeInfo)))/attendeeInfo">attendeeInfo</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-array/index.html"><span class="identifier">Array</span></a><span class="symbol">&lt;</span><a href="../../com.amazonaws.services.chime.sdk.meetings.audiovideo/-attendee-info/index.html"><span class="identifier">AttendeeInfo</span></a><span class="symbol">&gt;</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="on-attendees-left.html">onAttendeesLeft</a></h4>
+</td>
+<td>
+<p>Handles attendee(s) being removed.</p>
+<code><span class="keyword">abstract</span> <span class="keyword">fun </span><span class="identifier">onAttendeesLeft</span><span class="symbol">(</span><span class="identifier" id="com.amazonaws.services.chime.sdk.meetings.realtime.RealtimeObserver$onAttendeesLeft(kotlin.Array((com.amazonaws.services.chime.sdk.meetings.audiovideo.AttendeeInfo)))/attendeeInfo">attendeeInfo</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-array/index.html"><span class="identifier">Array</span></a><span class="symbol">&lt;</span><a href="../../com.amazonaws.services.chime.sdk.meetings.audiovideo/-attendee-info/index.html"><span class="identifier">AttendeeInfo</span></a><span class="symbol">&gt;</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="on-attendees-muted.html">onAttendeesMuted</a></h4>
+</td>
+<td>
+<p>Handles attendee(s) whose <a href="../../com.amazonaws.services.chime.sdk.meetings.audiovideo/-volume-level/index.html">VolumeLevel</a> has changed to muted.</p>
+<code><span class="keyword">abstract</span> <span class="keyword">fun </span><span class="identifier">onAttendeesMuted</span><span class="symbol">(</span><span class="identifier" id="com.amazonaws.services.chime.sdk.meetings.realtime.RealtimeObserver$onAttendeesMuted(kotlin.Array((com.amazonaws.services.chime.sdk.meetings.audiovideo.AttendeeInfo)))/attendeeInfo">attendeeInfo</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-array/index.html"><span class="identifier">Array</span></a><span class="symbol">&lt;</span><a href="../../com.amazonaws.services.chime.sdk.meetings.audiovideo/-attendee-info/index.html"><span class="identifier">AttendeeInfo</span></a><span class="symbol">&gt;</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="on-attendees-unmuted.html">onAttendeesUnmuted</a></h4>
+</td>
+<td>
+<p>Handles attendee(s) whose <a href="../../com.amazonaws.services.chime.sdk.meetings.audiovideo/-volume-level/index.html">VolumeLevel</a> has changed from muted.</p>
+<code><span class="keyword">abstract</span> <span class="keyword">fun </span><span class="identifier">onAttendeesUnmuted</span><span class="symbol">(</span><span class="identifier" id="com.amazonaws.services.chime.sdk.meetings.realtime.RealtimeObserver$onAttendeesUnmuted(kotlin.Array((com.amazonaws.services.chime.sdk.meetings.audiovideo.AttendeeInfo)))/attendeeInfo">attendeeInfo</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-array/index.html"><span class="identifier">Array</span></a><span class="symbol">&lt;</span><a href="../../com.amazonaws.services.chime.sdk.meetings.audiovideo/-attendee-info/index.html"><span class="identifier">AttendeeInfo</span></a><span class="symbol">&gt;</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="on-signal-strength-changed.html">onSignalStrengthChanged</a></h4>
+</td>
+<td>
+<p>Handles signal strength changes for attendees whose <a href="../../com.amazonaws.services.chime.sdk.meetings.audiovideo/-signal-strength/index.html">SignalStrength</a> has changed.</p>
+<code><span class="keyword">abstract</span> <span class="keyword">fun </span><span class="identifier">onSignalStrengthChanged</span><span class="symbol">(</span><span class="identifier" id="com.amazonaws.services.chime.sdk.meetings.realtime.RealtimeObserver$onSignalStrengthChanged(kotlin.Array((com.amazonaws.services.chime.sdk.meetings.audiovideo.SignalUpdate)))/signalUpdates">signalUpdates</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-array/index.html"><span class="identifier">Array</span></a><span class="symbol">&lt;</span><a href="../../com.amazonaws.services.chime.sdk.meetings.audiovideo/-signal-update/index.html"><span class="identifier">SignalUpdate</span></a><span class="symbol">&gt;</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="on-volume-changed.html">onVolumeChanged</a></h4>
+</td>
+<td>
+<p>Handles volume changes for attendees whose <a href="../../com.amazonaws.services.chime.sdk.meetings.audiovideo/-volume-level/index.html">VolumeLevel</a> has changed.</p>
+<code><span class="keyword">abstract</span> <span class="keyword">fun </span><span class="identifier">onVolumeChanged</span><span class="symbol">(</span><span class="identifier" id="com.amazonaws.services.chime.sdk.meetings.realtime.RealtimeObserver$onVolumeChanged(kotlin.Array((com.amazonaws.services.chime.sdk.meetings.audiovideo.VolumeUpdate)))/volumeUpdates">volumeUpdates</span><span class="symbol">:</span>&nbsp;<a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-array/index.html"><span class="identifier">Array</span></a><span class="symbol">&lt;</span><a href="../../com.amazonaws.services.chime.sdk.meetings.audiovideo/-volume-update/index.html"><span class="identifier">VolumeUpdate</span></a><span class="symbol">&gt;</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code></td>
+</tr>
+</tbody>
+</table>
+<h3>Inheritors</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<h4><a href="../../com.amazonaws.services.chime.sdk.meetings.audiovideo.audio.activespeakerdetector/-default-active-speaker-detector/index.html">DefaultActiveSpeakerDetector</a></h4>
+</td>
+<td>
+<p><a href="../../com.amazonaws.services.chime.sdk.meetings.audiovideo.audio.activespeakerdetector/-default-active-speaker-detector/index.html">DefaultActiveSpeakerDetector</a> A default implementation of the Active Speaker Detector</p>
+<code><span class="keyword">class </span><span class="identifier">DefaultActiveSpeakerDetector</span>&nbsp;<span class="symbol">:</span>&nbsp;<a href="../../com.amazonaws.services.chime.sdk.meetings.audiovideo.audio.activespeakerdetector/-active-speaker-detector-facade/index.html"><span class="identifier">ActiveSpeakerDetectorFacade</span></a><span class="symbol">, </span><a href="./index.html"><span class="identifier">RealtimeObserver</span></a></code></td>
+</tr>
+</tbody>
+</table>
+</BODY>
+</HTML>

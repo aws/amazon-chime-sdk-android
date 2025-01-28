@@ -164,7 +164,7 @@ class CpuVideoProcessor(private val logger: Logger, eglCoreFactory: EglCoreFacto
                 val gValue = rgbaBuffer.data[gLocation].toPositiveInt()
                 val bValue = rgbaBuffer.data[bLocation].toPositiveInt()
 
-                val newValue = ((rValue + gValue + bValue) / (3.0)).toInt().toByte()
+                val newValue = ((rValue + gValue + bValue) / (3.0)).toByte()
 
                 rgbaBuffer.data.put(rLocation, newValue)
                 rgbaBuffer.data.put(gLocation, newValue)

@@ -1,194 +1,78 @@
-<!doctype html>
-<html class="no-js">
-<head>
-    <meta name="viewport" content="width=device-width, initial-scale=1" charset="UTF-8">
-    <title>DefaultEventAnalyticsController</title>
-<link href="../../../images/logo-icon.svg" rel="icon" type="image/svg">    <script>var pathToRoot = "../../../";</script>
-    <script>document.documentElement.classList.replace("no-js","js");</script>
-    <script>const storage = localStorage.getItem("dokka-dark-mode")
-    if (storage == null) {
-        const osDarkSchemePreferred = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
-        if (osDarkSchemePreferred === true) {
-            document.getElementsByTagName("html")[0].classList.add("theme-dark")
-        }
-    } else {
-        const savedDarkMode = JSON.parse(storage)
-        if(savedDarkMode === true) {
-            document.getElementsByTagName("html")[0].classList.add("theme-dark")
-        }
-    }
-    </script>
-<script type="text/javascript" src="https://unpkg.com/kotlin-playground@1/dist/playground.min.js" async></script>
-<script type="text/javascript" src="../../../scripts/sourceset_dependencies.js" async></script>
-<link href="../../../styles/style.css" rel="Stylesheet">
-<link href="../../../styles/main.css" rel="Stylesheet">
-<link href="../../../styles/prism.css" rel="Stylesheet">
-<link href="../../../styles/logo-styles.css" rel="Stylesheet">
-<link href="../../../styles/font-jb-sans-auto.css" rel="Stylesheet">
-<script type="text/javascript" src="../../../scripts/clipboard.js" async></script>
-<script type="text/javascript" src="../../../scripts/navigation-loader.js" async></script>
-<script type="text/javascript" src="../../../scripts/platform-content-handler.js" async></script>
-<script type="text/javascript" src="../../../scripts/main.js" defer></script>
-<script type="text/javascript" src="../../../scripts/prism.js" async></script>
-<script type="text/javascript" src="../../../scripts/symbol-parameters-wrapper_deferred.js" defer></script></head>
-<body>
-    <div class="root">
-<nav class="navigation" id="navigation-wrapper">
-    <div class="navigation--inner">
-        <div class="navigation-title">
-            <button class="menu-toggle" id="menu-toggle" type="button">toggle menu</button>
-            <div class="library-name">
-<a class="library-name--link" href="../../../index.html">
-                            amazon-chime-sdk-android
-                    </a>            </div>
-            <div class="library-version">
-            </div>
-        </div>
-        <div class="filter-section" id="filter-section">
-                <button class="platform-tag platform-selector jvm-like" data-active="" data-filter=":amazon-chime-sdk:dokkaHtmlPartial/release">androidJvm</button>
-        </div>
-    </div>
-    <div class="navigation-controls">
-        <button class="navigation-controls--btn navigation-controls--theme" id="theme-toggle-button" type="button">switch theme</button>
-        <div class="navigation-controls--btn navigation-controls--search" id="searchBar" role="button">search in API</div>
-    </div>
-</nav>
-        <div id="container">
-            <div class="sidebar" id="leftColumn">
-                <div class="sidebar--inner" id="sideMenu"></div>
-            </div>
-            <div id="main">
-<div class="main-content" data-page-type="classlike" id="content" pageids="amazon-chime-sdk::com.amazonaws.services.chime.sdk.meetings.analytics/DefaultEventAnalyticsController///PointingToDeclaration//533364019">
-  <div class="breadcrumbs"><a href="../../index.html">amazon-chime-sdk</a><span class="delimiter">/</span><a href="../index.html">com.amazonaws.services.chime.sdk.meetings.analytics</a><span class="delimiter">/</span><span class="current">DefaultEventAnalyticsController</span></div>
-  <div class="cover ">
-    <h1 class="cover"><span>Default</span><wbr><span>Event</span><wbr><span>Analytics</span><wbr><span><span>Controller</span></span></h1>
-    <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":amazon-chime-sdk:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">class </span><a href="index.html">DefaultEventAnalyticsController</a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">logger<span class="token operator">: </span><a href="../../com.amazonaws.services.chime.sdk.meetings.utils.logger/-logger/index.html">Logger</a><span class="token punctuation">, </span></span><span class="parameter ">meetingSessionConfiguration<span class="token operator">: </span><a href="../../com.amazonaws.services.chime.sdk.meetings.session/-meeting-session-configuration/index.html">MeetingSessionConfiguration</a><span class="token punctuation">, </span></span><span class="parameter ">meetingStatsCollector<span class="token operator">: </span><a href="../-meeting-stats-collector/index.html">MeetingStatsCollector</a><span class="token punctuation">, </span></span><span class="parameter ">eventReporter<span class="token operator">: </span><a href="../../com.amazonaws.services.chime.sdk.meetings.ingestion/-event-reporter/index.html">EventReporter</a><span class="token operator">?</span><span class="token operator"> = </span>null</span></span><span class="token punctuation">)</span> : <a href="../-event-analytics-controller/index.html">EventAnalyticsController</a></div></div></div>
-  </div>
-  <div class="tabbedcontent">
-    <div class="tabs-section" tabs-section="tabs-section"><button class="section-tab" data-active="" data-togglable="CONSTRUCTOR,TYPE,PROPERTY,FUNCTION">Members</button></div>
-    <div class="tabs-section-body">
-      <div data-togglable="CONSTRUCTOR">
-        <h2 class="">Constructors</h2>
-        <div class="table"><a data-name="-1139834373%2FConstructors%2F533364019" anchor-label="DefaultEventAnalyticsController" id="-1139834373%2FConstructors%2F533364019" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release"></a>
-          <div class="table-row" data-togglable="CONSTRUCTOR" data-filterable-current=":amazon-chime-sdk:dokkaHtmlPartial/release" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release">
-            <div class="main-subrow keyValue ">
-              <div class=""><span class="inline-flex">
-                  <div><a href="-default-event-analytics-controller.html"><span>Default</span><wbr><span>Event</span><wbr><span>Analytics</span><wbr><span><span>Controller</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1139834373%2FConstructors%2F533364019"></span>
-                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
-                  </span></span></div>
-              <div>
-                <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":amazon-chime-sdk:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">constructor</span><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">logger<span class="token operator">: </span><a href="../../com.amazonaws.services.chime.sdk.meetings.utils.logger/-logger/index.html">Logger</a><span class="token punctuation">, </span></span><span class="parameter ">meetingSessionConfiguration<span class="token operator">: </span><a href="../../com.amazonaws.services.chime.sdk.meetings.session/-meeting-session-configuration/index.html">MeetingSessionConfiguration</a><span class="token punctuation">, </span></span><span class="parameter ">meetingStatsCollector<span class="token operator">: </span><a href="../-meeting-stats-collector/index.html">MeetingStatsCollector</a><span class="token punctuation">, </span></span><span class="parameter ">eventReporter<span class="token operator">: </span><a href="../../com.amazonaws.services.chime.sdk.meetings.ingestion/-event-reporter/index.html">EventReporter</a><span class="token operator">?</span><span class="token operator"> = </span>null</span></span><span class="token punctuation">)</span></div></div></div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div data-togglable="FUNCTION">
-        <h2 class="">Functions</h2>
-        <div class="table"><a data-name="-2029029505%2FFunctions%2F533364019" anchor-label="addEventAnalyticsObserver" id="-2029029505%2FFunctions%2F533364019" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release"></a>
-          <div class="table-row" data-filterable-current=":amazon-chime-sdk:dokkaHtmlPartial/release" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release">
-            <div class="main-subrow keyValue ">
-              <div class=""><span class="inline-flex">
-                  <div><a href="add-event-analytics-observer.html"><span>add</span><wbr><span>Event</span><wbr><span>Analytics</span><wbr><span><span>Observer</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-2029029505%2FFunctions%2F533364019"></span>
-                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
-                  </span></span></div>
-              <div>
-                <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":amazon-chime-sdk:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">override </span><span class="token keyword">fun </span><a href="add-event-analytics-observer.html"><span class="token function">addEventAnalyticsObserver</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">observer<span class="token operator">: </span><a href="../-event-analytics-observer/index.html">EventAnalyticsObserver</a></span></span><span class="token punctuation">)</span></div><div class="brief "><p class="paragraph">Add specified <a href="../-event-analytics-observer/index.html">EventAnalyticsObserver</a>.</p></div></div></div>
-                </div>
-              </div>
-            </div>
-          </div>
-<a data-name="1226820796%2FFunctions%2F533364019" anchor-label="getCommonEventAttributes" id="1226820796%2FFunctions%2F533364019" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release"></a>
-          <div class="table-row" data-filterable-current=":amazon-chime-sdk:dokkaHtmlPartial/release" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release">
-            <div class="main-subrow keyValue ">
-              <div class=""><span class="inline-flex">
-                  <div><a href="get-common-event-attributes.html"><span>get</span><wbr><span>Common</span><wbr><span>Event</span><wbr><span><span>Attributes</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1226820796%2FFunctions%2F533364019"></span>
-                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
-                  </span></span></div>
-              <div>
-                <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":amazon-chime-sdk:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">override </span><span class="token keyword">fun </span><a href="get-common-event-attributes.html"><span class="token function">getCommonEventAttributes</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">: </span><a href="../-event-attributes/index.html">EventAttributes</a></div><div class="brief "><p class="paragraph">Retrieve common attributes, including deviceName, osName, and more.</p></div></div></div>
-                </div>
-              </div>
-            </div>
-          </div>
-<a data-name="1714633535%2FFunctions%2F533364019" anchor-label="getMeetingHistory" id="1714633535%2FFunctions%2F533364019" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release"></a>
-          <div class="table-row" data-filterable-current=":amazon-chime-sdk:dokkaHtmlPartial/release" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release">
-            <div class="main-subrow keyValue ">
-              <div class=""><span class="inline-flex">
-                  <div><a href="get-meeting-history.html"><span>get</span><wbr><span>Meeting</span><wbr><span><span>History</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1714633535%2FFunctions%2F533364019"></span>
-                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
-                  </span></span></div>
-              <div>
-                <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":amazon-chime-sdk:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">override </span><span class="token keyword">fun </span><a href="get-meeting-history.html"><span class="token function">getMeetingHistory</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/index.html">List</a><span class="token operator">&lt;</span><a href="../-meeting-history-event/index.html">MeetingHistoryEvent</a><span class="token operator">&gt;</span></div><div class="brief "><p class="paragraph">Retrieve meeting history.</p></div></div></div>
-                </div>
-              </div>
-            </div>
-          </div>
-<a data-name="-622732302%2FFunctions%2F533364019" anchor-label="publishEvent" id="-622732302%2FFunctions%2F533364019" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release"></a>
-          <div class="table-row" data-filterable-current=":amazon-chime-sdk:dokkaHtmlPartial/release" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release">
-            <div class="main-subrow keyValue ">
-              <div class=""><span class="inline-flex">
-                  <div><a href="publish-event.html"><span>publish</span><wbr><span><span>Event</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-622732302%2FFunctions%2F533364019"></span>
-                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
-                  </span></span></div>
-              <div>
-                <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":amazon-chime-sdk:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">override </span><span class="token keyword">fun </span><a href="publish-event.html"><span class="token function">publishEvent</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">name<span class="token operator">: </span><a href="../-event-name/index.html">EventName</a><span class="token punctuation">, </span></span><span class="parameter ">attributes<span class="token operator">: </span><a href="../-event-attributes/index.html">EventAttributes</a><span class="token operator">?</span></span></span><span class="token punctuation">)</span></div><div class="brief "><p class="paragraph">Publish an event with updated <a href="../-event-attributes/index.html">EventAttributes</a>.</p></div></div></div>
-                </div>
-              </div>
-            </div>
-          </div>
-<a data-name="-1379668148%2FFunctions%2F533364019" anchor-label="pushHistory" id="-1379668148%2FFunctions%2F533364019" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release"></a>
-          <div class="table-row" data-filterable-current=":amazon-chime-sdk:dokkaHtmlPartial/release" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release">
-            <div class="main-subrow keyValue ">
-              <div class=""><span class="inline-flex">
-                  <div><a href="push-history.html"><span>push</span><wbr><span><span>History</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1379668148%2FFunctions%2F533364019"></span>
-                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
-                  </span></span></div>
-              <div>
-                <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":amazon-chime-sdk:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">override </span><span class="token keyword">fun </span><a href="push-history.html"><span class="token function">pushHistory</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">historyEventName<span class="token operator">: </span><a href="../-meeting-history-event-name/index.html">MeetingHistoryEventName</a></span></span><span class="token punctuation">)</span></div><div class="brief "><p class="paragraph">Push <a href="../-meeting-history-event-name/index.html">MeetingHistoryEventName</a> to internal <a href="../-meeting-stats-collector/index.html">MeetingStatsCollector</a>.</p></div></div></div>
-                </div>
-              </div>
-            </div>
-          </div>
-<a data-name="1468132602%2FFunctions%2F533364019" anchor-label="removeEventAnalyticsObserver" id="1468132602%2FFunctions%2F533364019" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release"></a>
-          <div class="table-row" data-filterable-current=":amazon-chime-sdk:dokkaHtmlPartial/release" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release">
-            <div class="main-subrow keyValue ">
-              <div class=""><span class="inline-flex">
-                  <div><a href="remove-event-analytics-observer.html"><span>remove</span><wbr><span>Event</span><wbr><span>Analytics</span><wbr><span><span>Observer</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1468132602%2FFunctions%2F533364019"></span>
-                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
-                  </span></span></div>
-              <div>
-                <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":amazon-chime-sdk:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">open </span><span class="token keyword">override </span><span class="token keyword">fun </span><a href="remove-event-analytics-observer.html"><span class="token function">removeEventAnalyticsObserver</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">observer<span class="token operator">: </span><a href="../-event-analytics-observer/index.html">EventAnalyticsObserver</a></span></span><span class="token punctuation">)</span></div><div class="brief "><p class="paragraph">Remove specified <a href="../-event-analytics-observer/index.html">EventAnalyticsObserver</a>.</p></div></div></div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-      <div class="footer">
-        <span class="go-to-top-icon"><a href="#content" id="go-to-top-link"></a></span><span>© 2024 Copyright</span><span class="pull-right"><span>Generated by </span><a href="https://github.com/Kotlin/dokka"><span>dokka</span><span class="padded-icon"></span></a></span>
-      </div>
-            </div>
-        </div>
-    </div>
-</body>
-</html>
-
+<HTML>
+<HEAD>
+<meta charset="UTF-8">
+<title>DefaultEventAnalyticsController - amazon-chime-sdk</title>
+<link rel="stylesheet" href="../../../style.css">
+</HEAD>
+<BODY>
+<a href="../../index.html">amazon-chime-sdk</a>&nbsp;/&nbsp;<a href="../index.html">com.amazonaws.services.chime.sdk.meetings.analytics</a>&nbsp;/&nbsp;<a href="./index.html">DefaultEventAnalyticsController</a><br/>
+<br/>
+<h1>DefaultEventAnalyticsController</h1>
+<code><span class="keyword">class </span><span class="identifier">DefaultEventAnalyticsController</span>&nbsp;<span class="symbol">:</span>&nbsp;<a href="../-event-analytics-controller/index.html"><span class="identifier">EventAnalyticsController</span></a></code>
+<h3>Constructors</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<h4><a href="-init-.html">&lt;init&gt;</a></h4>
+</td>
+<td>
+<code><span class="identifier">DefaultEventAnalyticsController</span><span class="symbol">(</span><span class="identifier" id="com.amazonaws.services.chime.sdk.meetings.analytics.DefaultEventAnalyticsController$<init>(com.amazonaws.services.chime.sdk.meetings.utils.logger.Logger, com.amazonaws.services.chime.sdk.meetings.session.MeetingSessionConfiguration, com.amazonaws.services.chime.sdk.meetings.analytics.MeetingStatsCollector, com.amazonaws.services.chime.sdk.meetings.ingestion.EventReporter)/logger">logger</span><span class="symbol">:</span>&nbsp;<a href="../../com.amazonaws.services.chime.sdk.meetings.utils.logger/-logger/index.html"><span class="identifier">Logger</span></a><span class="symbol">, </span><span class="identifier" id="com.amazonaws.services.chime.sdk.meetings.analytics.DefaultEventAnalyticsController$<init>(com.amazonaws.services.chime.sdk.meetings.utils.logger.Logger, com.amazonaws.services.chime.sdk.meetings.session.MeetingSessionConfiguration, com.amazonaws.services.chime.sdk.meetings.analytics.MeetingStatsCollector, com.amazonaws.services.chime.sdk.meetings.ingestion.EventReporter)/meetingSessionConfiguration">meetingSessionConfiguration</span><span class="symbol">:</span>&nbsp;<a href="../../com.amazonaws.services.chime.sdk.meetings.session/-meeting-session-configuration/index.html"><span class="identifier">MeetingSessionConfiguration</span></a><span class="symbol">, </span><span class="identifier" id="com.amazonaws.services.chime.sdk.meetings.analytics.DefaultEventAnalyticsController$<init>(com.amazonaws.services.chime.sdk.meetings.utils.logger.Logger, com.amazonaws.services.chime.sdk.meetings.session.MeetingSessionConfiguration, com.amazonaws.services.chime.sdk.meetings.analytics.MeetingStatsCollector, com.amazonaws.services.chime.sdk.meetings.ingestion.EventReporter)/meetingStatsCollector">meetingStatsCollector</span><span class="symbol">:</span>&nbsp;<a href="../-meeting-stats-collector/index.html"><span class="identifier">MeetingStatsCollector</span></a><span class="symbol">, </span><span class="identifier" id="com.amazonaws.services.chime.sdk.meetings.analytics.DefaultEventAnalyticsController$<init>(com.amazonaws.services.chime.sdk.meetings.utils.logger.Logger, com.amazonaws.services.chime.sdk.meetings.session.MeetingSessionConfiguration, com.amazonaws.services.chime.sdk.meetings.analytics.MeetingStatsCollector, com.amazonaws.services.chime.sdk.meetings.ingestion.EventReporter)/eventReporter">eventReporter</span><span class="symbol">:</span>&nbsp;<a href="../../com.amazonaws.services.chime.sdk.meetings.ingestion/-event-reporter/index.html"><span class="identifier">EventReporter</span></a><span class="symbol">?</span>&nbsp;<span class="symbol">=</span>&nbsp;null<span class="symbol">)</span></code></td>
+</tr>
+</tbody>
+</table>
+<h3>Functions</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<h4><a href="add-event-analytics-observer.html">addEventAnalyticsObserver</a></h4>
+</td>
+<td>
+<p>Add specified <a href="../-event-analytics-observer/index.html">EventAnalyticsObserver</a>.</p>
+<code><span class="keyword">fun </span><span class="identifier">addEventAnalyticsObserver</span><span class="symbol">(</span><span class="identifier" id="com.amazonaws.services.chime.sdk.meetings.analytics.DefaultEventAnalyticsController$addEventAnalyticsObserver(com.amazonaws.services.chime.sdk.meetings.analytics.EventAnalyticsObserver)/observer">observer</span><span class="symbol">:</span>&nbsp;<a href="../-event-analytics-observer/index.html"><span class="identifier">EventAnalyticsObserver</span></a><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="get-common-event-attributes.html">getCommonEventAttributes</a></h4>
+</td>
+<td>
+<p>Retrieve common attributes, including deviceName, osName, and more.</p>
+<code><span class="keyword">fun </span><span class="identifier">getCommonEventAttributes</span><span class="symbol">(</span><span class="symbol">)</span><span class="symbol">: </span><a href="../-event-attributes.html"><span class="identifier">EventAttributes</span></a></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="get-meeting-history.html">getMeetingHistory</a></h4>
+</td>
+<td>
+<p>Retrieve meeting history.</p>
+<code><span class="keyword">fun </span><span class="identifier">getMeetingHistory</span><span class="symbol">(</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/index.html"><span class="identifier">List</span></a><span class="symbol">&lt;</span><a href="../-meeting-history-event/index.html"><span class="identifier">MeetingHistoryEvent</span></a><span class="symbol">&gt;</span></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="publish-event.html">publishEvent</a></h4>
+</td>
+<td>
+<p>Publish an event with updated <a href="../-event-attributes.html">EventAttributes</a>.</p>
+<code><span class="keyword">fun </span><span class="identifier">publishEvent</span><span class="symbol">(</span><span class="identifier" id="com.amazonaws.services.chime.sdk.meetings.analytics.DefaultEventAnalyticsController$publishEvent(com.amazonaws.services.chime.sdk.meetings.analytics.EventName, kotlin.collections.MutableMap((com.amazonaws.services.chime.sdk.meetings.analytics.EventAttributeName, kotlin.Any)))/name">name</span><span class="symbol">:</span>&nbsp;<a href="../-event-name/index.html"><span class="identifier">EventName</span></a><span class="symbol">, </span><span class="identifier" id="com.amazonaws.services.chime.sdk.meetings.analytics.DefaultEventAnalyticsController$publishEvent(com.amazonaws.services.chime.sdk.meetings.analytics.EventName, kotlin.collections.MutableMap((com.amazonaws.services.chime.sdk.meetings.analytics.EventAttributeName, kotlin.Any)))/attributes">attributes</span><span class="symbol">:</span>&nbsp;<a href="../-event-attributes.html"><span class="identifier">EventAttributes</span></a><span class="symbol">?</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="push-history.html">pushHistory</a></h4>
+</td>
+<td>
+<p>Push <a href="../-meeting-history-event-name/index.html">MeetingHistoryEventName</a> to internal <a href="../-meeting-stats-collector/index.html">MeetingStatsCollector</a>.</p>
+<code><span class="keyword">fun </span><span class="identifier">pushHistory</span><span class="symbol">(</span><span class="identifier" id="com.amazonaws.services.chime.sdk.meetings.analytics.DefaultEventAnalyticsController$pushHistory(com.amazonaws.services.chime.sdk.meetings.analytics.MeetingHistoryEventName)/historyEventName">historyEventName</span><span class="symbol">:</span>&nbsp;<a href="../-meeting-history-event-name/index.html"><span class="identifier">MeetingHistoryEventName</span></a><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="remove-event-analytics-observer.html">removeEventAnalyticsObserver</a></h4>
+</td>
+<td>
+<p>Remove specified <a href="../-event-analytics-observer/index.html">EventAnalyticsObserver</a>.</p>
+<code><span class="keyword">fun </span><span class="identifier">removeEventAnalyticsObserver</span><span class="symbol">(</span><span class="identifier" id="com.amazonaws.services.chime.sdk.meetings.analytics.DefaultEventAnalyticsController$removeEventAnalyticsObserver(com.amazonaws.services.chime.sdk.meetings.analytics.EventAnalyticsObserver)/observer">observer</span><span class="symbol">:</span>&nbsp;<a href="../-event-analytics-observer/index.html"><span class="identifier">EventAnalyticsObserver</span></a><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code></td>
+</tr>
+</tbody>
+</table>
+</BODY>
+</HTML>

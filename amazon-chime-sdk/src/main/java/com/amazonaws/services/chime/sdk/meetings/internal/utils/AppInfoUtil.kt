@@ -21,9 +21,9 @@ object AppInfoUtil {
     private lateinit var clientUtcOffset: String
 
     private fun initializeAppInfo(context: Context) {
-        manufacturer = DeviceUtils.deviceManufacturer.toString()
-        model = DeviceUtils.deviceModel.toString()
-        osVersion = DeviceUtils.osVersion.toString()
+        manufacturer = DeviceUtils.deviceManufacturer
+        model = DeviceUtils.deviceModel
+        osVersion = DeviceUtils.osVersion
         val packageName = context.packageName
         val packageInfo = context.packageManager.getPackageInfo(packageName, 0)
         appName = String.format("Android %s", packageInfo.versionName)

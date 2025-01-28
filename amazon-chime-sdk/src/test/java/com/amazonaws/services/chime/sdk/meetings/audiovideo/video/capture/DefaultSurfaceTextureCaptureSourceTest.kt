@@ -81,7 +81,6 @@ class DefaultSurfaceTextureCaptureSourceTest {
         every { EGL14.eglCreatePbufferSurface(any(), any(), any(), any()) } returns mockEglSurface
 
         mockkConstructor(SurfaceTexture::class)
-        every { anyConstructed<SurfaceTexture>().setDefaultBufferSize(any(), any()) } just runs
 
         mockkConstructor(TimestampAligner::class)
         every { anyConstructed<TimestampAligner>().translateTimestamp(any()) } returns 0
@@ -97,6 +96,14 @@ class DefaultSurfaceTextureCaptureSourceTest {
 
     @Test
     fun `constructor sets expected dimensions of surface`() {
+        DefaultSurfaceTextureCaptureSource(
+                mockLogger,
+                testWidth,
+                testHeight,
+                testContentHint,
+                mockEglCoreFactory
+        )
+
         verify { anyConstructed<SurfaceTexture>().setDefaultBufferSize(testWidth, testHeight) }
     }
 

@@ -213,7 +213,7 @@ class DefaultCameraCaptureSource @JvmOverloads constructor(
         val maxFps: Int = 30
 
         val chosenCaptureFormat: VideoCaptureFormat? =
-            MediaDevice.listSupportedVideoCaptureFormats(cameraManager, device, maxFps, maxWidth, maxHeight).minByOrNull { format ->
+            MediaDevice.listSupportedVideoCaptureFormats(cameraManager, device, maxFps, maxWidth, maxHeight).minBy { format ->
                 abs(format.width - this.format.width) + abs(format.height - this.format.height)
             }
         val surfaceTextureFormat: VideoCaptureFormat = chosenCaptureFormat ?: run {
@@ -260,7 +260,7 @@ class DefaultCameraCaptureSource @JvmOverloads constructor(
 
         val processedFrame =
             VideoFrame(frame.timestampNs, processedBuffer, getCaptureFrameRotation())
-        sinks.iterator().forEach { it.onVideoFrameReceived(processedFrame) }
+        sinks.forEach { it.onVideoFrameReceived(processedFrame) }
         processedBuffer.release()
     }
 
@@ -390,11 +390,11 @@ class DefaultCameraCaptureSource @JvmOverloads constructor(
             // Pick range with max closest to but not exceeding the set max framerate
             val bestFpsRange = fpsRanges
                     .filter { it.upper <= this.format.maxFps }
-                    .minByOrNull { this.format.maxFps - it.upper }
+                    .minBy { this.format.maxFps - it.upper }
                     ?: run {
                         logger.warn(TAG, "No FPS ranges below set max FPS")
                         // Just fall back to the closest
-                        return@run fpsRanges.minByOrNull { abs(this.format.maxFps - it.upper) }
+                        return@run fpsRanges.minBy { abs(this.format.maxFps - it.upper) }
                     } ?: run {
                         logger.error(TAG, "No valid FPS ranges")
                         handleCameraCaptureFail(CaptureSourceError.ConfigurationFailure)

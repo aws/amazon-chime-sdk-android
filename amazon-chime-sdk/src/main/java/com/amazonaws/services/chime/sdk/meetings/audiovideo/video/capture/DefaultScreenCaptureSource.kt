@@ -319,7 +319,7 @@ class DefaultScreenCaptureSource(
 
         // Ignore frames while we are recreating the surface and display
         if (isResizingForOrientationChange) return
-        sinks.iterator().forEach { it.onVideoFrameReceived(frame) }
+        sinks.forEach { it.onVideoFrameReceived(frame) }
     }
 
     private fun resize() {

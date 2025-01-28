@@ -1,8 +1,3 @@
-## Unreleased
-
-### Changed
-* Upgrade gradle version and dokka
-
 ## [0.23.0] - 2024-08-15
 
 ### Changed

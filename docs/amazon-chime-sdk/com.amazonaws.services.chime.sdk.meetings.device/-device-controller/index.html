@@ -1,190 +1,100 @@
-<!doctype html>
-<html class="no-js">
-<head>
-    <meta name="viewport" content="width=device-width, initial-scale=1" charset="UTF-8">
-    <title>DeviceController</title>
-<link href="../../../images/logo-icon.svg" rel="icon" type="image/svg">    <script>var pathToRoot = "../../../";</script>
-    <script>document.documentElement.classList.replace("no-js","js");</script>
-    <script>const storage = localStorage.getItem("dokka-dark-mode")
-    if (storage == null) {
-        const osDarkSchemePreferred = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
-        if (osDarkSchemePreferred === true) {
-            document.getElementsByTagName("html")[0].classList.add("theme-dark")
-        }
-    } else {
-        const savedDarkMode = JSON.parse(storage)
-        if(savedDarkMode === true) {
-            document.getElementsByTagName("html")[0].classList.add("theme-dark")
-        }
-    }
-    </script>
-<script type="text/javascript" src="https://unpkg.com/kotlin-playground@1/dist/playground.min.js" async></script>
-<script type="text/javascript" src="../../../scripts/sourceset_dependencies.js" async></script>
-<link href="../../../styles/style.css" rel="Stylesheet">
-<link href="../../../styles/main.css" rel="Stylesheet">
-<link href="../../../styles/prism.css" rel="Stylesheet">
-<link href="../../../styles/logo-styles.css" rel="Stylesheet">
-<link href="../../../styles/font-jb-sans-auto.css" rel="Stylesheet">
-<script type="text/javascript" src="../../../scripts/clipboard.js" async></script>
-<script type="text/javascript" src="../../../scripts/navigation-loader.js" async></script>
-<script type="text/javascript" src="../../../scripts/platform-content-handler.js" async></script>
-<script type="text/javascript" src="../../../scripts/main.js" defer></script>
-<script type="text/javascript" src="../../../scripts/prism.js" async></script>
-<script type="text/javascript" src="../../../scripts/symbol-parameters-wrapper_deferred.js" defer></script></head>
-<body>
-    <div class="root">
-<nav class="navigation" id="navigation-wrapper">
-    <div class="navigation--inner">
-        <div class="navigation-title">
-            <button class="menu-toggle" id="menu-toggle" type="button">toggle menu</button>
-            <div class="library-name">
-<a class="library-name--link" href="../../../index.html">
-                            amazon-chime-sdk-android
-                    </a>            </div>
-            <div class="library-version">
-            </div>
-        </div>
-        <div class="filter-section" id="filter-section">
-                <button class="platform-tag platform-selector jvm-like" data-active="" data-filter=":amazon-chime-sdk:dokkaHtmlPartial/release">androidJvm</button>
-        </div>
-    </div>
-    <div class="navigation-controls">
-        <button class="navigation-controls--btn navigation-controls--theme" id="theme-toggle-button" type="button">switch theme</button>
-        <div class="navigation-controls--btn navigation-controls--search" id="searchBar" role="button">search in API</div>
-    </div>
-</nav>
-        <div id="container">
-            <div class="sidebar" id="leftColumn">
-                <div class="sidebar--inner" id="sideMenu"></div>
-            </div>
-            <div id="main">
-<div class="main-content" data-page-type="classlike" id="content" pageids="amazon-chime-sdk::com.amazonaws.services.chime.sdk.meetings.device/DeviceController///PointingToDeclaration//533364019">
-  <div class="breadcrumbs"><a href="../../index.html">amazon-chime-sdk</a><span class="delimiter">/</span><a href="../index.html">com.amazonaws.services.chime.sdk.meetings.device</a><span class="delimiter">/</span><span class="current">DeviceController</span></div>
-  <div class="cover ">
-    <h1 class="cover"><span>Device</span><wbr><span><span>Controller</span></span></h1>
-    <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":amazon-chime-sdk:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">interface </span><a href="index.html">DeviceController</a></div><p class="paragraph"><a href="index.html">DeviceController</a> keeps track of the devices being used for audio device (e.g. built-in speaker), video input (e.g. camera)). The list functions return <a href="../-media-device/index.html">MediaDevice</a> objects. Changes in device availability are broadcast to any registered <a href="../-device-change-observer/index.html">DeviceChangeObserver</a>.</p><h4 class="">Inheritors</h4><div class="table"><div class="table-row" data-filterable-current=":amazon-chime-sdk:dokkaHtmlPartial/release" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release"><div class="main-subrow keyValue "><div class=""><span class="inline-flex"><div><a href="../../com.amazonaws.services.chime.sdk.meetings.audiovideo/-audio-video-facade/index.html">AudioVideoFacade</a></div></span></div><div></div></div></div><div class="table-row" data-filterable-current=":amazon-chime-sdk:dokkaHtmlPartial/release" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release"><div class="main-subrow keyValue "><div class=""><span class="inline-flex"><div><a href="../-default-device-controller/index.html">DefaultDeviceController</a></div></span></div><div></div></div></div></div></div></div>
-  </div>
-  <div class="tabbedcontent">
-    <div class="tabs-section" tabs-section="tabs-section"><button class="section-tab" data-active="" data-togglable="CONSTRUCTOR,TYPE,PROPERTY,FUNCTION">Members</button></div>
-    <div class="tabs-section-body">
-      <div data-togglable="FUNCTION">
-        <h2 class="">Functions</h2>
-        <div class="table"><a data-name="240123690%2FFunctions%2F533364019" anchor-label="addDeviceChangeObserver" id="240123690%2FFunctions%2F533364019" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release"></a>
-          <div class="table-row" data-filterable-current=":amazon-chime-sdk:dokkaHtmlPartial/release" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release">
-            <div class="main-subrow keyValue ">
-              <div class=""><span class="inline-flex">
-                  <div><a href="add-device-change-observer.html"><span>add</span><wbr><span>Device</span><wbr><span>Change</span><wbr><span><span>Observer</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="240123690%2FFunctions%2F533364019"></span>
-                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
-                  </span></span></div>
-              <div>
-                <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":amazon-chime-sdk:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">fun </span><a href="add-device-change-observer.html"><span class="token function">addDeviceChangeObserver</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">observer<span class="token operator">: </span><a href="../-device-change-observer/index.html">DeviceChangeObserver</a></span></span><span class="token punctuation">)</span></div><div class="brief "><p class="paragraph">Adds an observer to receive callbacks about device changes.</p></div></div></div>
-                </div>
-              </div>
-            </div>
-          </div>
-<a data-name="-74725430%2FFunctions%2F533364019" anchor-label="chooseAudioDevice" id="-74725430%2FFunctions%2F533364019" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release"></a>
-          <div class="table-row" data-filterable-current=":amazon-chime-sdk:dokkaHtmlPartial/release" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release">
-            <div class="main-subrow keyValue ">
-              <div class=""><span class="inline-flex">
-                  <div><a href="choose-audio-device.html"><span>choose</span><wbr><span>Audio</span><wbr><span><span>Device</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-74725430%2FFunctions%2F533364019"></span>
-                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
-                  </span></span></div>
-              <div>
-                <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":amazon-chime-sdk:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">fun </span><a href="choose-audio-device.html"><span class="token function">chooseAudioDevice</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">mediaDevice<span class="token operator">: </span><a href="../-media-device/index.html">MediaDevice</a></span></span><span class="token punctuation">)</span></div><div class="brief "><p class="paragraph">Selects an audio device to use.</p></div></div></div>
-                </div>
-              </div>
-            </div>
-          </div>
-<a data-name="644890759%2FFunctions%2F533364019" anchor-label="getActiveAudioDevice" id="644890759%2FFunctions%2F533364019" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release"></a>
-          <div class="table-row" data-filterable-current=":amazon-chime-sdk:dokkaHtmlPartial/release" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release">
-            <div class="main-subrow keyValue ">
-              <div class=""><span class="inline-flex">
-                  <div><a href="get-active-audio-device.html"><span>get</span><wbr><span>Active</span><wbr><span>Audio</span><wbr><span><span>Device</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="644890759%2FFunctions%2F533364019"></span>
-                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
-                  </span></span></div>
-              <div>
-                <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":amazon-chime-sdk:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">fun </span><a href="get-active-audio-device.html"><span class="token function">getActiveAudioDevice</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">: </span><a href="../-media-device/index.html">MediaDevice</a><span class="token operator">?</span></div><div class="brief "><p class="paragraph">Get the active input/output audio device in the meeting, return null if there isn't any.</p></div></div></div>
-                </div>
-              </div>
-            </div>
-          </div>
-<a data-name="1741767010%2FFunctions%2F533364019" anchor-label="getActiveCamera" id="1741767010%2FFunctions%2F533364019" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release"></a>
-          <div class="table-row" data-filterable-current=":amazon-chime-sdk:dokkaHtmlPartial/release" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release">
-            <div class="main-subrow keyValue ">
-              <div class=""><span class="inline-flex">
-                  <div><a href="get-active-camera.html"><span>get</span><wbr><span>Active</span><wbr><span><span>Camera</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1741767010%2FFunctions%2F533364019"></span>
-                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
-                  </span></span></div>
-              <div>
-                <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":amazon-chime-sdk:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">fun </span><a href="get-active-camera.html"><span class="token function">getActiveCamera</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">: </span><a href="../-media-device/index.html">MediaDevice</a><span class="token operator">?</span></div><div class="brief "><p class="paragraph">Get the currently active camera, if any. This will return null if using a custom source, e.g. one passed in via <a href="../../com.amazonaws.services.chime.sdk.meetings.audiovideo/-audio-video-controller-facade/start-local-video.html">AudioVideoControllerFacade.startLocalVideo</a></p></div></div></div>
-                </div>
-              </div>
-            </div>
-          </div>
-<a data-name="-1686995598%2FFunctions%2F533364019" anchor-label="listAudioDevices" id="-1686995598%2FFunctions%2F533364019" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release"></a>
-          <div class="table-row" data-filterable-current=":amazon-chime-sdk:dokkaHtmlPartial/release" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release">
-            <div class="main-subrow keyValue ">
-              <div class=""><span class="inline-flex">
-                  <div><a href="list-audio-devices.html"><span>list</span><wbr><span>Audio</span><wbr><span><span>Devices</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1686995598%2FFunctions%2F533364019"></span>
-                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
-                  </span></span></div>
-              <div>
-                <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":amazon-chime-sdk:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">fun </span><a href="list-audio-devices.html"><span class="token function">listAudioDevices</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/index.html">List</a><span class="token operator">&lt;</span><a href="../-media-device/index.html">MediaDevice</a><span class="token operator">&gt;</span></div><div class="brief "><p class="paragraph">Lists currently available audio devices.</p></div></div></div>
-                </div>
-              </div>
-            </div>
-          </div>
-<a data-name="970586137%2FFunctions%2F533364019" anchor-label="removeDeviceChangeObserver" id="970586137%2FFunctions%2F533364019" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release"></a>
-          <div class="table-row" data-filterable-current=":amazon-chime-sdk:dokkaHtmlPartial/release" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release">
-            <div class="main-subrow keyValue ">
-              <div class=""><span class="inline-flex">
-                  <div><a href="remove-device-change-observer.html"><span>remove</span><wbr><span>Device</span><wbr><span>Change</span><wbr><span><span>Observer</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="970586137%2FFunctions%2F533364019"></span>
-                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
-                  </span></span></div>
-              <div>
-                <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":amazon-chime-sdk:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">fun </span><a href="remove-device-change-observer.html"><span class="token function">removeDeviceChangeObserver</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">observer<span class="token operator">: </span><a href="../-device-change-observer/index.html">DeviceChangeObserver</a></span></span><span class="token punctuation">)</span></div><div class="brief "><p class="paragraph">Removes an observer to stop receiving callbacks about device changes.</p></div></div></div>
-                </div>
-              </div>
-            </div>
-          </div>
-<a data-name="-1747673762%2FFunctions%2F533364019" anchor-label="switchCamera" id="-1747673762%2FFunctions%2F533364019" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release"></a>
-          <div class="table-row" data-filterable-current=":amazon-chime-sdk:dokkaHtmlPartial/release" data-filterable-set=":amazon-chime-sdk:dokkaHtmlPartial/release">
-            <div class="main-subrow keyValue ">
-              <div class=""><span class="inline-flex">
-                  <div><a href="switch-camera.html"><span>switch</span><wbr><span><span>Camera</span></span></a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="-1747673762%2FFunctions%2F533364019"></span>
-                    <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
-                  </span></span></div>
-              <div>
-                <div class="title">
-                  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable=":amazon-chime-sdk:dokkaHtmlPartial/release"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword">fun </span><a href="switch-camera.html"><span class="token function">switchCamera</span></a><span class="token punctuation">(</span><span class="token punctuation">)</span></div><div class="brief "><p class="paragraph">Switches the currently active camera. This will no-op if using a custom source, e.g. one passed in via <a href="../../com.amazonaws.services.chime.sdk.meetings.audiovideo/-audio-video-controller-facade/start-local-video.html">AudioVideoControllerFacade.startLocalVideo</a></p></div></div></div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-      <div class="footer">
-        <span class="go-to-top-icon"><a href="#content" id="go-to-top-link"></a></span><span>© 2024 Copyright</span><span class="pull-right"><span>Generated by </span><a href="https://github.com/Kotlin/dokka"><span>dokka</span><span class="padded-icon"></span></a></span>
-      </div>
-            </div>
-        </div>
-    </div>
-</body>
-</html>
-
+<HTML>
+<HEAD>
+<meta charset="UTF-8">
+<title>DeviceController - amazon-chime-sdk</title>
+<link rel="stylesheet" href="../../../style.css">
+</HEAD>
+<BODY>
+<a href="../../index.html">amazon-chime-sdk</a>&nbsp;/&nbsp;<a href="../index.html">com.amazonaws.services.chime.sdk.meetings.device</a>&nbsp;/&nbsp;<a href="./index.html">DeviceController</a><br/>
+<br/>
+<h1>DeviceController</h1>
+<code><span class="keyword">interface </span><span class="identifier">DeviceController</span></code>
+<p><a href="./index.html">DeviceController</a> keeps track of the devices being used for audio device
+(e.g. built-in speaker), video input (e.g. camera)).
+The list functions return <a href="../-media-device/index.html">MediaDevice</a> objects.
+Changes in device availability are broadcast to any registered
+<a href="../-device-change-observer/index.html">DeviceChangeObserver</a>.</p>
+<h3>Functions</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<h4><a href="add-device-change-observer.html">addDeviceChangeObserver</a></h4>
+</td>
+<td>
+<p>Adds an observer to receive callbacks about device changes.</p>
+<code><span class="keyword">abstract</span> <span class="keyword">fun </span><span class="identifier">addDeviceChangeObserver</span><span class="symbol">(</span><span class="identifier" id="com.amazonaws.services.chime.sdk.meetings.device.DeviceController$addDeviceChangeObserver(com.amazonaws.services.chime.sdk.meetings.device.DeviceChangeObserver)/observer">observer</span><span class="symbol">:</span>&nbsp;<a href="../-device-change-observer/index.html"><span class="identifier">DeviceChangeObserver</span></a><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="choose-audio-device.html">chooseAudioDevice</a></h4>
+</td>
+<td>
+<p>Selects an audio device to use.</p>
+<code><span class="keyword">abstract</span> <span class="keyword">fun </span><span class="identifier">chooseAudioDevice</span><span class="symbol">(</span><span class="identifier" id="com.amazonaws.services.chime.sdk.meetings.device.DeviceController$chooseAudioDevice(com.amazonaws.services.chime.sdk.meetings.device.MediaDevice)/mediaDevice">mediaDevice</span><span class="symbol">:</span>&nbsp;<a href="../-media-device/index.html"><span class="identifier">MediaDevice</span></a><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="get-active-audio-device.html">getActiveAudioDevice</a></h4>
+</td>
+<td>
+<p>Get the active input/output audio device in the meeting, return null if there isn't any.</p>
+<code><span class="keyword">abstract</span> <span class="keyword">fun </span><span class="identifier">getActiveAudioDevice</span><span class="symbol">(</span><span class="symbol">)</span><span class="symbol">: </span><a href="../-media-device/index.html"><span class="identifier">MediaDevice</span></a><span class="symbol">?</span></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="get-active-camera.html">getActiveCamera</a></h4>
+</td>
+<td>
+<p>Get the currently active camera, if any. This will return null if using a custom source,
+e.g. one passed in via <a href="../../com.amazonaws.services.chime.sdk.meetings.audiovideo/-audio-video-controller-facade/start-local-video.html">AudioVideoControllerFacade.startLocalVideo</a></p>
+<code><span class="keyword">abstract</span> <span class="keyword">fun </span><span class="identifier">getActiveCamera</span><span class="symbol">(</span><span class="symbol">)</span><span class="symbol">: </span><a href="../-media-device/index.html"><span class="identifier">MediaDevice</span></a><span class="symbol">?</span></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="list-audio-devices.html">listAudioDevices</a></h4>
+</td>
+<td>
+<p>Lists currently available audio devices.</p>
+<code><span class="keyword">abstract</span> <span class="keyword">fun </span><span class="identifier">listAudioDevices</span><span class="symbol">(</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.collections/-list/index.html"><span class="identifier">List</span></a><span class="symbol">&lt;</span><a href="../-media-device/index.html"><span class="identifier">MediaDevice</span></a><span class="symbol">&gt;</span></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="remove-device-change-observer.html">removeDeviceChangeObserver</a></h4>
+</td>
+<td>
+<p>Removes an observer to stop receiving callbacks about device changes.</p>
+<code><span class="keyword">abstract</span> <span class="keyword">fun </span><span class="identifier">removeDeviceChangeObserver</span><span class="symbol">(</span><span class="identifier" id="com.amazonaws.services.chime.sdk.meetings.device.DeviceController$removeDeviceChangeObserver(com.amazonaws.services.chime.sdk.meetings.device.DeviceChangeObserver)/observer">observer</span><span class="symbol">:</span>&nbsp;<a href="../-device-change-observer/index.html"><span class="identifier">DeviceChangeObserver</span></a><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="switch-camera.html">switchCamera</a></h4>
+</td>
+<td>
+<p>Switches the currently active camera. This will no-op if using a custom source,
+e.g. one passed in via <a href="../../com.amazonaws.services.chime.sdk.meetings.audiovideo/-audio-video-controller-facade/start-local-video.html">AudioVideoControllerFacade.startLocalVideo</a></p>
+<code><span class="keyword">abstract</span> <span class="keyword">fun </span><span class="identifier">switchCamera</span><span class="symbol">(</span><span class="symbol">)</span><span class="symbol">: </span><a href="https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-unit/index.html"><span class="identifier">Unit</span></a></code></td>
+</tr>
+</tbody>
+</table>
+<h3>Inheritors</h3>
+<table>
+<tbody>
+<tr>
+<td>
+<h4><a href="../../com.amazonaws.services.chime.sdk.meetings.audiovideo/-audio-video-facade.html">AudioVideoFacade</a></h4>
+</td>
+<td>
+<code><span class="keyword">interface </span><span class="identifier">AudioVideoFacade</span>&nbsp;<span class="symbol">:</span>&nbsp;<a href="../../com.amazonaws.services.chime.sdk.meetings.audiovideo/-audio-video-controller-facade/index.html"><span class="identifier">AudioVideoControllerFacade</span></a><span class="symbol">, </span><a href="../../com.amazonaws.services.chime.sdk.meetings.realtime/-realtime-controller-facade/index.html"><span class="identifier">RealtimeControllerFacade</span></a><span class="symbol">, </span><a href="./index.html"><span class="identifier">DeviceController</span></a><span class="symbol">, </span><a href="../../com.amazonaws.services.chime.sdk.meetings.audiovideo.video/-video-tile-controller-facade/index.html"><span class="identifier">VideoTileControllerFacade</span></a><span class="symbol">, </span><a href="../../com.amazonaws.services.chime.sdk.meetings.audiovideo.audio.activespeakerdetector/-active-speaker-detector-facade/index.html"><span class="identifier">ActiveSpeakerDetectorFacade</span></a><span class="symbol">, </span><a href="../../com.amazonaws.services.chime.sdk.meetings.audiovideo.contentshare/-content-share-controller/index.html"><span class="identifier">ContentShareController</span></a><span class="symbol">, </span><a href="../../com.amazonaws.services.chime.sdk.meetings.analytics/-event-analytics-facade/index.html"><span class="identifier">EventAnalyticsFacade</span></a></code></td>
+</tr>
+<tr>
+<td>
+<h4><a href="../-default-device-controller/index.html">DefaultDeviceController</a></h4>
+</td>
+<td>
+<code><span class="keyword">class </span><span class="identifier">DefaultDeviceController</span>&nbsp;<span class="symbol">:</span>&nbsp;<a href="./index.html"><span class="identifier">DeviceController</span></a></code></td>
+</tr>
+</tbody>
+</table>
+</BODY>
+</HTML>
