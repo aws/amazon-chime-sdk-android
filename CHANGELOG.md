@@ -1,5 +1,8 @@
 ## Unreleased
 
+### Fixed
+* When meeting has ended normally, but not initiated by the client, send a meetingEnded event rather than a meetingFailed event. 
+
 ### Changed
 * Upgrade gradle version and dokka
 
