@@ -106,7 +106,12 @@ enum class MeetingSessionStatusCode(val value: Int) {
     /**
      * Designated input device is not responding and timed out.
      */
-    AudioInputDeviceNotResponding(15);
+    AudioInputDeviceNotResponding(15),
+
+    /**
+     * Chime SDK audio server hung up.
+     */
+    AudioServerHungup(16);
 
     companion object {
         fun from(intValue: Int): MeetingSessionStatusCode? = values().find { it.value == intValue }

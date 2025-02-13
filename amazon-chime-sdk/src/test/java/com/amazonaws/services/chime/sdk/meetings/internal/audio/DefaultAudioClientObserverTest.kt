@@ -1106,6 +1106,64 @@ class DefaultAudioClientObserverTest {
         verify(exactly = 1, timeout = TestConstant.globalScopeTimeoutMs) { mockAudioClient.stopSession() }
     }
 
+    fun `onAudioClientStateChange should stop session and notify of session stop event when finish disconnecting while connecting`() {
+        every { mockAudioClient.stopSession() } returns 0
+
+        runBlockingTest {
+            audioClientObserver.onAudioClientStateChange(
+                AudioClient.AUDIO_CLIENT_STATE_CONNECTING,
+                AudioClient.AUDIO_CLIENT_OK
+            )
+
+            audioClientObserver.onAudioClientStateChange(
+                AudioClient.AUDIO_CLIENT_STATE_SERVER_HUNGUP,
+                AudioClient.AUDIO_CLIENT_ERR_SERVER_HUNGUP
+            )
+        }
+
+        verify(exactly = 1, timeout = TestConstant.globalScopeTimeoutMs) { mockAudioVideoObserver.onAudioSessionStopped(any()) }
+        verify(exactly = 1, timeout = TestConstant.globalScopeTimeoutMs) { mockAudioClient.stopSession() }
+        verify(exactly = 1, timeout = TestConstant.globalScopeTimeoutMs) { mockEventAnalyticsController.publishEvent(EventName.meetingEnded, any()) }
+    }
+
+    fun `onAudioClientStateChange should stop session and notify of session stop event when finish disconnecting while connected`() {
+        every { mockAudioClient.stopSession() } returns 0
+
+        runBlockingTest {
+            audioClientObserver.onAudioClientStateChange(
+                AudioClient.AUDIO_CLIENT_STATE_CONNECTED,
+                AudioClient.AUDIO_CLIENT_OK
+            )
+
+            audioClientObserver.onAudioClientStateChange(
+                AudioClient.AUDIO_CLIENT_STATE_SERVER_HUNGUP,
+                AudioClient.AUDIO_CLIENT_ERR_SERVER_HUNGUP
+            )
+        }
+
+        verify(exactly = 1, timeout = TestConstant.globalScopeTimeoutMs) { mockAudioVideoObserver.onAudioSessionStopped(any()) }
+        verify(exactly = 1, timeout = TestConstant.globalScopeTimeoutMs) { mockAudioClient.stopSession() }
+        verify(exactly = 1, timeout = TestConstant.globalScopeTimeoutMs) { mockEventAnalyticsController.publishEvent(EventName.meetingEnded, any()) }
+    }
+
+    fun `onAudioClientStateChange should stop session and notify of session stop event when finish disconnecting while reconnecting`() {
+        runBlockingTest {
+            audioClientObserver.onAudioClientStateChange(
+                AudioClient.AUDIO_CLIENT_STATE_RECONNECTING,
+                AudioClient.AUDIO_CLIENT_OK
+            )
+
+            audioClientObserver.onAudioClientStateChange(
+                AudioClient.AUDIO_CLIENT_STATE_SERVER_HUNGUP,
+                AudioClient.AUDIO_CLIENT_ERR_SERVER_HUNGUP
+            )
+        }
+
+        verify(exactly = 1, timeout = TestConstant.globalScopeTimeoutMs) { mockAudioVideoObserver.onAudioSessionStopped(any()) }
+        verify(exactly = 1, timeout = TestConstant.globalScopeTimeoutMs) { mockAudioClient.stopSession() }
+        verify(exactly = 1, timeout = TestConstant.globalScopeTimeoutMs) { mockEventAnalyticsController.publishEvent(EventName.meetingEnded, any()) }
+    }
+
     @Test
     fun `onAudioClientStateChange should notify of session fail event to EventAnalyticsController when failed to connect`() {
         every { mockAudioClient.stopSession() } returns 0
