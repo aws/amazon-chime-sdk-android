@@ -1,4 +1,4 @@
-## Unreleased
+## [0.24.0] - 2025-02-20
 
 ### Fixed
 * When meeting has ended normally, but not initiated by the client, send a meetingEnded event rather than a meetingFailed event. 
