@@ -68,7 +68,7 @@ internal class BlurProcessor(rs: RenderScript) {
      */
     fun process(bitmap: Bitmap): Bitmap? {
         val bitmapConfig = Bitmap.Config.ARGB_8888
-        if (!bitmap.config.equals(bitmapConfig)) {
+        if (bitmap.config?.equals(bitmapConfig) == false) {
             throw Exception("Bitmap must have ARGB_8888 config.")
         }
         // Copy data from bitmap to input allocations.

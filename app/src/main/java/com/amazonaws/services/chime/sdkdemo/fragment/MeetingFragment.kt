@@ -1485,6 +1485,7 @@ class MeetingFragment : Fragment(),
 
                     override fun onCaptureStopped() {
                         notifyHandler("Screen capture stopped")
+                        audioVideo.stopContentShare()
                     }
 
                     override fun onCaptureFailed(error: CaptureSourceError) {
