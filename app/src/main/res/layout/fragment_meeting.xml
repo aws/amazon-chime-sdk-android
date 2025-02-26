@@ -11,6 +11,7 @@
     android:orientation="vertical">
 
     <RelativeLayout
+        android:layout_marginTop="16dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
@@ -187,7 +188,7 @@
                     android:background="@null"
                     android:contentDescription="@string/send_message"
                     android:src="@drawable/button_send_message"
-                    android:tint="?android:attr/textColorPrimary" />
+                    app:tint="?android:attr/textColorPrimary" />
 
             </LinearLayout>
 
@@ -200,6 +201,7 @@
         android:layout_height="wrap_content"
         android:gravity="center"
         android:orientation="horizontal"
+        android:layout_marginBottom="16dp"
         android:padding="8dp">
 
         <ImageButton
@@ -212,7 +214,7 @@
             android:paddingLeft="8dp"
             android:paddingRight="8dp"
             android:src="@drawable/button_mute"
-            android:tint="?android:attr/textColorPrimary" />
+            app:tint="?android:attr/textColorPrimary" />
 
         <ImageButton
             android:id="@+id/buttonSpeaker"
@@ -224,7 +226,7 @@
             android:paddingLeft="8dp"
             android:paddingRight="8dp"
             android:src="@drawable/button_speaker"
-            android:tint="?android:attr/textColorPrimary" />
+            app:tint="?android:attr/textColorPrimary" />
 
         <ImageButton
             android:id="@+id/buttonCamera"
@@ -236,7 +238,7 @@
             android:paddingLeft="8dp"
             android:paddingRight="8dp"
             android:src="@drawable/button_camera"
-            android:tint="?android:attr/textColorPrimary" />
+            app:tint="?android:attr/textColorPrimary" />
 
         <ImageButton
             android:id="@+id/buttonMore"
@@ -248,7 +250,7 @@
             android:paddingLeft="8dp"
             android:paddingRight="8dp"
             android:src="@drawable/button_more"
-            android:tint="?android:attr/textColorPrimary" />
+            app:tint="?android:attr/textColorPrimary" />
 
         <ImageButton
             android:id="@+id/buttonLeave"
@@ -260,7 +262,7 @@
             android:paddingLeft="8dp"
             android:paddingRight="8dp"
             android:src="@drawable/button_end"
-            android:tint="#F44336" />
+            app:tint="#F44336" />
 
     </LinearLayout>
 

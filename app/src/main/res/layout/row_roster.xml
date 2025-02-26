@@ -48,6 +48,6 @@
         android:layout_marginEnd="8dp"
         android:contentDescription="@string/volume_indicator"
         android:gravity="center_vertical|end"
-        android:tint="?android:attr/textColorSecondary" />
+        app:tint="?android:attr/textColorSecondary" />
 
 </RelativeLayout>

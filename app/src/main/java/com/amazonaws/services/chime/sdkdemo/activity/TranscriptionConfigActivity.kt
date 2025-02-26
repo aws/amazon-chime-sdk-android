@@ -8,6 +8,7 @@ package com.amazonaws.services.chime.sdkdemo.activity
 import android.os.Bundle
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.WindowCompat
 import com.amazonaws.services.chime.sdk.meetings.internal.utils.DefaultBackOffRetry
 import com.amazonaws.services.chime.sdk.meetings.internal.utils.HttpUtils
 import com.amazonaws.services.chime.sdk.meetings.utils.logger.ConsoleLogger
@@ -50,6 +51,9 @@ class TranscriptionConfigActivity : AppCompatActivity(),
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_transcription_config)
+        WindowCompat.getInsetsController(window, window.decorView)
+            .isAppearanceLightStatusBars = true
+
         meetingId = intent.getStringExtra(HomeActivity.MEETING_ID_KEY) as String
         meetingEndpointUrl = intent.getStringExtra(HomeActivity.MEETING_ENDPOINT_KEY) as String
         if (savedInstanceState == null) {
