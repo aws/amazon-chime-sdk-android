@@ -9,7 +9,6 @@ apply plugin: 'kotlin-android'
 
 android {
     compileSdk project.ext.chimeCompileSdkVersion
-    buildToolsVersion = project.ext.chimeBuildToolsVersion
     defaultConfig {
         applicationId "com.amazonaws.services.chime.sdkdemo"
         minSdkVersion project.ext.chimeMinSdkVersion
@@ -19,17 +18,21 @@ android {
     }
     buildTypes {
         release {
-            minifyEnabled true
+            minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
+    kotlinOptions {
+        jvmTarget = '17'
     }
     buildFeatures {
         viewBinding true
     }
+    namespace 'com.amazonaws.services.chime.sdkdemo'
 }
 
 dependencies {
