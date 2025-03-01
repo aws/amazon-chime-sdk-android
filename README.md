@@ -101,6 +101,8 @@ If you don't need video and content share functionality, or software video codec
 
 Projects can now build Arm and x86 targets, which may be useful if bundling an app. x86 targets will not function and are not intended to be installed or run on any x86 device or emulator.
 **Important: Only Arm devices are supported.**
+> **Note**:
+For project that has `ndk` configuration for different types of Arm like `arm64_v8a`, `armeabi_v7a`, APK size for normal build will increase in large number as both `.so` files are included in the APK. When notice increase in APK file, it is encouraged to use [APK Analyzer](https://developer.android.com/studio/debug/apk-analyzer) to pin point which part makes the size increase
 
 If you need non-functional x86 stubs combined with fully functional arm architectures in order to bundle your app, you can use `amazon-chime-sdk-media-x86-stub` or `amazon-chime-sdk-media-no-video-codecs-x86-stub` media binaries and substitute them for `amazon-chime-sdk-media` references in the instructions below.
 
