@@ -5,7 +5,7 @@ video.
 
 ## 1. Create a session
 
-The [MeetingSession](https://aws.github.io/amazon-chime-sdk-android/amazon-chime-sdk/com.amazonaws.services.chime.sdk.meetings.session/-meeting-session/index.html) and its [AudioVideoFacade](https://aws.github.io/amazon-chime-sdk-android/amazon-chime-sdk/com.amazonaws.services.chime.sdk.meetings.audiovideo/-audio-video-facade.html) are the starting points for creating meetings. 
+The [MeetingSession](https://aws.github.io/amazon-chime-sdk-android/amazon-chime-sdk/com.amazonaws.services.chime.sdk.meetings.session/-meeting-session/index.html) and its [AudioVideoFacade](https://aws.github.io/amazon-chime-sdk-android/amazon-chime-sdk/com.amazonaws.services.chime.sdk.meetings.audiovideo/-audio-video-facade/index.html) are the starting points for creating meetings. 
 You will need to create a [Logger](https://aws.github.io/amazon-chime-sdk-android/amazon-chime-sdk/com.amazonaws.services.chime.sdk.meetings.utils.logger/-logger/index.html) and [MeetingSessionConfiguration](https://aws.github.io/amazon-chime-sdk-android/amazon-chime-sdk/com.amazonaws.services.chime.sdk.meetings.session/-meeting-session-configuration/index.html) before creating a meeting
 session.
 
@@ -223,7 +223,7 @@ The video tile state is represented by a [VideoPauseState](https://aws.github.io
 ### 8e. Binding a video tile to a video view
 
 To display video, you will also need to bind a video view to a video tile. Create a 
-[VideoRenderView](https://aws.github.io/amazon-chime-sdk-android/amazon-chime-sdk/com.amazonaws.services.chime.sdk.meetings.audiovideo.video/-video-render-view.html) and bind that view to the video tile in VideoTileObserver's `onVideoTileAdded` 
+[VideoRenderView](https://aws.github.io/amazon-chime-sdk-android/amazon-chime-sdk/com.amazonaws.services.chime.sdk.meetings.audiovideo.video/-video-render-view/index.html) and bind that view to the video tile in VideoTileObserver's `onVideoTileAdded` 
 method. You can use [DefaultVideoRenderView](https://aws.github.io/amazon-chime-sdk-android/amazon-chime-sdk/com.amazonaws.services.chime.sdk.meetings.audiovideo.video/-default-video-render-view/index.html) or customize the behavior by implementing the
 VideoRenderView interface.
 
@@ -359,4 +359,4 @@ Content share metrics will be prefixed by `contentShare`. Or you can use the [is
 
 ## 14. Configuring Remote Video Subscriptions (optional)
 
-Amazon Chime SDK allows builders to have complete control over the remote videos received by each of their application’s end-users. This can be accomplished using the API [AudioVideoFacade.updateVideoSourceSubscriptions](https://aws.github.io/amazon-chime-sdk-android/amazon-chime-sdk/com.amazonaws.services.chime.sdk.meetings.audiovideo/-default-audio-video-facade/update-video-source-subscriptions.html). See [Configuring Remote Video Subscriptions](guides/configuring_remote_video_subscription.md) for more information.
+Amazon Chime SDK allows builders to have complete control over the remote videos received by each of their application’s end-users. This can be accomplished using the API [AudioVideoFacade.updateVideoSourceSubscriptions](https://aws.github.io/amazon-chime-sdk-android/amazon-chime-sdk/com.amazonaws.services.chime.sdk.meetings.audiovideo/-default-audio-video-facade/update-video-source-subscriptions.html). See [Configuring Remote Video Subscriptions](configuring_remote_video_subscription.md) for more information.

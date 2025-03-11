@@ -47,7 +47,7 @@ private val PERMISSIONS = arrayOf(
 
 ActivityCompat.requestPermissions(applicationContext, PERMISSIONS, PERMISSION_REQUEST_CODE)
 ```
-You are now ready to integrate with the Amazon Chime SDK for Android. Next we will walk you through the key APIs in order to have a basic audio, video and screen share viewing experience. You can refer to the [API overview](guides/api_overview.md) or the [API document](https://aws.github.io/amazon-chime-sdk-android/amazon-chime-sdk/) for additional details.
+You are now ready to integrate with the Amazon Chime SDK for Android. Next we will walk you through the key APIs in order to have a basic audio, video and screen share viewing experience. You can refer to the [API overview](api_overview.md) or the [API document](https://aws.github.io/amazon-chime-sdk-android/amazon-chime-sdk/) for additional details.
 
 ## Create a meeting session
 
