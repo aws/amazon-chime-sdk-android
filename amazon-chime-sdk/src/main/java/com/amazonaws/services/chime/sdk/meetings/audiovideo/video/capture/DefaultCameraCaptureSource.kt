@@ -100,9 +100,13 @@ class DefaultCameraCaptureSource @JvmOverloads constructor(
         }
 
     init {
-        // Load library so that some of webrtc definition is linked properly
-        System.loadLibrary("amazon_chime_media_client")
-        val thread = HandlerThread("DefaultCameraCaptureSource")
+        try {
+            // Load library so that some of webrtc definition is linked properly
+            System.loadLibrary("amazon_chime_media_client")
+        } catch (e: UnsatisfiedLinkError) {
+            logger.error(TAG, "Unable to load native media libraries: ${e.localizedMessage}")
+        }
+        val thread = HandlerThread(TAG)
         thread.start()
         handler = Handler(thread.looper)
     }
