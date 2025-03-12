@@ -83,8 +83,13 @@ class DefaultAudioClientObserver(
     override var primaryMeetingPromotionObserver: PrimaryMeetingPromotionObserver? = null
 
     override fun onAudioClientStateChange(newInternalAudioState: Int, newInternalAudioStatus: Int) {
-        val newAudioState: SessionStateControllerAction = toAudioClientState(newInternalAudioState)
+        var newAudioState: SessionStateControllerAction = toAudioClientState(newInternalAudioState)
         val newAudioStatus: MeetingSessionStatusCode? = toAudioStatus(newInternalAudioStatus)
+
+        if (newAudioStatus == MeetingSessionStatusCode.AudioServerHungup ||
+            newAudioStatus == MeetingSessionStatusCode.AudioJoinedFromAnotherDevice) {
+            newAudioState = SessionStateControllerAction.FinishDisconnecting
+        }
 
         if (newAudioStatus == null) {
             logger.warn(
@@ -140,8 +145,22 @@ class DefaultAudioClientObserver(
                 }
             }
             SessionStateControllerAction.FinishDisconnecting -> {
-                if (currentAudioState == SessionStateControllerAction.Reconnecting) {
-                    notifyAudioClientObserver { observer -> observer.onAudioSessionCancelledReconnect() }
+                when (currentAudioState) {
+                    SessionStateControllerAction.Connecting,
+                    SessionStateControllerAction.FinishConnecting -> {
+                        if (newAudioStatus == MeetingSessionStatusCode.AudioServerHungup ||
+                            newAudioStatus == MeetingSessionStatusCode.AudioJoinedFromAnotherDevice) {
+                            handleAudioSessionEndedByServer(newAudioStatus)
+                        }
+                    }
+                    SessionStateControllerAction.Reconnecting -> {
+                        notifyAudioClientObserver { observer -> observer.onAudioSessionCancelledReconnect() }
+                        if (newAudioStatus == MeetingSessionStatusCode.AudioServerHungup ||
+                            newAudioStatus == MeetingSessionStatusCode.AudioJoinedFromAnotherDevice) {
+                            handleAudioSessionEndedByServer(newAudioStatus)
+                        }
+                    }
+                    else -> Unit
                 }
             }
             SessionStateControllerAction.Fail -> {
@@ -518,8 +537,8 @@ class DefaultAudioClientObserver(
             AudioClient.AUDIO_CLIENT_STATE_DISCONNECTING -> SessionStateControllerAction.Disconnecting
             AudioClient.AUDIO_CLIENT_STATE_DISCONNECTED_NORMAL -> SessionStateControllerAction.FinishDisconnecting
             AudioClient.AUDIO_CLIENT_STATE_FAILED_TO_CONNECT,
-            AudioClient.AUDIO_CLIENT_STATE_DISCONNECTED_ABNORMAL,
-            AudioClient.AUDIO_CLIENT_STATE_SERVER_HUNGUP -> SessionStateControllerAction.Fail
+            AudioClient.AUDIO_CLIENT_STATE_SERVER_HUNGUP,
+            AudioClient.AUDIO_CLIENT_STATE_DISCONNECTED_ABNORMAL -> SessionStateControllerAction.Fail
             else -> SessionStateControllerAction.Unknown
         }
     }
