@@ -158,6 +158,8 @@ class DefaultAudioClientObserverTest {
         audioClientObserver.audioClient = mockAudioClient
         every { mockConfiguration.credentials.attendeeId } returns testIdLocal
         every { mockConfiguration.credentials.externalUserId } returns testIdLocal
+        every { mockAudioClient.stopSession() } returns 0
+        DefaultAudioClientController.audioClientState = AudioClientState.STARTED
 
         Dispatchers.setMain(testDispatcher)
     }
@@ -168,12 +170,16 @@ class DefaultAudioClientObserverTest {
         testDispatcher.cleanupTestCoroutines()
     }
 
+    // notifyAudioClientObserver tests
+
     @Test
     fun `notifyAudioClientObserver should notify added observers`() {
         audioClientObserver.notifyAudioClientObserver(testObserverFun)
 
         verify(exactly = 1) { mockAudioVideoObserver.onAudioSessionStartedConnecting(any()) }
     }
+
+    // unsubscribeFromAudioClientStateChange tests
 
     @Test
     fun `unsubscribeFromAudioClientStateChange should result in no notification`() {
@@ -183,6 +189,8 @@ class DefaultAudioClientObserverTest {
 
         verifyAudioVideoObserverIsNotNotified()
     }
+
+    // onAttendeesPresenceChange tests
 
     @Test
     fun `onAttendeesPresenceChange should NOT notify about attendee presence events when NO attendees updates`() {
@@ -371,6 +379,8 @@ class DefaultAudioClientObserverTest {
         verify(exactly = 1) { mockRealtimeObserver.onAttendeesJoined(expectedArgs) }
     }
 
+    // onVolumeStateChange tests
+
     @Test
     fun `onVolumeStateChange should notify added observers`() {
         audioClientObserver.onVolumeStateChange(arrayOf(testAttendeeVolumeUpdate))
@@ -411,6 +421,8 @@ class DefaultAudioClientObserverTest {
         }
     }
 
+    // onVolumeChange tests
+
     @Test
     fun `onVolumeChange should send remote attendee event when it has an empty externalUserId`() {
         val testInput = arrayOf(
@@ -439,6 +451,8 @@ class DefaultAudioClientObserverTest {
 
         verify(exactly = 1) { mockRealtimeObserver.onVolumeChanged(expectedArgs) }
     }
+
+    // onSignalStrengthChange tests
 
     @Test
     fun `onSignalStrengthChange should notify added observers`() {
@@ -526,6 +540,8 @@ class DefaultAudioClientObserverTest {
         verify(exactly = 1) { mockRealtimeObserver.onSignalStrengthChanged(expectedArgs) }
     }
 
+    // onVolumeStateChange tests
+
     @Test
     fun `onVolumeStateChange should notify about attendee mute when newly muted attendees`() {
         audioClientObserver.onVolumeStateChange(arrayOf(testAttendeeVolumeMuted))
@@ -569,6 +585,8 @@ class DefaultAudioClientObserverTest {
 
         verify(exactly = 1) { mockRealtimeObserver.onVolumeChanged(expectedArgs) }
     }
+
+    // onTranscriptEventsReceived tests
 
     @Test
     fun `onTranscriptEventsReceived should do nothing if transcript events is sent as null`() {
@@ -885,6 +903,8 @@ class DefaultAudioClientObserverTest {
         verify(exactly = 0) { mockTranscriptEventObserver.onTranscriptEventReceived(any()) }
     }
 
+    // unsubscribeFromRealTimeEvents tests
+
     @Test
     fun `unsubscribeFromRealTimeEvents should result in no notification`() {
         audioClientObserver.unsubscribeFromRealTimeEvents(mockRealtimeObserver)
@@ -901,6 +921,8 @@ class DefaultAudioClientObserverTest {
         verify(exactly = 0) { mockRealtimeObserver.onSignalStrengthChanged(any()) }
     }
 
+    // Common sense tests for onAudioClientStateChange
+
     @Test
     fun `onAudioClientStateChange should NOT notify when new state is UNKNOWN`() {
         runBlockingTest {
@@ -915,6 +937,7 @@ class DefaultAudioClientObserverTest {
 
     @Test
     fun `onAudioClientStateChange should notify of session started event when finished connecting`() {
+
         runBlockingTest {
             audioClientObserver.onAudioClientStateChange(
                 AudioClient.AUDIO_CLIENT_STATE_CONNECTING,
@@ -932,6 +955,7 @@ class DefaultAudioClientObserverTest {
 
     @Test
     fun `onAudioClientStateChange should publish meeting start event when finished connecting`() {
+
         runBlockingTest {
             audioClientObserver.onAudioClientStateChange(
                 AudioClient.AUDIO_CLIENT_STATE_CONNECTING,
@@ -950,6 +974,7 @@ class DefaultAudioClientObserverTest {
 
     @Test
     fun `onAudioClientStateChange should should publish meeting start event when finished reconnecting`() {
+
         runBlockingTest {
             audioClientObserver.onAudioClientStateChange(
                 AudioClient.AUDIO_CLIENT_STATE_RECONNECTING,
@@ -970,6 +995,7 @@ class DefaultAudioClientObserverTest {
 
     @Test
     fun `onAudioClientStateChange should notify of session reconnected event when finished reconnecting`() {
+
         runBlockingTest {
             audioClientObserver.onAudioClientStateChange(
                 AudioClient.AUDIO_CLIENT_STATE_RECONNECTING,
@@ -987,6 +1013,7 @@ class DefaultAudioClientObserverTest {
 
     @Test
     fun `onAudioClientStateChange should notify of session reconnect event when start reconnecting`() {
+
         runBlockingTest {
             audioClientObserver.onAudioClientStateChange(
                 AudioClient.AUDIO_CLIENT_STATE_CONNECTED,
@@ -1004,6 +1031,7 @@ class DefaultAudioClientObserverTest {
 
     @Test
     fun `onAudioClientStateChange should increment poor connection count`() {
+
         runBlockingTest {
             audioClientObserver.onAudioClientStateChange(
                 AudioClient.AUDIO_CLIENT_STATE_CONNECTED,
@@ -1021,6 +1049,7 @@ class DefaultAudioClientObserverTest {
 
     @Test
     fun `onAudioClientStateChange should notify of poor connection event when status changed to poor network`() {
+
         runBlockingTest {
             audioClientObserver.onAudioClientStateChange(
                 AudioClient.AUDIO_CLIENT_STATE_CONNECTED,
@@ -1038,6 +1067,7 @@ class DefaultAudioClientObserverTest {
 
     @Test
     fun `onAudioClientStateChange should notify of connection recover event when status changed from poor network`() {
+
         runBlockingTest {
             audioClientObserver.onAudioClientStateChange(
                 AudioClient.AUDIO_CLIENT_STATE_CONNECTED,
@@ -1055,6 +1085,7 @@ class DefaultAudioClientObserverTest {
 
     @Test
     fun `onAudioClientStateChange should notify of session reconnect cancel event when cancelling reconnect`() {
+
         runBlockingTest {
             audioClientObserver.onAudioClientStateChange(
                 AudioClient.AUDIO_CLIENT_STATE_RECONNECTING,
@@ -1072,6 +1103,7 @@ class DefaultAudioClientObserverTest {
 
     @Test
     fun `onAudioClientStateChange should not notify of session stop event when disconnected`() {
+
         runBlockingTest {
             audioClientObserver.onAudioClientStateChange(
                 AudioClient.AUDIO_CLIENT_STATE_CONNECTING,
@@ -1088,7 +1120,6 @@ class DefaultAudioClientObserverTest {
 
     @Test
     fun `onAudioClientStateChange should stop session and notify of session stop event when failure while connecting`() {
-        every { mockAudioClient.stopSession() } returns 0
 
         runBlockingTest {
             audioClientObserver.onAudioClientStateChange(
@@ -1107,7 +1138,6 @@ class DefaultAudioClientObserverTest {
     }
 
     fun `onAudioClientStateChange should stop session and notify of session stop event when finish disconnecting while connecting`() {
-        every { mockAudioClient.stopSession() } returns 0
 
         runBlockingTest {
             audioClientObserver.onAudioClientStateChange(
@@ -1127,7 +1157,6 @@ class DefaultAudioClientObserverTest {
     }
 
     fun `onAudioClientStateChange should stop session and notify of session stop event when finish disconnecting while connected`() {
-        every { mockAudioClient.stopSession() } returns 0
 
         runBlockingTest {
             audioClientObserver.onAudioClientStateChange(
@@ -1147,6 +1176,7 @@ class DefaultAudioClientObserverTest {
     }
 
     fun `onAudioClientStateChange should stop session and notify of session stop event when finish disconnecting while reconnecting`() {
+
         runBlockingTest {
             audioClientObserver.onAudioClientStateChange(
                 AudioClient.AUDIO_CLIENT_STATE_RECONNECTING,
@@ -1166,7 +1196,6 @@ class DefaultAudioClientObserverTest {
 
     @Test
     fun `onAudioClientStateChange should notify of session fail event to EventAnalyticsController when failed to connect`() {
-        every { mockAudioClient.stopSession() } returns 0
 
         runBlockingTest {
             audioClientObserver.onAudioClientStateChange(
@@ -1187,7 +1216,6 @@ class DefaultAudioClientObserverTest {
 
     @Test
     fun `onAudioClientStateChange should stop session and notify of session stop event when failure while reconnecting`() {
-        every { mockAudioClient.stopSession() } returns 0
 
         runBlockingTest {
             audioClientObserver.onAudioClientStateChange(
@@ -1206,7 +1234,6 @@ class DefaultAudioClientObserverTest {
 
     @Test
     fun `onAudioClientStateChange should stop session and notify of session stop event when input device is not responding`() {
-        every { mockAudioClient.stopSession() } returns 0
 
         runBlockingTest {
             audioClientObserver.onAudioClientStateChange(
@@ -1227,7 +1254,6 @@ class DefaultAudioClientObserverTest {
 
     @Test
     fun `onAudioClientStateChange should stop session and notify of session stop event when output device is not responding`() {
-        every { mockAudioClient.stopSession() } returns 0
 
         runBlockingTest {
             audioClientObserver.onAudioClientStateChange(
@@ -1248,6 +1274,7 @@ class DefaultAudioClientObserverTest {
 
     @Test
     fun `onAudioClientStateChange should NOT notify when state and status is unchanged`() {
+
         runBlockingTest {
             audioClientObserver.onAudioClientStateChange(
                 SessionStateControllerAction.Init.value,
@@ -1257,6 +1284,1579 @@ class DefaultAudioClientObserverTest {
 
         verifyAudioVideoObserverIsNotNotified()
     }
+
+    // onAudioClientStateChange tests for all remaining combinations of status and state
+    @Test
+    fun `onAudioClientStateChange should behave as expected when transitioning from connected ok to unknown ok`() {
+
+        runBlockingTest {
+            audioClientObserver.onAudioClientStateChange(
+                AudioClient.AUDIO_CLIENT_STATE_CONNECTED,
+                AudioClient.AUDIO_CLIENT_OK
+            )
+
+            audioClientObserver.onAudioClientStateChange(
+                AudioClient.AUDIO_CLIENT_STATE_UNKNOWN,
+                AudioClient.AUDIO_CLIENT_OK
+            )
+        }
+
+        verifyAudioVideoObserverIsNotNotified()
+        verify(exactly = 0) { mockEventAnalyticsController.publishEvent(any()) }
+    }
+    @Test
+    fun `onAudioClientStateChange should behave as expected when transitioning from connected ok to init ok`() {
+
+        runBlockingTest {
+            audioClientObserver.onAudioClientStateChange(
+                AudioClient.AUDIO_CLIENT_STATE_CONNECTED,
+                AudioClient.AUDIO_CLIENT_OK
+            )
+
+            audioClientObserver.onAudioClientStateChange(
+                AudioClient.AUDIO_CLIENT_STATE_INIT,
+                AudioClient.AUDIO_CLIENT_OK
+            )
+        }
+
+        verifyNoop()
+    }
+    @Test
+    fun `onAudioClientStateChange should behave as expected when transitioning from connected ok to connecting ok`() {
+
+        runBlockingTest {
+            audioClientObserver.onAudioClientStateChange(
+                AudioClient.AUDIO_CLIENT_STATE_CONNECTED,
+                AudioClient.AUDIO_CLIENT_OK
+            )
+
+            audioClientObserver.onAudioClientStateChange(
+                AudioClient.AUDIO_CLIENT_STATE_CONNECTING,
+                AudioClient.AUDIO_CLIENT_OK
+            )
+        }
+
+        verifyNoop()
+    }
+    @Test
+    fun `onAudioClientStateChange should behave as expected when transitioning from connected ok to failed ok`() {
+
+        runBlockingTest {
+            audioClientObserver.onAudioClientStateChange(
+                AudioClient.AUDIO_CLIENT_STATE_CONNECTED,
+                AudioClient.AUDIO_CLIENT_OK
+            )
+
+            audioClientObserver.onAudioClientStateChange(
+                AudioClient.AUDIO_CLIENT_STATE_FAILED_TO_CONNECT,
+                AudioClient.AUDIO_CLIENT_OK
+            )
+        }
+        verifyFailed(MeetingSessionStatusCode.OK)
+    }
+    @Test
+    fun `onAudioClientStateChange should behave as expected when transitioning from connected ok to disconnecting ok`() {
+
+        runBlockingTest {
+            audioClientObserver.onAudioClientStateChange(
+                AudioClient.AUDIO_CLIENT_STATE_CONNECTED,
+                AudioClient.AUDIO_CLIENT_OK
+            )
+
+            audioClientObserver.onAudioClientStateChange(
+                AudioClient.AUDIO_CLIENT_STATE_DISCONNECTING,
+                AudioClient.AUDIO_CLIENT_OK
+            )
+        }
+        verifyNoop()
+    }
+    @Test
+    fun `onAudioClientStateChange should behave as expected when transitioning from connected ok to disconnected normal ok`() {
+
+        runBlockingTest {
+            audioClientObserver.onAudioClientStateChange(
+                AudioClient.AUDIO_CLIENT_STATE_CONNECTED,
+                AudioClient.AUDIO_CLIENT_OK
+            )
+
+            audioClientObserver.onAudioClientStateChange(
+                AudioClient.AUDIO_CLIENT_STATE_DISCONNECTED_NORMAL,
+                AudioClient.AUDIO_CLIENT_OK
+            )
+        }
+        verifyNoop()
+    }
+    @Test
+    fun `onAudioClientStateChange should behave as expected when transitioning from connected ok to disconnected abnormal ok`() {
+
+        runBlockingTest {
+            audioClientObserver.onAudioClientStateChange(
+                AudioClient.AUDIO_CLIENT_STATE_CONNECTED,
+                AudioClient.AUDIO_CLIENT_OK
+            )
+
+            audioClientObserver.onAudioClientStateChange(
+                AudioClient.AUDIO_CLIENT_STATE_DISCONNECTED_ABNORMAL,
+                AudioClient.AUDIO_CLIENT_OK
+            )
+        }
+        verifyFailed(MeetingSessionStatusCode.OK)
+    }
+    @Test
+    fun `onAudioClientStateChange should behave as expected when transitioning from connected ok to server hungup ok`() {
+
+        runBlockingTest {
+            audioClientObserver.onAudioClientStateChange(
+                AudioClient.AUDIO_CLIENT_STATE_CONNECTED,
+                AudioClient.AUDIO_CLIENT_OK
+            )
+
+            audioClientObserver.onAudioClientStateChange(
+                AudioClient.AUDIO_CLIENT_STATE_SERVER_HUNGUP,
+                AudioClient.AUDIO_CLIENT_OK
+            )
+        }
+        verifyFailed(MeetingSessionStatusCode.OK)
+    }
+
+    @Test
+    fun `onAudioClientStateChange should behave as expected when transitioning from connected ok to unknown network not good enough for voip`() {
+
+        runBlockingTest {
+            audioClientObserver.onAudioClientStateChange(
+                AudioClient.AUDIO_CLIENT_STATE_CONNECTED,
+                AudioClient.AUDIO_CLIENT_OK
+            )
+
+            audioClientObserver.onAudioClientStateChange(
+                AudioClient.AUDIO_CLIENT_STATE_UNKNOWN,
+                AudioClient.AUDIO_CLIENT_STATUS_NETWORK_IS_NOT_GOOD_ENOUGH_FOR_VOIP
+            )
+        }
+
+        verifyNoop()
+    }
+    @Test
+    fun `onAudioClientStateChange should behave as expected when transitioning from connected ok to init network not good enough for voip`() {
+
+        runBlockingTest {
+            audioClientObserver.onAudioClientStateChange(
+                AudioClient.AUDIO_CLIENT_STATE_CONNECTED,
+                AudioClient.AUDIO_CLIENT_OK
+            )
+
+            audioClientObserver.onAudioClientStateChange(
+                AudioClient.AUDIO_CLIENT_STATE_INIT,
+                AudioClient.AUDIO_CLIENT_STATUS_NETWORK_IS_NOT_GOOD_ENOUGH_FOR_VOIP
+            )
+        }
+
+        verifyNoop()
+    }
+    @Test
+    fun `onAudioClientStateChange should behave as expected when transitioning from connected ok to connecting network not good enough for voip`() {
+
+        runBlockingTest {
+            audioClientObserver.onAudioClientStateChange(
+                AudioClient.AUDIO_CLIENT_STATE_CONNECTED,
+                AudioClient.AUDIO_CLIENT_OK
+            )
+
+            audioClientObserver.onAudioClientStateChange(
+                AudioClient.AUDIO_CLIENT_STATE_CONNECTING,
+                AudioClient.AUDIO_CLIENT_STATUS_NETWORK_IS_NOT_GOOD_ENOUGH_FOR_VOIP
+            )
+        }
+
+        verifyNoop()
+    }
+    @Test
+    fun `onAudioClientStateChange should behave as expected when transitioning from connected ok to failed network not good enough for voip`() {
+
+        runBlockingTest {
+            audioClientObserver.onAudioClientStateChange(
+                AudioClient.AUDIO_CLIENT_STATE_CONNECTED,
+                AudioClient.AUDIO_CLIENT_OK
+            )
+
+            audioClientObserver.onAudioClientStateChange(
+                AudioClient.AUDIO_CLIENT_STATE_FAILED_TO_CONNECT,
+                AudioClient.AUDIO_CLIENT_STATUS_NETWORK_IS_NOT_GOOD_ENOUGH_FOR_VOIP
+            )
+        }
+        verifyFailed(MeetingSessionStatusCode.NetworkBecamePoor)
+    }
+    @Test
+    fun `onAudioClientStateChange should behave as expected when transitioning from connected ok to disconnecting network not good enough for voip`() {
+
+        runBlockingTest {
+            audioClientObserver.onAudioClientStateChange(
+                AudioClient.AUDIO_CLIENT_STATE_CONNECTED,
+                AudioClient.AUDIO_CLIENT_OK
+            )
+
+            audioClientObserver.onAudioClientStateChange(
+                AudioClient.AUDIO_CLIENT_STATE_DISCONNECTING,
+                AudioClient.AUDIO_CLIENT_STATUS_NETWORK_IS_NOT_GOOD_ENOUGH_FOR_VOIP
+            )
+        }
+        verifyNoop()
+    }
+    @Test
+    fun `onAudioClientStateChange should behave as expected when transitioning from connected ok to disconnected normal network not good enough for voip`() {
+
+        runBlockingTest {
+            audioClientObserver.onAudioClientStateChange(
+                AudioClient.AUDIO_CLIENT_STATE_CONNECTED,
+                AudioClient.AUDIO_CLIENT_OK
+            )
+
+            audioClientObserver.onAudioClientStateChange(
+                AudioClient.AUDIO_CLIENT_STATE_DISCONNECTED_NORMAL,
+                AudioClient.AUDIO_CLIENT_STATUS_NETWORK_IS_NOT_GOOD_ENOUGH_FOR_VOIP
+            )
+        }
+        verifyNoop()
+    }
+    @Test
+    fun `onAudioClientStateChange should behave as expected when transitioning from connected ok to disconnected abnormal network not good enough for voip`() {
+
+        runBlockingTest {
+            audioClientObserver.onAudioClientStateChange(
+                AudioClient.AUDIO_CLIENT_STATE_CONNECTED,
+                AudioClient.AUDIO_CLIENT_OK
+            )
+
+            audioClientObserver.onAudioClientStateChange(
+                AudioClient.AUDIO_CLIENT_STATE_DISCONNECTED_ABNORMAL,
+                AudioClient.AUDIO_CLIENT_STATUS_NETWORK_IS_NOT_GOOD_ENOUGH_FOR_VOIP
+            )
+        }
+        verifyFailed(MeetingSessionStatusCode.NetworkBecamePoor)
+    }
+    @Test
+    fun `onAudioClientStateChange should behave as expected when transitioning from connected ok to server hungup network not good enough for voip`() {
+
+        runBlockingTest {
+            audioClientObserver.onAudioClientStateChange(
+                AudioClient.AUDIO_CLIENT_STATE_CONNECTED,
+                AudioClient.AUDIO_CLIENT_OK
+            )
+
+            audioClientObserver.onAudioClientStateChange(
+                AudioClient.AUDIO_CLIENT_STATE_SERVER_HUNGUP,
+                AudioClient.AUDIO_CLIENT_STATUS_NETWORK_IS_NOT_GOOD_ENOUGH_FOR_VOIP
+            )
+        }
+        verifyFailed(MeetingSessionStatusCode.NetworkBecamePoor)
+    }
+
+    @Test
+    fun `onAudioClientStateChange should behave as expected when transitioning from connected ok to unknown server hungup`() {
+
+        runBlockingTest {
+            audioClientObserver.onAudioClientStateChange(
+                AudioClient.AUDIO_CLIENT_STATE_CONNECTED,
+                AudioClient.AUDIO_CLIENT_OK
+            )
+
+            audioClientObserver.onAudioClientStateChange(
+                AudioClient.AUDIO_CLIENT_STATE_UNKNOWN,
+                AudioClient.AUDIO_CLIENT_ERR_SERVER_HUNGUP
+            )
+        }
+
+        verifyEnded(MeetingSessionStatusCode.AudioServerHungup)
+    }
+    @Test
+    fun `onAudioClientStateChange should behave as expected when transitioning from connected ok to init server hungup`() {
+
+        runBlockingTest {
+            audioClientObserver.onAudioClientStateChange(
+                AudioClient.AUDIO_CLIENT_STATE_CONNECTED,
+                AudioClient.AUDIO_CLIENT_OK
+            )
+
+            audioClientObserver.onAudioClientStateChange(
+                AudioClient.AUDIO_CLIENT_STATE_INIT,
+                AudioClient.AUDIO_CLIENT_ERR_SERVER_HUNGUP
+            )
+        }
+
+        verifyEnded(MeetingSessionStatusCode.AudioServerHungup)
+    }
+    @Test
+    fun `onAudioClientStateChange should behave as expected when transitioning from connected ok to connecting server hungup`() {
+
+        runBlockingTest {
+            audioClientObserver.onAudioClientStateChange(
+                AudioClient.AUDIO_CLIENT_STATE_CONNECTED,
+                AudioClient.AUDIO_CLIENT_OK
+            )
+
+            audioClientObserver.onAudioClientStateChange(
+                AudioClient.AUDIO_CLIENT_STATE_CONNECTING,
+                AudioClient.AUDIO_CLIENT_ERR_SERVER_HUNGUP
+            )
+        }
+
+        verifyEnded(MeetingSessionStatusCode.AudioServerHungup)
+    }
+    @Test
+    fun `onAudioClientStateChange should behave as expected when transitioning from connected ok to failed server hungup`() {
+
+        runBlockingTest {
+            audioClientObserver.onAudioClientStateChange(
+                AudioClient.AUDIO_CLIENT_STATE_CONNECTED,
+                AudioClient.AUDIO_CLIENT_OK
+            )
+
+            audioClientObserver.onAudioClientStateChange(
+                AudioClient.AUDIO_CLIENT_STATE_FAILED_TO_CONNECT,
+                AudioClient.AUDIO_CLIENT_ERR_SERVER_HUNGUP
+            )
+        }
+        verifyEnded(MeetingSessionStatusCode.AudioServerHungup)
+    }
+    @Test
+    fun `onAudioClientStateChange should behave as expected when transitioning from connected ok to disconnecting server hungup`() {
+
+        runBlockingTest {
+            audioClientObserver.onAudioClientStateChange(
+                AudioClient.AUDIO_CLIENT_STATE_CONNECTED,
+                AudioClient.AUDIO_CLIENT_OK
+            )
+
+            audioClientObserver.onAudioClientStateChange(
+                AudioClient.AUDIO_CLIENT_STATE_DISCONNECTING,
+                AudioClient.AUDIO_CLIENT_ERR_SERVER_HUNGUP
+            )
+        }
+        verifyEnded(MeetingSessionStatusCode.AudioServerHungup)
+    }
+    @Test
+    fun `onAudioClientStateChange should behave as expected when transitioning from connected ok to disconnected normal server hungup`() {
+
+        runBlockingTest {
+            audioClientObserver.onAudioClientStateChange(
+                AudioClient.AUDIO_CLIENT_STATE_CONNECTED,
+                AudioClient.AUDIO_CLIENT_OK
+            )
+
+            audioClientObserver.onAudioClientStateChange(
+                AudioClient.AUDIO_CLIENT_STATE_DISCONNECTED_NORMAL,
+                AudioClient.AUDIO_CLIENT_ERR_SERVER_HUNGUP
+            )
+        }
+        verifyEnded(MeetingSessionStatusCode.AudioServerHungup)
+    }
+    @Test
+    fun `onAudioClientStateChange should behave as expected when transitioning from connected ok to disconnected abnormal server hungup`() {
+
+        runBlockingTest {
+            audioClientObserver.onAudioClientStateChange(
+                AudioClient.AUDIO_CLIENT_STATE_CONNECTED,
+                AudioClient.AUDIO_CLIENT_OK
+            )
+
+            audioClientObserver.onAudioClientStateChange(
+                AudioClient.AUDIO_CLIENT_STATE_DISCONNECTED_ABNORMAL,
+                AudioClient.AUDIO_CLIENT_ERR_SERVER_HUNGUP
+            )
+        }
+        verifyEnded(MeetingSessionStatusCode.AudioServerHungup)
+    }
+    @Test
+    fun `onAudioClientStateChange should behave as expected when transitioning from connected ok to server hungup server hungup`() {
+
+        runBlockingTest {
+            audioClientObserver.onAudioClientStateChange(
+                AudioClient.AUDIO_CLIENT_STATE_CONNECTED,
+                AudioClient.AUDIO_CLIENT_OK
+            )
+
+            audioClientObserver.onAudioClientStateChange(
+                AudioClient.AUDIO_CLIENT_STATE_SERVER_HUNGUP,
+                AudioClient.AUDIO_CLIENT_ERR_SERVER_HUNGUP
+            )
+        }
+        verifyEnded(MeetingSessionStatusCode.AudioServerHungup)
+    }
+
+    @Test
+    fun `onAudioClientStateChange should behave as expected when transitioning from connected ok to unknown joined from another device`() {
+
+        runBlockingTest {
+            audioClientObserver.onAudioClientStateChange(
+                AudioClient.AUDIO_CLIENT_STATE_CONNECTED,
+                AudioClient.AUDIO_CLIENT_OK
+            )
+
+            audioClientObserver.onAudioClientStateChange(
+                AudioClient.AUDIO_CLIENT_STATE_UNKNOWN,
+                AudioClient.AUDIO_CLIENT_ERR_JOINED_FROM_ANOTHER_DEVICE
+            )
+        }
+
+        verifyEnded(MeetingSessionStatusCode.AudioJoinedFromAnotherDevice)
+    }
+    @Test
+    fun `onAudioClientStateChange should behave as expected when transitioning from connected ok to init joined from another device`() {
+
+        runBlockingTest {
+            audioClientObserver.onAudioClientStateChange(
+                AudioClient.AUDIO_CLIENT_STATE_CONNECTED,
+                AudioClient.AUDIO_CLIENT_OK
+            )
+
+            audioClientObserver.onAudioClientStateChange(
+                AudioClient.AUDIO_CLIENT_STATE_INIT,
+                AudioClient.AUDIO_CLIENT_ERR_JOINED_FROM_ANOTHER_DEVICE
+            )
+        }
+
+        verifyEnded(MeetingSessionStatusCode.AudioJoinedFromAnotherDevice)
+    }
+    @Test
+    fun `onAudioClientStateChange should behave as expected when transitioning from connected ok to connecting joined from another device`() {
+
+        runBlockingTest {
+            audioClientObserver.onAudioClientStateChange(
+                AudioClient.AUDIO_CLIENT_STATE_CONNECTED,
+                AudioClient.AUDIO_CLIENT_OK
+            )
+
+            audioClientObserver.onAudioClientStateChange(
+                AudioClient.AUDIO_CLIENT_STATE_CONNECTING,
+                AudioClient.AUDIO_CLIENT_ERR_JOINED_FROM_ANOTHER_DEVICE
+            )
+        }
+
+        verifyEnded(MeetingSessionStatusCode.AudioJoinedFromAnotherDevice)
+    }
+    @Test
+    fun `onAudioClientStateChange should behave as expected when transitioning from connected ok to failed joined from another device`() {
+
+        runBlockingTest {
+            audioClientObserver.onAudioClientStateChange(
+                AudioClient.AUDIO_CLIENT_STATE_CONNECTED,
+                AudioClient.AUDIO_CLIENT_OK
+            )
+
+            audioClientObserver.onAudioClientStateChange(
+                AudioClient.AUDIO_CLIENT_STATE_FAILED_TO_CONNECT,
+                AudioClient.AUDIO_CLIENT_ERR_JOINED_FROM_ANOTHER_DEVICE
+            )
+        }
+        verifyEnded(MeetingSessionStatusCode.AudioJoinedFromAnotherDevice)
+    }
+    @Test
+    fun `onAudioClientStateChange should behave as expected when transitioning from connected ok to disconnecting joined from another device`() {
+
+        runBlockingTest {
+            audioClientObserver.onAudioClientStateChange(
+                AudioClient.AUDIO_CLIENT_STATE_CONNECTED,
+                AudioClient.AUDIO_CLIENT_OK
+            )
+
+            audioClientObserver.onAudioClientStateChange(
+                AudioClient.AUDIO_CLIENT_STATE_DISCONNECTING,
+                AudioClient.AUDIO_CLIENT_ERR_JOINED_FROM_ANOTHER_DEVICE
+            )
+        }
+        verifyEnded(MeetingSessionStatusCode.AudioJoinedFromAnotherDevice)
+    }
+    @Test
+    fun `onAudioClientStateChange should behave as expected when transitioning from connected ok to disconnected normal joined from another device`() {
+
+        runBlockingTest {
+            audioClientObserver.onAudioClientStateChange(
+                AudioClient.AUDIO_CLIENT_STATE_CONNECTED,
+                AudioClient.AUDIO_CLIENT_OK
+            )
+
+            audioClientObserver.onAudioClientStateChange(
+                AudioClient.AUDIO_CLIENT_STATE_DISCONNECTED_NORMAL,
+                AudioClient.AUDIO_CLIENT_ERR_JOINED_FROM_ANOTHER_DEVICE
+            )
+        }
+        verifyEnded(MeetingSessionStatusCode.AudioJoinedFromAnotherDevice)
+    }
+    @Test
+    fun `onAudioClientStateChange should behave as expected when transitioning from connected ok to disconnected abnormal joined from another device`() {
+
+        runBlockingTest {
+            audioClientObserver.onAudioClientStateChange(
+                AudioClient.AUDIO_CLIENT_STATE_CONNECTED,
+                AudioClient.AUDIO_CLIENT_OK
+            )
+
+            audioClientObserver.onAudioClientStateChange(
+                AudioClient.AUDIO_CLIENT_STATE_DISCONNECTED_ABNORMAL,
+                AudioClient.AUDIO_CLIENT_ERR_JOINED_FROM_ANOTHER_DEVICE
+            )
+        }
+        verifyEnded(MeetingSessionStatusCode.AudioJoinedFromAnotherDevice)
+    }
+    @Test
+    fun `onAudioClientStateChange should behave as expected when transitioning from connected ok to server hungup joined from another device`() {
+
+        runBlockingTest {
+            audioClientObserver.onAudioClientStateChange(
+                AudioClient.AUDIO_CLIENT_STATE_CONNECTED,
+                AudioClient.AUDIO_CLIENT_OK
+            )
+
+            audioClientObserver.onAudioClientStateChange(
+                AudioClient.AUDIO_CLIENT_STATE_SERVER_HUNGUP,
+                AudioClient.AUDIO_CLIENT_ERR_JOINED_FROM_ANOTHER_DEVICE
+            )
+        }
+        verifyEnded(MeetingSessionStatusCode.AudioJoinedFromAnotherDevice)
+    }
+
+    @Test
+    fun `onAudioClientStateChange should behave as expected when transitioning from connected ok to unknown internal server error`() {
+
+        runBlockingTest {
+            audioClientObserver.onAudioClientStateChange(
+                AudioClient.AUDIO_CLIENT_STATE_CONNECTED,
+                AudioClient.AUDIO_CLIENT_OK
+            )
+
+            audioClientObserver.onAudioClientStateChange(
+                AudioClient.AUDIO_CLIENT_STATE_UNKNOWN,
+                AudioClient.AUDIO_CLIENT_ERR_INTERNAL_SERVER_ERROR
+            )
+        }
+
+        verifyNoop()
+    }
+    @Test
+    fun `onAudioClientStateChange should behave as expected when transitioning from connected ok to init internal server error`() {
+
+        runBlockingTest {
+            audioClientObserver.onAudioClientStateChange(
+                AudioClient.AUDIO_CLIENT_STATE_CONNECTED,
+                AudioClient.AUDIO_CLIENT_OK
+            )
+
+            audioClientObserver.onAudioClientStateChange(
+                AudioClient.AUDIO_CLIENT_STATE_INIT,
+                AudioClient.AUDIO_CLIENT_ERR_INTERNAL_SERVER_ERROR
+            )
+        }
+
+        verifyNoop()
+    }
+    @Test
+    fun `onAudioClientStateChange should behave as expected when transitioning from connected ok to connecting internal server error`() {
+
+        runBlockingTest {
+            audioClientObserver.onAudioClientStateChange(
+                AudioClient.AUDIO_CLIENT_STATE_CONNECTED,
+                AudioClient.AUDIO_CLIENT_OK
+            )
+
+            audioClientObserver.onAudioClientStateChange(
+                AudioClient.AUDIO_CLIENT_STATE_CONNECTING,
+                AudioClient.AUDIO_CLIENT_ERR_INTERNAL_SERVER_ERROR
+            )
+        }
+
+        verifyNoop()
+    }
+    @Test
+    fun `onAudioClientStateChange should behave as expected when transitioning from connected ok to failed internal server error`() {
+
+        runBlockingTest {
+            audioClientObserver.onAudioClientStateChange(
+                AudioClient.AUDIO_CLIENT_STATE_CONNECTED,
+                AudioClient.AUDIO_CLIENT_OK
+            )
+
+            audioClientObserver.onAudioClientStateChange(
+                AudioClient.AUDIO_CLIENT_STATE_FAILED_TO_CONNECT,
+                AudioClient.AUDIO_CLIENT_ERR_INTERNAL_SERVER_ERROR
+            )
+        }
+        verifyFailed(MeetingSessionStatusCode.AudioInternalServerError)
+    }
+    @Test
+    fun `onAudioClientStateChange should behave as expected when transitioning from connected ok to disconnecting internal server error`() {
+
+        runBlockingTest {
+            audioClientObserver.onAudioClientStateChange(
+                AudioClient.AUDIO_CLIENT_STATE_CONNECTED,
+                AudioClient.AUDIO_CLIENT_OK
+            )
+
+            audioClientObserver.onAudioClientStateChange(
+                AudioClient.AUDIO_CLIENT_STATE_DISCONNECTING,
+                AudioClient.AUDIO_CLIENT_ERR_INTERNAL_SERVER_ERROR
+            )
+        }
+        verifyNoop()
+    }
+    @Test
+    fun `onAudioClientStateChange should behave as expected when transitioning from connected ok to disconnected normal internal server error`() {
+
+        runBlockingTest {
+            audioClientObserver.onAudioClientStateChange(
+                AudioClient.AUDIO_CLIENT_STATE_CONNECTED,
+                AudioClient.AUDIO_CLIENT_OK
+            )
+
+            audioClientObserver.onAudioClientStateChange(
+                AudioClient.AUDIO_CLIENT_STATE_DISCONNECTED_NORMAL,
+                AudioClient.AUDIO_CLIENT_ERR_INTERNAL_SERVER_ERROR
+            )
+        }
+        verifyNoop()
+    }
+    @Test
+    fun `onAudioClientStateChange should behave as expected when transitioning from connected ok to disconnected abnormal internal server error`() {
+
+        runBlockingTest {
+            audioClientObserver.onAudioClientStateChange(
+                AudioClient.AUDIO_CLIENT_STATE_CONNECTED,
+                AudioClient.AUDIO_CLIENT_OK
+            )
+
+            audioClientObserver.onAudioClientStateChange(
+                AudioClient.AUDIO_CLIENT_STATE_DISCONNECTED_ABNORMAL,
+                AudioClient.AUDIO_CLIENT_ERR_INTERNAL_SERVER_ERROR
+            )
+        }
+        verifyFailed(MeetingSessionStatusCode.AudioInternalServerError)
+    }
+    @Test
+    fun `onAudioClientStateChange should behave as expected when transitioning from connected ok to server hungup internal server error`() {
+
+        runBlockingTest {
+            audioClientObserver.onAudioClientStateChange(
+                AudioClient.AUDIO_CLIENT_STATE_CONNECTED,
+                AudioClient.AUDIO_CLIENT_OK
+            )
+
+            audioClientObserver.onAudioClientStateChange(
+                AudioClient.AUDIO_CLIENT_STATE_SERVER_HUNGUP,
+                AudioClient.AUDIO_CLIENT_ERR_INTERNAL_SERVER_ERROR
+            )
+        }
+        verifyFailed(MeetingSessionStatusCode.AudioInternalServerError)
+    }
+
+    @Test
+    fun `onAudioClientStateChange should behave as expected when transitioning from connected ok to unknown auth rejected`() {
+
+        runBlockingTest {
+            audioClientObserver.onAudioClientStateChange(
+                AudioClient.AUDIO_CLIENT_STATE_CONNECTED,
+                AudioClient.AUDIO_CLIENT_OK
+            )
+
+            audioClientObserver.onAudioClientStateChange(
+                AudioClient.AUDIO_CLIENT_STATE_UNKNOWN,
+                AudioClient.AUDIO_CLIENT_ERR_AUTH_REJECTED
+            )
+        }
+
+        verifyNoop()
+    }
+    @Test
+    fun `onAudioClientStateChange should behave as expected when transitioning from connected ok to init auth rejected`() {
+
+        runBlockingTest {
+            audioClientObserver.onAudioClientStateChange(
+                AudioClient.AUDIO_CLIENT_STATE_CONNECTED,
+                AudioClient.AUDIO_CLIENT_OK
+            )
+
+            audioClientObserver.onAudioClientStateChange(
+                AudioClient.AUDIO_CLIENT_STATE_INIT,
+                AudioClient.AUDIO_CLIENT_ERR_AUTH_REJECTED
+            )
+        }
+
+        verifyNoop()
+    }
+    @Test
+    fun `onAudioClientStateChange should behave as expected when transitioning from connected ok to connecting auth rejected`() {
+
+        runBlockingTest {
+            audioClientObserver.onAudioClientStateChange(
+                AudioClient.AUDIO_CLIENT_STATE_CONNECTED,
+                AudioClient.AUDIO_CLIENT_OK
+            )
+
+            audioClientObserver.onAudioClientStateChange(
+                AudioClient.AUDIO_CLIENT_STATE_CONNECTING,
+                AudioClient.AUDIO_CLIENT_ERR_AUTH_REJECTED
+            )
+        }
+
+        verifyNoop()
+    }
+    @Test
+    fun `onAudioClientStateChange should behave as expected when transitioning from connected ok to failed auth rejected`() {
+
+        runBlockingTest {
+            audioClientObserver.onAudioClientStateChange(
+                AudioClient.AUDIO_CLIENT_STATE_CONNECTED,
+                AudioClient.AUDIO_CLIENT_OK
+            )
+
+            audioClientObserver.onAudioClientStateChange(
+                AudioClient.AUDIO_CLIENT_STATE_FAILED_TO_CONNECT,
+                AudioClient.AUDIO_CLIENT_ERR_AUTH_REJECTED
+            )
+        }
+        verifyFailed(MeetingSessionStatusCode.AudioAuthenticationRejected)
+    }
+    @Test
+    fun `onAudioClientStateChange should behave as expected when transitioning from connected ok to disconnecting auth rejected`() {
+
+        runBlockingTest {
+            audioClientObserver.onAudioClientStateChange(
+                AudioClient.AUDIO_CLIENT_STATE_CONNECTED,
+                AudioClient.AUDIO_CLIENT_OK
+            )
+
+            audioClientObserver.onAudioClientStateChange(
+                AudioClient.AUDIO_CLIENT_STATE_DISCONNECTING,
+                AudioClient.AUDIO_CLIENT_ERR_AUTH_REJECTED
+            )
+        }
+        verifyNoop()
+    }
+    @Test
+    fun `onAudioClientStateChange should behave as expected when transitioning from connected ok to disconnected normal auth rejected`() {
+
+        runBlockingTest {
+            audioClientObserver.onAudioClientStateChange(
+                AudioClient.AUDIO_CLIENT_STATE_CONNECTED,
+                AudioClient.AUDIO_CLIENT_OK
+            )
+
+            audioClientObserver.onAudioClientStateChange(
+                AudioClient.AUDIO_CLIENT_STATE_DISCONNECTED_NORMAL,
+                AudioClient.AUDIO_CLIENT_ERR_AUTH_REJECTED
+            )
+        }
+        verifyNoop()
+    }
+    @Test
+    fun `onAudioClientStateChange should behave as expected when transitioning from connected ok to disconnected abnormal auth rejected`() {
+
+        runBlockingTest {
+            audioClientObserver.onAudioClientStateChange(
+                AudioClient.AUDIO_CLIENT_STATE_CONNECTED,
+                AudioClient.AUDIO_CLIENT_OK
+            )
+
+            audioClientObserver.onAudioClientStateChange(
+                AudioClient.AUDIO_CLIENT_STATE_DISCONNECTED_ABNORMAL,
+                AudioClient.AUDIO_CLIENT_ERR_AUTH_REJECTED
+            )
+        }
+        verifyFailed(MeetingSessionStatusCode.AudioAuthenticationRejected)
+    }
+    @Test
+    fun `onAudioClientStateChange should behave as expected when transitioning from connected ok to server hungup auth rejected`() {
+
+        runBlockingTest {
+            audioClientObserver.onAudioClientStateChange(
+                AudioClient.AUDIO_CLIENT_STATE_CONNECTED,
+                AudioClient.AUDIO_CLIENT_OK
+            )
+
+            audioClientObserver.onAudioClientStateChange(
+                AudioClient.AUDIO_CLIENT_STATE_SERVER_HUNGUP,
+                AudioClient.AUDIO_CLIENT_ERR_AUTH_REJECTED
+            )
+        }
+        verifyFailed(MeetingSessionStatusCode.AudioAuthenticationRejected)
+    }
+
+    @Test
+    fun `onAudioClientStateChange should behave as expected when transitioning from connected ok to unknown call at capacity`() {
+
+        runBlockingTest {
+            audioClientObserver.onAudioClientStateChange(
+                AudioClient.AUDIO_CLIENT_STATE_CONNECTED,
+                AudioClient.AUDIO_CLIENT_OK
+            )
+
+            audioClientObserver.onAudioClientStateChange(
+                AudioClient.AUDIO_CLIENT_STATE_UNKNOWN,
+                AudioClient.AUDIO_CLIENT_ERR_CALL_AT_CAPACITY
+            )
+        }
+
+        verifyNoop()
+    }
+    @Test
+    fun `onAudioClientStateChange should behave as expected when transitioning from connected ok to init call at capacity`() {
+
+        runBlockingTest {
+            audioClientObserver.onAudioClientStateChange(
+                AudioClient.AUDIO_CLIENT_STATE_CONNECTED,
+                AudioClient.AUDIO_CLIENT_OK
+            )
+
+            audioClientObserver.onAudioClientStateChange(
+                AudioClient.AUDIO_CLIENT_STATE_INIT,
+                AudioClient.AUDIO_CLIENT_ERR_CALL_AT_CAPACITY
+            )
+        }
+
+        verifyNoop()
+    }
+    @Test
+    fun `onAudioClientStateChange should behave as expected when transitioning from connected ok to connecting call at capacity`() {
+
+        runBlockingTest {
+            audioClientObserver.onAudioClientStateChange(
+                AudioClient.AUDIO_CLIENT_STATE_CONNECTED,
+                AudioClient.AUDIO_CLIENT_OK
+            )
+
+            audioClientObserver.onAudioClientStateChange(
+                AudioClient.AUDIO_CLIENT_STATE_CONNECTING,
+                AudioClient.AUDIO_CLIENT_ERR_CALL_AT_CAPACITY
+            )
+        }
+
+        verifyNoop()
+    }
+    @Test
+    fun `onAudioClientStateChange should behave as expected when transitioning from connected ok to failed call at capacity`() {
+
+        runBlockingTest {
+            audioClientObserver.onAudioClientStateChange(
+                AudioClient.AUDIO_CLIENT_STATE_CONNECTED,
+                AudioClient.AUDIO_CLIENT_OK
+            )
+
+            audioClientObserver.onAudioClientStateChange(
+                AudioClient.AUDIO_CLIENT_STATE_FAILED_TO_CONNECT,
+                AudioClient.AUDIO_CLIENT_ERR_CALL_AT_CAPACITY
+            )
+        }
+        verifyFailed(MeetingSessionStatusCode.AudioCallAtCapacity)
+    }
+    @Test
+    fun `onAudioClientStateChange should behave as expected when transitioning from connected ok to disconnecting call at capacity`() {
+
+        runBlockingTest {
+            audioClientObserver.onAudioClientStateChange(
+                AudioClient.AUDIO_CLIENT_STATE_CONNECTED,
+                AudioClient.AUDIO_CLIENT_OK
+            )
+
+            audioClientObserver.onAudioClientStateChange(
+                AudioClient.AUDIO_CLIENT_STATE_DISCONNECTING,
+                AudioClient.AUDIO_CLIENT_ERR_CALL_AT_CAPACITY
+            )
+        }
+        verifyNoop()
+    }
+    @Test
+    fun `onAudioClientStateChange should behave as expected when transitioning from connected ok to disconnected normal call at capacity`() {
+
+        runBlockingTest {
+            audioClientObserver.onAudioClientStateChange(
+                AudioClient.AUDIO_CLIENT_STATE_CONNECTED,
+                AudioClient.AUDIO_CLIENT_OK
+            )
+
+            audioClientObserver.onAudioClientStateChange(
+                AudioClient.AUDIO_CLIENT_STATE_DISCONNECTED_NORMAL,
+                AudioClient.AUDIO_CLIENT_ERR_CALL_AT_CAPACITY
+            )
+        }
+        verifyNoop()
+    }
+    @Test
+    fun `onAudioClientStateChange should behave as expected when transitioning from connected ok to disconnected abnormal call at capacity`() {
+
+        runBlockingTest {
+            audioClientObserver.onAudioClientStateChange(
+                AudioClient.AUDIO_CLIENT_STATE_CONNECTED,
+                AudioClient.AUDIO_CLIENT_OK
+            )
+
+            audioClientObserver.onAudioClientStateChange(
+                AudioClient.AUDIO_CLIENT_STATE_DISCONNECTED_ABNORMAL,
+                AudioClient.AUDIO_CLIENT_ERR_CALL_AT_CAPACITY
+            )
+        }
+        verifyFailed(MeetingSessionStatusCode.AudioCallAtCapacity)
+    }
+    @Test
+    fun `onAudioClientStateChange should behave as expected when transitioning from connected ok to server hungup call at capacity`() {
+
+        runBlockingTest {
+            audioClientObserver.onAudioClientStateChange(
+                AudioClient.AUDIO_CLIENT_STATE_CONNECTED,
+                AudioClient.AUDIO_CLIENT_OK
+            )
+
+            audioClientObserver.onAudioClientStateChange(
+                AudioClient.AUDIO_CLIENT_STATE_SERVER_HUNGUP,
+                AudioClient.AUDIO_CLIENT_ERR_CALL_AT_CAPACITY
+            )
+        }
+        verifyFailed(MeetingSessionStatusCode.AudioCallAtCapacity)
+    }
+
+    @Test
+    fun `onAudioClientStateChange should behave as expected when transitioning from connected ok to unknown service unavailable`() {
+
+        runBlockingTest {
+            audioClientObserver.onAudioClientStateChange(
+                AudioClient.AUDIO_CLIENT_STATE_CONNECTED,
+                AudioClient.AUDIO_CLIENT_OK
+            )
+
+            audioClientObserver.onAudioClientStateChange(
+                AudioClient.AUDIO_CLIENT_STATE_UNKNOWN,
+                AudioClient.AUDIO_CLIENT_ERR_SERVICE_UNAVAILABLE
+            )
+        }
+        verifyNoop()
+    }
+    @Test
+    fun `onAudioClientStateChange should behave as expected when transitioning from connected ok to init service unavailable`() {
+
+        runBlockingTest {
+            audioClientObserver.onAudioClientStateChange(
+                AudioClient.AUDIO_CLIENT_STATE_CONNECTED,
+                AudioClient.AUDIO_CLIENT_OK
+            )
+
+            audioClientObserver.onAudioClientStateChange(
+                AudioClient.AUDIO_CLIENT_STATE_INIT,
+                AudioClient.AUDIO_CLIENT_ERR_SERVICE_UNAVAILABLE
+            )
+        }
+        verifyNoop()
+    }
+    @Test
+    fun `onAudioClientStateChange should behave as expected when transitioning from connected ok to connecting service unavailable`() {
+
+        runBlockingTest {
+            audioClientObserver.onAudioClientStateChange(
+                AudioClient.AUDIO_CLIENT_STATE_CONNECTED,
+                AudioClient.AUDIO_CLIENT_OK
+            )
+
+            audioClientObserver.onAudioClientStateChange(
+                AudioClient.AUDIO_CLIENT_STATE_CONNECTING,
+                AudioClient.AUDIO_CLIENT_ERR_SERVICE_UNAVAILABLE
+            )
+        }
+        verifyNoop()
+    }
+    @Test
+    fun `onAudioClientStateChange should behave as expected when transitioning from connected ok to failed service unavailable`() {
+
+        runBlockingTest {
+            audioClientObserver.onAudioClientStateChange(
+                AudioClient.AUDIO_CLIENT_STATE_CONNECTED,
+                AudioClient.AUDIO_CLIENT_OK
+            )
+
+            audioClientObserver.onAudioClientStateChange(
+                AudioClient.AUDIO_CLIENT_STATE_FAILED_TO_CONNECT,
+                AudioClient.AUDIO_CLIENT_ERR_SERVICE_UNAVAILABLE
+            )
+        }
+        verifyFailed(MeetingSessionStatusCode.AudioServiceUnavailable)
+    }
+    @Test
+    fun `onAudioClientStateChange should behave as expected when transitioning from connected ok to disconnecting service unavailable`() {
+
+        runBlockingTest {
+            audioClientObserver.onAudioClientStateChange(
+                AudioClient.AUDIO_CLIENT_STATE_CONNECTED,
+                AudioClient.AUDIO_CLIENT_OK
+            )
+
+            audioClientObserver.onAudioClientStateChange(
+                AudioClient.AUDIO_CLIENT_STATE_DISCONNECTING,
+                AudioClient.AUDIO_CLIENT_ERR_SERVICE_UNAVAILABLE
+            )
+        }
+        verifyNoop()
+    }
+    @Test
+    fun `onAudioClientStateChange should behave as expected when transitioning from connected ok to disconnected normal service unavailable`() {
+
+        runBlockingTest {
+            audioClientObserver.onAudioClientStateChange(
+                AudioClient.AUDIO_CLIENT_STATE_CONNECTED,
+                AudioClient.AUDIO_CLIENT_OK
+            )
+
+            audioClientObserver.onAudioClientStateChange(
+                AudioClient.AUDIO_CLIENT_STATE_DISCONNECTED_NORMAL,
+                AudioClient.AUDIO_CLIENT_ERR_SERVICE_UNAVAILABLE
+            )
+        }
+        verifyNoop()
+    }
+    @Test
+    fun `onAudioClientStateChange should behave as expected when transitioning from connected ok to disconnected abnormal service unavailable`() {
+
+        runBlockingTest {
+            audioClientObserver.onAudioClientStateChange(
+                AudioClient.AUDIO_CLIENT_STATE_CONNECTED,
+                AudioClient.AUDIO_CLIENT_OK
+            )
+
+            audioClientObserver.onAudioClientStateChange(
+                AudioClient.AUDIO_CLIENT_STATE_DISCONNECTED_ABNORMAL,
+                AudioClient.AUDIO_CLIENT_ERR_SERVICE_UNAVAILABLE
+            )
+        }
+        verifyFailed(MeetingSessionStatusCode.AudioServiceUnavailable)
+    }
+    @Test
+    fun `onAudioClientStateChange should behave as expected when transitioning from connected ok to server hungup service unavailable`() {
+
+        runBlockingTest {
+            audioClientObserver.onAudioClientStateChange(
+                AudioClient.AUDIO_CLIENT_STATE_CONNECTED,
+                AudioClient.AUDIO_CLIENT_OK
+            )
+
+            audioClientObserver.onAudioClientStateChange(
+                AudioClient.AUDIO_CLIENT_STATE_SERVER_HUNGUP,
+                AudioClient.AUDIO_CLIENT_ERR_SERVICE_UNAVAILABLE
+            )
+        }
+        verifyFailed(MeetingSessionStatusCode.AudioServiceUnavailable)
+    }
+
+    @Test
+    fun `onAudioClientStateChange should behave as expected when transitioning from connected ok to unknown should disconnect audio`() {
+
+        runBlockingTest {
+            audioClientObserver.onAudioClientStateChange(
+                AudioClient.AUDIO_CLIENT_STATE_CONNECTED,
+                AudioClient.AUDIO_CLIENT_OK
+            )
+
+            audioClientObserver.onAudioClientStateChange(
+                AudioClient.AUDIO_CLIENT_STATE_UNKNOWN,
+                AudioClient.AUDIO_CLIENT_ERR_SHOULD_DISCONNECT_AUDIO
+            )
+        }
+        verifyNoop()
+    }
+    @Test
+    fun `onAudioClientStateChange should behave as expected when transitioning from connected ok to init should disconnect audio`() {
+
+        runBlockingTest {
+            audioClientObserver.onAudioClientStateChange(
+                AudioClient.AUDIO_CLIENT_STATE_CONNECTED,
+                AudioClient.AUDIO_CLIENT_OK
+            )
+
+            audioClientObserver.onAudioClientStateChange(
+                AudioClient.AUDIO_CLIENT_STATE_INIT,
+                AudioClient.AUDIO_CLIENT_ERR_SHOULD_DISCONNECT_AUDIO
+            )
+        }
+        verifyNoop()
+    }
+    @Test
+    fun `onAudioClientStateChange should behave as expected when transitioning from connected ok to connecting should disconnect audio`() {
+
+        runBlockingTest {
+            audioClientObserver.onAudioClientStateChange(
+                AudioClient.AUDIO_CLIENT_STATE_CONNECTED,
+                AudioClient.AUDIO_CLIENT_OK
+            )
+
+            audioClientObserver.onAudioClientStateChange(
+                AudioClient.AUDIO_CLIENT_STATE_CONNECTING,
+                AudioClient.AUDIO_CLIENT_ERR_SHOULD_DISCONNECT_AUDIO
+            )
+        }
+        verifyNoop()
+    }
+    @Test
+    fun `onAudioClientStateChange should behave as expected when transitioning from connected ok to failed should disconnect audio`() {
+
+        runBlockingTest {
+            audioClientObserver.onAudioClientStateChange(
+                AudioClient.AUDIO_CLIENT_STATE_CONNECTED,
+                AudioClient.AUDIO_CLIENT_OK
+            )
+
+            audioClientObserver.onAudioClientStateChange(
+                AudioClient.AUDIO_CLIENT_STATE_FAILED_TO_CONNECT,
+                AudioClient.AUDIO_CLIENT_ERR_SHOULD_DISCONNECT_AUDIO
+            )
+        }
+        verifyFailed(MeetingSessionStatusCode.AudioDisconnectAudio)
+    }
+    @Test
+    fun `onAudioClientStateChange should behave as expected when transitioning from connected ok to disconnecting should disconnect audio`() {
+
+        runBlockingTest {
+            audioClientObserver.onAudioClientStateChange(
+                AudioClient.AUDIO_CLIENT_STATE_CONNECTED,
+                AudioClient.AUDIO_CLIENT_OK
+            )
+
+            audioClientObserver.onAudioClientStateChange(
+                AudioClient.AUDIO_CLIENT_STATE_DISCONNECTING,
+                AudioClient.AUDIO_CLIENT_ERR_SHOULD_DISCONNECT_AUDIO
+            )
+        }
+        verifyNoop()
+    }
+    @Test
+    fun `onAudioClientStateChange should behave as expected when transitioning from connected ok to disconnected normal should disconnect audio`() {
+
+        runBlockingTest {
+            audioClientObserver.onAudioClientStateChange(
+                AudioClient.AUDIO_CLIENT_STATE_CONNECTED,
+                AudioClient.AUDIO_CLIENT_OK
+            )
+
+            audioClientObserver.onAudioClientStateChange(
+                AudioClient.AUDIO_CLIENT_STATE_DISCONNECTED_NORMAL,
+                AudioClient.AUDIO_CLIENT_ERR_SHOULD_DISCONNECT_AUDIO
+            )
+        }
+        verifyNoop()
+    }
+    @Test
+    fun `onAudioClientStateChange should behave as expected when transitioning from connected ok to disconnected abnormal should disconnect audio`() {
+
+        runBlockingTest {
+            audioClientObserver.onAudioClientStateChange(
+                AudioClient.AUDIO_CLIENT_STATE_CONNECTED,
+                AudioClient.AUDIO_CLIENT_OK
+            )
+
+            audioClientObserver.onAudioClientStateChange(
+                AudioClient.AUDIO_CLIENT_STATE_DISCONNECTED_ABNORMAL,
+                AudioClient.AUDIO_CLIENT_ERR_SHOULD_DISCONNECT_AUDIO
+            )
+        }
+        verifyFailed(MeetingSessionStatusCode.AudioDisconnectAudio)
+    }
+    @Test
+    fun `onAudioClientStateChange should behave as expected when transitioning from connected ok to server hungup should disconnect audio`() {
+
+        runBlockingTest {
+            audioClientObserver.onAudioClientStateChange(
+                AudioClient.AUDIO_CLIENT_STATE_CONNECTED,
+                AudioClient.AUDIO_CLIENT_OK
+            )
+
+            audioClientObserver.onAudioClientStateChange(
+                AudioClient.AUDIO_CLIENT_STATE_SERVER_HUNGUP,
+                AudioClient.AUDIO_CLIENT_ERR_SHOULD_DISCONNECT_AUDIO
+            )
+        }
+        verifyFailed(MeetingSessionStatusCode.AudioDisconnectAudio)
+    }
+
+    @Test
+    fun `onAudioClientStateChange should behave as expected when transitioning from connected ok to unknown call ended`() {
+
+        runBlockingTest {
+            audioClientObserver.onAudioClientStateChange(
+                AudioClient.AUDIO_CLIENT_STATE_CONNECTED,
+                AudioClient.AUDIO_CLIENT_OK
+            )
+
+            audioClientObserver.onAudioClientStateChange(
+                AudioClient.AUDIO_CLIENT_STATE_UNKNOWN,
+                AudioClient.AUDIO_CLIENT_ERR_CALL_ENDED
+            )
+        }
+        verifyNoop()
+    }
+    @Test
+    fun `onAudioClientStateChange should behave as expected when transitioning from connected ok to init call ended`() {
+
+        runBlockingTest {
+            audioClientObserver.onAudioClientStateChange(
+                AudioClient.AUDIO_CLIENT_STATE_CONNECTED,
+                AudioClient.AUDIO_CLIENT_OK
+            )
+
+            audioClientObserver.onAudioClientStateChange(
+                AudioClient.AUDIO_CLIENT_STATE_INIT,
+                AudioClient.AUDIO_CLIENT_ERR_CALL_ENDED
+            )
+        }
+        verifyNoop()
+    }
+    @Test
+    fun `onAudioClientStateChange should behave as expected when transitioning from connected ok to connecting call ended`() {
+
+        runBlockingTest {
+            audioClientObserver.onAudioClientStateChange(
+                AudioClient.AUDIO_CLIENT_STATE_CONNECTED,
+                AudioClient.AUDIO_CLIENT_OK
+            )
+
+            audioClientObserver.onAudioClientStateChange(
+                AudioClient.AUDIO_CLIENT_STATE_CONNECTING,
+                AudioClient.AUDIO_CLIENT_ERR_CALL_ENDED
+            )
+        }
+        verifyNoop()
+    }
+    @Test
+    fun `onAudioClientStateChange should behave as expected when transitioning from connected ok to failed call ended`() {
+
+        runBlockingTest {
+            audioClientObserver.onAudioClientStateChange(
+                AudioClient.AUDIO_CLIENT_STATE_CONNECTED,
+                AudioClient.AUDIO_CLIENT_OK
+            )
+
+            audioClientObserver.onAudioClientStateChange(
+                AudioClient.AUDIO_CLIENT_STATE_FAILED_TO_CONNECT,
+                AudioClient.AUDIO_CLIENT_ERR_CALL_ENDED
+            )
+        }
+        verifyFailed(MeetingSessionStatusCode.AudioCallEnded)
+    }
+    @Test
+    fun `onAudioClientStateChange should behave as expected when transitioning from connected ok to disconnecting call ended`() {
+
+        runBlockingTest {
+            audioClientObserver.onAudioClientStateChange(
+                AudioClient.AUDIO_CLIENT_STATE_CONNECTED,
+                AudioClient.AUDIO_CLIENT_OK
+            )
+
+            audioClientObserver.onAudioClientStateChange(
+                AudioClient.AUDIO_CLIENT_STATE_DISCONNECTING,
+                AudioClient.AUDIO_CLIENT_ERR_CALL_ENDED
+            )
+        }
+        verifyNoop()
+    }
+    @Test
+    fun `onAudioClientStateChange should behave as expected when transitioning from connected ok to disconnected normal call ended`() {
+
+        runBlockingTest {
+            audioClientObserver.onAudioClientStateChange(
+                AudioClient.AUDIO_CLIENT_STATE_CONNECTED,
+                AudioClient.AUDIO_CLIENT_OK
+            )
+
+            audioClientObserver.onAudioClientStateChange(
+                AudioClient.AUDIO_CLIENT_STATE_DISCONNECTED_NORMAL,
+                AudioClient.AUDIO_CLIENT_ERR_CALL_ENDED
+            )
+        }
+        verifyNoop()
+    }
+    @Test
+    fun `onAudioClientStateChange should behave as expected when transitioning from connected ok to disconnected abnormal call ended`() {
+
+        runBlockingTest {
+            audioClientObserver.onAudioClientStateChange(
+                AudioClient.AUDIO_CLIENT_STATE_CONNECTED,
+                AudioClient.AUDIO_CLIENT_OK
+            )
+
+            audioClientObserver.onAudioClientStateChange(
+                AudioClient.AUDIO_CLIENT_STATE_DISCONNECTED_ABNORMAL,
+                AudioClient.AUDIO_CLIENT_ERR_CALL_ENDED
+            )
+        }
+        verifyFailed(MeetingSessionStatusCode.AudioCallEnded)
+    }
+    @Test
+    fun `onAudioClientStateChange should behave as expected when transitioning from connected ok to server hungup call ended`() {
+
+        runBlockingTest {
+            audioClientObserver.onAudioClientStateChange(
+                AudioClient.AUDIO_CLIENT_STATE_CONNECTED,
+                AudioClient.AUDIO_CLIENT_OK
+            )
+
+            audioClientObserver.onAudioClientStateChange(
+                AudioClient.AUDIO_CLIENT_STATE_SERVER_HUNGUP,
+                AudioClient.AUDIO_CLIENT_ERR_CALL_ENDED
+            )
+        }
+        verifyFailed(MeetingSessionStatusCode.AudioCallEnded)
+    }
+
+    @Test
+    fun `onAudioClientStateChange should behave as expected when transitioning from connected ok to unknown audio input device not responding`() {
+
+        runBlockingTest {
+            audioClientObserver.onAudioClientStateChange(
+                AudioClient.AUDIO_CLIENT_STATE_CONNECTED,
+                AudioClient.AUDIO_CLIENT_OK
+            )
+
+            audioClientObserver.onAudioClientStateChange(
+                AudioClient.AUDIO_CLIENT_STATE_UNKNOWN,
+                AudioClient.AUDIO_CLIENT_ERR_INPUT_DEVICE_NOT_RESPONDING
+            )
+        }
+        verifyNoop()
+    }
+    @Test
+    fun `onAudioClientStateChange should behave as expected when transitioning from connected ok to init audio input device not responding`() {
+
+        runBlockingTest {
+            audioClientObserver.onAudioClientStateChange(
+                AudioClient.AUDIO_CLIENT_STATE_CONNECTED,
+                AudioClient.AUDIO_CLIENT_OK
+            )
+
+            audioClientObserver.onAudioClientStateChange(
+                AudioClient.AUDIO_CLIENT_STATE_INIT,
+                AudioClient.AUDIO_CLIENT_ERR_INPUT_DEVICE_NOT_RESPONDING
+            )
+        }
+        verifyNoop()
+    }
+    @Test
+    fun `onAudioClientStateChange should behave as expected when transitioning from connected ok to connecting audio input device not responding`() {
+
+        runBlockingTest {
+            audioClientObserver.onAudioClientStateChange(
+                AudioClient.AUDIO_CLIENT_STATE_CONNECTED,
+                AudioClient.AUDIO_CLIENT_OK
+            )
+
+            audioClientObserver.onAudioClientStateChange(
+                AudioClient.AUDIO_CLIENT_STATE_CONNECTING,
+                AudioClient.AUDIO_CLIENT_ERR_INPUT_DEVICE_NOT_RESPONDING
+            )
+        }
+        verifyNoop()
+    }
+    @Test
+    fun `onAudioClientStateChange should behave as expected when transitioning from connected ok to failed audio input device not responding`() {
+
+        runBlockingTest {
+            audioClientObserver.onAudioClientStateChange(
+                AudioClient.AUDIO_CLIENT_STATE_CONNECTED,
+                AudioClient.AUDIO_CLIENT_OK
+            )
+
+            audioClientObserver.onAudioClientStateChange(
+                AudioClient.AUDIO_CLIENT_STATE_FAILED_TO_CONNECT,
+                AudioClient.AUDIO_CLIENT_ERR_INPUT_DEVICE_NOT_RESPONDING
+            )
+        }
+        verifyFailed(MeetingSessionStatusCode.AudioInputDeviceNotResponding)
+    }
+    @Test
+    fun `onAudioClientStateChange should behave as expected when transitioning from connected ok to disconnecting audio input device not responding`() {
+
+        runBlockingTest {
+            audioClientObserver.onAudioClientStateChange(
+                AudioClient.AUDIO_CLIENT_STATE_CONNECTED,
+                AudioClient.AUDIO_CLIENT_OK
+            )
+
+            audioClientObserver.onAudioClientStateChange(
+                AudioClient.AUDIO_CLIENT_STATE_DISCONNECTING,
+                AudioClient.AUDIO_CLIENT_ERR_INPUT_DEVICE_NOT_RESPONDING
+            )
+        }
+        verifyNoop()
+    }
+    @Test
+    fun `onAudioClientStateChange should behave as expected when transitioning from connected ok to disconnected normal audio input device not responding`() {
+
+        runBlockingTest {
+            audioClientObserver.onAudioClientStateChange(
+                AudioClient.AUDIO_CLIENT_STATE_CONNECTED,
+                AudioClient.AUDIO_CLIENT_OK
+            )
+
+            audioClientObserver.onAudioClientStateChange(
+                AudioClient.AUDIO_CLIENT_STATE_DISCONNECTED_NORMAL,
+                AudioClient.AUDIO_CLIENT_ERR_INPUT_DEVICE_NOT_RESPONDING
+            )
+        }
+        verifyNoop()
+    }
+    @Test
+    fun `onAudioClientStateChange should behave as expected when transitioning from connected ok to disconnected abnormal audio input device not responding`() {
+
+        runBlockingTest {
+            audioClientObserver.onAudioClientStateChange(
+                AudioClient.AUDIO_CLIENT_STATE_CONNECTED,
+                AudioClient.AUDIO_CLIENT_OK
+            )
+
+            audioClientObserver.onAudioClientStateChange(
+                AudioClient.AUDIO_CLIENT_STATE_DISCONNECTED_ABNORMAL,
+                AudioClient.AUDIO_CLIENT_ERR_INPUT_DEVICE_NOT_RESPONDING
+            )
+        }
+        verifyFailed(MeetingSessionStatusCode.AudioInputDeviceNotResponding)
+    }
+    @Test
+    fun `onAudioClientStateChange should behave as expected when transitioning from connected ok to server hungup audio input device not responding`() {
+
+        runBlockingTest {
+            audioClientObserver.onAudioClientStateChange(
+                AudioClient.AUDIO_CLIENT_STATE_CONNECTED,
+                AudioClient.AUDIO_CLIENT_OK
+            )
+
+            audioClientObserver.onAudioClientStateChange(
+                AudioClient.AUDIO_CLIENT_STATE_SERVER_HUNGUP,
+                AudioClient.AUDIO_CLIENT_ERR_INPUT_DEVICE_NOT_RESPONDING
+            )
+        }
+        verifyFailed(MeetingSessionStatusCode.AudioInputDeviceNotResponding)
+    }
+
+    @Test
+    fun `onAudioClientStateChange should behave as expected when transitioning from connected ok to unknown audio output device not responding`() {
+
+        runBlockingTest {
+            audioClientObserver.onAudioClientStateChange(
+                AudioClient.AUDIO_CLIENT_STATE_CONNECTED,
+                AudioClient.AUDIO_CLIENT_OK
+            )
+
+            audioClientObserver.onAudioClientStateChange(
+                AudioClient.AUDIO_CLIENT_STATE_UNKNOWN,
+                AudioClient.AUDIO_CLIENT_ERR_OUTPUT_DEVICE_NOT_RESPONDING
+            )
+        }
+        verifyNoop()
+    }
+    @Test
+    fun `onAudioClientStateChange should behave as expected when transitioning from connected ok to init audio output device not responding`() {
+
+        runBlockingTest {
+            audioClientObserver.onAudioClientStateChange(
+                AudioClient.AUDIO_CLIENT_STATE_CONNECTED,
+                AudioClient.AUDIO_CLIENT_OK
+            )
+
+            audioClientObserver.onAudioClientStateChange(
+                AudioClient.AUDIO_CLIENT_STATE_INIT,
+                AudioClient.AUDIO_CLIENT_ERR_OUTPUT_DEVICE_NOT_RESPONDING
+            )
+        }
+        verifyNoop()
+    }
+    @Test
+    fun `onAudioClientStateChange should behave as expected when transitioning from connected ok to connecting audio output device not responding`() {
+
+        runBlockingTest {
+            audioClientObserver.onAudioClientStateChange(
+                AudioClient.AUDIO_CLIENT_STATE_CONNECTED,
+                AudioClient.AUDIO_CLIENT_OK
+            )
+
+            audioClientObserver.onAudioClientStateChange(
+                AudioClient.AUDIO_CLIENT_STATE_CONNECTING,
+                AudioClient.AUDIO_CLIENT_ERR_OUTPUT_DEVICE_NOT_RESPONDING
+            )
+        }
+        verifyNoop()
+    }
+    @Test
+    fun `onAudioClientStateChange should behave as expected when transitioning from connected ok to failed audio output device not responding`() {
+
+        runBlockingTest {
+            audioClientObserver.onAudioClientStateChange(
+                AudioClient.AUDIO_CLIENT_STATE_CONNECTED,
+                AudioClient.AUDIO_CLIENT_OK
+            )
+
+            audioClientObserver.onAudioClientStateChange(
+                AudioClient.AUDIO_CLIENT_STATE_FAILED_TO_CONNECT,
+                AudioClient.AUDIO_CLIENT_ERR_OUTPUT_DEVICE_NOT_RESPONDING
+            )
+        }
+        verifyFailed(MeetingSessionStatusCode.AudioOutputDeviceNotResponding)
+    }
+    @Test
+    fun `onAudioClientStateChange should behave as expected when transitioning from connected ok to disconnecting audio output device not responding`() {
+
+        runBlockingTest {
+            audioClientObserver.onAudioClientStateChange(
+                AudioClient.AUDIO_CLIENT_STATE_CONNECTED,
+                AudioClient.AUDIO_CLIENT_OK
+            )
+
+            audioClientObserver.onAudioClientStateChange(
+                AudioClient.AUDIO_CLIENT_STATE_DISCONNECTING,
+                AudioClient.AUDIO_CLIENT_ERR_OUTPUT_DEVICE_NOT_RESPONDING
+            )
+        }
+        verifyNoop()
+    }
+    @Test
+    fun `onAudioClientStateChange should behave as expected when transitioning from connected ok to disconnected normal audio output device not responding`() {
+
+        runBlockingTest {
+            audioClientObserver.onAudioClientStateChange(
+                AudioClient.AUDIO_CLIENT_STATE_CONNECTED,
+                AudioClient.AUDIO_CLIENT_OK
+            )
+
+            audioClientObserver.onAudioClientStateChange(
+                AudioClient.AUDIO_CLIENT_STATE_DISCONNECTED_NORMAL,
+                AudioClient.AUDIO_CLIENT_ERR_OUTPUT_DEVICE_NOT_RESPONDING
+            )
+        }
+        verifyNoop()
+    }
+    @Test
+    fun `onAudioClientStateChange should behave as expected when transitioning from connected ok to disconnected abnormal audio output device not responding`() {
+
+        runBlockingTest {
+            audioClientObserver.onAudioClientStateChange(
+                AudioClient.AUDIO_CLIENT_STATE_CONNECTED,
+                AudioClient.AUDIO_CLIENT_OK
+            )
+
+            audioClientObserver.onAudioClientStateChange(
+                AudioClient.AUDIO_CLIENT_STATE_DISCONNECTED_ABNORMAL,
+                AudioClient.AUDIO_CLIENT_ERR_OUTPUT_DEVICE_NOT_RESPONDING
+            )
+        }
+        verifyFailed(MeetingSessionStatusCode.AudioOutputDeviceNotResponding)
+    }
+    @Test
+    fun `onAudioClientStateChange should behave as expected when transitioning from connected ok to server hungup audio output device not responding`() {
+
+        runBlockingTest {
+            audioClientObserver.onAudioClientStateChange(
+                AudioClient.AUDIO_CLIENT_STATE_CONNECTED,
+                AudioClient.AUDIO_CLIENT_OK
+            )
+
+            audioClientObserver.onAudioClientStateChange(
+                AudioClient.AUDIO_CLIENT_STATE_SERVER_HUNGUP,
+                AudioClient.AUDIO_CLIENT_ERR_OUTPUT_DEVICE_NOT_RESPONDING
+            )
+        }
+        verifyFailed(MeetingSessionStatusCode.AudioOutputDeviceNotResponding)
+    }
+
+    // Logger tests
 
     @Test
     fun `onLogMessage should call logger`() {
@@ -1279,6 +2879,8 @@ class DefaultAudioClientObserverTest {
         verify(exactly = 0) { mockLogger.error(any(), any()) }
     }
 
+    // onMetrics tests
+
     @Test
     fun `onMetrics should call clientMetricsCollector processAudioClientMetrics`() {
         val metrics = mutableMapOf(1 to 2.3, 4 to 5.6)
@@ -1297,5 +2899,24 @@ class DefaultAudioClientObserverTest {
         verify(exactly = 0) { mockAudioVideoObserver.onVideoSessionStartedConnecting() }
         verify(exactly = 0) { mockAudioVideoObserver.onVideoSessionStarted(any()) }
         verify(exactly = 0) { mockAudioVideoObserver.onVideoSessionStopped(any()) }
+    }
+
+    private fun verifyFailed(statusCode: MeetingSessionStatusCode) {
+        verify(exactly = 1, timeout = TestConstant.globalScopeTimeoutMs) { mockEventAnalyticsController.publishEvent(EventName.meetingFailed, any()) }
+        verify(exactly = 1, timeout = TestConstant.globalScopeTimeoutMs) { mockAudioVideoObserver.onAudioSessionStopped(MeetingSessionStatus(statusCode)) }
+        verify(exactly = 1, timeout = TestConstant.globalScopeTimeoutMs) { mockAudioClient.stopSession() }
+    }
+
+    private fun verifyEnded(statusCode: MeetingSessionStatusCode) {
+        verify(exactly = 1, timeout = TestConstant.globalScopeTimeoutMs) { mockEventAnalyticsController.publishEvent(EventName.meetingEnded, any()) }
+        verify(exactly = 1, timeout = TestConstant.globalScopeTimeoutMs) { mockAudioVideoObserver.onAudioSessionStopped(MeetingSessionStatus(statusCode)) }
+        verify(exactly = 1, timeout = TestConstant.globalScopeTimeoutMs) { mockAudioClient.stopSession() }
+    }
+
+    private fun verifyNoop() {
+        verifyAudioVideoObserverIsNotNotified()
+        verify(exactly = 0) { mockEventAnalyticsController.publishEvent(any()) }
+        verify(exactly = 0) { mockAudioVideoObserver.onAudioSessionStopped(any()) }
+        verify(exactly = 0) { mockAudioClient.stopSession() }
     }
 }
