@@ -7,7 +7,6 @@ package com.amazonaws.services.chime.sdk.meetings.internal.utils
 
 import io.mockk.impl.annotations.MockK
 import io.mockk.mockk
-import io.mockk.mockkStatic
 import io.mockk.verify
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
@@ -19,10 +18,8 @@ import kotlinx.coroutines.test.setMain
 import org.junit.After
 import org.junit.Assert.assertEquals
 import org.junit.Before
-import org.junit.Ignore
 import org.junit.Test
 
-@Ignore("Skipping all tests due to issue with mocking System::class")
 class ObserverUtilsTest {
     @MockK
     private lateinit var mockObserver: MockObserver
@@ -37,7 +34,6 @@ class ObserverUtilsTest {
 
     @Before
     fun setUp() {
-        mockkStatic(System::class)
         Dispatchers.setMain(testDispatcher)
         mockObserver = mockk(relaxed = true)
         mockObservers.add(mockObserver)
