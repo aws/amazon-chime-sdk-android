@@ -83,8 +83,8 @@ class DefaultAudioClientObserver(
     override var primaryMeetingPromotionObserver: PrimaryMeetingPromotionObserver? = null
 
     override fun onAudioClientStateChange(newInternalAudioState: Int, newInternalAudioStatus: Int) {
-        val newAudioState: SessionStateControllerAction = toAudioClientState(newInternalAudioState)
         val newAudioStatus: MeetingSessionStatusCode? = toAudioStatus(newInternalAudioStatus)
+        var newAudioState: SessionStateControllerAction = toAudioClientState(newInternalAudioState, newAudioStatus)
 
         if (newAudioStatus == null) {
             logger.warn(
@@ -145,13 +145,13 @@ class DefaultAudioClientObserver(
                 when (currentAudioState) {
                     SessionStateControllerAction.Connecting,
                     SessionStateControllerAction.FinishConnecting -> {
-                        if (newAudioStatus == MeetingSessionStatusCode.AudioServerHungup) {
+                        if (shouldCloseAndNotifyEndMeeting(newAudioStatus)) {
                             handleAudioSessionEndedByServer(newAudioStatus)
                         }
                     }
                     SessionStateControllerAction.Reconnecting -> {
                         notifyAudioClientObserver { observer -> observer.onAudioSessionCancelledReconnect() }
-                        if (newAudioStatus == MeetingSessionStatusCode.AudioServerHungup) {
+                        if (shouldCloseAndNotifyEndMeeting(newAudioStatus)) {
                             handleAudioSessionEndedByServer(newAudioStatus)
                         }
                     }
@@ -524,7 +524,10 @@ class DefaultAudioClientObserver(
         ObserverUtils.notifyObserverOnMainThread(audioClientStateObservers, observerFunction)
     }
 
-    private fun toAudioClientState(internalAudioClientState: Int): SessionStateControllerAction {
+    private fun toAudioClientState(internalAudioClientState: Int, statusCode: MeetingSessionStatusCode?): SessionStateControllerAction {
+        if (shouldCloseAndNotifyEndMeeting(statusCode)) {
+            return SessionStateControllerAction.FinishDisconnecting
+        }
         return when (internalAudioClientState) {
             AudioClient.AUDIO_CLIENT_STATE_UNKNOWN -> SessionStateControllerAction.Unknown
             AudioClient.AUDIO_CLIENT_STATE_INIT -> SessionStateControllerAction.Init
@@ -532,12 +535,16 @@ class DefaultAudioClientObserver(
             AudioClient.AUDIO_CLIENT_STATE_CONNECTED -> SessionStateControllerAction.FinishConnecting
             AudioClient.AUDIO_CLIENT_STATE_RECONNECTING -> SessionStateControllerAction.Reconnecting
             AudioClient.AUDIO_CLIENT_STATE_DISCONNECTING -> SessionStateControllerAction.Disconnecting
-            AudioClient.AUDIO_CLIENT_STATE_DISCONNECTED_NORMAL,
-            AudioClient.AUDIO_CLIENT_STATE_SERVER_HUNGUP -> SessionStateControllerAction.FinishDisconnecting
+            AudioClient.AUDIO_CLIENT_STATE_DISCONNECTED_NORMAL -> SessionStateControllerAction.FinishDisconnecting
             AudioClient.AUDIO_CLIENT_STATE_FAILED_TO_CONNECT,
+            AudioClient.AUDIO_CLIENT_STATE_SERVER_HUNGUP,
             AudioClient.AUDIO_CLIENT_STATE_DISCONNECTED_ABNORMAL -> SessionStateControllerAction.Fail
             else -> SessionStateControllerAction.Unknown
         }
+    }
+
+    private fun shouldCloseAndNotifyEndMeeting(status: MeetingSessionStatusCode?): Boolean {
+        return status == MeetingSessionStatusCode.AudioServerHungup || status == MeetingSessionStatusCode.AudioJoinedFromAnotherDevice
     }
 
     private fun toAudioStatus(internalAudioStatus: Int): MeetingSessionStatusCode? {

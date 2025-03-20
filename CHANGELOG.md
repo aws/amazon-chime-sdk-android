@@ -5,6 +5,7 @@
 
 ### Fixed
 * Fixed some broken links in the guides
+* Fixed a bug preventing cleanup after joining from another device and added unit tests.
 
 ## [0.24.0] - 2025-02-20
 
