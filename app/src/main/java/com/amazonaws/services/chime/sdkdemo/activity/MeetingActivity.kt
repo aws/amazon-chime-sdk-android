@@ -231,7 +231,14 @@ class MeetingActivity : AppCompatActivity(),
     }
 
     private fun urlRewriter(url: String): String {
-        // You can change urls by url.replace("example.com", "my.example.com")
+        // check for audio URL
+        logger.info(TAG, "[URL Rewriter] provided url: $url")
+        if (url.contains(".k.") && url.endsWith(".app.chime.aws:3478")) {
+            logger.info(TAG, "[URL Rewriter] URL is audio URL")
+            val rewrittenUrl = url.replace(".app.chime.aws:3478", ".m.chime.aws:42366")
+            logger.info(TAG, "[URL Rewriter] rewritten url: $rewrittenUrl")
+            return rewrittenUrl
+        }
         return url
     }
 
