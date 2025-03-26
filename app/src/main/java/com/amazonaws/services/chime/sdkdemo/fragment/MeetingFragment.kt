@@ -124,7 +124,6 @@ import com.amazonaws.services.chime.sdkdemo.service.ScreenCaptureService
 import com.amazonaws.services.chime.sdkdemo.utils.CpuVideoProcessor
 import com.amazonaws.services.chime.sdkdemo.utils.GpuVideoProcessor
 import com.amazonaws.services.chime.sdkdemo.utils.PostLogger
-import com.amazonaws.services.chime.sdkdemo.utils.addPaddingsForSystemBars
 import com.amazonaws.services.chime.sdkdemo.utils.encodeURLParam
 import com.amazonaws.services.chime.sdkdemo.utils.formatTimestamp
 import com.amazonaws.services.chime.sdkdemo.utils.isContentShare
@@ -336,7 +335,7 @@ class MeetingFragment : Fragment(),
                 }
             )
         }
-        addPaddingsForSystemBars(view)
+
         return view
     }
 
@@ -1486,7 +1485,6 @@ class MeetingFragment : Fragment(),
 
                     override fun onCaptureStopped() {
                         notifyHandler("Screen capture stopped")
-                        audioVideo.stopContentShare()
                     }
 
                     override fun onCaptureFailed(error: CaptureSourceError) {

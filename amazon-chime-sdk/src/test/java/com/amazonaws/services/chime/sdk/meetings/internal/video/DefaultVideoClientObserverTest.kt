@@ -37,10 +37,8 @@ import kotlinx.coroutines.test.setMain
 import org.junit.After
 import org.junit.Assert
 import org.junit.Before
-import org.junit.Ignore
 import org.junit.Test
 
-@Ignore("Skipping all tests due to issue with mocking System::class")
 class DefaultVideoClientObserverTest {
     @MockK
     private lateinit var mockAudioVideoObserver: AudioVideoObserver

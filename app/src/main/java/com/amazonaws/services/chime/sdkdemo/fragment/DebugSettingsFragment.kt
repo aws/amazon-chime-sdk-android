@@ -9,7 +9,6 @@ import androidx.lifecycle.ViewModelProvider
 import com.amazonaws.services.chime.sdkdemo.R
 import com.amazonaws.services.chime.sdkdemo.databinding.FragmentDebugSettingsBinding
 import com.amazonaws.services.chime.sdkdemo.model.DebugSettingsViewModel
-import com.amazonaws.services.chime.sdkdemo.utils.addPaddingsForSystemBars
 
 class DebugSettingsFragment : DialogFragment() {
     private lateinit var debugSettingsViewModel: DebugSettingsViewModel
@@ -25,7 +24,6 @@ class DebugSettingsFragment : DialogFragment() {
     ): View {
         // Inflate the layout to use as embedded fragment
         _binding = FragmentDebugSettingsBinding.inflate(inflater, container, false)
-        addPaddingsForSystemBars(binding.root)
         return binding.root
     }
 

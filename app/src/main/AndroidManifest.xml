@@ -4,7 +4,8 @@
   ~ SPDX-License-Identifier: Apache-2.0
   -->
 
-<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.amazonaws.services.chime.sdkdemo">
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.BLUETOOTH" />
@@ -30,14 +31,11 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".activity.HomeActivity"
-            android:windowSoftInputMode="adjustResize" />
-        <activity android:name=".activity.MeetingActivity"
-            android:windowSoftInputMode="adjustResize" />
+        <activity android:name=".activity.HomeActivity" />
+        <activity android:name=".activity.MeetingActivity" />
         <activity android:name=".activity.TranscriptionConfigActivity"
             android:parentActivityName=".activity.MeetingActivity"
-            android:configChanges="orientation|screenSize|keyboardHidden"
-            android:windowSoftInputMode="adjustResize" />
+            android:configChanges="orientation|screenSize|keyboardHidden"/>
         <service android:name=".service.MicrophoneService"
             android:enabled="true"
             android:foregroundServiceType="microphone"

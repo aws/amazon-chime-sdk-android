@@ -29,10 +29,8 @@ import io.mockk.mockkStatic
 import io.mockk.runs
 import org.junit.Assert.assertNotNull
 import org.junit.Before
-import org.junit.Ignore
 import org.junit.Test
 
-@Ignore("Skipping all tests due to issue with mocking System::class")
 class DefaultMeetingSessionTest {
     @MockK
     private lateinit var configuration: MeetingSessionConfiguration

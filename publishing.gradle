@@ -37,9 +37,7 @@ project.afterEvaluate {
         publications {
             publishChimeSDK(MavenPublication) {
                 afterEvaluate {
-                    project.pluginManager.withPlugin("com.android.library") {
-                        from(components.named("release").get())
-                    }
+                    from components.release
                 }
                 groupId = GROUP
                 version = version

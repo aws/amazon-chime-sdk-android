@@ -183,9 +183,8 @@ class DefaultScreenCaptureSource(
         mediaProjection?.registerCallback(
             object : MediaProjection.Callback() {
                 override fun onStop() {
-                    // from Android 15: this can be triggered by system when user stop screen
-                    // share from status bar chip: https://developer.android.com/media/grow/media-projection#status_bar_chip_auto_stop
-                    stop()
+                    // clean up resources
+                    stopInternal()
                 }
             },
             handler

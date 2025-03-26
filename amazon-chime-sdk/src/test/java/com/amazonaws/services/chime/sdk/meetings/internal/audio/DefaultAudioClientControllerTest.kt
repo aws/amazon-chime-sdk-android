@@ -48,10 +48,8 @@ import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
 import org.junit.Before
-import org.junit.Ignore
 import org.junit.Test
 
-@Ignore("Skipping all tests due to issue with mocking System::class")
 @ExperimentalCoroutinesApi
 class DefaultAudioClientControllerTest {
     @MockK
