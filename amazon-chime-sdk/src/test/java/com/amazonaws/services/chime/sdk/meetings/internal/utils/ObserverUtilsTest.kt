@@ -7,6 +7,7 @@ package com.amazonaws.services.chime.sdk.meetings.internal.utils
 
 import io.mockk.impl.annotations.MockK
 import io.mockk.mockk
+import io.mockk.mockkStatic
 import io.mockk.verify
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
@@ -34,6 +35,7 @@ class ObserverUtilsTest {
 
     @Before
     fun setUp() {
+        mockkStatic(System::class)
         Dispatchers.setMain(testDispatcher)
         mockObserver = mockk(relaxed = true)
         mockObservers.add(mockObserver)

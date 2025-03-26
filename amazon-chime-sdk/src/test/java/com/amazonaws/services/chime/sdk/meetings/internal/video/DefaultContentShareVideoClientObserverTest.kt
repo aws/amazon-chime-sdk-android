@@ -28,10 +28,8 @@ import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.setMain
 import org.junit.After
 import org.junit.Before
-import org.junit.Ignore
 import org.junit.Test
 
-@Ignore("Skipping all tests due to issue with mocking System::class")
 class DefaultContentShareVideoClientObserverTest {
     @MockK
     private lateinit var mockContext: Context

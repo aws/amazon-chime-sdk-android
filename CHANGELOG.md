@@ -1,8 +1,5 @@
 ## Unreleased
 
-### Changed
-* Compile and target Android SDK 35; also update gradle, AGP, and dependencies
-
 ### Fixed
 * Fixed some broken links in the guides
 * Fixed a bug preventing cleanup after joining from another device and added unit tests.

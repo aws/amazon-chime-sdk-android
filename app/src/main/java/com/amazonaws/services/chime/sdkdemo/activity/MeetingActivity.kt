@@ -8,7 +8,6 @@ package com.amazonaws.services.chime.sdkdemo.activity
 import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.WindowCompat
 import androidx.lifecycle.ViewModelProvider
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.AudioVideoConfiguration
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.AudioVideoFacade
@@ -64,9 +63,6 @@ class MeetingActivity : AppCompatActivity(),
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_meeting)
-        WindowCompat.getInsetsController(window, window.decorView)
-            .isAppearanceLightStatusBars = true
-
         meetingId = intent.extras?.getString(HomeActivity.MEETING_ID_KEY) as String
         name = intent.extras?.getString(HomeActivity.NAME_KEY) as String
         val audioMode = intent.extras?.getInt(HomeActivity.AUDIO_MODE_KEY)?.let { intValue ->

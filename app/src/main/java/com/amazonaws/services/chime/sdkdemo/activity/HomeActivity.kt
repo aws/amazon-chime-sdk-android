@@ -21,7 +21,6 @@ import androidx.appcompat.widget.SwitchCompat
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.os.bundleOf
-import androidx.core.view.WindowCompat
 import androidx.lifecycle.ViewModelProvider
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.AudioVideoConfiguration
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.audio.AudioDeviceCapabilities
@@ -79,8 +78,6 @@ class HomeActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_home)
-        WindowCompat.getInsetsController(window, window.decorView)
-            .isAppearanceLightStatusBars = true
 
         meetingEditText = findViewById(R.id.editMeetingId)
         nameEditText = findViewById(R.id.editName)
@@ -102,12 +99,12 @@ class HomeActivity : AppCompatActivity() {
 
         findViewById<Button>(R.id.buttonDebugSettings)?.setOnClickListener { showDebugSettings() }
 
-        val versionText: TextView = findViewById(R.id.versionText)
+        val versionText: TextView = findViewById(R.id.versionText) as TextView
         versionText.text = "${getString(R.string.version_prefix)}${Versioning.sdkVersion()}"
     }
 
     private fun showDebugSettings() {
-        val debugSettingsFragment = DebugSettingsFragment()
+        var debugSettingsFragment = DebugSettingsFragment()
         debugSettingsFragment.show(supportFragmentManager, TAG)
     }
 
@@ -165,7 +162,6 @@ class HomeActivity : AppCompatActivity() {
         permissionsList: Array<String>,
         grantResults: IntArray
     ) {
-        super.onRequestPermissionsResult(requestCode, permissionsList, grantResults)
         when (requestCode) {
             WEBRTC_PERMISSION_REQUEST_CODE -> {
                 val isMissingPermission: Boolean =

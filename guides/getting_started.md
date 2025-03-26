@@ -30,11 +30,11 @@ allprojects {
 implementation(name: 'amazon-chime-sdk', ext: 'aar')
 implementation(name: 'amazon-chime-sdk-media', ext: 'aar')
 ```
-5. Use Java 17 features by adding the following under the `android` section.
+5. Use Java 8 features by adding the following under the `android` section.
 ```
 compileOptions {
-    sourceCompatibility JavaVersion.VERSION_17
-    targetCompatibility JavaVersion.VERSION_17
+    sourceCompatibility JavaVersion.VERSION_1_8
+    targetCompatibility JavaVersion.VERSION_1_8
 }
 ```
 6. `CAMERA` permissions are already added to the manifest by the Amazon Chime SDK. Your activity should also request the appropriate permissions. Additionally, based on which `AudioDeviceCapabilities` you plan to have users join meetings with, you will need to add `MODIFY_AUDIO_SETTINGS` or `RECORD_AUDIO` to your manifest file and request these permissions in your application.
