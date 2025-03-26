@@ -6,7 +6,6 @@
 package com.amazonaws.services.chime.sdk.meetings.internal.audio
 
 import android.content.Context
-import android.util.Log
 import com.xodee.client.audio.audioclient.AudioClient
 
 class AudioClientFactory private constructor(
@@ -16,12 +15,8 @@ class AudioClientFactory private constructor(
     private val audioClient: AudioClient
 
     init {
-        try {
-            System.loadLibrary("c++_shared")
-            System.loadLibrary("amazon_chime_media_client")
-        } catch (e: UnsatisfiedLinkError) {
-            Log.e("AudioClientFactory", "Unable to load native media libraries: ${e.localizedMessage}")
-        }
+        System.loadLibrary("c++_shared")
+        System.loadLibrary("amazon_chime_media_client")
         audioClient = AudioClient(
             context.assets,
             audioClientObserver,
