@@ -82,6 +82,7 @@ android {
     defaultConfig {
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
+    packagingOptions { resources.excludes.add("META-INF/*") }
 }
 
 tasks.withType(DokkaTask.class) {
