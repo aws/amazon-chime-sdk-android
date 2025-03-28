@@ -1,4 +1,4 @@
-## Unreleased
+## [0.24.1] - 2025-03-28
 
 ### Fixed
 * Fixed some broken links in the guides
