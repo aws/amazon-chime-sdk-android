@@ -33,6 +33,7 @@ import com.amazonaws.services.chime.sdkdemo.adapter.LanguageOptionsAdapter
 import com.amazonaws.services.chime.sdkdemo.data.SpinnerItem
 import com.amazonaws.services.chime.sdkdemo.data.TranscribeLanguageOption
 import com.amazonaws.services.chime.sdkdemo.databinding.FragmentTranscriptionConfigBinding
+import com.amazonaws.services.chime.sdkdemo.utils.addPaddingsForSystemBars
 import java.lang.ClassCastException
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -463,7 +464,7 @@ class TranscriptionConfigFragment : Fragment() {
             identifyLanguageCheckbox.isChecked = identifyLanguageEnabled
             preferredLanguageSpinner.setSelection(preferredLanguageSpinnerIndex)
         }
-
+        addPaddingsForSystemBars(view)
         return view
     }
 

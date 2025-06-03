@@ -91,9 +91,8 @@ class DefaultAudioClientControllerTest {
     fun setup() {
         // It appears that mocking Log.d needs to happen before MockKAnnotations.init, or else
         // test will complain that Log.d is not mocked
-        mockkStatic(System::class, Log::class)
+        mockkStatic(Log::class)
         every { Log.d(any(), any()) } returns 0
-        every { System.loadLibrary(any()) } just runs
 
         MockKAnnotations.init(this, relaxUnitFun = true)
 
