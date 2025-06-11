@@ -44,104 +44,124 @@ And review the following guides:
 
 > NOTE: If you just want to run demo application, skip to [Running the demo app](#running-the-demo-app)
 
-The Mobile SDKs for Android could be downloaded from the Maven Central repository, by integrated into your Android project's Gradle files, or you can be directly embedded via .aar files.
+To integrate the Amazon Chime SDK, include the main SDK, one media SDK, and optionally the machine learning module.
 
-For the purpose of setup, your project's root folder will be referred to as `root`.
+### SDKs Modules
 
-### From Maven
+| Modules                | Artifact                                            | Description                                                    |
+|------------------------|-----------------------------------------------------|--------------------------------------------------------------- |
+| Main SDK (required)    | `amazon-chime-sdk`                                  | Meeting control, platform integration, and top-level APIs.     |
+| Media SDK (choose one) | `amazon-chime-sdk-media`                            | Full-featured for ARM devices.                                 |
+|                        | `amazon-chime-sdk-media-no-video-codecs`            | Audio only for ARM devices, smaller size.                      |
+|                        | `amazon-chime-sdk-media-x86-stub`                   | Full-featured for ARM devices, stubbed x86 support.            |
+|                        | `amazon-chime-sdk-media-no-video-codecs-x86-stub`   | Audio-only for ARM devices, stubbed x86 support, smaller size. |
+| ML SDK (optional)      | `amazon-chime-sdk-machine-learning`                 | Enables background blur and replacement.                       |
 
-To obtain the dependencies from Maven, add the dependencies to your app's (module-level) `build.gradle`.
+> ⚠️ **Note on x86 stub variants**:  
+> These artifacts **fully support ARM devices**, but include **stubbed x86/x86_64 code** to support building universal APKs or App Bundles.  
+> They are **not intended to run on x86 emulators or devices**, as audio/video functionality is unavailable in x86 code.
 
-Update `build.gradle` in `root/app` and add the following under `dependencies`:
 
+
+### Option 1: Install via Maven Central (Recommended)
+The main SDK includes the full media SDK (`amazon-chime-sdk-media`) and ML SDK (`amazon-chime-sdk-machine-learning`) by default.  
+To use a different media implementation (e.g. audio only or x86 compatible), you must **exclude** the default and add your desired one explicitly.
+
+#### Usage examples
+> Replace `<version>` with the latest version from the latest [release](https://github.com/aws/amazon-chime-sdk-android/releases/latest).
+
+##### Full-feartured (ARM)
+
+```groovy
+implementation 'software.aws.chimesdk:amazon-chime-sdk:<version>'
 ```
-dependencies {
-    implementation 'software.aws.chimesdk:amazon-chime-sdk-media:$MEDIA_VERSION'
-    implementation 'software.aws.chimesdk:amazon-chime-sdk:$SDK_VERSION'
+
+##### Audio-only (ARM)
+```groovy
+implementation('software.aws.chimesdk:amazon-chime-sdk:<version>') {
+    exclude group: 'software.aws.chimesdk', module: 'amazon-chime-sdk-media'
+    exclude group: 'software.aws.chimesdk', module: 'amazon-chime-sdk-machine-learning'
 }
+implementation 'software.aws.chimesdk:amazon-chime-sdk-media-no-video-codecs:<media_version>'
 ```
-The version numbers could be obtained from the latest [release](https://github.com/aws/amazon-chime-sdk-android/releases/latest).
 
-If you don't need video and content share functionality, or software video codec support, you could use `amazon-chime-sdk-media-no-video-codecs` instead to reduce size. Exclude the usage of `amazon-chime-sdk-media` module and/or `amazon-chime-sdk-machine-learning` module from the transitive dependency of `amazon-chime-sdk`:
-
-```
-dependencies {
-    implementation 'software.aws.chimesdk:amazon-chime-sdk-media-no-video-codecs:$MEDIA_VERSION'
-    implementation ('software.aws.chimesdk:amazon-chime-sdk:$MEDIA_VERSION') {
-        exclude module: 'amazon-chime-sdk-media'
-        exclude module: 'amazon-chime-sdk-machine-learning'
-    }
+##### Full-featured (ARM) + x86 stub
+```groovy
+implementation('software.aws.chimesdk:amazon-chime-sdk:<version>') {
+    exclude group: 'software.aws.chimesdk', module: 'amazon-chime-sdk-media'
 }
+implementation 'software.aws.chimesdk:amazon-chime-sdk-media-x86-stub:<media_version>'
 ```
 
-Projects can now build Arm and x86 targets, which may be useful if bundling an app. x86 targets will not function and are not intended to be installed or run on any x86 device or emulator.
-**Important: Only Arm devices are supported.**
-
-
-If you need non-functional x86 stubs in the media binary in order to bundle your app, you can append `-x86-stub` to your chosen media dependency. For example:
-```
-dependencies {
-    implementation 'software.aws.chimesdk:amazon-chime-sdk-media-no-video-codecs-x86-stub:$MEDIA_VERSION'
-    implementation ('software.aws.chimesdk:amazon-chime-sdk:$MEDIA_VERSION') {
-        exclude module: 'amazon-chime-sdk-media'
-        exclude module: 'amazon-chime-sdk-machine-learning'
-    }
+##### Audio-only (ARM) + x86 stub
+```groovy
+implementation('software.aws.chimesdk:amazon-chime-sdk:<version>') {
+    exclude group: 'software.aws.chimesdk', module: 'amazon-chime-sdk-media'
+    exclude group: 'software.aws.chimesdk', module: 'amazon-chime-sdk-machine-learning'
 }
+implementation 'software.aws.chimesdk:amazon-chime-sdk-media-no-video-codecs-x86-stub:<media_version>'
 ```
-### Manually download SDK binaries
+
+### Option 2: Using AAR Files Directly
 To include the SDK binaries in your own project, follow these steps.
 
-#### 1. Download binaries
+#### Step 1: Download the binaries
 
-Download `amazon-chime-sdk` and `amazon-chime-sdk-media` binaries from the latest [release](https://github.com/aws/amazon-chime-sdk-android/releases/latest).
+Download the necessary `.aar` files from the latest [release](https://github.com/aws/amazon-chime-sdk-android/releases/latest), including:
 
-If you like to use more machine learning features, e.g. background blur/replacement, also download the `amazon-chime-sdk-machine-learning` binary from the latest [release](https://github.com/aws/amazon-chime-sdk-android/releases/latest). Otherwise, you can ignore all references to `amazon-chime-sdk-machine-learning` in the instructions below.
+- `amazon-chime-sdk`
+- the media SDK variant you need
+- optionally, `amazon-chime-sdk-machine-learning`
 
-If you don't need video and content share functionality, or software video codec support, you could use `amazon-chime-sdk-media-no-video-codecs` instead of `amazon-chime-sdk-media` to exclude software video codecs support and reduce size. If you do, you can treat all references to `amazon-chime-sdk-media` as `amazon-chime-sdk-media-no-video-codecs` in the instructions below. 
+> **Note:** Do not mix binaries from different releases.
 
-Projects can now build Arm and x86 targets, which may be useful if bundling an app. x86 targets will not function and are not intended to be installed or run on any x86 device or emulator.
-**Important: Only Arm devices are supported.**
+Copy the `.aar` files into your app’s `libs` directory.
 
-If you need non-functional x86 stubs combined with fully functional arm architectures in order to bundle your app, you can use `amazon-chime-sdk-media-x86-stub` or `amazon-chime-sdk-media-no-video-codecs-x86-stub` media binaries and substitute them for `amazon-chime-sdk-media` references in the instructions below.
+#### Step 2: Update Gradle configuration
 
-**NOTE: We do not support mixing and matching binaries from different releases.**
+In your **project-level** `build.gradle`, add:
 
-Unzip them and copy the aar files to `root/app/libs`
-
-#### 2. Update gradle files
-
-Update `build.gradle` in `root` by adding the following under `repositories` in `allprojects`:
-
-```
+```groovy
 allprojects {
    repositories {
-      jcenter()
       flatDir {
         dirs 'libs'
       }
+      //...
    }
 }
 ```
 
-Update `build.gradle` in `root/app` and add the following under `dependencies`:
+In your **app-level** build.gradle, add:
 
-```
-implementation(name: 'amazon-chime-sdk', ext: 'aar')
-implementation(name: 'amazon-chime-sdk-media', ext: 'aar')
+```groovy
+dependencies {
+    implementation(name: 'amazon-chime-sdk', ext: 'aar')
+    implementation(name: '<chosen-media-aar-name>', ext: 'aar')
+
+    // Optional
+    implementation(name: 'amazon-chime-sdk-machine-learning', ext: 'aar')
+}
 ```
 
-If you are using `amazon-chime-sdk-machine-learning` library, then add below statement as well under `dependencies`:
+Replace <chosen-media-aar-name> with the media SDK variant you downloaded, such as:
+- amazon-chime-sdk-media
+- amazon-chime-sdk-media-no-video-codecs
+- amazon-chime-sdk-media-x86-stub
+- amazon-chime-sdk-media-no-video-codecs-x86-stub
 
-```
-implementation(name: 'amazon-chime-sdk-machine-learning', ext: 'aar')
-```
+### Java Compatibility
+For Java 17 compatibility, add this inside your `app/build.gradle`:
 
-Update `build.gradle` in `root/app` under `compileOptions`:
-
-```
-compileOptions {
-    sourceCompatibility JavaVersion.VERSION_17
-    targetCompatibility JavaVersion.VERSION_17
+```groovy
+android {
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
+    kotlinOptions {
+        jvmTarget = "17"
+    }
 }
 ```
 
@@ -288,7 +308,7 @@ audioDevices.forEach {
 ```kotlin
 // Filter out OTHER type which is currently not supported for selection
 val audioDevices = meetingSession.audioVideo.listAudioDevices().filter {
-    it.type != MediaDeviceType.OTHER)
+    it.type != MediaDeviceType.OTHER
 }
 val device = /* An item from audioDevices */
 meetingSession.audioVideo.chooseAudioDevice(device)
@@ -348,7 +368,7 @@ override fun onAudioDeviceChanged(freshAudioDeviceList: List<MediaDevice>) {
 #### Use case 8. Choose the audio configuration.
 
 > When joining a meeting, each configuration will have a default if not explicitly specified when starting the audio session.
-> 
+>
 > - Supported AudioMode options: *Mono/16KHz*, *Mono/48KHz*, and *Stereo/48KHz*. Default is *Stereo/48KHz*.
 > - Supported AudioDeviceCapabilities options: *Input and Output*, *Output Only*, and *None*. Default is *Input and Output*.
 > - Supported AudioStreamType options: *VoiceCall* and *Music*. Default is *VoiceCall*
@@ -681,7 +701,7 @@ meetingSession.audioVideo.realtimeSendDataMessage(
 #### Use case 24. Stop a session.
 
 ```kotlin
-val observer = object: AudioVideoObserver {  
+val observer = object: AudioVideoObserver {
     override fun onAudioSessionStopped(sessionStatus: MeetingSessionStatus) {
         // This is where meeting ended.
         // You can do some clean up work here.
