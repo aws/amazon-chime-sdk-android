@@ -41,7 +41,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 class HomeActivity : AppCompatActivity() {
-    private val logger = ConsoleLogger(LogLevel.INFO)
+    private val logger = ConsoleLogger(LogLevel.VERBOSE)
     private val uiScope = CoroutineScope(Dispatchers.Main)
 
     private val MEETING_REGION = "us-east-1"

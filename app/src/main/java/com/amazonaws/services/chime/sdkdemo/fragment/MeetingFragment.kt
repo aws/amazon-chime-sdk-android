@@ -144,7 +144,7 @@ class MeetingFragment : Fragment(),
     MetricsObserver, ActiveSpeakerObserver, DeviceChangeObserver, DataMessageObserver,
     ContentShareObserver, EventAnalyticsObserver, TranscriptEventObserver,
     PrimaryMeetingPromotionObserver {
-    private val logger = ConsoleLogger(LogLevel.DEBUG)
+    private val logger = ConsoleLogger(LogLevel.VERBOSE)
     private val mutex = Mutex()
     private val uiScope = CoroutineScope(Dispatchers.Main)
     private val meetingModel: MeetingModel by lazy { ViewModelProvider(this)[MeetingModel::class.java] }
