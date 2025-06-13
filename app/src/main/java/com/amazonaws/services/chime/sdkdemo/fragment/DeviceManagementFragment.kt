@@ -33,6 +33,7 @@ import com.amazonaws.services.chime.sdk.meetings.utils.logger.LogLevel
 import com.amazonaws.services.chime.sdkdemo.R
 import com.amazonaws.services.chime.sdkdemo.activity.HomeActivity
 import com.amazonaws.services.chime.sdkdemo.activity.MeetingActivity
+import com.amazonaws.services.chime.sdkdemo.utils.addPaddingsForSystemBars
 import com.amazonaws.services.chime.sdkdemo.utils.isLandscapeMode
 import java.lang.ClassCastException
 import kotlinx.coroutines.CoroutineScope
@@ -200,7 +201,7 @@ class DeviceManagementFragment : Fragment(), DeviceChangeObserver {
 
             cameraCaptureSource.start()
         }
-
+        addPaddingsForSystemBars(view)
         return view
     }
 

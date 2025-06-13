@@ -64,8 +64,7 @@ class DefaultMeetingSessionTest {
     @Before
     fun setup() {
         // Mock Log.d first because initializing the AudioClient mock appears to fail otherwise
-        mockkStatic(System::class, Log::class)
-        every { System.loadLibrary(any()) } just runs
+        mockkStatic(Log::class)
         every { Log.d(any(), any()) } returns 0
         MockKAnnotations.init(this, relaxed = true)
         every { context.assets } returns assetManager
