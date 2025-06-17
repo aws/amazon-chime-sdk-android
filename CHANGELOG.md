@@ -1,4 +1,4 @@
-## Unreleased
+## [0.25.0] - 2025-06-17
 
 ### Changed
 * Compile and target Android SDK 35; also update gradle, AGP, and dependencies
