@@ -25,6 +25,11 @@ enum class EventName {
     meetingStartSucceeded,
 
     /**
+     * The meeting reconnected.
+     */
+    meetingReconnected,
+
+    /**
      * The meeting failed to start.
      */
     meetingStartFailed,

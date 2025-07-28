@@ -8,7 +8,6 @@ package com.amazonaws.services.chime.sdk.meetings.internal.audio
 import com.amazonaws.services.chime.sdk.meetings.analytics.EventAnalyticsController
 import com.amazonaws.services.chime.sdk.meetings.analytics.EventAttributeName
 import com.amazonaws.services.chime.sdk.meetings.analytics.EventName
-import com.amazonaws.services.chime.sdk.meetings.analytics.MeetingHistoryEventName
 import com.amazonaws.services.chime.sdk.meetings.analytics.MeetingStatsCollector
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.AttendeeInfo
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.AudioVideoObserver
@@ -102,15 +101,18 @@ class DefaultAudioClientObserver(
             SessionStateControllerAction.FinishConnecting -> {
                 when (currentAudioState) {
                     SessionStateControllerAction.Connecting -> {
-                        notifyStartSucceeded()
+                        meetingStatsCollector.updateMeetingStartTimeMs()
+                        eventAnalyticsController.publishEvent(
+                            EventName.meetingStartSucceeded
+                        )
                         notifyAudioClientObserver { observer -> observer.onAudioSessionStarted(false) }
                     }
                     SessionStateControllerAction.Reconnecting -> {
                         meetingStatsCollector.incrementRetryCount()
-                        eventAnalyticsController.pushHistory(
-                            MeetingHistoryEventName.meetingReconnected
+                        meetingStatsCollector.updateMeetingReconnectedTimeMs()
+                        eventAnalyticsController.publishEvent(
+                            EventName.meetingReconnected
                         )
-                        notifyStartSucceeded()
                         notifyAudioClientObserver {
                             observer -> observer.onAudioSessionStarted(true)
                             primaryMeetingPromotionObserver?.onPrimaryMeetingDemotion(MeetingSessionStatus(MeetingSessionStatusCode.AudioInternalServerError))
@@ -137,6 +139,7 @@ class DefaultAudioClientObserver(
                 }
             }
             SessionStateControllerAction.Reconnecting -> {
+                meetingStatsCollector.updateMeetingStartReconnectingTimeMs()
                 if (currentAudioState == SessionStateControllerAction.FinishConnecting) {
                     notifyAudioClientObserver { observer -> observer.onAudioSessionDropped() }
                 }
@@ -177,13 +180,6 @@ class DefaultAudioClientObserver(
         }
         currentAudioState = newAudioState
         currentAudioStatus = newAudioStatus
-    }
-
-    private fun notifyStartSucceeded() {
-        meetingStatsCollector.updateMeetingStartTimeMs()
-        eventAnalyticsController.publishEvent(
-            EventName.meetingStartSucceeded
-        )
     }
 
     override fun onVolumeStateChange(attendeeUpdates: Array<out AttendeeUpdate>?) {
