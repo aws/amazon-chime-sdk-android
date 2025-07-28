@@ -59,6 +59,7 @@ enum class MeetingHistoryEventName {
         fun fromMeetingEvent(name: EventName): MeetingHistoryEventName {
             return when (name) {
                 EventName.meetingStartSucceeded -> meetingStartSucceeded
+                EventName.meetingReconnected -> meetingReconnected
                 EventName.videoInputFailed -> videoInputFailed
                 EventName.meetingStartRequested -> meetingStartRequested
                 EventName.meetingStartFailed -> meetingStartFailed

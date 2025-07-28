@@ -38,8 +38,14 @@ class DefaultEventAnalyticsController(
         // Add meeting stats for meeting cycle related events
         when (name) {
             EventName.meetingStartSucceeded, EventName.meetingStartFailed,
-            EventName.meetingEnded, EventName.meetingFailed ->
-                eventAttributes.putAll(meetingStatsCollector.getMeetingStatsEventAttributes())
+            EventName.meetingEnded, EventName.meetingFailed, EventName.meetingReconnected ->
+            {
+                val meetingStats = meetingStatsCollector.getMeetingStatsEventAttributes()
+                if (name != EventName.meetingReconnected) {
+                    meetingStats.remove(EventAttributeName.meetingReconnectDurationMs)
+                }
+                eventAttributes.putAll(meetingStats)
+            }
             else -> Unit
         }
 

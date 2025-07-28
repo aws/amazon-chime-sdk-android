@@ -83,6 +83,7 @@ Chime SDK sends these meeting events.
 |--                    |--
 |`meetingStartRequested` |The meeting will start.
 |`meetingStartSucceeded` |The meeting started.
+|`meetingReconnected`    |The meeting reconnected.
 |`meetingStartFailed`    |The meeting failed to start.
 |`meetingEnded`          |The meeting ended.
 |`meetingFailed`         |The meeting ended with one of the following failure [MeetingSessionStatusCode](https://aws.github.io/amazon-chime-sdk-android/amazon-chime-sdk/com.amazonaws.services.chime.sdk.meetings.session/-meeting-session-status-code/index.html): <br><ul><li>`AudioJoinedFromAnotherDevice`</li><li>`AudioDisconnectAudio`</li><li>`AudioAuthenticationRejected`</li><li>`AudioCallAtCapacity`</li><li>`AudioCallEnded`</li><li>`AudioInternalServerError`</li><li>`AudioServiceUnavailable`</li><li>`AudioDisconnected`</li></ul>
@@ -122,12 +123,13 @@ Chime SDK sends a meeting event with attributes. These standard attributes are a
 The following table describes attributes for a meeting.
 |Attribute|Description|Included in
 |--|--|--
-|`maxVideoTileCount`|The maximum number of simultaneous video tiles shared during the meeting. This includes a local tile (your video), remote tiles, and content shares.<br><br>Unit: Count|`meetingStartSucceeded`, `meetingStartFailed`, `meetingEnded`, `meetingFailed`
-|`meetingDurationMs`|The time that elapsed between the beginning (`AudioVideoObserver.onAudioSessionStarted`) and the end (`AudioVideoObserver.onAudioSessionStopped`) of the meeting.<br><br>Unit: Milliseconds|`meetingStartSucceeded`, `meetingStartFailed`, `meetingEnded`, `meetingFailed`
+|`maxVideoTileCount`|The maximum number of simultaneous video tiles shared during the meeting. This includes a local tile (your video), remote tiles, and content shares.<br><br>Unit: Count|`meetingStartSucceeded`, `meetingReconnected`, `meetingStartFailed`, `meetingEnded`, `meetingFailed`
+|`meetingDurationMs`|The time that elapsed between the beginning (`AudioVideoObserver.onAudioSessionStarted`) and the end (`AudioVideoObserver.onAudioSessionStopped`) of the meeting.<br><br>Unit: Milliseconds|`meetingStartSucceeded`, `meetingReconnected`, `meetingStartFailed`, `meetingEnded`, `meetingFailed`
+|`meetingReconnectDuraionMs`|The time taken to reconnect the session after dropped.<br><br>Unit: Milliseconds|`meetingReconnected`
 |`meetingErrorMessage`|The error message that explains why the meeting has failed.| `meetingFailed`
 |`meetingStatus`|The meeting status when the meeting ended or failed. Note that this attribute indicates an enum name in [MeetingSessionStatusCode](https://aws.github.io/amazon-chime-sdk-android/amazon-chime-sdk/com.amazonaws.services.chime.sdk.meetings.session/-meeting-session-status-code/index.html), such as `Left` or `MeetingEnded`.|`meetingStartFailed`, `meetingEnded`, `meetingFailed`
-|`poorConnectionCount`|The number of times the significant packet loss occurred during the meeting. Per count, you receive `AudioVideoObserver.onConnectionBecamePoor`.<br><br>Unit: Count|`meetingStartSucceeded`, `meetingStartFailed`, `meetingEnded`, `meetingFailed`
-|`retryCount`|The number of connection retries performed during the meeting.<br><br>Unit: Count|`meetingStartSucceeded`, `meetingStartFailed`, `meetingEnded`, `meetingFailed`
+|`poorConnectionCount`|The number of times the significant packet loss occurred during the meeting. Per count, you receive `AudioVideoObserver.onConnectionBecamePoor`.<br><br>Unit: Count|`meetingStartSucceeded`, `meetingReconnected`, `meetingStartFailed`, `meetingEnded`, `meetingFailed`
+|`retryCount`|The number of connection retries performed during the meeting.<br><br>Unit: Count|`meetingStartSucceeded`, `meetingReconnected`, `meetingStartFailed`, `meetingEnded`, `meetingFailed`
 
 ### Device attributes
 The following table describes attributes for the camera.

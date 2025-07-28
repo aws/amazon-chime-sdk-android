@@ -89,6 +89,11 @@ enum class EventAttributeName {
     meetingStartDurationMs,
 
     /**
+     * Duration of the meeting reconnect process
+     */
+    meetingReconnectDurationMs,
+
+    /**
      * Duration of the meeting
      */
     meetingDurationMs,
