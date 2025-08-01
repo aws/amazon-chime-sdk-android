@@ -118,7 +118,16 @@ class DefaultAudioClientController(
         if (getRoute() == route) return true
         logger.info(TAG, "Setting route to $route")
 
-        return audioClient.setRoute(route) == AUDIO_CLIENT_RESULT_SUCCESS
+        val result = audioClient.setRoute(route)
+        if(result == AUDIO_CLIENT_RESULT_SUCCESS) {
+            return true
+        } else {
+            val attributes = mutableMapOf<EventAttributeName, Any>(
+                EventAttributeName.audioInputErrorMessage to "Failed to set route. Error: $result"
+            )
+            eventAnalyticsController.publishEvent(EventName.audioInputFailed, attributes)
+            return false
+        }
     }
 
     private fun getDefaultRecordingPreset(): AudioClient.AudioRecordingPreset {

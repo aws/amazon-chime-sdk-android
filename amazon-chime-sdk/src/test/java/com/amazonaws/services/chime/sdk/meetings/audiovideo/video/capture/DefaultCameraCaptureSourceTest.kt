@@ -18,6 +18,9 @@ import android.os.Looper
 import android.util.Range
 import android.view.WindowManager
 import androidx.core.content.ContextCompat
+import com.amazonaws.services.chime.sdk.meetings.analytics.EventAnalyticsController
+import com.amazonaws.services.chime.sdk.meetings.analytics.EventAttributeName
+import com.amazonaws.services.chime.sdk.meetings.analytics.EventName
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoContentHint
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoFrame
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoSink
@@ -45,6 +48,7 @@ import org.junit.After
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Ignore
+import kotlin.Any
 
 class DefaultCameraCaptureSourceTest {
 
@@ -90,6 +94,9 @@ class DefaultCameraCaptureSourceTest {
     private lateinit var mockCameraSession: CameraCaptureSession
 
     @MockK
+    private lateinit var mockEventAnalyticsController: EventAnalyticsController
+
+    @MockK
     private lateinit var mockObserver: CaptureSourceObserver
 
     private val testDispatcher = TestCoroutineDispatcher()
@@ -132,6 +139,8 @@ class DefaultCameraCaptureSourceTest {
 
         // Most of the previous mocks need to be done before constructor call
         MockKAnnotations.init(this, relaxUnitFun = true)
+
+        testCameraCaptureSource.eventAnalyticsController = mockEventAnalyticsController
 
         every { mockCameraManager.getCameraCharacteristics("0") } returns mockFrontCameraCharacteristics
         every { mockCameraManager.getCameraCharacteristics("1") } returns mockBackCameraCharacteristics
@@ -269,23 +278,10 @@ class DefaultCameraCaptureSourceTest {
         sessionCallbackSlot.captured.onConfigured(mockCameraSession)
 
         verify { mockObserver.onCaptureFailed(CaptureSourceError.ConfigurationFailure) }
-    }
 
-    @Ignore("Broken on build server, possible Mockk issue")
-    fun `FPS range above max value still is selected`() {
-        val stateCallbackSlot = slot<CameraDevice.StateCallback>()
-        every { mockCameraManager.openCamera(any(), capture(stateCallbackSlot), any()) } just runs
-        val sessionCallbackSlot = slot<CameraCaptureSession.StateCallback>()
-        every { mockCameraDevice.createCaptureSession(any(), capture(sessionCallbackSlot), any()) } just runs
-
-        every { mockFrontCameraCharacteristics.get(CameraCharacteristics.CONTROL_AE_AVAILABLE_TARGET_FPS_RANGES) } returns arrayOf(Range(30, 30))
-
-        testCameraCaptureSource.addCaptureSourceObserver(mockObserver)
-        testCameraCaptureSource.start()
-
-        stateCallbackSlot.captured.onOpened(mockCameraDevice)
-        sessionCallbackSlot.captured.onConfigured(mockCameraSession)
-
-        verify { mockObserver.onCaptureFailed(CaptureSourceError.ConfigurationFailure) }
+        val attributes = mutableMapOf<EventAttributeName, Any>(
+            EventAttributeName.videoInputErrorMessage to CaptureSourceError.ConfigurationFailure
+        )
+        verify { mockEventAnalyticsController.publishEvent(EventName.videoInputFailed, attributes) }
     }
 }

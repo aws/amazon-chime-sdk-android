@@ -205,6 +205,11 @@ class DefaultAudioClientControllerTest {
         val testOutput: Boolean = audioClientController.setRoute(testNewRoute)
 
         assertFalse(testOutput)
+
+        val attributes = mutableMapOf<EventAttributeName, Any>(
+            EventAttributeName.audioInputErrorMessage to "Failed to set route. Error: $testAudioClientFailureCode"
+        )
+        verify { mockEventAnalyticsController.publishEvent(EventName.audioInputFailed, attributes) }
     }
 
     @Test
