@@ -12,7 +12,9 @@ import androidx.annotation.RequiresApi
 import androidx.core.content.ContextCompat
 import com.amazonaws.services.chime.sdk.meetings.analytics.EventAnalyticsController
 import com.amazonaws.services.chime.sdk.meetings.analytics.EventAnalyticsObserver
+import com.amazonaws.services.chime.sdk.meetings.analytics.EventAttributeName
 import com.amazonaws.services.chime.sdk.meetings.analytics.EventAttributes
+import com.amazonaws.services.chime.sdk.meetings.analytics.EventName
 import com.amazonaws.services.chime.sdk.meetings.analytics.MeetingHistoryEvent
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.audio.AudioDeviceCapabilities
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.audio.activespeakerdetector.ActiveSpeakerDetectorFacade
@@ -272,6 +274,10 @@ class DefaultAudioVideoFacade(
     private fun checkAudioPermissions(audioDeviceCapabilities: AudioDeviceCapabilities) {
         val hasRequiredPermissions: Boolean = audioDeviceCapabilities.requiredPermissions().all { ContextCompat.checkSelfPermission(context, it) == PackageManager.PERMISSION_GRANTED }
         if (!hasRequiredPermissions) {
+            val attributes = mutableMapOf<EventAttributeName, Any>(
+                EventAttributeName.deviceAccessErrorMessage to "No audio permission"
+            )
+            eventAnalyticsController.publishEvent(EventName.deviceAccessFailed, attributes)
             throw SecurityException("Missing necessary permissions for WebRTC: ${audioDeviceCapabilities.requiredPermissions().joinToString()}")
         }
     }

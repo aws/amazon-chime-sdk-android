@@ -11,6 +11,8 @@ import android.media.AudioDeviceInfo
 import android.media.AudioManager
 import android.media.AudioRecordingConfiguration
 import com.amazonaws.services.chime.sdk.meetings.analytics.EventAnalyticsController
+import com.amazonaws.services.chime.sdk.meetings.analytics.EventAttributeName
+import com.amazonaws.services.chime.sdk.meetings.analytics.EventName
 import com.amazonaws.services.chime.sdk.meetings.analytics.MeetingHistoryEventName
 import com.amazonaws.services.chime.sdk.meetings.internal.audio.AudioClientController
 import com.amazonaws.services.chime.sdk.meetings.internal.audio.AudioClientState
@@ -23,6 +25,7 @@ import io.mockk.impl.annotations.MockK
 import io.mockk.mockkClass
 import io.mockk.mockkStatic
 import io.mockk.verify
+import kotlin.Any
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.TestCoroutineDispatcher
@@ -204,6 +207,19 @@ class DefaultDeviceControllerTest {
                         it.label == "my bluetooth headphone (Bluetooth)"
             )
         }
+    }
+
+    @Test
+    fun `listAudioDevices should public deviceAccessFailed event when no device available`() {
+        setupForNewAPILevel()
+        every { audioManager.getDevices(AudioManager.GET_DEVICES_OUTPUTS) } returns arrayOf()
+
+        deviceController.listAudioDevices()
+
+        val attributes = mutableMapOf<EventAttributeName, Any>(
+            EventAttributeName.deviceAccessErrorMessage to "No available audio devices"
+        )
+        verify(exactly = 1) { eventAnalyticsController.publishEvent(EventName.deviceAccessFailed, attributes) }
     }
 
     @Test

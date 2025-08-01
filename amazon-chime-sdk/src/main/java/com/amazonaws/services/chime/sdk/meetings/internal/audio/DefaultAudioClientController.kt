@@ -119,7 +119,7 @@ class DefaultAudioClientController(
         logger.info(TAG, "Setting route to $route")
 
         val result = audioClient.setRoute(route)
-        if(result == AUDIO_CLIENT_RESULT_SUCCESS) {
+        if (result == AUDIO_CLIENT_RESULT_SUCCESS) {
             return true
         } else {
             val attributes = mutableMapOf<EventAttributeName, Any>(

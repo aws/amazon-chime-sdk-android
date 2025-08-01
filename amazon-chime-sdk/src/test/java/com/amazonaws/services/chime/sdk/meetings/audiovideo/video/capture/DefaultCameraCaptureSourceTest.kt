@@ -40,6 +40,7 @@ import io.mockk.mockkStatic
 import io.mockk.runs
 import io.mockk.slot
 import io.mockk.verify
+import kotlin.Any
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.test.TestCoroutineDispatcher
 import kotlinx.coroutines.test.resetMain
@@ -48,7 +49,6 @@ import org.junit.After
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Ignore
-import kotlin.Any
 
 class DefaultCameraCaptureSourceTest {
 
@@ -280,8 +280,8 @@ class DefaultCameraCaptureSourceTest {
         verify { mockObserver.onCaptureFailed(CaptureSourceError.ConfigurationFailure) }
 
         val attributes = mutableMapOf<EventAttributeName, Any>(
-            EventAttributeName.videoInputErrorMessage to CaptureSourceError.ConfigurationFailure
+            EventAttributeName.deviceAccessErrorMessage to CaptureSourceError.ConfigurationFailure
         )
-        verify { mockEventAnalyticsController.publishEvent(EventName.videoInputFailed, attributes) }
+        verify { mockEventAnalyticsController.publishEvent(EventName.deviceAccessFailed, attributes) }
     }
 }

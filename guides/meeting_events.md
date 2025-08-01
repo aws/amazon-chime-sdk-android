@@ -135,8 +135,9 @@ The following table describes attributes for a meeting.
 The following table describes attributes for the camera.
 |Attribute|Description|Included in
 |--|--|--
+|`audioInputErrorMessage`|The error message that explains why the microphone selection failed.|`audioInputFailed`
 |`videoInputError`|The error message that explains why the camera selection failed.|`videoInputFailed`
-
+|`deviceAccessErrorMessage`|The error message that explains why the microphone or camera access failed.`|`deviceAccessFailed`
 ### The meeting history attribute
 The meeting history attribute is a list of states. Each state object contains the state name and timestamp.
 
@@ -170,6 +171,7 @@ The following table lists available states.
 |State|Description
 |--|--
 |`audioInputSelected`|The microphone was selected.
+|`audioInputFailed`|The microphone selection failed.
 |`meetingEnded`|The meeting ended.
 |`meetingFailed`|The meeting ended with the failure status.
 |`meetingReconnected`|The meeting reconnected.
@@ -178,6 +180,7 @@ The following table lists available states.
 |`meetingStartSucceeded`|The meeting started.
 |`videoInputFailed`|The camera selection failed.
 |`videoInputSelected`|The camera was selected.
+|`deviceAccessFailed`|The microphone or camera access failed.
 
 ## Example
 

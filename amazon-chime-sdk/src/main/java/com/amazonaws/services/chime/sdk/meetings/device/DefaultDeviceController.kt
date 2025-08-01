@@ -18,6 +18,8 @@ import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.annotation.VisibleForTesting
 import com.amazonaws.services.chime.sdk.meetings.analytics.EventAnalyticsController
+import com.amazonaws.services.chime.sdk.meetings.analytics.EventAttributeName
+import com.amazonaws.services.chime.sdk.meetings.analytics.EventName
 import com.amazonaws.services.chime.sdk.meetings.analytics.MeetingHistoryEventName
 import com.amazonaws.services.chime.sdk.meetings.internal.audio.AudioClientController
 import com.amazonaws.services.chime.sdk.meetings.internal.audio.AudioClientState
@@ -26,6 +28,7 @@ import com.amazonaws.services.chime.sdk.meetings.internal.utils.ConcurrentSet
 import com.amazonaws.services.chime.sdk.meetings.internal.utils.ObserverUtils
 import com.amazonaws.services.chime.sdk.meetings.internal.video.VideoClientController
 import com.xodee.client.audio.audioclient.AudioClient
+import kotlin.Any
 
 class DefaultDeviceController(
     private val context: Context,
@@ -117,7 +120,12 @@ class DefaultDeviceController(
                     )
                 )
             }
-
+            if (audioDevices.isEmpty()) {
+                val attributes = mutableMapOf<EventAttributeName, Any>(
+                    EventAttributeName.deviceAccessErrorMessage to "No available audio devices"
+                )
+                eventAnalyticsController.publishEvent(EventName.deviceAccessFailed, attributes)
+            }
             // It doesn't look like Android can switch between two wired connection, so we'll assume WIRED_HEADSET
             // is where audio is routed.
             if (wiredDeviceCount > 1) audioDevices.removeIf { it.type == MediaDeviceType.AUDIO_USB_HEADSET }

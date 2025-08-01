@@ -20,6 +20,11 @@ enum class EventName {
     videoInputFailed,
 
     /**
+     * The microphone or camera device access failed.
+     */
+    deviceAccessFailed,
+
+    /**
      * The meeting will start.
      */
     meetingStartRequested,
