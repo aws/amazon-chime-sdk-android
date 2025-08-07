@@ -18,6 +18,8 @@ import com.amazonaws.services.chime.sdk.meetings.internal.audio.AudioClientContr
 import com.amazonaws.services.chime.sdk.meetings.internal.audio.AudioClientState
 import com.amazonaws.services.chime.sdk.meetings.internal.audio.DefaultAudioClientController
 import com.amazonaws.services.chime.sdk.meetings.internal.video.VideoClientController
+import com.amazonaws.services.chime.sdk.meetings.utils.MediaError
+import com.amazonaws.services.chime.sdk.meetings.utils.logger.Logger
 import com.xodee.client.audio.audioclient.AudioClient
 import io.mockk.MockKAnnotations
 import io.mockk.every
@@ -79,6 +81,9 @@ class DefaultDeviceControllerTest {
     @MockK
     private lateinit var deviceChangeObserver: DeviceChangeObserver
 
+    @MockK
+    private lateinit var mockLogger: Logger
+
     private lateinit var deviceController: DefaultDeviceController
 
     private val testDispatcher = TestCoroutineDispatcher()
@@ -90,6 +95,7 @@ class DefaultDeviceControllerTest {
             audioClientController,
             videoClientController,
             eventAnalyticsController,
+            mockLogger,
             audioManager,
             24
         )
@@ -104,6 +110,7 @@ class DefaultDeviceControllerTest {
             audioClientController,
             videoClientController,
             eventAnalyticsController,
+            mockLogger,
             audioManager,
             21
         )
@@ -210,16 +217,16 @@ class DefaultDeviceControllerTest {
     }
 
     @Test
-    fun `listAudioDevices should public deviceAccessFailed event when no device available`() {
+    fun `listAudioDevices should public audioAccessFailed event when no device available`() {
         setupForNewAPILevel()
         every { audioManager.getDevices(AudioManager.GET_DEVICES_OUTPUTS) } returns arrayOf()
 
         deviceController.listAudioDevices()
 
         val attributes = mutableMapOf<EventAttributeName, Any>(
-            EventAttributeName.deviceAccessErrorMessage to "No available audio devices"
+            EventAttributeName.audioAccessErrorMessage to MediaError.NoAudioDevices
         )
-        verify(exactly = 1) { eventAnalyticsController.publishEvent(EventName.deviceAccessFailed, attributes) }
+        verify(exactly = 1) { eventAnalyticsController.publishEvent(EventName.audioAccessFailed, attributes) }
     }
 
     @Test

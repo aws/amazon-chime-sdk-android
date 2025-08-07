@@ -31,9 +31,14 @@ enum class MeetingHistoryEventName {
     videoInputSelected,
 
     /**
-     * The microphone or camera device access failed.
+     * The microphone device access failed.
      */
-    deviceAccessFailed,
+    audioAccessFailed,
+
+    /**
+     * The camera device access failed.
+     */
+    videoAccessFailed,
 
     /**
      * The meeting failed to start.
@@ -72,7 +77,8 @@ enum class MeetingHistoryEventName {
                 EventName.meetingReconnected -> meetingReconnected
                 EventName.audioInputFailed -> audioInputFailed
                 EventName.videoInputFailed -> videoInputFailed
-                EventName.deviceAccessFailed -> deviceAccessFailed
+                EventName.audioAccessFailed -> audioAccessFailed
+                EventName.videoAccessFailed -> videoAccessFailed
                 EventName.meetingStartRequested -> meetingStartRequested
                 EventName.meetingStartFailed -> meetingStartFailed
                 EventName.meetingEnded -> meetingEnded

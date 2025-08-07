@@ -131,7 +131,12 @@ enum class EventAttributeName {
     videoInputErrorMessage,
 
     /**
-     * The error message that explains why the microphone or camera access failed
+     * The error message that explains why the microphone access failed
      */
-    deviceAccessErrorMessage;
+    audioAccessErrorMessage,
+
+    /**
+     * The error message that explains why the camera access failed
+     */
+    videoAccessErrorMessage;
 }

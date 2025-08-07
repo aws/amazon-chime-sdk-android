@@ -27,6 +27,8 @@ import com.amazonaws.services.chime.sdk.meetings.internal.audio.DefaultAudioClie
 import com.amazonaws.services.chime.sdk.meetings.internal.utils.ConcurrentSet
 import com.amazonaws.services.chime.sdk.meetings.internal.utils.ObserverUtils
 import com.amazonaws.services.chime.sdk.meetings.internal.video.VideoClientController
+import com.amazonaws.services.chime.sdk.meetings.utils.MediaError
+import com.amazonaws.services.chime.sdk.meetings.utils.logger.Logger
 import com.xodee.client.audio.audioclient.AudioClient
 import kotlin.Any
 
@@ -35,6 +37,7 @@ class DefaultDeviceController(
     private val audioClientController: AudioClientController,
     private val videoClientController: VideoClientController,
     private val eventAnalyticsController: EventAnalyticsController,
+    private val logger: Logger,
     private val audioManager: AudioManager = context.getSystemService(Context.AUDIO_SERVICE) as AudioManager,
     private val buildVersion: Int = Build.VERSION.SDK_INT
 ) : DeviceController {
@@ -46,6 +49,8 @@ class DefaultDeviceController(
     private var receiver: BroadcastReceiver? = null
 
     private var audioDeviceCallback: AudioDeviceCallback? = null
+
+    private val TAG = "DefaultDeviceController"
 
     init {
         @SuppressLint("NewApi")
@@ -122,9 +127,10 @@ class DefaultDeviceController(
             }
             if (audioDevices.isEmpty()) {
                 val attributes = mutableMapOf<EventAttributeName, Any>(
-                    EventAttributeName.deviceAccessErrorMessage to "No available audio devices"
+                    EventAttributeName.audioAccessErrorMessage to MediaError.NoAudioDevices
                 )
-                eventAnalyticsController.publishEvent(EventName.deviceAccessFailed, attributes)
+                eventAnalyticsController.publishEvent(EventName.audioAccessFailed, attributes)
+                logger.error(TAG, "List audio devices failed: ${MediaError.NoAudioDevices}")
             }
             // It doesn't look like Android can switch between two wired connection, so we'll assume WIRED_HEADSET
             // is where audio is routed.

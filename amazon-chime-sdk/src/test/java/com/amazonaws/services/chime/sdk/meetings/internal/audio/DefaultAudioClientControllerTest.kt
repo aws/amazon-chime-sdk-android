@@ -22,6 +22,7 @@ import com.amazonaws.services.chime.sdk.meetings.audiovideo.audio.AudioRecording
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.audio.AudioStreamType
 import com.amazonaws.services.chime.sdk.meetings.internal.utils.AppInfoUtil
 import com.amazonaws.services.chime.sdk.meetings.session.MeetingSessionStatusCode
+import com.amazonaws.services.chime.sdk.meetings.utils.MediaError
 import com.amazonaws.services.chime.sdk.meetings.utils.logger.Logger
 import com.xodee.client.audio.audioclient.AppInfo
 import com.xodee.client.audio.audioclient.AudioClient
@@ -207,7 +208,7 @@ class DefaultAudioClientControllerTest {
         assertFalse(testOutput)
 
         val attributes = mutableMapOf<EventAttributeName, Any>(
-            EventAttributeName.audioInputErrorMessage to "Failed to set route. Error: $testAudioClientFailureCode"
+            EventAttributeName.audioInputErrorMessage to MediaError.FailedToSetRoute
         )
         verify { mockEventAnalyticsController.publishEvent(EventName.audioInputFailed, attributes) }
     }

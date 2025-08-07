@@ -29,6 +29,7 @@ import com.amazonaws.services.chime.sdk.meetings.realtime.RealtimeControllerFaca
 import com.amazonaws.services.chime.sdk.meetings.realtime.RealtimeObserver
 import com.amazonaws.services.chime.sdk.meetings.realtime.TranscriptEventObserver
 import com.amazonaws.services.chime.sdk.meetings.realtime.datamessage.DataMessageObserver
+import com.amazonaws.services.chime.sdk.meetings.utils.PermissionError
 import io.mockk.MockKAnnotations
 import io.mockk.every
 import io.mockk.impl.annotations.InjectMockKs
@@ -122,9 +123,9 @@ class DefaultAudioVideoFacadeTest {
             audioVideoFacade.start()
         }
         val attributes = mutableMapOf<EventAttributeName, Any>(
-            EventAttributeName.deviceAccessErrorMessage to "No audio permission"
+            EventAttributeName.audioAccessErrorMessage to PermissionError.AudioPermissionError
         )
-        verify(exactly = 1) { eventAnalyticsController.publishEvent(EventName.deviceAccessFailed, attributes) }
+        verify(exactly = 1) { eventAnalyticsController.publishEvent(EventName.audioAccessFailed, attributes) }
     }
 
     @Test

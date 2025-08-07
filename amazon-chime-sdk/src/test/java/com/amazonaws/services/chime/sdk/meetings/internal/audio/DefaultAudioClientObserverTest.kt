@@ -8,7 +8,6 @@ package com.amazonaws.services.chime.sdk.meetings.internal.audio
 import android.util.Log
 import com.amazonaws.services.chime.sdk.meetings.TestConstant
 import com.amazonaws.services.chime.sdk.meetings.analytics.EventAnalyticsController
-import com.amazonaws.services.chime.sdk.meetings.analytics.EventAttributeName
 import com.amazonaws.services.chime.sdk.meetings.analytics.EventName
 import com.amazonaws.services.chime.sdk.meetings.analytics.MeetingStatsCollector
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.AttendeeInfo
@@ -55,7 +54,6 @@ import io.mockk.impl.annotations.MockK
 import io.mockk.mockkStatic
 import io.mockk.verify
 import io.mockk.verifyOrder
-import kotlin.Any
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.TestCoroutineDispatcher
@@ -2857,34 +2855,6 @@ class DefaultAudioClientObserverTest {
             )
         }
         verifyFailed(MeetingSessionStatusCode.AudioOutputDeviceNotResponding)
-    }
-
-    @Test
-    fun `onAudioClientStateChange should publish deviceAccessFailed event when audio input device not responding`() {
-
-        audioClientObserver.onAudioClientStateChange(
-            AudioClient.AUDIO_CLIENT_OK,
-            AudioClient.AUDIO_CLIENT_ERR_INPUT_DEVICE_NOT_RESPONDING
-        )
-
-        val attributes = mutableMapOf<EventAttributeName, Any>(
-            EventAttributeName.deviceAccessErrorMessage to "Audio input device not responding"
-        )
-        verify(exactly = 1) { mockEventAnalyticsController.publishEvent(EventName.deviceAccessFailed, attributes) }
-    }
-
-    @Test
-    fun `onAudioClientStateChange should publish deviceAccessFailed event when audio output device not responding`() {
-
-        audioClientObserver.onAudioClientStateChange(
-            AudioClient.AUDIO_CLIENT_OK,
-            AudioClient.AUDIO_CLIENT_ERR_OUTPUT_DEVICE_NOT_RESPONDING
-        )
-
-        val attributes = mutableMapOf<EventAttributeName, Any>(
-            EventAttributeName.deviceAccessErrorMessage to "Audio output device not responding"
-        )
-        verify(exactly = 1) { mockEventAnalyticsController.publishEvent(EventName.deviceAccessFailed, attributes) }
     }
 
     // Logger tests

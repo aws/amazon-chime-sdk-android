@@ -39,6 +39,7 @@ import com.amazonaws.services.chime.sdk.meetings.realtime.RealtimeObserver
 import com.amazonaws.services.chime.sdk.meetings.realtime.TranscriptEventObserver
 import com.amazonaws.services.chime.sdk.meetings.realtime.datamessage.DataMessageObserver
 import com.amazonaws.services.chime.sdk.meetings.session.MeetingSessionCredentials
+import com.amazonaws.services.chime.sdk.meetings.utils.PermissionError
 
 class DefaultAudioVideoFacade(
     private val context: Context,
@@ -275,9 +276,9 @@ class DefaultAudioVideoFacade(
         val hasRequiredPermissions: Boolean = audioDeviceCapabilities.requiredPermissions().all { ContextCompat.checkSelfPermission(context, it) == PackageManager.PERMISSION_GRANTED }
         if (!hasRequiredPermissions) {
             val attributes = mutableMapOf<EventAttributeName, Any>(
-                EventAttributeName.deviceAccessErrorMessage to "No audio permission"
+                EventAttributeName.audioAccessErrorMessage to PermissionError.AudioPermissionError
             )
-            eventAnalyticsController.publishEvent(EventName.deviceAccessFailed, attributes)
+            eventAnalyticsController.publishEvent(EventName.audioAccessFailed, attributes)
             throw SecurityException("Missing necessary permissions for WebRTC: ${audioDeviceCapabilities.requiredPermissions().joinToString()}")
         }
     }

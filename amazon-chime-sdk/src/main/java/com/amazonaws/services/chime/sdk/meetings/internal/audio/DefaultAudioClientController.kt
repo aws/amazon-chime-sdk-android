@@ -23,6 +23,7 @@ import com.amazonaws.services.chime.sdk.meetings.internal.utils.AppInfoUtil
 import com.amazonaws.services.chime.sdk.meetings.session.MeetingSessionCredentials
 import com.amazonaws.services.chime.sdk.meetings.session.MeetingSessionStatus
 import com.amazonaws.services.chime.sdk.meetings.session.MeetingSessionStatusCode
+import com.amazonaws.services.chime.sdk.meetings.utils.MediaError
 import com.amazonaws.services.chime.sdk.meetings.utils.logger.Logger
 import com.xodee.client.audio.audioclient.AudioClient
 import com.xodee.client.audio.audioclient.AudioClient.AudioDeviceCapabilitiesInternal
@@ -123,9 +124,10 @@ class DefaultAudioClientController(
             return true
         } else {
             val attributes = mutableMapOf<EventAttributeName, Any>(
-                EventAttributeName.audioInputErrorMessage to "Failed to set route. Error: $result"
+                EventAttributeName.audioInputErrorMessage to MediaError.FailedToSetRoute
             )
             eventAnalyticsController.publishEvent(EventName.audioInputFailed, attributes)
+            logger.error(TAG, "Failed to set route. Error: $result")
             return false
         }
     }

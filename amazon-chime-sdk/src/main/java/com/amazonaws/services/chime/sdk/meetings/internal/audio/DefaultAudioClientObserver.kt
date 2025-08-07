@@ -85,18 +85,6 @@ class DefaultAudioClientObserver(
         val newAudioStatus: MeetingSessionStatusCode? = toAudioStatus(newInternalAudioStatus)
         val newAudioState: SessionStateControllerAction = toAudioClientState(newInternalAudioState, newAudioStatus)
 
-        if (newAudioStatus == MeetingSessionStatusCode.AudioInputDeviceNotResponding) {
-            val attributes = mutableMapOf<EventAttributeName, Any>(
-                EventAttributeName.deviceAccessErrorMessage to "Audio input device not responding"
-            )
-            eventAnalyticsController.publishEvent(EventName.deviceAccessFailed, attributes)
-        } else if (newAudioStatus == MeetingSessionStatusCode.AudioOutputDeviceNotResponding) {
-            val attributes = mutableMapOf<EventAttributeName, Any>(
-                EventAttributeName.deviceAccessErrorMessage to "Audio output device not responding"
-            )
-            eventAnalyticsController.publishEvent(EventName.deviceAccessFailed, attributes)
-        }
-
         if (newAudioStatus == null) {
             logger.warn(
                 TAG,

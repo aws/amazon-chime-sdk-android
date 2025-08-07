@@ -280,8 +280,8 @@ class DefaultCameraCaptureSourceTest {
         verify { mockObserver.onCaptureFailed(CaptureSourceError.ConfigurationFailure) }
 
         val attributes = mutableMapOf<EventAttributeName, Any>(
-            EventAttributeName.deviceAccessErrorMessage to CaptureSourceError.ConfigurationFailure
+            EventAttributeName.videoAccessErrorMessage to CaptureSourceError.ConfigurationFailure
         )
-        verify { mockEventAnalyticsController.publishEvent(EventName.deviceAccessFailed, attributes) }
+        verify { mockEventAnalyticsController.publishEvent(EventName.videoAccessFailed, attributes) }
     }
 }
