@@ -87,10 +87,8 @@ Chime SDK sends these meeting events.
 |`meetingStartFailed`    |The meeting failed to start.
 |`meetingEnded`          |The meeting ended.
 |`meetingFailed`         |The meeting ended with one of the following failure [MeetingSessionStatusCode](https://aws.github.io/amazon-chime-sdk-android/amazon-chime-sdk/com.amazonaws.services.chime.sdk.meetings.session/-meeting-session-status-code/index.html): <br><ul><li>`AudioJoinedFromAnotherDevice`</li><li>`AudioDisconnectAudio`</li><li>`AudioAuthenticationRejected`</li><li>`AudioCallAtCapacity`</li><li>`AudioCallEnded`</li><li>`AudioInternalServerError`</li><li>`AudioServiceUnavailable`</li><li>`AudioDisconnected`</li></ul>
-|`audioInputFailed`      |The microphone selection failed.
-|`videoInputFailed`      |The camera selection failed.
-|`audioAccessFailed`     |The microphone access failed.
-|`videoAccessFailed`     |The camera access failed.
+|`audioInputFailed`      |The microphone selection or access failed.
+|`videoInputFailed`      |The camera selection or access failed.
 
 ### Common attributes
 Chime SDK stores common attributes for event to identify the event.
@@ -139,10 +137,8 @@ The following table describes attributes for a meeting.
 The following table describes attributes for the microphone and camera.
 |Attribute|Description|Included in
 |--|--|--
-|`audioInputErrorMessage`|The error message that explains why the microphone selection failed.|`audioInputFailed`
-|`audioAccessErrorMessage`|The error message that explains why the microphone access failed.|`audioAccessFailed`
-|`videoInputErrorMessage`|The error message that explains why the camera selection failed.|`videoInputFailed`
-|`videoAccessErrorMessage`|The error message that explains why the camera access failed.|`videoAccessFailed`
+|`audioInputErrorMessage`|The error message that explains why the microphone selection or access failed.|`audioInputFailed`
+|`videoInputErrorMessage`|The error message that explains why the camera selection or access failed.|`videoInputFailed`
 ### The meeting history attribute
 The meeting history attribute is a list of states. Each state object contains the state name and timestamp.
 
@@ -182,11 +178,9 @@ The following table lists available states.
 |`meetingStartRequested`|The meeting will start.
 |`meetingStartSucceeded`|The meeting started.
 |`audioInputSelected`|The microphone was selected.
-|`audioInputFailed`|The microphone selection failed.
-|`audioAccessFailed`|The microphone access failed.
-|`videoInputFailed`|The camera selection failed.
+|`audioInputFailed`|The microphone selection or access failed.
 |`videoInputSelected`|The camera was selected.
-|`videoAccessFailed`|The camera access failed.
+|`videoInputFailed`|The camera selection or access failed.
 
 ## Example
 

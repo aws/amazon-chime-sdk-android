@@ -127,9 +127,9 @@ class DefaultDeviceController(
             }
             if (audioDevices.isEmpty()) {
                 val attributes = mutableMapOf<EventAttributeName, Any>(
-                    EventAttributeName.audioAccessErrorMessage to MediaError.NoAudioDevices
+                    EventAttributeName.audioInputErrorMessage to MediaError.NoAudioDevices
                 )
-                eventAnalyticsController.publishEvent(EventName.audioAccessFailed, attributes)
+                eventAnalyticsController.publishEvent(EventName.audioInputFailed, attributes)
                 logger.error(TAG, "List audio devices failed: ${MediaError.NoAudioDevices}")
             }
             // It doesn't look like Android can switch between two wired connection, so we'll assume WIRED_HEADSET

@@ -1,8 +1,8 @@
 ## PENDING
 
 ### Added
-* Added meetingReconnected/audioInputFailed/audioAccessFailed/videoAccessFailed meeting event
-* Added meetingReconnectDurationMs/audioInputErrorMessage/audioAccessErrorMessage/videoAccessErrorMessage meeting event
+* Added meetingReconnected/audioInputFailed meeting event
+* Added meetingReconnectDurationMs/audioInputErrorMessage meeting event
 
 ## [0.25.0] - 2025-06-17
 

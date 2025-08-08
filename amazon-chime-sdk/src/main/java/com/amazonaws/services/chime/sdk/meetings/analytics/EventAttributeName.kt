@@ -121,22 +121,12 @@ enum class EventAttributeName {
     // Device Event Attributes - videoInputFailed
 
     /**
-     * The error of audio input selection such as starting microphone
+     * The error of audio input selection or access such as starting microphone
      */
     audioInputErrorMessage,
 
     /**
-     * The error of video input selection such as starting camera
+     * The error of video input selection or access such as starting camera
      */
     videoInputErrorMessage,
-
-    /**
-     * The error message that explains why the microphone access failed
-     */
-    audioAccessErrorMessage,
-
-    /**
-     * The error message that explains why the camera access failed
-     */
-    videoAccessErrorMessage;
 }

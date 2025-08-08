@@ -217,7 +217,7 @@ class DefaultDeviceControllerTest {
     }
 
     @Test
-    fun `listAudioDevices should public audioAccessFailed event when no device available`() {
+    fun `listAudioDevices should public audioInputFailed event when no device available`() {
         setupForNewAPILevel()
         every { audioManager.getDevices(AudioManager.GET_DEVICES_OUTPUTS) } returns arrayOf()
 
@@ -226,7 +226,7 @@ class DefaultDeviceControllerTest {
         val attributes = mutableMapOf<EventAttributeName, Any>(
             EventAttributeName.audioAccessErrorMessage to MediaError.NoAudioDevices
         )
-        verify(exactly = 1) { eventAnalyticsController.publishEvent(EventName.audioAccessFailed, attributes) }
+        verify(exactly = 1) { eventAnalyticsController.publishEvent(EventName.audioInputFailed, attributes) }
     }
 
     @Test

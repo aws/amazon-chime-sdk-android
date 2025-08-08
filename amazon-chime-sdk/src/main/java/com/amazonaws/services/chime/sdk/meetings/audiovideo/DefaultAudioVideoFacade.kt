@@ -276,9 +276,9 @@ class DefaultAudioVideoFacade(
         val hasRequiredPermissions: Boolean = audioDeviceCapabilities.requiredPermissions().all { ContextCompat.checkSelfPermission(context, it) == PackageManager.PERMISSION_GRANTED }
         if (!hasRequiredPermissions) {
             val attributes = mutableMapOf<EventAttributeName, Any>(
-                EventAttributeName.audioAccessErrorMessage to PermissionError.AudioPermissionError
+                EventAttributeName.audioInputErrorMessage to PermissionError.AudioPermissionError
             )
-            eventAnalyticsController.publishEvent(EventName.audioAccessFailed, attributes)
+            eventAnalyticsController.publishEvent(EventName.audioInputFailed, attributes)
             throw SecurityException("Missing necessary permissions for WebRTC: ${audioDeviceCapabilities.requiredPermissions().joinToString()}")
         }
     }
