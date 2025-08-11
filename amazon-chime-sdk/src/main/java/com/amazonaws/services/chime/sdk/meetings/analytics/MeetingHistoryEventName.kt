@@ -16,7 +16,12 @@ enum class MeetingHistoryEventName {
     audioInputSelected,
 
     /**
-     * The camera selection failed.
+     * The microphone selection or access failed.
+     */
+    audioInputFailed,
+
+    /**
+     * The camera selection or access failed.
      */
     videoInputFailed,
 
@@ -59,6 +64,8 @@ enum class MeetingHistoryEventName {
         fun fromMeetingEvent(name: EventName): MeetingHistoryEventName {
             return when (name) {
                 EventName.meetingStartSucceeded -> meetingStartSucceeded
+                EventName.meetingReconnected -> meetingReconnected
+                EventName.audioInputFailed -> audioInputFailed
                 EventName.videoInputFailed -> videoInputFailed
                 EventName.meetingStartRequested -> meetingStartRequested
                 EventName.meetingStartFailed -> meetingStartFailed

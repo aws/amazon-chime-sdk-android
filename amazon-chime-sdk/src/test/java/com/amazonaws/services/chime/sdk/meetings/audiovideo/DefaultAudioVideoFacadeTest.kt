@@ -10,6 +10,8 @@ import android.content.Context
 import androidx.core.content.ContextCompat
 import com.amazonaws.services.chime.sdk.meetings.analytics.EventAnalyticsController
 import com.amazonaws.services.chime.sdk.meetings.analytics.EventAnalyticsObserver
+import com.amazonaws.services.chime.sdk.meetings.analytics.EventAttributeName
+import com.amazonaws.services.chime.sdk.meetings.analytics.EventName
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.audio.AudioDeviceCapabilities
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.audio.activespeakerdetector.ActiveSpeakerDetectorFacade
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.contentshare.ContentShareController
@@ -27,6 +29,7 @@ import com.amazonaws.services.chime.sdk.meetings.realtime.RealtimeControllerFaca
 import com.amazonaws.services.chime.sdk.meetings.realtime.RealtimeObserver
 import com.amazonaws.services.chime.sdk.meetings.realtime.TranscriptEventObserver
 import com.amazonaws.services.chime.sdk.meetings.realtime.datamessage.DataMessageObserver
+import com.amazonaws.services.chime.sdk.meetings.utils.PermissionError
 import io.mockk.MockKAnnotations
 import io.mockk.every
 import io.mockk.impl.annotations.InjectMockKs
@@ -34,8 +37,10 @@ import io.mockk.impl.annotations.MockK
 import io.mockk.mockkClass
 import io.mockk.mockkStatic
 import io.mockk.verify
+import kotlin.Any
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
+import org.junit.Assert.assertThrows
 import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
@@ -110,11 +115,17 @@ class DefaultAudioVideoFacadeTest {
     @Before
     fun setup() = MockKAnnotations.init(this, relaxUnitFun = true)
 
-    @Test(expected = SecurityException::class)
+    @Test
     fun `start should throw exception when the required permissions are not granted with default AudioDeviceCapabilities`() {
         mockkStatic(ContextCompat::class)
         every { ContextCompat.checkSelfPermission(any(), any()) } returns 1
-        audioVideoFacade.start()
+        assertThrows(SecurityException::class.java) {
+            audioVideoFacade.start()
+        }
+        val attributes = mutableMapOf<EventAttributeName, Any>(
+            EventAttributeName.audioInputErrorMessage to PermissionError.AudioPermissionError
+        )
+        verify(exactly = 1) { eventAnalyticsController.publishEvent(EventName.audioInputFailed, attributes) }
     }
 
     @Test

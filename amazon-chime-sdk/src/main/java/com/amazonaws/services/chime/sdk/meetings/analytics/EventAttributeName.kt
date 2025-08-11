@@ -89,6 +89,11 @@ enum class EventAttributeName {
     meetingStartDurationMs,
 
     /**
+     * Duration of the meeting reconnect process
+     */
+    meetingReconnectDurationMs,
+
+    /**
      * Duration of the meeting
      */
     meetingDurationMs,
@@ -116,7 +121,12 @@ enum class EventAttributeName {
     // Device Event Attributes - videoInputFailed
 
     /**
-     * The error of video input selection such as starting camera
+     * The error of audio input selection or access such as starting microphone
      */
-    videoInputError;
+    audioInputErrorMessage,
+
+    /**
+     * The error of video input selection or access such as starting camera
+     */
+    videoInputErrorMessage,
 }

@@ -9,7 +9,6 @@ import android.util.Log
 import com.amazonaws.services.chime.sdk.meetings.TestConstant
 import com.amazonaws.services.chime.sdk.meetings.analytics.EventAnalyticsController
 import com.amazonaws.services.chime.sdk.meetings.analytics.EventName
-import com.amazonaws.services.chime.sdk.meetings.analytics.MeetingHistoryEventName
 import com.amazonaws.services.chime.sdk.meetings.analytics.MeetingStatsCollector
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.AttendeeInfo
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.AudioVideoObserver
@@ -988,9 +987,8 @@ class DefaultAudioClientObserverTest {
         }
 
         verify(exactly = 1) { mockMeetingStatsCollector.incrementRetryCount() }
-        verify(exactly = 1) { mockMeetingStatsCollector.updateMeetingStartTimeMs() }
-        verify(exactly = 1) { mockEventAnalyticsController.pushHistory(MeetingHistoryEventName.meetingReconnected) }
-        verify(exactly = 1) { mockEventAnalyticsController.publishEvent(EventName.meetingStartSucceeded) }
+        verify(exactly = 1) { mockMeetingStatsCollector.updateMeetingReconnectedTimeMs() }
+        verify(exactly = 1) { mockEventAnalyticsController.publishEvent(EventName.meetingReconnected) }
     }
 
     @Test
@@ -1026,7 +1024,10 @@ class DefaultAudioClientObserverTest {
             )
         }
 
-        verify(exactly = 1) { mockAudioVideoObserver.onAudioSessionDropped() }
+        verify(exactly = 1) {
+            mockMeetingStatsCollector.updateMeetingStartReconnectingTimeMs()
+            mockAudioVideoObserver.onAudioSessionDropped()
+        }
     }
 
     @Test

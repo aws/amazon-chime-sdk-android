@@ -23,6 +23,7 @@ import com.amazonaws.services.chime.sdk.meetings.internal.utils.AppInfoUtil
 import com.amazonaws.services.chime.sdk.meetings.session.MeetingSessionCredentials
 import com.amazonaws.services.chime.sdk.meetings.session.MeetingSessionStatus
 import com.amazonaws.services.chime.sdk.meetings.session.MeetingSessionStatusCode
+import com.amazonaws.services.chime.sdk.meetings.utils.MediaError
 import com.amazonaws.services.chime.sdk.meetings.utils.logger.Logger
 import com.xodee.client.audio.audioclient.AudioClient
 import com.xodee.client.audio.audioclient.AudioClient.AudioDeviceCapabilitiesInternal
@@ -118,7 +119,17 @@ class DefaultAudioClientController(
         if (getRoute() == route) return true
         logger.info(TAG, "Setting route to $route")
 
-        return audioClient.setRoute(route) == AUDIO_CLIENT_RESULT_SUCCESS
+        val result = audioClient.setRoute(route)
+        if (result == AUDIO_CLIENT_RESULT_SUCCESS) {
+            return true
+        } else {
+            val attributes = mutableMapOf<EventAttributeName, Any>(
+                EventAttributeName.audioInputErrorMessage to MediaError.FailedToSetRoute
+            )
+            eventAnalyticsController.publishEvent(EventName.audioInputFailed, attributes)
+            logger.error(TAG, "Failed to set route. Error: $result")
+            return false
+        }
     }
 
     private fun getDefaultRecordingPreset(): AudioClient.AudioRecordingPreset {

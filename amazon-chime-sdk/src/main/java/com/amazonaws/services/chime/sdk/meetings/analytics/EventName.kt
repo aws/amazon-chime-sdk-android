@@ -10,7 +10,12 @@ package com.amazonaws.services.chime.sdk.meetings.analytics
  */
 enum class EventName {
     /**
-     * The camera selection failed.
+     * The microphone selection or access failed.
+     */
+    audioInputFailed,
+
+    /**
+     * The camera selection or access failed.
      */
     videoInputFailed,
 
@@ -23,6 +28,11 @@ enum class EventName {
      * The meeting started.
      */
     meetingStartSucceeded,
+
+    /**
+     * The meeting reconnected.
+     */
+    meetingReconnected,
 
     /**
      * The meeting failed to start.

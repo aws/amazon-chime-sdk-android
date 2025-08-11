@@ -150,7 +150,8 @@ class DefaultMeetingSession @JvmOverloads constructor(
                 context,
                 audioClientController,
                 videoClientController,
-                eventAnalyticsController
+                eventAnalyticsController,
+                logger
             )
 
         val realtimeController =

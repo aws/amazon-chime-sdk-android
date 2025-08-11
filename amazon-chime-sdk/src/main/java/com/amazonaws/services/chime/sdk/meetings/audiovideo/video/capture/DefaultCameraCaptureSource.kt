@@ -352,7 +352,7 @@ class DefaultCameraCaptureSource @JvmOverloads constructor(
 
     private fun handleCameraCaptureFail(error: CaptureSourceError) {
         val attributes = mutableMapOf<EventAttributeName, Any>(
-            EventAttributeName.videoInputError to error
+            EventAttributeName.videoInputErrorMessage to error
         )
         eventAnalyticsController?.publishEvent(EventName.videoInputFailed, attributes)
         ObserverUtils.notifyObserverOnMainThread(observers) {
