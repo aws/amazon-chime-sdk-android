@@ -224,7 +224,7 @@ class DefaultDeviceControllerTest {
         deviceController.listAudioDevices()
 
         val attributes = mutableMapOf<EventAttributeName, Any>(
-            EventAttributeName.audioAccessErrorMessage to MediaError.NoAudioDevices
+            EventAttributeName.audioInputErrorMessage to MediaError.NoAudioDevices
         )
         verify(exactly = 1) { eventAnalyticsController.publishEvent(EventName.audioInputFailed, attributes) }
     }

@@ -123,7 +123,7 @@ class DefaultAudioVideoFacadeTest {
             audioVideoFacade.start()
         }
         val attributes = mutableMapOf<EventAttributeName, Any>(
-            EventAttributeName.audioAccessErrorMessage to PermissionError.AudioPermissionError
+            EventAttributeName.audioInputErrorMessage to PermissionError.AudioPermissionError
         )
         verify(exactly = 1) { eventAnalyticsController.publishEvent(EventName.audioInputFailed, attributes) }
     }
