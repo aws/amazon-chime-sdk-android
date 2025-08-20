@@ -6,6 +6,8 @@
 package com.amazonaws.services.chime.sdk.meetings.internal.video
 
 import android.content.Context
+import com.amazonaws.services.chime.sdk.meetings.analytics.EventAnalyticsController
+import com.amazonaws.services.chime.sdk.meetings.analytics.EventName
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.AudioVideoObserver
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoFrame
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoRotation
@@ -21,6 +23,8 @@ import com.amazonaws.services.chime.sdk.meetings.utils.logger.Logger
 import com.xodee.client.audio.audioclient.AudioClient
 import com.xodee.client.video.DataMessage
 import com.xodee.client.video.VideoClient
+import com.xodee.client.video.VideoClientEvent
+import com.xodee.client.video.VideoClientSignalingDroppedError
 import io.mockk.MockKAnnotations
 import io.mockk.every
 import io.mockk.impl.annotations.MockK
@@ -53,6 +57,9 @@ class DefaultVideoClientObserverTest {
 
     @MockK
     private lateinit var mockAnotherDataMessageObserver: DataMessageObserver
+
+    @MockK
+    private lateinit var mockEventAnalyticsController: EventAnalyticsController
 
     @MockK
     private lateinit var mockContext: Context
@@ -141,7 +148,8 @@ class DefaultVideoClientObserverTest {
                 turnRequestParams,
                 mockMetricsCollector,
                 mockVideoClientStateController,
-                mockDefaultUrlRewriter
+                mockDefaultUrlRewriter,
+                mockEventAnalyticsController
             )
         testVideoClientObserver.subscribeToVideoClientStateChange(mockAudioVideoObserver)
         testVideoClientObserver.subscribeToVideoTileChange(mockVideoTileController)
@@ -215,6 +223,19 @@ class DefaultVideoClientObserverTest {
                 MeetingSessionStatus(
                     MeetingSessionStatusCode.OK
                 )
+            )
+        }
+    }
+
+    @Test
+    fun `didReceiveEvent should publish event when event type is sigaling dropped`() {
+        val event = VideoClientEvent.signalingDroppedEvent(1, VideoClientSignalingDroppedError.SIGNALING_CLIENT_EOF)
+        testVideoClientObserver.didReceiveEvent(mockVideoClient, event)
+
+        verify {
+            mockEventAnalyticsController.publishEvent(
+                EventName.signalingDropped,
+                any()
             )
         }
     }

@@ -58,7 +58,12 @@ enum class MeetingHistoryEventName {
     /**
      * The meeting reconnected.
      */
-    meetingReconnected;
+    meetingReconnected,
+
+    /**
+     * The WebSocket failed or closed with an error.
+     */
+    signalingDropped;
 
     companion object {
         fun fromMeetingEvent(name: EventName): MeetingHistoryEventName {
@@ -71,6 +76,7 @@ enum class MeetingHistoryEventName {
                 EventName.meetingStartFailed -> meetingStartFailed
                 EventName.meetingEnded -> meetingEnded
                 EventName.meetingFailed -> meetingFailed
+                EventName.signalingDropped -> signalingDropped
             }
         }
     }

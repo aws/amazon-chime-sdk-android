@@ -45,6 +45,11 @@ enum class EventName {
     meetingEnded,
 
     /**
+     * The WebSocket failed or closed with an error.
+     */
+    signalingDropped,
+
+    /**
      * The meeting ended with failure.
      */
     meetingFailed

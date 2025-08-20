@@ -6,6 +6,9 @@
 package com.amazonaws.services.chime.sdk.meetings.internal.video
 
 import android.content.Context
+import com.amazonaws.services.chime.sdk.meetings.analytics.EventAnalyticsController
+import com.amazonaws.services.chime.sdk.meetings.analytics.EventAttributeName
+import com.amazonaws.services.chime.sdk.meetings.analytics.EventName
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.AudioVideoObserver
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.PrimaryMeetingPromotionObserver
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.RemoteVideoSource
@@ -26,6 +29,7 @@ import com.amazonaws.services.chime.sdk.meetings.realtime.datamessage.DataMessag
 import com.amazonaws.services.chime.sdk.meetings.session.MeetingSessionStatus
 import com.amazonaws.services.chime.sdk.meetings.session.MeetingSessionStatusCode
 import com.amazonaws.services.chime.sdk.meetings.session.URLRewriter
+import com.amazonaws.services.chime.sdk.meetings.utils.SignalingDroppedError
 import com.amazonaws.services.chime.sdk.meetings.utils.logger.Logger
 import com.xodee.client.audio.audioclient.AudioClient
 import com.xodee.client.video.DataMessage as mediaDataMessage
@@ -34,7 +38,10 @@ import com.xodee.client.video.VideoClient
 import com.xodee.client.video.VideoClient.VIDEO_CLIENT_NO_PAUSE
 import com.xodee.client.video.VideoClient.VIDEO_CLIENT_REMOTE_PAUSED_BY_LOCAL_BAD_NETWORK
 import com.xodee.client.video.VideoClient.VIDEO_CLIENT_REMOTE_PAUSED_BY_USER
+import com.xodee.client.video.VideoClientEvent
+import com.xodee.client.video.VideoClientEventType
 import java.security.InvalidParameterException
+import kotlin.Any
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -45,7 +52,8 @@ class DefaultVideoClientObserver(
     private val turnRequestParams: TURNRequestParams,
     private val clientMetricsCollector: ClientMetricsCollector,
     private val videoClientStateController: VideoClientStateController,
-    private val urlRewriter: URLRewriter
+    private val urlRewriter: URLRewriter,
+    private val eventAnalyticsController: EventAnalyticsController
 ) : VideoClientObserver {
     private val TAG = "DefaultVideoClientObserver"
 
@@ -87,7 +95,7 @@ class DefaultVideoClientObserver(
     }
 
     override fun didFail(client: VideoClient?, status: Int, controlStatus: Int) {
-        logger.info(TAG, "didFail with controlStatus: $controlStatus")
+        logger.error(TAG, "didFail with status: $status, controlStatus: $controlStatus")
 
         forEachVideoClientStateObserver { observer ->
             observer.onVideoSessionStopped(
@@ -121,6 +129,23 @@ class DefaultVideoClientObserver(
         logger.debug(TAG, "cameraSendIsAvailable: $available")
         forEachVideoClientStateObserver {
             it.onCameraSendAvailabilityUpdated(available)
+        }
+    }
+
+    override fun didReceiveEvent(client: VideoClient?, event: VideoClientEvent?) {
+        logger.info(TAG, "didReceiveEvent")
+        event?.let {
+            when (it.eventType) {
+                VideoClientEventType.SIGNALING_DROPPED -> {
+                    logger.error(TAG, "Signaling dropped with error: ${it.signalingDroppedError}")
+                    val error = SignalingDroppedError.fromVideoClientSignalingDroppedError(it.signalingDroppedError)
+                    val attributes = mutableMapOf<EventAttributeName, Any>(
+                        EventAttributeName.signalingDroppedErrorMessage to error
+                    )
+                    eventAnalyticsController.publishEvent(EventName.signalingDropped, attributes)
+                }
+                VideoClientEventType.OTHER -> {}
+            }
         }
     }
 
