@@ -133,8 +133,8 @@ class DefaultVideoClientObserver(
     }
 
     override fun didReceiveEvent(client: VideoClient?, event: VideoClientEvent?) {
-        logger.info(TAG, "didReceiveEvent")
         event?.let {
+            logger.info(TAG, "didReceiveEvent: ${it.eventType}")
             when (it.eventType) {
                 VideoClientEventType.SIGNALING_DROPPED -> {
                     logger.error(TAG, "Signaling dropped with error: ${it.signalingDroppedError}")
@@ -142,7 +142,7 @@ class DefaultVideoClientObserver(
                     val attributes = mutableMapOf<EventAttributeName, Any>(
                         EventAttributeName.signalingDroppedErrorMessage to error
                     )
-                    eventAnalyticsController.publishEvent(EventName.signalingDropped, attributes)
+                    eventAnalyticsController.publishEvent(EventName.videoClientSignalingDropped, attributes)
                 }
                 VideoClientEventType.OTHER -> {}
             }

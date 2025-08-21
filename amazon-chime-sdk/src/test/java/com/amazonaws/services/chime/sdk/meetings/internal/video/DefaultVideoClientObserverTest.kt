@@ -234,7 +234,7 @@ class DefaultVideoClientObserverTest {
 
         verify {
             mockEventAnalyticsController.publishEvent(
-                EventName.signalingDropped,
+                EventName.videoClientSignalingDropped,
                 any()
             )
         }
