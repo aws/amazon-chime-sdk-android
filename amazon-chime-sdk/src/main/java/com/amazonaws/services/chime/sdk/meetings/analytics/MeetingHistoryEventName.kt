@@ -68,7 +68,17 @@ enum class MeetingHistoryEventName {
     /**
      * The content share WebSocket failed or closed with an error.
      */
-    contentShareSignalingDropped;
+    contentShareSignalingDropped,
+
+    /**
+     * The app entered foreground.
+     */
+    appEnteredForeground,
+
+    /**
+     * The app entered background.
+     */
+    appEnteredBackground;
 
     companion object {
         fun fromMeetingEvent(name: EventName): MeetingHistoryEventName {

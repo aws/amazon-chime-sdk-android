@@ -19,6 +19,7 @@ import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.DefaultVideoTi
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.gl.DefaultEglCoreFactory
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.gl.EglCoreFactory
 import com.amazonaws.services.chime.sdk.meetings.device.DefaultDeviceController
+import com.amazonaws.services.chime.sdk.meetings.ingestion.DefaultAppLifecycleObserver
 import com.amazonaws.services.chime.sdk.meetings.ingestion.DefaultMeetingEventReporterFactory
 import com.amazonaws.services.chime.sdk.meetings.ingestion.EventReporterFactory
 import com.amazonaws.services.chime.sdk.meetings.ingestion.IngestionConfiguration
@@ -71,6 +72,8 @@ class DefaultMeetingSession @JvmOverloads constructor(
             eventReporter
         )
 
+        val appLifecycleObserver = DefaultAppLifecycleObserver(eventAnalyticsController, logger)
+
         val metricsCollector = DefaultClientMetricsCollector()
         val audioClientObserver =
             DefaultAudioClientObserver(
@@ -78,7 +81,8 @@ class DefaultMeetingSession @JvmOverloads constructor(
                 metricsCollector,
                 configuration,
                 meetingStatsCollector,
-                eventAnalyticsController
+                eventAnalyticsController,
+                appLifecycleObserver
             )
 
         val audioClient =
@@ -221,7 +225,8 @@ class DefaultMeetingSession @JvmOverloads constructor(
             videoTileController,
             activeSpeakerDetector,
             contentShareController,
-            eventAnalyticsController
+            eventAnalyticsController,
+            appLifecycleObserver
         )
     }
 }
