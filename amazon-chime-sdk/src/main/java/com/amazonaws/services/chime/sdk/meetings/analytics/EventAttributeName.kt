@@ -131,7 +131,7 @@ enum class EventAttributeName {
     videoInputErrorMessage,
 
     /**
-     * The error that explains why the signaling dropped
+     * The error message that explains why the signaling websocket connection dropped
      */
     signalingDroppedErrorMessage,
 }

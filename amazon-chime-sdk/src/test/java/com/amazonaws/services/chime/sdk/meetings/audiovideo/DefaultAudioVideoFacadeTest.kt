@@ -25,6 +25,7 @@ import com.amazonaws.services.chime.sdk.meetings.device.DeviceChangeObserver
 import com.amazonaws.services.chime.sdk.meetings.device.DeviceController
 import com.amazonaws.services.chime.sdk.meetings.device.MediaDevice
 import com.amazonaws.services.chime.sdk.meetings.device.MediaDeviceType
+import com.amazonaws.services.chime.sdk.meetings.ingestion.AppLifecycleObserver
 import com.amazonaws.services.chime.sdk.meetings.realtime.RealtimeControllerFacade
 import com.amazonaws.services.chime.sdk.meetings.realtime.RealtimeObserver
 import com.amazonaws.services.chime.sdk.meetings.realtime.TranscriptEventObserver
@@ -90,6 +91,9 @@ class DefaultAudioVideoFacadeTest {
 
     @MockK
     private lateinit var eventAnalyticsController: EventAnalyticsController
+
+    @MockK
+    private lateinit var mockAppLifecycleObserver: AppLifecycleObserver
 
     @MockK
     private lateinit var realtimeController: RealtimeControllerFacade
@@ -196,6 +200,7 @@ class DefaultAudioVideoFacadeTest {
         every { ContextCompat.checkSelfPermission(any(), any()) } returns 0
         audioVideoFacade.start()
         verify { audioVideoController.start(AudioVideoConfiguration()) }
+        verify { mockAppLifecycleObserver.startObserving() }
     }
 
     @Test
@@ -211,6 +216,7 @@ class DefaultAudioVideoFacadeTest {
     fun `stop should call audioVideoController stop`() {
         audioVideoFacade.stop()
         verify { audioVideoController.stop() }
+        verify { mockAppLifecycleObserver.stopObserving() }
     }
 
     @Test
