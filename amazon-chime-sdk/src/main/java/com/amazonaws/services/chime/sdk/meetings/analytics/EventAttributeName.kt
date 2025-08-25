@@ -129,4 +129,9 @@ enum class EventAttributeName {
      * The error of video input selection or access such as starting camera
      */
     videoInputErrorMessage,
+
+    /**
+     * The error that explains why the signaling dropped
+     */
+    signalingDroppedErrorMessage,
 }

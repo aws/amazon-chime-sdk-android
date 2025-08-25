@@ -116,7 +116,8 @@ class DefaultMeetingSession @JvmOverloads constructor(
                 turnRequestParams,
                 metricsCollector,
                 videoClientStateController,
-                configuration.urls.urlRewriter
+                configuration.urls.urlRewriter,
+                eventAnalyticsController
             )
 
         val videoClientFactory = DefaultVideoClientFactory()
@@ -192,7 +193,8 @@ class DefaultMeetingSession @JvmOverloads constructor(
                 logger,
                 contentShareTurnRequestParams,
                 metricsCollector,
-                contentShareConfiguration.urls.urlRewriter
+                contentShareConfiguration.urls.urlRewriter,
+                eventAnalyticsController
             )
 
         val contentShareVideoClientController =

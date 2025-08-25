@@ -45,6 +45,16 @@ enum class EventName {
     meetingEnded,
 
     /**
+     * The video client WebSocket failed or closed with an error.
+     */
+    videoClientSignalingDropped,
+
+    /**
+     * The content share WebSocket failed or closed with an error.
+     */
+    contentShareSignalingDropped,
+
+    /**
      * The meeting ended with failure.
      */
     meetingFailed
