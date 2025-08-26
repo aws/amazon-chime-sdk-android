@@ -187,7 +187,7 @@ The following table lists available states.
 |`videoClientSignalingDropped`|The video client signaling websocket failed or closed with an error.
 |`contentShareSignalingDropped`|The content share client signaling websocket failed or closed with an error.
 |`appEnteredForeground`|The app entered foreground.
-|`appEnteredBackground`|The app entered background. 
+|`appEnteredBackground`|The app entered background.
 
 ## Example
 
