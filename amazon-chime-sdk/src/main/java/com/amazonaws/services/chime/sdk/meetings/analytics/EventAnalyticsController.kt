@@ -15,7 +15,8 @@ interface EventAnalyticsController {
      *
      * @param name: [EventName] - Name of event to publish
      * @param attributes: [EventAttributes] - Attributes of event to pass to builders.
-     * @param notifyObservers: [Boolean] - Whether to notify `EventAnalyticsObserver` of the events.
+     * @param notifyObservers: [Boolean] - Whether to notify `EventAnalyticsObserver` of the events,
+     *   `EventAnalyticsObserver` should be notified for critical meeting events such as `meetingStartFailed`.
      */
     fun publishEvent(name: EventName, attributes: EventAttributes? = null, notifyObservers: Boolean = true)
 

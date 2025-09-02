@@ -137,7 +137,7 @@ The following table describes attributes for a meeting.
 |`poorConnectionCount`|The number of times the significant packet loss occurred during the meeting. Per count, you receive `AudioVideoObserver.onConnectionBecamePoor`.<br><br>Unit: Count|`meetingStartSucceeded`, `meetingReconnected`, `meetingStartFailed`, `meetingEnded`, `meetingFailed`
 |`retryCount`|The number of connection retries performed during the meeting.<br><br>Unit: Count|`meetingStartSucceeded`, `meetingReconnected`, `meetingStartFailed`, `meetingEnded`, `meetingFailed`
 |`signalingDroppedErrorMessage`|The error message that explains why the signaling websocket connection dropped.|`videoClientSignalingDropped`, `contentShareSignalingDropped`
-|`appState`|The current app state when the event occurs.| All events
+|`appState`|The current app state when the event occurs. Possible states include: `Active`, `Inactive`, `Foreground`, and `Background`.| All events
 
 ### Device attributes
 The following table describes attributes for the microphone and camera.
