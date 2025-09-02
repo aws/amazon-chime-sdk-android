@@ -5,7 +5,11 @@
 
 package com.amazonaws.services.chime.sdk.meetings.ingestion
 
+import android.app.ActivityManager
 import android.app.Application
+import android.content.Context
+import android.os.Handler
+import android.os.Looper
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ProcessLifecycleOwner
 import com.amazonaws.services.chime.sdk.meetings.utils.logger.Logger
@@ -13,8 +17,10 @@ import io.mockk.MockKAnnotations
 import io.mockk.every
 import io.mockk.impl.annotations.MockK
 import io.mockk.mockk
+import io.mockk.mockkConstructor
 import io.mockk.mockkObject
-import io.mockk.unmockkObject
+import io.mockk.mockkStatic
+import io.mockk.unmockkAll
 import io.mockk.verify
 import org.junit.After
 import org.junit.Assert.assertEquals
@@ -37,6 +43,9 @@ class DefaultAppStateMonitorTests {
     @MockK
     private lateinit var mockLifecycle: Lifecycle
 
+    @MockK
+    private lateinit var mockMemoryHandler: Handler
+
     @Before
     fun setUp() {
         MockKAnnotations.init(this, relaxUnitFun = true)
@@ -47,6 +56,16 @@ class DefaultAppStateMonitorTests {
         every { mockLifecycle.addObserver(any()) } returns Unit
         every { mockLifecycle.removeObserver(any()) } returns Unit
 
+        // Mock Handler constructor for memory monitoring
+        mockkConstructor(Handler::class)
+        every { anyConstructed<Handler>().post(any()) } returns true
+        every { anyConstructed<Handler>().postDelayed(any<Runnable>(), any()) } returns true
+        every { anyConstructed<Handler>().removeCallbacks(any<Runnable>()) } returns Unit
+
+        // Mock Looper.getMainLooper()
+        mockkStatic(Looper::class)
+        every { Looper.getMainLooper() } returns mockk()
+
         // Set up mock behavior
         every { mockLogger.info(any(), any()) } returns Unit
         every { mockApplication.getSystemService(any()) } returns null
@@ -56,7 +75,7 @@ class DefaultAppStateMonitorTests {
 
     @After
     fun tearDown() {
-        unmockkObject(ProcessLifecycleOwner)
+        unmockkAll()
     }
 
     @Test
@@ -74,33 +93,30 @@ class DefaultAppStateMonitorTests {
     }
 
     @Test
-    fun `start should log start message`() {
+    fun `start should start monitoring`() {
         appStateMonitor.start()
 
-        verify(exactly = 1) { mockLogger.info(any(), "Started monitoring app state and memory") }
+        // Verify ProcessLifecycleOwner.get().lifecycle.addObserver(this) gets called
+        verify(exactly = 1) { mockLifecycle.addObserver(appStateMonitor) }
+
+        // Verify memoryHandler.postDelayed(this, memoryCheckIntervalMs) gets called
+        // This happens through the memory monitoring runnable
+        verify(exactly = 1) { anyConstructed<Handler>().post(any()) }
     }
 
     @Test
-    fun `stop should log stop message`() {
-        appStateMonitor.stop()
-
-        verify(exactly = 1) { mockLogger.info(any(), "Stopped monitoring app state and memory") }
-    }
-
-    @Test
-    fun `start should be idempotent`() {
-        appStateMonitor.start()
+    fun `stop should stop monitoring`() {
+        // First start monitoring to set up the state
         appStateMonitor.start()
 
-        verify(exactly = 2) { mockLogger.info(any(), "Started monitoring app state and memory") }
-    }
-
-    @Test
-    fun `stop should be idempotent`() {
-        appStateMonitor.stop()
+        // Now stop monitoring
         appStateMonitor.stop()
 
-        verify(exactly = 2) { mockLogger.info(any(), "Stopped monitoring app state and memory") }
+        // Verify ProcessLifecycleOwner.get().lifecycle.removeObserver(this) is called
+        verify(exactly = 2) { mockLifecycle.removeObserver(appStateMonitor) }
+
+        // Verify memoryHandler.removeCallbacks(it) is called
+        verify(exactly = 1) { anyConstructed<Handler>().removeCallbacks(any()) }
     }
 
     @Test
@@ -112,6 +128,9 @@ class DefaultAppStateMonitorTests {
         appStateMonitor.onStart(mockk())
 
         assertEquals(AppState.FOREGROUND, appStateMonitor.appState)
+
+        // Verify handler?.onAppStateChanged(value) is called
+        verify(exactly = 1) { mockHandler.onAppStateChanged(AppState.FOREGROUND) }
     }
 
     @Test
@@ -124,6 +143,9 @@ class DefaultAppStateMonitorTests {
         appStateMonitor.onResume(mockk())
 
         assertEquals(AppState.ACTIVE, appStateMonitor.appState)
+
+        // Verify handler?.onAppStateChanged(value) is called
+        verify(exactly = 1) { mockHandler.onAppStateChanged(AppState.ACTIVE) }
     }
 
     @Test
@@ -137,6 +159,9 @@ class DefaultAppStateMonitorTests {
         appStateMonitor.onPause(mockk())
 
         assertEquals(AppState.INACTIVE, appStateMonitor.appState)
+
+        // Verify handler?.onAppStateChanged(value) is called
+        verify(exactly = 1) { mockHandler.onAppStateChanged(AppState.INACTIVE) }
     }
 
     @Test
@@ -150,34 +175,38 @@ class DefaultAppStateMonitorTests {
         appStateMonitor.onStop(mockk())
 
         assertEquals(AppState.BACKGROUND, appStateMonitor.appState)
-    }
 
-    @Test
-    fun `should start memory monitoring when started`() {
-        appStateMonitor.start()
-
-        // Verify both app state and memory monitoring start messages
-        verify(exactly = 1) { mockLogger.info(any(), "Started monitoring app state and memory") }
-        verify(exactly = 1) { mockLogger.info(any(), match { it.contains("Started continuous memory monitoring") }) }
-    }
-
-    @Test
-    fun `should stop memory monitoring when stopped`() {
-        // Test that start and stop operations complete without errors
-        appStateMonitor.start()
-        appStateMonitor.stop()
-
-        // If we reach this point, the start/stop operations completed successfully
-        // The actual logging verification is tested in other tests
+        // Verify handler?.onAppStateChanged(value) is called
+        verify(exactly = 1) { mockHandler.onAppStateChanged(AppState.BACKGROUND) }
     }
 
     @Test
     fun `checkMemoryStatus should detect low memory condition`() {
-        // This test would require mocking ActivityManager which is complex
-        // For now, we'll test that the method doesn't crash
-        appStateMonitor.start()
+        // Mock ActivityManager and MemoryInfo
+        val mockActivityManager = mockk<ActivityManager>()
 
-        // Verify that start was called successfully
-        verify(exactly = 1) { mockLogger.info(any(), "Started monitoring app state and memory") }
+        // Set up mock behavior for low memory condition
+        every { mockApplication.getSystemService(Context.ACTIVITY_SERVICE) } returns mockActivityManager
+        every { mockActivityManager.getMemoryInfo(any()) } answers {
+            val memoryInfo = firstArg<ActivityManager.MemoryInfo>()
+            memoryInfo.lowMemory = true
+            memoryInfo.availMem = 100L * 1024 * 1024 // 100MB
+            memoryInfo.threshold = 200L * 1024 * 1024 // 200MB threshold
+        }
+
+        // Start monitoring and bind handler
+        appStateMonitor.start()
+        appStateMonitor.bindHandler(mockHandler)
+
+        // Manually trigger memory check by accessing the private method through reflection
+        val checkMemoryMethod = DefaultAppStateMonitor::class.java.getDeclaredMethod("checkMemoryStatus")
+        checkMemoryMethod.isAccessible = true
+        checkMemoryMethod.invoke(appStateMonitor)
+
+        // Verify handler?.onMemoryWarning() is called
+        verify(exactly = 1) { mockHandler.onMemoryWarning() }
+
+        // Verify logging of low memory condition
+        verify(exactly = 1) { mockLogger.info(any(), match { it.contains("Application detected low memory condition") }) }
     }
 }
