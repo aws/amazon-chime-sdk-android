@@ -71,14 +71,14 @@ enum class MeetingHistoryEventName {
     contentShareSignalingDropped,
 
     /**
-     * The app entered foreground.
+     * The application state is changed.
      */
-    appEnteredForeground,
+    appStateChanged,
 
     /**
-     * The app entered background.
+     * The application memory is low.
      */
-    appEnteredBackground;
+    appMemoryLow;
 
     companion object {
         fun fromMeetingEvent(name: EventName): MeetingHistoryEventName {
@@ -93,6 +93,8 @@ enum class MeetingHistoryEventName {
                 EventName.meetingFailed -> meetingFailed
                 EventName.videoClientSignalingDropped -> videoClientSignalingDropped
                 EventName.contentShareSignalingDropped -> contentShareSignalingDropped
+                EventName.appStateChanged -> appStateChanged
+                EventName.appMemoryLow -> appMemoryLow
             }
         }
     }

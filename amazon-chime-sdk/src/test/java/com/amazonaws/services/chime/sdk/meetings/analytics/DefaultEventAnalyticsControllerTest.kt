@@ -5,6 +5,8 @@
 
 package com.amazonaws.services.chime.sdk.meetings.analytics
 
+import com.amazonaws.services.chime.sdk.meetings.ingestion.AppState
+import com.amazonaws.services.chime.sdk.meetings.ingestion.AppStateMonitor
 import com.amazonaws.services.chime.sdk.meetings.ingestion.EventReporter
 import com.amazonaws.services.chime.sdk.meetings.internal.ingestion.SDKEvent
 import com.amazonaws.services.chime.sdk.meetings.internal.utils.DeviceUtils
@@ -56,6 +58,9 @@ class DefaultEventAnalyticsControllerTest {
     @MockK
     private lateinit var mockMeetingStatsCollector: MeetingStatsCollector
 
+    @MockK
+    private lateinit var mockAppStateMonitor: AppStateMonitor
+
     private val meetingAttributes: EventAttributes = mutableMapOf()
     private val mockMeetingDurationMs = 1000L
     private val mockMeetingReconnectDurationMs = 500L
@@ -73,6 +78,7 @@ class DefaultEventAnalyticsControllerTest {
                 mockLogger,
                 mockMeetingSessionConfiguration,
                 mockMeetingStatsCollector,
+                mockAppStateMonitor,
                 eventReporter
             )
         every { mockMeetingStatsCollector.getMeetingStatsEventAttributes() } returns meetingAttributes
@@ -92,6 +98,7 @@ class DefaultEventAnalyticsControllerTest {
         every { DeviceUtils.sdkName } returns "sdkName"
         every { DeviceUtils.osName } returns "osName"
         every { DeviceUtils.osVersion } returns "osVersion"
+        every { mockAppStateMonitor.appState } returns AppState.ACTIVE
 
         Dispatchers.setMain(testDispatcher)
     }

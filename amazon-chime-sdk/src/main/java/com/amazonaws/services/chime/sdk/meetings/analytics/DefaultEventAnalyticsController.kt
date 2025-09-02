@@ -5,6 +5,9 @@
 
 package com.amazonaws.services.chime.sdk.meetings.analytics
 
+import com.amazonaws.services.chime.sdk.meetings.ingestion.AppState
+import com.amazonaws.services.chime.sdk.meetings.ingestion.AppStateHandler
+import com.amazonaws.services.chime.sdk.meetings.ingestion.AppStateMonitor
 import com.amazonaws.services.chime.sdk.meetings.ingestion.EventReporter
 import com.amazonaws.services.chime.sdk.meetings.internal.ingestion.SDKEvent
 import com.amazonaws.services.chime.sdk.meetings.internal.utils.ConcurrentSet
@@ -18,11 +21,12 @@ class DefaultEventAnalyticsController(
     private val logger: Logger,
     private val meetingSessionConfiguration: MeetingSessionConfiguration,
     private val meetingStatsCollector: MeetingStatsCollector,
+    private val appStateMonitor: AppStateMonitor,
     private val eventReporter: EventReporter? = null
-) : EventAnalyticsController {
+) : EventAnalyticsController, AppStateHandler {
     private var eventAnalyticsObservers = ConcurrentSet.createConcurrentSet<EventAnalyticsObserver>()
 
-    override fun publishEvent(name: EventName, attributes: EventAttributes?) {
+    override fun publishEvent(name: EventName, attributes: EventAttributes?, notifyObservers: Boolean) {
         val now = Calendar.getInstance().timeInMillis
 
         // Also pushes to the history
@@ -49,10 +53,14 @@ class DefaultEventAnalyticsController(
             else -> Unit
         }
 
+        eventAttributes[EventAttributeName.appState] = appStateMonitor.appState.description
+
         eventReporter?.report(SDKEvent(name, eventAttributes))
 
-        ObserverUtils.notifyObserverOnMainThread(eventAnalyticsObservers) {
-            it.onEventReceived(name, eventAttributes)
+        if (notifyObservers) {
+            ObserverUtils.notifyObserverOnMainThread(eventAnalyticsObservers) {
+                it.onEventReceived(name, eventAttributes)
+            }
         }
     }
 
@@ -81,5 +89,22 @@ class DefaultEventAnalyticsController(
 
     override fun removeEventAnalyticsObserver(observer: EventAnalyticsObserver) {
         this.eventAnalyticsObservers.remove(observer)
+    }
+
+    // AppStateHandler implementation
+    override fun onAppStateChanged(newAppState: AppState) {
+        publishEvent(
+            name = EventName.appStateChanged,
+            attributes = mutableMapOf(EventAttributeName.appState to newAppState),
+            false
+        )
+    }
+
+    override fun onMemoryWarning() {
+        publishEvent(
+            name = EventName.appMemoryLow,
+            attributes = mutableMapOf(),
+            false
+        )
     }
 }

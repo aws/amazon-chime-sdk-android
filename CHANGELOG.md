@@ -1,8 +1,8 @@
 ## PENDING
 
 ### Added
-* Added meetingReconnected/audioInputFailed/videoClientSignalingDropped/contentShareSignalingDropped/appEnteredForeground/appEnteredBackground meeting event
-* Added meetingReconnectDurationMs/audioInputErrorMessage/signalingDroppedErrorMessage meeting event
+* Added following meeting events: meetingReconnected/audioInputFailed/videoClientSignalingDropped/contentShareSignalingDropped/appStateChanged/appMemoryLow
+* Added following meeting event attributes: meetingReconnectDurationMs/audioInputErrorMessage/signalingDroppedErrorMessage/appState
 
 ## [0.25.0] - 2025-06-17
 

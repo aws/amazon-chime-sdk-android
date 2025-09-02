@@ -104,6 +104,11 @@ enum class EventAttributeName {
     meetingErrorMessage,
 
     /**
+     * The application state
+     */
+    appState,
+
+    /**
      * Meeting Status [MeetingSessionStatus]
      */
     meetingStatus,

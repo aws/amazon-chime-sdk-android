@@ -19,7 +19,7 @@ import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.DefaultVideoTi
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.gl.DefaultEglCoreFactory
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.gl.EglCoreFactory
 import com.amazonaws.services.chime.sdk.meetings.device.DefaultDeviceController
-import com.amazonaws.services.chime.sdk.meetings.ingestion.DefaultAppLifecycleObserver
+import com.amazonaws.services.chime.sdk.meetings.ingestion.DefaultAppStateMonitor
 import com.amazonaws.services.chime.sdk.meetings.ingestion.DefaultMeetingEventReporterFactory
 import com.amazonaws.services.chime.sdk.meetings.ingestion.EventReporterFactory
 import com.amazonaws.services.chime.sdk.meetings.ingestion.IngestionConfiguration
@@ -65,14 +65,18 @@ class DefaultMeetingSession @JvmOverloads constructor(
 
         val eventReporter = eventReporterFactory.createEventReporter()
 
+        val appStateMonitor = DefaultAppStateMonitor(logger, context.applicationContext as? android.app.Application)
+
         eventAnalyticsController = DefaultEventAnalyticsController(
             logger,
             configuration,
             meetingStatsCollector,
+            appStateMonitor,
             eventReporter
         )
 
-        val appLifecycleObserver = DefaultAppLifecycleObserver(eventAnalyticsController, logger)
+        // Bind the EventAnalyticsController as the handler for app state changes
+        appStateMonitor.bindHandler(eventAnalyticsController)
 
         val metricsCollector = DefaultClientMetricsCollector()
         val audioClientObserver =
@@ -82,7 +86,7 @@ class DefaultMeetingSession @JvmOverloads constructor(
                 configuration,
                 meetingStatsCollector,
                 eventAnalyticsController,
-                appLifecycleObserver
+                appStateMonitor
             )
 
         val audioClient =
@@ -226,7 +230,7 @@ class DefaultMeetingSession @JvmOverloads constructor(
             activeSpeakerDetector,
             contentShareController,
             eventAnalyticsController,
-            appLifecycleObserver
+            appStateMonitor
         )
     }
 }

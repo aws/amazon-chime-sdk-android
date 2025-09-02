@@ -34,7 +34,7 @@ import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoTileObser
 import com.amazonaws.services.chime.sdk.meetings.device.DeviceChangeObserver
 import com.amazonaws.services.chime.sdk.meetings.device.DeviceController
 import com.amazonaws.services.chime.sdk.meetings.device.MediaDevice
-import com.amazonaws.services.chime.sdk.meetings.ingestion.AppLifecycleObserver
+import com.amazonaws.services.chime.sdk.meetings.ingestion.AppStateMonitor
 import com.amazonaws.services.chime.sdk.meetings.realtime.RealtimeControllerFacade
 import com.amazonaws.services.chime.sdk.meetings.realtime.RealtimeObserver
 import com.amazonaws.services.chime.sdk.meetings.realtime.TranscriptEventObserver
@@ -51,7 +51,7 @@ class DefaultAudioVideoFacade(
     private val activeSpeakerDetector: ActiveSpeakerDetectorFacade,
     private val contentShareController: ContentShareController,
     private val eventAnalyticsController: EventAnalyticsController,
-    private val appLifecycleObserver: AppLifecycleObserver
+    private val appStateMonitor: AppStateMonitor
 ) : AudioVideoFacade {
 
     override fun start() {
@@ -59,7 +59,7 @@ class DefaultAudioVideoFacade(
     }
 
     override fun start(audioVideoConfiguration: AudioVideoConfiguration) {
-        appLifecycleObserver.startObserving()
+        appStateMonitor.start()
         checkAudioPermissions(audioVideoConfiguration.audioDeviceCapabilities)
         audioVideoController.start(audioVideoConfiguration)
     }
@@ -81,7 +81,7 @@ class DefaultAudioVideoFacade(
     }
 
     override fun stop() {
-        appLifecycleObserver.stopObserving()
+        appStateMonitor.stop()
         audioVideoController.stop()
     }
 

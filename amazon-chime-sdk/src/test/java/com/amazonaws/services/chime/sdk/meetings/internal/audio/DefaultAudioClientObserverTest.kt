@@ -25,7 +25,7 @@ import com.amazonaws.services.chime.sdk.meetings.audiovideo.TranscriptionStatus
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.TranscriptionStatusType
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.VolumeLevel
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.VolumeUpdate
-import com.amazonaws.services.chime.sdk.meetings.ingestion.AppLifecycleObserver
+import com.amazonaws.services.chime.sdk.meetings.ingestion.AppStateMonitor
 import com.amazonaws.services.chime.sdk.meetings.internal.AttendeeStatus
 import com.amazonaws.services.chime.sdk.meetings.internal.SessionStateControllerAction
 import com.amazonaws.services.chime.sdk.meetings.internal.metric.ClientMetricsCollector
@@ -80,7 +80,7 @@ class DefaultAudioClientObserverTest {
     private lateinit var mockAudioVideoObserver: AudioVideoObserver
 
     @MockK
-    private lateinit var mockAppLifecycleObserver: AppLifecycleObserver
+    private lateinit var mockAppStateMonitor: AppStateMonitor
 
     @MockK
     private lateinit var mockRealtimeObserver: RealtimeObserver
@@ -155,7 +155,7 @@ class DefaultAudioClientObserverTest {
                 mockConfiguration,
                 mockMeetingStatsCollector,
                 mockEventAnalyticsController,
-                mockAppLifecycleObserver
+                mockAppStateMonitor
             )
         audioClientObserver.subscribeToAudioClientStateChange(mockAudioVideoObserver)
         audioClientObserver.subscribeToRealTimeEvents(mockRealtimeObserver)
@@ -1161,7 +1161,7 @@ class DefaultAudioClientObserverTest {
         verify(exactly = 1, timeout = TestConstant.globalScopeTimeoutMs) { mockAudioVideoObserver.onAudioSessionStopped(any()) }
         verify(exactly = 1, timeout = TestConstant.globalScopeTimeoutMs) { mockAudioClient.stopSession() }
         verify(exactly = 1, timeout = TestConstant.globalScopeTimeoutMs) { mockEventAnalyticsController.publishEvent(EventName.meetingEnded, any()) }
-        verify(exactly = 1, timeout = TestConstant.globalScopeTimeoutMs) { mockAppLifecycleObserver.stopObserving() }
+        verify(exactly = 1, timeout = TestConstant.globalScopeTimeoutMs) { mockAppStateMonitor.stop() }
     }
 
     fun `onAudioClientStateChange should stop session and notify of session stop event when finish disconnecting while connected`() {

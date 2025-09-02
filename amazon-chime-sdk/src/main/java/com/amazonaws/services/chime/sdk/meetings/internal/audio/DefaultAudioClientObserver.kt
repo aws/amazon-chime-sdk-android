@@ -26,7 +26,7 @@ import com.amazonaws.services.chime.sdk.meetings.audiovideo.TranscriptionStatus
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.TranscriptionStatusType
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.VolumeLevel
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.VolumeUpdate
-import com.amazonaws.services.chime.sdk.meetings.ingestion.AppLifecycleObserver
+import com.amazonaws.services.chime.sdk.meetings.ingestion.AppStateMonitor
 import com.amazonaws.services.chime.sdk.meetings.internal.AttendeeStatus
 import com.amazonaws.services.chime.sdk.meetings.internal.SessionStateControllerAction
 import com.amazonaws.services.chime.sdk.meetings.internal.metric.ClientMetricsCollector
@@ -52,7 +52,7 @@ class DefaultAudioClientObserver(
     private val configuration: MeetingSessionConfiguration,
     private val meetingStatsCollector: MeetingStatsCollector,
     private val eventAnalyticsController: EventAnalyticsController,
-    private val appLifecycleObserver: AppLifecycleObserver,
+    private val appStateMonitor: AppStateMonitor,
     var audioClient: AudioClient? = null
 ) : AudioClientObserver {
     private val TAG = "DefaultAudioClientObserver"
@@ -575,7 +575,7 @@ class DefaultAudioClientObserver(
             // TODO: assess if only notifyAudioClientObserver should be in GlobalScope.launch
             GlobalScope.launch {
                 audioClient?.stopSession()
-                appLifecycleObserver.stopObserving()
+                appStateMonitor.stop()
                 DefaultAudioClientController.audioClientState = AudioClientState.STOPPED
                 notifyAudioClientObserver { observer ->
                     observer.onAudioSessionStopped(MeetingSessionStatus(statusCode))

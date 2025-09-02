@@ -16,7 +16,7 @@ interface EventAnalyticsController {
      * @param name: [EventName] - Name of event to publish
      * @param attributes: [EventAttributes] - Attributes of event to pass to builders.
      */
-    fun publishEvent(name: EventName, attributes: EventAttributes? = null)
+    fun publishEvent(name: EventName, attributes: EventAttributes? = null, notifyObservers: Boolean = true)
 
     /**
      * Push [MeetingHistoryEventName] to internal [MeetingStatsCollector].
