@@ -89,8 +89,10 @@ Chime SDK sends these meeting events.
 |`meetingFailed`                    |The meeting ended with one of the following failure [MeetingSessionStatusCode](https://aws.github.io/amazon-chime-sdk-android/amazon-chime-sdk/com.amazonaws.services.chime.sdk.meetings.session/-meeting-session-status-code/index.html): <br><ul><li>`AudioJoinedFromAnotherDevice`</li><li>`AudioDisconnectAudio`</li><li>`AudioAuthenticationRejected`</li><li>`AudioCallAtCapacity`</li><li>`AudioCallEnded`</li><li>`AudioInternalServerError`</li><li>`AudioServiceUnavailable`</li><li>`AudioDisconnected`</li></ul>
 |`audioInputFailed`                 |The microphone selection or access failed.
 |`videoInputFailed`                 |The camera selection or access failed.
-|`videoClientSignalingDropped`      |The video client WebSocket failed or closed with an error.
-|`contentShareSignalingDropped`     |The content share WebSocket failed or closed with an error.
+|`videoClientSignalingDropped`      |The video client signaling websocket failed or closed with an error.
+|`contentShareSignalingDropped`     |The content share client signaling websocket failed or closed with an error.
+|`appStateChanged`                  |The application state is changed.
+|`appMemoryLow`                     |The application memory is low.
 
 ### Common attributes
 Chime SDK stores common attributes for event to identify the event.
@@ -134,7 +136,8 @@ The following table describes attributes for a meeting.
 |`meetingStatus`|The meeting status when the meeting ended or failed. Note that this attribute indicates an enum name in [MeetingSessionStatusCode](https://aws.github.io/amazon-chime-sdk-android/amazon-chime-sdk/com.amazonaws.services.chime.sdk.meetings.session/-meeting-session-status-code/index.html), such as `Left` or `MeetingEnded`.|`meetingStartFailed`, `meetingEnded`, `meetingFailed`
 |`poorConnectionCount`|The number of times the significant packet loss occurred during the meeting. Per count, you receive `AudioVideoObserver.onConnectionBecamePoor`.<br><br>Unit: Count|`meetingStartSucceeded`, `meetingReconnected`, `meetingStartFailed`, `meetingEnded`, `meetingFailed`
 |`retryCount`|The number of connection retries performed during the meeting.<br><br>Unit: Count|`meetingStartSucceeded`, `meetingReconnected`, `meetingStartFailed`, `meetingEnded`, `meetingFailed`
-|`signalingDroppedErrorMessage`|The error message that explains why the signaling dropped.|`videoClientSignalingDropped`, `contentShareSignalingDropped`
+|`signalingDroppedErrorMessage`|The error message that explains why the signaling websocket connection dropped.|`videoClientSignalingDropped`, `contentShareSignalingDropped`
+|`appState`|The current app state when the event occurs. Possible states include: `Active`, `Inactive`, `Foreground`, and `Background`.| All events
 
 ### Device attributes
 The following table describes attributes for the microphone and camera.
@@ -174,16 +177,20 @@ the meeting history will include two `meetingStartSucceeded`.
 The following table lists available states.
 |State|Description
 |--|--
-|`meetingEnded`|The meeting ended.
-|`meetingFailed`|The meeting ended with the failure status.
-|`meetingReconnected`|The meeting reconnected.
-|`meetingStartFailed`|The meeting failed to start.
-|`meetingStartRequested`|The meeting will start.
-|`meetingStartSucceeded`|The meeting started.
-|`audioInputSelected`|The microphone was selected.
-|`audioInputFailed`|The microphone selection or access failed.
-|`videoInputSelected`|The camera was selected.
-|`videoInputFailed`|The camera selection or access failed.
+|`meetingEnded`                 |The meeting ended.
+|`meetingFailed`                |The meeting ended with the failure status.
+|`meetingReconnected`           |The meeting reconnected.
+|`meetingStartFailed`           |The meeting failed to start.
+|`meetingStartRequested`        |The meeting will start.
+|`meetingStartSucceeded`        |The meeting started.
+|`audioInputSelected`           |The microphone was selected.
+|`audioInputFailed`             |The microphone selection or access failed.
+|`videoInputSelected`           |The camera was selected.
+|`videoInputFailed`             |The camera selection or access failed.
+|`videoClientSignalingDropped`  |The video client signaling websocket failed or closed with an error.
+|`contentShareSignalingDropped` |The content share client signaling websocket failed or closed with an error.
+|`appStateChanged`              |The application state is changed.
+|`appMemoryLow`                 |The application memory is low.
 
 ## Example
 

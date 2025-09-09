@@ -57,5 +57,15 @@ enum class EventName {
     /**
      * The meeting ended with failure.
      */
-    meetingFailed
+    meetingFailed,
+
+    /**
+     * The application state changed.
+     */
+    appStateChanged,
+
+    /**
+     * The application received a memory low warning.
+     */
+    appMemoryLow
 }

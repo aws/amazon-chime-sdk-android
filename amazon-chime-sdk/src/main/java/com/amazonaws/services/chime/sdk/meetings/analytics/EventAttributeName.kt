@@ -104,6 +104,11 @@ enum class EventAttributeName {
     meetingErrorMessage,
 
     /**
+     * The application state
+     */
+    appState,
+
+    /**
      * Meeting Status [MeetingSessionStatus]
      */
     meetingStatus,
@@ -131,7 +136,7 @@ enum class EventAttributeName {
     videoInputErrorMessage,
 
     /**
-     * The error that explains why the signaling dropped
+     * The error message that explains why the signaling websocket connection dropped
      */
     signalingDroppedErrorMessage,
 }

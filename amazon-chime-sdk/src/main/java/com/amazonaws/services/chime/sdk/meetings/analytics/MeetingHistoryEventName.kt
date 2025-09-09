@@ -68,7 +68,17 @@ enum class MeetingHistoryEventName {
     /**
      * The content share WebSocket failed or closed with an error.
      */
-    contentShareSignalingDropped;
+    contentShareSignalingDropped,
+
+    /**
+     * The application state is changed.
+     */
+    appStateChanged,
+
+    /**
+     * The application memory is low.
+     */
+    appMemoryLow;
 
     companion object {
         fun fromMeetingEvent(name: EventName): MeetingHistoryEventName {
@@ -83,6 +93,8 @@ enum class MeetingHistoryEventName {
                 EventName.meetingFailed -> meetingFailed
                 EventName.videoClientSignalingDropped -> videoClientSignalingDropped
                 EventName.contentShareSignalingDropped -> contentShareSignalingDropped
+                EventName.appStateChanged -> appStateChanged
+                EventName.appMemoryLow -> appMemoryLow
             }
         }
     }
