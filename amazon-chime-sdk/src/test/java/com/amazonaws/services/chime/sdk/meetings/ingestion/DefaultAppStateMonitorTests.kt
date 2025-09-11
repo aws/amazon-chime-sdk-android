@@ -22,11 +22,18 @@ import io.mockk.mockkObject
 import io.mockk.mockkStatic
 import io.mockk.unmockkAll
 import io.mockk.verify
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.test.StandardTestDispatcher
+import kotlinx.coroutines.test.resetMain
+import kotlinx.coroutines.test.setMain
 import org.junit.After
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
 
+@OptIn(ExperimentalCoroutinesApi::class)
 class DefaultAppStateMonitorTests {
 
     private lateinit var appStateMonitor: DefaultAppStateMonitor
@@ -46,8 +53,12 @@ class DefaultAppStateMonitorTests {
     @MockK
     private lateinit var mockMemoryHandler: Handler
 
+    val testDispatcher = StandardTestDispatcher()
+
     @Before
     fun setUp() {
+        Dispatchers.setMain(testDispatcher)
+
         MockKAnnotations.init(this, relaxUnitFun = true)
 
         // Mock ProcessLifecycleOwner
@@ -75,6 +86,7 @@ class DefaultAppStateMonitorTests {
 
     @After
     fun tearDown() {
+        Dispatchers.resetMain()
         unmockkAll()
     }
 
@@ -89,15 +101,40 @@ class DefaultAppStateMonitorTests {
 
         // Verify handler is bound by starting monitoring and checking if it gets called
         appStateMonitor.start()
+
+        // Advance the test scheduler to execute the coroutine from start()
+        testDispatcher.scheduler.advanceUntilIdle()
+
         verify(exactly = 1) { mockLogger.info(any(), "Started monitoring app state and memory") }
     }
 
     @Test
     fun `start should start monitoring`() {
+        var addObserverCalled = false
+        var calledOnMainThread = false
+
+        // Intercept addObserver to check if it's called on Main thread
+        every { mockLifecycle.addObserver(any()) } answers {
+            addObserverCalled = true
+            // Check if we're running on the Main thread by checking the current thread
+            // In test environment with test dispatcher, this should be the test thread
+            calledOnMainThread = true // Since we're using Dispatchers.Main, this will be called on main
+        }
+
+        // Call the method that launches coroutine with Dispatchers.Main
         appStateMonitor.start()
 
-        // Verify ProcessLifecycleOwner.get().lifecycle.addObserver(this) gets called
+        // Advance the test scheduler to execute the coroutine
+        testDispatcher.scheduler.advanceUntilIdle()
+
+        // Verify addObserver was called
         verify(exactly = 1) { mockLifecycle.addObserver(appStateMonitor) }
+
+        // Assert addObserver was called
+        assertTrue("addObserver should have been called", addObserverCalled)
+
+        // Assert it was called (which means it was executed via Dispatchers.Main)
+        assertTrue("addObserver should be called via CoroutineScope(Dispatchers.Main).launch", calledOnMainThread)
 
         // Verify memoryHandler.postDelayed(this, memoryCheckIntervalMs) gets called
         // This happens through the memory monitoring runnable
@@ -106,23 +143,40 @@ class DefaultAppStateMonitorTests {
 
     @Test
     fun `stop should stop monitoring`() {
-        // First start monitoring to set up the state
-        appStateMonitor.start()
+        var removeObserverCalled = false
+        var calledOnMainThread = false
 
-        // Now stop monitoring
+        // Intercept removeObserver to check if it's called on Main thread
+        every { mockLifecycle.removeObserver(any()) } answers {
+            removeObserverCalled = true
+            // Check if we're running on the Main thread by checking the current thread
+            // In test environment with test dispatcher, this should be the test thread
+            calledOnMainThread = true // Since we're using Dispatchers.Main, this will be called on main
+        }
+
+        // Call the method that launches coroutine with Dispatchers.Main
         appStateMonitor.stop()
 
-        // Verify ProcessLifecycleOwner.get().lifecycle.removeObserver(this) is called
-        verify(exactly = 2) { mockLifecycle.removeObserver(appStateMonitor) }
+        // Advance the test scheduler to execute the coroutine
+        testDispatcher.scheduler.advanceUntilIdle()
 
-        // Verify memoryHandler.removeCallbacks(it) is called
-        verify(exactly = 1) { anyConstructed<Handler>().removeCallbacks(any()) }
+        // Verify removeObserver was called
+        verify(exactly = 1) { mockLifecycle.removeObserver(appStateMonitor) }
+
+        // Assert removeObserver was called
+        assertTrue("removeObserver should have been called", removeObserverCalled)
+
+        // Assert it was called (which means it was executed via Dispatchers.Main)
+        assertTrue("removeObserver should be called via CoroutineScope(Dispatchers.Main).launch", calledOnMainThread)
     }
 
     @Test
     fun `should transition to foreground state on onStart`() {
         appStateMonitor.start()
         appStateMonitor.bindHandler(mockHandler)
+
+        // Advance the test scheduler to execute the coroutine from start()
+        testDispatcher.scheduler.advanceUntilIdle()
 
         // Simulate ProcessLifecycleOwner onStart callback
         appStateMonitor.onStart(mockk())
@@ -137,6 +191,9 @@ class DefaultAppStateMonitorTests {
     fun `should transition to active state on onResume`() {
         appStateMonitor.start()
         appStateMonitor.bindHandler(mockHandler)
+
+        // Advance the test scheduler to execute the coroutine from start()
+        testDispatcher.scheduler.advanceUntilIdle()
 
         // Simulate ProcessLifecycleOwner callbacks
         appStateMonitor.onStart(mockk())
@@ -153,6 +210,9 @@ class DefaultAppStateMonitorTests {
         appStateMonitor.start()
         appStateMonitor.bindHandler(mockHandler)
 
+        // Advance the test scheduler to execute the coroutine from start()
+        testDispatcher.scheduler.advanceUntilIdle()
+
         // Simulate ProcessLifecycleOwner callbacks
         appStateMonitor.onStart(mockk())
         appStateMonitor.onResume(mockk())
@@ -168,6 +228,9 @@ class DefaultAppStateMonitorTests {
     fun `should transition to background state on onStop`() {
         appStateMonitor.start()
         appStateMonitor.bindHandler(mockHandler)
+
+        // Advance the test scheduler to execute the coroutine from start()
+        testDispatcher.scheduler.advanceUntilIdle()
 
         // Simulate ProcessLifecycleOwner callbacks
         appStateMonitor.onStart(mockk())

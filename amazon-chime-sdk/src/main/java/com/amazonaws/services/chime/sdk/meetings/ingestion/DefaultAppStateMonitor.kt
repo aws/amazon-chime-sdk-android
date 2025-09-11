@@ -14,6 +14,9 @@ import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ProcessLifecycleOwner
 import com.amazonaws.services.chime.sdk.meetings.utils.logger.Logger
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 class DefaultAppStateMonitor(
     private val logger: Logger,
@@ -50,29 +53,34 @@ class DefaultAppStateMonitor(
     }
 
     override fun start() {
-        // Prevent registering self as an observer multiple times
-        stop()
+        CoroutineScope(Dispatchers.Main).launch {
+            // Removing existing observers and monitors if there are any
+            ProcessLifecycleOwner.get().lifecycle.removeObserver(this@DefaultAppStateMonitor)
+            stopMemoryMonitoring()
 
-        shouldPostEvent = true
+            shouldPostEvent = true
 
-        // Register for process lifecycle events
-        ProcessLifecycleOwner.get().lifecycle.addObserver(this)
+            // Register for process lifecycle events
+            ProcessLifecycleOwner.get().lifecycle.addObserver(this@DefaultAppStateMonitor)
 
-        // Start continuous memory monitoring
-        startMemoryMonitoring()
+            // Start continuous memory monitoring
+            startMemoryMonitoring()
 
-        logger.info(TAG, "Started monitoring app state and memory")
+            logger.info(TAG, "Started monitoring app state and memory")
+        }
     }
 
     override fun stop() {
-        shouldPostEvent = false
+        CoroutineScope(Dispatchers.Main).launch {
+            shouldPostEvent = false
 
-        ProcessLifecycleOwner.get().lifecycle.removeObserver(this)
+            ProcessLifecycleOwner.get().lifecycle.removeObserver(this@DefaultAppStateMonitor)
 
-        // Stop continuous memory monitoring
-        stopMemoryMonitoring()
+            // Stop continuous memory monitoring
+            stopMemoryMonitoring()
 
-        logger.info(TAG, "Stopped monitoring app state and memory")
+            logger.info(TAG, "Stopped monitoring app state and memory")
+        }
     }
 
     // ProcessLifecycleOwner callbacks
