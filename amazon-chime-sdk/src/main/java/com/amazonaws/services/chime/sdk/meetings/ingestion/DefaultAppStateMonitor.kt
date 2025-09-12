@@ -8,6 +8,7 @@ package com.amazonaws.services.chime.sdk.meetings.ingestion
 import android.app.ActivityManager
 import android.app.Application
 import android.content.Context
+import android.os.BatteryManager
 import android.os.Handler
 import android.os.Looper
 import androidx.lifecycle.DefaultLifecycleObserver
@@ -140,6 +141,62 @@ class DefaultAppStateMonitor(
                     handler?.onMemoryWarning()
                 }
             }
+        }
+    }
+
+    /**
+     * Returns the current battery level as a value between 0.0 and 1.0
+     * @return Battery level (0.0 = empty, 1.0 = full), or null if unable to determine
+     */
+    override fun getBatteryLevel(): Float? {
+        return application?.let { app ->
+            val batteryManager = app.getSystemService(Context.BATTERY_SERVICE) as? BatteryManager
+            batteryManager?.let { bm ->
+                val batteryLevel = bm.getIntProperty(BatteryManager.BATTERY_PROPERTY_CAPACITY)
+                if (batteryLevel in 0..100) {
+                    // Convert from percentage (0-100) to fraction (0.0-1.0)
+                    batteryLevel / 100.0f
+                } else {
+                    logger.warn(TAG, "Invalid battery level from BatteryManager: $batteryLevel")
+                    null
+                }
+            } ?: run {
+                logger.warn(TAG, "BatteryManager service not available")
+                null
+            }
+        } ?: run {
+            logger.warn(TAG, "Application context not available for battery level check")
+            null
+        }
+    }
+
+    /**
+     * Returns the current battery state
+     * @return Battery state (CHARGING, DISCHARGING, NOT_CHARGING, FULL, UNKNOWN)
+     */
+    override fun getBatteryState(): BatteryState {
+        return application?.let { app ->
+            val batteryManager = app.getSystemService(Context.BATTERY_SERVICE) as? BatteryManager
+            batteryManager?.let { bm ->
+                val status = bm.getIntProperty(BatteryManager.BATTERY_PROPERTY_STATUS)
+                when (status) {
+                    BatteryManager.BATTERY_STATUS_CHARGING -> BatteryState.CHARGING
+                    BatteryManager.BATTERY_STATUS_DISCHARGING -> BatteryState.DISCHARGING
+                    BatteryManager.BATTERY_STATUS_NOT_CHARGING -> BatteryState.NOT_CHARGING
+                    BatteryManager.BATTERY_STATUS_FULL -> BatteryState.FULL
+                    BatteryManager.BATTERY_STATUS_UNKNOWN -> BatteryState.UNKNOWN
+                    else -> {
+                        logger.warn(TAG, "Unknown battery status from BatteryManager: $status")
+                        BatteryState.UNKNOWN
+                    }
+                }
+            } ?: run {
+                logger.warn(TAG, "BatteryManager service not available")
+                BatteryState.UNKNOWN
+            }
+        } ?: run {
+            logger.warn(TAG, "Application context not available for battery state check")
+            BatteryState.UNKNOWN
         }
     }
 }

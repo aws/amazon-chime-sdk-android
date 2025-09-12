@@ -54,6 +54,11 @@ class DefaultEventAnalyticsController(
         }
 
         eventAttributes[EventAttributeName.appState] = appStateMonitor.appState.description
+        val batteryLevel = appStateMonitor.getBatteryLevel()
+        if (batteryLevel != null) {
+            eventAttributes[EventAttributeName.batteryLevel] = batteryLevel
+        }
+        eventAttributes[EventAttributeName.batteryState] = appStateMonitor.getBatteryState().description
 
         eventReporter?.report(SDKEvent(name, eventAttributes))
 
@@ -67,8 +72,15 @@ class DefaultEventAnalyticsController(
     override fun pushHistory(historyEventName: MeetingHistoryEventName) {
         val currentTimeMs = Calendar.getInstance().timeInMillis
         val eventAttributes = mutableMapOf(
-            EventAttributeName.timestampMs to currentTimeMs
+            EventAttributeName.timestampMs to currentTimeMs,
+            EventAttributeName.appState to appStateMonitor.appState.description,
+            EventAttributeName.batteryState to appStateMonitor.getBatteryState().description
         ) as EventAttributes
+
+        val batteryLevel = appStateMonitor.getBatteryLevel()
+        if (batteryLevel != null) {
+            eventAttributes[EventAttributeName.batteryLevel] = batteryLevel
+        }
 
         eventReporter?.report(SDKEvent(historyEventName, eventAttributes))
 

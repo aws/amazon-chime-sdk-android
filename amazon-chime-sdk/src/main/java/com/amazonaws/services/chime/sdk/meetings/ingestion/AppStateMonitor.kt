@@ -30,4 +30,16 @@ interface AppStateMonitor {
      * Stop monitoring application state changes
      */
     fun stop()
+
+    /**
+     * Returns the current battery level as a value between 0.0 and 1.0
+     * @return Battery level (0.0 = empty, 1.0 = full), or null if unable to determine
+     */
+    fun getBatteryLevel(): Float?
+
+    /**
+     * Returns the current battery state
+     * @return Battery state (CHARGING, DISCHARGING, NOT_CHARGING, FULL, UNKNOWN)
+     */
+    fun getBatteryState(): BatteryState
 }

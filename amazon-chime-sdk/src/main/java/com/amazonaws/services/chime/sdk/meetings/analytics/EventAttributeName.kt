@@ -109,6 +109,16 @@ enum class EventAttributeName {
     appState,
 
     /**
+     * The current battery level
+     */
+    batteryLevel,
+
+    /**
+     * The current battery state
+     */
+    batteryState,
+
+    /**
      * Meeting Status [MeetingSessionStatus]
      */
     meetingStatus,
