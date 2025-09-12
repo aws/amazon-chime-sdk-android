@@ -7,6 +7,7 @@ package com.amazonaws.services.chime.sdk.meetings.analytics
 
 import com.amazonaws.services.chime.sdk.meetings.ingestion.AppState
 import com.amazonaws.services.chime.sdk.meetings.ingestion.AppStateMonitor
+import com.amazonaws.services.chime.sdk.meetings.ingestion.BatteryState
 import com.amazonaws.services.chime.sdk.meetings.ingestion.EventReporter
 import com.amazonaws.services.chime.sdk.meetings.internal.ingestion.SDKEvent
 import com.amazonaws.services.chime.sdk.meetings.internal.utils.DeviceUtils
@@ -99,6 +100,8 @@ class DefaultEventAnalyticsControllerTest {
         every { DeviceUtils.osName } returns "osName"
         every { DeviceUtils.osVersion } returns "osVersion"
         every { mockAppStateMonitor.appState } returns AppState.ACTIVE
+        every { mockAppStateMonitor.getBatteryLevel() } returns 0.75f
+        every { mockAppStateMonitor.getBatteryState() } returns BatteryState.CHARGING
 
         Dispatchers.setMain(testDispatcher)
     }
@@ -237,5 +240,71 @@ class DefaultEventAnalyticsControllerTest {
         testEventAnalyticsController.getMeetingHistory()
 
         verify { mockMeetingStatsCollector.getMeetingHistory() }
+    }
+
+    @Test
+    fun `publishEvent should include appState, batteryLevel, and batteryState in event attributes`() {
+        val slot = slot<SDKEvent>()
+        every { eventReporter.report(capture(slot)) } just Runs
+
+        testEventAnalyticsController.publishEvent(EventName.meetingFailed)
+
+        verify(exactly = 1) { eventReporter.report(any()) }
+
+        val eventAttributes = slot.captured.eventAttributes
+        assertEquals("Active", eventAttributes[EventAttributeName.appState.name])
+        assertEquals(0.75f, eventAttributes[EventAttributeName.batteryLevel.name])
+        assertEquals("Charging", eventAttributes[EventAttributeName.batteryState.name])
+    }
+
+    @Test
+    fun `publishEvent should include appState and batteryState but not batteryLevel when battery level is null`() {
+        // Mock battery level as null
+        every { mockAppStateMonitor.getBatteryLevel() } returns null
+
+        val slot = slot<SDKEvent>()
+        every { eventReporter.report(capture(slot)) } just Runs
+
+        testEventAnalyticsController.publishEvent(EventName.meetingFailed)
+
+        verify(exactly = 1) { eventReporter.report(any()) }
+
+        val eventAttributes = slot.captured.eventAttributes
+        assertEquals("Active", eventAttributes[EventAttributeName.appState.name])
+        assertFalse(eventAttributes.containsKey(EventAttributeName.batteryLevel.name))
+        assertEquals("Charging", eventAttributes[EventAttributeName.batteryState.name])
+    }
+
+    @Test
+    fun `pushHistory should include appState, batteryLevel, and batteryState in event attributes`() {
+        val slot = slot<SDKEvent>()
+        every { eventReporter.report(capture(slot)) } just Runs
+
+        testEventAnalyticsController.pushHistory(MeetingHistoryEventName.meetingReconnected)
+
+        verify(exactly = 1) { eventReporter.report(any()) }
+
+        val eventAttributes = slot.captured.eventAttributes
+        assertEquals("Active", eventAttributes[EventAttributeName.appState.name])
+        assertEquals(0.75f, eventAttributes[EventAttributeName.batteryLevel.name])
+        assertEquals("Charging", eventAttributes[EventAttributeName.batteryState.name])
+    }
+
+    @Test
+    fun `pushHistory should include appState and batteryState but not batteryLevel when battery level is null`() {
+        // Mock battery level as null
+        every { mockAppStateMonitor.getBatteryLevel() } returns null
+
+        val slot = slot<SDKEvent>()
+        every { eventReporter.report(capture(slot)) } just Runs
+
+        testEventAnalyticsController.pushHistory(MeetingHistoryEventName.meetingReconnected)
+
+        verify(exactly = 1) { eventReporter.report(any()) }
+
+        val eventAttributes = slot.captured.eventAttributes
+        assertEquals("Active", eventAttributes[EventAttributeName.appState.name])
+        assertFalse(eventAttributes.containsKey(EventAttributeName.batteryLevel.name))
+        assertEquals("Charging", eventAttributes[EventAttributeName.batteryState.name])
     }
 }
