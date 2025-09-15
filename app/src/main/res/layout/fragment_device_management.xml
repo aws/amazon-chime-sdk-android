@@ -84,6 +84,24 @@
                 android:paddingRight="32dp" />
 
             <TextView
+                android:id="@+id/textViewVideoCodec"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:paddingLeft="32dp"
+                android:paddingRight="32dp"
+                android:text="@string/video_codec_title" />
+  		  
+            <Spinner
+                android:id="@+id/spinnerVideoCodec"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                android:contentDescription="@string/video_codec_spinner"
+                android:paddingLeft="32dp"
+                android:paddingRight="32dp" />
+
+            <TextView
                 android:id="@+id/textViewVideoPreview"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

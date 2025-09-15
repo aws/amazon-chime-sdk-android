@@ -8,6 +8,7 @@ package com.amazonaws.services.chime.sdk.meetings.audiovideo
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.metric.MetricsObserver
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.LocalVideoConfiguration
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.RemoteVideoSource
+import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoCodecPreference
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoResolution
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoSource
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoSubscriptionConfiguration
@@ -225,5 +226,9 @@ class DefaultAudioVideoController(
         CoroutineScope(Dispatchers.Main).launch {
             primaryMeetingPromotionObserver?.onPrimaryMeetingDemotion(MeetingSessionStatus(MeetingSessionStatusCode.OK))
         }
+    }
+
+    override fun setVideoCodecSendPreferences(videoCodecPreferences: List<VideoCodecPreference>) {
+        videoClientController.setVideoCodecSendPreferences(videoCodecPreferences)
     }
 }
