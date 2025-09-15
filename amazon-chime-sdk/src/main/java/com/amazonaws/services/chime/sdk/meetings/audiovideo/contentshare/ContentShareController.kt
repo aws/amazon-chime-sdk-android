@@ -6,6 +6,7 @@
 package com.amazonaws.services.chime.sdk.meetings.audiovideo.contentshare
 
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.LocalVideoConfiguration
+import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoCodecPreference
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoSource
 
 /**
@@ -72,4 +73,18 @@ interface ContentShareController {
      * @param observer: [ContentShareObserver] - The observer to be removed for events.
      */
     fun removeContentShareObserver(observer: ContentShareObserver)
+
+    /**
+     * Set codec preferences for this clients send stream in order of most preferred to least preferred. The controller will
+     * fallback for one of two reasons
+     * - The codec is not supported by the browser
+     * - Another client that has joined the conference does not support receiving the video. Note that if another client does not support
+     *   any of the codecs provided the sender will not fallback, and that client will not be able to receive from this sender.
+     *
+     * If there is no overlap between what is passed in and what is supported by the browser, this function
+     * may not have any effect, and the default set of codecs for this browser will be used.
+     *
+     * @param videoCodecPreferences list of VideoCodecCapability in order of preference
+     */
+    fun setVideoCodecSendPreferences(videoCodecPreferences: List<VideoCodecPreference>)
 }

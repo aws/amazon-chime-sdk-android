@@ -10,6 +10,7 @@ import com.amazonaws.services.chime.sdk.meetings.audiovideo.contentshare.Content
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.contentshare.ContentShareStatus
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.contentshare.ContentShareStatusCode
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.LocalVideoConfiguration
+import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoCodecPreference
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoResolution
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoSource
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.gl.EglCore
@@ -24,6 +25,7 @@ import com.amazonaws.services.chime.sdk.meetings.utils.logger.Logger
 import com.xodee.client.video.VideoClient
 import com.xodee.client.video.VideoClientConfig
 import com.xodee.client.video.VideoClientConfigBuilder
+import com.xodee.client.video.VideoCodecCapabilitiesInternal
 
 class DefaultContentShareVideoClientController(
     private val context: Context,
@@ -154,5 +156,13 @@ class DefaultContentShareVideoClientController(
     override fun unsubscribeFromVideoClientStateChange(observer: ContentShareObserver) {
         observers.remove(observer)
         contentShareVideoClientObserver.unsubscribeFromVideoClientStateChange(observer)
+    }
+
+    override fun setVideoCodecSendPreferences(codecPreference: List<VideoCodecPreference>) {
+        logger.info(TAG, codecPreference.toString())
+        val codecPreferencesInternal = codecPreference.map { preference ->
+            VideoCodecCapabilitiesInternal(preference.name, preference.clockRate, preference.params.toString())
+        }
+        videoClient?.setVideoCodecPreferences(codecPreferencesInternal)
     }
 }

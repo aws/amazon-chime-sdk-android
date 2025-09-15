@@ -26,6 +26,7 @@ import com.amazonaws.services.chime.sdk.meetings.audiovideo.contentshare.Content
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.metric.MetricsObserver
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.LocalVideoConfiguration
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.RemoteVideoSource
+import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoCodecPreference
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoRenderView
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoSource
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoSubscriptionConfiguration
@@ -130,6 +131,11 @@ class DefaultAudioVideoFacade(
     override fun demoteFromPrimaryMeeting() {
         contentShareController.stopContentShare()
         audioVideoController.demoteFromPrimaryMeeting()
+    }
+
+    override fun setVideoCodecSendPreferences(videoCodecPreferences: List<VideoCodecPreference>) {
+        audioVideoController.setVideoCodecSendPreferences(videoCodecPreferences)
+        contentShareController.setVideoCodecSendPreferences(videoCodecPreferences)
     }
 
     override fun realtimeLocalMute(): Boolean {

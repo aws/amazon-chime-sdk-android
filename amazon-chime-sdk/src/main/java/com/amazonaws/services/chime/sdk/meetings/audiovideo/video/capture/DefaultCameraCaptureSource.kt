@@ -29,6 +29,7 @@ import com.amazonaws.services.chime.sdk.meetings.analytics.EventAnalyticsControl
 import com.amazonaws.services.chime.sdk.meetings.analytics.EventAttributeName
 import com.amazonaws.services.chime.sdk.meetings.analytics.EventName
 import com.amazonaws.services.chime.sdk.meetings.analytics.MeetingHistoryEventName
+import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoCodecPreference
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoContentHint
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoFrame
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoResolution
@@ -36,6 +37,8 @@ import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoRotation
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoSink
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.buffer.VideoFrameBuffer
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.buffer.VideoFrameTextureBuffer
+import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.h264ConstrainedBaselineProfile
+import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.vp8
 import com.amazonaws.services.chime.sdk.meetings.device.MediaDevice
 import com.amazonaws.services.chime.sdk.meetings.device.MediaDeviceType
 import com.amazonaws.services.chime.sdk.meetings.internal.utils.ConcurrentSet
@@ -185,6 +188,8 @@ class DefaultCameraCaptureSource @JvmOverloads constructor(
                 start()
             }
         }
+
+    override var codecPreferences: List<VideoCodecPreference> = listOf(h264ConstrainedBaselineProfile, vp8)
 
     override fun start() {
         if (ActivityCompat.checkSelfPermission(

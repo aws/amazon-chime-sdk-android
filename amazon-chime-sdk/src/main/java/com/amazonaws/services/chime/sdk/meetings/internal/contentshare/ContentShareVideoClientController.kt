@@ -7,6 +7,7 @@ package com.amazonaws.services.chime.sdk.meetings.internal.contentshare
 
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.contentshare.ContentShareObserver
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.LocalVideoConfiguration
+import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoCodecPreference
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoFrame
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoSource
 
@@ -59,4 +60,9 @@ interface ContentShareVideoClientController {
      * @param observer: [ContentShareObserver] - The observer to be removed for events.
      */
     fun unsubscribeFromVideoClientStateChange(observer: ContentShareObserver)
+
+    /**
+     * See [AudioVideoFacade.setVideoCodecSendPreferences]
+     */
+    fun setVideoCodecSendPreferences(codecPreferences: List<VideoCodecPreference>)
 }

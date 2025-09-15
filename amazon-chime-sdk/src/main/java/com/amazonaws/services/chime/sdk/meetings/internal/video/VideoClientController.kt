@@ -8,6 +8,7 @@ package com.amazonaws.services.chime.sdk.meetings.internal.video
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.PrimaryMeetingPromotionObserver
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.LocalVideoConfiguration
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.RemoteVideoSource
+import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoCodecPreference
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoFrame
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoSource
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoSubscriptionConfiguration
@@ -165,4 +166,9 @@ interface VideoClientController {
      * Set max bitrate in kbps for mobile video client
      */
     fun setMaxBitRateKbps(maxBitRate: Int)
+
+    /**
+     * See [AudioVideoFacade.setVideoCodecSendPreferences]
+     */
+    fun setVideoCodecSendPreferences(codecPreferences: List<VideoCodecPreference>)
 }
