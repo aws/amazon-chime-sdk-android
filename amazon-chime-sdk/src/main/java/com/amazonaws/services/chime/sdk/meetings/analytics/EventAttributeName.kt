@@ -173,5 +173,15 @@ enum class EventAttributeName {
     /**
      * Whether low power mode is currently enabled
      */
-    lowPowerModeEnabled;
+    lowPowerModeEnabled,
+
+    /**
+     * The time taken for connection's ICE gathering state to complete
+     */
+    iceGatheringDurationMs,
+
+    /**
+     * The time taken for opening a WebSocket connection.
+     */
+    signalingOpenDurationMs;
 }

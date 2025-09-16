@@ -18,6 +18,8 @@ import com.amazonaws.services.chime.sdk.meetings.session.URLRewriter
 import com.amazonaws.services.chime.sdk.meetings.utils.VideoClientFailedError
 import com.amazonaws.services.chime.sdk.meetings.utils.logger.Logger
 import com.xodee.client.video.VideoClient
+import com.xodee.client.video.VideoClientEvent
+import com.xodee.client.video.VideoClientSignalingDroppedError
 import io.mockk.MockKAnnotations
 import io.mockk.every
 import io.mockk.impl.annotations.InjectMockKs
@@ -169,5 +171,44 @@ class DefaultContentShareVideoClientObserverTest {
 
         verify(exactly = 3) { mockURLRewriter(any()) }
         assert(outUris.equals(turnUris))
+    }
+
+    @Test
+    fun `didReceiveEvent should publish event when event type is sigaling opened`() {
+        val event = VideoClientEvent.signalingOpenedEvent(1, 1)
+        testContentShareVideoClientObserver.didReceiveEvent(mockVideoClient, event)
+
+        verify {
+            mockEventAnalyticsController.publishEvent(
+                EventName.videoClientSignalingOpened,
+                any()
+            )
+        }
+    }
+
+    @Test
+    fun `didReceiveEvent should publish event when event type is sigaling dropped`() {
+        val event = VideoClientEvent.signalingDroppedEvent(1, VideoClientSignalingDroppedError.SIGNALING_CLIENT_EOF)
+        testContentShareVideoClientObserver.didReceiveEvent(mockVideoClient, event)
+
+        verify {
+            mockEventAnalyticsController.publishEvent(
+                EventName.videoClientSignalingDropped,
+                any()
+            )
+        }
+    }
+
+    @Test
+    fun `didReceiveEvent should publish event when event type is ice gathering completed`() {
+        val event = VideoClientEvent.iceGatheringCompletedEvent(1, 1)
+        testContentShareVideoClientObserver.didReceiveEvent(mockVideoClient, event)
+
+        verify {
+            mockEventAnalyticsController.publishEvent(
+                EventName.videoClientIceGatheringCompleted,
+                any()
+            )
+        }
     }
 }
