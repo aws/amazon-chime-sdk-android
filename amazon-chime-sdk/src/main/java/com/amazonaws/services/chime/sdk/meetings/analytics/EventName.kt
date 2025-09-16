@@ -55,6 +55,26 @@ enum class EventName {
     contentShareSignalingDropped,
 
     /**
+     * The content share start was requested.
+     */
+    contentShareStartRequested,
+
+    /**
+     * The content share started successfully.
+     */
+    contentShareStarted,
+
+    /**
+     * The content share stopped.
+     */
+    contentShareStopped,
+
+    /*
+     * The content share failed to start.
+     */
+    contentShareFailed,
+
+    /**
      * The meeting ended with failure.
      */
     meetingFailed,
