@@ -71,6 +71,26 @@ enum class MeetingHistoryEventName {
     contentShareSignalingDropped,
 
     /**
+     * The content share start was requested.
+     */
+    contentShareStartRequested,
+
+    /**
+     * The content share started successfully.
+     */
+    contentShareStarted,
+
+    /**
+     * The content share stopped.
+     */
+    contentShareStopped,
+
+    /*
+     * The content share failed to start.
+     */
+    contentShareFailed,
+
+    /**
      * The application state is changed.
      */
     appStateChanged,
@@ -93,6 +113,10 @@ enum class MeetingHistoryEventName {
                 EventName.meetingFailed -> meetingFailed
                 EventName.videoClientSignalingDropped -> videoClientSignalingDropped
                 EventName.contentShareSignalingDropped -> contentShareSignalingDropped
+                EventName.contentShareStartRequested -> contentShareStartRequested
+                EventName.contentShareStarted -> contentShareStarted
+                EventName.contentShareStopped -> contentShareStopped
+                EventName.contentShareFailed -> contentShareFailed
                 EventName.appStateChanged -> appStateChanged
                 EventName.appMemoryLow -> appMemoryLow
             }

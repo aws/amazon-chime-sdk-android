@@ -149,4 +149,9 @@ enum class EventAttributeName {
      * The error message that explains why the signaling websocket connection dropped
      */
     signalingDroppedErrorMessage,
+
+    /**
+     * The error message that explains why content share failed
+     */
+    contentShareErrorMessage,
 }
