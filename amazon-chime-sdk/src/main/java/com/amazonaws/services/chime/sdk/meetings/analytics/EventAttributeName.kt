@@ -178,5 +178,15 @@ enum class EventAttributeName {
     /**
      * The network connection type
      */
-    networkConnectionType;
+    networkConnectionType,
+
+    /**
+     * The time taken for connection's ICE gathering state to complete
+     */
+    iceGatheringDurationMs,
+
+    /**
+     * The time taken for opening a WebSocket connection.
+     */
+    signalingOpenDurationMs;
 }

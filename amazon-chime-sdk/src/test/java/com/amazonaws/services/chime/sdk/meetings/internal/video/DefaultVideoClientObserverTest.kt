@@ -228,6 +228,19 @@ class DefaultVideoClientObserverTest {
     }
 
     @Test
+    fun `didReceiveEvent should publish event when event type is sigaling opened`() {
+        val event = VideoClientEvent.signalingOpenedEvent(1, 1)
+        testVideoClientObserver.didReceiveEvent(mockVideoClient, event)
+
+        verify {
+            mockEventAnalyticsController.publishEvent(
+                EventName.videoClientSignalingOpened,
+                any()
+            )
+        }
+    }
+
+    @Test
     fun `didReceiveEvent should publish event when event type is sigaling dropped`() {
         val event = VideoClientEvent.signalingDroppedEvent(1, VideoClientSignalingDroppedError.SIGNALING_CLIENT_EOF)
         testVideoClientObserver.didReceiveEvent(mockVideoClient, event)
@@ -235,6 +248,19 @@ class DefaultVideoClientObserverTest {
         verify {
             mockEventAnalyticsController.publishEvent(
                 EventName.videoClientSignalingDropped,
+                any()
+            )
+        }
+    }
+
+    @Test
+    fun `didReceiveEvent should publish event when event type is ice gathering completed`() {
+        val event = VideoClientEvent.iceGatheringCompletedEvent(1, 1)
+        testVideoClientObserver.didReceiveEvent(mockVideoClient, event)
+
+        verify {
+            mockEventAnalyticsController.publishEvent(
+                EventName.videoClientIceGatheringCompleted,
                 any()
             )
         }

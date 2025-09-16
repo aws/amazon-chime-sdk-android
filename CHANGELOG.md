@@ -4,8 +4,8 @@
 * Guard video client stop with a mutex
 
 ### Added
-* Added following meeting events: contentShareStartRequested/contentShareStarted/contentShareStopped/contentShareFailed/voiceFocusEnabled/voiceFocusDisabled/voiceFocusEnableFailed/voiceFocusDisableFailed/videoCaptureSessionInterruptionBegan/videoCaptureSessionInterruptionEnded/networkConnectionTypeChanged
-* Added following meeting event attributes: voiceFocusErrorMessage/lowPowerModeEnabled/networkConnectionType
+* Added following meeting events: contentShareStartRequested/contentShareStarted/contentShareStopped/contentShareFailed/voiceFocusEnabled/voiceFocusDisabled/voiceFocusEnableFailed/voiceFocusDisableFailed/videoCaptureSessionInterruptionBegan/videoCaptureSessionInterruptionEnded/networkConnectionTypeChanged/signalingDropped/iceGatheringCompleted
+* Added following meeting event attributes: voiceFocusErrorMessage/lowPowerModeEnabled/networkConnectionType/signalingOpenDurationMs/iceGatheringDurationMs
 
 ## [0.25.1] - 2025-10-02
 

@@ -168,6 +168,18 @@ class DefaultContentShareVideoClientObserver(
                     )
                     eventAnalyticsController.publishEvent(EventName.contentShareSignalingDropped, attributes)
                 }
+                VideoClientEventType.SIGNALING_OPENED -> {
+                    val attributes = mutableMapOf<EventAttributeName, Any>(
+                        EventAttributeName.signalingOpenDurationMs to it.signalingOpenDurationMs
+                    )
+                    eventAnalyticsController.publishEvent(EventName.contentShareSignalingOpened, attributes)
+                }
+                VideoClientEventType.ICE_GATHERING_COMPLETED -> {
+                    val attributes = mutableMapOf<EventAttributeName, Any>(
+                        EventAttributeName.iceGatheringDurationMs to it.iceGatheringDurationMs
+                    )
+                    eventAnalyticsController.publishEvent(EventName.contentShareIceGatheringCompleted, attributes)
+                }
                 VideoClientEventType.OTHER -> {}
             }
         }
