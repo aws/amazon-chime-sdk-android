@@ -54,9 +54,8 @@ class DefaultEventAnalyticsController(
         }
 
         eventAttributes[EventAttributeName.appState] = appStateMonitor.appState.description
-        val batteryLevel = appStateMonitor.getBatteryLevel()
-        if (batteryLevel != null) {
-            eventAttributes[EventAttributeName.batteryLevel] = batteryLevel
+        appStateMonitor.getBatteryLevel()?.let {
+            eventAttributes[EventAttributeName.batteryLevel] = it
         }
         eventAttributes[EventAttributeName.batteryState] = appStateMonitor.getBatteryState().description
 
@@ -77,9 +76,8 @@ class DefaultEventAnalyticsController(
             EventAttributeName.batteryState to appStateMonitor.getBatteryState().description
         ) as EventAttributes
 
-        val batteryLevel = appStateMonitor.getBatteryLevel()
-        if (batteryLevel != null) {
-            eventAttributes[EventAttributeName.batteryLevel] = batteryLevel
+        appStateMonitor.getBatteryLevel()?.let {
+            eventAttributes[EventAttributeName.batteryLevel] = it
         }
 
         eventReporter?.report(SDKEvent(historyEventName, eventAttributes))

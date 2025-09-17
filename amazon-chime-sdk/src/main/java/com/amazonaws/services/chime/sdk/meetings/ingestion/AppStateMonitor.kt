@@ -39,7 +39,7 @@ interface AppStateMonitor {
 
     /**
      * Returns the current battery state
-     * @return Battery state (CHARGING, DISCHARGING, NOT_CHARGING, FULL, UNKNOWN)
+     * @return Battery state
      */
     fun getBatteryState(): BatteryState
 }
