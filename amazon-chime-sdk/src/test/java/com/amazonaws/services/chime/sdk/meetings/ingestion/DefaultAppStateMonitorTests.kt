@@ -8,6 +8,7 @@ package com.amazonaws.services.chime.sdk.meetings.ingestion
 import android.app.ActivityManager
 import android.app.Application
 import android.content.Context
+import android.os.BatteryManager
 import android.os.Handler
 import android.os.Looper
 import androidx.lifecycle.Lifecycle
@@ -271,5 +272,163 @@ class DefaultAppStateMonitorTests {
 
         // Verify logging of low memory condition
         verify(exactly = 1) { mockLogger.info(any(), match { it.contains("Application detected low memory condition") }) }
+    }
+
+    @Test
+    fun `getBatteryLevel should return valid battery level when BatteryManager is available`() {
+        // Mock BatteryManager
+        val mockBatteryManager = mockk<BatteryManager>()
+
+        // Set up mock behavior for valid battery level (75%)
+        every { mockApplication.getSystemService(Context.BATTERY_SERVICE) } returns mockBatteryManager
+        every { mockBatteryManager.getIntProperty(BatteryManager.BATTERY_PROPERTY_CAPACITY) } returns 75
+
+        val batteryLevel = appStateMonitor.getBatteryLevel()
+
+        assertEquals(0.75f, batteryLevel)
+    }
+
+    @Test
+    fun `getBatteryLevel should return null when BatteryManager is not available`() {
+        // Set up mock behavior for unavailable BatteryManager
+        every { mockApplication.getSystemService(Context.BATTERY_SERVICE) } returns null
+
+        val batteryLevel = appStateMonitor.getBatteryLevel()
+
+        assertEquals(null, batteryLevel)
+        verify(exactly = 1) { mockLogger.warn(any(), "BatteryManager service not available") }
+    }
+
+    @Test
+    fun `getBatteryLevel should return null when application context is not available`() {
+        // Create monitor without application context
+        val monitorWithoutApp = DefaultAppStateMonitor(mockLogger, null)
+
+        val batteryLevel = monitorWithoutApp.getBatteryLevel()
+
+        assertEquals(null, batteryLevel)
+        verify(exactly = 1) { mockLogger.warn(any(), "Application context not available for battery level check") }
+    }
+
+    @Test
+    fun `getBatteryLevel should return null when battery level is invalid`() {
+        // Mock BatteryManager
+        val mockBatteryManager = mockk<BatteryManager>()
+
+        // Set up mock behavior for invalid battery level (-1)
+        every { mockApplication.getSystemService(Context.BATTERY_SERVICE) } returns mockBatteryManager
+        every { mockBatteryManager.getIntProperty(BatteryManager.BATTERY_PROPERTY_CAPACITY) } returns -1
+
+        val batteryLevel = appStateMonitor.getBatteryLevel()
+
+        assertEquals(null, batteryLevel)
+        verify(exactly = 1) { mockLogger.warn(any(), "Invalid battery level from BatteryManager: -1") }
+    }
+
+    @Test
+    fun `getBatteryState should return CHARGING when battery is charging`() {
+        // Mock BatteryManager
+        val mockBatteryManager = mockk<BatteryManager>()
+
+        // Set up mock behavior for charging state
+        every { mockApplication.getSystemService(Context.BATTERY_SERVICE) } returns mockBatteryManager
+        every { mockBatteryManager.getIntProperty(BatteryManager.BATTERY_PROPERTY_STATUS) } returns BatteryManager.BATTERY_STATUS_CHARGING
+
+        val batteryState = appStateMonitor.getBatteryState()
+
+        assertEquals(BatteryState.CHARGING, batteryState)
+    }
+
+    @Test
+    fun `getBatteryState should return DISCHARGING when battery is discharging`() {
+        // Mock BatteryManager
+        val mockBatteryManager = mockk<BatteryManager>()
+
+        // Set up mock behavior for discharging state
+        every { mockApplication.getSystemService(Context.BATTERY_SERVICE) } returns mockBatteryManager
+        every { mockBatteryManager.getIntProperty(BatteryManager.BATTERY_PROPERTY_STATUS) } returns BatteryManager.BATTERY_STATUS_DISCHARGING
+
+        val batteryState = appStateMonitor.getBatteryState()
+
+        assertEquals(BatteryState.DISCHARGING, batteryState)
+    }
+
+    @Test
+    fun `getBatteryState should return NOT_CHARGING when battery is not charging`() {
+        // Mock BatteryManager
+        val mockBatteryManager = mockk<BatteryManager>()
+
+        // Set up mock behavior for not charging state
+        every { mockApplication.getSystemService(Context.BATTERY_SERVICE) } returns mockBatteryManager
+        every { mockBatteryManager.getIntProperty(BatteryManager.BATTERY_PROPERTY_STATUS) } returns BatteryManager.BATTERY_STATUS_NOT_CHARGING
+
+        val batteryState = appStateMonitor.getBatteryState()
+
+        assertEquals(BatteryState.NOT_CHARGING, batteryState)
+    }
+
+    @Test
+    fun `getBatteryState should return FULL when battery is full`() {
+        // Mock BatteryManager
+        val mockBatteryManager = mockk<BatteryManager>()
+
+        // Set up mock behavior for full state
+        every { mockApplication.getSystemService(Context.BATTERY_SERVICE) } returns mockBatteryManager
+        every { mockBatteryManager.getIntProperty(BatteryManager.BATTERY_PROPERTY_STATUS) } returns BatteryManager.BATTERY_STATUS_FULL
+
+        val batteryState = appStateMonitor.getBatteryState()
+
+        assertEquals(BatteryState.FULL, batteryState)
+    }
+
+    @Test
+    fun `getBatteryState should return UNKNOWN when battery status is unknown`() {
+        // Mock BatteryManager
+        val mockBatteryManager = mockk<BatteryManager>()
+
+        // Set up mock behavior for unknown state
+        every { mockApplication.getSystemService(Context.BATTERY_SERVICE) } returns mockBatteryManager
+        every { mockBatteryManager.getIntProperty(BatteryManager.BATTERY_PROPERTY_STATUS) } returns BatteryManager.BATTERY_STATUS_UNKNOWN
+
+        val batteryState = appStateMonitor.getBatteryState()
+
+        assertEquals(BatteryState.UNKNOWN, batteryState)
+    }
+
+    @Test
+    fun `getBatteryState should return UNKNOWN when battery status is unrecognized`() {
+        // Mock BatteryManager
+        val mockBatteryManager = mockk<BatteryManager>()
+
+        // Set up mock behavior for unrecognized status (999)
+        every { mockApplication.getSystemService(Context.BATTERY_SERVICE) } returns mockBatteryManager
+        every { mockBatteryManager.getIntProperty(BatteryManager.BATTERY_PROPERTY_STATUS) } returns 999
+
+        val batteryState = appStateMonitor.getBatteryState()
+
+        assertEquals(BatteryState.UNKNOWN, batteryState)
+        verify(exactly = 1) { mockLogger.warn(any(), "Unknown battery status from BatteryManager: 999") }
+    }
+
+    @Test
+    fun `getBatteryState should return UNKNOWN when BatteryManager is not available`() {
+        // Set up mock behavior for unavailable BatteryManager
+        every { mockApplication.getSystemService(Context.BATTERY_SERVICE) } returns null
+
+        val batteryState = appStateMonitor.getBatteryState()
+
+        assertEquals(BatteryState.UNKNOWN, batteryState)
+        verify(exactly = 1) { mockLogger.warn(any(), "BatteryManager service not available") }
+    }
+
+    @Test
+    fun `getBatteryState should return UNKNOWN when application context is not available`() {
+        // Create monitor without application context
+        val monitorWithoutApp = DefaultAppStateMonitor(mockLogger, null)
+
+        val batteryState = monitorWithoutApp.getBatteryState()
+
+        assertEquals(BatteryState.UNKNOWN, batteryState)
+        verify(exactly = 1) { mockLogger.warn(any(), "Application context not available for battery state check") }
     }
 }

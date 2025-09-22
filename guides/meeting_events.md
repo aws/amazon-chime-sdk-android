@@ -138,6 +138,8 @@ The following table describes attributes for a meeting.
 |`retryCount`|The number of connection retries performed during the meeting.<br><br>Unit: Count|`meetingStartSucceeded`, `meetingReconnected`, `meetingStartFailed`, `meetingEnded`, `meetingFailed`
 |`signalingDroppedErrorMessage`|The error message that explains why the signaling websocket connection dropped.|`videoClientSignalingDropped`, `contentShareSignalingDropped`
 |`appState`|The current app state when the event occurs. Possible states include: `Active`, `Inactive`, `Foreground`, and `Background`.| All events
+|`batteryLevel`|The current battery level when the event occurs.| All events
+|`batteryState`|The current battery state when the event occurs. Possible states include: `Charging`, `Discharging`, `NotCharging`, `Full`, and `Unknown`.| All events
 
 ### Device attributes
 The following table describes attributes for the microphone and camera.
