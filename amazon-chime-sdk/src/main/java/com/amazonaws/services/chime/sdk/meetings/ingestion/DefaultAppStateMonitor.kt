@@ -11,6 +11,7 @@ import android.content.Context
 import android.os.BatteryManager
 import android.os.Handler
 import android.os.Looper
+import android.os.PowerManager
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ProcessLifecycleOwner
@@ -197,6 +198,21 @@ class DefaultAppStateMonitor(
         } ?: run {
             logger.warn(TAG, "Application context not available for battery state check")
             BatteryState.UNKNOWN
+        }
+    }
+
+    /**
+     * Checks whether Android's Battery Saver mode (a.k.a. Low Power Mode) is currently enabled.
+     *
+     * @return true if Battery Saver mode is on, false otherwise.
+     */
+    override fun isBatterySaverOn(): Boolean {
+        return application?.let { app ->
+            val powerManager = app.getSystemService(Context.POWER_SERVICE) as? PowerManager
+            powerManager?.isPowerSaveMode ?: false
+        } ?: run {
+            logger.warn(TAG, "Application context not available for Battery Saver check")
+            false
         }
     }
 }

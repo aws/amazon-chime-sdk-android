@@ -10,9 +10,19 @@ package com.amazonaws.services.chime.sdk.meetings.analytics
  */
 enum class EventName {
     /**
+     * The microphone was selected.
+     */
+    audioInputSelected,
+
+    /**
      * The microphone selection or access failed.
      */
     audioInputFailed,
+
+    /**
+     * The camera was selected.
+     */
+    videoInputSelected,
 
     /**
      * The camera selection or access failed.
@@ -87,5 +97,25 @@ enum class EventName {
     /**
      * The application received a memory low warning.
      */
-    appMemoryLow
+    appMemoryLow,
+
+    /**
+     * Voice focus enabled
+     */
+    voiceFocusEnabled,
+
+    /**
+     * Voice focus disabled
+     */
+    voiceFocusDisabled,
+
+    /**
+     * Failed to enable voice focus
+     */
+    voiceFocusEnableFailed,
+
+    /**
+     * Failed to disable voice focus
+     */
+    voiceFocusDisableFailed;
 }
