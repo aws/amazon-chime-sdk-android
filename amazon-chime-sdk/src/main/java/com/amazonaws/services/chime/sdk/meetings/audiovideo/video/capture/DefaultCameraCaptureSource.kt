@@ -28,7 +28,6 @@ import androidx.core.app.ActivityCompat
 import com.amazonaws.services.chime.sdk.meetings.analytics.EventAnalyticsController
 import com.amazonaws.services.chime.sdk.meetings.analytics.EventAttributeName
 import com.amazonaws.services.chime.sdk.meetings.analytics.EventName
-import com.amazonaws.services.chime.sdk.meetings.analytics.MeetingHistoryEventName
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoContentHint
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoFrame
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoResolution
@@ -42,7 +41,6 @@ import com.amazonaws.services.chime.sdk.meetings.internal.utils.ConcurrentSet
 import com.amazonaws.services.chime.sdk.meetings.internal.utils.ObserverUtils
 import com.amazonaws.services.chime.sdk.meetings.utils.logger.Logger
 import kotlin.math.abs
-import kotlinx.coroutines.Runnable
 import kotlinx.coroutines.android.asCoroutineDispatcher
 import kotlinx.coroutines.runBlocking
 
@@ -54,6 +52,7 @@ class DefaultCameraCaptureSource @JvmOverloads constructor(
     private val context: Context,
     private val logger: Logger,
     private val surfaceTextureCaptureSourceFactory: SurfaceTextureCaptureSourceFactory,
+    private val eventAnalyticsController: EventAnalyticsController?,
     private val cameraManager: CameraManager = context.getSystemService(
         Context.CAMERA_SERVICE
     ) as CameraManager
@@ -94,26 +93,7 @@ class DefaultCameraCaptureSource @JvmOverloads constructor(
 
     private val TAG = "DefaultCameraCaptureSource"
 
-    var eventAnalyticsController: EventAnalyticsController? = null
-        set(value) {
-            field = value
-        }
-
-    init {
-        try {
-            // Load library so that some of webrtc definition is linked properly
-            System.loadLibrary("amazon_chime_media_client")
-        } catch (e: UnsatisfiedLinkError) {
-            logger.error(TAG, "Unable to load native media libraries: ${e.localizedMessage}")
-        }
-        val thread = HandlerThread(TAG)
-        thread.start()
-        handler = Handler(thread.looper)
-    }
-
-    override var device: MediaDevice? = MediaDevice.listVideoDevices(cameraManager)
-        .firstOrNull { it.type == MediaDeviceType.VIDEO_FRONT_CAMERA } ?: MediaDevice.listVideoDevices(cameraManager)
-        .firstOrNull { it.type == MediaDeviceType.VIDEO_BACK_CAMERA }
+    override var device: MediaDevice? = null
         set(value) {
             logger.info(TAG, "Setting capture device: $value")
             if (field == value) {
@@ -128,7 +108,29 @@ class DefaultCameraCaptureSource @JvmOverloads constructor(
                 stop()
                 start()
             }
+
+            device?.let {
+                eventAnalyticsController?.publishEvent(EventName.videoInputSelected, mutableMapOf(
+                    EventAttributeName.videoDeviceType to it.type.toString()
+                ), false)
+            }
         }
+
+    init {
+        try {
+            // Load library so that some of webrtc definition is linked properly
+            System.loadLibrary("amazon_chime_media_client")
+        } catch (e: UnsatisfiedLinkError) {
+            logger.error(TAG, "Unable to load native media libraries: ${e.localizedMessage}")
+        }
+        val thread = HandlerThread(TAG)
+        thread.start()
+        handler = Handler(thread.looper)
+
+        device = MediaDevice.listVideoDevices(cameraManager)
+            .firstOrNull { it.type == MediaDeviceType.VIDEO_FRONT_CAMERA } ?: MediaDevice.listVideoDevices(cameraManager)
+            .firstOrNull { it.type == MediaDeviceType.VIDEO_BACK_CAMERA }
+    }
 
     override fun switchCamera() {
         val desiredDeviceType = if (device?.type == MediaDeviceType.VIDEO_FRONT_CAMERA) {
@@ -139,10 +141,6 @@ class DefaultCameraCaptureSource @JvmOverloads constructor(
         device =
             MediaDevice.listVideoDevices(cameraManager).firstOrNull { it.type == desiredDeviceType } ?: MediaDevice.listVideoDevices(cameraManager)
                 .firstOrNull { it.type == MediaDeviceType.VIDEO_BACK_CAMERA }
-
-        if (device != null) {
-            eventAnalyticsController?.pushHistory(MeetingHistoryEventName.videoInputSelected)
-        }
     }
     override fun setMaxResolution(maxResolution: VideoResolution) {
         this.maxResolution = maxResolution

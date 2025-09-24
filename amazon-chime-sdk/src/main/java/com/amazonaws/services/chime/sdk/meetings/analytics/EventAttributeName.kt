@@ -154,4 +154,24 @@ enum class EventAttributeName {
      * The error message that explains why content share failed
      */
     contentShareErrorMessage,
+
+    /**
+     * The error message explaining why enabling or disabling Voice Focus failed
+     */
+    voiceFocusErrorMessage,
+
+    /**
+     * The selected audio device type
+     */
+    audioDeviceType,
+
+    /**
+     * The selected video device type
+     */
+    videoDeviceType,
+
+    /**
+     * Whether low power mode is currently enabled
+     */
+    lowPowerModeEnabled;
 }

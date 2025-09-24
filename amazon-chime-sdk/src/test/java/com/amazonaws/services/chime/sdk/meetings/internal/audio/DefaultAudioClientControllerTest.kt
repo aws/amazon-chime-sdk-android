@@ -20,6 +20,7 @@ import com.amazonaws.services.chime.sdk.meetings.audiovideo.audio.AudioDeviceCap
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.audio.AudioMode
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.audio.AudioRecordingPresetOverride
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.audio.AudioStreamType
+import com.amazonaws.services.chime.sdk.meetings.ingestion.VoiceFocusError
 import com.amazonaws.services.chime.sdk.meetings.internal.utils.AppInfoUtil
 import com.amazonaws.services.chime.sdk.meetings.session.MeetingSessionStatusCode
 import com.amazonaws.services.chime.sdk.meetings.utils.MediaError
@@ -78,7 +79,7 @@ class DefaultAudioClientControllerTest {
     private val testDispatcher = TestCoroutineDispatcher()
 
     private val testAudioClientSuccessCode = 0
-    private val testAudioClientFailureCode = -1
+    private val testAudioClientFailureCode = 1
     private val testNewRoute = 5
     private val testMicMute = true
     private val testAudioFallbackUrl = "audioFallbackUrl"
@@ -667,6 +668,8 @@ class DefaultAudioClientControllerTest {
         val disableOutput: Boolean = audioClientController.setVoiceFocusEnabled(false)
         verify(exactly = 1) { mockAudioClient.setVoiceFocusNoiseSuppression(false) }
         assertTrue(disableOutput)
+
+        verify(exactly = 1) { mockEventAnalyticsController.publishEvent(EventName.voiceFocusEnabled, mutableMapOf(), false) }
     }
 
     @Test
@@ -680,6 +683,52 @@ class DefaultAudioClientControllerTest {
         val disableOutput: Boolean = audioClientController.setVoiceFocusEnabled(false)
         verify(exactly = 0) { mockAudioClient.setVoiceFocusNoiseSuppression(any()) }
         assertFalse(disableOutput)
+
+        verify(exactly = 1) { mockEventAnalyticsController.publishEvent(EventName.voiceFocusEnableFailed, mutableMapOf(
+            EventAttributeName.voiceFocusErrorMessage to VoiceFocusError.audioClientNotStarted
+        ), false) }
+    }
+
+    @Test
+    fun `setVoiceEnabled should publish event when audioClient setVoiceFocusNoiseSuppression(enabled) returns error`() {
+        setupStartTests()
+        audioClientController.start(
+            testAudioFallbackUrl,
+            testAudioHostUrl,
+            testMeetingId,
+            testAttendeeId,
+            testJoinToken,
+            AudioMode.Stereo48K,
+            AudioDeviceCapabilities.InputAndOutput,
+            AudioStreamType.VoiceCall,
+            AudioRecordingPresetOverride.None,
+            true,
+            reconnectTimeoutMs = 180000
+        )
+
+        // Mock setVoiceFocusNoiseSuppression to return error code
+        every { mockAudioClient.setVoiceFocusNoiseSuppression(true) } returns testAudioClientFailureCode
+        every { mockAudioClient.setVoiceFocusNoiseSuppression(false) } returns testAudioClientFailureCode
+
+        // Test enabling VoiceFocus with error
+        val enableResult = audioClientController.setVoiceFocusEnabled(true)
+        assertFalse(enableResult)
+        verify(exactly = 1) { mockAudioClient.setVoiceFocusNoiseSuppression(true) }
+        verify(exactly = 1) { mockEventAnalyticsController.publishEvent(
+            EventName.voiceFocusEnableFailed,
+            mutableMapOf(EventAttributeName.voiceFocusErrorMessage to VoiceFocusError.fromXalError(testAudioClientFailureCode)),
+            false
+        ) }
+
+        // Test disabling VoiceFocus with error
+        val disableResult = audioClientController.setVoiceFocusEnabled(false)
+        assertFalse(disableResult)
+        verify(exactly = 1) { mockAudioClient.setVoiceFocusNoiseSuppression(false) }
+        verify(exactly = 1) { mockEventAnalyticsController.publishEvent(
+            EventName.voiceFocusDisableFailed,
+            mutableMapOf(EventAttributeName.voiceFocusErrorMessage to VoiceFocusError.fromXalError(testAudioClientFailureCode)),
+            false
+        ) }
     }
 
     @Test
