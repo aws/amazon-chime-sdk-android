@@ -36,6 +36,8 @@ import com.xodee.client.video.VideoSubscriptionConfigurationInternal
 import java.security.InvalidParameterException
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
 
 class DefaultVideoClientController(
     private val context: Context,
@@ -66,7 +68,7 @@ class DefaultVideoClientController(
     private val cameraCaptureSource: DefaultCameraCaptureSource
     private var videoSourceAdapter = VideoSourceAdapter()
     private var isUsingInternalCaptureSource = false
-
+    private val eglCoreMutex = Mutex()
     init {
         videoClientStateController.bindLifecycleHandler(this)
 
@@ -106,8 +108,10 @@ class DefaultVideoClientController(
 
             videoClientStateController.stop()
 
-            eglCore?.release()
-            eglCore = null
+            eglCoreMutex.withLock {
+                eglCore?.release()
+                eglCore = null
+            }
         }
     }
 
