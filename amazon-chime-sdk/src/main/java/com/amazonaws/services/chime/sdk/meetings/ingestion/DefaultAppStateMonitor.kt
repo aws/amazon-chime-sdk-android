@@ -85,6 +85,14 @@ class DefaultAppStateMonitor(
     }
 
     // ProcessLifecycleOwner callbacks
+    override fun onCreate(owner: LifecycleOwner) {
+        // no-op
+    }
+
+    override fun onDestroy(owner: LifecycleOwner) {
+        // no-op
+    }
+
     override fun onStart(owner: LifecycleOwner) {
         _appState = AppState.FOREGROUND
     }
