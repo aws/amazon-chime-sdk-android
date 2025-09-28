@@ -118,7 +118,17 @@ enum class MeetingHistoryEventName {
     /**
      * Failed to disable voice focus
      */
-    voiceFocusDisableFailed;
+    voiceFocusDisableFailed,
+
+    /**
+     * Video capture session interruption began
+     */
+    videoCaptureSessionInterruptionBegan,
+
+    /**
+     * Video capture session interruption ended
+     */
+    videoCaptureSessionInterruptionEnded;
 
     companion object {
         fun fromMeetingEvent(name: EventName): MeetingHistoryEventName {
@@ -145,6 +155,8 @@ enum class MeetingHistoryEventName {
                 EventName.voiceFocusDisabled -> voiceFocusDisabled
                 EventName.voiceFocusEnableFailed -> voiceFocusEnableFailed
                 EventName.voiceFocusDisableFailed -> voiceFocusDisableFailed
+                EventName.videoCaptureSessionInterruptionBegan -> videoCaptureSessionInterruptionBegan
+                EventName.videoCaptureSessionInterruptionEnded -> videoCaptureSessionInterruptionEnded
             }
         }
     }

@@ -1,7 +1,7 @@
 ## PENDING
 
 ### Added
-* Added following meeting events: meetingReconnected/audioInputFailed/videoClientSignalingDropped/contentShareSignalingDropped/appStateChanged/appMemoryLow/contentShareStartRequested/contentShareStarted/contentShareStopped/contentShareFailed/voiceFocusEnabled/voiceFocusDisabled/voiceFocusEnableFailed/voiceFocusDisableFailed
+* Added following meeting events: meetingReconnected/audioInputFailed/videoClientSignalingDropped/contentShareSignalingDropped/appStateChanged/appMemoryLow/contentShareStartRequested/contentShareStarted/contentShareStopped/contentShareFailed/voiceFocusEnabled/voiceFocusDisabled/voiceFocusEnableFailed/voiceFocusDisableFailed/videoCaptureSessionInterruptionBegan/videoCaptureSessionInterruptionEnded
 * Added following meeting event attributes: meetingReconnectDurationMs/audioInputErrorMessage/signalingDroppedErrorMessage/appState/batteryLevel/batteryState/contentShareErrorMessage/voiceFocusErrorMessage/lowPowerModeEnabled
 
 ## [0.25.0] - 2025-06-17

@@ -186,28 +186,30 @@ the meeting history will include two `meetingStartSucceeded`.
 The following table lists available states.
 |State|Description
 |--|--
-|`meetingEnded`                 |The meeting ended.
-|`meetingFailed`                |The meeting ended with the failure status.
-|`meetingReconnected`           |The meeting reconnected.
-|`meetingStartFailed`           |The meeting failed to start.
-|`meetingStartRequested`        |The meeting will start.
-|`meetingStartSucceeded`        |The meeting started.
-|`audioInputSelected`           |The microphone was selected.
-|`audioInputFailed`             |The microphone selection or access failed.
-|`videoInputSelected`           |The camera was selected.
-|`videoInputFailed`             |The camera selection or access failed.
-|`videoClientSignalingDropped`  |The video client signaling websocket failed or closed with an error.
-|`contentShareStartRequested`   |The content share start was requested.
-|`contentShareStarted`          |The content share started successfully.
-|`contentShareStopped`          |The content share stopped.
-|`contentShareFailed`           |The content share failed.
-|`contentShareSignalingDropped` |The content share client signaling websocket failed or closed with an error.
-|`appStateChanged`              |The application state is changed.
-|`appMemoryLow`                 |The application memory is low.
-|`voiceFocusEnabled`            |The voice focus is enabled.
-|`voiceFocusDisabled`           |The voice focus is disabled.
-|`voiceFocusEnableFailed`       |Failed to enable voice focus.
-|`voiceFocusDisableFailed`      |Failed to disable voice focus.
+|`meetingEnded`                             |The meeting ended.
+|`meetingFailed`                            |The meeting ended with the failure status.
+|`meetingReconnected`                       |The meeting reconnected.
+|`meetingStartFailed`                       |The meeting failed to start.
+|`meetingStartRequested`                    |The meeting will start.
+|`meetingStartSucceeded`                    |The meeting started.
+|`audioInputSelected`                       |The microphone was selected.
+|`audioInputFailed`                         |The microphone selection or access failed.
+|`videoInputSelected`                       |The camera was selected.
+|`videoInputFailed`                         |The camera selection or access failed.
+|`videoClientSignalingDropped`              |The video client signaling websocket failed or closed with an error.
+|`contentShareStartRequested`               |The content share start was requested.
+|`contentShareStarted`                      |The content share started successfully.
+|`contentShareStopped`                      |The content share stopped.
+|`contentShareFailed`                       |The content share failed.
+|`contentShareSignalingDropped`             |The content share client signaling websocket failed or closed with an error.
+|`appStateChanged`                          |The application state is changed.
+|`appMemoryLow`                             |The application memory is low.
+|`voiceFocusEnabled`                        |The voice focus is enabled.
+|`voiceFocusDisabled`                       |The voice focus is disabled.
+|`voiceFocusEnableFailed`                   |Failed to enable voice focus.
+|`voiceFocusDisableFailed`                  |Failed to disable voice focus.
+|`videoCaptureSessionInterruptionBegan`     |Video capture session interruption began.
+|`videoCaptureSessionInterruptionEnded`     |Video capture session interruption ended.
 
 ## Example
 

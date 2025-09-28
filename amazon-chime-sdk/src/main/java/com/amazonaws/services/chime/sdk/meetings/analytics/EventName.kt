@@ -117,5 +117,15 @@ enum class EventName {
     /**
      * Failed to disable voice focus
      */
-    voiceFocusDisableFailed;
+    voiceFocusDisableFailed,
+
+    /**
+     * Video capture session interruption began
+     */
+    videoCaptureSessionInterruptionBegan,
+
+    /**
+     * Video capture session interruption ended
+     */
+    videoCaptureSessionInterruptionEnded;
 }

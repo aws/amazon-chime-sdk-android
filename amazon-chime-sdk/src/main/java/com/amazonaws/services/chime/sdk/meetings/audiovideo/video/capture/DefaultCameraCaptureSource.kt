@@ -71,6 +71,8 @@ class DefaultCameraCaptureSource @JvmOverloads constructor(
     // From CameraCharacteristics.LENS_FACING
     private var isCameraFrontFacing = false
 
+    private var isCameraInterrupted = false
+
     // This source provides a surface we pass into the system APIs
     // and then starts emitting frames once the system starts drawing to the
     // surface. To speed up restart, since theses sources have to wait on
@@ -297,6 +299,12 @@ class DefaultCameraCaptureSource @JvmOverloads constructor(
         override fun onOpened(device: CameraDevice) {
             logger.info(TAG, "Camera device opened for ID ${device.id}")
             cameraDevice = device
+
+            if (isCameraInterrupted) {
+                isCameraInterrupted = false
+                eventAnalyticsController?.publishEvent(EventName.videoCaptureSessionInterruptionEnded, mutableMapOf(), false)
+            }
+
             try {
                 cameraDevice?.createCaptureSession(
                     listOf(surfaceTextureSource?.surface),
@@ -320,7 +328,9 @@ class DefaultCameraCaptureSource @JvmOverloads constructor(
 
         override fun onDisconnected(device: CameraDevice) {
             logger.info(TAG, "Camera device disconnected for ID ${device.id}")
+            isCameraInterrupted = true
             ObserverUtils.notifyObserverOnMainThread(observers) { it.onCaptureStopped() }
+            eventAnalyticsController?.publishEvent(EventName.videoCaptureSessionInterruptionBegan, mutableMapOf(), false)
         }
 
         override fun onError(device: CameraDevice, error: Int) {
