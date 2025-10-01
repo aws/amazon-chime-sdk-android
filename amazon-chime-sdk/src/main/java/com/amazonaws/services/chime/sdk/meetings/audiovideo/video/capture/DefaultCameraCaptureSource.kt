@@ -129,6 +129,7 @@ class DefaultCameraCaptureSource @JvmOverloads constructor(
         thread.start()
         handler = Handler(thread.looper)
 
+        // Initializing the device in the init block rather than at declaration to allow it to emit the corresponding meeting event.
         device = MediaDevice.listVideoDevices(cameraManager)
             .firstOrNull { it.type == MediaDeviceType.VIDEO_FRONT_CAMERA } ?: MediaDevice.listVideoDevices(cameraManager)
             .firstOrNull { it.type == MediaDeviceType.VIDEO_BACK_CAMERA }
