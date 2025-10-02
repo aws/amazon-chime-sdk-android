@@ -140,8 +140,6 @@ class DefaultCameraCaptureSourceTest {
         // Most of the previous mocks need to be done before constructor call
         MockKAnnotations.init(this, relaxUnitFun = true)
 
-        testCameraCaptureSource.eventAnalyticsController = mockEventAnalyticsController
-
         every { mockCameraManager.getCameraCharacteristics("0") } returns mockFrontCameraCharacteristics
         every { mockCameraManager.getCameraCharacteristics("1") } returns mockBackCameraCharacteristics
         every { mockCameraManager.openCamera(any(), any<CameraDevice.StateCallback>(), any()) } just runs
