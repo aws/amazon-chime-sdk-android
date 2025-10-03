@@ -1,4 +1,4 @@
-## PENDING
+## [0.25.1] - 2025-10-02
 
 ### Added
 * Added following meeting events: meetingReconnected/audioInputFailed/videoClientSignalingDropped/contentShareSignalingDropped/appStateChanged/appMemoryLow/contentShareStartRequested/contentShareStarted/contentShareStopped/contentShareFailed/voiceFocusEnabled/voiceFocusDisabled/voiceFocusEnableFailed/voiceFocusDisableFailed/videoCaptureSessionInterruptionBegan/videoCaptureSessionInterruptionEnded
