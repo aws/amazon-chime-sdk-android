@@ -105,8 +105,12 @@ class DefaultVideoClientController(
             videoClientObserver.primaryMeetingPromotionObserver = null
 
             videoClientStopMutex.withLock {
+                // Race conditions in video client stop functions may lead to crashes at pointer deallocation
+                // if multiple such threads are called at the same time.
                 videoClientStateController.stop()
 
+                // We put release eglCore under mutex as a race condition may decrease its reference counter
+                // below 0 and cause crashes if multiple such calls happen together.
                 eglCore?.release()
                 eglCore = null
             }
