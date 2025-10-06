@@ -6,6 +6,8 @@
 package com.amazonaws.services.chime.sdk.meetings.internal.contentshare
 
 import android.content.Context
+import com.amazonaws.services.chime.sdk.meetings.analytics.EventAnalyticsController
+import com.amazonaws.services.chime.sdk.meetings.analytics.EventName
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.contentshare.ContentShareObserver
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.contentshare.ContentShareStatus
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.contentshare.ContentShareStatusCode
@@ -31,7 +33,8 @@ class DefaultContentShareVideoClientController(
     private val contentShareVideoClientObserver: ContentShareVideoClientObserver,
     private val configuration: MeetingSessionConfiguration,
     private val videoClientFactory: VideoClientFactory,
-    private val eglCoreFactory: EglCoreFactory
+    private val eglCoreFactory: EglCoreFactory,
+    private val eventAnalyticsController: EventAnalyticsController
 ) : ContentShareVideoClientController {
     private val observers = ConcurrentSet.createConcurrentSet<ContentShareObserver>()
     private val videoSourceAdapter = VideoSourceAdapter()
@@ -60,6 +63,8 @@ class DefaultContentShareVideoClientController(
             logger.info(TAG, "Could not start content because max content resolution was set to disabled")
             return
         }
+
+        eventAnalyticsController.publishEvent(EventName.contentShareStartRequested)
 
         // Start the given content share source
         if (eglCore == null) {

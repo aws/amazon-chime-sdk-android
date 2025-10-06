@@ -20,7 +20,6 @@ import androidx.annotation.VisibleForTesting
 import com.amazonaws.services.chime.sdk.meetings.analytics.EventAnalyticsController
 import com.amazonaws.services.chime.sdk.meetings.analytics.EventAttributeName
 import com.amazonaws.services.chime.sdk.meetings.analytics.EventName
-import com.amazonaws.services.chime.sdk.meetings.analytics.MeetingHistoryEventName
 import com.amazonaws.services.chime.sdk.meetings.internal.audio.AudioClientController
 import com.amazonaws.services.chime.sdk.meetings.internal.audio.AudioClientState
 import com.amazonaws.services.chime.sdk.meetings.internal.audio.DefaultAudioClientController
@@ -186,7 +185,9 @@ class DefaultDeviceController(
 
         val selected = audioClientController.setRoute(route)
         if (selected) {
-            eventAnalyticsController.pushHistory(MeetingHistoryEventName.audioInputSelected)
+            eventAnalyticsController.publishEvent(EventName.audioInputSelected, mutableMapOf(
+                EventAttributeName.audioDeviceType to mediaDevice.type.toString()
+            ), false)
         }
     }
 

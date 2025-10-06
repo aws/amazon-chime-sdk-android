@@ -102,6 +102,7 @@ class DefaultEventAnalyticsControllerTest {
         every { mockAppStateMonitor.appState } returns AppState.ACTIVE
         every { mockAppStateMonitor.getBatteryLevel() } returns 0.75f
         every { mockAppStateMonitor.getBatteryState() } returns BatteryState.CHARGING
+        every { mockAppStateMonitor.isBatterySaverOn() } returns true
 
         Dispatchers.setMain(testDispatcher)
     }
@@ -255,6 +256,7 @@ class DefaultEventAnalyticsControllerTest {
         assertEquals("Active", eventAttributes[EventAttributeName.appState.name])
         assertEquals(0.75f, eventAttributes[EventAttributeName.batteryLevel.name])
         assertEquals("Charging", eventAttributes[EventAttributeName.batteryState.name])
+        assertEquals(true.toString(), eventAttributes[EventAttributeName.lowPowerModeEnabled.name])
     }
 
     @Test
@@ -273,6 +275,7 @@ class DefaultEventAnalyticsControllerTest {
         assertEquals("Active", eventAttributes[EventAttributeName.appState.name])
         assertFalse(eventAttributes.containsKey(EventAttributeName.batteryLevel.name))
         assertEquals("Charging", eventAttributes[EventAttributeName.batteryState.name])
+        assertEquals(true.toString(), eventAttributes[EventAttributeName.lowPowerModeEnabled.name])
     }
 
     @Test
@@ -288,10 +291,11 @@ class DefaultEventAnalyticsControllerTest {
         assertEquals("Active", eventAttributes[EventAttributeName.appState.name])
         assertEquals(0.75f, eventAttributes[EventAttributeName.batteryLevel.name])
         assertEquals("Charging", eventAttributes[EventAttributeName.batteryState.name])
+        assertEquals(true.toString(), eventAttributes[EventAttributeName.lowPowerModeEnabled.name])
     }
 
     @Test
-    fun `pushHistory should include appState and batteryState but not batteryLevel when battery level is null`() {
+    fun `pushHistory should include appState, batteryState, and lowPowerModeEnabled but not batteryLevel when battery level is null`() {
         // Mock battery level as null
         every { mockAppStateMonitor.getBatteryLevel() } returns null
 
@@ -306,5 +310,6 @@ class DefaultEventAnalyticsControllerTest {
         assertEquals("Active", eventAttributes[EventAttributeName.appState.name])
         assertFalse(eventAttributes.containsKey(EventAttributeName.batteryLevel.name))
         assertEquals("Charging", eventAttributes[EventAttributeName.batteryState.name])
+        assertEquals(true.toString(), eventAttributes[EventAttributeName.lowPowerModeEnabled.name])
     }
 }

@@ -7,6 +7,8 @@ package com.amazonaws.services.chime.sdk.meetings.internal.contentshare
 
 import android.content.Context
 import android.util.Log
+import com.amazonaws.services.chime.sdk.meetings.analytics.EventAnalyticsController
+import com.amazonaws.services.chime.sdk.meetings.analytics.EventName
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.contentshare.ContentShareObserver
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoResolution
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoSource
@@ -59,6 +61,9 @@ class DefaultContentShareVideoClientControllerTest {
     @MockK
     private lateinit var mockEglCoreFactory: EglCoreFactory
 
+    @MockK
+    private lateinit var mockEventAnalyticsController: EventAnalyticsController
+
     @MockK(relaxed = true)
     private lateinit var mockEglCore: EglCore
 
@@ -100,6 +105,7 @@ class DefaultContentShareVideoClientControllerTest {
         testContentShareVideoClientController.startVideoShare(mockVideoSource)
 
         verify(exactly = 1) { mockVideoClient.setExternalVideoSource(any(), any()) }
+        verify(exactly = 1) { mockEventAnalyticsController.publishEvent(EventName.contentShareStartRequested) }
     }
     @Test
     fun `startVideoShare should not call VideoClientStateController setExternalVideoSource when contentMaxResolution is set to Disabled`() {

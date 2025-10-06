@@ -140,8 +140,6 @@ class DefaultCameraCaptureSourceTest {
         // Most of the previous mocks need to be done before constructor call
         MockKAnnotations.init(this, relaxUnitFun = true)
 
-        testCameraCaptureSource.eventAnalyticsController = mockEventAnalyticsController
-
         every { mockCameraManager.getCameraCharacteristics("0") } returns mockFrontCameraCharacteristics
         every { mockCameraManager.getCameraCharacteristics("1") } returns mockBackCameraCharacteristics
         every { mockCameraManager.openCamera(any(), any<CameraDevice.StateCallback>(), any()) } just runs
@@ -206,6 +204,9 @@ class DefaultCameraCaptureSourceTest {
 
         verify(exactly = 1) { mockCameraManager.openCamera("0", any<CameraDevice.StateCallback>(), any()) }
         verify(exactly = 1) { mockCameraManager.openCamera("1", any<CameraDevice.StateCallback>(), any()) }
+        verify(exactly = 1) { mockEventAnalyticsController.publishEvent(EventName.videoInputSelected, mutableMapOf(
+            EventAttributeName.videoDeviceType to MediaDeviceType.VIDEO_BACK_CAMERA.toString()
+        ), false) }
     }
 
     @Ignore("Broken on build server, possible Mockk issue")

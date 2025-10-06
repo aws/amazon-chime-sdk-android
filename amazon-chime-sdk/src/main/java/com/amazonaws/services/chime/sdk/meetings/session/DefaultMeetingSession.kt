@@ -212,7 +212,8 @@ class DefaultMeetingSession @JvmOverloads constructor(
                 contentShareObserver,
                 contentShareConfiguration,
                 videoClientFactory,
-                eglCoreFactory
+                eglCoreFactory,
+                eventAnalyticsController
             )
 
         val contentShareController =

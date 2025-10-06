@@ -42,4 +42,11 @@ interface AppStateMonitor {
      * @return Battery state
      */
     fun getBatteryState(): BatteryState
+
+    /**
+     * Checks whether Android's Battery Saver mode (a.k.a. Low Power Mode) is currently enabled.
+     *
+     * @return true if Battery Saver mode is on, false otherwise.
+     */
+    fun isBatterySaverOn(): Boolean
 }
