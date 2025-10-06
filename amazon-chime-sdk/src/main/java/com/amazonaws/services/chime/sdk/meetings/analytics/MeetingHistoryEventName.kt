@@ -71,6 +71,26 @@ enum class MeetingHistoryEventName {
     contentShareSignalingDropped,
 
     /**
+     * The content share start was requested.
+     */
+    contentShareStartRequested,
+
+    /**
+     * The content share started successfully.
+     */
+    contentShareStarted,
+
+    /**
+     * The content share stopped.
+     */
+    contentShareStopped,
+
+    /*
+     * The content share failed to start.
+     */
+    contentShareFailed,
+
+    /**
      * The application state is changed.
      */
     appStateChanged,
@@ -78,14 +98,46 @@ enum class MeetingHistoryEventName {
     /**
      * The application memory is low.
      */
-    appMemoryLow;
+    appMemoryLow,
+
+    /**
+     * Voice focus enabled
+     */
+    voiceFocusEnabled,
+
+    /**
+     * Voice focus disabled
+     */
+    voiceFocusDisabled,
+
+    /**
+     * Failed to enable voice focus
+     */
+    voiceFocusEnableFailed,
+
+    /**
+     * Failed to disable voice focus
+     */
+    voiceFocusDisableFailed,
+
+    /**
+     * Video capture session interruption began
+     */
+    videoCaptureSessionInterruptionBegan,
+
+    /**
+     * Video capture session interruption ended
+     */
+    videoCaptureSessionInterruptionEnded;
 
     companion object {
         fun fromMeetingEvent(name: EventName): MeetingHistoryEventName {
             return when (name) {
                 EventName.meetingStartSucceeded -> meetingStartSucceeded
                 EventName.meetingReconnected -> meetingReconnected
+                EventName.audioInputSelected -> audioInputFailed
                 EventName.audioInputFailed -> audioInputFailed
+                EventName.videoInputSelected -> videoInputSelected
                 EventName.videoInputFailed -> videoInputFailed
                 EventName.meetingStartRequested -> meetingStartRequested
                 EventName.meetingStartFailed -> meetingStartFailed
@@ -93,8 +145,18 @@ enum class MeetingHistoryEventName {
                 EventName.meetingFailed -> meetingFailed
                 EventName.videoClientSignalingDropped -> videoClientSignalingDropped
                 EventName.contentShareSignalingDropped -> contentShareSignalingDropped
+                EventName.contentShareStartRequested -> contentShareStartRequested
+                EventName.contentShareStarted -> contentShareStarted
+                EventName.contentShareStopped -> contentShareStopped
+                EventName.contentShareFailed -> contentShareFailed
                 EventName.appStateChanged -> appStateChanged
                 EventName.appMemoryLow -> appMemoryLow
+                EventName.voiceFocusEnabled -> voiceFocusEnabled
+                EventName.voiceFocusDisabled -> voiceFocusDisabled
+                EventName.voiceFocusEnableFailed -> voiceFocusEnableFailed
+                EventName.voiceFocusDisableFailed -> voiceFocusDisableFailed
+                EventName.videoCaptureSessionInterruptionBegan -> videoCaptureSessionInterruptionBegan
+                EventName.videoCaptureSessionInterruptionEnded -> videoCaptureSessionInterruptionEnded
             }
         }
     }

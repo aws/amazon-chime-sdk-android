@@ -76,11 +76,9 @@ class DefaultVideoClientController(
             DefaultCameraCaptureSource(
                 context,
                 logger,
-                surfaceTextureCaptureSourceFactory
-            ).apply {
-                eventAnalyticsController =
-                    this@DefaultVideoClientController.eventAnalyticsController
-            }
+                surfaceTextureCaptureSourceFactory,
+                eventAnalyticsController
+            )
     }
 
     private var videoClient: VideoClient? = null
