@@ -58,7 +58,6 @@ class DefaultEventAnalyticsController(
             eventAttributes[EventAttributeName.batteryLevel] = it
         }
         eventAttributes[EventAttributeName.batteryState] = appStateMonitor.getBatteryState().description
-        eventAttributes[EventAttributeName.lowPowerModeEnabled] = appStateMonitor.isBatterySaverOn().toString()
 
         eventReporter?.report(SDKEvent(name, eventAttributes))
 
@@ -74,8 +73,7 @@ class DefaultEventAnalyticsController(
         val eventAttributes = mutableMapOf(
             EventAttributeName.timestampMs to currentTimeMs,
             EventAttributeName.appState to appStateMonitor.appState.description,
-            EventAttributeName.batteryState to appStateMonitor.getBatteryState().description,
-            EventAttributeName.lowPowerModeEnabled to appStateMonitor.isBatterySaverOn().toString()
+            EventAttributeName.batteryState to appStateMonitor.getBatteryState().description
         ) as EventAttributes
 
         appStateMonitor.getBatteryLevel()?.let {

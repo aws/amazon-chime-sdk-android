@@ -28,6 +28,7 @@ import androidx.core.app.ActivityCompat
 import com.amazonaws.services.chime.sdk.meetings.analytics.EventAnalyticsController
 import com.amazonaws.services.chime.sdk.meetings.analytics.EventAttributeName
 import com.amazonaws.services.chime.sdk.meetings.analytics.EventName
+import com.amazonaws.services.chime.sdk.meetings.analytics.MeetingHistoryEventName
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoContentHint
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoFrame
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoResolution
@@ -41,6 +42,7 @@ import com.amazonaws.services.chime.sdk.meetings.internal.utils.ConcurrentSet
 import com.amazonaws.services.chime.sdk.meetings.internal.utils.ObserverUtils
 import com.amazonaws.services.chime.sdk.meetings.utils.logger.Logger
 import kotlin.math.abs
+import kotlinx.coroutines.Runnable
 import kotlinx.coroutines.android.asCoroutineDispatcher
 import kotlinx.coroutines.runBlocking
 
@@ -52,7 +54,6 @@ class DefaultCameraCaptureSource @JvmOverloads constructor(
     private val context: Context,
     private val logger: Logger,
     private val surfaceTextureCaptureSourceFactory: SurfaceTextureCaptureSourceFactory,
-    private val eventAnalyticsController: EventAnalyticsController?,
     private val cameraManager: CameraManager = context.getSystemService(
         Context.CAMERA_SERVICE
     ) as CameraManager
@@ -70,8 +71,6 @@ class DefaultCameraCaptureSource @JvmOverloads constructor(
 
     // From CameraCharacteristics.LENS_FACING
     private var isCameraFrontFacing = false
-
-    private var isCameraInterrupted = false
 
     // This source provides a surface we pass into the system APIs
     // and then starts emitting frames once the system starts drawing to the
@@ -95,7 +94,26 @@ class DefaultCameraCaptureSource @JvmOverloads constructor(
 
     private val TAG = "DefaultCameraCaptureSource"
 
-    override var device: MediaDevice? = null
+    var eventAnalyticsController: EventAnalyticsController? = null
+        set(value) {
+            field = value
+        }
+
+    init {
+        try {
+            // Load library so that some of webrtc definition is linked properly
+            System.loadLibrary("amazon_chime_media_client")
+        } catch (e: UnsatisfiedLinkError) {
+            logger.error(TAG, "Unable to load native media libraries: ${e.localizedMessage}")
+        }
+        val thread = HandlerThread(TAG)
+        thread.start()
+        handler = Handler(thread.looper)
+    }
+
+    override var device: MediaDevice? = MediaDevice.listVideoDevices(cameraManager)
+        .firstOrNull { it.type == MediaDeviceType.VIDEO_FRONT_CAMERA } ?: MediaDevice.listVideoDevices(cameraManager)
+        .firstOrNull { it.type == MediaDeviceType.VIDEO_BACK_CAMERA }
         set(value) {
             logger.info(TAG, "Setting capture device: $value")
             if (field == value) {
@@ -110,30 +128,7 @@ class DefaultCameraCaptureSource @JvmOverloads constructor(
                 stop()
                 start()
             }
-
-            device?.let {
-                eventAnalyticsController?.publishEvent(EventName.videoInputSelected, mutableMapOf(
-                    EventAttributeName.videoDeviceType to it.type.toString()
-                ), false)
-            }
         }
-
-    init {
-        try {
-            // Load library so that some of webrtc definition is linked properly
-            System.loadLibrary("amazon_chime_media_client")
-        } catch (e: UnsatisfiedLinkError) {
-            logger.error(TAG, "Unable to load native media libraries: ${e.localizedMessage}")
-        }
-        val thread = HandlerThread(TAG)
-        thread.start()
-        handler = Handler(thread.looper)
-
-        // Initializing the device in the init block rather than at declaration to allow it to emit the corresponding meeting event.
-        device = MediaDevice.listVideoDevices(cameraManager)
-            .firstOrNull { it.type == MediaDeviceType.VIDEO_FRONT_CAMERA } ?: MediaDevice.listVideoDevices(cameraManager)
-            .firstOrNull { it.type == MediaDeviceType.VIDEO_BACK_CAMERA }
-    }
 
     override fun switchCamera() {
         val desiredDeviceType = if (device?.type == MediaDeviceType.VIDEO_FRONT_CAMERA) {
@@ -144,6 +139,10 @@ class DefaultCameraCaptureSource @JvmOverloads constructor(
         device =
             MediaDevice.listVideoDevices(cameraManager).firstOrNull { it.type == desiredDeviceType } ?: MediaDevice.listVideoDevices(cameraManager)
                 .firstOrNull { it.type == MediaDeviceType.VIDEO_BACK_CAMERA }
+
+        if (device != null) {
+            eventAnalyticsController?.pushHistory(MeetingHistoryEventName.videoInputSelected)
+        }
     }
     override fun setMaxResolution(maxResolution: VideoResolution) {
         this.maxResolution = maxResolution
@@ -300,12 +299,6 @@ class DefaultCameraCaptureSource @JvmOverloads constructor(
         override fun onOpened(device: CameraDevice) {
             logger.info(TAG, "Camera device opened for ID ${device.id}")
             cameraDevice = device
-
-            if (isCameraInterrupted) {
-                isCameraInterrupted = false
-                eventAnalyticsController?.publishEvent(EventName.videoCaptureSessionInterruptionEnded, mutableMapOf(), false)
-            }
-
             try {
                 cameraDevice?.createCaptureSession(
                     listOf(surfaceTextureSource?.surface),
@@ -329,9 +322,7 @@ class DefaultCameraCaptureSource @JvmOverloads constructor(
 
         override fun onDisconnected(device: CameraDevice) {
             logger.info(TAG, "Camera device disconnected for ID ${device.id}")
-            isCameraInterrupted = true
             ObserverUtils.notifyObserverOnMainThread(observers) { it.onCaptureStopped() }
-            eventAnalyticsController?.publishEvent(EventName.videoCaptureSessionInterruptionBegan, mutableMapOf(), false)
         }
 
         override fun onError(device: CameraDevice, error: Int) {

@@ -21,7 +21,6 @@ import com.amazonaws.services.chime.sdk.meetings.internal.video.TURNCredentials
 import com.amazonaws.services.chime.sdk.meetings.internal.video.TURNRequestParams
 import com.amazonaws.services.chime.sdk.meetings.session.URLRewriter
 import com.amazonaws.services.chime.sdk.meetings.utils.SignalingDroppedError
-import com.amazonaws.services.chime.sdk.meetings.utils.VideoClientFailedError
 import com.amazonaws.services.chime.sdk.meetings.utils.logger.Logger
 import com.xodee.client.audio.audioclient.AudioClient
 import com.xodee.client.video.RemoteVideoSourceInternal
@@ -61,7 +60,6 @@ class DefaultContentShareVideoClientObserver(
 
     override fun didConnect(client: VideoClient?, controlStatus: Int) {
         logger.debug(TAG, "content share video client is connected")
-        eventAnalyticsController.publishEvent(EventName.contentShareStarted)
         ObserverUtils.notifyObserverOnMainThread(contentShareObservers) {
             it.onContentShareStarted()
         }
@@ -69,11 +67,6 @@ class DefaultContentShareVideoClientObserver(
 
     override fun didFail(client: VideoClient?, status: Int, controlStatus: Int) {
         logger.info(TAG, "content share video client is failed with $controlStatus")
-
-        eventAnalyticsController.publishEvent(EventName.contentShareFailed, mutableMapOf<EventAttributeName, Any>(
-            EventAttributeName.contentShareErrorMessage to VideoClientFailedError.fromVideoClientStatus(status)
-        ))
-
         resetContentShareVideoClientMetrics()
         ObserverUtils.notifyObserverOnMainThread(contentShareObservers) {
             it.onContentShareStopped(
@@ -86,7 +79,6 @@ class DefaultContentShareVideoClientObserver(
 
     override fun didStop(client: VideoClient?) {
         logger.info(TAG, "content share video client is stopped")
-        eventAnalyticsController.publishEvent(EventName.contentShareStopped)
         resetContentShareVideoClientMetrics()
         ObserverUtils.notifyObserverOnMainThread(contentShareObservers) {
             it.onContentShareStopped(

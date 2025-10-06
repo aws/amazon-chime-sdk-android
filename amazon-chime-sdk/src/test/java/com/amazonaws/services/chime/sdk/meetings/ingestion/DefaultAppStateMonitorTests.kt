@@ -11,7 +11,6 @@ import android.content.Context
 import android.os.BatteryManager
 import android.os.Handler
 import android.os.Looper
-import android.os.PowerManager
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ProcessLifecycleOwner
 import com.amazonaws.services.chime.sdk.meetings.utils.logger.Logger
@@ -31,7 +30,6 @@ import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.setMain
 import org.junit.After
 import org.junit.Assert.assertEquals
-import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
@@ -432,85 +430,5 @@ class DefaultAppStateMonitorTests {
 
         assertEquals(BatteryState.UNKNOWN, batteryState)
         verify(exactly = 1) { mockLogger.warn(any(), "Application context not available for battery state check") }
-    }
-
-    @Test
-    fun `isBatterySaverOn should return true when PowerManager indicates power save mode is enabled`() {
-        // Mock PowerManager
-        val mockPowerManager = mockk<PowerManager>()
-
-        // Set up mock behavior for power save mode enabled
-        every { mockApplication.getSystemService(Context.POWER_SERVICE) } returns mockPowerManager
-        every { mockPowerManager.isPowerSaveMode } returns true
-
-        val isBatterySaverOn = appStateMonitor.isBatterySaverOn()
-
-        assertTrue("Battery saver should be on", isBatterySaverOn)
-    }
-
-    @Test
-    fun `isBatterySaverOn should return false when PowerManager indicates power save mode is disabled`() {
-        // Mock PowerManager
-        val mockPowerManager = mockk<PowerManager>()
-
-        // Set up mock behavior for power save mode disabled
-        every { mockApplication.getSystemService(Context.POWER_SERVICE) } returns mockPowerManager
-        every { mockPowerManager.isPowerSaveMode } returns false
-
-        val isBatterySaverOn = appStateMonitor.isBatterySaverOn()
-
-        assertFalse("Battery saver should be off", isBatterySaverOn)
-    }
-
-    @Test
-    fun `isBatterySaverOn should return false when PowerManager is not available`() {
-        // Set up mock behavior for unavailable PowerManager
-        every { mockApplication.getSystemService(Context.POWER_SERVICE) } returns null
-
-        val isBatterySaverOn = appStateMonitor.isBatterySaverOn()
-
-        assertFalse("Battery saver should default to false when PowerManager is unavailable", isBatterySaverOn)
-    }
-
-    @Test
-    fun `isBatterySaverOn should return false and log warning when application context is not available`() {
-        // Create monitor without application context
-        val monitorWithoutApp = DefaultAppStateMonitor(mockLogger, null)
-
-        val isBatterySaverOn = monitorWithoutApp.isBatterySaverOn()
-
-        assertFalse("Battery saver should default to false when application context is unavailable", isBatterySaverOn)
-        verify(exactly = 1) { mockLogger.warn(any(), "Application context not available for Battery Saver check") }
-    }
-
-    @Test
-    fun `isBatterySaverOn should handle PowerManager service cast failure gracefully`() {
-        // Mock a service that is not PowerManager (e.g., return a different service type)
-        val mockWrongService = mockk<ActivityManager>()
-        every { mockApplication.getSystemService(Context.POWER_SERVICE) } returns mockWrongService
-
-        val isBatterySaverOn = appStateMonitor.isBatterySaverOn()
-
-        assertFalse("Battery saver should default to false when PowerManager cast fails", isBatterySaverOn)
-    }
-
-    @Test
-    fun `isBatterySaverOn should work correctly in different power save mode states`() {
-        // Mock PowerManager
-        val mockPowerManager = mockk<PowerManager>()
-        every { mockApplication.getSystemService(Context.POWER_SERVICE) } returns mockPowerManager
-
-        // Test power save mode enabled
-        every { mockPowerManager.isPowerSaveMode } returns true
-        assertTrue("Battery saver should be on when power save mode is enabled", appStateMonitor.isBatterySaverOn())
-
-        // Test power save mode disabled
-        every { mockPowerManager.isPowerSaveMode } returns false
-        assertFalse("Battery saver should be off when power save mode is disabled", appStateMonitor.isBatterySaverOn())
-
-        // Test multiple calls to ensure consistency
-        every { mockPowerManager.isPowerSaveMode } returns true
-        assertTrue("Battery saver should consistently return true", appStateMonitor.isBatterySaverOn())
-        assertTrue("Battery saver should consistently return true on multiple calls", appStateMonitor.isBatterySaverOn())
     }
 }

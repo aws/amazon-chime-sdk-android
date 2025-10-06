@@ -10,19 +10,9 @@ package com.amazonaws.services.chime.sdk.meetings.analytics
  */
 enum class EventName {
     /**
-     * The microphone was selected.
-     */
-    audioInputSelected,
-
-    /**
      * The microphone selection or access failed.
      */
     audioInputFailed,
-
-    /**
-     * The camera was selected.
-     */
-    videoInputSelected,
 
     /**
      * The camera selection or access failed.
@@ -65,26 +55,6 @@ enum class EventName {
     contentShareSignalingDropped,
 
     /**
-     * The content share start was requested.
-     */
-    contentShareStartRequested,
-
-    /**
-     * The content share started successfully.
-     */
-    contentShareStarted,
-
-    /**
-     * The content share stopped.
-     */
-    contentShareStopped,
-
-    /*
-     * The content share failed to start.
-     */
-    contentShareFailed,
-
-    /**
      * The meeting ended with failure.
      */
     meetingFailed,
@@ -97,35 +67,5 @@ enum class EventName {
     /**
      * The application received a memory low warning.
      */
-    appMemoryLow,
-
-    /**
-     * Voice focus enabled
-     */
-    voiceFocusEnabled,
-
-    /**
-     * Voice focus disabled
-     */
-    voiceFocusDisabled,
-
-    /**
-     * Failed to enable voice focus
-     */
-    voiceFocusEnableFailed,
-
-    /**
-     * Failed to disable voice focus
-     */
-    voiceFocusDisableFailed,
-
-    /**
-     * Video capture session interruption began
-     */
-    videoCaptureSessionInterruptionBegan,
-
-    /**
-     * Video capture session interruption ended
-     */
-    videoCaptureSessionInterruptionEnded;
+    appMemoryLow
 }

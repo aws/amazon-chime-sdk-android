@@ -118,9 +118,10 @@ class MeetingActivity : AppCompatActivity(),
             meetingSessionModel.cameraCaptureSource = DefaultCameraCaptureSource(
                 applicationContext,
                 logger,
-                surfaceTextureCaptureSourceFactory,
-                meetingSession?.eventAnalyticsController
-            )
+                surfaceTextureCaptureSourceFactory
+            ).apply {
+                eventAnalyticsController = meetingSession?.eventAnalyticsController
+            }
             // Add a new parameter for DefaultCameraCaptureSource (videoMaxResolution)
             var resolution: VideoResolution = VideoResolution.VideoResolutionHD
             meetingSession?.let {
