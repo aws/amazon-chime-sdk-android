@@ -1,8 +1,3 @@
-/*
- * Copyright Amazon.com, Inc. or its affiliates. All Rights Reserved.
- * SPDX-License-Identifier: Apache-2.0
- */
-
 package com.amazonaws.services.chime.sdk.meetings.utils
 
 import com.xodee.client.video.VideoClientSignalingDroppedError
@@ -11,62 +6,62 @@ enum class SignalingDroppedError {
     /**
      * No error occurred
      */
-    none,
+    None,
 
     /**
      * The signaling client was disconnected from the server
      */
-    signalingClientDisconnected,
+    SignalingClientDisconnected,
 
     /**
      * The signaling client connection was closed
      */
-    signalingClientClosed,
+    SignalingClientClosed,
 
     /**
      * The signaling client encountered an End-Of-File condition
      */
-    signalingClientEOF,
+    SignalingClientEOF,
 
     /**
      * A general error occurred in the signaling client
      */
-    signalingClientError,
+    SignalingClientError,
 
     /**
      * An error occurred with the signaling client's proxy connection
      */
-    signalingClientProxyError,
+    SignalingClientProxyError,
 
     /**
      * The signaling client failed to establish an initial connection
      */
-    signalingClientOpenFailed,
+    SignalingClientOpenFailed,
 
     /**
      * Failed to parse an incoming signaling frame
      */
-    signalFrameParseFailed,
+    SignalFrameParseFailed,
 
     /**
      * Failed to serialize a signaling frame for transmission
      */
-    signalFrameSerializeFailed,
+    SignalFrameSerializeFailed,
 
     /**
      * Failed to send a signaling frame
      */
-    signalFrameSendingFailed,
+    SignalFrameSendingFailed,
 
     /**
      * An internal server error occurred
      */
-    internalServerError,
+    InternalServerError,
 
     /**
      * An unspecified or other error occurred
      */
-    other;
+    Other;
 
     companion object {
         /**
@@ -77,18 +72,18 @@ enum class SignalingDroppedError {
          */
         fun fromVideoClientSignalingDroppedError(videoClientError: VideoClientSignalingDroppedError): SignalingDroppedError {
             return when (videoClientError) {
-                VideoClientSignalingDroppedError.NONE -> none
-                VideoClientSignalingDroppedError.SIGNALING_CLIENT_DISCONNECTED -> signalingClientDisconnected
-                VideoClientSignalingDroppedError.SIGNALING_CLIENT_CLOSED -> signalingClientClosed
-                VideoClientSignalingDroppedError.SIGNALING_CLIENT_EOF -> signalingClientEOF
-                VideoClientSignalingDroppedError.SIGNALING_CLIENT_ERROR -> signalingClientError
-                VideoClientSignalingDroppedError.SIGNALING_CLIENT_PROXY_ERROR -> signalingClientProxyError
-                VideoClientSignalingDroppedError.SIGNALING_CLIENT_OPEN_FAILED -> signalingClientOpenFailed
-                VideoClientSignalingDroppedError.SIGNAL_FRAME_PARSE_FAILED -> signalFrameParseFailed
-                VideoClientSignalingDroppedError.SIGNAL_FRAME_SERIALIZE_FAILED -> signalFrameSerializeFailed
-                VideoClientSignalingDroppedError.VIDEO_SIGNAL_FRAME_SENDING_FAILED -> signalFrameSendingFailed
-                VideoClientSignalingDroppedError.INTERNAL_SERVER_ERROR -> internalServerError
-                VideoClientSignalingDroppedError.OTHER -> other
+                VideoClientSignalingDroppedError.NONE -> None
+                VideoClientSignalingDroppedError.SIGNALING_CLIENT_DISCONNECTED -> SignalingClientDisconnected
+                VideoClientSignalingDroppedError.SIGNALING_CLIENT_CLOSED -> SignalingClientClosed
+                VideoClientSignalingDroppedError.SIGNALING_CLIENT_EOF -> SignalingClientEOF
+                VideoClientSignalingDroppedError.SIGNALING_CLIENT_ERROR -> SignalingClientError
+                VideoClientSignalingDroppedError.SIGNALING_CLIENT_PROXY_ERROR -> SignalingClientProxyError
+                VideoClientSignalingDroppedError.SIGNALING_CLIENT_OPEN_FAILED -> SignalingClientOpenFailed
+                VideoClientSignalingDroppedError.SIGNAL_FRAME_PARSE_FAILED -> SignalFrameParseFailed
+                VideoClientSignalingDroppedError.SIGNAL_FRAME_SERIALIZE_FAILED -> SignalFrameSerializeFailed
+                VideoClientSignalingDroppedError.VIDEO_SIGNAL_FRAME_SENDING_FAILED -> SignalFrameSendingFailed
+                VideoClientSignalingDroppedError.INTERNAL_SERVER_ERROR -> InternalServerError
+                VideoClientSignalingDroppedError.OTHER -> Other
             }
         }
     }

@@ -6,16 +6,12 @@
 package com.amazonaws.services.chime.sdk.meetings.internal.video
 
 import android.content.Context
-import com.amazonaws.services.chime.sdk.meetings.analytics.EventAnalyticsController
-import com.amazonaws.services.chime.sdk.meetings.analytics.EventAttributeName
-import com.amazonaws.services.chime.sdk.meetings.analytics.EventName
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.contentshare.ContentShareObserver
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.contentshare.ContentShareStatus
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.contentshare.ContentShareStatusCode
 import com.amazonaws.services.chime.sdk.meetings.internal.contentshare.DefaultContentShareVideoClientObserver
 import com.amazonaws.services.chime.sdk.meetings.internal.metric.ClientMetricsCollector
 import com.amazonaws.services.chime.sdk.meetings.session.URLRewriter
-import com.amazonaws.services.chime.sdk.meetings.utils.VideoClientFailedError
 import com.amazonaws.services.chime.sdk.meetings.utils.logger.Logger
 import com.xodee.client.video.VideoClient
 import io.mockk.MockKAnnotations
@@ -52,9 +48,6 @@ class DefaultContentShareVideoClientObserverTest {
     @MockK
     private lateinit var mockURLRewriter: URLRewriter
 
-    @MockK
-    private lateinit var mockEventAnalyticsController: EventAnalyticsController
-
     @InjectMockKs
     private lateinit var testContentShareVideoClientObserver: DefaultContentShareVideoClientObserver
 
@@ -66,7 +59,7 @@ class DefaultContentShareVideoClientObserverTest {
 
     private val testDispatcher = TestCoroutineDispatcher()
 
-    private val videoClientStatus = 6
+    private val videoClientStatus = 0
 
     @Before
     fun setUp() {
@@ -86,16 +79,6 @@ class DefaultContentShareVideoClientObserverTest {
     }
 
     @Test
-    fun `didConnect should call publishEvent with ContentShareStarted`() {
-        testContentShareVideoClientObserver.didStop(mockVideoClient)
-
-        verify(exactly = 1) {
-            mockContentShareObserver.onContentShareStarted()
-            mockEventAnalyticsController.publishEvent(EventName.contentShareStarted)
-        }
-    }
-
-    @Test
     fun `didFail should notify observer of onContentShareStopped event with VideoServiceFailed status`() {
         testContentShareVideoClientObserver.didFail(
             mockVideoClient,
@@ -109,9 +92,6 @@ class DefaultContentShareVideoClientObserverTest {
                     ContentShareStatusCode.VideoServiceFailed
                 )
             )
-            mockEventAnalyticsController.publishEvent(EventName.contentShareFailed, mutableMapOf(
-                EventAttributeName.contentShareErrorMessage to VideoClientFailedError.fromVideoClientStatus(videoClientStatus)
-            ))
         }
     }
 
@@ -144,9 +124,6 @@ class DefaultContentShareVideoClientObserverTest {
         testContentShareVideoClientObserver.didStop(mockVideoClient)
 
         verify { mockClientMetricsCollector.processContentShareVideoClientMetrics(emptyMap()) }
-        verify(exactly = 1) {
-            mockEventAnalyticsController.publishEvent(EventName.contentShareStopped)
-        }
     }
 
     @Test

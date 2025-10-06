@@ -90,11 +90,9 @@ Chime SDK sends these meeting events.
 |`audioInputFailed`                 |The microphone selection or access failed.
 |`videoInputFailed`                 |The camera selection or access failed.
 |`videoClientSignalingDropped`      |The video client signaling websocket failed or closed with an error.
-|`contentShareStartRequested`       |The content share start was requested.
-|`contentShareStarted`              |The content share started successfully.
-|`contentShareStopped`              |The content share stopped.
-|`contentShareFailed`               |The content share failed.
 |`contentShareSignalingDropped`     |The content share client signaling websocket failed or closed with an error.
+|`appStateChanged`                  |The application state is changed.
+|`appMemoryLow`                     |The application memory is low.
 
 ### Common attributes
 Chime SDK stores common attributes for event to identify the event.
@@ -138,15 +136,10 @@ The following table describes attributes for a meeting.
 |`meetingStatus`|The meeting status when the meeting ended or failed. Note that this attribute indicates an enum name in [MeetingSessionStatusCode](https://aws.github.io/amazon-chime-sdk-android/amazon-chime-sdk/com.amazonaws.services.chime.sdk.meetings.session/-meeting-session-status-code/index.html), such as `Left` or `MeetingEnded`.|`meetingStartFailed`, `meetingEnded`, `meetingFailed`
 |`poorConnectionCount`|The number of times the significant packet loss occurred during the meeting. Per count, you receive `AudioVideoObserver.onConnectionBecamePoor`.<br><br>Unit: Count|`meetingStartSucceeded`, `meetingReconnected`, `meetingStartFailed`, `meetingEnded`, `meetingFailed`
 |`retryCount`|The number of connection retries performed during the meeting.<br><br>Unit: Count|`meetingStartSucceeded`, `meetingReconnected`, `meetingStartFailed`, `meetingEnded`, `meetingFailed`
-|`audioDeviceType`|The selected audio device type.|`audioInputSelected`
-|`videoDeviceType`|The selected video device type.|`videoDeviceType`
-|`contentShareErrorMessage`|The error message that explains why content share failed.|`contentShareFailed`
 |`signalingDroppedErrorMessage`|The error message that explains why the signaling websocket connection dropped.|`videoClientSignalingDropped`, `contentShareSignalingDropped`
 |`appState`|The current app state when the event occurs. Possible states include: `Active`, `Inactive`, `Foreground`, and `Background`.| All events
 |`batteryLevel`|The current battery level when the event occurs.| All events
 |`batteryState`|The current battery state when the event occurs. Possible states include: `Charging`, `Discharging`, `NotCharging`, `Full`, and `Unknown`.| All events
-|`lowPowerModeEnabled`|Whether low power mode is currently enabled.| All events
-|`voiceFocusErrorMessage`|The error message explaining why enabling or disabling Voice Focus failed.| `voiceFocusEnableFailed`, `voiceFocusDisableFailed`
 
 ### Device attributes
 The following table describes attributes for the microphone and camera.
@@ -186,30 +179,20 @@ the meeting history will include two `meetingStartSucceeded`.
 The following table lists available states.
 |State|Description
 |--|--
-|`meetingEnded`                             |The meeting ended.
-|`meetingFailed`                            |The meeting ended with the failure status.
-|`meetingReconnected`                       |The meeting reconnected.
-|`meetingStartFailed`                       |The meeting failed to start.
-|`meetingStartRequested`                    |The meeting will start.
-|`meetingStartSucceeded`                    |The meeting started.
-|`audioInputSelected`                       |The microphone was selected.
-|`audioInputFailed`                         |The microphone selection or access failed.
-|`videoInputSelected`                       |The camera was selected.
-|`videoInputFailed`                         |The camera selection or access failed.
-|`videoClientSignalingDropped`              |The video client signaling websocket failed or closed with an error.
-|`contentShareStartRequested`               |The content share start was requested.
-|`contentShareStarted`                      |The content share started successfully.
-|`contentShareStopped`                      |The content share stopped.
-|`contentShareFailed`                       |The content share failed.
-|`contentShareSignalingDropped`             |The content share client signaling websocket failed or closed with an error.
-|`appStateChanged`                          |The application state is changed.
-|`appMemoryLow`                             |The application memory is low.
-|`voiceFocusEnabled`                        |The voice focus is enabled.
-|`voiceFocusDisabled`                       |The voice focus is disabled.
-|`voiceFocusEnableFailed`                   |Failed to enable voice focus.
-|`voiceFocusDisableFailed`                  |Failed to disable voice focus.
-|`videoCaptureSessionInterruptionBegan`     |Video capture session interruption began.
-|`videoCaptureSessionInterruptionEnded`     |Video capture session interruption ended.
+|`meetingEnded`                 |The meeting ended.
+|`meetingFailed`                |The meeting ended with the failure status.
+|`meetingReconnected`           |The meeting reconnected.
+|`meetingStartFailed`           |The meeting failed to start.
+|`meetingStartRequested`        |The meeting will start.
+|`meetingStartSucceeded`        |The meeting started.
+|`audioInputSelected`           |The microphone was selected.
+|`audioInputFailed`             |The microphone selection or access failed.
+|`videoInputSelected`           |The camera was selected.
+|`videoInputFailed`             |The camera selection or access failed.
+|`videoClientSignalingDropped`  |The video client signaling websocket failed or closed with an error.
+|`contentShareSignalingDropped` |The content share client signaling websocket failed or closed with an error.
+|`appStateChanged`              |The application state is changed.
+|`appMemoryLow`                 |The application memory is low.
 
 ## Example
 
