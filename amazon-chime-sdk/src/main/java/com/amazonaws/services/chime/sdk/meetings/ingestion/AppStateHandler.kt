@@ -20,4 +20,9 @@ interface AppStateHandler {
      * Called when the application receives a memory warning
      */
     fun onMemoryWarning()
+
+    /**
+     * Called when the network connection type is changed
+     */
+    fun onNetworkConnectionTypeChanged(type: NetworkConnectionType)
 }

@@ -128,7 +128,12 @@ enum class MeetingHistoryEventName {
     /**
      * Video capture session interruption ended
      */
-    videoCaptureSessionInterruptionEnded;
+    videoCaptureSessionInterruptionEnded,
+
+    /**
+     * Network connection type is changed
+     */
+    networkConnectionTypeChanged;
 
     companion object {
         fun fromMeetingEvent(name: EventName): MeetingHistoryEventName {
@@ -157,6 +162,7 @@ enum class MeetingHistoryEventName {
                 EventName.voiceFocusDisableFailed -> voiceFocusDisableFailed
                 EventName.videoCaptureSessionInterruptionBegan -> videoCaptureSessionInterruptionBegan
                 EventName.videoCaptureSessionInterruptionEnded -> videoCaptureSessionInterruptionEnded
+                EventName.networkConnectionTypeChanged -> networkConnectionTypeChanged
             }
         }
     }
