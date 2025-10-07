@@ -9,6 +9,7 @@ import com.amazonaws.services.chime.sdk.meetings.ingestion.AppState
 import com.amazonaws.services.chime.sdk.meetings.ingestion.AppStateHandler
 import com.amazonaws.services.chime.sdk.meetings.ingestion.AppStateMonitor
 import com.amazonaws.services.chime.sdk.meetings.ingestion.EventReporter
+import com.amazonaws.services.chime.sdk.meetings.ingestion.NetworkConnectionType
 import com.amazonaws.services.chime.sdk.meetings.internal.ingestion.SDKEvent
 import com.amazonaws.services.chime.sdk.meetings.internal.utils.ConcurrentSet
 import com.amazonaws.services.chime.sdk.meetings.internal.utils.EventAttributesUtils
@@ -118,5 +119,11 @@ class DefaultEventAnalyticsController(
             attributes = mutableMapOf(),
             false
         )
+    }
+
+    override fun onNetworkConnectionTypeChanged(type: NetworkConnectionType) {
+        publishEvent(EventName.networkConnectionTypeChanged,
+            mutableMapOf(EventAttributeName.networkConnectionType to type.description),
+            false)
     }
 }

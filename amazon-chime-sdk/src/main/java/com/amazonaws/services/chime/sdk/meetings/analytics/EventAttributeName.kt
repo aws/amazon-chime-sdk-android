@@ -173,5 +173,10 @@ enum class EventAttributeName {
     /**
      * Whether low power mode is currently enabled
      */
-    lowPowerModeEnabled;
+    lowPowerModeEnabled,
+
+    /**
+     * The network connection type
+     */
+    networkConnectionType;
 }

@@ -127,5 +127,10 @@ enum class EventName {
     /**
      * Video capture session interruption ended
      */
-    videoCaptureSessionInterruptionEnded;
+    videoCaptureSessionInterruptionEnded,
+
+    /**
+     * Network connection type is changed
+     */
+    networkConnectionTypeChanged;
 }
