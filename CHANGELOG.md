@@ -1,3 +1,8 @@
+## PENDING
+
+### Changed
+* Guard video client stop with a mutex
+
 ## [0.25.1] - 2025-10-02
 
 ### Added
