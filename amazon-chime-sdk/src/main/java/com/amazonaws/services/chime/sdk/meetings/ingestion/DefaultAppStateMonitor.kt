@@ -19,12 +19,15 @@ import com.amazonaws.services.chime.sdk.meetings.utils.logger.Logger
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import org.amazon.chime.webrtc.NetworkChangeDetector.ConnectionType
+import org.amazon.chime.webrtc.NetworkMonitor
+import org.amazon.chime.webrtc.NetworkMonitor.NetworkObserver
 
 class DefaultAppStateMonitor(
     private val logger: Logger,
     private val application: Application? = null,
     private val memoryCheckIntervalMs: Long = 5000L // Check memory every 5 seconds
-) : AppStateMonitor, DefaultLifecycleObserver {
+) : AppStateMonitor, DefaultLifecycleObserver, NetworkObserver {
 
     private val TAG = "DefaultAppStateMonitor"
 
@@ -50,6 +53,12 @@ class DefaultAppStateMonitor(
     override val appState: AppState
         get() = _appState
 
+    init {
+        application?.let {
+            NetworkMonitor.getInstance().startMonitoring(it.applicationContext, "")
+        }
+    }
+
     override fun bindHandler(handler: AppStateHandler) {
         this.handler = handler
     }
@@ -59,6 +68,7 @@ class DefaultAppStateMonitor(
             // Removing existing observers and monitors if there are any
             ProcessLifecycleOwner.get().lifecycle.removeObserver(this@DefaultAppStateMonitor)
             stopMemoryMonitoring()
+            NetworkMonitor.getInstance().removeObserver(this@DefaultAppStateMonitor)
 
             shouldPostEvent = true
 
@@ -67,6 +77,8 @@ class DefaultAppStateMonitor(
 
             // Start continuous memory monitoring
             startMemoryMonitoring()
+
+            NetworkMonitor.getInstance().addObserver(this@DefaultAppStateMonitor)
 
             logger.info(TAG, "Started monitoring app state and memory")
         }
@@ -80,6 +92,8 @@ class DefaultAppStateMonitor(
 
             // Stop continuous memory monitoring
             stopMemoryMonitoring()
+
+            NetworkMonitor.getInstance().removeObserver(this@DefaultAppStateMonitor)
 
             logger.info(TAG, "Stopped monitoring app state and memory")
         }
@@ -222,5 +236,14 @@ class DefaultAppStateMonitor(
             logger.warn(TAG, "Application context not available for Battery Saver check")
             false
         }
+    }
+
+    /**
+     * Callback from NetworkMonitor indicating a change in the network connection type.
+     */
+    override fun onConnectionTypeChanged(connectionType: ConnectionType) {
+        logger.info("DefaultEventAnalyticsController", "Network connection type changed: $connectionType")
+        val type = NetworkConnectionType.fromWebRTCConnectionType(connectionType)
+        handler?.onNetworkConnectionTypeChanged(type)
     }
 }

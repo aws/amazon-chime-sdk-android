@@ -29,6 +29,8 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.StandardTestDispatcher
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.setMain
+import org.amazon.chime.webrtc.NetworkChangeDetector.ConnectionType
+import org.amazon.chime.webrtc.NetworkMonitor
 import org.junit.After
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
@@ -80,9 +82,14 @@ class DefaultAppStateMonitorTests {
         mockkStatic(Looper::class)
         every { Looper.getMainLooper() } returns mockk()
 
+        // Mock NetworkMonitor
+        mockkStatic(NetworkMonitor::class)
+        every { NetworkMonitor.getInstance() } returns mockk(relaxed = true)
+
         // Set up mock behavior
         every { mockLogger.info(any(), any()) } returns Unit
         every { mockApplication.getSystemService(any()) } returns null
+        every { mockApplication.getApplicationContext() } returns mockApplication
 
         appStateMonitor = DefaultAppStateMonitor(mockLogger, mockApplication)
     }
@@ -512,5 +519,176 @@ class DefaultAppStateMonitorTests {
         every { mockPowerManager.isPowerSaveMode } returns true
         assertTrue("Battery saver should consistently return true", appStateMonitor.isBatterySaverOn())
         assertTrue("Battery saver should consistently return true on multiple calls", appStateMonitor.isBatterySaverOn())
+    }
+
+    // Tests for onConnectionTypeChanged method
+
+    @Test
+    fun `onConnectionTypeChanged should notify handler when bound and started`() {
+        // Start monitoring and bind handler
+        appStateMonitor.start()
+        appStateMonitor.bindHandler(mockHandler)
+
+        // Advance the test scheduler to execute the coroutine from start()
+        testDispatcher.scheduler.advanceUntilIdle()
+
+        // Call onConnectionTypeChanged with WIFI connection type
+        appStateMonitor.onConnectionTypeChanged(ConnectionType.CONNECTION_WIFI)
+
+        // Verify handler notification with correct NetworkConnectionType
+        verify(exactly = 1) { mockHandler.onNetworkConnectionTypeChanged(NetworkConnectionType.WIFI) }
+    }
+
+    @Test
+    fun `onConnectionTypeChanged should not notify handler when not bound`() {
+        // Start monitoring but don't bind handler
+        appStateMonitor.start()
+
+        // Advance the test scheduler to execute the coroutine from start()
+        testDispatcher.scheduler.advanceUntilIdle()
+
+        // Call onConnectionTypeChanged
+        appStateMonitor.onConnectionTypeChanged(ConnectionType.CONNECTION_ETHERNET)
+
+        // Verify handler was not called (since it's not bound)
+        verify(exactly = 0) { mockHandler.onNetworkConnectionTypeChanged(any()) }
+    }
+
+    @Test
+    fun `onConnectionTypeChanged should handle CONNECTION_UNKNOWN correctly`() {
+        appStateMonitor.start()
+        appStateMonitor.bindHandler(mockHandler)
+        testDispatcher.scheduler.advanceUntilIdle()
+
+        appStateMonitor.onConnectionTypeChanged(ConnectionType.CONNECTION_UNKNOWN)
+
+        verify(exactly = 1) { mockHandler.onNetworkConnectionTypeChanged(NetworkConnectionType.UNKNOWN) }
+    }
+
+    @Test
+    fun `onConnectionTypeChanged should handle CONNECTION_ETHERNET correctly`() {
+        appStateMonitor.start()
+        appStateMonitor.bindHandler(mockHandler)
+        testDispatcher.scheduler.advanceUntilIdle()
+
+        appStateMonitor.onConnectionTypeChanged(ConnectionType.CONNECTION_ETHERNET)
+
+        verify(exactly = 1) { mockHandler.onNetworkConnectionTypeChanged(NetworkConnectionType.ETHERNET) }
+    }
+
+    @Test
+    fun `onConnectionTypeChanged should handle CONNECTION_WIFI correctly`() {
+        appStateMonitor.start()
+        appStateMonitor.bindHandler(mockHandler)
+        testDispatcher.scheduler.advanceUntilIdle()
+
+        appStateMonitor.onConnectionTypeChanged(ConnectionType.CONNECTION_WIFI)
+
+        verify(exactly = 1) { mockHandler.onNetworkConnectionTypeChanged(NetworkConnectionType.WIFI) }
+    }
+
+    @Test
+    fun `onConnectionTypeChanged should handle CONNECTION_5G correctly`() {
+        appStateMonitor.start()
+        appStateMonitor.bindHandler(mockHandler)
+        testDispatcher.scheduler.advanceUntilIdle()
+
+        appStateMonitor.onConnectionTypeChanged(ConnectionType.CONNECTION_5G)
+
+        verify(exactly = 1) { mockHandler.onNetworkConnectionTypeChanged(NetworkConnectionType.FIVE_G) }
+    }
+
+    @Test
+    fun `onConnectionTypeChanged should handle CONNECTION_4G correctly`() {
+        appStateMonitor.start()
+        appStateMonitor.bindHandler(mockHandler)
+        testDispatcher.scheduler.advanceUntilIdle()
+
+        appStateMonitor.onConnectionTypeChanged(ConnectionType.CONNECTION_4G)
+
+        verify(exactly = 1) { mockHandler.onNetworkConnectionTypeChanged(NetworkConnectionType.FOUR_G) }
+    }
+
+    @Test
+    fun `onConnectionTypeChanged should handle CONNECTION_3G correctly`() {
+        appStateMonitor.start()
+        appStateMonitor.bindHandler(mockHandler)
+        testDispatcher.scheduler.advanceUntilIdle()
+
+        appStateMonitor.onConnectionTypeChanged(ConnectionType.CONNECTION_3G)
+
+        verify(exactly = 1) { mockHandler.onNetworkConnectionTypeChanged(NetworkConnectionType.THREE_G) }
+    }
+
+    @Test
+    fun `onConnectionTypeChanged should handle CONNECTION_2G correctly`() {
+        appStateMonitor.start()
+        appStateMonitor.bindHandler(mockHandler)
+        testDispatcher.scheduler.advanceUntilIdle()
+
+        appStateMonitor.onConnectionTypeChanged(ConnectionType.CONNECTION_2G)
+
+        verify(exactly = 1) { mockHandler.onNetworkConnectionTypeChanged(NetworkConnectionType.TWO_G) }
+    }
+
+    @Test
+    fun `onConnectionTypeChanged should handle CONNECTION_UNKNOWN_CELLULAR correctly`() {
+        appStateMonitor.start()
+        appStateMonitor.bindHandler(mockHandler)
+        testDispatcher.scheduler.advanceUntilIdle()
+
+        appStateMonitor.onConnectionTypeChanged(ConnectionType.CONNECTION_UNKNOWN_CELLULAR)
+
+        verify(exactly = 1) { mockHandler.onNetworkConnectionTypeChanged(NetworkConnectionType.CELLULAR) }
+    }
+
+    @Test
+    fun `onConnectionTypeChanged should handle CONNECTION_BLUETOOTH correctly`() {
+        appStateMonitor.start()
+        appStateMonitor.bindHandler(mockHandler)
+        testDispatcher.scheduler.advanceUntilIdle()
+
+        appStateMonitor.onConnectionTypeChanged(ConnectionType.CONNECTION_BLUETOOTH)
+
+        verify(exactly = 1) { mockHandler.onNetworkConnectionTypeChanged(NetworkConnectionType.BLUETOOTH) }
+    }
+
+    @Test
+    fun `onConnectionTypeChanged should handle CONNECTION_VPN correctly`() {
+        appStateMonitor.start()
+        appStateMonitor.bindHandler(mockHandler)
+        testDispatcher.scheduler.advanceUntilIdle()
+
+        appStateMonitor.onConnectionTypeChanged(ConnectionType.CONNECTION_VPN)
+
+        verify(exactly = 1) { mockHandler.onNetworkConnectionTypeChanged(NetworkConnectionType.VPN) }
+    }
+
+    @Test
+    fun `onConnectionTypeChanged should handle CONNECTION_NONE correctly`() {
+        appStateMonitor.start()
+        appStateMonitor.bindHandler(mockHandler)
+        testDispatcher.scheduler.advanceUntilIdle()
+
+        appStateMonitor.onConnectionTypeChanged(ConnectionType.CONNECTION_NONE)
+
+        verify(exactly = 1) { mockHandler.onNetworkConnectionTypeChanged(NetworkConnectionType.NONE) }
+    }
+
+    @Test
+    fun `onConnectionTypeChanged should handle multiple consecutive connection changes`() {
+        appStateMonitor.start()
+        appStateMonitor.bindHandler(mockHandler)
+        testDispatcher.scheduler.advanceUntilIdle()
+
+        // Simulate multiple connection type changes
+        appStateMonitor.onConnectionTypeChanged(ConnectionType.CONNECTION_NONE)
+        appStateMonitor.onConnectionTypeChanged(ConnectionType.CONNECTION_WIFI)
+        appStateMonitor.onConnectionTypeChanged(ConnectionType.CONNECTION_4G)
+
+        // Verify all handler notifications
+        verify(exactly = 1) { mockHandler.onNetworkConnectionTypeChanged(NetworkConnectionType.NONE) }
+        verify(exactly = 1) { mockHandler.onNetworkConnectionTypeChanged(NetworkConnectionType.WIFI) }
+        verify(exactly = 1) { mockHandler.onNetworkConnectionTypeChanged(NetworkConnectionType.FOUR_G) }
     }
 }

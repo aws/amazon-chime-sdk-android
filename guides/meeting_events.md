@@ -210,6 +210,7 @@ The following table lists available states.
 |`voiceFocusDisableFailed`                  |Failed to disable voice focus.
 |`videoCaptureSessionInterruptionBegan`     |Video capture session interruption began.
 |`videoCaptureSessionInterruptionEnded`     |Video capture session interruption ended.
+|`networkConnectionTypeChanged`             |Network connection type is changed.
 
 ## Example
 

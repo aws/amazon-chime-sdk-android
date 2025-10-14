@@ -9,6 +9,7 @@ import com.amazonaws.services.chime.sdk.meetings.ingestion.AppState
 import com.amazonaws.services.chime.sdk.meetings.ingestion.AppStateMonitor
 import com.amazonaws.services.chime.sdk.meetings.ingestion.BatteryState
 import com.amazonaws.services.chime.sdk.meetings.ingestion.EventReporter
+import com.amazonaws.services.chime.sdk.meetings.ingestion.NetworkConnectionType
 import com.amazonaws.services.chime.sdk.meetings.internal.ingestion.SDKEvent
 import com.amazonaws.services.chime.sdk.meetings.internal.utils.DeviceUtils
 import com.amazonaws.services.chime.sdk.meetings.session.MeetingSessionConfiguration
@@ -45,7 +46,7 @@ import org.junit.Test
 class DefaultEventAnalyticsControllerTest {
     private val testDispatcher = TestCoroutineDispatcher()
 
-    private lateinit var testEventAnalyticsController: EventAnalyticsController
+    private lateinit var testEventAnalyticsController: DefaultEventAnalyticsController
 
     @MockK
     private lateinit var mockLogger: Logger
@@ -311,5 +312,22 @@ class DefaultEventAnalyticsControllerTest {
         assertFalse(eventAttributes.containsKey(EventAttributeName.batteryLevel.name))
         assertEquals("Charging", eventAttributes[EventAttributeName.batteryState.name])
         assertEquals(true.toString(), eventAttributes[EventAttributeName.lowPowerModeEnabled.name])
+    }
+
+    @Test
+    fun `onNetworkConnectionTypeChanged should publish networkConnectionTypeChanged event`() {
+
+        val slot = slot<SDKEvent>()
+        every { eventReporter.report(capture(slot)) } just Runs
+
+        testEventAnalyticsController.onNetworkConnectionTypeChanged(NetworkConnectionType.WIFI)
+
+        verify(exactly = 1) { eventReporter.report(any()) }
+
+        val capturedEvent = slot.captured
+        val capturedAttributes = capturedEvent.eventAttributes
+
+        assertEquals(capturedEvent.name, EventName.networkConnectionTypeChanged.name)
+        assertEquals(NetworkConnectionType.WIFI.description, capturedAttributes[EventAttributeName.networkConnectionType.name])
     }
 }
