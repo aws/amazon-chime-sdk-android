@@ -61,14 +61,34 @@ enum class MeetingHistoryEventName {
     meetingReconnected,
 
     /**
+     * The video client WebSocket opened.
+     */
+    videoClientSignalingOpened,
+
+    /**
      * The video client WebSocket failed or closed with an error.
      */
     videoClientSignalingDropped,
 
     /**
+     * The video client ICE candidate gathering has finished.
+     */
+    videoClientIceGatheringCompleted,
+
+    /**
+     * The content share WebSocket opened.
+     */
+    contentShareSignalingOpened,
+
+    /**
      * The content share WebSocket failed or closed with an error.
      */
     contentShareSignalingDropped,
+
+    /**
+     * The content share ICE candidate gathering has finished.
+     */
+    contentShareIceGatheringCompleted,
 
     /**
      * The content share start was requested.
@@ -148,8 +168,12 @@ enum class MeetingHistoryEventName {
                 EventName.meetingStartFailed -> meetingStartFailed
                 EventName.meetingEnded -> meetingEnded
                 EventName.meetingFailed -> meetingFailed
+                EventName.videoClientSignalingOpened -> videoClientSignalingOpened
                 EventName.videoClientSignalingDropped -> videoClientSignalingDropped
+                EventName.videoClientIceGatheringCompleted -> videoClientIceGatheringCompleted
+                EventName.contentShareSignalingOpened -> contentShareSignalingOpened
                 EventName.contentShareSignalingDropped -> contentShareSignalingDropped
+                EventName.contentShareIceGatheringCompleted -> contentShareIceGatheringCompleted
                 EventName.contentShareStartRequested -> contentShareStartRequested
                 EventName.contentShareStarted -> contentShareStarted
                 EventName.contentShareStopped -> contentShareStopped

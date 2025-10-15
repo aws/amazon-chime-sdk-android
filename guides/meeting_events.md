@@ -89,12 +89,16 @@ Chime SDK sends these meeting events.
 |`meetingFailed`                    |The meeting ended with one of the following failure [MeetingSessionStatusCode](https://aws.github.io/amazon-chime-sdk-android/amazon-chime-sdk/com.amazonaws.services.chime.sdk.meetings.session/-meeting-session-status-code/index.html): <br><ul><li>`AudioJoinedFromAnotherDevice`</li><li>`AudioDisconnectAudio`</li><li>`AudioAuthenticationRejected`</li><li>`AudioCallAtCapacity`</li><li>`AudioCallEnded`</li><li>`AudioInternalServerError`</li><li>`AudioServiceUnavailable`</li><li>`AudioDisconnected`</li></ul>
 |`audioInputFailed`                 |The microphone selection or access failed.
 |`videoInputFailed`                 |The camera selection or access failed.
+|`videoClientSignalingOpened`       |The video client signaling websocket opened.
 |`videoClientSignalingDropped`      |The video client signaling websocket failed or closed with an error.
+|`videoClientIceGatheringCompleted` |The video client ICE candidate gathering has finished.
 |`contentShareStartRequested`       |The content share start was requested.
 |`contentShareStarted`              |The content share started successfully.
 |`contentShareStopped`              |The content share stopped.
 |`contentShareFailed`               |The content share failed.
+|`contentShareSignalingOpened`      |The content share signaling websocket opened.
 |`contentShareSignalingDropped`     |The content share client signaling websocket failed or closed with an error.
+|`contentShareIceGatheringCompleted`|The content share ICE candidate gathering has finished.
 
 ### Common attributes
 Chime SDK stores common attributes for event to identify the event.
@@ -142,6 +146,8 @@ The following table describes attributes for a meeting.
 |`videoDeviceType`|The selected video device type.|`videoDeviceType`
 |`contentShareErrorMessage`|The error message that explains why content share failed.|`contentShareFailed`
 |`signalingDroppedErrorMessage`|The error message that explains why the signaling websocket connection dropped.|`videoClientSignalingDropped`, `contentShareSignalingDropped`
+|`signalingOpenDurationMs`|The time that elapsed for the signaling websocket to open.<br><br>Unit: Milliseconds|`videoClientSignalingOpened`, `contentShareSignalingOpened`
+|`iceGatheringDurationMs`|The time that elapsed for ICE candidate gathering to complete.<br><br>Unit: Milliseconds|`videoClientIceGatheringCompleted`, `contentShareIceGatheringCompleted`
 |`appState`|The current app state when the event occurs. Possible states include: `Active`, `Inactive`, `Foreground`, and `Background`.| All events
 |`batteryLevel`|The current battery level when the event occurs.| All events
 |`batteryState`|The current battery state when the event occurs. Possible states include: `Charging`, `Discharging`, `NotCharging`, `Full`, and `Unknown`.| All events
@@ -196,12 +202,16 @@ The following table lists available states.
 |`audioInputFailed`                         |The microphone selection or access failed.
 |`videoInputSelected`                       |The camera was selected.
 |`videoInputFailed`                         |The camera selection or access failed.
+|`videoClientSignalingOpened`               |The video client signaling websocket opened.
 |`videoClientSignalingDropped`              |The video client signaling websocket failed or closed with an error.
+|`videoClientIceGatheringCompleted`         |The video client ICE candidate gathering has finished.
 |`contentShareStartRequested`               |The content share start was requested.
 |`contentShareStarted`                      |The content share started successfully.
 |`contentShareStopped`                      |The content share stopped.
 |`contentShareFailed`                       |The content share failed.
+|`contentShareSignalingOpened`              |The content share signaling websocket opened.
 |`contentShareSignalingDropped`             |The content share client signaling websocket failed or closed with an error.
+|`contentShareIceGatheringCompleted`        |The content share ICE candidate gathering has finished.
 |`appStateChanged`                          |The application state is changed.
 |`appMemoryLow`                             |The application memory is low.
 |`voiceFocusEnabled`                        |The voice focus is enabled.
