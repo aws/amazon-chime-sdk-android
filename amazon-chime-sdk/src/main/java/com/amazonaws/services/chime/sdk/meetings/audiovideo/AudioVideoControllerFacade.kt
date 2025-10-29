@@ -213,5 +213,5 @@ interface AudioVideoControllerFacade {
      *
      * @param videoCodecPreferences list of VideoCodecCapability in order of preference
      */
-    fun setVideoCodecSendPreferences(videoCodecPreferences: List<VideoCodecPreference>)
+    fun setVideoCodecSendPreferences(preferences: List<VideoCodecPreference>)
 }

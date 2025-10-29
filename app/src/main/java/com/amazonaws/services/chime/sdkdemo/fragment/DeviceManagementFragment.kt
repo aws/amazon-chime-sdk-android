@@ -275,7 +275,8 @@ class DeviceManagementFragment : Fragment(), DeviceChangeObserver {
 
     private val onVideoCodecSelected = object : AdapterView.OnItemSelectedListener {
         override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-            cameraCaptureSource.codecPreferences = parent?.getItemAtPosition(position) as List<VideoCodecPreference>
+            val codecPreferences = parent?.getItemAtPosition(position) as List<VideoCodecPreference>
+            audiovideo.setVideoCodecSendPreferences(codecPreferences)
         }
 
         // Abstract, requires implementation

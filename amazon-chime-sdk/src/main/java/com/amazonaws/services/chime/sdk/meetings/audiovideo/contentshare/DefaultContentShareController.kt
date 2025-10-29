@@ -41,7 +41,7 @@ class DefaultContentShareController(
         contentShareVideoClientController.unsubscribeFromVideoClientStateChange(observer)
     }
 
-    override fun setVideoCodecSendPreferences(videoCodecPreferences: List<VideoCodecPreference>) {
-        contentShareVideoClientController.setVideoCodecSendPreferences(videoCodecPreferences)
+    override fun setVideoCodecSendPreferences(preferences: List<VideoCodecPreference>) {
+        contentShareVideoClientController.setVideoCodecSendPreferences(preferences)
     }
 }

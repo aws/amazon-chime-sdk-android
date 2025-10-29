@@ -17,6 +17,9 @@ import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.capture.Defaul
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.capture.DefaultSurfaceTextureCaptureSourceFactory
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.gl.EglCore
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.gl.EglCoreFactory
+import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.h264ConstrainedBaselineProfile
+import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.vp8
+import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.vp9Profile0
 import com.amazonaws.services.chime.sdk.meetings.device.MediaDevice
 import com.amazonaws.services.chime.sdk.meetings.internal.utils.AppInfoUtil
 import com.amazonaws.services.chime.sdk.meetings.session.MeetingSessionConfiguration
@@ -69,6 +72,7 @@ class DefaultVideoClientController(
     private var videoSourceAdapter = VideoSourceAdapter()
     private var isUsingInternalCaptureSource = false
     private val videoClientStopMutex = Mutex()
+    private val videoCodecPreferences: List<VideoCodecPreference> = listOf(vp9Profile0, h264ConstrainedBaselineProfile, vp8)
     init {
         videoClientStateController.bindLifecycleHandler(this)
 
@@ -134,6 +138,11 @@ class DefaultVideoClientController(
         config.safeMaxBitRateKbps.let {
             if (it > 0) videoClient?.setMaxBitRateKbps(it)
         }
+
+        val codecPreferencesInternal = codecPreferences.map { preference ->
+            VideoCodecCapabilitiesInternal(preference.name, preference.clockRate, preference.params.toString())
+        }
+        videoClient?.setVideoCodecPreferences(codecPreferencesInternal)
     }
 
     override fun startLocalVideo(source: VideoSource) {
@@ -152,6 +161,11 @@ class DefaultVideoClientController(
         config.safeMaxBitRateKbps.let {
             if (it > 0) videoClient?.setMaxBitRateKbps(it)
         }
+
+        val codecPreferencesInternal = codecPreferences.map { preference ->
+            VideoCodecCapabilitiesInternal(preference.name, preference.clockRate, preference.params.toString())
+        }
+        videoClient?.setVideoCodecPreferences(codecPreferencesInternal)
     }
 
     override fun stopLocalVideo() {
@@ -270,13 +284,8 @@ class DefaultVideoClientController(
         if (videoClientStateController.canAct(VideoClientState.INITIALIZED)) videoClient?.demoteFromPrimaryMeeting()
     }
 
-    override fun setVideoCodecSendPreferences(codecPreferences: List<VideoCodecPreference>) {
-        if (!videoClientStateController.canAct(VideoClientState.INITIALIZED)) return
-        logger.info(TAG, codecPreferences.toString())
-        val codecPreferencesInternal = codecPreferences.map { preference ->
-            VideoCodecCapabilitiesInternal(preference.name, preference.clockRate, preference.params.toString())
-        }
-        videoClient?.setVideoCodecPreferences(codecPreferencesInternal)
+    override fun setVideoCodecSendPreferences(preferences: List<VideoCodecPreference>) {
+        videoCodecPreferences = preferences
     }
 
     override fun initializeVideoClient() {

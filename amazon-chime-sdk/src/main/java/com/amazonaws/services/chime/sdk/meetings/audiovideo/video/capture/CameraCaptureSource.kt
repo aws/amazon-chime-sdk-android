@@ -17,12 +17,6 @@ import com.amazonaws.services.chime.sdk.meetings.device.MediaDevice
  */
 interface CameraCaptureSource : VideoCaptureSource {
     /**
-     * List of video codec capability in order of preference, specified in
-     * AudioVideoControllerFacade.setVideoCodecSendPreferences()
-     */
-    var codecPreferences: List<VideoCodecPreference>
-
-    /**
      * Current camera device. This is only null if the phone/device doesn't have any cameras
      * May be called regardless of whether [start] or [stop] has been called.
      */

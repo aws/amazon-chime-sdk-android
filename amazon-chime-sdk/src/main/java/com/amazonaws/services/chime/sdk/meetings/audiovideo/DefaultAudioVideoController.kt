@@ -228,7 +228,7 @@ class DefaultAudioVideoController(
         }
     }
 
-    override fun setVideoCodecSendPreferences(videoCodecPreferences: List<VideoCodecPreference>) {
-        videoClientController.setVideoCodecSendPreferences(videoCodecPreferences)
+    override fun setVideoCodecSendPreferences(preferences: List<VideoCodecPreference>) {
+        videoClientController.setVideoCodecSendPreferences(preferences)
     }
 }

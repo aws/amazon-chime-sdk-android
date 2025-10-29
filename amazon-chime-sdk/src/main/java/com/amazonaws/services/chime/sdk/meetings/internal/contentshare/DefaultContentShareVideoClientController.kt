@@ -17,6 +17,9 @@ import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoResolutio
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoSource
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.gl.EglCore
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.gl.EglCoreFactory
+import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.h264ConstrainedBaselineProfile
+import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.vp8
+import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.vp9Profile0
 import com.amazonaws.services.chime.sdk.meetings.internal.utils.AppInfoUtil
 import com.amazonaws.services.chime.sdk.meetings.internal.utils.ConcurrentSet
 import com.amazonaws.services.chime.sdk.meetings.internal.utils.ObserverUtils
@@ -54,6 +57,7 @@ class DefaultContentShareVideoClientController(
     private val VIDEO_CLIENT_FLAG_DISABLE_CAPTURER = 1 shl 20
     private val VIDEO_CLIENT_FLAG_IS_CONTENT = 1 shl 23
     private val VIDEO_CLIENT_FLAG_ENABLE_INBAND_TURN_CREDS = 1 shl 26
+    private val videoCodecPreferences: List<VideoCodecPreference> = listOf(vp9Profile0, h264ConstrainedBaselineProfile, vp8)
 
     override fun startVideoShare(videoSource: VideoSource) {
         startVideoShare(videoSource, LocalVideoConfiguration())
@@ -106,6 +110,11 @@ class DefaultContentShareVideoClientController(
             videoClient?.setMaxBitRateKbps(ContentHighResolutionBitrateKbps)
             logger.info(TAG, "Set Max Bitrate to 2500kbps for UHD content")
         }
+
+        val codecPreferencesInternal = videoCodecPreferences.map { preference ->
+            VideoCodecCapabilitiesInternal(preference.name, preference.clockRate, preference.params.toString())
+        }
+        videoClient?.setVideoCodecPreferences(codecPreferencesInternal)
     }
 
     private fun initializeVideoClient() {
@@ -163,11 +172,7 @@ class DefaultContentShareVideoClientController(
         contentShareVideoClientObserver.unsubscribeFromVideoClientStateChange(observer)
     }
 
-    override fun setVideoCodecSendPreferences(codecPreference: List<VideoCodecPreference>) {
-        logger.info(TAG, codecPreference.toString())
-        val codecPreferencesInternal = codecPreference.map { preference ->
-            VideoCodecCapabilitiesInternal(preference.name, preference.clockRate, preference.params.toString())
-        }
-        videoClient?.setVideoCodecPreferences(codecPreferencesInternal)
+    override fun setVideoCodecSendPreferences(preference: List<VideoCodecPreference>) {
+        videoCodecPreferences = codecPreference
     }
 }

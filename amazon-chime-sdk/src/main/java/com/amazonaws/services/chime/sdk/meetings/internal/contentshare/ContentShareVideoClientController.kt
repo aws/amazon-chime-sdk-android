@@ -64,5 +64,5 @@ interface ContentShareVideoClientController {
     /**
      * See [AudioVideoFacade.setVideoCodecSendPreferences]
      */
-    fun setVideoCodecSendPreferences(codecPreferences: List<VideoCodecPreference>)
+    fun setVideoCodecSendPreferences(preferences: List<VideoCodecPreference>)
 }
