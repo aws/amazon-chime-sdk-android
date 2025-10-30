@@ -133,9 +133,9 @@ class DefaultAudioVideoFacade(
         audioVideoController.demoteFromPrimaryMeeting()
     }
 
-    override fun setVideoCodecSendPreferences(videoCodecPreferences: List<VideoCodecPreference>) {
-        audioVideoController.setVideoCodecSendPreferences(videoCodecPreferences)
-        contentShareController.setVideoCodecSendPreferences(videoCodecPreferences)
+    override fun setVideoCodecSendPreferences(preferences: List<VideoCodecPreference>) {
+        audioVideoController.setVideoCodecSendPreferences(preferences)
+        contentShareController.setVideoCodecSendPreferences(preferences)
     }
 
     override fun realtimeLocalMute(): Boolean {

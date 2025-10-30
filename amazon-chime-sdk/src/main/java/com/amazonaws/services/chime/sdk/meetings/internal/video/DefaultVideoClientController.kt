@@ -72,7 +72,7 @@ class DefaultVideoClientController(
     private var videoSourceAdapter = VideoSourceAdapter()
     private var isUsingInternalCaptureSource = false
     private val videoClientStopMutex = Mutex()
-    private val videoCodecPreferences: List<VideoCodecPreference> = listOf(vp9Profile0, h264ConstrainedBaselineProfile, vp8)
+    private var videoCodecPreferences: List<VideoCodecPreference> = listOf(vp9Profile0, h264ConstrainedBaselineProfile, vp8)
     init {
         videoClientStateController.bindLifecycleHandler(this)
 
@@ -139,7 +139,7 @@ class DefaultVideoClientController(
             if (it > 0) videoClient?.setMaxBitRateKbps(it)
         }
 
-        val codecPreferencesInternal = codecPreferences.map { preference ->
+        val codecPreferencesInternal = videoCodecPreferences.map { preference ->
             VideoCodecCapabilitiesInternal(preference.name, preference.clockRate, preference.params.toString())
         }
         videoClient?.setVideoCodecPreferences(codecPreferencesInternal)
@@ -162,7 +162,7 @@ class DefaultVideoClientController(
             if (it > 0) videoClient?.setMaxBitRateKbps(it)
         }
 
-        val codecPreferencesInternal = codecPreferences.map { preference ->
+        val codecPreferencesInternal = videoCodecPreferences.map { preference ->
             VideoCodecCapabilitiesInternal(preference.name, preference.clockRate, preference.params.toString())
         }
         videoClient?.setVideoCodecPreferences(codecPreferencesInternal)

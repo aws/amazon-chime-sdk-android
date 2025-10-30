@@ -57,7 +57,7 @@ class DefaultContentShareVideoClientController(
     private val VIDEO_CLIENT_FLAG_DISABLE_CAPTURER = 1 shl 20
     private val VIDEO_CLIENT_FLAG_IS_CONTENT = 1 shl 23
     private val VIDEO_CLIENT_FLAG_ENABLE_INBAND_TURN_CREDS = 1 shl 26
-    private val videoCodecPreferences: List<VideoCodecPreference> = listOf(vp9Profile0, h264ConstrainedBaselineProfile, vp8)
+    private var videoCodecPreferences: List<VideoCodecPreference> = listOf(vp9Profile0, h264ConstrainedBaselineProfile, vp8)
 
     override fun startVideoShare(videoSource: VideoSource) {
         startVideoShare(videoSource, LocalVideoConfiguration())
@@ -172,7 +172,7 @@ class DefaultContentShareVideoClientController(
         contentShareVideoClientObserver.unsubscribeFromVideoClientStateChange(observer)
     }
 
-    override fun setVideoCodecSendPreferences(preference: List<VideoCodecPreference>) {
-        videoCodecPreferences = codecPreference
+    override fun setVideoCodecSendPreferences(preferences: List<VideoCodecPreference>) {
+        videoCodecPreferences = preferences
     }
 }
