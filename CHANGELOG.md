@@ -6,6 +6,7 @@
 ### Added
 * Added following meeting events: contentShareStartRequested/contentShareStarted/contentShareStopped/contentShareFailed/voiceFocusEnabled/voiceFocusDisabled/voiceFocusEnableFailed/voiceFocusDisableFailed/videoCaptureSessionInterruptionBegan/videoCaptureSessionInterruptionEnded/networkConnectionTypeChanged/signalingDropped/iceGatheringCompleted
 * Added following meeting event attributes: voiceFocusErrorMessage/lowPowerModeEnabled/networkConnectionType/signalingOpenDurationMs/iceGatheringDurationMs
+* Add video codec selection API and set default video codec to VP9
 
 ## [0.25.1] - 2025-10-02
 
