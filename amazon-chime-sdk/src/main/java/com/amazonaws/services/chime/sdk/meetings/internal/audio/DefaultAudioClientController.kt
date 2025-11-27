@@ -5,11 +5,13 @@
 
 package com.amazonaws.services.chime.sdk.meetings.internal.audio
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.media.AudioFormat
 import android.media.AudioManager
 import android.media.AudioRecord
 import android.media.AudioTrack
+import android.os.Build
 import com.amazonaws.services.chime.sdk.meetings.analytics.EventAnalyticsController
 import com.amazonaws.services.chime.sdk.meetings.analytics.EventAttributeName
 import com.amazonaws.services.chime.sdk.meetings.analytics.EventName
@@ -41,7 +43,8 @@ class DefaultAudioClientController(
     private val audioClientObserver: AudioClientObserver,
     private val audioClient: AudioClient,
     private val meetingStatsCollector: MeetingStatsCollector,
-    private val eventAnalyticsController: EventAnalyticsController
+    private val eventAnalyticsController: EventAnalyticsController,
+    private val buildVersion: Int = Build.VERSION.SDK_INT
 ) : AudioClientController {
     private val TAG = "DefaultAudioClientController"
     private val DEFAULT_PORT = 0 // In case the URL does not have port
@@ -300,10 +303,17 @@ class DefaultAudioClientController(
         meetingStatsCollector.resetMeetingStats()
     }
 
+    @SuppressLint("NewApi")
     private fun resetAudioManager() {
         audioManager.apply {
             isBluetoothScoOn = false
             stopBluetoothSco()
+        }
+        // Clear communication device on API 31+ to release audio routing
+        // Unlike stopBluetoothSco(), setCommunicationDevice() is tied to the app process
+        // and must be cleared to avoid breaking audio for other apps
+        if (buildVersion >= Build.VERSION_CODES.S) {
+            audioManager.clearCommunicationDevice()
         }
         audioManager.mode = audioModePreCall
         audioManager.isSpeakerphoneOn = speakerphoneStatePreCall
