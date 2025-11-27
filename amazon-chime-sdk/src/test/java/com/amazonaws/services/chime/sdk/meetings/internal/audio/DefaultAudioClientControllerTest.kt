@@ -10,6 +10,7 @@ import android.media.AudioDeviceInfo
 import android.media.AudioManager
 import android.media.AudioRecord
 import android.media.AudioTrack
+import android.os.Build
 import android.util.Log
 import com.amazonaws.services.chime.sdk.meetings.TestConstant
 import com.amazonaws.services.chime.sdk.meetings.analytics.EventAnalyticsController
@@ -921,5 +922,78 @@ class DefaultAudioClientControllerTest {
             true,
             reconnectTimeoutMs = 180000
         )
+    }
+
+    @Test
+    fun `stop should call clearCommunicationDevice on API 31+ when audio client is started`() {
+        setupStartTests()
+        every { audioManager.clearCommunicationDevice() } just runs
+
+        // Create controller with buildVersion = API 31 (S)
+        val audioClientControllerApi31 = DefaultAudioClientController(
+            context,
+            mockLogger,
+            mockAudioClientObserver,
+            mockAudioClient,
+            mockEventAnlyticsStateController,
+            mockEventAnalyticsController,
+            buildVersion = Build.VERSION_CODES.S
+        )
+
+        audioClientControllerApi31.start(
+            testAudioFallbackUrl,
+            testAudioHostUrl,
+            testMeetingId,
+            testAttendeeId,
+            testJoinToken,
+            AudioMode.Stereo48K,
+            AudioDeviceCapabilities.InputAndOutput,
+            AudioStreamType.VoiceCall,
+            AudioRecordingPresetOverride.None,
+            true,
+            reconnectTimeoutMs = 180000
+        )
+        every { mockAudioClient.stopSession() } returns testAudioClientSuccessCode
+
+        audioClientControllerApi31.stop()
+
+        verify(exactly = 1, timeout = TestConstant.globalScopeTimeoutMs) { audioManager.clearCommunicationDevice() }
+    }
+
+    @Test
+    fun `stop should NOT call clearCommunicationDevice on API less than 31 when audio client is started`() {
+        setupStartTests()
+        every { audioManager.clearCommunicationDevice() } just runs
+
+        // Create controller with buildVersion = API 30 (R)
+        val audioClientControllerApi30 = DefaultAudioClientController(
+            context,
+            mockLogger,
+            mockAudioClientObserver,
+            mockAudioClient,
+            mockEventAnlyticsStateController,
+            mockEventAnalyticsController,
+            buildVersion = Build.VERSION_CODES.R
+        )
+
+        audioClientControllerApi30.start(
+            testAudioFallbackUrl,
+            testAudioHostUrl,
+            testMeetingId,
+            testAttendeeId,
+            testJoinToken,
+            AudioMode.Stereo48K,
+            AudioDeviceCapabilities.InputAndOutput,
+            AudioStreamType.VoiceCall,
+            AudioRecordingPresetOverride.None,
+            true,
+            reconnectTimeoutMs = 180000
+        )
+        every { mockAudioClient.stopSession() } returns testAudioClientSuccessCode
+
+        audioClientControllerApi30.stop()
+
+        verify(exactly = 1, timeout = TestConstant.globalScopeTimeoutMs) { mockAudioClient.stopSession() }
+        verify(exactly = 0) { audioManager.clearCommunicationDevice() }
     }
 }

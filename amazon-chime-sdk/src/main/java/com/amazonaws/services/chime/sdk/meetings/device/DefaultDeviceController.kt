@@ -22,28 +22,58 @@ import com.amazonaws.services.chime.sdk.meetings.analytics.EventAttributeName
 import com.amazonaws.services.chime.sdk.meetings.analytics.EventName
 import com.amazonaws.services.chime.sdk.meetings.internal.audio.AudioClientController
 import com.amazonaws.services.chime.sdk.meetings.internal.audio.AudioClientState
+import com.amazonaws.services.chime.sdk.meetings.internal.audio.BluetoothAudioRouter
 import com.amazonaws.services.chime.sdk.meetings.internal.audio.DefaultAudioClientController
+import com.amazonaws.services.chime.sdk.meetings.internal.audio.DefaultBluetoothAudioRouterFactory
 import com.amazonaws.services.chime.sdk.meetings.internal.utils.ConcurrentSet
 import com.amazonaws.services.chime.sdk.meetings.internal.utils.ObserverUtils
 import com.amazonaws.services.chime.sdk.meetings.internal.video.VideoClientController
 import com.amazonaws.services.chime.sdk.meetings.utils.MediaError
 import com.amazonaws.services.chime.sdk.meetings.utils.logger.Logger
 import com.xodee.client.audio.audioclient.AudioClient
-import kotlin.Any
 
-class DefaultDeviceController(
+class DefaultDeviceController @VisibleForTesting internal constructor(
     private val context: Context,
     private val audioClientController: AudioClientController,
     private val videoClientController: VideoClientController,
     private val eventAnalyticsController: EventAnalyticsController,
     private val logger: Logger,
-    private val audioManager: AudioManager = context.getSystemService(Context.AUDIO_SERVICE) as AudioManager,
-    private val buildVersion: Int = Build.VERSION.SDK_INT
+    private val audioManager: AudioManager,
+    private val buildVersion: Int,
+    private val bluetoothAudioRouter: BluetoothAudioRouter
 ) : DeviceController {
+
+    /**
+     * Public constructor for production use.
+     */
+    constructor(
+        context: Context,
+        audioClientController: AudioClientController,
+        videoClientController: VideoClientController,
+        eventAnalyticsController: EventAnalyticsController,
+        logger: Logger
+    ) : this(
+        context,
+        audioClientController,
+        videoClientController,
+        eventAnalyticsController,
+        logger,
+        context.getSystemService(Context.AUDIO_SERVICE) as AudioManager,
+        Build.VERSION.SDK_INT,
+        DefaultBluetoothAudioRouterFactory().create(
+            context,
+            context.getSystemService(Context.AUDIO_SERVICE) as AudioManager,
+            logger
+        )
+    )
+
     private val deviceChangeObservers = ConcurrentSet.createConcurrentSet<DeviceChangeObserver>()
 
     // TODO: remove code blocks for lower API level after the minimum SDK version becomes 23
     private val AUDIO_MANAGER_API_LEVEL = 23
+
+    // API level constant for setCommunicationDevice support (Android 12+)
+    private val COMMUNICATION_DEVICE_API_LEVEL = Build.VERSION_CODES.S
 
     private var receiver: BroadcastReceiver? = null
 
@@ -52,18 +82,8 @@ class DefaultDeviceController(
     private val TAG = "DefaultDeviceController"
 
     init {
-        @SuppressLint("NewApi")
         if (buildVersion >= AUDIO_MANAGER_API_LEVEL) {
-            audioDeviceCallback = object : AudioDeviceCallback() {
-                override fun onAudioDevicesAdded(addedDevices: Array<out AudioDeviceInfo>?) {
-                    notifyAudioDeviceChange()
-                }
-
-                override fun onAudioDevicesRemoved(removedDevices: Array<out AudioDeviceInfo>?) {
-                    notifyAudioDeviceChange()
-                }
-            }
-            audioManager.registerAudioDeviceCallback(audioDeviceCallback, null)
+            registerAudioDeviceCallback()
         } else {
             receiver = object : BroadcastReceiver() {
                 override fun onReceive(context: Context?, intent: Intent?) {
@@ -82,8 +102,8 @@ class DefaultDeviceController(
         }
     }
 
+    @SuppressLint("NewApi")
     override fun listAudioDevices(): List<MediaDevice> {
-        @SuppressLint("NewApi")
         if (buildVersion >= AUDIO_MANAGER_API_LEVEL) {
             var isWiredHeadsetOn = false
             var isHandsetAvailable = false
@@ -120,7 +140,8 @@ class DefaultDeviceController(
                         "${device.productName} (${getReadableType(device.type)})",
                         MediaDeviceType.fromAudioDeviceInfo(
                             device.type
-                        )
+                        ),
+                        id = device.id.toString()
                     )
                 )
             }
@@ -170,24 +191,33 @@ class DefaultDeviceController(
         }
     }
 
+    @SuppressLint("NewApi")
     override fun chooseAudioDevice(mediaDevice: MediaDevice) {
         if (DefaultAudioClientController.audioClientState != AudioClientState.STARTED) {
             return
         }
-        setupAudioDevice(mediaDevice.type)
-        val route = when (mediaDevice.type) {
-            MediaDeviceType.AUDIO_BUILTIN_SPEAKER -> AudioClient.SPK_STREAM_ROUTE_SPEAKER
-            MediaDeviceType.AUDIO_BLUETOOTH -> AudioClient.SPK_STREAM_ROUTE_BT_AUDIO
-            MediaDeviceType.AUDIO_WIRED_HEADSET -> AudioClient.SPK_STREAM_ROUTE_HEADSET
-            MediaDeviceType.AUDIO_USB_HEADSET -> AudioClient.SPK_STREAM_ROUTE_HEADSET
-            else -> AudioClient.SPK_STREAM_ROUTE_RECEIVER
-        }
 
-        val selected = audioClientController.setRoute(route)
-        if (selected) {
-            eventAnalyticsController.publishEvent(EventName.audioInputSelected, mutableMapOf(
-                EventAttributeName.audioDeviceType to mediaDevice.type.toString()
-            ), false)
+        logger.info(TAG, "chooseAudioDevice() called for device id: ${mediaDevice.id} with type: ${mediaDevice.type}")
+        bluetoothAudioRouter.cancelPendingOperation()
+
+        val route = getRouteForDeviceType(mediaDevice.type)
+
+        if (mediaDevice.type == MediaDeviceType.AUDIO_BLUETOOTH) {
+            // Delegate Bluetooth routing to the router
+            bluetoothAudioRouter.routeToBluetoothDevice(
+                mediaDevice = mediaDevice,
+                route = route,
+                onSuccess = { r, deviceType -> executeSetRoute(r, deviceType) },
+                onFailure = { notifyAudioDeviceChange() }
+            )
+        } else {
+            // Non-Bluetooth: handle directly
+            if (buildVersion >= COMMUNICATION_DEVICE_API_LEVEL) {
+                setupAudioDevice(mediaDevice)
+            } else {
+                setupAudioDevice(mediaDevice.type)
+            }
+            executeSetRoute(route, mediaDevice.type)
         }
     }
 
@@ -250,6 +280,24 @@ class DefaultDeviceController(
         }
     }
 
+    /**
+     * Sets up audio device routing using the API 31+ setCommunicationDevice() API.
+     *
+     * @param mediaDevice The media device to route audio to
+     */
+    @RequiresApi(Build.VERSION_CODES.S)
+    private fun setupAudioDevice(mediaDevice: MediaDevice) {
+        val audioDeviceInfo = findAudioDeviceById(mediaDevice.id)
+
+        if (audioDeviceInfo == null) {
+            logger.error(TAG, "Failed to setup audio device. AudioDeviceInfo not found for id: ${mediaDevice.id}, type: ${mediaDevice.type}")
+            return
+        }
+
+        val success = audioManager.setCommunicationDevice(audioDeviceInfo)
+        logger.info(TAG, "setCommunicationDevice(${audioDeviceInfo.productName}, id=${audioDeviceInfo.id}) returned $success")
+    }
+
     private fun getReadableType(type: Int): String {
         return when (type) {
             AudioDeviceInfo.TYPE_WIRED_HEADSET -> "Wired Headset"
@@ -287,5 +335,77 @@ class DefaultDeviceController(
                 listAudioDevices()
             )
         }
+    }
+
+    /**
+     * Executes the setRoute call and records the event.
+     *
+     * @param route The audio route value to set
+     * @param deviceType The device type for analytics event
+     */
+    private fun executeSetRoute(route: Int, deviceType: MediaDeviceType) {
+        val selected = audioClientController.setRoute(route)
+        if (selected) {
+            eventAnalyticsController.publishEvent(EventName.audioInputSelected, mutableMapOf(
+                EventAttributeName.audioDeviceType to deviceType.toString()
+            ), false)
+        }
+    }
+
+    /**
+     * Maps a MediaDeviceType to the corresponding AudioClient route constant.
+     *
+     * @param type The media device type
+     * @return The corresponding AudioClient route constant
+     */
+    private fun getRouteForDeviceType(type: MediaDeviceType): Int {
+        return when (type) {
+            MediaDeviceType.AUDIO_BUILTIN_SPEAKER -> AudioClient.SPK_STREAM_ROUTE_SPEAKER
+            MediaDeviceType.AUDIO_BLUETOOTH -> AudioClient.SPK_STREAM_ROUTE_BT_AUDIO
+            MediaDeviceType.AUDIO_WIRED_HEADSET -> AudioClient.SPK_STREAM_ROUTE_HEADSET
+            MediaDeviceType.AUDIO_USB_HEADSET -> AudioClient.SPK_STREAM_ROUTE_HEADSET
+            else -> AudioClient.SPK_STREAM_ROUTE_RECEIVER
+        }
+    }
+
+    /**
+     * Finds an AudioDeviceInfo by its ID from available communication devices.
+     *
+     * @param id The AudioDeviceInfo ID as a String (converted to Int for lookup)
+     * @return The matching AudioDeviceInfo, or null if not found
+     */
+    @RequiresApi(Build.VERSION_CODES.S)
+    private fun findAudioDeviceById(id: String?): AudioDeviceInfo? {
+        val deviceId = id?.toIntOrNull() ?: return null
+        return audioManager.availableCommunicationDevices.firstOrNull { it.id == deviceId }
+    }
+
+    /**
+     * Creates an AudioDeviceCallback for listening to audio device changes.
+     * Requires API level 23+.
+     *
+     * @return The created AudioDeviceCallback
+     */
+    @SuppressLint("NewApi")
+    private fun createAudioDeviceCallback(): AudioDeviceCallback {
+        return object : AudioDeviceCallback() {
+            override fun onAudioDevicesAdded(addedDevices: Array<out AudioDeviceInfo>?) {
+                notifyAudioDeviceChange()
+            }
+
+            override fun onAudioDevicesRemoved(removedDevices: Array<out AudioDeviceInfo>?) {
+                notifyAudioDeviceChange()
+            }
+        }
+    }
+
+    /**
+     * Registers the AudioDeviceCallback with the AudioManager.
+     * Requires API level 23+.
+     */
+    @SuppressLint("NewApi")
+    private fun registerAudioDeviceCallback() {
+        audioDeviceCallback = createAudioDeviceCallback()
+        audioManager.registerAudioDeviceCallback(audioDeviceCallback, null)
     }
 }

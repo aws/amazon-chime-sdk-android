@@ -15,18 +15,22 @@ import com.amazonaws.services.chime.sdk.meetings.analytics.EventAttributeName
 import com.amazonaws.services.chime.sdk.meetings.analytics.EventName
 import com.amazonaws.services.chime.sdk.meetings.internal.audio.AudioClientController
 import com.amazonaws.services.chime.sdk.meetings.internal.audio.AudioClientState
+import com.amazonaws.services.chime.sdk.meetings.internal.audio.BluetoothAudioRouter
 import com.amazonaws.services.chime.sdk.meetings.internal.audio.DefaultAudioClientController
 import com.amazonaws.services.chime.sdk.meetings.internal.video.VideoClientController
 import com.amazonaws.services.chime.sdk.meetings.utils.MediaError
 import com.amazonaws.services.chime.sdk.meetings.utils.logger.Logger
 import com.xodee.client.audio.audioclient.AudioClient
 import io.mockk.MockKAnnotations
+import io.mockk.Runs
 import io.mockk.every
 import io.mockk.impl.annotations.MockK
+import io.mockk.just
 import io.mockk.mockkClass
 import io.mockk.mockkStatic
+import io.mockk.slot
+import io.mockk.unmockkAll
 import io.mockk.verify
-import kotlin.Any
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.TestCoroutineDispatcher
@@ -83,12 +87,23 @@ class DefaultDeviceControllerTest {
     @MockK
     private lateinit var mockLogger: Logger
 
+    @MockK
+    private lateinit var bluetoothInfo2: AudioDeviceInfo
+
+    @MockK
+    private lateinit var mockBluetoothAudioRouter: BluetoothAudioRouter
+
     private lateinit var deviceController: DefaultDeviceController
 
     private val testDispatcher = TestCoroutineDispatcher()
 
+    // Captured callbacks for Bluetooth routing tests
+    private var capturedOnSuccess: ((Int, MediaDeviceType) -> Unit)? = null
+    private var capturedOnFailure: (() -> Unit)? = null
+
     private fun setupForNewAPILevel() {
         MockKAnnotations.init(this, relaxUnitFun = true)
+        every { context.registerReceiver(any(), any()) } returns Intent()
         deviceController = DefaultDeviceController(
             context,
             audioClientController,
@@ -96,7 +111,8 @@ class DefaultDeviceControllerTest {
             eventAnalyticsController,
             mockLogger,
             audioManager,
-            24
+            24,
+            mockBluetoothAudioRouter
         )
         commonSetup()
     }
@@ -111,24 +127,122 @@ class DefaultDeviceControllerTest {
             eventAnalyticsController,
             mockLogger,
             audioManager,
-            21
+            21,
+            mockBluetoothAudioRouter
         )
         commonSetup()
+    }
+
+    /**
+     * Sets up the test environment for API 31+ (Android 12+) tests.
+     */
+    private fun setupForAPI31Plus(apiLevel: Int = 31) {
+        MockKAnnotations.init(this, relaxUnitFun = true)
+        every { context.registerReceiver(any(), any()) } returns Intent()
+
+        // Capture Bluetooth routing callbacks
+        val onSuccessSlot = slot<(Int, MediaDeviceType) -> Unit>()
+        val onFailureSlot = slot<() -> Unit>()
+        every {
+            mockBluetoothAudioRouter.routeToBluetoothDevice(any(), any(), capture(onSuccessSlot), capture(onFailureSlot))
+        } answers {
+            capturedOnSuccess = onSuccessSlot.captured
+            capturedOnFailure = onFailureSlot.captured
+        }
+
+        deviceController = DefaultDeviceController(
+            context,
+            audioClientController,
+            videoClientController,
+            eventAnalyticsController,
+            mockLogger,
+            audioManager,
+            apiLevel,
+            mockBluetoothAudioRouter
+        )
+        commonSetupForBluetooth()
+    }
+
+    /**
+     * Sets up the test environment for API < 31 (Android 11 and below) tests.
+     */
+    private fun setupForAPI30AndBelow(apiLevel: Int = 30) {
+        MockKAnnotations.init(this, relaxUnitFun = true)
+        every { context.registerReceiver(any(), any()) } returns Intent()
+
+        // Capture Bluetooth routing callbacks
+        val onSuccessSlot = slot<(Int, MediaDeviceType) -> Unit>()
+        val onFailureSlot = slot<() -> Unit>()
+        every {
+            mockBluetoothAudioRouter.routeToBluetoothDevice(any(), any(), capture(onSuccessSlot), capture(onFailureSlot))
+        } answers {
+            capturedOnSuccess = onSuccessSlot.captured
+            capturedOnFailure = onFailureSlot.captured
+        }
+
+        deviceController = DefaultDeviceController(
+            context,
+            audioClientController,
+            videoClientController,
+            eventAnalyticsController,
+            mockLogger,
+            audioManager,
+            apiLevel,
+            mockBluetoothAudioRouter
+        )
+        commonSetupForBluetooth()
+    }
+
+    private fun commonSetupForBluetooth() {
+        every { speakerInfo.type } returns AudioDeviceInfo.TYPE_BUILTIN_SPEAKER
+        every { speakerInfo.productName } returns "Speaker"
+        every { speakerInfo.id } returns 1
+        every { earpieceInfo.type } returns AudioDeviceInfo.TYPE_BUILTIN_EARPIECE
+        every { earpieceInfo.productName } returns "Handset"
+        every { earpieceInfo.id } returns 2
+        every { wiredHeadsetInfo.type } returns AudioDeviceInfo.TYPE_WIRED_HEADSET
+        every { wiredHeadsetInfo.productName } returns "Wired Headset"
+        every { wiredHeadsetInfo.id } returns 3
+        every { bluetoothInfo.type } returns AudioDeviceInfo.TYPE_BLUETOOTH_SCO
+        every { bluetoothInfo.productName } returns "Bluetooth Headset"
+        every { bluetoothInfo.id } returns 4
+        every { bluetoothInfo2.type } returns AudioDeviceInfo.TYPE_BLUETOOTH_SCO
+        every { bluetoothInfo2.productName } returns "Bluetooth Headset 2"
+        every { bluetoothInfo2.id } returns 5
+
+        every { audioManager.getDevices(AudioManager.GET_DEVICES_OUTPUTS) } returns arrayOf(
+            speakerInfo, earpieceInfo, bluetoothInfo
+        )
+        every { audioManager.availableCommunicationDevices } returns listOf(
+            speakerInfo, earpieceInfo, bluetoothInfo
+        )
+        every { audioManager.setCommunicationDevice(any()) } returns true
+        every { audioManager.clearCommunicationDevice() } just Runs
+
+        mockkStatic(DefaultAudioClientController::class)
+        DefaultAudioClientController.audioClientState = AudioClientState.STARTED
+        every { audioClientController.setRoute(any()) } returns true
     }
 
     private fun commonSetup() {
         every { speakerInfo.type } returns AudioDeviceInfo.TYPE_BUILTIN_SPEAKER
         every { speakerInfo.productName } returns "default speaker"
+        every { speakerInfo.id } returns 1
         every { earpieceInfo.type } returns AudioDeviceInfo.TYPE_BUILTIN_EARPIECE
         every { earpieceInfo.productName } returns "default receiver"
+        every { earpieceInfo.id } returns 2
         every { telephonyInfo.type } returns AudioDeviceInfo.TYPE_TELEPHONY
         every { telephonyInfo.productName } returns "telephony receiver"
+        every { telephonyInfo.id } returns 3
         every { wiredHeadsetInfo.type } returns AudioDeviceInfo.TYPE_WIRED_HEADSET
         every { wiredHeadsetInfo.productName } returns "my wired headset"
+        every { wiredHeadsetInfo.id } returns 4
         every { bluetoothInfo.type } returns AudioDeviceInfo.TYPE_BLUETOOTH_SCO
         every { bluetoothInfo.productName } returns "my bluetooth headphone"
+        every { bluetoothInfo.id } returns 5
         every { audioDevice.productName } returns "my product name"
         every { audioDevice.type } returns AudioDeviceInfo.TYPE_BLUETOOTH_SCO
+        every { audioDevice.id } returns 6
         every { activeConfiguration.audioDevice } returns audioDevice
         every { audioManager.activeRecordingConfigurations } returns listOf(activeConfiguration)
     }
@@ -136,12 +250,15 @@ class DefaultDeviceControllerTest {
     @Before
     fun setup() {
         Dispatchers.setMain(testDispatcher)
+        capturedOnSuccess = null
+        capturedOnFailure = null
     }
 
     @After
     fun tearDown() {
         Dispatchers.resetMain()
         testDispatcher.cleanupTestCoroutines()
+        unmockkAll()
     }
 
     @Test
@@ -166,7 +283,7 @@ class DefaultDeviceControllerTest {
         every { audioManager.getDevices(AudioManager.GET_DEVICES_OUTPUTS) } returns arrayOf(
             speakerInfo, earpieceInfo, audioDevice
         )
-        val expected = MediaDevice("my product name (Bluetooth)", MediaDeviceType.AUDIO_BLUETOOTH)
+        val expected = MediaDevice("my product name (Bluetooth)", MediaDeviceType.AUDIO_BLUETOOTH, id = "6")
         val mediaDevice = deviceController.getActiveAudioDevice()
         assertEquals(expected, mediaDevice)
     }
@@ -312,19 +429,16 @@ class DefaultDeviceControllerTest {
     }
 
     @Test
-    fun `chooseAudioDevice should call audioManager startBluetoothSco when choosing bluetooth device`() {
+    fun `chooseAudioDevice should delegate to BluetoothAudioRouter when choosing bluetooth device`() {
         setupForOldAPILevel()
         every { audioClientController.setRoute(any()) } returns true
         mockkStatic(DefaultAudioClientController::class)
         DefaultAudioClientController.audioClientState = AudioClientState.STARTED
-        deviceController.chooseAudioDevice(
-            MediaDevice(
-                "bluetooth",
-                MediaDeviceType.AUDIO_BLUETOOTH
-            )
-        )
+        val bluetoothDevice = MediaDevice("bluetooth", MediaDeviceType.AUDIO_BLUETOOTH)
 
-        verify { audioManager.startBluetoothSco() }
+        deviceController.chooseAudioDevice(bluetoothDevice)
+
+        verify { mockBluetoothAudioRouter.routeToBluetoothDevice(bluetoothDevice, AudioClient.SPK_STREAM_ROUTE_BT_AUDIO, any(), any()) }
     }
 
     @Test
@@ -466,5 +580,214 @@ class DefaultDeviceControllerTest {
     @Test
     fun `deviceController stopListening should call BluetoothDeviceController stopListening for old API level`() {
         setupForOldAPILevel()
+    }
+
+    // ==================== Bluetooth Routing Delegation Tests - API 31+ ====================
+
+    @Test
+    fun `chooseAudioDevice should immediately call setRoute for speaker on API 31+`() {
+        setupForAPI31Plus(31)
+        val speakerDevice = MediaDevice("Speaker", MediaDeviceType.AUDIO_BUILTIN_SPEAKER, id = "1")
+
+        deviceController.chooseAudioDevice(speakerDevice)
+
+        verify { audioClientController.setRoute(AudioClient.SPK_STREAM_ROUTE_SPEAKER) }
+    }
+
+    @Test
+    fun `chooseAudioDevice should immediately call setRoute for wired headset on API 31+`() {
+        setupForAPI31Plus(31)
+        every { audioManager.availableCommunicationDevices } returns listOf(
+            speakerInfo, earpieceInfo, bluetoothInfo, wiredHeadsetInfo
+        )
+        val wiredDevice = MediaDevice("Wired Headset", MediaDeviceType.AUDIO_WIRED_HEADSET, id = "3")
+
+        deviceController.chooseAudioDevice(wiredDevice)
+
+        verify { audioClientController.setRoute(AudioClient.SPK_STREAM_ROUTE_HEADSET) }
+    }
+
+    @Test
+    fun `chooseAudioDevice should immediately call setRoute for handset on API 31+`() {
+        setupForAPI31Plus(31)
+        val handsetDevice = MediaDevice("Handset", MediaDeviceType.AUDIO_HANDSET, id = "2")
+
+        deviceController.chooseAudioDevice(handsetDevice)
+
+        verify { audioClientController.setRoute(AudioClient.SPK_STREAM_ROUTE_RECEIVER) }
+    }
+
+    @Test
+    fun `chooseAudioDevice should delegate to BluetoothAudioRouter for Bluetooth on API 31+`() {
+        setupForAPI31Plus(31)
+        val bluetoothDevice = MediaDevice("Bluetooth Headset", MediaDeviceType.AUDIO_BLUETOOTH, id = "4")
+
+        deviceController.chooseAudioDevice(bluetoothDevice)
+
+        verify { mockBluetoothAudioRouter.routeToBluetoothDevice(bluetoothDevice, AudioClient.SPK_STREAM_ROUTE_BT_AUDIO, any(), any()) }
+    }
+
+    @Test
+    fun `chooseAudioDevice should not call setRoute directly for Bluetooth on API 31+`() {
+        setupForAPI31Plus(31)
+        val bluetoothDevice = MediaDevice("Bluetooth Headset", MediaDeviceType.AUDIO_BLUETOOTH, id = "4")
+
+        deviceController.chooseAudioDevice(bluetoothDevice)
+
+        verify(exactly = 0) { audioClientController.setRoute(AudioClient.SPK_STREAM_ROUTE_BT_AUDIO) }
+    }
+
+    @Test
+    fun `chooseAudioDevice should cancel pending Bluetooth operation on device change on API 31+`() {
+        setupForAPI31Plus(31)
+        val bluetoothDevice = MediaDevice("Bluetooth Headset", MediaDeviceType.AUDIO_BLUETOOTH, id = "4")
+        val speakerDevice = MediaDevice("Speaker", MediaDeviceType.AUDIO_BUILTIN_SPEAKER, id = "1")
+
+        deviceController.chooseAudioDevice(bluetoothDevice)
+        deviceController.chooseAudioDevice(speakerDevice)
+
+        verify(exactly = 2) { mockBluetoothAudioRouter.cancelPendingOperation() }
+    }
+
+    @Test
+    fun `Bluetooth success callback should call setRoute and publish event on API 31+`() {
+        setupForAPI31Plus(31)
+        val bluetoothDevice = MediaDevice("Bluetooth Headset", MediaDeviceType.AUDIO_BLUETOOTH, id = "4")
+
+        deviceController.chooseAudioDevice(bluetoothDevice)
+
+        // Simulate success callback from BluetoothAudioRouter
+        capturedOnSuccess?.invoke(AudioClient.SPK_STREAM_ROUTE_BT_AUDIO, MediaDeviceType.AUDIO_BLUETOOTH)
+
+        verify { audioClientController.setRoute(AudioClient.SPK_STREAM_ROUTE_BT_AUDIO) }
+        verify {
+            eventAnalyticsController.publishEvent(
+                EventName.audioInputSelected,
+                mutableMapOf(EventAttributeName.audioDeviceType to MediaDeviceType.AUDIO_BLUETOOTH.toString()),
+                false
+            )
+        }
+    }
+
+    @Test
+    fun `Bluetooth failure callback should notify observers on API 31+`() {
+        setupForAPI31Plus(31)
+        deviceController.addDeviceChangeObserver(deviceChangeObserver)
+        val bluetoothDevice = MediaDevice("Bluetooth Headset", MediaDeviceType.AUDIO_BLUETOOTH, id = "4")
+
+        deviceController.chooseAudioDevice(bluetoothDevice)
+
+        // Simulate failure callback from BluetoothAudioRouter
+        capturedOnFailure?.invoke()
+
+        verify { deviceChangeObserver.onAudioDeviceChanged(any()) }
+    }
+
+    // ==================== Bluetooth Routing Delegation Tests - API < 31 ====================
+
+    @Test
+    fun `chooseAudioDevice should delegate to BluetoothAudioRouter for Bluetooth on API below 31`() {
+        setupForAPI30AndBelow(30)
+        val bluetoothDevice = MediaDevice("Bluetooth Headset", MediaDeviceType.AUDIO_BLUETOOTH)
+
+        deviceController.chooseAudioDevice(bluetoothDevice)
+
+        verify { mockBluetoothAudioRouter.routeToBluetoothDevice(bluetoothDevice, AudioClient.SPK_STREAM_ROUTE_BT_AUDIO, any(), any()) }
+    }
+
+    @Test
+    fun `chooseAudioDevice should immediately call setRoute for speaker on API below 31`() {
+        setupForAPI30AndBelow(30)
+        val speakerDevice = MediaDevice("Speaker", MediaDeviceType.AUDIO_BUILTIN_SPEAKER)
+
+        deviceController.chooseAudioDevice(speakerDevice)
+
+        verify { audioClientController.setRoute(AudioClient.SPK_STREAM_ROUTE_SPEAKER) }
+    }
+
+    @Test
+    fun `chooseAudioDevice should cancel pending Bluetooth operation on device change on API below 31`() {
+        setupForAPI30AndBelow(30)
+        val bluetoothDevice = MediaDevice("Bluetooth Headset", MediaDeviceType.AUDIO_BLUETOOTH)
+        val speakerDevice = MediaDevice("Speaker", MediaDeviceType.AUDIO_BUILTIN_SPEAKER)
+
+        deviceController.chooseAudioDevice(bluetoothDevice)
+        deviceController.chooseAudioDevice(speakerDevice)
+
+        verify(exactly = 2) { mockBluetoothAudioRouter.cancelPendingOperation() }
+    }
+
+    @Test
+    fun `Bluetooth success callback should call setRoute and publish event on API below 31`() {
+        setupForAPI30AndBelow(30)
+        val bluetoothDevice = MediaDevice("Bluetooth Headset", MediaDeviceType.AUDIO_BLUETOOTH)
+
+        deviceController.chooseAudioDevice(bluetoothDevice)
+
+        // Simulate success callback from BluetoothAudioRouter
+        capturedOnSuccess?.invoke(AudioClient.SPK_STREAM_ROUTE_BT_AUDIO, MediaDeviceType.AUDIO_BLUETOOTH)
+
+        verify { audioClientController.setRoute(AudioClient.SPK_STREAM_ROUTE_BT_AUDIO) }
+        verify {
+            eventAnalyticsController.publishEvent(
+                EventName.audioInputSelected,
+                mutableMapOf(EventAttributeName.audioDeviceType to MediaDeviceType.AUDIO_BLUETOOTH.toString()),
+                false
+            )
+        }
+    }
+
+    @Test
+    fun `Bluetooth failure callback should notify observers on API below 31`() {
+        setupForAPI30AndBelow(30)
+        deviceController.addDeviceChangeObserver(deviceChangeObserver)
+        val bluetoothDevice = MediaDevice("Bluetooth Headset", MediaDeviceType.AUDIO_BLUETOOTH)
+
+        deviceController.chooseAudioDevice(bluetoothDevice)
+
+        // Simulate failure callback from BluetoothAudioRouter
+        capturedOnFailure?.invoke()
+
+        verify { deviceChangeObserver.onAudioDeviceChanged(any()) }
+    }
+
+    // ==================== Cross-API Tests ====================
+
+    @Test
+    fun `listAudioDevices should include device IDs for API 23+`() {
+        setupForAPI31Plus(23)
+
+        val devices = deviceController.listAudioDevices()
+
+        devices.forEach { device ->
+            assert(device.id != null) { "Device ${device.label} should have an ID" }
+        }
+    }
+
+    @Test
+    fun `chooseAudioDevice should not proceed when AudioClient is not STARTED on API 31+`() {
+        setupForAPI31Plus(31)
+        DefaultAudioClientController.audioClientState = AudioClientState.STOPPED
+        val speakerDevice = MediaDevice("Speaker", MediaDeviceType.AUDIO_BUILTIN_SPEAKER, id = "1")
+
+        deviceController.chooseAudioDevice(speakerDevice)
+
+        verify(exactly = 0) { audioClientController.setRoute(any()) }
+    }
+
+    @Test
+    fun `chooseAudioDevice should call publishEvent when audio device is selected on API 31+`() {
+        setupForAPI31Plus(31)
+        val speakerDevice = MediaDevice("Speaker", MediaDeviceType.AUDIO_BUILTIN_SPEAKER, id = "1")
+
+        deviceController.chooseAudioDevice(speakerDevice)
+
+        verify {
+            eventAnalyticsController.publishEvent(
+                EventName.audioInputSelected,
+                mutableMapOf(EventAttributeName.audioDeviceType to MediaDeviceType.AUDIO_BUILTIN_SPEAKER.toString()),
+                false
+            )
+        }
     }
 }
