@@ -17,7 +17,9 @@ import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.capture.VideoC
  *
  * @property label: String - human readable string describing the device.
  * @property type: [MediaDeviceType] - media device type
- * @property id: String - Unique ID, if applicable
+ * @property id: String - Unique device identifier. For video devices, this is the camera ID from CameraManager.
+ *                        For audio devices, this is the AudioDeviceInfo.id converted to String.
+ *                        It's never null when returned by the SDK's APIs
  */
 data class MediaDevice(
     val label: String,

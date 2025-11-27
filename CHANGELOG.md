@@ -1,3 +1,8 @@
+## [Unreleased]
+
+### Fixed
+* Fixed Bluetooth audio routing race condition where the SDK would change the audio route before the Bluetooth connection was established, causing Android to reject Bluetooth routing and fall back to Handset. The fix introduces a `BluetoothAudioRouter` abstraction that defers route changes until the Bluetooth connection is confirmed ready. On API 31+ (Android 12+), the SDK now uses `setCommunicationDevice` API for Bluetooth routing. The deprecated `startBluetoothSco`/`stopBluetoothSco` APIs are only used on older Android versions (API 23-30).
+
 ## [0.25.2] - 2025-12-09
 
 ### Changed
