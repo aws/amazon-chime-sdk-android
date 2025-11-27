@@ -15,6 +15,8 @@ import android.media.AudioDeviceCallback
 import android.media.AudioDeviceInfo
 import android.media.AudioManager
 import android.os.Build
+import android.os.Handler
+import android.os.Looper
 import androidx.annotation.RequiresApi
 import androidx.annotation.VisibleForTesting
 import com.amazonaws.services.chime.sdk.meetings.analytics.EventAnalyticsController
@@ -30,7 +32,6 @@ import com.amazonaws.services.chime.sdk.meetings.internal.video.VideoClientContr
 import com.amazonaws.services.chime.sdk.meetings.utils.MediaError
 import com.amazonaws.services.chime.sdk.meetings.utils.logger.Logger
 import com.xodee.client.audio.audioclient.AudioClient
-import kotlin.Any
 
 class DefaultDeviceController(
     private val context: Context,
@@ -49,6 +50,22 @@ class DefaultDeviceController(
     private var receiver: BroadcastReceiver? = null
 
     private var audioDeviceCallback: AudioDeviceCallback? = null
+
+    private var scoStateReceiver: BroadcastReceiver? = null
+
+    // Pending Bluetooth route state for SCO-aware routing
+    private var pendingBluetoothRoute: Int? = null
+    private var pendingBluetoothTimestamp: Long = 0L
+
+    // Track last SCO state to distinguish device switching from connection failure
+    private var lastScoState: Int = AudioManager.SCO_AUDIO_STATE_DISCONNECTED
+
+    // Timeout handler for pending Bluetooth operations
+    private val handler = Handler(Looper.getMainLooper())
+    private var timeoutRunnable: Runnable? = null
+
+    // Timeout duration constant for SCO connection
+    private val SCO_CONNECTION_TIMEOUT_MS = 3000L
 
     private val TAG = "DefaultDeviceController"
 
@@ -81,6 +98,20 @@ class DefaultDeviceController(
                 receiver, IntentFilter(BluetoothDevice.ACTION_ACL_DISCONNECTED)
             )
         }
+
+        // Register Bluetooth SCO state receiver to handle pending Bluetooth route operations
+        scoStateReceiver = object : BroadcastReceiver() {
+            override fun onReceive(context: Context?, intent: Intent?) {
+                val state = intent?.getIntExtra(AudioManager.EXTRA_SCO_AUDIO_STATE, -1) ?: return
+                val previousState = intent.getIntExtra(AudioManager.EXTRA_SCO_AUDIO_PREVIOUS_STATE, -1)
+                onScoStateChanged(state, previousState)
+            }
+        }
+
+        context.registerReceiver(
+            scoStateReceiver,
+            IntentFilter(AudioManager.ACTION_SCO_AUDIO_STATE_UPDATED)
+        )
     }
 
     override fun listAudioDevices(): List<MediaDevice> {
@@ -135,7 +166,8 @@ class DefaultDeviceController(
             // It doesn't look like Android can switch between two wired connection, so we'll assume WIRED_HEADSET
             // is where audio is routed.
             if (wiredDeviceCount > 1) audioDevices.removeIf { it.type == MediaDeviceType.AUDIO_USB_HEADSET }
-            return if (isWiredHeadsetOn) audioDevices.filter { it.type != MediaDeviceType.AUDIO_HANDSET } else audioDevices
+            val finalDevices = if (isWiredHeadsetOn) audioDevices.filter { it.type != MediaDeviceType.AUDIO_HANDSET } else audioDevices
+            return finalDevices
         } else {
             val res = mutableListOf<MediaDevice>()
             res.add(
@@ -175,7 +207,13 @@ class DefaultDeviceController(
         if (DefaultAudioClientController.audioClientState != AudioClientState.STARTED) {
             return
         }
+
+        // Cancel any pending Bluetooth operation before processing new selection
+        cancelPendingBluetoothOperation()
+
+        logger.info(TAG, "chooseAudioDevice() called for device: ${mediaDevice.label} with type: ${mediaDevice.type}")
         setupAudioDevice(mediaDevice.type)
+
         val route = when (mediaDevice.type) {
             MediaDeviceType.AUDIO_BUILTIN_SPEAKER -> AudioClient.SPK_STREAM_ROUTE_SPEAKER
             MediaDeviceType.AUDIO_BLUETOOTH -> AudioClient.SPK_STREAM_ROUTE_BT_AUDIO
@@ -184,9 +222,16 @@ class DefaultDeviceController(
             else -> AudioClient.SPK_STREAM_ROUTE_RECEIVER
         }
 
-        val selected = audioClientController.setRoute(route)
-        if (selected) {
-            eventAnalyticsController.pushHistory(MeetingHistoryEventName.audioInputSelected)
+        if (mediaDevice.type == MediaDeviceType.AUDIO_BLUETOOTH) {
+            // Defer setRoute() until SCO connects to avoid race condition where audio bounce
+            // occurs while SCO is still in CONNECTING state, causing audio to route to Handset
+            pendingBluetoothRoute = route
+            pendingBluetoothTimestamp = System.currentTimeMillis()
+            startScoTimeout()
+            logger.info(TAG, "Bluetooth device selected, deferring route change until SCO connected")
+        } else {
+            // Non-Bluetooth: call setRoute() immediately
+            executeSetRoute(route)
         }
     }
 
@@ -210,6 +255,8 @@ class DefaultDeviceController(
                     return listAudioDevices().firstOrNull {
                         it.type == mediaDeviceType
                     }
+                } else {
+                    logger.info(TAG, "getActiveAudioDevice() audioDevice is null. isSpeakerPhoneOn is ${audioManager.isSpeakerphoneOn}")
                 }
 
                 // Some android devices doesn't have audio device for speaker
@@ -286,5 +333,92 @@ class DefaultDeviceController(
                 listAudioDevices()
             )
         }
+    }
+
+    /**
+     * Cancels any pending Bluetooth route operation and cleans up associated state.
+     */
+    private fun cancelPendingBluetoothOperation() {
+        if (pendingBluetoothRoute != null) {
+            pendingBluetoothRoute = null
+            pendingBluetoothTimestamp = 0L
+            timeoutRunnable?.let { handler.removeCallbacks(it) }
+            timeoutRunnable = null
+        }
+    }
+
+    /**
+     * Starts a timeout for the pending Bluetooth SCO connection.
+     * If SCO does not reach CONNECTED state within the timeout period,
+     * the pending operation is cancelled and observers are notified.
+     */
+    private fun startScoTimeout() {
+        timeoutRunnable?.let { handler.removeCallbacks(it) }
+        timeoutRunnable = Runnable {
+            if (pendingBluetoothRoute != null) {
+                logger.warn(TAG, "Bluetooth SCO connection timeout")
+                pendingBluetoothRoute = null
+                pendingBluetoothTimestamp = 0L
+                notifyAudioDeviceChange()
+            }
+        }
+        handler.postDelayed(timeoutRunnable!!, SCO_CONNECTION_TIMEOUT_MS)
+    }
+
+    /**
+     * Executes the setRoute call and records the event.
+     *
+     * @param route The audio route value to set
+     */
+    private fun executeSetRoute(route: Int) {
+        val selected = audioClientController.setRoute(route)
+        if (selected) {
+            eventAnalyticsController.pushHistory(MeetingHistoryEventName.audioInputSelected)
+        }
+    }
+
+    /**
+     * Handles SCO state transitions for pending Bluetooth operations.
+     *
+     * When SCO reaches CONNECTED state and there's a pending Bluetooth operation,
+     * the deferred setRoute() call is executed.
+     *
+     * When SCO transitions to DISCONNECTED from CONNECTING (connection attempt failed),
+     * the pending operation is cancelled. However, DISCONNECTED from CONNECTED is
+     * expected during Bluetooth device switching and should NOT cancel the pending
+     * operation - we wait for the new device to connect.
+     *
+     * @param state The new SCO audio state
+     * @param previousState The previous SCO audio state
+     */
+    private fun onScoStateChanged(state: Int, previousState: Int) {
+        val pendingRoute = pendingBluetoothRoute ?: run {
+            lastScoState = state
+            return
+        }
+
+        when (state) {
+            AudioManager.SCO_AUDIO_STATE_CONNECTED -> {
+                logger.info(TAG, "Bluetooth SCO connected, applying route change")
+                cancelPendingBluetoothOperation()
+                executeSetRoute(pendingRoute)
+            }
+            AudioManager.SCO_AUDIO_STATE_DISCONNECTED -> {
+                // Only treat as failure if transitioning from CONNECTING (connection attempt failed)
+                // CONNECTED → DISCONNECTED is expected during Bluetooth device switching
+                if (previousState == AudioManager.SCO_AUDIO_STATE_CONNECTING) {
+                    logger.warn(TAG, "Bluetooth SCO connection failed")
+                    cancelPendingBluetoothOperation()
+                    notifyAudioDeviceChange()
+                }
+            }
+            AudioManager.SCO_AUDIO_STATE_ERROR -> {
+                logger.warn(TAG, "Bluetooth SCO error")
+                cancelPendingBluetoothOperation()
+                notifyAudioDeviceChange()
+            }
+        }
+
+        lastScoState = state
     }
 }
