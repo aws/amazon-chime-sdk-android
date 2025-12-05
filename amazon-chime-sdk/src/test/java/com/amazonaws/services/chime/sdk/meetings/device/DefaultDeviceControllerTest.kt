@@ -90,6 +90,7 @@ class DefaultDeviceControllerTest {
 
     private fun setupForNewAPILevel() {
         MockKAnnotations.init(this, relaxUnitFun = true)
+        every { context.registerReceiver(any(), any()) } returns Intent()
         deviceController = DefaultDeviceController(
             context,
             audioClientController,
@@ -120,16 +121,22 @@ class DefaultDeviceControllerTest {
     private fun commonSetup() {
         every { speakerInfo.type } returns AudioDeviceInfo.TYPE_BUILTIN_SPEAKER
         every { speakerInfo.productName } returns "default speaker"
+        every { speakerInfo.id } returns 1
         every { earpieceInfo.type } returns AudioDeviceInfo.TYPE_BUILTIN_EARPIECE
         every { earpieceInfo.productName } returns "default receiver"
+        every { earpieceInfo.id } returns 2
         every { telephonyInfo.type } returns AudioDeviceInfo.TYPE_TELEPHONY
         every { telephonyInfo.productName } returns "telephony receiver"
+        every { telephonyInfo.id } returns 3
         every { wiredHeadsetInfo.type } returns AudioDeviceInfo.TYPE_WIRED_HEADSET
         every { wiredHeadsetInfo.productName } returns "my wired headset"
+        every { wiredHeadsetInfo.id } returns 4
         every { bluetoothInfo.type } returns AudioDeviceInfo.TYPE_BLUETOOTH_SCO
         every { bluetoothInfo.productName } returns "my bluetooth headphone"
+        every { bluetoothInfo.id } returns 5
         every { audioDevice.productName } returns "my product name"
         every { audioDevice.type } returns AudioDeviceInfo.TYPE_BLUETOOTH_SCO
+        every { audioDevice.id } returns 6
         every { activeConfiguration.audioDevice } returns audioDevice
         every { audioManager.activeRecordingConfigurations } returns listOf(activeConfiguration)
     }
@@ -183,7 +190,7 @@ class DefaultDeviceControllerTest {
         every { audioManager.getDevices(AudioManager.GET_DEVICES_OUTPUTS) } returns arrayOf(
             speakerInfo, earpieceInfo, audioDevice
         )
-        val expected = MediaDevice("my product name (Bluetooth)", MediaDeviceType.AUDIO_BLUETOOTH)
+        val expected = MediaDevice("my product name (Bluetooth)", MediaDeviceType.AUDIO_BLUETOOTH, id = "6")
         val mediaDevice = deviceController.getActiveAudioDevice()
         assertEquals(expected, mediaDevice)
     }
@@ -191,7 +198,7 @@ class DefaultDeviceControllerTest {
     @Test
     fun `deviceController should register device change event when build version is low`() {
         setupForOldAPILevel()
-        verify(exactly = 3) { context.registerReceiver(any(), any()) }
+        verify(exactly = 4) { context.registerReceiver(any(), any()) }
     }
 
     @Test

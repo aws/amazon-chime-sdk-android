@@ -10,6 +10,7 @@ import android.media.AudioFormat
 import android.media.AudioManager
 import android.media.AudioRecord
 import android.media.AudioTrack
+import android.os.Build
 import com.amazonaws.services.chime.sdk.meetings.analytics.EventAnalyticsController
 import com.amazonaws.services.chime.sdk.meetings.analytics.EventAttributeName
 import com.amazonaws.services.chime.sdk.meetings.analytics.EventName
@@ -303,6 +304,12 @@ class DefaultAudioClientController(
         audioManager.apply {
             isBluetoothScoOn = false
             stopBluetoothSco()
+        }
+        // Clear communication device on API 31+ to release audio routing
+        // Unlike stopBluetoothSco(), setCommunicationDevice() is tied to the app process
+        // and must be cleared to avoid breaking audio for other apps
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            audioManager.clearCommunicationDevice()
         }
         audioManager.mode = audioModePreCall
         audioManager.isSpeakerphoneOn = speakerphoneStatePreCall
