@@ -23,7 +23,6 @@ import com.amazonaws.services.chime.sdk.meetings.internal.metric.ClientMetricsCo
 import com.amazonaws.services.chime.sdk.meetings.internal.utils.ConcurrentSet
 import com.amazonaws.services.chime.sdk.meetings.internal.utils.DNSServerUtils
 import com.amazonaws.services.chime.sdk.meetings.internal.utils.ObserverUtils
-import com.amazonaws.services.chime.sdk.meetings.internal.utils.TURNRequestUtils
 import com.amazonaws.services.chime.sdk.meetings.realtime.datamessage.DataMessage
 import com.amazonaws.services.chime.sdk.meetings.realtime.datamessage.DataMessageObserver
 import com.amazonaws.services.chime.sdk.meetings.session.MeetingSessionStatus
@@ -49,7 +48,6 @@ import kotlinx.coroutines.launch
 class DefaultVideoClientObserver(
     private val context: Context,
     private val logger: Logger,
-    private val turnRequestParams: TURNRequestParams,
     private val clientMetricsCollector: ClientMetricsCollector,
     private val videoClientStateController: VideoClientStateController,
     private val urlRewriter: URLRewriter,
@@ -238,38 +236,6 @@ class DefaultVideoClientObserver(
             logger.error(TAG, message)
         } else {
             logger.verbose(TAG, message)
-        }
-    }
-
-    override fun requestTurnCreds(client: VideoClient?) {
-        logger.info(TAG, "requestTurnCreds")
-        uiScope.launch {
-            val turnResponse: TURNCredentials? = TURNRequestUtils.doTurnRequest(turnRequestParams, logger)
-            with(turnResponse) {
-                val isActive = client?.isActive ?: false
-                if (this != null && isActive) {
-                    val newUris = uris.map { url -> url?.let {
-                        urlRewriter(it)
-                    } }.toTypedArray()
-                    client?.updateTurnCredentials(
-                        username,
-                        password,
-                        ttl,
-                        newUris,
-                        turnRequestParams.signalingUrl,
-                        VideoClient.VideoClientTurnStatus.VIDEO_CLIENT_TURN_FEATURE_ON
-                    )
-                } else {
-                    client?.updateTurnCredentials(
-                        null,
-                        null,
-                        null,
-                        null,
-                        null,
-                        VideoClient.VideoClientTurnStatus.VIDEO_CLIENT_TURN_STATUS_CCP_FAILURE
-                    )
-                }
-            }
         }
     }
 
