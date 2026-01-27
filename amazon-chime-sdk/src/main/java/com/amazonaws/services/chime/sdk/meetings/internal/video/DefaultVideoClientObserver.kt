@@ -43,7 +43,6 @@ import java.security.InvalidParameterException
 import kotlin.Any
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 
 class DefaultVideoClientObserver(
     private val context: Context,
