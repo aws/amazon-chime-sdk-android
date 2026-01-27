@@ -46,9 +46,6 @@ class DefaultContentShareVideoClientObserverTest {
     private lateinit var mockLogger: Logger
 
     @MockK
-    private lateinit var mockTurnRequestParams: TURNRequestParams
-
-    @MockK
     private lateinit var mockClientMetricsCollector: ClientMetricsCollector
 
     @MockK

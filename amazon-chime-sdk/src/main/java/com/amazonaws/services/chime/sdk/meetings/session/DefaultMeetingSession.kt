@@ -34,7 +34,6 @@ import com.amazonaws.services.chime.sdk.meetings.internal.video.DefaultVideoClie
 import com.amazonaws.services.chime.sdk.meetings.internal.video.DefaultVideoClientFactory
 import com.amazonaws.services.chime.sdk.meetings.internal.video.DefaultVideoClientObserver
 import com.amazonaws.services.chime.sdk.meetings.internal.video.DefaultVideoClientStateController
-import com.amazonaws.services.chime.sdk.meetings.internal.video.TURNRequestParams
 import com.amazonaws.services.chime.sdk.meetings.realtime.DefaultRealtimeController
 import com.amazonaws.services.chime.sdk.meetings.utils.logger.Logger
 
@@ -104,14 +103,6 @@ class DefaultMeetingSession @JvmOverloads constructor(
                 eventAnalyticsController
             )
 
-        val turnRequestParams =
-            TURNRequestParams(
-                configuration.meetingId,
-                configuration.urls.signalingURL,
-                configuration.urls.turnControlURL,
-                configuration.credentials.joinToken
-            )
-
         val videoClientStateController =
             DefaultVideoClientStateController(
                 logger
@@ -121,7 +112,6 @@ class DefaultMeetingSession @JvmOverloads constructor(
             DefaultVideoClientObserver(
                 context,
                 logger,
-                turnRequestParams,
                 metricsCollector,
                 videoClientStateController,
                 configuration.urls.urlRewriter,
@@ -187,19 +177,10 @@ class DefaultMeetingSession @JvmOverloads constructor(
         val contentShareConfiguration =
             configuration.createContentShareMeetingSessionConfiguration()
 
-        val contentShareTurnRequestParams =
-            TURNRequestParams(
-                contentShareConfiguration.meetingId,
-                contentShareConfiguration.urls.signalingURL,
-                contentShareConfiguration.urls.turnControlURL,
-                contentShareConfiguration.credentials.joinToken
-            )
-
         val contentShareObserver =
             DefaultContentShareVideoClientObserver(
                 context,
                 logger,
-                contentShareTurnRequestParams,
                 metricsCollector,
                 contentShareConfiguration.urls.urlRewriter,
                 eventAnalyticsController

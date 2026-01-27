@@ -98,14 +98,6 @@ class DefaultVideoClientObserverTest {
 
     private lateinit var testVideoClientObserver: DefaultVideoClientObserver
 
-    private val turnRequestParams =
-        TURNRequestParams(
-            "meetingId",
-            "signalingUrl",
-            "turnControlUrl",
-            "joinToken"
-        )
-
     private val videoClientSuccessCode = 0
     private val testMessage = "Hello world"
     private val testProfileId = "aliceId"
@@ -145,7 +137,6 @@ class DefaultVideoClientObserverTest {
             DefaultVideoClientObserver(
                 mockContext,
                 mockLogger,
-                turnRequestParams,
                 mockMetricsCollector,
                 mockVideoClientStateController,
                 mockDefaultUrlRewriter,
