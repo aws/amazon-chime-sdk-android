@@ -28,7 +28,6 @@ import com.xodee.client.video.VideoClientEventType
 import kotlin.Any
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 
 class DefaultContentShareVideoClientObserver(
     private val context: Context,
