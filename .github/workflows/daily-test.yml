@@ -79,7 +79,7 @@ jobs:
           npm run cma -- --app-url "sample.apk" --log-level error --tag "@common" --app-id "${id}" --retry --platform-version ${{ matrix.os_list }}
 
       - name: Send Notification
-        uses: slackapi/slack-github-action@v1.25.0
+        uses: slackapi/slack-github-action@v2.1.1
         if: failure()
         with:
           payload: |
@@ -90,7 +90,7 @@ jobs:
             }
 
       - name: Configure AWS Credentials
-        uses: aws-actions/configure-aws-credentials@v2
+        uses: aws-actions/configure-aws-credentials@v6
         if: always()
         with:
           role-to-assume: ${{ secrets.ROLE_TO_ASSUME }}
