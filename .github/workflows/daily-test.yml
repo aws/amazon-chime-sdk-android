@@ -39,7 +39,7 @@ jobs:
 
     steps:
       - name: Checkout test package
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         if: always()
         with:
           repository: awslabs/amazon-chime-sdk-apple
@@ -59,7 +59,7 @@ jobs:
           fi
 
       - name: Setup Node.js - 15.x
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v6
         if: always()
         with:
           node-version: 15.x
@@ -97,7 +97,7 @@ jobs:
           aws-region: ${{ env.REGION }}
 
       - name: Setup Node.js - 18.x
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v6
         if: always()
         with:
           node-version: 18.x
