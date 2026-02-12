@@ -218,6 +218,7 @@ class DefaultDeviceControllerTest {
         )
         every { audioManager.setCommunicationDevice(any()) } returns true
         every { audioManager.clearCommunicationDevice() } just Runs
+        every { audioManager.activeRecordingConfigurations } returns emptyList()
 
         mockkStatic(DefaultAudioClientController::class)
         DefaultAudioClientController.audioClientState = AudioClientState.STARTED
@@ -680,6 +681,10 @@ class DefaultDeviceControllerTest {
         // Simulate failure callback from BluetoothAudioRouter
         capturedOnFailure?.invoke()
 
+        // Should clear communication device on API 31+
+        verify { audioManager.clearCommunicationDevice() }
+        // Should fall back to speaker (no active non-BT recording device mocked)
+        verify { audioClientController.setRoute(AudioClient.SPK_STREAM_ROUTE_SPEAKER) }
         verify { deviceChangeObserver.onAudioDeviceChanged(any()) }
     }
 
@@ -748,6 +753,10 @@ class DefaultDeviceControllerTest {
         // Simulate failure callback from BluetoothAudioRouter
         capturedOnFailure?.invoke()
 
+        // Should NOT call clearCommunicationDevice on API < 31
+        verify(exactly = 0) { audioManager.clearCommunicationDevice() }
+        // Should fall back to speaker (no active non-BT recording device mocked)
+        verify { audioClientController.setRoute(AudioClient.SPK_STREAM_ROUTE_SPEAKER) }
         verify { deviceChangeObserver.onAudioDeviceChanged(any()) }
     }
 

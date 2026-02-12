@@ -24,20 +24,21 @@ internal object BluetoothRoutingConfig {
      * Android documentation recommends up to 30 seconds for Bluetooth device changes.
      * See: https://developer.android.com/develop/connectivity/bluetooth/ble-audio/audio-manager#set_communication_device
      *
-     * Since 30 seconds is too long for a voice call, we use 5 seconds instead.
+     * Since 30 seconds is too long for a voice call, we use 10 seconds instead.
      */
-    const val COMMUNICATION_DEVICE_TIMEOUT_MS = 5000L
+    const val COMMUNICATION_DEVICE_TIMEOUT_MS = 10000L
 
     /**
      * Delay between retry attempts for Bluetooth routing mismatch recovery (API 31+).
      *
      * When setCommunicationDevice() returns true but the listener fires with a different device,
      * we retry after this delay to allow the Bluetooth SCO teardown to complete.
+     * Car Bluetooth adapters may need longer than headphones for SCO teardown.
      */
-    const val BLUETOOTH_ROUTING_MISMATCH_RETRY_DELAY_MS = 500L
+    const val BLUETOOTH_ROUTING_MISMATCH_RETRY_DELAY_MS = 1000L
 
     /**
      * Maximum number of retry attempts for Bluetooth routing mismatch recovery (API 31+).
      */
-    const val BLUETOOTH_ROUTING_MISMATCH_MAX_RETRIES = 3
+    const val BLUETOOTH_ROUTING_MISMATCH_MAX_RETRIES = 5
 }

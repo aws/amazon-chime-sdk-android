@@ -168,6 +168,35 @@ class CommunicationDeviceBluetoothAudioRouterTest {
     // _Requirements: 7.4_
 
     @Test
+    fun `routeToBluetoothDevice should retry when a different Bluetooth SCO device is confirmed`() {
+        // Given: Two Bluetooth devices are available
+        val targetDevice = createMockAudioDeviceInfo(testDeviceId, AudioDeviceInfo.TYPE_BLUETOOTH_SCO)
+        val otherBtDevice = createMockAudioDeviceInfo(77, AudioDeviceInfo.TYPE_BLUETOOTH_SCO)
+        every { audioManager.availableCommunicationDevices } returns listOf(targetDevice, otherBtDevice)
+        every { audioManager.setCommunicationDevice(targetDevice) } returns true
+
+        // When: Routing to target Bluetooth device
+        router.routeToBluetoothDevice(
+            mediaDevice = testMediaDevice,
+            route = testRoute,
+            onSuccess = { _, _ -> successCallbackInvoked = true },
+            onFailure = { failureCallbackInvoked = true }
+        )
+
+        // And: Communication device changes to a DIFFERENT Bluetooth SCO device
+        simulateCommunicationDeviceChanged(otherBtDevice)
+
+        // Then: Retry should be scheduled (not success)
+        assertEquals(
+            "Retry should be scheduled with correct delay",
+            BluetoothRoutingConfig.BLUETOOTH_ROUTING_MISMATCH_RETRY_DELAY_MS,
+            capturedRetryDelay
+        )
+        assertFalse("Success callback should not be invoked for wrong BT device", successCallbackInvoked)
+        assertFalse("Failure callback should not be invoked yet", failureCallbackInvoked)
+    }
+
+    @Test
     fun `routeToBluetoothDevice should schedule retry when device mismatch occurs`() {
         // Given: A Bluetooth device is available
         val bluetoothDevice = createMockAudioDeviceInfo(testDeviceId, AudioDeviceInfo.TYPE_BLUETOOTH_SCO)
@@ -203,6 +232,7 @@ class CommunicationDeviceBluetoothAudioRouterTest {
         val handsetDevice = createMockAudioDeviceInfo(99, AudioDeviceInfo.TYPE_BUILTIN_EARPIECE)
         every { audioManager.availableCommunicationDevices } returns listOf(bluetoothDevice, handsetDevice)
         every { audioManager.setCommunicationDevice(bluetoothDevice) } returns true
+        every { audioManager.clearCommunicationDevice() } just Runs
 
         // When: Routing to Bluetooth device
         router.routeToBluetoothDevice(
@@ -218,7 +248,9 @@ class CommunicationDeviceBluetoothAudioRouterTest {
         // And: Retry runnable executes
         capturedRetryRunnable?.run()
 
-        // Then: setCommunicationDevice should be called again
+        // Then: clearCommunicationDevice should be called before retrying
+        verify(exactly = 1) { audioManager.clearCommunicationDevice() }
+        // And: setCommunicationDevice should be called again
         verify(exactly = 2) { audioManager.setCommunicationDevice(bluetoothDevice) }
     }
 

@@ -208,7 +208,7 @@ class DefaultDeviceController @VisibleForTesting internal constructor(
                 mediaDevice = mediaDevice,
                 route = route,
                 onSuccess = { r, deviceType -> executeSetRoute(r, deviceType) },
-                onFailure = { notifyAudioDeviceChange() }
+                onFailure = { handleBluetoothRoutingFailure() }
             )
         } else {
             // Non-Bluetooth: handle directly
@@ -335,6 +335,55 @@ class DefaultDeviceController @VisibleForTesting internal constructor(
                 listAudioDevices()
             )
         }
+    }
+
+    /**
+     * Handles Bluetooth routing failure by cleaning up the communication device state
+     * and falling back to the current active device or speaker.
+     *
+     * Without this cleanup, the audio system can be left in a transitional state where
+     * setCommunicationDevice() was called but never confirmed, causing audio to land on
+     * an unexpected device (typically speaker or handset).
+     */
+    @SuppressLint("NewApi")
+    private fun handleBluetoothRoutingFailure() {
+        logger.warn(TAG, "Bluetooth routing failed. Cleaning up and falling back.")
+
+        if (buildVersion >= COMMUNICATION_DEVICE_API_LEVEL) {
+            // Clear the communication device to reset the audio routing state.
+            // Without this, the AudioManager may be stuck targeting a device that
+            // never fully connected.
+            audioManager.clearCommunicationDevice()
+        }
+
+        // Determine what device to fall back to. If there's a currently active device
+        // that isn't Bluetooth, re-route to it. Otherwise fall back to speaker.
+        val activeDevice = getActiveAudioDevice()
+        if (activeDevice != null && activeDevice.type != MediaDeviceType.AUDIO_BLUETOOTH) {
+            logger.info(TAG, "Falling back to current active device: ${activeDevice.type}")
+            val fallbackRoute = getRouteForDeviceType(activeDevice.type)
+            if (buildVersion >= COMMUNICATION_DEVICE_API_LEVEL) {
+                setupAudioDevice(activeDevice)
+            } else {
+                setupAudioDevice(activeDevice.type)
+            }
+            executeSetRoute(fallbackRoute, activeDevice.type)
+        } else {
+            // No active non-BT device found — fall back to speaker as a safe default
+            logger.info(TAG, "No active non-Bluetooth device found. Falling back to speaker.")
+            val speakerRoute = getRouteForDeviceType(MediaDeviceType.AUDIO_BUILTIN_SPEAKER)
+            if (buildVersion >= COMMUNICATION_DEVICE_API_LEVEL) {
+                val speakerDevice = listAudioDevices().firstOrNull { it.type == MediaDeviceType.AUDIO_BUILTIN_SPEAKER }
+                if (speakerDevice != null) {
+                    setupAudioDevice(speakerDevice)
+                }
+            } else {
+                setupAudioDevice(MediaDeviceType.AUDIO_BUILTIN_SPEAKER)
+            }
+            executeSetRoute(speakerRoute, MediaDeviceType.AUDIO_BUILTIN_SPEAKER)
+        }
+
+        notifyAudioDeviceChange()
     }
 
     /**

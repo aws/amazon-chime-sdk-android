@@ -194,8 +194,8 @@ internal class CommunicationDeviceBluetoothAudioRouter(
         val pending = pendingOperation ?: return
         val pendingDeviceId = pending.deviceId ?: return
 
-        if (device != null && device.type == AudioDeviceInfo.TYPE_BLUETOOTH_SCO) {
-            // Success: Bluetooth SCO device confirmed
+        if (device != null && device.type == AudioDeviceInfo.TYPE_BLUETOOTH_SCO && device.id == pendingDeviceId) {
+            // Success: The exact target Bluetooth SCO device confirmed
             val waitTime = System.currentTimeMillis() - pending.timestamp
             logger.info(TAG, "Bluetooth communication device confirmed with id: ${device.id} after ${waitTime}ms" +
                     " (retries: $retryCount) - invoking success callback")
@@ -205,7 +205,9 @@ internal class CommunicationDeviceBluetoothAudioRouter(
             cancelPendingOperation()
             onSuccess(route, deviceType)
         } else {
-            // MISMATCH: We got Handset/Speaker instead of Bluetooth
+            // MISMATCH: We got a different device than expected. This includes:
+            // - Handset/Speaker instead of Bluetooth
+            // - A different Bluetooth SCO device (e.g. old device still tearing down)
             // This may happen during rapid Bluetooth device transitions when the SCO channel
             // from the previous device is still being torn down
             if (retryCount < BluetoothRoutingConfig.BLUETOOTH_ROUTING_MISMATCH_MAX_RETRIES) {
@@ -264,6 +266,11 @@ internal class CommunicationDeviceBluetoothAudioRouter(
             onFailure()
             return
         }
+
+        // Clear the current communication device before retrying. This releases
+        // the audio routing state from the previous (mismatched) device and avoids
+        // the infinite timeout loop described in the debugging session.
+        audioManager.clearCommunicationDevice()
 
         logger.info(TAG, "Retrying setCommunicationDevice(${audioDeviceInfo.productName}, id=${audioDeviceInfo.id})")
         val success = audioManager.setCommunicationDevice(audioDeviceInfo)
