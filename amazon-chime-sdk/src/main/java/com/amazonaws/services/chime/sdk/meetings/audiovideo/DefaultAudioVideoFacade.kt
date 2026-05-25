@@ -140,6 +140,14 @@ class DefaultAudioVideoFacade(
         return realtimeController.realtimeLocalUnmute()
     }
 
+    override fun realtimePlaybackMute(): Boolean {
+        return realtimeController.realtimePlaybackMute()
+    }
+
+    override fun realtimePlaybackUnmute(): Boolean {
+        return realtimeController.realtimePlaybackUnmute()
+    }
+
     override fun addRealtimeObserver(observer: RealtimeObserver) {
         realtimeController.addRealtimeObserver(observer)
     }

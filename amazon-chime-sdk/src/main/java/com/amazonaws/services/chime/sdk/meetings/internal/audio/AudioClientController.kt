@@ -38,6 +38,7 @@ interface AudioClientController {
 
     fun stop()
     fun setMute(isMuted: Boolean): Boolean
+    fun setPlaybackMute(isMuted: Boolean): Boolean
     fun setVoiceFocusEnabled(enabled: Boolean): Boolean
     fun isVoiceFocusEnabled(): Boolean
     fun promoteToPrimaryMeeting(credentials: MeetingSessionCredentials, observer: PrimaryMeetingPromotionObserver)

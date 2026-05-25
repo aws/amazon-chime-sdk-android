@@ -65,6 +65,7 @@ class MeetingModel : ViewModel() {
     val currentCaptionIndices = mutableMapOf<String, Int>()
 
     var isMuted = false
+    var isPlaybackMuted = false
     var isCameraOn = false
     var isDeviceListDialogOn = false
     var isAdditionalOptionsDialogOn = false

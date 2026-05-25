@@ -109,6 +109,20 @@ class DefaultRealtimeControllerTest {
     }
 
     @Test
+    fun `realtimePlaybackMute should call audioClientController setPlaybackMute with true and return the status`() {
+        every { audioClientController.setPlaybackMute(true) } returns true
+        assertTrue(realtimeController.realtimePlaybackMute())
+        verify { audioClientController.setPlaybackMute(true) }
+    }
+
+    @Test
+    fun `realtimePlaybackUnmute should call audioClientController setPlaybackMute with false and return the status`() {
+        every { audioClientController.setPlaybackMute(false) } returns true
+        assertTrue(realtimeController.realtimePlaybackUnmute())
+        verify { audioClientController.setPlaybackMute(false) }
+    }
+
+    @Test
     fun `realtimeSetVoiceFocusEnabled(true) should call audioClientController setVoiceFocusEnabled with true and return the status`() {
         every { audioClientController.setVoiceFocusEnabled(true) } returns true
         assertTrue(realtimeController.realtimeSetVoiceFocusEnabled(true))

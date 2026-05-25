@@ -325,6 +325,12 @@ class DefaultAudioClientController(
         )
     }
 
+    override fun setPlaybackMute(isMuted: Boolean): Boolean {
+        return audioClientState == AudioClientState.STARTED && AudioClient.AUDIO_CLIENT_OK == audioClient.setSpkMute(
+            isMuted
+        )
+    }
+
     override fun setVoiceFocusEnabled(enabled: Boolean): Boolean {
         if (audioClientState == AudioClientState.STARTED) {
             val result = audioClient.setVoiceFocusNoiseSuppression(enabled)

@@ -21,6 +21,21 @@ enum class ObservableMetric {
     audioSendPacketLossPercent,
 
     /**
+     * Upstream audio jitter (ms)
+     */
+    audioSendJitterMs,
+
+    /**
+     * Downstream audio jitter (ms)
+     */
+    audioReceiveJitterMs,
+
+    /**
+     * Audio round-trip time (ms) between client and server
+     */
+    audioRttMs,
+
+    /**
      * Estimated uplink bandwidth from perspective of video client
      */
     videoAvailableSendBandwidth,

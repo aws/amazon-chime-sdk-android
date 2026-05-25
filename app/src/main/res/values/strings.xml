@@ -87,6 +87,8 @@
     <string name="disable_screen_capture_source">Stop sharing screen</string>
     <string name="enable_voice_focus">Turn on Voice Focus (noise suppression)</string>
     <string name="disable_voice_focus">Turn off Voice Focus (noise suppression)</string>
+    <string name="mute_playback">Mute Playback</string>
+    <string name="unmute_playback">Unmute Playback</string>
     <string name="enable_live_transcription">Turn on Live Transcription</string>
     <string name="disable_live_transcription">Turn off Live Transcription</string>
     <string name="enable_flashlight">Turn on flashlight</string>
