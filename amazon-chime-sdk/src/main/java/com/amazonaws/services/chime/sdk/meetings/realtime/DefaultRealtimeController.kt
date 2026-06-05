@@ -27,6 +27,14 @@ class DefaultRealtimeController(
         return audioClientController.setMute(false)
     }
 
+    override fun realtimePlaybackMute(): Boolean {
+        return audioClientController.setPlaybackMute(true)
+    }
+
+    override fun realtimePlaybackUnmute(): Boolean {
+        return audioClientController.setPlaybackMute(false)
+    }
+
     override fun addRealtimeObserver(observer: RealtimeObserver) {
         audioClientObserver.subscribeToRealTimeEvents(observer)
     }

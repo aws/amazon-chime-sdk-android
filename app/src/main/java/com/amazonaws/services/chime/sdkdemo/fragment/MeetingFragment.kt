@@ -645,7 +645,8 @@ class MeetingFragment : Fragment(),
             context?.getString(if (meetingModel.isUsingCpuVideoProcessor) R.string.disable_cpu_filter else R.string.enable_cpu_filter),
             context?.getString(if (meetingModel.isUsingGpuVideoProcessor) R.string.disable_gpu_filter else R.string.enable_gpu_filter),
             context?.getString(if (meetingModel.isUsingCameraCaptureSource) R.string.disable_custom_capture_source else R.string.enable_custom_capture_source),
-            context?.getString(R.string.video_configuration)
+            context?.getString(R.string.video_configuration),
+            context?.getString(if (meetingModel.isPlaybackMuted) R.string.unmute_playback else R.string.mute_playback)
         )
         if (inReplicaMeeting()) {
             additionalToggles.add(context?.getString(R.string.demote_from_primary_meeting))
@@ -662,7 +663,8 @@ class MeetingFragment : Fragment(),
                 4 -> toggleGpuDemoFilter()
                 5 -> toggleCustomCaptureSource()
                 6 -> presentVideoConfigDialog()
-                7 -> { // May not be accessible
+                7 -> togglePlaybackMute()
+                8 -> { // May not be accessible
                     if (inReplicaMeeting()) {
                         demoteFromPrimaryMeeting()
                     } else {
@@ -1000,6 +1002,17 @@ class MeetingFragment : Fragment(),
             notifyHandler("Voice Focus ${action}d")
         } else {
             notifyHandler("Failed to $action Voice Focus")
+        }
+    }
+
+    private fun togglePlaybackMute() {
+        val mute = !meetingModel.isPlaybackMuted
+        val success = if (mute) audioVideo.realtimePlaybackMute() else audioVideo.realtimePlaybackUnmute()
+        if (success) {
+            meetingModel.isPlaybackMuted = mute
+            notifyHandler("Playback ${if (mute) "muted" else "unmuted"}")
+        } else {
+            notifyHandler("Failed to ${if (mute) "mute" else "unmute"} playback")
         }
     }
 

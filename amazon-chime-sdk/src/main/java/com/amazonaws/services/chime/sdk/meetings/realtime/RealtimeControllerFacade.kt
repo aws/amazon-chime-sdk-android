@@ -36,6 +36,20 @@ interface RealtimeControllerFacade {
     fun realtimeLocalUnmute(): Boolean
 
     /**
+     * Mutes the audio output (speaker).
+     *
+     * @return Boolean whether the mute action succeeded
+     */
+    fun realtimePlaybackMute(): Boolean
+
+    /**
+     * Unmutes the audio output (speaker).
+     *
+     * @return Boolean whether the unmute action succeeded
+     */
+    fun realtimePlaybackUnmute(): Boolean
+
+    /**
      * Subscribes to real time events with an observer
      *
      * @param observer: [RealtimeObserver] - Observer that handles real time events

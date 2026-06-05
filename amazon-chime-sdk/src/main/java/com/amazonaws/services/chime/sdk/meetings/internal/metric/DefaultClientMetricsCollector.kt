@@ -29,6 +29,12 @@ class DefaultClientMetricsCollector :
             metrics[AudioClient.AUDIO_CLIENT_METRIC_POST_JB_SPK_1S_PACKETS_LOST_PERCENT]
         cachedObservableMetrics[ObservableMetric.audioSendPacketLossPercent] =
             metrics[AudioClient.AUDIO_SERVER_METRIC_POST_JB_MIC_1S_PACKETS_LOST_PERCENT]
+        cachedObservableMetrics[ObservableMetric.audioSendJitterMs] =
+            metrics[AudioClient.AUDIO_SERVER_METRIC_MIC_JITTER_MS]
+        cachedObservableMetrics[ObservableMetric.audioReceiveJitterMs] =
+            metrics[AudioClient.AUDIO_CLIENT_METRIC_SPK_JITTER_MS]
+        cachedObservableMetrics[ObservableMetric.audioRttMs] =
+            metrics[AudioClient.AUDIO_CLIENT_METRIC_RTT_MS]
         maybeEmitMetrics()
     }
 
