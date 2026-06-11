@@ -141,12 +141,16 @@ class DefaultContentShareVideoClientController(
     }
 
     override fun stopVideoShare() {
+        if (!isSharing) return
+        isSharing = false
+
         logger.info(TAG, "Stopping content share video client")
+        videoSourceAdapter.source = null
+        videoClient?.setSending(false)
         videoClient?.javaStopService()
         videoClient?.destroy()
         videoClient = null
 
-        isSharing = false
         eglCore?.release()
         eglCore = null
     }
