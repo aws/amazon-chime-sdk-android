@@ -146,13 +146,18 @@ class DefaultContentShareVideoClientController(
 
         logger.info(TAG, "Stopping content share video client")
         videoSourceAdapter.source = null
-        videoClient?.setSending(false)
-        videoClient?.javaStopService()
-        videoClient?.destroy()
-        videoClient = null
 
-        eglCore?.release()
+        val client = videoClient
+        val core = eglCore
+        videoClient = null
         eglCore = null
+
+        Thread {
+            client?.setSending(false)
+            client?.javaStopService()
+            client?.destroy()
+            core?.release()
+        }.start()
     }
 
     override fun subscribeToVideoClientStateChange(observer: ContentShareObserver) {
