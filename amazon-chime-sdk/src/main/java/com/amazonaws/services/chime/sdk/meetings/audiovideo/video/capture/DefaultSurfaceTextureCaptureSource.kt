@@ -140,6 +140,7 @@ class DefaultSurfaceTextureCaptureSource(
         runBlocking(handler.asCoroutineDispatcher().immediate) {
             logger.info(TAG, "Setting on frame available listener to null")
             surfaceTexture.setOnFrameAvailableListener(null)
+            handler.removeCallbacksAndMessages(null)
         }
     }
 
