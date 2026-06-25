@@ -627,12 +627,14 @@ class MeetingFragment : Fragment(),
     private fun refreshAdditionalOptionsDialogItems() {
         if (inReplicaMeeting() && !hasJoinedPrimaryMeeting) {
             val additionalToggles = arrayOf(
-                context?.getString(R.string.promote_to_primary_meeting)
+                context?.getString(R.string.promote_to_primary_meeting),
+                context?.getString(if (meetingModel.isPlaybackMuted) R.string.unmute_playback else R.string.mute_playback)
             )
 
             additionalOptionsAlertDialogBuilder.setItems(additionalToggles) { _, which ->
                 when (which) {
                     0 -> promoteToPrimaryMeeting()
+                    1 -> togglePlaybackMute()
                 }
             }
             return
