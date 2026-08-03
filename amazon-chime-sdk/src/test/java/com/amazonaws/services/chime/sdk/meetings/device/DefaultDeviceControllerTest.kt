@@ -256,6 +256,7 @@ class DefaultDeviceControllerTest {
 
     @After
     fun tearDown() {
+        testDispatcher.scheduler.advanceUntilIdle()
         Dispatchers.resetMain()
         testDispatcher.cleanupTestCoroutines()
         unmockkAll()
