@@ -40,13 +40,16 @@ import io.mockk.mockkObject
 import io.mockk.mockkStatic
 import io.mockk.runs
 import io.mockk.slot
+import io.mockk.unmockkConstructor
 import io.mockk.verify
 import java.util.Timer
 import java.util.TimerTask
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.TestCoroutineDispatcher
+import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.setMain
+import org.junit.After
 import org.junit.Before
 import org.junit.Test
 
@@ -134,6 +137,8 @@ class DefaultAudioVideoControllerTest {
         every { AppInfoUtil.initializeVideoClientAppDetailedInfo(any()) } just runs
         Dispatchers.setMain(testDispatcher)
         MockKAnnotations.init(this, relaxUnitFun = true)
+        mockkConstructor(Timer::class)
+        every { anyConstructed<Timer>().schedule(any<TimerTask>(), 5000L) } just runs
         val logger = ConsoleLogger(LogLevel.INFO)
 
         audioVideoController =
@@ -166,6 +171,15 @@ class DefaultAudioVideoControllerTest {
                 videoClientObserver,
                 logger
             )
+    }
+
+    @ExperimentalCoroutinesApi
+    @After
+    fun tearDown() {
+        testDispatcher.scheduler.advanceUntilIdle()
+        Dispatchers.resetMain()
+        testDispatcher.cleanupTestCoroutines()
+        unmockkConstructor(Timer::class)
     }
 
     @Test
@@ -523,7 +537,6 @@ class DefaultAudioVideoControllerTest {
 
     @Test
     fun `promoteToPrimaryMeeting returns failure if either times out`() {
-        mockkConstructor(Timer::class)
         val timerTaskSlot = slot<TimerTask>()
         every { anyConstructed<Timer>().schedule(capture(timerTaskSlot), 5000L) } returns Unit
         val audioObserver = slot<PrimaryMeetingPromotionObserver>()
