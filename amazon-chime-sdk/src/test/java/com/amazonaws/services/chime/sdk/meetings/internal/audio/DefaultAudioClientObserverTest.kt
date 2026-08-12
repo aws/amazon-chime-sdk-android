@@ -170,6 +170,7 @@ class DefaultAudioClientObserverTest {
 
     @After
     fun tearDown() {
+        testDispatcher.scheduler.advanceUntilIdle()
         Dispatchers.resetMain()
         testDispatcher.cleanupTestCoroutines()
     }

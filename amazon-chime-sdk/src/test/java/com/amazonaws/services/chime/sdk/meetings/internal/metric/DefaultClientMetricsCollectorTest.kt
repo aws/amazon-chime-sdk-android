@@ -17,6 +17,7 @@ import io.mockk.mockkStatic
 import io.mockk.verify
 import java.util.Calendar
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.TestCoroutineDispatcher
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.setMain
@@ -47,8 +48,10 @@ class DefaultClientMetricsCollectorTest {
             DefaultClientMetricsCollector()
     }
 
+    @ExperimentalCoroutinesApi
     @After
     fun tearDown() {
+        testDispatcher.scheduler.advanceUntilIdle()
         Dispatchers.resetMain()
         testDispatcher.cleanupTestCoroutines()
     }

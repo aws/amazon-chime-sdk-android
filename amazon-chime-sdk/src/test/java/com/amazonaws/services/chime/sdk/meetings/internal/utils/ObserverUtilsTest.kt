@@ -9,6 +9,7 @@ import io.mockk.impl.annotations.MockK
 import io.mockk.mockk
 import io.mockk.verify
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.TestCoroutineDispatcher
@@ -39,8 +40,10 @@ class ObserverUtilsTest {
         mockObservers.add(mockObserver)
     }
 
+    @ExperimentalCoroutinesApi
     @After
     fun tearDown() {
+        testDispatcher.scheduler.advanceUntilIdle()
         Dispatchers.resetMain()
         testDispatcher.cleanupTestCoroutines()
     }
