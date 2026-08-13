@@ -62,6 +62,7 @@ import com.amazonaws.services.chime.sdk.meetings.audiovideo.contentshare.Content
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.metric.MetricsObserver
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.metric.ObservableMetric
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.LocalVideoConfiguration
+import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoSource
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.RemoteVideoSource
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoPauseState
 import com.amazonaws.services.chime.sdk.meetings.audiovideo.video.VideoPriority
@@ -1178,7 +1179,7 @@ class MeetingFragment : Fragment(),
 
         videoConfigDialogBuilder.setView(maxBitRateInput)
         videoConfigDialogBuilder.setPositiveButton("Done", DialogInterface.OnClickListener { dialog, which ->
-            meetingModel.localVideoMaxBitRateKbps = maxBitRateInput.text.toString().toIntOrNull() ?: 0
+            meetingModel.localVideoMaxBitRateKbps = maxBitRateInput.text.toString().toIntOrNull()
             // If local video is started, restart
             if (meetingModel.isLocalVideoStarted) {
                 startLocalVideo()
@@ -1210,29 +1211,32 @@ class MeetingFragment : Fragment(),
     private fun startLocalVideo() {
         if (meetingModel.isCameraSendAvailable) {
             meetingModel.isLocalVideoStarted = true
-            val localVideoConfig = LocalVideoConfiguration(meetingModel.localVideoMaxBitRateKbps)
+            // Only build a LocalVideoConfiguration when a max bitrate was set; otherwise call the
+            // no-config overload so the SDK picks its defaults (keeps that path covered).
+            val localVideoConfig = meetingModel.localVideoMaxBitRateKbps?.let { LocalVideoConfiguration(it) }
+            fun startWith(source: VideoSource) =
+                if (localVideoConfig != null) audioVideo.startLocalVideo(source, localVideoConfig)
+                else audioVideo.startLocalVideo(source)
             if (meetingModel.isUsingCameraCaptureSource) {
                 if (meetingModel.isUsingGpuVideoProcessor) {
                     cameraCaptureSource.addVideoSink(gpuVideoProcessor)
-                    audioVideo.startLocalVideo(gpuVideoProcessor, localVideoConfig)
+                    startWith(gpuVideoProcessor)
                 } else if (meetingModel.isUsingCpuVideoProcessor) {
                     cameraCaptureSource.addVideoSink(cpuVideoProcessor)
-                    audioVideo.startLocalVideo(cpuVideoProcessor, localVideoConfig)
+                    startWith(cpuVideoProcessor)
                 } else if (meetingModel.isUsingBackgroundBlur) {
                     cameraCaptureSource.addVideoSink(backgroundBlurVideoFrameProcessor)
-                    audioVideo.startLocalVideo(backgroundBlurVideoFrameProcessor, localVideoConfig)
+                    startWith(backgroundBlurVideoFrameProcessor)
                 } else if (meetingModel.isUsingBackgroundReplacement) {
                     cameraCaptureSource.addVideoSink(backgroundReplacementVideoFrameProcessor)
-                    audioVideo.startLocalVideo(
-                        backgroundReplacementVideoFrameProcessor,
-                        localVideoConfig
-                    )
+                    startWith(backgroundReplacementVideoFrameProcessor)
                 } else {
-                    audioVideo.startLocalVideo(cameraCaptureSource, localVideoConfig)
+                    startWith(cameraCaptureSource)
                 }
                 cameraCaptureSource.start()
             } else {
-                audioVideo.startLocalVideo(localVideoConfig)
+                if (localVideoConfig != null) audioVideo.startLocalVideo(localVideoConfig)
+                else audioVideo.startLocalVideo()
             }
             buttonCamera.setImageResource(R.drawable.button_camera_on)
         }

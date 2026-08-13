@@ -54,6 +54,8 @@ class HomeActivity : AppCompatActivity() {
     private var audioMode: AppCompatSpinner? = null
     private var audioDeviceCapabilitiesSpinner: AppCompatSpinner? = null
     private var audioRedundancySwitch: SwitchCompat? = null
+    private var fhdSwitch: SwitchCompat? = null
+    private var enableHigherDefinitionVideo: Boolean = false
     private var reconnectTimeoutSpinner: AppCompatSpinner? = null
     private var authenticationProgressBar: ProgressBar? = null
     private var meetingID: String? = null
@@ -88,6 +90,7 @@ class HomeActivity : AppCompatActivity() {
         audioDeviceCapabilitiesSpinner = findViewById(R.id.audioDeviceCapabilitiesSpinner)
         audioRedundancySwitch = findViewById(R.id.audioRedundancySwitch)
         audioRedundancySwitch?.setChecked(true)
+        fhdSwitch = findViewById(R.id.fhdSwitch)
         authenticationProgressBar = findViewById(R.id.progressAuthentication)
         debugSettingsViewModel = ViewModelProvider(this).get(DebugSettingsViewModel::class.java)
 
@@ -128,6 +131,7 @@ class HomeActivity : AppCompatActivity() {
         val reconnectTimeoutMs = reconnectTimeoutOptions[reconnectTimeoutSpinner?.selectedItemPosition ?: 0]
 
         val redundancyEnabled = audioRedundancySwitch?.isChecked as Boolean
+        enableHigherDefinitionVideo = fhdSwitch?.isChecked ?: false
         audioVideoConfig = AudioVideoConfiguration(audioMode = mode, audioDeviceCapabilities = audioDeviceCapabilities, enableAudioRedundancy = redundancyEnabled, reconnectTimeoutMs = reconnectTimeoutMs)
 
         meetingID = meetingEditText?.text.toString().trim().replace("\\s+".toRegex(), "+")
@@ -233,6 +237,10 @@ class HomeActivity : AppCompatActivity() {
             attendeeName)}&region=${encodeURLParam(MEETING_REGION)}"
         if (!primaryMeetingId.isNullOrEmpty()) {
             url += "&primaryExternalMeetingId=${encodeURLParam(primaryMeetingId)}"
+        }
+        if (enableHigherDefinitionVideo) {
+            // FHD video + UHD content both require the max-attendee-count param; FHD is capped at 25.
+            url += "&v_rs=FHD&c_rs=UHD&a_cnt=25"
         }
         val response = HttpUtils.post(URL(url), "", DefaultBackOffRetry(), logger)
         return if (response.httpException == null) {
