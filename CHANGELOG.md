@@ -1,3 +1,9 @@
+## [0.25.5] - 2026-08-25
+
+### Changed
+* Automatically switch an active call to Wi-Fi when Wi-Fi becomes available, consistent with mobile device network preference.
+* Adjusted the uplink policy to use SVC when available in multiparty calls and dynamically publish video layers, reducing receive-side video freezes for mobile SDK senders.
+
 ## [0.25.4] - 2026-06-29
 
 ### Added
