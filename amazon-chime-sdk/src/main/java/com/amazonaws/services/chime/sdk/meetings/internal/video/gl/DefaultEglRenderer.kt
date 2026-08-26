@@ -189,7 +189,7 @@ class DefaultEglRenderer(private val logger: Logger) : EglRenderer {
             // Setup draw matrix transformations
             val frameAspectRatio = frame.getRotatedWidth().toFloat() / frame.getRotatedHeight()
             var drawnAspectRatio = frameAspectRatio
-            synchronized(aspectRatio) {
+            synchronized(ShareEglLock.Lock) {
                 if (aspectRatio != 0f) {
                     drawnAspectRatio = aspectRatio
                 }
