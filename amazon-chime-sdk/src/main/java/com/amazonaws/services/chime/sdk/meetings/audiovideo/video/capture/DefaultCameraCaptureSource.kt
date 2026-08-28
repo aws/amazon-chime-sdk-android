@@ -305,10 +305,18 @@ class DefaultCameraCaptureSource @JvmOverloads constructor(
                 isCameraInterrupted = false
                 eventAnalyticsController?.publishEvent(EventName.videoCaptureSessionInterruptionEnded, mutableMapOf(), false)
             }
+            
+            val surface = surfaceTextureSource?.surface
+            if (surface == null) {
+                logger.error(TAG, "Surface is null, cannot create capture session")
+                device.close()
+                handleCameraCaptureFail(CaptureSourceError.SystemFailure)
+                return
+            }
 
             try {
                 cameraDevice?.createCaptureSession(
-                    listOf(surfaceTextureSource?.surface),
+                    listOf(surface),
                     cameraCaptureSessionStateCallback,
                     handler
                 )
