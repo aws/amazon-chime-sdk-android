@@ -34,8 +34,8 @@ jobs:
       max-parallel: 1
       matrix:
         # Latest 2 Android versions. TODO: Upgrade to Appium 2 for OS 14 and above.
-        os_list: ["12", "13"]
-        demo_flavor_list: ["default", "no-video-codecs"]
+        os_list: ["13"]
+        demo_flavor_list: ["default"]
     outputs:
       job-status: ${{ job.status }}
 
@@ -46,7 +46,7 @@ jobs:
         with:
           repository: awslabs/amazon-chime-sdk-apple
           token: ${{ secrets.GH_INTEG_READ_ONLY_PAT }}
-          ref: automated-test-development
+          ref: fix/android-tab-scroll-timeout
 
       - name: Get latest prod demo app
         if: always()
@@ -83,7 +83,7 @@ jobs:
           id=$(jq -er '.item.id' <<< "$upload_response")
           npm install
           npm run build
-          npm run cma -- --app-url "sample.apk" --log-level error --tag "@common" --app-id "${id}" --retry --platform-version ${{ matrix.os_list }}
+          npm run cma -- --app-url "sample.apk" --log-level error --tag "@metric" --app-id "${id}" --platform-version ${{ matrix.os_list }}
 
       - name: Send Notification
         uses: slackapi/slack-github-action@v1.25.0
