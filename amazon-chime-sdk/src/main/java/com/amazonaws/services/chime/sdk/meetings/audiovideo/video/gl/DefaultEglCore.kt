@@ -22,6 +22,9 @@ class DefaultEglCore(
     override var eglDisplay = EGL14.EGL_NO_DISPLAY
     override lateinit var eglConfig: EGLConfig
 
+    // Prevents double-release from over-decrementing DefaultEglCoreFactory's shared refcount.
+    private var isReleased = false
+
     init {
         eglDisplay = EGL14.eglGetDisplay(EGL14.EGL_DEFAULT_DISPLAY)
         if (eglDisplay == EGL14.EGL_NO_DISPLAY) {
@@ -57,24 +60,31 @@ class DefaultEglCore(
     }
 
     override fun release() {
-        if (eglSurface != EGL14.EGL_NO_SURFACE) {
-            EGL14.eglDestroySurface(eglDisplay, eglSurface)
-            eglSurface = EGL14.EGL_NO_SURFACE
-        }
+        synchronized(this) {
+            if (isReleased) {
+                return
+            }
+            isReleased = true
 
-        if (eglDisplay != EGL14.EGL_NO_DISPLAY) {
-            // Android is unusual in that it uses a reference-counted EGLDisplay. So for
-            // every eglInitialize() we need an eglTerminate().
-            EGL14.eglMakeCurrent(
-                eglDisplay, EGL14.EGL_NO_SURFACE, EGL14.EGL_NO_SURFACE,
-                EGL14.EGL_NO_CONTEXT
-            )
-            EGL14.eglDestroyContext(eglDisplay, eglContext)
-            EGL14.eglReleaseThread()
-            EGL14.eglTerminate(eglDisplay)
+            if (eglSurface != EGL14.EGL_NO_SURFACE) {
+                EGL14.eglDestroySurface(eglDisplay, eglSurface)
+                eglSurface = EGL14.EGL_NO_SURFACE
+            }
+
+            if (eglDisplay != EGL14.EGL_NO_DISPLAY) {
+                // Android is unusual in that it uses a reference-counted EGLDisplay. So for
+                // every eglInitialize() we need an eglTerminate().
+                EGL14.eglMakeCurrent(
+                    eglDisplay, EGL14.EGL_NO_SURFACE, EGL14.EGL_NO_SURFACE,
+                    EGL14.EGL_NO_CONTEXT
+                )
+                EGL14.eglDestroyContext(eglDisplay, eglContext)
+                EGL14.eglReleaseThread()
+                EGL14.eglTerminate(eglDisplay)
+            }
+            eglDisplay = EGL14.EGL_NO_DISPLAY
+            eglContext = EGL14.EGL_NO_CONTEXT
         }
-        eglDisplay = EGL14.EGL_NO_DISPLAY
-        eglContext = EGL14.EGL_NO_CONTEXT
 
         releaseCallback?.run()
     }

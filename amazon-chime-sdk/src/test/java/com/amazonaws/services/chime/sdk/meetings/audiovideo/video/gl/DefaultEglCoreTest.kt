@@ -15,6 +15,7 @@ import io.mockk.impl.annotations.MockK
 import io.mockk.mockkStatic
 import io.mockk.slot
 import io.mockk.verify
+import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
 
@@ -61,5 +62,18 @@ class DefaultEglCoreTest {
 
         verify { EGL14.eglDestroyContext(any(), any()) }
         verify { EGL14.eglTerminate(any()) }
+    }
+
+    @Test
+    fun `release is idempotent and only invokes callback once`() {
+        var callbackCount = 0
+        val testEglCore = DefaultEglCore(Runnable { callbackCount++ }, mockContext)
+
+        testEglCore.release()
+        testEglCore.release()
+
+        assertEquals(1, callbackCount)
+        verify(exactly = 1) { EGL14.eglDestroyContext(any(), any()) }
+        verify(exactly = 1) { EGL14.eglTerminate(any()) }
     }
 }

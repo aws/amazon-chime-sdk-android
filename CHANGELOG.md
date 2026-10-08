@@ -1,3 +1,8 @@
+## Unreleased
+
+### Fixed
+* Fixed video client teardown race where frames could still flow into a stopping native client. `stopVideoClient()` now disconnects the external video source and stops sending/capture before `javaStopService()`. Also made `DefaultEglCore.release()` idempotent and serialized `DefaultEglCoreFactory` refcount release to prevent `IllegalStateException: release() called on an object with refcount < 1` during concurrent EGL teardown.
+
 ## [0.25.5] - 2026-08-25
 
 ### Changed
