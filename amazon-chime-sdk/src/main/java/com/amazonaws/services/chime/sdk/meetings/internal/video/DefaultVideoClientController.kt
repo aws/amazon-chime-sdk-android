@@ -300,9 +300,13 @@ class DefaultVideoClientController(
 
     override fun stopVideoClient() {
         logger.info(TAG, "Stopping video client")
-        videoClient?.javaStopService()
+        // Disconnect the source and stop sending before native teardown so frames cannot
+        // reach a client that is being stopped/destroyed.
+        videoSourceAdapter.source = null
+        videoClient?.setSending(false)
         // SDK owns the lifecycle of the internal capture source
         stopInternalCaptureSourceIfRunning()
+        videoClient?.javaStopService()
     }
 
     override fun destroyVideoClient() {

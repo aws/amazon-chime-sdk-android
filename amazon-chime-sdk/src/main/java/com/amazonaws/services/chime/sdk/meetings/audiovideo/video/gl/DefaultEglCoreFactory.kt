@@ -34,7 +34,10 @@ class DefaultEglCoreFactory(private var sharedContext: EGLContext = EGL14.EGL_NO
     }
 
     private fun onEglCoreReleased() {
-        refCountDelegate?.release()
+        // Keep refcount updates on the same lock as create/release to avoid racing a replacement.
+        synchronized(ShareEglLock.Lock) {
+            refCountDelegate?.release()
+        }
     }
 
     private fun release() {
