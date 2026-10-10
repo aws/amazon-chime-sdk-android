@@ -80,7 +80,7 @@ class MeetingModel : ViewModel() {
     var isUsingCpuVideoProcessor = false
     var isUsingBackgroundBlur = false
     var isUsingBackgroundReplacement = false
-    var localVideoMaxBitRateKbps = 0
+    var localVideoMaxBitRateKbps: Int? = null
     var isCameraSendAvailable = false
     var isMicrophoneServiceBound = false
     val microphoneServiceConnection = object : ServiceConnection {
