@@ -56,7 +56,7 @@ allprojects {
         }
     }
     project.ext {
-        chimeMinSdkVersion = 21
+        chimeMinSdkVersion = 24
         chimeTargetSdkVersion = 35
         chimeCompileSdkVersion = 35
         sdkDir = localProperties.getProperty('sdk.dir')

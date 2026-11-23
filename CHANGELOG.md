@@ -1,3 +1,8 @@
+## [Unreleased]
+
+### Removed
+* **Breaking** Removed support for Android 5.0, 5.1 and 6.0 (API 21 to 23). Apps building with the Amazon Chime SDK must set `minSdkVersion` to 24 (Android 7.0) or above. Android 7.0 is the minimum version supported and tested with libwebrtc M157, the new WebRTC version the media library is built on.
+
 ## [0.25.5] - 2026-08-25
 
 ### Changed
